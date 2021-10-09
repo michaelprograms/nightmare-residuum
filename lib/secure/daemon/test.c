@@ -54,7 +54,7 @@ void process_all () {
         write("  Failed:    " + totalFailed + " / " + (totalPassed + totalFailed) + " (" + to_int(totalFailed * 100 / (totalPassed + totalFailed)) + "%)"+"\n");
         write("  Functions: " + totalFnsTested + " / " + (totalFnsTested + totalFnsUntested) + " (" + to_int(totalFnsTested * 100 / (totalFnsTested + totalFnsUntested)) + "%)"+"\n");
         write("  Time:      " + (timeAfter - timeBefore) + " ms"+"\n");
-        call_out((: watch_all :), 2, 0);
+        // call_out((: watch_all :), 2, 0);
     }
 }
 
