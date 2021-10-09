@@ -28,7 +28,10 @@ jobs:
     runs-on: ${{ matrix.os }}
 
     steps:
+    - name: Checkout repository
     - uses: actions/checkout@v2
+    - name: Checkout submodules
+    - uses: textbook/git-checkout-submodule-action@master
     - name: Install packages
       run: |
         sudo apt update
@@ -36,7 +39,7 @@ jobs:
         sudo apt remove libgcc-11-dev gcc-11
     - name: compile
       env: ${{ matrix.compiler }}
-      run: mkdir build && cd build && cmake -DCMAKE_BUILD_TYPE=${{ matrix.build }} -DPACKAGE_DB_SQLITE=2 .. && make -j 2 install && cd ..
+      run: ./build.sh
     - name: testsuite
       run: ./run-tests.sh
 #       run: cd testsuite && ../build/bin/driver etc/config.test -ftest
