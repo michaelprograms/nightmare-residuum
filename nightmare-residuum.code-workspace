@@ -1,0 +1,13 @@
+{
+    "folders": [
+        {
+            "path": "."
+        }
+    ],
+    "settings": {
+        "editor.wordWrap": "on",
+        "files.trimTrailingWhitespace": true,
+        "editor.rulers": [80],
+        "editor.bracketPairColorization.enabled": true,
+    }
+}

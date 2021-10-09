@@ -1,0 +1,14 @@
+# Auto Generated Files
+/build
+
+# Save Files
+/lib/save/
+!/lib/save/daemon/soul.o
+
+# Log Files
+/lib/log
+
+# Temporary files
+/lib/tmp
+
+!/**/.gitignore

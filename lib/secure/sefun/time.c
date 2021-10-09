@@ -1,0 +1,33 @@
+#include <time.h>
+
+string time_ago (int timestamp) {
+    int Years, Months, Weeks, Days, Hours, Minutes;
+    int diff = time() - timestamp;
+    string msg = "";
+
+    Years = diff / YEAR_IN_SECS;
+    diff = diff - (Years * YEAR_IN_SECS);
+    Months = diff / MONTH_IN_SECS;
+    diff = diff - (Months * MONTH_IN_SECS);
+    Weeks = diff / WEEK_IN_SECS;
+    diff = diff - (Weeks * WEEK_IN_SECS);
+    Days = diff / DAY_IN_SECS;
+    diff = diff - (Days * DAY_IN_SECS);
+
+    if (Years > 0) msg += Years + " year" + (Years > 1 ? "s" : "");
+    if (Months > 0) msg += (strlen(msg)>0?" ":"") + Months + " month" + (Months > 1 ? "s" : "");
+    if (Weeks > 0) msg += (strlen(msg)>0?" ":"") + Weeks + " week" + (Weeks > 1 ? "s" : "");
+    if (Days > 0) msg +=  (strlen(msg)>0?" ":"") + Days + " day" + (Days > 1 ? "s" : "");
+
+    if (strlen(msg) > 0) return msg + " ago";
+
+    Hours = diff / HOUR_IN_SECS;
+    diff = diff - (Hours * HOUR_IN_SECS);
+    if (Hours > 0) return Hours + " hour" + (Hours > 1 ? "s" : "") + " ago";
+
+    Minutes = diff / MINUTE_IN_SECS;
+    diff = diff - (Minutes * MINUTE_IN_SECS);
+    if (Minutes > 0) return Minutes + " minute" + (Minutes > 1 ? "s" : "") + " ago";
+
+    return "very recently";
+}
