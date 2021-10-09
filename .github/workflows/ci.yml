@@ -35,6 +35,7 @@ jobs:
         sudo apt remove libgcc-11-dev gcc-11
     - name: build
       run: |
+         chmod +rw ./driver/src/local_options
          chmod +x ./build.sh
          ./build.sh
       shell: bash
