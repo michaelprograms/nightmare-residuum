@@ -29,9 +29,9 @@ jobs:
 
     steps:
     - name: Checkout repository
-    - uses: actions/checkout@v2
+      uses: actions/checkout@v2
     - name: Checkout submodules
-    - uses: textbook/git-checkout-submodule-action@master
+      uses: textbook/git-checkout-submodule-action@master
     - name: Install packages
       run: |
         sudo apt update
