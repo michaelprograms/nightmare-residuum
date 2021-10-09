@@ -23,7 +23,7 @@ jobs:
           - CC: "gcc"
             CXX: "g++"
         build: ["Debug"]
-        os: ["ubuntu-21.04"]
+        os: ["ubuntu-18.04"]
 
     runs-on: ${{ matrix.os }}
 
