@@ -26,10 +26,14 @@ string *query_map () {
 
     lines = ({});
     map = __Server->query_layout_map();
-    for (int y = 0; y <= __Server->query_max_y(); y ++) {
+
+    // for (y = 0; y <= __Server->query_max_y(); y ++) {
+    //     string *rooms = ({});
+    //     for (x = 0; x <= __Server->query_max_x(); x ++) {
+    for (int y = thisy - 2; y <= thisy + 2; y ++) {
         string *rooms = ({});
-        for (int x = 0; x <= __Server->query_max_x(); x ++) {
-            if (map[x][y]) {
+        for (int x = thisx - 2; x <= thisx + 2; x ++) {
+            if (map[x] && map[x][y]) {
                 if (thisx == x && thisy == y) {
                     rooms += ({ "[X]" });
                 } else {
@@ -39,7 +43,7 @@ string *query_map () {
                 rooms += ({ "   " });
             }
         }
-        lines += ({ implode(rooms, " ") });
+        lines += ({ implode(rooms, "") });
     }
 
     return lines;
