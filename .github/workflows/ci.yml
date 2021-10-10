@@ -26,21 +26,12 @@ jobs:
     steps:
     - name: Checkout repository
       uses: actions/checkout@v2
-    - name: Checkout submodules
-      uses: textbook/git-checkout-submodule-action@master
     - name: Install packages
       run: |
         sudo apt update
         sudo apt install -y build-essential clang-6.0 autoconf automake bison expect libevent-dev libmysqlclient-dev libpcre3-dev libpq-dev libsqlite3-dev libssl-dev libtool libz-dev telnet libgtest-dev libjemalloc-dev
         sudo apt remove libgcc-11-dev gcc-11
-    - name: build
-      run: |
-         chown ./driver/src/local_options
-         chmod +x ./build.sh
-         ./build.sh
-      shell: bash
     - name: run-tests
       run: |
-         chmod +x ./run-tests.sh
          ./run-tests.sh
       shell: bash
