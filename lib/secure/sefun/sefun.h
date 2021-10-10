@@ -59,7 +59,7 @@ string sanitize_name (string name);
 varargs void tell (mixed target, string msg);
 
 /* --- time --- */
-string time_ago (int timestamp);
+varargs string time_ago (int timestamp, int granularity);
 
 /* --- user --- */
 object this_account ();

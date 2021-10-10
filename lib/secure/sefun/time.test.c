@@ -75,7 +75,19 @@ void test_time_ago () {
     values += ({ testOb->time_ago(now - (100 * YEAR_IN_SECS)) });
     results += ({ "100 years ago" });
 
+    values += ({ testOb->time_ago(now - (1 * YEAR_IN_SECS) - (7 * MONTH_IN_SECS) - (2 * WEEK_IN_SECS) - (4 * DAY_IN_SECS) - (15 * HOUR_IN_SECS) - (42 * MINUTE_IN_SECS) - 29, 4) });
+    results += ({ "1 year 7 months 2 weeks 4 days ago" });
+    values += ({ testOb->time_ago(now - (1 * YEAR_IN_SECS) - (7 * MONTH_IN_SECS) - (2 * WEEK_IN_SECS) - (4 * DAY_IN_SECS) - (15 * HOUR_IN_SECS) - (42 * MINUTE_IN_SECS) - 29, 3) });
+    results += ({ "1 year 7 months 2 weeks ago" });
+    values += ({ testOb->time_ago(now - (1 * YEAR_IN_SECS) - (7 * MONTH_IN_SECS) - (2 * WEEK_IN_SECS) - (4 * DAY_IN_SECS) - (15 * HOUR_IN_SECS) - (42 * MINUTE_IN_SECS) - 29, 2) });
+    results += ({ "1 year 7 months ago" });
+    values += ({ testOb->time_ago(now - (1 * YEAR_IN_SECS) - (7 * MONTH_IN_SECS) - (2 * WEEK_IN_SECS) - (4 * DAY_IN_SECS) - (15 * HOUR_IN_SECS) - (42 * MINUTE_IN_SECS) - 29, 1) });
+    results += ({ "1 year ago" });
+    // default granularity:
     values += ({ testOb->time_ago(now - (1 * YEAR_IN_SECS) - (7 * MONTH_IN_SECS) - (2 * WEEK_IN_SECS) - (4 * DAY_IN_SECS) - (15 * HOUR_IN_SECS) - (42 * MINUTE_IN_SECS) - 29) });
+    results += ({ "1 year 7 months ago" });
+    // disable granularity:
+    values += ({ testOb->time_ago(now - (1 * YEAR_IN_SECS) - (7 * MONTH_IN_SECS) - (2 * WEEK_IN_SECS) - (4 * DAY_IN_SECS) - (15 * HOUR_IN_SECS) - (42 * MINUTE_IN_SECS) - 29, 0) });
     results += ({ "1 year 7 months 2 weeks 4 days ago" });
 
     expect_arrays_equal(values, results, "time_ago handled times");
