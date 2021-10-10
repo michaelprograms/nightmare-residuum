@@ -33,11 +33,16 @@ jobs:
         sudo apt update
         sudo apt install -y build-essential clang-6.0 autoconf automake bison expect libevent-dev libmysqlclient-dev libpcre3-dev libpq-dev libsqlite3-dev libssl-dev libtool libz-dev telnet libgtest-dev libjemalloc-dev
         sudo apt remove libgcc-11-dev gcc-11
-    - name: compile
-      run: |
-        ./build.sh
+    - name: Cache Driver
+      uses: actions/cache@v2
+      id: cache
+      with:
+        path: build/
+        key: ${{ hashFiles('.git/modules/driver/ORIG_HEAD') }}
+    - name: Build Driver
+      if: steps.cache.outputs.cache-hit != 'true'
+      run: /build.sh
       shell: bash
-    - name: run-tests
-      run: |
-        ./run-tests.sh
+    - name: Run Tests
+      run: ./run-tests.sh
       shell: bash
