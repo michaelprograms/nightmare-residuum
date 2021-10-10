@@ -40,6 +40,15 @@ void receive_message (string type, string message) {
     } else if (type == "go") {
         message = "%^GREEN%^BOLD%^" + message + "%^RESET%^";
         receive(wrap(message));
+    } else if (type == "room_living_contents") {
+        message = "%^RED%^BOLD%^" + message + "%^RESET%^";
+        receive(wrap(message));
+    } else if (type == "room_nonliving_contents") {
+        message = "%^MAGENTA%^" + message + "%^RESET%^";
+        receive(wrap(message));
+    } else if (type == "room_exits") {
+        message = "%^GREEN%^" + replace_string(message, ":", ":%^RESET%^") + "%^RESET%^";
+        receive(wrap(message));
     } else {
         receive(wrap(message, 0, 0));
     }

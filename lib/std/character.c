@@ -76,20 +76,22 @@ void describe_environment () {
     string *exits;
 
     if ((env = environment()) && env->is_room()) {
-        tell(this_object(), env->query_short()+"\n");
-        tell(this_object(), env->query_long()+"\n\n");
+        // @TODO creatorp?
+        message("room_file", file_name(env)+"\n", this_object());
+        message("room_short", env->query_short()+"\n", this_object());
+        message("room_long", env->query_long()+"\n\n", this_object());
 
-        if (!sizeof(exits = env->query_exit_directions())) {
-            tell(this_object(), "There are no obvious exits visible.\n");
+        if (!sizeof(exits = env->query_exit_dirs())) {
+            message("room_exits", "There are no obvious exits visible.\n", this_object());
         } else {
-            tell(this_object(), "There are "+cardinal(sizeof(exits))+" exits: "+implode(exits, ", ")+"\n");
+            message("room_exits", "There are "+cardinal(sizeof(exits))+" exits: "+implode(exits, ", ")+"\n", this_object());
         }
 
         if (sizeof(obs = filter_array(env->query_living_contents(), (:$1 != this_object():)))) {
-            tell(this_object(), "\n" + implode(map_array(obs, (:$1->query_name():)), "\n") + "\n");
+            message("room_living_contents", "\n" + implode(map_array(obs, (:$1->query_name():)), "\n") + "\n", this_object());
         }
         if (sizeof(obs = env->query_nonliving_contents())) {
-            tell(this_object(), "\n" + implode(map_array(obs, (:$1->query_name():)), "\n") + "\n");
+            message("room_nonliving_contents", "\n" + implode(map_array(obs, (:$1->query_name():)), "\n") + "\n", this_object());
         }
     } else {
         tell(this_object(), "You do not have an environment.\n");
