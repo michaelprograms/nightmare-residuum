@@ -52,7 +52,7 @@ string *epilog (int load_empty) {
 void flag (string flag) {
     if (flag == "test") {
         // catch("/secure/test/tests.c"->run());
-        call_out(function() { D_TEST->run(); }, 0);
+        call_out(function() { D_TEST->run(1); }, 0);
     } else {
         debug_message("master()->flag: received unknown flag.");
     }

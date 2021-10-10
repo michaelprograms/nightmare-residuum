@@ -1,0 +1,43 @@
+# This is a basic workflow that is manually triggered
+
+name: CI on ubuntu
+
+on:
+  push:
+    branches:
+      - main
+    paths-ignore:
+      - 'docs/**'
+  pull_request:
+    branches:
+      - main
+    paths-ignore:
+      - 'docs/**'
+
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: ["ubuntu-20.04"]
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+      with:
+        submodules: true
+    - name: Install packages
+      run: |
+        sudo apt update
+        sudo apt install -y build-essential clang-6.0 autoconf automake bison expect libevent-dev libmysqlclient-dev libpcre3-dev libpq-dev libsqlite3-dev libssl-dev libtool libz-dev telnet libgtest-dev libjemalloc-dev
+        sudo apt remove libgcc-11-dev gcc-11
+    - name: compile
+      run: |
+        ./build.sh
+      shell: bash
+    - name: run-tests
+      run: |
+        ./run-tests.sh
+      shell: bash
