@@ -21,8 +21,8 @@ void set_layout (string layout) {
     // parse the layout map
     for (int y = 0; y < sizeof(lines); y ++) {
         for (int x = 0; x < sizeof(lines[y]); x ++) {
-            if (__MaxX < strlen(lines[y])) {
-                __MaxX = strlen(lines[y]);
+            if (__MaxX < strlen(lines[y]) - 1) {
+                __MaxX = strlen(lines[y]) - 1;
             }
             if (undefinedp(__LayoutMap[x])) {
                 __LayoutMap[x] = ([]);
@@ -85,6 +85,7 @@ object virtual_create (string arg) {
     }
 
     room = new(__Inheritable);
+    room->set_server(file_name(this_object()));
 
     // Setup exits
     add_potential_exit(room, "northwest", x - 1, y - 1);
