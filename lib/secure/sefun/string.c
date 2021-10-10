@@ -30,16 +30,6 @@ varargs string pad_right (string text, int n, string pad) {
     return text;
 }
 
-string trim_whitespace (string str) {
-    int i, j = strlen(str) - 1;
-    if (j < 0) {
-        return "";
-    }
-    while (i <= j && member_array(str[i], " \t\n\r") != -1) i ++;
-    while (i <= j && member_array(str[j], " \t\n\r") != -1) j --;
-    return str[i..j];
-}
-
 varargs string identify (mixed a) {
     int i, s;
     string ret;

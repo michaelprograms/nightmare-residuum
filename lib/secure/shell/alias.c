@@ -72,7 +72,7 @@ mixed expand_alias (string input) {
     }
 
     if (!(currentAlias = __Aliases[argv[0]])) {
-        return trim_whitespace(implode(argv, " "));
+        return trim(implode(argv, " "));
     }
 
     expandedInput = replace_string(currentAlias->template, "\\\\$", sprintf("%c", 255));
@@ -90,7 +90,7 @@ mixed expand_alias (string input) {
         expandedInput = replace_string(expandedInput, "$*", currentAlias->defaults[0]);
     }
 
-  return trim_whitespace(replace_string(expandedInput, sprintf("%c", 255), "$"));
+  return trim(replace_string(expandedInput, sprintf("%c", 255), "$"));
 }
 
 void create () {

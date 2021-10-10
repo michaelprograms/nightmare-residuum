@@ -58,7 +58,7 @@ void execute_command (string input) {
 protected void shell_input (mixed input) {
     if (input == -1) return handle_destruct();
 
-    input = trim_whitespace(input);
+    input = trim(input);
     if (input == "") return;
 
     // @TODO history

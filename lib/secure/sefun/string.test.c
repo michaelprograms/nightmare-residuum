@@ -74,24 +74,6 @@ void test_pad_right () {
     expect_arrays_equal (values, results, "pad_right handled padding");
 }
 
-void test_trim_whitespace () {
-    string *values = ({}), *results = ({});
-
-    expect_function("trim_whitespace", testOb);
-
-    values += ({ testOb->trim_whitespace("    test    ") });
-    results += ({ "test" });
-    values += ({ testOb->trim_whitespace("	test	") });
-    results += ({ "test" });
-    values += ({ testOb->trim_whitespace("\ttest\t") });
-    results += ({ "test" });
-    values += ({ testOb->trim_whitespace("\ntest\n") });
-    results += ({ "test" });
-    values += ({ testOb->trim_whitespace("\rtest\r") });
-    results += ({ "test" });
-    expect_arrays_equal (values, results, "trim_whitespace handled trimming");
-}
-
 void test_identify () {
     int tInt = 123, undefInt;
     float tFloat = 123.0, undefFloat;
