@@ -10,9 +10,13 @@ protected void set_save_path (string path) { // @TODO private for security?
     __SavePath = path;
 }
 
-protected void restore_data () {
-    unguarded((: restore_object, __SavePath :));
+void restore_data () {
+    if (stringp(__SavePath)) {
+        unguarded((: restore_object, __SavePath :));
+    }
 }
-protected void save_data () {
-    unguarded((: save_object, __SavePath :));
+void save_data () {
+    if (stringp(__SavePath)) {
+        unguarded((: save_object, __SavePath :));
+    }
 }

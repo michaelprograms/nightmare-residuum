@@ -13,6 +13,7 @@ private void set_character_name (string name) {
     }
     if (name) {
         __Character->set_name(capitalize(name));
+        // __Character->set_key_name(sanitize_name(name)); // @TODO this should be automatic when sanitize_name is a sefun
     } else {
         destruct(__Character);
         __Character = clone_object(STD_CHARACTER);

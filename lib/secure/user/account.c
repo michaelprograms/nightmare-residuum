@@ -179,7 +179,9 @@ protected nomask varargs void account_input (int state, mixed extra, string inpu
             } else if (input == "delete") {
                 input_next((: account_input, STATE_CHARACTER_DELETE, 0 :), PROMPT_CHARACTER_DELETE);
             } else if (member_array(input, __Account->query_character_names()) > -1) {
-                write("\n\nEntering as " + input + "...\n\n");
+
+
+                write("\n\nEntering as " + query_character()->query_name() + "...\n\n");
                 set_character_name(input);
                 character_enter(0);
             } else {

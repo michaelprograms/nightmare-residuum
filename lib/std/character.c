@@ -74,26 +74,32 @@ void exit_world () {
 void describe_environment () {
     object env, *obs;
     string *exits;
+    string *map;
 
-    if ((env = environment()) && env->is_room()) {
-        // @TODO creatorp?
-        message("room_file", file_name(env)+"\n", this_object());
-        message("room_short", env->query_short()+"\n", this_object());
-        message("room_long", env->query_long()+"\n\n", this_object());
+    if (!(env = environment()) || !env->is_room()) {
+        message("system", "You do not have an environment.\n", this_object());
+        return;
+    }
 
-        if (!sizeof(exits = env->query_exit_dirs())) {
-            message("room_exits", "There are no obvious exits visible.\n", this_object());
-        } else {
-            message("room_exits", "There are "+cardinal(sizeof(exits))+" exits: "+implode(exits, ", ")+"\n", this_object());
-        }
+    if (map = env->query_map()) {
+        message("room_map", implode(map, "\n") + "\n", this_object());
+    }
 
-        if (sizeof(obs = filter_array(env->query_living_contents(), (:$1 != this_object():)))) {
-            message("room_living_contents", "\n" + implode(map_array(obs, (:$1->query_name():)), "\n") + "\n", this_object());
-        }
-        if (sizeof(obs = env->query_nonliving_contents())) {
-            message("room_nonliving_contents", "\n" + implode(map_array(obs, (:$1->query_name():)), "\n") + "\n", this_object());
-        }
+    // @TODO creatorp?
+    message("room_file", file_name(env)+"\n", this_object());
+    message("room_short", env->query_short()+"\n", this_object());
+    message("room_long", env->query_long()+"\n\n", this_object());
+
+    if (!sizeof(exits = env->query_exit_dirs())) {
+        message("room_exits", "There are no obvious exits visible.\n", this_object());
     } else {
-        tell(this_object(), "You do not have an environment.\n");
+        message("room_exits", "There are "+cardinal(sizeof(exits))+" exits: "+implode(map_array(exits, (:"%^CYAN%^"+$1+"%^RESET%^":)), ", ")+"\n", this_object());
+    }
+
+    if (sizeof(obs = filter_array(env->query_living_contents(), (:$1 != this_object():)))) {
+        message("room_living_contents", "\n" + implode(map_array(obs, (:$1->query_name():)), "\n") + "\n", this_object());
+    }
+    if (sizeof(obs = env->query_nonliving_contents())) {
+        message("room_nonliving_contents", "\n" + implode(map_array(obs, (:$1->query_name():)), "\n") + "\n", this_object());
     }
 }
