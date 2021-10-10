@@ -104,6 +104,5 @@ void scan (string *paths, string type) {
             }
         }
         __Paths = distinct_array(__Paths + ({ path }));
-        debug_message("!!! __Paths is now "+identify(__Paths));
     }
 }
