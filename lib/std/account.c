@@ -34,6 +34,9 @@ int is_account () { return 1; }
 
 void set_name (string name) {
     __AccountName = name;
+    if (!stringp(__AccountName)) {  // name can be cleared during account creation
+        return;
+    }
     set_save_path(D_ACCOUNT->query_save_path(lower_case(__AccountName)));
     if (D_ACCOUNT->query_exists(__AccountName)) {
         restore_data();
