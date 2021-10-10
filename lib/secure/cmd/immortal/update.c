@@ -47,7 +47,9 @@ void command (string input) {
             message("system", "\n", this_user());
             // this_user()->query_character()->set_property("updating", 1);
             // write("properties: "+identify(this_user()->query_character()->query_properties())+"\n");
-            destruct(find_object(tests[0]));
+            if (find_object(tests[0])) {
+                catch(destruct(find_object(tests[0])));
+            }
             call_other(tests[0], "???");
             call_out(function(mapping tests) {
                 tests[0]->execute_test((: doneCallback:));
