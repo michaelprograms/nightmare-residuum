@@ -1,5 +1,6 @@
 # Auto Generated Files
 /build
+!/build/bin/driver
 
 # Save Files
 /lib/save/
