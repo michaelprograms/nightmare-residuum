@@ -37,8 +37,8 @@ jobs:
       uses: actions/cache@v2
       id: cache
       with:
-        path: build/
-        key: ${{ hashFiles('**/.git/modules/driver/ORIG_HEAD') }}
+        path: build
+        key: ${{ hashFiles('**/.git/modules/driver/ORIG_HEAD') }}${{ hashFiles('**/driver') }}
     - name: Build Driver
       if: steps.cache.outputs.cache-hit != 'true'
       run: /build.sh
