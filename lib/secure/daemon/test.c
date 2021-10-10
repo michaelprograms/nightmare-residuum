@@ -129,7 +129,7 @@ void update_test_data (string path) {
 void run (int callShutdown) {
 
     if (callShutdown) {
-        call_out((: shutdown :), 10, -1);
+        call_out((: shutdown :), 10);
     }
 
     update_test_data("/secure/");
