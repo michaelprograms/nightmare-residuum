@@ -142,29 +142,22 @@ mapping get_mud_stats () {
     object compile_object(string pathname);
 */
 object compile_object (string path) {
-    string nom, tmp, where, which;
+    object ob;
+    string area, room, vpath;
 
-    debug_message("compile_object called for "+path);
 
     if (!path) return 0;
     if (path[0..0] != "/") path = "/" + path;
 
-    if (sscanf(path, "/realm/%s/%*s", nom)) {
-        tmp = sprintf("%svirtual/server", user_path(nom));
-    } else if(sscanf(path, "/domain/%s/%*s", nom)) {
-        tmp = sprintf("%s/%s/virtual/server", "/domain", nom);
-    }
-    if (file_size(tmp+".c") < 0) {
-        if (sscanf(path, "%s.%s", where, which) != 2) return 0;
-        if (sscanf(path, "/realm/%s/%*s", nom)) {
-            tmp = sprintf("%svirtual/%s_server", user_path(nom), which);
-        } else if(sscanf(path, "/domain/%s/%*s", nom)) {
-            tmp = sprintf("%s/%s/virtual/%s_server", "/domain", nom, which);
+    if (sscanf(path, "/domain/%s/virtual/room/%s/", area, room)) {
+        vpath = sprintf("%s/%s/virtual/%s", "/domain", area, room);
+        if (file_size(vpath + ".c") >= 0) {
+            if (ob = vpath->virtual_create(path)) {
+                return ob;
+            }
         }
-        if (file_size(tmp+".c") < 0) return 0;
-        else return call_other(tmp, "compile_object", where);
     }
-    return call_other(tmp, "compile_object", path);
+    return 0;
 }
 
 // object_name
