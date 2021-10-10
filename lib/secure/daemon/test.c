@@ -126,16 +126,12 @@ void update_test_data (string path) {
     }
 }
 
-void run () {
-    // remove_call_out();
-    // currentTest = 0;
-    // totalTests = 0;
-    // totalFiles = 0;
-    // totalPassed = 0;
-    // totalFailed = 0;
-    // totalFnsTested = 0;
-    // totalFnsUntested = 0;
-    // __Tests = ([]);
+void run (int callShutdown) {
+
+    if (callShutdown) {
+        call_out((: shutdown :), 10, -1);
+    }
+
     update_test_data("/secure/");
     update_test_data("/daemon/");
     update_test_data("/std/");
