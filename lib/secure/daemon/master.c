@@ -145,7 +145,6 @@ object compile_object (string path) {
     object ob;
     string area, room, vpath;
 
-
     if (!path) return 0;
     if (path[0..0] != "/") path = "/" + path;
 
@@ -383,8 +382,6 @@ private int retrieve_ed_setup(object who) {
 varargs int valid_override (string file, string efun_name, string main_file) {
     if (file[0] != '/') return 0;
 
-    // debug_message("valid_override "+file+" "+efun_name+" "+main_file);
-
     switch (efun_name) {
         case "input_to":
         case "get_char":
@@ -419,12 +416,9 @@ int valid_read(string file, mixed caller, string fn) {
     int valid = 0;
     file = sanitize_path(file);
     if (regexp(file_name(caller), "/secure/daemon/master") > 0) valid = 1; // @TODO this_object()
-    // else if (regexp(file_name(caller), "/secure/daemon/test") > 0) valid = 1; // @TODO
     else if (regexp(file_name(caller), "/secure/daemon/access") > 0) valid = 1;
     else {
-        // debug_message("master()->valid_read " + file_name(caller) + " wants " + fn + " on " + file);
         valid = D_ACCESS->query_allowed(caller, fn, file, "read");
-        // if (!valid) log_file("access", "Read access denied: "+file+" : "+identify(previous_object(-1))+" : "+fn+"\n");
     }
     if (!valid) debug_message("master()->valid_read " + file + " " + file_name(caller) + " gets " + valid);
     return valid;
@@ -456,6 +450,7 @@ string *parse_command_plural_id_list () {
 }
 // List of prepositions that are permitted
 string *parse_command_prepos_list () {
+    // @TODO prune some?
     return ({ "in", "from", "on", "under", "behind", "beside", "of", "for","to",
       "with", "at", "off", "out", "down", "up", "around", "over", "into","onto",
       "about", "out of", "aboard", "above", "against", "alongside", "beneath",
@@ -490,11 +485,6 @@ object *parse_command_users () {
     "plural" error or not (i.e. the error data represents more than one
     object).
 */
-// string parser_error_message (int error, object ob, mixed arg, int plural) {
-//     // @TODO
-//     return 0;
-// }
-
 string parser_error_message (int type, object ob, mixed arg, int plural) {
     string err;
     object tmpob;
