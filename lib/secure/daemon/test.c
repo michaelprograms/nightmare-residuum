@@ -12,6 +12,7 @@ private nosave mapping __Tests = ([
 private nosave int currentTest = 0, totalTests = 0, totalFiles = 0;
 private nosave int totalPassed = 0, totalFailed = 0, totalFnsTested = 0, totalFnsUntested = 0;
 private nosave int timeBefore, timeAfter;
+private nosave int shutdownAfterTests = 0;
 
 // -----------------------------------------------------------------------------
 
@@ -55,6 +56,9 @@ void process_all () {
         write("  Functions: " + totalFnsTested + " / " + (totalFnsTested + totalFnsUntested) + " (" + to_int(totalFnsTested * 100 / (totalFnsTested + totalFnsUntested)) + "%)"+"\n");
         write("  Time:      " + (timeAfter - timeBefore) + " ms"+"\n");
         // call_out((: watch_all :), 2, 0);
+        if (shutdownAfterTests) {
+            shutdown(totalFailed > 0 ? -1 : 0);
+        }
     }
 }
 
@@ -126,11 +130,9 @@ void update_test_data (string path) {
     }
 }
 
-void run (int callShutdown) {
+varargs void run (int callShutdown) {
 
-    if (callShutdown) {
-        call_out((: shutdown :), 10);
-    }
+    shutdownAfterTests = callShutdown;
 
     update_test_data("/secure/");
     update_test_data("/daemon/");

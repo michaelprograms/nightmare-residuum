@@ -30,7 +30,7 @@ void test_lifecycle_functions () {
 
     expect_function("create", testOb);
 
-    expect_function("heart_beat", testOb);
+    // expect_function("heart_beat", testOb);
 
     expect_function("id", testOb);
     // Tests for id handled by /std/object/id.test.c
@@ -39,7 +39,7 @@ void test_lifecycle_functions () {
 
     expect_function("reset", testOb);
 
-    expect_function("virtual_start", testOb);
+    // expect_function("virtual_start", testOb);
 }
 
 void test_move () {

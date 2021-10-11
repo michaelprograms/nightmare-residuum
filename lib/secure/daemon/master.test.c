@@ -14,7 +14,7 @@ string *test_order () {
         "test_startup_applies",
         "test_build_applies",
         "test_error_applies",
-        "test_ed_applies",
+        // "test_ed_applies",
         "test_security_applies",
         "test_valid_applies",
      });
@@ -60,16 +60,16 @@ void test_error_applies () {
     expect_function("log_error", testOb);
 }
 
-void test_ed_applies () {
-    expect_function("get_save_file_name", testOb);
+// void test_ed_applies () {
+//     expect_function("get_save_file_name", testOb);
 
-    expect_function("make_path_absolute", testOb);
-    // make_absolute_path testing handled by sefun sanitize_path
+//     expect_function("make_path_absolute", testOb);
+//     // make_absolute_path testing handled by sefun sanitize_path
 
-    expect_function("retrieve_ed_setup", testOb);
+//     expect_function("retrieve_ed_setup", testOb);
 
-    expect_function("save_ed_setup", testOb);
-}
+//     expect_function("save_ed_setup", testOb);
+// }
 
 void test_security_applies () {
     int *values = ({}), *results = ({});
