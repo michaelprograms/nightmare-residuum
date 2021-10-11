@@ -58,9 +58,6 @@ void test_valid_account () {
 
     expect_function("query_exists", testOb);
 
-    values += ({ testOb->query_exists("testaccount") });
-    results += ({ 1 });
-
     values += ({ testOb->query_exists("") });
     results += ({ 0 });
     values += ({ testOb->query_exists("testaccountinvalid") });

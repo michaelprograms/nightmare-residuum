@@ -8,6 +8,12 @@ void after_all_tests () {
     if (objectp(testOb)) destruct(testOb);
 }
 
+nosave private object __MockAccount;
+object query_account () {
+    return __MockAccount;
+}
+
+
 void test_strip_colour () {
     string text = "%^BOLD%^Text%^RESET%^";
     expect_function("strip_colour", testOb);
@@ -192,8 +198,8 @@ void test_identify () {
 
 void test_wrap () {
     string *values = ({}), *results = ({});
-    string linewrap = "\e[0;37;40m\n"; // @TODO when unknown ansi
-    // string linewrap = "\n";
+    // string linewrap = "\e[0;37;40m\n"; // @TODO when unknown ansi
+    string linewrap = "\n";
 
     expect_function("wrap", testOb);
 
@@ -214,12 +220,17 @@ void test_wrap () {
     values += ({ testOb->wrap("test", -10) });
     results += ({ "test" });
 
+    __MockAccount = new(STD_ACCOUNT);
+    __MockAccount->set_setting("ansi", "on");
+
     values += ({ testOb->wrap("%^BOLD_OFF%^test", 80) });
     results += ({ "\e[22mtest" });
     values += ({ testOb->wrap("%^RED%^test%^RESET%^", 80) });
     results += ({ "\e[31mtest\e[0;37;40m" });
 
     expect_arrays_equal (values, results, "wrap handled wrapping");
+
+    destruct(__MockAccount);
 }
 
 void test_string_compare_same_until () {
