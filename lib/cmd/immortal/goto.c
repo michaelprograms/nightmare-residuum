@@ -16,9 +16,4 @@ void command (string input) {
         this_character()->handle_go(input, "teleport", "away");
         this_character()->describe_environment();
     }
-
-    // if (file_size(input) > 0) {
-    // } else {
-    //     write("File not found?\n");
-    // }
 }
