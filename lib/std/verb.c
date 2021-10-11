@@ -11,7 +11,6 @@ nosave private string __Verb = split_path(file_name())[1];
 protected varargs void add_rules (mixed *rules, mixed *syns) {
     foreach (string rule in rules) {
         parse_add_rule(__Verb, rule);
-        debug_message("adding parse rule: "+__Verb+" "+rule);
         if (!undefinedp(syns)) {
             foreach (string syn in syns) {
                 parse_add_synonym(syn, __Verb, rule);

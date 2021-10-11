@@ -5,11 +5,9 @@ inherit "/secure/user/shell.c";
 
 #include "user.h"
 
-#define CONNECT_TIMEOUT 60 // @TODO should be higher
+#define CONNECT_TIMEOUT 60
 
 nosave private int calloutHandle;
-
-
 
 /* --- interactive apply --- */
 
@@ -24,10 +22,15 @@ nomask void logon () {
 }
 
 nomask void net_dead () {
-    // @TODO
-
     if (query_account() && query_character()) {
-        query_account()->update_character_data(query_character()->query_key_name(), query_character_summary());
+        query_account()->update_character_data(query_character());
+        character_linkdead();
+    }
+    if (query_account()) {
+        destruct(query_account());
+    }
+    if (query_shell()) {
+        destruct(query_shell());
     }
 }
 
@@ -57,11 +60,12 @@ void receive_message (string type, string message) {
 /* --- interactive non-apply */
 
 nomask void reconnect () {
-    // @TODO
+    // @TODO - what calls this?
 }
 
 nomask void quit_character (int destructing) {
     write("Reality "+(random(2)?"explodes into an im":"implodes into an ex")+"plosion of irreality.\n");
+    // @TODO query_character()->handle_connection_status("quit");
     character_exit();
     shell_stop();
     flush_messages();
@@ -89,7 +93,9 @@ protected nomask int handle_login_commands (string input) {
 
 nomask varargs void handle_destruct (string message) {
     if (!undefinedp(calloutHandle)) remove_call_out(calloutHandle);
-    if (message) write(message);
+    if (message) message("system", message, this_object());
+    // @TODO destruct account/character/shell
+    flush_messages();
     destruct(this_object());
 }
 

@@ -1,6 +1,6 @@
 #include "user.h"
 
-nosave private object __Account = new("/std/account.c");
+nosave private object __Account;
 
 object query_account () { return __Account; }
 
@@ -58,10 +58,13 @@ protected nomask varargs void account_input (int state, mixed extra, string inpu
                 return;
             } else if (D_ACCOUNT->query_exists(input)) {
                 write("\nExisting account '"+input+"'...\n");
+                // @TODO check children(STD_ACCOUNT) and take over instead of destroy on net_dead?
+                __Account = new(STD_ACCOUNT);
                 __Account->set_name(input);
                 input_next((: account_input, STATE_ACCOUNT_PASSWORD, 0 :), PROMPT_PASSWORD_ENTER, 1);
             } else {
                 reset_connect_timeout();
+                __Account = new(STD_ACCOUNT);
                 __Account->set_name(input);
                 write("\nNew account '"+input+"'!\n");
                 write("You should pick a sensible and unique account name.\n");
@@ -180,7 +183,6 @@ protected nomask varargs void account_input (int state, mixed extra, string inpu
                 input_next((: account_input, STATE_CHARACTER_DELETE, 0 :), PROMPT_CHARACTER_DELETE);
             } else if (member_array(input, __Account->query_character_names()) > -1) {
                 set_character_name(input);
-                write("\n\nEntering as " + query_character()->query_name() + "...\n\n");
                 character_enter(0);
             } else {
                 write("Invalid input choice received.\n\n");
@@ -273,6 +275,19 @@ protected nomask varargs void account_input (int state, mixed extra, string inpu
                 write("Invalid password. Character deletion cancelled.\n");
             }
             display_account_menu();
+            break;
+
+        case STATE_CHARACTER_OVERRIDE:
+            reset_connect_timeout();
+            input_next((: account_input, STATE_CHARACTER_OVERRIDE_CONFIRM, input :), PROMPT_CHARACTER_OVERRIDE);
+            break;
+
+        case STATE_CHARACTER_OVERRIDE_CONFIRM:
+            if ((input = lower_case(input)) == "" || input[0..0] != "y") {
+                write("\nCanceled character connection override.\n");
+                return;
+            }
+            character_override();
             break;
 
         // case STATE_TYPE_ENTER:

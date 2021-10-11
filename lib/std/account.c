@@ -94,12 +94,15 @@ int query_has_playable_characters () {
 string *query_character_names () {
     return __AccountCharacterNames;
 }
-void update_character_data (string name, mapping info) {
-    debug_message("updating "+name+" with "+time_ago(info["last_action"])+" "+identify(info)+"\n");
-    __AccountCharacters[name]["type"] = info["type"];
-    __AccountCharacters[name]["level"] = info["level"];
-    __AccountCharacters[name]["last_action"] = info["last_action"];
-    __AccountCharacters[name]["last_location"] = info["last_location"];
+void update_character_data (object character) {
+    string name;
+    if (!character || !(name = character->query_key_name())) {
+        return;
+    }
+    __AccountCharacters[name]["type"] = character->query_type();
+    __AccountCharacters[name]["level"] = character->query_level();
+    __AccountCharacters[name]["last_action"] = character->query_last_action();
+    __AccountCharacters[name]["last_location"] = character->query_last_location();
     save_data();
 }
 

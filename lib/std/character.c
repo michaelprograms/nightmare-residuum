@@ -32,9 +32,9 @@ void receive_message (string type, string message) {
 object query_user () {
     return __User;
 }
-void set_user (object account) {
+void set_user (object user) {
     // @TODO security?
-    __User = account;
+    __User = user;
 }
 void update_last_action () { // @TODO set_last_action?
     __LastAction = time();
