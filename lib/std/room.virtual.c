@@ -99,3 +99,48 @@ object virtual_create (string arg) {
 
     return room;
 }
+
+varargs string *query_map (mixed mode) {
+    string *lines;
+    string strx, stry;
+    int thisx, thisy;
+    int ax, ay, bx, by;
+
+    if (sscanf(split_path(base_name(previous_object()))[1], "%s.%s", strx, stry) != 2) {
+        return 0;
+    }
+    thisx = to_int(strx);
+    thisy = to_int(stry);
+
+    lines = ({});
+
+    if (undefinedp(mode) || mode == "room") {
+        ax = thisx - 2;
+        bx = thisx + 2;
+        ay = thisy - 2;
+        by = thisy + 2;
+    } else if (mode == "all") {
+        ax = 0;
+        bx = __MaxX;
+        ay = 0;
+        by = __MaxY;
+    }
+
+    for (int y = ay; y <= by; y ++) {
+        string *rooms = ({});
+        for (int x = ax; x <= bx; x ++) {
+            if (__LayoutMap[x] && __LayoutMap[x][y]) {
+                if (thisx == x && thisy == y) {
+                    rooms += ({ "[X]" });
+                } else {
+                    rooms += ({ "[ ]" });
+                }
+            } else {
+                rooms += ({ "   " });
+            }
+        }
+        lines += ({ implode(rooms, "") });
+    }
+
+    return lines;
+}
