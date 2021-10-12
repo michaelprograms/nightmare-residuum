@@ -49,17 +49,12 @@ string *testObjectFns = ({ }), *testObjectUntestedFns = ({ });
 
 private void handle_untested_functions () {
     string log = "";
-    // foreach (string fn in testObjectFns) {
-    //     if (member_array(fn, testObjectUntestedFns) == -1) {
-    //         log += "    " + GREEN + "+" + RESET + " " + fn + "\n";
-    //     }
-    // }
     foreach (string fn in testObjectUntestedFns) {
         log += "    " + RED + "?" + RESET + " " + fn + "\n";
     }
-    write("\n  " + UNDERLINE + BOLD + "Untested Functions" + RESET+"\n");
-    if (strlen(log) > 0) write(log+"\n");
-    else write("    " + RED + "x" + RESET + " no function found\n"+"\n");
+    if (strlen(log) > 0) {
+        write("\n  " + UNDERLINE + BOLD + "Untested Functions" + RESET + "\n" + log);
+    }
 }
 
 public int execute_test (function done) {
