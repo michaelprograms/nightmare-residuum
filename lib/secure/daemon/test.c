@@ -54,7 +54,7 @@ void process_all () {
         write("Passed:    " + sprintf("%3d", totalPassed) + " / " + sprintf("%3d", totalExpects) + " (" + sprintf("%3d", to_int(totalPassed * 100 / totalExpects)) + "%)"+"\n");
         write("Failed:    " + sprintf("%3d", totalFailed) + " / " + sprintf("%3d", totalExpects) + " (" + sprintf("%3d", to_int(totalFailed * 100 / totalExpects)) + "%)"+"\n");
         write("Functions: " + sprintf("%3d", totalFnsTested) + " / " + sprintf("%3d", (totalFnsTested + totalFnsUntested)) + " (" + sprintf("%3d", to_int(totalFnsTested * 100 / (totalFnsTested + totalFnsUntested))) + "%)"+"\n");
-        write("Time:      " + (timeAfter - timeBefore) + " ms for "+totalTests+" tests\n");
+        write("Time:      " + (timeAfter - timeBefore) + " ms for "+totalTests+" tests\n\n");
         // call_out((: watch_all :), 2, 0);
         if (shutdownAfterTests) {
             shutdown(totalFailed > 0 ? -1 : 0);
