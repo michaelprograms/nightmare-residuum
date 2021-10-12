@@ -132,6 +132,16 @@ void update_test_data (string path) {
 
 varargs void run (int callShutdown) {
 
+    remove_call_out();
+    currentTest = 0;
+    totalTests = 0;
+    totalFiles = 0;
+    totalPassed = 0;
+    totalFailed = 0;
+    totalFnsTested = 0;
+    totalFnsUntested = 0;
+    __Tests = ([]);
+
     shutdownAfterTests = callShutdown;
 
     write("Scanning for test files...\n");
