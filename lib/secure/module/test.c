@@ -47,16 +47,6 @@ protected expect_next_failure () {
 
 string *testObjectFns = ({ }), *testObjectUntestedFns = ({ });
 
-private void handle_untested_functions () {
-    string log = "";
-    foreach (string fn in testObjectUntestedFns) {
-        log += "    " + RED + "?" + RESET + " " + fn + "\n";
-    }
-    if (strlen(log) > 0) {
-        write("\n  " + UNDERLINE + BOLD + "Untested Functions" + RESET + "\n" + log);
-    }
-}
-
 public int execute_test (function done) {
     string *testFns, *otherTestFns;
     int timeBefore, timeAfter;
@@ -72,7 +62,7 @@ public int execute_test (function done) {
     failingExpects = 0;
     passingExpects = 0;
 
-    write("Evaluating '" + CYAN + UNDERLINE + file_name(this_object()) + RESET + "'"+"\n");
+    write("\nEvaluating '" + CYAN + UNDERLINE + file_name(this_object()) + RESET + "'"+"\n");
     before_all_tests();
     foreach (string testFn in testFns) {
         currentTestLog = "";
@@ -95,7 +85,12 @@ public int execute_test (function done) {
 
     after_all_tests();
     write("  " + passingExpects + " Pass " + (failingExpects ? failingExpects + " Fail" : "")+"\n");
-    handle_untested_functions();
+    if (sizeof(testObjectUntestedFns) > 0) {
+        write("  " + UNDERLINE + BOLD + "Untested Functions" + RESET + "\n");
+        foreach (string fn in testObjectUntestedFns) {
+            write("    " + RED + "?" + RESET + " " + fn + "\n");
+        }
+    }
     evaluate(done, sizeof(testFns), passingExpects, failingExpects, sizeof(testObjectFns), sizeof(testObjectUntestedFns));
 }
 

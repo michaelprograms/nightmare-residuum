@@ -134,10 +134,10 @@ varargs void run (int callShutdown) {
 
     shutdownAfterTests = callShutdown;
 
+    write("Scanning for test files...\n");
     update_test_data("/secure/");
     update_test_data("/daemon/");
     update_test_data("/std/");
-    write(""+"\n");
 
     tests = keys(__Tests);
     tests = sort_array(tests, function(string a, string b) {
