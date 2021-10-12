@@ -48,13 +48,13 @@ void process_all () {
             call_out(function() { tests[currentTest]->execute_test((: done :)); }, 0);
         }
     } else {
+        int totalExpects = totalPassed + totalFailed;
         timeAfter = rusage()["utime"] + rusage()["stime"];
-        write("  Files:     " + currentTest + " / " + totalFiles + " (" + to_int(currentTest * 100 / totalFiles) + "%)"+"\n");
-        write("  Tests:     " + totalTests+"\n");
-        write("  Passed:    " + totalPassed + " / " + (totalPassed + totalFailed) + " (" + to_int(totalPassed * 100 / (totalPassed + totalFailed)) + "%)"+"\n");
-        write("  Failed:    " + totalFailed + " / " + (totalPassed + totalFailed) + " (" + to_int(totalFailed * 100 / (totalPassed + totalFailed)) + "%)"+"\n");
-        write("  Functions: " + totalFnsTested + " / " + (totalFnsTested + totalFnsUntested) + " (" + to_int(totalFnsTested * 100 / (totalFnsTested + totalFnsUntested)) + "%)"+"\n");
-        write("  Time:      " + (timeAfter - timeBefore) + " ms"+"\n");
+        write("\nFiles:     " + sprintf("%3d", currentTest) + " / " + sprintf("%3d", totalFiles) + " (" + sprintf("%3d", to_int(currentTest * 100 / totalFiles)) + "%)"+"\n");
+        write("Passed:    " + sprintf("%3d", totalPassed) + " / " + sprintf("%3d", totalExpects) + " (" + sprintf("%3d", to_int(totalPassed * 100 / totalExpects)) + "%)"+"\n");
+        write("Failed:    " + sprintf("%3d", totalFailed) + " / " + sprintf("%3d", totalExpects) + " (" + sprintf("%3d", to_int(totalFailed * 100 / totalExpects)) + "%)"+"\n");
+        write("Functions: " + sprintf("%3d", totalFnsTested) + " / " + sprintf("%3d", (totalFnsTested + totalFnsUntested)) + " (" + sprintf("%3d", to_int(totalFnsTested * 100 / (totalFnsTested + totalFnsUntested))) + "%)"+"\n");
+        write("Time:      " + (timeAfter - timeBefore) + " ms for "+totalTests+" tests\n");
         // call_out((: watch_all :), 2, 0);
         if (shutdownAfterTests) {
             shutdown(totalFailed > 0 ? -1 : 0);
