@@ -11,6 +11,7 @@ private void set_character_name (string name) {
         __Character = clone_object(STD_CHARACTER);
         __Character->set_user(this_object());
     }
+    // @TODO check if already have a name?
     if (name) {
         __Character->set_name(capitalize(name));
         // __Character->set_key_name(sanitize_name(name)); // @TODO this should be automatic when sanitize_name is a sefun
@@ -53,10 +54,9 @@ nomask private void character_enter (int newbie) {
             destruct(__Character);
             __Character = char;
             __Character->set_user(this_object());
-            write("\n\nReturning " + __Character->query_name() + " from linkdeath...\n\n");
             this_object()->shell_start();
-            __Character->handle_move(__Character->query_last_environment());
-            __Character->describe_environment();
+            write("\n\nReturning " + __Character->query_name() + " from linkdeath...\n\n");
+            __Character->exit_freezer();
             return;
         }
     } else { // fresh login
@@ -116,6 +116,5 @@ nomask protected void character_exit () {
 
 nomask protected void character_linkdead () {
     __Character->update_last_action();
-    message("system", __Character->query_name()+" suddenly fades from existance.\n", environment(__Character)->query_living_contents(), __Character);
-    __Character->handle_move("/domain/Nowhere/freezer.c");
+    __Character->enter_freezer();
 }

@@ -5,7 +5,6 @@
 nomask void logon ();
 nomask void net_dead ();
 void receive_message (string type, string message);
-nomask void reconnect (); // @TODO ?
 nomask void quit_character (int destructing);
 nomask void quit_account ();
 nomask void reset_connect_timeout ();
@@ -62,6 +61,8 @@ private void set_character_name (string name);
 private void set_character_type (string type);
 string query_character_type ();
 object query_character ();
+int query_immortal ();
+void set_immortal (int i);
 nomask private void character_enter (int newbie);
 nomask private void character_override ();
 nomask protected void character_exit ();

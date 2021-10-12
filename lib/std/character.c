@@ -60,13 +60,26 @@ void enter_world () {
     } else {
         handle_move("/domain/Nowhere/void.c");
     }
+    message("connection", this_object()->query_name()+" enters "+mud_name()+".\n", environment()->query_living_contents(), this_object());
     describe_environment();
 }
 
 void exit_world () {
+    message("connection", this_object()->query_name()+" exits "+mud_name()+".\n", environment()->query_living_contents(), this_object());
     save_data();
     master()->handle_parse_refresh();
-    destruct(); // @TODO handle_remove
+    handle_remove();
+}
+
+void enter_freezer () {
+    message("connection", this_object()->query_name()+" suddenly fades from existence.\n", environment()->query_living_contents(), this_object());
+    handle_move("/domain/Nowhere/freezer.c");
+}
+
+void exit_freezer () {
+    handle_move(query_last_environment());
+    message("connection", this_object()->query_name()+" suddenly appears from existence.\n", environment()->query_living_contents(), this_object());
+    describe_environment();
 }
 
 // -----------------------------------------------------------------------------
