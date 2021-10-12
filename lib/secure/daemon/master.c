@@ -400,7 +400,12 @@ varargs int valid_override (string file, string efun_name, string main_file) {
 // valid_shadow
 
 // valid_socket
-
+int valid_socket (object caller, string fn, mixed *info) {
+    int valid = 0;
+    if (regexp(file_name(caller), "/secure/daemon/ipc") > 0) valid = 1;
+    // @TODO D_ACCESS->query_allowed(caller, fn, 0, "socket")
+    return valid;
+}
 
 /*
 Read efuns:
