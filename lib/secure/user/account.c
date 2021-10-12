@@ -48,7 +48,7 @@ protected nomask varargs void account_input (int state, mixed extra, string inpu
 
         case STATE_ACCOUNT_HANDLE:
             if (!input || input == "") {
-                return handle_destruct("\nInvalid entry. Connection terminated.\n");
+                return handle_remove("\nInvalid entry. Connection terminated.\n");
             }
             if (this_object()->handle_login_commands(input)) return; // @TODO clean this up
             if (!D_ACCOUNT->query_valid_name(input)) {
@@ -80,7 +80,7 @@ protected nomask varargs void account_input (int state, mixed extra, string inpu
             if ((input = lower_case(input)) == "" || input[0..0] != "y") {
                 __Account->set_name(0);
                 if (extra >= 2) {
-                    return handle_destruct("\nInvalid entry. Connection terminated.\n");
+                    return handle_remove("\nInvalid entry. Connection terminated.\n");
                 }
                 write("\nCanceled new account.\n");
                 input_next((: account_input, STATE_ACCOUNT_HANDLE, ++extra :), PROMPT_ACCOUNT_ENTER);
@@ -159,7 +159,7 @@ protected nomask varargs void account_input (int state, mixed extra, string inpu
             } else {
                 write("Invalid password.\n");
                 if (extra >= 2) {
-                    return handle_destruct("\nInvalid entry. Connection terminated.\n");
+                    return handle_remove("\nInvalid entry. Connection terminated.\n");
                 }
                 input_next((: account_input, STATE_ACCOUNT_PASSWORD, ++extra :), PROMPT_PASSWORD_ENTER, 1);
             }
@@ -169,7 +169,7 @@ protected nomask varargs void account_input (int state, mixed extra, string inpu
                 display_account_menu();
             } else if (input == "exit") {
                 __Account->set_last_on();
-                handle_destruct("\nExiting account. Connection closed.\n");
+                handle_remove("\nExiting account. Connection closed.\n");
             } else if (input == "settings") {
                 write("\nAccount Settings\n\n");
                 account_input(STATE_SETTINGS_ENTER);
@@ -199,12 +199,12 @@ protected nomask varargs void account_input (int state, mixed extra, string inpu
         case STATE_CHARACTER_HANDLE:
             if (!input || input == "") {
                 if (extra >= 2) {
-                    return handle_destruct("\nInvalid entry. Connection terminated.\n");
+                    return handle_remove("\nInvalid entry. Connection terminated.\n");
                 }
             } else {
                 if (input && input == "exit") {
                     __Account->set_last_on();
-                    handle_destruct("\nExiting account. Connection closed.\n");
+                    handle_remove("\nExiting account. Connection closed.\n");
                 }
                 if (!D_CHARACTER->query_valid_name(input)) {
                     write("\nThe character '"+input+"' is not a valid name for new characters.\n");
@@ -227,7 +227,7 @@ protected nomask varargs void account_input (int state, mixed extra, string inpu
             if ((input = lower_case(input)) == "" || input[0..0] != "y") {
                 set_character_name(0);
                 if (extra >= 2) {
-                    return handle_destruct("\nInvalid entry. Connection terminated.\n");
+                    return handle_remove("\nInvalid entry. Connection terminated.\n");
                 }
                 write("\nCanceled new character.\n");
                 input_next((: account_input, STATE_CHARACTER_HANDLE, ++extra :), PROMPT_CHARACTER_ENTER);

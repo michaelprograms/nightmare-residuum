@@ -81,7 +81,7 @@ nomask void quit_account () {
 
 nomask void reset_connect_timeout () {
     if (!undefinedp(calloutHandle)) remove_call_out(calloutHandle);
-    calloutHandle = call_out((: handle_destruct, "\nTime exceeded. Connection terminated.\n" :), CONNECT_TIMEOUT);
+    calloutHandle = call_out((: handle_remove, "\nTime exceeded. Connection terminated.\n" :), CONNECT_TIMEOUT);
 }
 
 protected nomask int handle_login_commands (string input) {
@@ -91,7 +91,7 @@ protected nomask int handle_login_commands (string input) {
     return 0;
 }
 
-nomask varargs void handle_destruct (string message) {
+nomask varargs void handle_remove (string message) {
     if (!undefinedp(calloutHandle)) remove_call_out(calloutHandle);
     if (message) message("system", message, this_object());
     // @TODO destruct account/character/shell

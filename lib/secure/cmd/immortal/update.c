@@ -25,8 +25,8 @@ void command (string input) {
                 }
             }
         }
-        write("Attempting ob->handle_destruct()...\n");
-        ob->handle_destruct();
+        write("Attempting ob->handle_remove()...\n");
+        ob->handle_remove();
     }
     if (ob) {
         write("Attempting destruct(ob)...\n");

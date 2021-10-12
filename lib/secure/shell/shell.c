@@ -28,7 +28,7 @@ void create () {
     alias::create();
 }
 
-void handle_destruct () {
+void handle_remove () {
     if (origin() != ORIGIN_LOCAL && __User && __User != previous_object()) {
         error("illegal attempt to remove shell object?");
     }
@@ -56,7 +56,7 @@ void execute_command (string input) {
 }
 
 protected void shell_input (mixed input) {
-    if (input == -1) return handle_destruct();
+    if (input == -1) return handle_remove();
 
     input = trim(input);
     if (input == "") return;

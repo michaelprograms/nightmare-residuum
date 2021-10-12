@@ -13,6 +13,6 @@ protected nomask void shell_start () {
 
 protected nomask void shell_stop () {
     if (__Shell) {
-        __Shell->handle_destruct();
+        __Shell->handle_remove();
     }
 }

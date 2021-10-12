@@ -3,7 +3,7 @@
 
 /* --- shell --- */
 void execute_command (string input);
-void handle_destruct ();
+void handle_remove ();
 protected void shell_input (mixed input);
 protected void shell_init ();
 protected mixed query_prompt ();

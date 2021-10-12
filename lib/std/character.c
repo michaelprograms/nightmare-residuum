@@ -66,7 +66,7 @@ void enter_world () {
 void exit_world () {
     save_data();
     master()->handle_parse_refresh();
-    destruct(); // @TODO handle_destruct
+    destruct(); // @TODO handle_remove
 }
 
 // -----------------------------------------------------------------------------

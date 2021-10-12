@@ -92,7 +92,7 @@ nomask private void character_override () {
     if (sizeof(chars) > 0 && (char = chars[0])) {
         destruct(__Character);
         // Notify and remove old user
-        char->query_user()->handle_destruct("\nYour connection has been overriden.\n\n");
+        char->query_user()->handle_remove("\nYour connection has been overriden.\n\n");
         char->set_user(this_object());
         __Character = char;
         write("\n\nOverriding connection of " + __Character->query_name() + "...\n\n");
