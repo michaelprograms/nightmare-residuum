@@ -71,20 +71,12 @@ string possessive_noun (mixed value) { // @TODO rename?
     }
 }
 
-// possessive pronoun of an object
-string possessive (mixed value) {
-    switch (objectp(value) ? value->query_gender() : value) {
-    case "male": return "his";
-    case "female": return "her";
-    default: return "its";
-    }
-}
-
 // subjective pronoun of an object
 string subjective (mixed value) {
     switch (objectp(value) ? value->query_gender() : value) {
     case "male": return "he";
     case "female": return "she";
+    case "neither": return "they"
     default: return "it";
     }
 }
@@ -94,15 +86,22 @@ string objective (mixed value) {
     switch (objectp(value) ? value->query_gender() : value) {
     case "male": return "him";
     case "female": return "her";
+    case "neither": return "them"
     default: return "it";
+    }
+}
+
+// possessive pronoun of an object
+string possessive (mixed value) {
+    switch (objectp(value) ? value->query_gender() : value) {
+    case "male": return "his";
+    case "female": return "hers";
+    case "neither": return "theirs"
+    default: return "its";
     }
 }
 
 // reflexive pronoun of an object
 string reflexive (mixed value) {
-    switch (objectp(value) ? value->query_gender() : value) {
-    case "male": return "himself";
-    case "female": return "herself";
-    default: return "itself";
-    }
+    return objective(value) + "self";
 }
