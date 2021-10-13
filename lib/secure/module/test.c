@@ -144,7 +144,7 @@ private string format_array_differences (mixed *actual, mixed *expect) {
 // message should start with the function being tested
 private void validate_expect (mixed value1, mixed value2, string message) {
     foreach (string fn in testObjectUntestedFns) {
-        if (strsrch(message, fn+" ") > -1) {
+        if (regexp(message, fn + "[ :(]") > 0) {
             testObjectUntestedFns -= ({ fn });
         }
     }
