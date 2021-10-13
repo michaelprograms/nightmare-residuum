@@ -1,8 +1,3 @@
-#define ANSI_RGB(r,g,b) "\e[38;2;"+r+";"+g+";"+b+"m"
-
-nosave private int __Generated = 0;
-nosave private string __Banner;
-
 float from_sRGB (int n) {
     float x = n / 255.0,  y;
     if (x <= 0.04045) y = x / 12.92;
@@ -50,7 +45,7 @@ string *get_color_ratio (int *color1, int *color2, int steps) {
     return color;
 }
 
-private void generate () {
+string query_banner () {
     int *c1 = ({
         random(255),
         random(255),
@@ -63,8 +58,8 @@ private void generate () {
     });
     string *lines;
     string text = "\e[0;37;40m"; // start with ANSI reset
-    string *colors;
-    int n = 0, r = 0;
+    string *colors = allocate(6); // left padding
+
     int clump = 0;
     string tmp;
     int pad;
@@ -78,22 +73,26 @@ private void generate () {
     pad = 40-strlen(tmp)/2;
     lines[<1] = lines[<1][0..pad-1] + tmp + lines[<1][80-pad+strlen(tmp)%2..79];
 
-    r = 255;
-    n = 64 + random(192);
-    r = r - n;
-    c1[0] = n;
-    n = random(r);
-    r = r - n;
-    c1[1] = n;
-    n = random(r);
-    r = r - n;
-    c1[2] = n;
-    c1 = shuffle(c1);
+    if (previous_object() && previous_object()->query_terminal_color() == 256) {
+        int r = 255;
+        int n = 64 + random(192);
+        r = r - n;
+        c1[0] = n;
+        n = random(r);
+        r = r - n;
+        c1[1] = n;
+        n = random(r);
+        r = r - n;
+        c1[2] = n;
+        c1 = shuffle(c1);
 
-    colors = allocate(6) + get_color_ratio(c1, c2, 34);
-
-    for(int i = sizeof(colors)-1; i > -1; i --) {
-        colors += ({ colors[i] });
+        colors += get_color_ratio(c1, c2, 34);
+        for(int i = sizeof(colors)-1; i > -1; i --) {
+            colors[i] = "\e[38;2;"+colors[i]+"m";
+            colors += ({ colors[i] });
+        }
+    } else { // 16 bit mode
+        colors += allocate(68, "\e[33m");
     }
 
     for (int i = 0; i < sizeof(lines); i ++) {
@@ -103,31 +102,19 @@ private void generate () {
             } else if (lines[i][j..j] == ".") {
                 if (clump > 0) {
                     clump --;
-                    text += " "; // " "
+                    text += " ";
                 } else if (random(16)) {
-                    text += " "; // " "
+                    text += " ";
                 } else {
                     clump = 4;
                     text += "\e[0;37;40m.";
                 }
             } else if (lines[i][j..j] != " ") {
-                if (i > 0 && i < 8) text += "\e[38;2;"+colors[j]+"m";
+                if (i > 0 && i < 8) text += colors[j];
                 text += lines[i][j..j] + "\e[0;37;40m";
             } else text += " ";
         }
         text += "\n";
     }
-    __Banner = text;
-    __Generated = time();
-}
-
-string query_banner () {
-    // if (time() + 10 <= __Generated || __Generated == 0) {
-    //     generate();
-    // }
-    generate();
-    return __Banner;
-}
-int query_generated () {
-    return __Generated;
+    return text;
 }

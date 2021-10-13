@@ -8,17 +8,19 @@ inherit "/secure/user/shell.c";
 #define CONNECT_TIMEOUT 60
 
 nosave private int calloutHandle;
+nosave private string __TerminalType;
+nosave private int __TerminalColor = 256;
 
 /* --- interactive apply --- */
 
 nomask void logon () {
     debug_message(ctime()+" connect() from "+query_ip_number()); // @TODO LOG_D
 
-    call_out(function() {
+    calloutHandle = call_out_walltime(function () {
         receive_message("system", D_WELCOME->query_banner() + "\n");
         account_input();
         if (this_user() && interactive(this_user())) telnet_ga();
-    }, 0);
+    }, 0.5); // allow time for terminal_type to be called
 }
 
 nomask void net_dead () {
@@ -57,10 +59,39 @@ void receive_message (string type, string message) {
     }
 }
 
+void terminal_type (string term) {
+    __TerminalType = term;
+    // @TODO LOG_D->log_unique(term);
+
+    term = lower_case(explode(term, " ")[0]);
+    if (term == "mudslinger") {
+        __TerminalColor = 16;
+    }
+
+    if (!undefinedp(calloutHandle)) { // force prompt
+        remove_call_out(calloutHandle);
+        receive_message("system", D_WELCOME->query_banner() + "\n");
+        account_input();
+        if (this_user() && interactive(this_user())) telnet_ga();
+    }
+}
+
+void receive_environ (string var, string value) {
+    // Web clients send this
+    // if (var == "IPADDRESS") {
+    //     // @TODO use this instead of query_ip_address?
+    // }
+    // var can also be "CLIENT_NAME", "CLIENT_VERSION"
+
+}
+
 /* --- interactive non-apply */
 
-nomask void reconnect () {
-    // @TODO - what calls this?
+string query_terminal_type() {
+    return __TerminalType;
+}
+int query_terminal_color() {
+    return __TerminalColor;
 }
 
 nomask void quit_character (int destructing) {
