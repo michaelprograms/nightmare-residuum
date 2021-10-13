@@ -67,6 +67,8 @@ void test_pluralize () {
     expect_function("pluralize", testOb);
 
     // test parameter as string
+    values = ({});
+    results = ({});
     values += ({ testOb->pluralize("elf") });
     results += ({ "elves" });
     values += ({ testOb->pluralize("staff") });
@@ -83,8 +85,11 @@ void test_pluralize () {
     results += ({ "flooblecranks" });
     values += ({ testOb->pluralize("bloobleyank") });
     results += ({ "bloobleyanks" });
+    expect_arrays_equal(values, results, "pluralize handled strings");
 
     // test parameter as object
+    values = ({});
+    results = ({});
     ob = new(STD_OBJECT);
     ob->set_name("tester");
     values += ({ testOb->pluralize(ob) });
@@ -93,8 +98,7 @@ void test_pluralize () {
     // ob->set_plural_name("gaggle of testers")
     // values += ({ testOb->(ob) });
     // results += ({ "gaggle of testers" });
-
-    expect_arrays_equal(values, results, "pluralize handled words");
+    expect_arrays_equal(values, results, "pluralize handled objects");
 }
 
 void test_consolidate () {
@@ -117,5 +121,47 @@ void test_consolidate () {
     values += ({ testOb->consolidate(-54321, "care") });
     results += ({ "negative fifty-four thousand, three hundred and twenty-one cares" });
 
-    expect_arrays_equal(values, results, "pluralize handled words");
+    expect_arrays_equal(values, results, "consolidate handled words");
+}
+
+void test_possessive_noun () {
+    string *values, *results;
+    object ob;
+
+    expect_function("possessive_noun", testOb);
+
+    // test parameter as a string
+    values = ({});
+    results = ({});
+    values += ({ testOb->possessive_noun() });
+    results += ({ "Its" });
+    values += ({ testOb->possessive_noun("Name") });
+    results += ({ "Name's" });
+    values += ({ testOb->possessive_noun("Hermes") });
+    results += ({ "Hermes'" });
+    values += ({ testOb->possessive_noun("Shax") });
+    results += ({ "Shax'" });
+    values += ({ testOb->possessive_noun("Chaz") });
+    results += ({ "Chaz'" });
+    expect_arrays_equal(values, results, "possessive_noun handled names");
+
+    // test parameter as an object
+    values = ({});
+    results = ({});
+    ob = new(STD_OBJECT);
+    values += ({ testOb->possessive_noun() });
+    results += ({ "Its" });
+    ob->set_name("Name");
+    values += ({ testOb->possessive_noun(ob) });
+    results += ({ "Name's" });
+    ob->set_name("Hermes");
+    values += ({ testOb->possessive_noun(ob) });
+    results += ({ "Hermes'" });
+    ob->set_name("Shax");
+    values += ({ testOb->possessive_noun(ob) });
+    results += ({ "Shax'" });
+    ob->set_name("Chaz");
+    values += ({ testOb->possessive_noun(ob) });
+    results += ({ "Chaz'" });
+    expect_arrays_equal(values, results, "possessive_noun handled objects");
 }
