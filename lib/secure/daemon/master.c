@@ -4,6 +4,7 @@
 
 // --- master ------------------------------------------------------------------
 
+// This apply is called when a new user connects to the driver.
 object connect (int port) {
     object ob;
     string err;
@@ -20,18 +21,7 @@ object connect (int port) {
     return ob;
 }
 
-// privs_file
-/*
-    The privs_file() function is called in the master  object  when  a  new
-    file  is  created.  The 'filename' of the object is passed as the argu‐
-    ment, and the string that privs_file()  returns  is  used  as  the  new
-    object's privs string.
-
-    The  privs_file() functionality is only available if the driver is com‐
-    piled with the PRIVS option defined.
-
-    string privs_file(string filename);
-*/
+// This apply is called when a new file is created to determine privilege
 string privs_file (string filename) {
     return D_ACCESS->query_file_privs(filename);
 }
@@ -48,10 +38,9 @@ string *epilog (int load_empty) {
     return preload;
 }
 
-// This apply is called for each command line option passed to the driver with the -f flag.
+// This apply is called for each driver command line option passed via -f.
 void flag (string flag) {
     if (flag == "test") {
-        // catch("/secure/test/tests.c"->run());
         call_out(function() { D_TEST->run(1); }, 0);
     } else {
         debug_message("master()->flag: received unknown flag.");
@@ -63,6 +52,7 @@ void preload (string filename) {
     catch(load_object(filename));
 }
 
+// This apply is called by the driver during MSSP requests.
 mapping get_mud_stats () {
     return ([
         /* --- Required --- */
@@ -124,23 +114,7 @@ mapping get_mud_stats () {
 
 // --- build applies -----------------------------------------------------------
 
-// compile_object
-/*
-    The driver  calls  compile_object(3)  in  the  event  that  the  mudlib
-    instructs  the driver to load a file that does not exist.  For example,
-    the driver will call compile_object("/obj/file.r")  in  master  if  the
-    mudlib     calls    call_other("/obj/file.r",    "some_function")    or
-    new("/obj/file.r") and /obj/file.r.c names a file that does not  exist.
-    The  compile_object()  function  is  expected to return 0 if the mudlib
-    does not wish to associate an object with the file name  "/obj/file.r".
-    If  the  mudlib  does  wish  to  associate  an object with the filename
-    "/obj/file.r", then the mudlib should return the object it wishes asso‐
-    ciated.  After an association is made between an object and a filename,
-    then it will be as if the file, file.r.c, did exist (to the driver) and
-    when loaded produced the object that compile_object() returned.
-
-    object compile_object(string pathname);
-*/
+// This apply is called on non-existant files that could be virtually created.
 object compile_object (string path) {
     object ob;
     string area, room, vpath;
@@ -159,21 +133,14 @@ object compile_object (string path) {
     return 0;
 }
 
-// object_name
-/*
-    This  master  apply  is called by the sprintf() efun, when printing the
-    "value" of an object.  This function should return a string correspond‐
-    ing to the name of the object (eg a user's name).
-
-    string object_name(object ob);
-*/
+// This apply is called by the sprintf efun when printing an object.
 string object_name (object ob) {
     if (!ob) return "<destructed>";
     else if (interactive(ob)) return ob->query_key_name() + " <interactive>";
     return 0;
 }
 
-// Add directory relative header files.
+// This apply is called to determine directory relative header file paths.
 string *get_include_path (string file) {
     string *path = explode(file, "/"), *paths = ({ ":DEFAULT:" });
     switch (path[0]) {
@@ -189,7 +156,7 @@ string *get_include_path (string file) {
 
 // --- error applies -----------------------------------------------------------
 
-// Shutdown before driver crashes from segmentation fault or other error.
+// This apply is called when shutting down the driver.
 void crash (string crash_message, object command_giver, object current_object) {
     debug_message(ctime() + " crashed because " + crash_message + " " + identify(call_stack()) + " " + identify(previous_object(-1)));
     message("system", "Reality collapses.\n", users());
@@ -223,7 +190,7 @@ private varargs string standard_trace (mapping e, int flag) {
     return ret;
 }
 
-// Handles caught and runtime errors for the driver.
+// This apply is called to handle caught and runtime errors.
 void error_handler (mapping e, int caught) {
     string ret, file = caught ? "catch" : "runtime";
 
@@ -241,26 +208,17 @@ void error_handler (mapping e, int caught) {
     // CHAT_D->do_chat("runtime", ret , 2 , 0);
     if (this_user(1) && !this_user()->query_property("updating")) {
         tell_object(this_user(1), sprintf("%sTrace written to /log/%s\n", e["error"], (caught ? "catch" : "runtime")));
-        // this_user(1)->set_error(e);
     }
     return 0;
 }
 
-/*
-    Whenever  an error occurs during compilation, the function log_error in
-    the master object is called with the filename that the  error  occurred
-    in  and  the error message itself.  Then, log_error is free to do what‐
-    ever it thinks it should do with that  information.   Usually  this  is
-    deciding  based  on  the  filename  where  the  error message should be
-    logged, and then writing it to that file.
-
-    void log_error(string file, string message);
-*/
 private string *read_file_disabled_warnings (string file) {
     string *lines = file_size(file) > 0 ? explode(read_file(file), "\n") : ({});
     lines = filter_array(lines, (: regexp($1,"// disable warning:") :));
     return map_array(lines, (: $1[strsrch($1, ": ")+2..<1] :));
 }
+
+// This apply is called when an error occurs during compilation of a file.
 void log_error (string file, string msg) {
     string dest, lcMsg, nom, tmp;
 
@@ -302,13 +260,7 @@ void log_error (string file, string msg) {
     string get_save_file_name(string filename?);
 */
 
-// make_path_absolute
-/*
-    This  master apply is called by the ed() efun to resolves relative path
-    names of a file to read/write, to an absolute path name.
-
-    string make_path_absolute(string rel_path);
-*/
+// This apply is called by the ed efun to resolve path names.
 string make_path_absolute (string rel_path) {
     return sanitize_path(rel_path);
 }
@@ -320,6 +272,7 @@ string make_path_absolute (string rel_path) {
     (contained in an int).
 
     int retrieve_ed_setup(object user);
+    user->query_ed()
 */
 
 // save_ed_setup
@@ -329,36 +282,7 @@ string make_path_absolute (string rel_path) {
     return an int for success (1 or TRUE)/failure (0 or FALSE).
 
     int save_ed_setup(object user, int config);
-*/
-
-/*
-Dead Souls:
-int save_ed_setup(object who, int code) {
-    string file;
-
-    if(!intp(code)) return 0;
-    rm(file = user_path(who->GetKeyName())+".edrc");
-    return write_file(file, code+"");
-}
-
-int retrieve_ed_setup(object who) {
-    string file;
-
-    file = user_path(who->GetKeyName())+".edrc";
-    if(!file_exists(file)) return 0;
-    return to_int(read_file(file));
-}
-
-Lima:
-
-private int save_ed_setup(object who, int code) {
-  who->set_ed_setup(code);
-  return 1;
-}
-
-private int retrieve_ed_setup(object who) {
-  return who->query_ed_setup();
-}
+    user->set_ed(config)
 */
 
 // --- valid applies -----------------------------------------------------------
@@ -373,7 +297,7 @@ private int retrieve_ed_setup(object who) {
 
 // valid_object
 
-// Controls the use of efun:: prefix.
+// This apply controls the use of efun:: prefix.
 varargs int valid_override (string file, string efun_name, string main_file) {
     if (file[0] != '/') return 0;
 
@@ -394,7 +318,7 @@ varargs int valid_override (string file, string efun_name, string main_file) {
 
 // valid_shadow
 
-// valid_socket
+// This apply is called prior to every socket efun.
 int valid_socket (object caller, string fn, mixed *info) {
     int valid = 0;
     if (regexp(file_name(caller), "/secure/daemon/ipc") > 0) valid = 1;
@@ -412,25 +336,22 @@ Write efuns:
     debugmalloc, dumpallobj, mkdir, remove_file, rename, rmdir,
     save_object, sqlite3_connect, trace_start, write_bytes, write_file,
 */
-int valid_read(string file, mixed caller, string fn) {
+// This apply is called for each of the read efuns
+int valid_read (string file, mixed caller, string fn) {
     int valid = 0;
     file = sanitize_path(file);
     if (regexp(file_name(caller), "/secure/daemon/master") > 0) valid = 1; // @TODO this_object()
     else if (regexp(file_name(caller), "/secure/daemon/access") > 0) valid = 1;
-    else {
-        valid = D_ACCESS->query_allowed(caller, fn, file, "read");
-    }
-    if (!valid) debug_message("master()->valid_read " + file + " " + file_name(caller) + " gets " + valid);
+    else valid = D_ACCESS->query_allowed(caller, fn, file, "read");
     return valid;
 }
-int valid_write(string file, mixed caller, string fn) {
+// This apply is called for each of the write efuns
+int valid_write (string file, mixed caller, string fn) {
     int valid = 0;
     file = sanitize_path(file);
     if (regexp(file_name(caller), "/secure/daemon/master") > 0) valid = 1; // @TODO this_object()
     else if (regexp(file_name(caller), "/secure/daemon/access") > 0) valid = 1;
-    else {
-        valid = D_ACCESS->query_allowed(caller, fn, file, "write");
-    }
+    else valid = D_ACCESS->query_allowed(caller, fn, file, "write");
     return valid;
 }
 
@@ -463,28 +384,11 @@ string *parse_command_prepos_list () {
 string parse_command_all_word () {
     return "all";
 }
-/*
-    This should return a list of living objects that can be refered to by
-    commands that match remote living objects. Normally the objects
-    examined when parsing a string are obtained from the deep_inventory()
-    of the environment of the object that called parse_sentence() however
-    in some cases you want commands to be able to match players who are not
-    in the same room. This apply should return valid "remote living" objects.
-    The response to this call is cached, and if it should change (e.g.
-    someone logs in or out) then parse_refresh() must be called.
-*/
+// A list of objects that can match remote living objects.
 object *parse_command_users () {
     return users()->query_character(); // @TODO characters() efun?
 }
-/*
-    This apply is called by the parser to generate intelligent error
-    messages in cases where rules have been "nearly matched". The
-    parameters passed are the error code (defined in an parser_errors.h file
-    packaged with fluffos), the object concerned (if known), data about the
-    error (dependent on the error code) and whether or not the error was a
-    "plural" error or not (i.e. the error data represents more than one
-    object).
-*/
+// This apply is called to generate error responses to user input.
 string parser_error_message (int type, object ob, mixed arg, int plural) {
     string err;
     object tmpob;
@@ -580,9 +484,7 @@ string parser_error_message (int type, object ob, mixed arg, int plural) {
     return err;
 }
 
-/*
-    This function is called whenever characters enter or exit the world.
-*/
+// This function is called whenever characters enter or exit the world.
 void handle_parse_refresh () {
     parse_refresh();
 }
