@@ -125,7 +125,8 @@ protected nomask int handle_login_commands (string input) {
 nomask varargs void handle_remove (string message) {
     if (!undefinedp(calloutHandle)) remove_call_out(calloutHandle);
     if (message) message("system", message, this_object());
-    // @TODO destruct account/character/shell
+    if (query_shell()) shell_stop();
+    if (query_character()) quit_character(1);
     flush_messages();
     destruct(this_object());
 }
