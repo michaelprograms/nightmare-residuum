@@ -43,10 +43,9 @@ int query_last_action () {
     return __LastAction;
 }
 
-void setup () {
+void setup_character () {
     __LastAction = time();
-    // write("__User: "+identify(__User)+"\n");
-    if (!D_CHARACTER->query_exists(this_object()->query_key_name())) {
+    if (!D_CHARACTER->query_exists(query_key_name())) {
         save_data();
     } else {
         restore_data();
@@ -60,25 +59,25 @@ void enter_world () {
     } else {
         handle_move("/domain/Nowhere/void.c");
     }
-    message("connection", this_object()->query_name()+" enters "+mud_name()+".\n", environment()->query_living_contents(), this_object());
+    message("connection", query_name()+" enters "+mud_name()+".\n", environment()->query_living_contents(), this_object());
     describe_environment();
 }
 
 void exit_world () {
-    message("connection", this_object()->query_name()+" exits "+mud_name()+".\n", environment()->query_living_contents(), this_object());
+    message("connection", query_name()+" exits "+mud_name()+".\n", environment()->query_living_contents(), this_object());
     save_data();
     master()->handle_parse_refresh();
     handle_remove();
 }
 
 void enter_freezer () {
-    message("connection", this_object()->query_name()+" suddenly fades from existence.\n", environment()->query_living_contents(), this_object());
+    message("connection", query_name()+" suddenly fades from existence.\n", environment()->query_living_contents(), this_object());
     handle_move("/domain/Nowhere/freezer.c");
 }
 
 void exit_freezer () {
     handle_move(query_last_environment());
-    message("connection", this_object()->query_name()+" suddenly appears from existence.\n", environment()->query_living_contents(), this_object());
+    message("connection", query_name()+" suddenly appears from existence.\n", environment()->query_living_contents(), this_object());
     describe_environment();
 }
 

@@ -60,7 +60,7 @@ nomask private void character_enter (int newbie) {
             return;
         }
     } else { // fresh login
-        __Character->setup(); // this calls restore_data/save_data
+        __Character->setup_character(); // this calls restore_data/save_data
 
         if (newbie) {
             if (__Character->query_type() == "human") {
@@ -70,14 +70,12 @@ nomask private void character_enter (int newbie) {
             }
         }
 
-        this_object()->shell_start();
+        shell_start();
         __Character->enter_world();
 
         if (newbie) {
             set_immortal(1); // @TODO FTUE
-            // @TODO init_stats
             __Character->save_data();
-            // @TODO init user?
         }
     }
 }
@@ -93,8 +91,8 @@ nomask private void character_override () {
         destruct(__Character);
         // Notify and remove old user
         char->query_user()->handle_remove("\nYour connection has been overriden.\n\n");
-        char->set_user(this_object());
         __Character = char;
+        __Character->set_user(this_object());
         write("\n\nOverriding connection of " + __Character->query_name() + "...\n\n");
         shell_start();
         return;

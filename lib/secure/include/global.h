@@ -6,7 +6,7 @@
 #define STD_ACCOUNT     "/std/account.c"
 #define STD_CHARACTER   "/std/character.c"
 #define STD_CONTAINER   "/std/container.c"
-#define STD_LIVING      "/std/living.c"
+#define STD_LIVING      "/std/living/living.c"
 #define STD_ROOM        "/std/room.c"
 
 // std modules
