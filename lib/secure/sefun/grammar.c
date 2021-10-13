@@ -76,7 +76,7 @@ string subjective (mixed value) {
     switch (objectp(value) ? value->query_gender() : value) {
     case "male": return "he";
     case "female": return "she";
-    case "neither": return "they"
+    case "neither": return "they";
     default: return "it";
     }
 }
@@ -86,7 +86,7 @@ string objective (mixed value) {
     switch (objectp(value) ? value->query_gender() : value) {
     case "male": return "him";
     case "female": return "her";
-    case "neither": return "them"
+    case "neither": return "them";
     default: return "it";
     }
 }
@@ -96,7 +96,7 @@ string possessive (mixed value) {
     switch (objectp(value) ? value->query_gender() : value) {
     case "male": return "his";
     case "female": return "hers";
-    case "neither": return "theirs"
+    case "neither": return "theirs";
     default: return "its";
     }
 }
