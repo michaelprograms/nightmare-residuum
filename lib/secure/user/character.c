@@ -54,7 +54,7 @@ nomask private void character_enter (int newbie) {
             destruct(__Character);
             __Character = char;
             __Character->set_user(this_object());
-            this_object()->shell_start();
+            shell_start();
             write("\n\nReturning " + __Character->query_name() + " from linkdeath...\n\n");
             __Character->exit_freezer();
             return;
@@ -96,7 +96,7 @@ nomask private void character_override () {
         char->set_user(this_object());
         __Character = char;
         write("\n\nOverriding connection of " + __Character->query_name() + "...\n\n");
-        this_object()->shell_start();
+        shell_start();
         return;
     } else {
         write("\n"+__Character->query_key_name()+" no longer available to override.\n");
@@ -108,7 +108,7 @@ nomask private void character_override () {
 nomask protected void character_exit () {
     if (__Character) {
         __Character->update_last_action();
-        this_object()->query_account()->update_character_data(__Character);
+        query_account()->update_character_data(__Character);
         __Character->exit_world();
         __BodyType = 0;
     }

@@ -95,7 +95,7 @@ int query_terminal_color() {
 }
 
 nomask void quit_character (int destructing) {
-    write("Reality "+(random(2)?"explodes into an im":"implodes into an ex")+"plosion of irreality.\n");
+    message("system", "Reality "+(random(2)?"explodes into an im":"implodes into an ex")+"plosion of irreality.\n", this_object());
     // @TODO query_character()->handle_connection_status("quit");
     character_exit();
     shell_stop();

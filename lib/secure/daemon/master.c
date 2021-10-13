@@ -191,13 +191,8 @@ string *get_include_path (string file) {
 
 // Shutdown before driver crashes from segmentation fault or other error.
 void crash (string crash_message, object command_giver, object current_object) {
-    // string guilty_stack = get_stack(), guilty_obs = identify(previous_object(-1));
-    // write_file(DIR_LOGS "/crashes", mud_name()+" crashed "+ctime(time())+" with error "+crash_message+".\n"+guilty_stack+"\n"+guilty_obs+"\n---\n");
-    // write_file(DIR_LOGS+"/crashes", mud_name()+" crashed "+ctime(time())+" with error "+
-    // crash_message+".\n");
-    // if(this_player()) write_file(DIR_LOGS+"/crashes", identify(this_player())+"\n");
-    // if(query_verb()) write_file(DIR_LOGS+"/crashes", " verb "+query_verb()+"\n\n");
-    message("system", "World imploding.\n", users());
+    debug_message(ctime() + " crashed because " + crash_message + " " + identify(call_stack()) + " " + identify(previous_object(-1)));
+    message("system", "Reality collapses.\n", users());
     users()->quit_account();
 }
 
