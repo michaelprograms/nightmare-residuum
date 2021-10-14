@@ -16,7 +16,7 @@ private nosave int shutdownAfterTests = 0;
 
 // -----------------------------------------------------------------------------
 
-void process_all ();
+void process ();
 void watch_all ();
 
 // -----------------------------------------------------------------------------
@@ -29,7 +29,7 @@ varargs void done (int numTests, int numPassed, int numFailed, int fnsTested, in
         totalFnsTested += fnsTested;
         totalFnsUntested += fnsUntested;
         currentTest ++;
-        process_all();
+        process();
     } else if (__Mode == "WATCH") {
         totalTests = numTests;
         totalPassed = numPassed;
@@ -39,9 +39,11 @@ varargs void done (int numTests, int numPassed, int numFailed, int fnsTested, in
     }
 }
 
-void process_all () {
+void process () {
     __Mode = "ALL";
     if (currentTest < sizeof(tests)) {
+        object t;
+        if (t = find_object(tests[currentTest])) destruct(t);
         if (!inherits(M_TEST, load_object(tests[currentTest]))) done();
         else {
             // call_out clears the call stack, call_other will chain the tests
@@ -165,5 +167,5 @@ varargs void run (int callShutdown) {
     });
 
     timeBefore = rusage()["utime"] + rusage()["stime"];
-    call_out((: process_all :), 0);
+    call_out((: process :), 0);
 }
