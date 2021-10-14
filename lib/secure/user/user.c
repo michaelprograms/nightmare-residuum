@@ -7,7 +7,7 @@ inherit "/secure/user/shell.c";
 
 #define CONNECT_TIMEOUT 60
 
-nosave private int calloutHandle;
+nosave private int calloutBanner, calloutTimeout;
 nosave private string __TerminalType;
 nosave private int __TerminalColor = 256;
 
@@ -16,7 +16,10 @@ nosave private int __TerminalColor = 256;
 nomask void logon () {
     debug_message(ctime()+" connect() from "+query_ip_number()); // @TODO LOG_D
 
-    calloutHandle = call_out_walltime(function () {
+    calloutBanner = call_out_walltime(function () {
+        if (!calloutBanner) {
+            return;
+        }
         receive_message("system", D_WELCOME->query_banner() + "\n");
         account_input();
         if (this_user() && interactive(this_user())) telnet_ga();
@@ -68,8 +71,9 @@ void terminal_type (string term) {
         __TerminalColor = 16;
     }
 
-    if (!undefinedp(calloutHandle)) { // force prompt
-        remove_call_out(calloutHandle);
+    if (!undefinedp(calloutBanner)) { // force prompt
+        remove_call_out(calloutBanner);
+        calloutBanner = 0;
         receive_message("system", D_WELCOME->query_banner() + "\n");
         account_input();
         if (this_user() && interactive(this_user())) telnet_ga();
@@ -111,8 +115,8 @@ nomask void quit_account () {
 }
 
 nomask void reset_connect_timeout () {
-    if (!undefinedp(calloutHandle)) remove_call_out(calloutHandle);
-    calloutHandle = call_out((: handle_remove, "\nTime exceeded. Connection terminated.\n" :), CONNECT_TIMEOUT);
+    if (!undefinedp(calloutTimeout)) remove_call_out(calloutTimeout);
+    calloutTimeout = call_out((: handle_remove, "\nTime exceeded. Connection terminated.\n" :), CONNECT_TIMEOUT);
 }
 
 protected nomask int handle_login_commands (string input) {
@@ -123,7 +127,7 @@ protected nomask int handle_login_commands (string input) {
 }
 
 nomask varargs void handle_remove (string message) {
-    if (!undefinedp(calloutHandle)) remove_call_out(calloutHandle);
+    if (!undefinedp(calloutTimeout)) remove_call_out(calloutTimeout);
     if (message) message("system", message, this_object());
     if (query_shell()) shell_stop();
     if (query_character()) quit_character(1);
