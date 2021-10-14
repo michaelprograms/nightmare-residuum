@@ -17,7 +17,7 @@ private nosave int shutdownAfterTests = 0;
 // -----------------------------------------------------------------------------
 
 void process ();
-void watch_all ();
+// void watch_all ();
 
 // -----------------------------------------------------------------------------
 
@@ -71,47 +71,48 @@ private void update_and_execute (string path) {
 }
 
 
-void watch_all () {
-    int flag, touched;
-    string path;
-    object testOb;
+// void watch_all () {
+//     int flag, touched;
+//     string path;
+//     object testOb;
 
-    __Mode = "WATCH";
-    for (int i = 0; i < sizeof(tests); i ++) {
-        flag = 0;
-        path = tests[i];
-        touched = stat(path)[1];
-        if (__Tests[path]["touched"] < touched) {
-            __Tests[path]["touched"] = touched;
-            flag = 1;
-        }
-        touched = stat(__Tests[path]["code"])[1];
-        if (__Tests[path]["codeTouched"] < touched) {
-            __Tests[path]["codeTouched"] = touched;
-            flag = 1;
-        }
-        if (flag) {
-            write("\n" + path + " has been changed..."+"\n");
-            totalTests = totalPassed = totalFailed = totalFnsTested = totalFnsUntested = 0;
-            currentTest = i;
-            timeBefore = rusage()["utime"] + rusage()["stime"];
+//     __Mode = "WATCH";
+//     for (int i = 0; i < sizeof(tests); i ++) {
+//         flag = 0;
+//         path = tests[i];
+//         touched = stat(path)[1];
+//         if (__Tests[path]["touched"] < touched) {
+//             __Tests[path]["touched"] = touched;
+//             flag = 1;
+//         }
+//         touched = stat(__Tests[path]["code"])[1];
+//         if (__Tests[path]["codeTouched"] < touched) {
+//             __Tests[path]["codeTouched"] = touched;
+//             flag = 1;
+//         }
+//         if (flag) {
+//             write("\n" + path + " has been changed..."+"\n");
+//             totalTests = totalPassed = totalFailed = totalFnsTested = totalFnsUntested = 0;
+//             currentTest = i;
+//             timeBefore = rusage()["utime"] + rusage()["stime"];
 
-            if (testOb = find_object(path)) destruct(testOb);
-            catch (update_and_execute(path));
-            timeAfter = rusage()["utime"] + rusage()["stime"];
-        }
-    }
+//             if (testOb = find_object(path)) destruct(testOb);
+//             catch (update_and_execute(path));
+//             timeAfter = rusage()["utime"] + rusage()["stime"];
+//         }
+//     }
 
-    call_out((: watch_all :), 2, 0);
-}
+//     call_out((: watch_all :), 2, 0);
+// }
 
-void update_test_data (string path) {
+varargs void update_test_data (string path, string ignore) {
     mixed *dir = get_dir(path, -1); // Assumes path has trailing /
     string *codeFiles = ({}), tmp;
 
     foreach (mixed *file in dir) {
+        if (path + file[0] == ignore) continue;
         if (file[1] == -2) {
-            update_test_data(path + file[0] + "/");
+            update_test_data(path + file[0] + "/", ignore);
         } else if (regexp(file[0], "\\.test\\.c$")) {
             __Tests[path+file[0]] = ([
                 "touched": file[2],
@@ -147,9 +148,9 @@ varargs void run (int callShutdown) {
     shutdownAfterTests = callShutdown;
 
     write("Scanning for test files...\n");
-    update_test_data("/secure/");
+    update_test_data("/secure/", "/secure/cmd");
     update_test_data("/daemon/");
-    update_test_data("/std/");
+    update_test_data("/std/", "/std/class");
 
     tests = keys(__Tests);
     tests = sort_array(tests, function(string a, string b) {
