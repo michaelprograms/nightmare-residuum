@@ -23,7 +23,6 @@ string query_name ();
 string query_key_name ();
 void set_name (string name);
 void set_key_name (string name);
-string query_plural_name ();
 string *query_id ();
 string query_key_id ();
 void set_id (string *id);

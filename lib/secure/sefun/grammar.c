@@ -16,7 +16,7 @@ string cardinal (int n) {
 
 string pluralize (mixed single) {
     string str;
-    if (objectp(single)) str = single->query_plural_name() || single->query_name();
+    if (objectp(single)) str = single->query_name();
     else str = single;
     if (undefinedp(str) || !stringp(str)) error("Bad argument 1 to grammar->pluralize");
 

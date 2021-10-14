@@ -28,7 +28,6 @@ void set_key_name (string name) {
     __KeyName = lower_case(name);
     refresh_id();
 }
-string query_plural_name () { return 0; } // @TODO "override this to define a custom plural name"
 
 string *query_id () {
     return __ID;
