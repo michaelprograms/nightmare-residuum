@@ -87,7 +87,6 @@ void test_handle_go () {
 
     r1->set_exit("east", file_name(r2));
     r2->set_exit("west", file_name(r1));
-    write(identify(r1->query_exit("east"))+"\n");
 
     values += ({ regexp(r1->query_exit("east"), "/std/room#[0-9]+") });
     results += ({ 1 });
