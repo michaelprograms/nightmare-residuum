@@ -94,10 +94,6 @@ void test_pluralize () {
     ob->set_name("tester");
     values += ({ testOb->pluralize(ob) });
     results += ({ "testers" });
-    // @TODO plural_name override
-    // ob->set_plural_name("gaggle of testers")
-    // values += ({ testOb->(ob) });
-    // results += ({ "gaggle of testers" });
     expect_arrays_equal(values, results, "pluralize handled objects");
 }
 
@@ -164,4 +160,172 @@ void test_possessive_noun () {
     values += ({ testOb->possessive_noun(ob) });
     results += ({ "Chaz'" });
     expect_arrays_equal(values, results, "possessive_noun handled objects");
+}
+
+void test_subjective () {
+    string *values, *results;
+    object ob;
+
+    expect_function("subjective", testOb);
+
+    // test parameter as a string
+    values = ({});
+    results = ({});
+    values += ({ testOb->subjective() });
+    results += ({ "it" });
+    values += ({ testOb->subjective("male") });
+    results += ({ "he" });
+    values += ({ testOb->subjective("female") });
+    results += ({ "she" });
+    values += ({ testOb->subjective("neither") });
+    results += ({ "they" });
+    values += ({ testOb->subjective("nonexistant") });
+    results += ({ "it" });
+    expect_arrays_equal(values, results, "subjective handled names");
+
+    // test parameter as an object
+    values = ({});
+    results = ({});
+    ob = new(STD_LIVING);
+    values += ({ testOb->subjective() });
+    results += ({ "it" });
+    ob->set_gender("male");
+    values += ({ testOb->subjective(ob) });
+    results += ({ "he" });
+    ob->set_gender("female");
+    values += ({ testOb->subjective(ob) });
+    results += ({ "she" });
+    ob->set_gender("neither");
+    values += ({ testOb->subjective(ob) });
+    results += ({ "they" });
+    ob->set_gender("nonexistant");
+    values += ({ testOb->subjective(ob) });
+    results += ({ "it" });
+    expect_arrays_equal(values, results, "subjective handled objects");
+}
+
+void test_objective () {
+    string *values, *results;
+    object ob;
+
+    expect_function("objective", testOb);
+
+    // test parameter as a string
+    values = ({});
+    results = ({});
+    values += ({ testOb->objective() });
+    results += ({ "it" });
+    values += ({ testOb->objective("male") });
+    results += ({ "him" });
+    values += ({ testOb->objective("female") });
+    results += ({ "her" });
+    values += ({ testOb->objective("neither") });
+    results += ({ "them" });
+    values += ({ testOb->objective("nonexistant") });
+    results += ({ "it" });
+    expect_arrays_equal(values, results, "objective handled names");
+
+    // test parameter as an object
+    values = ({});
+    results = ({});
+    ob = new(STD_LIVING);
+    values += ({ testOb->objective() });
+    results += ({ "it" });
+    ob->set_gender("male");
+    values += ({ testOb->objective(ob) });
+    results += ({ "him" });
+    ob->set_gender("female");
+    values += ({ testOb->objective(ob) });
+    results += ({ "her" });
+    ob->set_gender("neither");
+    values += ({ testOb->objective(ob) });
+    results += ({ "them" });
+    ob->set_gender("nonexistant");
+    values += ({ testOb->objective(ob) });
+    results += ({ "it" });
+    expect_arrays_equal(values, results, "objective handled objects");
+}
+
+void test_possessive () {
+    string *values, *results;
+    object ob;
+
+    expect_function("possessive", testOb);
+
+    // test parameter as a string
+    values = ({});
+    results = ({});
+    values += ({ testOb->possessive() });
+    results += ({ "its" });
+    values += ({ testOb->possessive("male") });
+    results += ({ "his" });
+    values += ({ testOb->possessive("female") });
+    results += ({ "hers" });
+    values += ({ testOb->possessive("neither") });
+    results += ({ "theirs" });
+    values += ({ testOb->possessive("nonexistant") });
+    results += ({ "its" });
+    expect_arrays_equal(values, results, "possessive handled names");
+
+    // test parameter as an object
+    values = ({});
+    results = ({});
+    ob = new(STD_LIVING);
+    values += ({ testOb->possessive() });
+    results += ({ "its" });
+    ob->set_gender("male");
+    values += ({ testOb->possessive(ob) });
+    results += ({ "his" });
+    ob->set_gender("female");
+    values += ({ testOb->possessive(ob) });
+    results += ({ "hers" });
+    ob->set_gender("neither");
+    values += ({ testOb->possessive(ob) });
+    results += ({ "theirs" });
+    ob->set_gender("nonexistant");
+    values += ({ testOb->possessive(ob) });
+    results += ({ "its" });
+    expect_arrays_equal(values, results, "possessive handled objects");
+}
+
+void test_reflexive () {
+    string *values, *results;
+    object ob;
+
+    expect_function("reflexive", testOb);
+
+    // test parameter as a string
+    values = ({});
+    results = ({});
+    values += ({ testOb->reflexive() });
+    results += ({ "itself" });
+    values += ({ testOb->reflexive("male") });
+    results += ({ "himself" });
+    values += ({ testOb->reflexive("female") });
+    results += ({ "herself" });
+    values += ({ testOb->reflexive("neither") });
+    results += ({ "themself" });
+    values += ({ testOb->reflexive("nonexistant") });
+    results += ({ "itself" });
+    expect_arrays_equal(values, results, "reflexive handled names");
+
+    // test parameter as an object
+    values = ({});
+    results = ({});
+    ob = new(STD_LIVING);
+    values += ({ testOb->reflexive() });
+    results += ({ "itself" });
+    ob->set_gender("male");
+    values += ({ testOb->reflexive(ob) });
+    results += ({ "himself" });
+    ob->set_gender("female");
+    values += ({ testOb->reflexive(ob) });
+    results += ({ "herself" });
+    ob->set_gender("neither");
+    values += ({ testOb->reflexive(ob) });
+    results += ({ "themself" });
+    ob->set_gender("nonexistant");
+    values += ({ testOb->reflexive(ob) });
+    results += ({ "itself" });
+    expect_arrays_equal(values, results, "reflexive handled objects");
 }

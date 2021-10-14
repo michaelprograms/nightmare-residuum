@@ -27,9 +27,9 @@ string cardinal (int n);
 string pluralize (mixed single);
 string consolidate (int n, string str);
 string possessive_noun (mixed value);
-string possessive (mixed value);
 string subjective (mixed value);
 string objective (mixed value);
+string possessive (mixed value);
 string reflexive (mixed value);
 
 /* --- override --- */
