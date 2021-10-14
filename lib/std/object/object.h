@@ -11,6 +11,9 @@ int id (string id);
 int move_or_destruct (object parent);
 void reset ();
 // void virtual_start ();
+int is_living ();
+int inventory_visible ();
+int inventory_accessible ();
 
 /* --- description --- */
 nomask void set_long (mixed m);
@@ -35,9 +38,6 @@ void refresh_id ();
 string *parse_command_id_list ();
 string *parse_command_adjectiv_id_list ();
 string *parse_command_plural_id_list ();
-int is_living ();
-int inventory_visible ();
-int inventory_accessible ();
 
 /* --- property --- */
 mapping query_properties ();

@@ -130,13 +130,3 @@ string *parse_command_adjectiv_id_list () {
 string *parse_command_plural_id_list () {
     return __Plural;
 }
-
-int is_living () {
-    return 0;
-}
-int inventory_visible () {
-    return 0;
-}
-int inventory_accessible () {
-    return 0;
-}

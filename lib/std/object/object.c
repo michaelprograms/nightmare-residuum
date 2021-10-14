@@ -105,3 +105,15 @@ void reset () {
 //     addtional initialization.
 //     */
 // }
+
+// --- PARSER ------------------------------------------------------------------
+
+int is_living () {
+    return 0;
+}
+int inventory_visible () {
+    return 0;
+}
+int inventory_accessible () {
+    return 0;
+}

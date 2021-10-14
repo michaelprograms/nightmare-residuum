@@ -5,7 +5,7 @@ inherit M_TEST;
 private nosave object testOb;
 void before_each_test () {
     if (objectp(testOb)) destruct(testOb);
-    testOb = clone_object("/secure/daemon/access");
+    testOb = clone_object("/secure/daemon/access.c");
 }
 void after_all_tests () {
     if (objectp(testOb)) destruct(testOb);
@@ -22,7 +22,7 @@ void test_query_file_privs () {
     values += ({ testOb->query_file_privs("/daemon/something.c") });
     results += ({ ACCESS_MUDLIB });
 
-    values += ({ testOb->query_file_privs("/std/object.c") });
+    values += ({ testOb->query_file_privs("/std/object/object.c") });
     results += ({ ACCESS_ASSIST });
     values += ({ testOb->query_file_privs("/std/module/save.c") });
     results += ({ ACCESS_ASSIST });
@@ -51,5 +51,5 @@ void test_query_file_privs () {
     values += ({ testOb->query_file_privs("/nonexistantpath/file.c") });
     results += ({ 0 });
 
-    expect_arrays_equal (values, results, "query_file_privs handled files");
+    expect_arrays_equal(values, results, "query_file_privs handled files");
 }

@@ -136,7 +136,7 @@ void test_identify () {
     }), "identify handled float");
 
     tOb = new(STD_OBJECT);
-    expect_strings_regexp(testOb->identify(tOb), "OBJ\\(\\/std\\/object#(.+)\\)", "identify handled object");
+    expect_strings_regexp(testOb->identify(tOb), "OBJ\\("+replace_string(STD_OBJECT[0..<3], "/", "\\/")+"#(.+)\\)", "identify handled object");
     destruct(tOb);
 
     // string
