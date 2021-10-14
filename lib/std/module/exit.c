@@ -1,10 +1,6 @@
 nosave private mapping __Exits = ([]);
 nosave private mapping __Door = ([]);
 
-void create () {
-
-}
-
 mapping query_exits () { return copy(__Exits); }
 string *query_exit_directions () { return keys(__Exits); }
 string *query_exit_dirs () { // shorthand directions
@@ -26,8 +22,12 @@ string *query_exit_dirs () { // shorthand directions
     }
     return exits;
 }
-string *query_exit_destinations () { return values(__Exits); }
-string query_exit (string dir) { return __Exits[dir] && __Exits[dir]; }
+string *query_exit_destinations () {
+    return values(__Exits);
+}
+string query_exit (string dir) {
+    return __Exits[dir] && __Exits[dir]["room"];
+}
 
 varargs void set_exit (string dir, string dest, function before, function after) {
     if (!stringp(dir)) error("Bad argument 1 to exit->set_exit");
@@ -61,7 +61,7 @@ void remove_exit (string dir) {
 
 mixed handle_go (object ob, string dir) {
     // if(query_verb() == "go" && interactive(ob)) {
-    //     // check standng/sitting?
+    //     // @TODO check standng/sitting?
     // }
     if (__Exits[dir] && __Exits[dir]["pre"] && !(evaluate(__Exits[dir]["pre"], dir)))
         return 1;

@@ -3,7 +3,6 @@ inherit M_EXIT;
 
 void create () {
     container::create();
-    exit::create();
 }
 
 int is_room () { return 1; }
