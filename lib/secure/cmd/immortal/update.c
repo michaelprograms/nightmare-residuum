@@ -1,5 +1,8 @@
-void doneCallback (int numTests, int numPassed, int numFailed, int fnsTested, int fnsUntested) {
-    // write(numTests+" tests, "+numPassed+" passed, "+numFailed+" failed, "+fnsTested+" fnsTested, "+fnsUntested+" fnsUntested\n");
+varargs void done (int numTests, int numPassed, int numFailed, int fnsTested, int fnsUntested) {
+    int numExpects = numPassed + numFailed;
+    message("system", "\nPassed:    " + sprintf("%3d", numPassed) + " / " + sprintf("%3d", numExpects) + " (" + sprintf("%3d", to_int(numPassed * 100 / numExpects)) + "%)"+"\n", this_user());
+    message("system", "Failed:    " + sprintf("%3d", numFailed) + " / " + sprintf("%3d", numExpects) + " (" + sprintf("%3d", to_int(numFailed * 100 / numExpects)) + "%)"+"\n", this_user());
+    message("system", "Functions: " + sprintf("%3d", fnsTested) + " / " + sprintf("%3d", (fnsTested + fnsUntested)) + " (" + sprintf("%3d", to_int(fnsTested * 100 / (fnsTested + fnsUntested))) + "%)"+"\n\n", this_user());
 }
 
 void command (string input) {
@@ -35,27 +38,22 @@ void command (string input) {
 
     tmp = catch (call_other(input, "???"));
     if (!tmp) {
-        mapping tests = ([
-            0: input[0..<2] + "test.c"
-        ]);
+        string test = input[0..<2] + "test.c";
         message("system", input + ": Ok\n", this_user());
         foreach (object l in keep) {
             l->handle_move(input);
         }
         keep = ({});
-        if (file_size(tests[0]) > 0) {
-            message("system", "\n", this_user());
-            // this_user()->query_character()->set_property("updating", 1);
-            // write("properties: "+identify(this_user()->query_character()->query_properties())+"\n");
-            if (find_object(tests[0])) {
-                catch(destruct(find_object(tests[0])));
+        if (file_size(test) > 0) {
+            if (find_object(test)) {
+                catch(destruct(find_object(test)));
             }
-            call_other(tests[0], "???");
-            call_out(function(mapping tests) {
-                tests[0]->execute_test((: doneCallback:));
-            }, 0, tests);
-            // this_user()->query_character()->set_property("updating", 0);
-            // write("properties: "+identify(this_user()->query_character()->query_properties())+"\n");
+            call_other(test, "???");
+            call_out_walltime(function(string t) {
+                t->execute_test((: done :));
+            }, 0, test);
         }
-    } else message("system", input + ": Error in update\n" + tmp+"\n", this_user());
+    } else {
+        message("system", input + ": Error in update\n" + tmp+"\n", this_user());
+    }
 }
