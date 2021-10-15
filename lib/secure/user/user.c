@@ -14,7 +14,7 @@ nosave private int __TerminalColor = 256;
 /* --- interactive apply --- */
 
 nomask void logon () {
-    debug_message(ctime()+" connect() from "+query_ip_number()); // @TODO LOG_D
+    debug_message(ctime() + " connect from " + query_ip_number()); // @TODO LOG_D
 
     calloutBanner = call_out_walltime(function () {
         if (!calloutBanner) {
