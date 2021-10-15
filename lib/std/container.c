@@ -1,4 +1,5 @@
 inherit STD_OBJECT;
+inherit M_CLEAN;
 
 int can_receive (object ob) {
     return (member_array(ob, all_inventory(this_object())) == -1);

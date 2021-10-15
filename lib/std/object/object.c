@@ -2,8 +2,6 @@ inherit "/std/object/description.c";
 inherit "/std/object/id.c";
 inherit "/std/object/property.c";
 
-inherit M_CLEAN;
-
 #include "/std/object/object.h"
 
 nosave private object __LastEnv = 0;

@@ -41,3 +41,16 @@ void test_receive () {
 
     expect_arrays_equal(values, results, "receive and release behave");
 }
+
+void test_inventory () {
+    expect_function("inventory_visible", testOb);
+    expect_function("inventory_accessible", testOb);
+
+    expect_arrays_equal(({
+        testOb->inventory_visible(),
+        testOb->inventory_accessible(),
+    }), ({
+        1,
+        1,
+    }), "receive and release behave");
+}
