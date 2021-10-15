@@ -1,10 +1,10 @@
 nosave private string __SavePath;
 
-protected string query_save_path () {
+string query_save_path () {
     return __SavePath;
 }
-protected void set_save_path (string path) { // @TODO private for security?
-    if (undefinedp(path) || !stringp(path)) {
+void set_save_path (string path) { // @TODO private for security?
+    if (undefinedp(path) || (!stringp(path) && path != 0)) {
         error("Bad argument 1 to save->set_save_path");
     }
     __SavePath = path;
