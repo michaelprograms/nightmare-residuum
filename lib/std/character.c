@@ -35,6 +35,10 @@ void set_user (object user) {
     // @TODO security?
     __User = user;
 }
+
+int query_created () {
+    return __Created;
+}
 void update_last_action () { // @TODO set_last_action?
     __LastAction = time();
 }
