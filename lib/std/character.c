@@ -13,7 +13,6 @@ int is_character () { return 1; }
 
 void create() {
     living::create();
-    set_no_clean(1);
 }
 
 void set_name (string name) {

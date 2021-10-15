@@ -8,7 +8,6 @@ private string __LastEnvironment;
 
 void create () {
     container::create();
-    set_no_clean(1);
 }
 
 string query_type () {
