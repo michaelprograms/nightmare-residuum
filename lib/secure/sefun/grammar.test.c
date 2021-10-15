@@ -95,6 +95,7 @@ void test_pluralize () {
     values += ({ testOb->pluralize(ob) });
     results += ({ "testers" });
     expect_arrays_equal(values, results, "pluralize handled objects");
+    destruct(ob);
 }
 
 void test_consolidate () {
@@ -160,6 +161,7 @@ void test_possessive_noun () {
     values += ({ testOb->possessive_noun(ob) });
     results += ({ "Chaz'" });
     expect_arrays_equal(values, results, "possessive_noun handled objects");
+    destruct(ob);
 }
 
 void test_subjective () {
@@ -202,6 +204,7 @@ void test_subjective () {
     values += ({ testOb->subjective(ob) });
     results += ({ "it" });
     expect_arrays_equal(values, results, "subjective handled objects");
+    destruct(ob);
 }
 
 void test_objective () {
@@ -244,6 +247,7 @@ void test_objective () {
     values += ({ testOb->objective(ob) });
     results += ({ "it" });
     expect_arrays_equal(values, results, "objective handled objects");
+    destruct(ob);
 }
 
 void test_possessive () {
@@ -286,6 +290,7 @@ void test_possessive () {
     values += ({ testOb->possessive(ob) });
     results += ({ "its" });
     expect_arrays_equal(values, results, "possessive handled objects");
+    destruct(ob);
 }
 
 void test_reflexive () {
@@ -328,4 +333,5 @@ void test_reflexive () {
     values += ({ testOb->reflexive(ob) });
     results += ({ "itself" });
     expect_arrays_equal(values, results, "reflexive handled objects");
+    destruct(ob);
 }
