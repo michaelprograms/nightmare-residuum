@@ -46,7 +46,7 @@ nomask private void character_enter (int newbie) {
     // Check for existing character
     chars = filter_array(children(STD_CHARACTER) - ({ __Character }), (: $1 && $1->query_key_name() == __Character->query_key_name():));
     if (sizeof(chars) > 0 && (char = chars[0])) {
-        if (interactive(char->query_user())) {
+        if (char->query_user() && interactive(char->query_user())) {
             write(char->query_name()+" is connected and interactive.\n");
             account_input(STATE_CHARACTER_OVERRIDE);
             return;
