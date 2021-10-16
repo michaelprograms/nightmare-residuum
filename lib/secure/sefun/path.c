@@ -16,7 +16,7 @@ string base_path (string path) {
 // Evaluate . and .. and enforce leading /
 string sanitize_path (string path) {
     string *parts;
-    int i = 0, domain = 0, realm = 0;
+    int i = 0, domain = 0; // , realm = 0;
 
     if (!path || (path[0] != '/' && path[0] != '~' && path[0] != '^')) {
         if (previous_object() && previous_object()->query_shell()) {
@@ -27,7 +27,9 @@ string sanitize_path (string path) {
     if (path[0] == '^') {
         path = replace_string(path, "^", "domain");
         domain = 1;
-    }
+    } // else if (path[0] == "~") {
+        // @TODO
+    // }
     parts = explode(path, "/") - ({ "", "." });
     if (!sizeof(parts)) {
         return "/";
@@ -44,19 +46,19 @@ string sanitize_path (string path) {
             }
             continue;
         }
-        if (!domain && !realm && tmp[0] == '~' && previous_object()->query_shell()) {
-            realm = 1;
-            if (sizeof(tmp) == 1) {
-                tmp = previous_object()->query_character()->query_key_name();
-            } else {
-                tmp = tmp[1..];
-            }
-            parts[0..i] = explode(user_path(tmp), "/");
-        }
+        // if (!domain && !realm && tmp[0] == '~' && previous_object()->query_shell()) {
+        //     realm = 1;
+        //     if (sizeof(tmp) == 1) {
+        //         tmp = previous_object()->query_character()->query_key_name();
+        //     } else {
+        //         tmp = tmp[1..];
+        //     }
+        //     parts[0..i] = explode(user_path(tmp), "/");
+        // }
         i ++;
     }
 
-    return "/" + implode(parts, "/") + (path[<1] == '/' || domain || realm ? "/" : "");
+    return "/" + implode(parts, "/") + (path[<1] == '/' || domain /* || realm */ ? "/" : "");
 }
 
 varargs string absolute_path (string relative_path, mixed relative_to) {

@@ -97,22 +97,22 @@ void test_sanitize_path () {
         testOb->sanitize_path("^/dir/.././dir2/../."),
     }), "/domain/", "sanitize_path handled ^");
 
-    mockCharacter = new("/std/object/id.c");
-    mockCharacter->set_key_name("tester");
-    mockShell = new("/secure/shell/shell.c");
-    mockShell->start_shell();
-    expect_array_strings_equal(({
-        testOb->sanitize_path("~"),
-        // testOb->sanitize_path("~."),
-        testOb->sanitize_path("~/"),
-        testOb->sanitize_path("~/."),
-        testOb->sanitize_path("~/dir/.."),
-        testOb->sanitize_path("~/dir/../."),
-        testOb->sanitize_path("~/dir/dir/../.."),
-        testOb->sanitize_path("~/dir/dir/../../."),
-        testOb->sanitize_path("~/dir/dir/.././../."),
-        testOb->sanitize_path("~/dir/.././dir2/../."),
-    }), "/realm/tester/", "sanitize_path handled ~");
+    // mockCharacter = new("/std/object/id.c");
+    // mockCharacter->set_key_name("tester");
+    // mockShell = new("/secure/shell/shell.c");
+    // mockShell->start_shell();
+    // expect_array_strings_equal(({
+    //     testOb->sanitize_path("~"),
+    //     // testOb->sanitize_path("~."),
+    //     testOb->sanitize_path("~/"),
+    //     testOb->sanitize_path("~/."),
+    //     testOb->sanitize_path("~/dir/.."),
+    //     testOb->sanitize_path("~/dir/../."),
+    //     testOb->sanitize_path("~/dir/dir/../.."),
+    //     testOb->sanitize_path("~/dir/dir/../../."),
+    //     testOb->sanitize_path("~/dir/dir/.././../."),
+    //     testOb->sanitize_path("~/dir/.././dir2/../."),
+    // }), "/realm/tester/", "sanitize_path handled ~");
 }
 
 void test_absolute_path () {
