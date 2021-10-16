@@ -48,7 +48,7 @@ jobs:
       shell: bash
   
     - uses: pCYSl5EDgo/cat@master
-      id: Runtime Log
+      id: logs
       with:
         path: lib/log/runtime
 
