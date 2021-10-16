@@ -1,13 +1,14 @@
-nosave private string __SavePath;
+nosave private string __SavePath = 0;
 
 string query_save_path () {
     return __SavePath;
 }
 void set_save_path (string path) {
-    if (undefinedp(path) || (!stringp(path) && path != 0)) {
-        error("Bad argument 1 to save->set_save_path");
+    if (stringp(path) && regexp(path, "^\\/save\\/")) {
+        __SavePath = path;
+    } else {
+        __SavePath = 0;
     }
-    __SavePath = path;
 }
 
 void restore_data () {

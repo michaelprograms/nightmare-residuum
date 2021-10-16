@@ -12,7 +12,7 @@
 // std modules
 #define M_CLEAN         "/std/module/clean.c"
 #define M_EXIT          "/std/module/exit.c"
-#define M_SAVE          "/std/module/save.c"
+#define M_SAVE          "/secure/module/save.c"
 
 // secure modules
 #define M_TEST          "/secure/module/test.c" // @TODO /secure/std/module/test
