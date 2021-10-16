@@ -6,7 +6,7 @@ object query_shell () {
 
 protected nomask void shell_start () {
     if (!__Shell) {
-        __Shell = new("/secure/shell/shell.c");
+        __Shell = clone_object("/secure/shell/shell.c");
         __Shell->shell_start();
     }
 }

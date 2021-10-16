@@ -15,20 +15,48 @@ string base_path (string path) {
 
 // Evaluate . and .. and enforce leading /
 string sanitize_path (string path) {
-    string *parts = explode(path, "/") - ({ "", "." });
-    int i;
+    string *parts;
+    int i = 0, domain = 0, realm = 0;
 
-    if (!sizeof(parts)) return "/";
-
-    while ((i = member_array("..", parts)) != -1) {
-	    if (i > 1) parts = parts[0..i-2] + parts[i+1..];
-	    else if (i == 0) parts = parts[1..];
-	    else parts = parts[2..];
+    if (!path || (path[0] != '/' && path[0] != '~' && path[0] != '^')) {
+        if (previous_object() && previous_object()->query_shell()) {
+            path = previous_object()->query_shell()->query_variable("cwd");
+        }
     }
 
-    // @TODO ~ and ^
+    if (path[0] == '^') {
+        path = replace_string(path, "^", "domain");
+        domain = 1;
+    }
+    parts = explode(path, "/") - ({ "", "." });
+    if (!sizeof(parts)) {
+        return "/";
+    }
 
-    return "/" + implode(parts, "/") + (path[<1] == '/' ? "/" : "");
+    while (i < sizeof(parts)) {
+        string tmp = parts[i];
+        if (tmp == "..") {
+            if (i) {
+                parts[i-1..i] = ({});
+                i --;
+            } else {
+                parts[i..i] = ({});
+            }
+            continue;
+        }
+        if (!domain && !realm && tmp[0] == '~' && previous_object()->query_shell()) {
+            realm = 1;
+            if (sizeof(tmp) == 1) {
+                tmp = previous_object()->query_character()->query_key_name();
+            } else {
+                tmp = tmp[1..];
+            }
+            parts[0..i] = explode(user_path(tmp), "/");
+        }
+        i ++;
+    }
+
+    return "/" + implode(parts, "/") + (path[<1] == '/' || domain || realm ? "/" : "");
 }
 
 varargs string absolute_path (string relative_path, mixed relative_to) {
