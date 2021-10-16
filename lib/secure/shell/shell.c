@@ -4,6 +4,7 @@
 inherit M_SAVE;
 
 inherit "/secure/shell/alias.c";
+inherit "/secure/shell/variable.c";
 
 nosave private object __User;
 nosave private mapping __ShellCommands = ([]);
@@ -26,6 +27,7 @@ void create () {
     }
 
     alias::create();
+    variable::create();
 }
 
 void handle_remove () {
@@ -76,8 +78,7 @@ protected void shell_input (mixed input) {
 }
 
 protected void shell_init () {
-    // @TODO
-    // @TODO why disabled?
+    set_variable("cwd", "/", 1);
 }
 
 protected mixed query_prompt () {
