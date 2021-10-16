@@ -7,7 +7,7 @@ nomask void net_dead ();
 void receive_message (string type, string message);
 void terminal_type (string term);
 string query_terminal_type ();
-int query_terminal_color();
+string query_terminal_color();
 nomask void quit_character (int destructing);
 nomask void quit_account ();
 nomask void reset_connect_timeout ();

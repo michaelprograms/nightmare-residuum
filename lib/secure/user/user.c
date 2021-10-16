@@ -9,7 +9,8 @@ inherit "/secure/user/shell.c";
 
 nosave private int calloutBanner, calloutTimeout;
 nosave private string __TerminalType;
-nosave private int __TerminalColor = 256;
+nosave private string __TerminalColor = "rgb";
+nosave private string __IPAddr;
 
 /* --- interactive apply --- */
 
@@ -68,7 +69,7 @@ void terminal_type (string term) {
 
     term = lower_case(explode(term, " ")[0]);
     if (term == "mudslinger") {
-        __TerminalColor = 16;
+        __TerminalColor = "16";
     }
 
     if (!undefinedp(calloutBanner)) { // force prompt
@@ -94,7 +95,7 @@ void receive_environ (string var, string value) {
 string query_terminal_type() {
     return __TerminalType;
 }
-int query_terminal_color() {
+string query_terminal_color() {
     return __TerminalColor;
 }
 

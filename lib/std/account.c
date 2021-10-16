@@ -19,7 +19,7 @@ private mapping __AccountCharacters = ([
 private mapping __AccountSettings = ([
     // default settings
     "width": 80,
-    "ansi": "off",
+    "ansi": "on",
     "screenreader": "off",
 ]);
 // private mapping __AcountProperties = ([]); // @TODO

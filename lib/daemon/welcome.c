@@ -73,7 +73,7 @@ string query_banner () {
     pad = 40-strlen(tmp)/2;
     lines[<1] = lines[<1][0..pad-1] + tmp + lines[<1][80-pad+strlen(tmp)%2..79];
 
-    if (previous_object() && previous_object()->query_terminal_color() == 256) {
+    if (previous_object() && previous_object()->query_terminal_color() == "rgb") {
         int r = 255;
         int n = 64 + random(192);
         r = r - n;
