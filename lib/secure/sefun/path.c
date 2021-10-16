@@ -45,3 +45,22 @@ varargs string absolute_path (string relative_path, mixed relative_to) {
     relative_path = sanitize_path(relative_path);
     return relative_path;
 }
+
+// Check path recursively and create dirs
+int assure_dir (string path) {
+    string *dirs;
+    string dir = "";
+    int check = 1;
+
+    if (!path) {
+        return 0;
+    }
+    dirs = split_path(path);
+    dirs = explode(dirs[0], "/") + (!regexp(dirs[1], "\\.") ? ({ dirs[1] }) : ({}));
+    for (int i = 0; check && i < sizeof(dirs); i ++) {
+        if (file_size(dir = dir + "/" + dirs[i]) == -1) {
+            check = unguarded((: mkdir, dir :));
+        }
+    }
+    return check;
+}
