@@ -16,8 +16,7 @@ string base_path (string path) {
 // Evaluate . and .. and enforce leading /
 string sanitize_path (string path) {
     string *parts;
-    int i = 0;
-    // , domain = 0, realm = 0;
+    int i = 0, domain = 0; // , realm = 0;
 
     if (!path || (path[0] != '/' && path[0] != '~' && path[0] != '^')) {
         if (previous_object() && previous_object()->query_shell()) {
@@ -27,7 +26,7 @@ string sanitize_path (string path) {
 
     if (path[0] == '^') {
         path = replace_string(path, "^", "domain");
-        // domain = 1;
+        domain = 1;
     } // else if (path[0] == "~") {
         // @TODO
     // }
@@ -59,7 +58,7 @@ string sanitize_path (string path) {
         i ++;
     }
 
-    return "/" + implode(parts, "/") + (path[<1] == '/' || domain || realm ? "/" : "");
+    return "/" + implode(parts, "/") + (path[<1] == '/' || domain /* || realm */ ? "/" : "");
 }
 
 varargs string absolute_path (string relative_path, mixed relative_to) {
