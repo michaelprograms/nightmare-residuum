@@ -22,7 +22,6 @@ jobs:
       uses: actions/checkout@v2
       with:
         submodules: true
-        
     - name: Install Packages
       run: |
         sudo apt update
@@ -36,7 +35,6 @@ jobs:
       with:
         path: build
         key: ${{ hashFiles('**/driver/src') }}
-        
     - name: Build Driver
       if: steps.cache.outputs.cache-hit != 'true'
       run: ./build.sh
@@ -47,12 +45,23 @@ jobs:
       run: ./run-tests.sh
       shell: bash
       timeout-minutes: 1
-      
-    - uses: pCYSl5EDgo/cat@master
-      id: logs
+
+    - name: Get Catch Log
+      uses: pCYSl5EDgo/cat@master
+      id: catch_logs
+      with:
+        path: lib/log/catch
+    - name: View Catch Log
+      run: echo $TEXT
+      env:
+        TEXT: ${{ steps.catch_logs.outputs.text }}
+        
+    - name: Get Runtime Log
+      uses: pCYSl5EDgo/cat@master
+      id: runtime_logs
       with:
         path: lib/log/runtime
-
-    - run: echo $TEXT
+    - name: View Runtime Log
+      run: echo $TEXT
       env:
-        TEXT: ${{ steps.logs.outputs.text }}
+        TEXT: ${{ steps.runtime_logs.outputs.text }}
