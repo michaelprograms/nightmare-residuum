@@ -21,11 +21,10 @@ private void display_account_menu ();
 #define STATE_ACCOUNT_ENTER                 0
 #define STATE_ACCOUNT_HANDLE                1
 #define STATE_ACCOUNT_CONFIRM               2
-#define STATE_PASSWORD_NEW                  4
-#define STATE_PASSWORD_CONFIRM              5
-#define STATE_SCREENREADER_HANDLE           6
-#define STATE_ANSI_HANDLE                   7
-#define STATE_ACCOUNT_COMPLETE              8
+#define STATE_PASSWORD_NEW                  3
+#define STATE_PASSWORD_CONFIRM              4
+#define STATE_SCREENREADER_HANDLE           5
+#define STATE_ACCOUNT_COMPLETE              6
 #define STATE_ACCOUNT_PASSWORD              10
 #define STATE_ACCOUNT_MENU                  11
 #define STATE_CHARACTER_ENTER               20
@@ -47,7 +46,6 @@ private void display_account_menu ();
 #define PROMPT_PASSWORD_CREATE              "Create password: "
 #define PROMPT_PASSWORD_CONFIRM             "Confirm password: "
 #define PROMPT_SCREENREADER_ENTER           "Do you use a screenreader? (y/N) "
-#define PROMPT_ANSI_PROMPT                  "Can you see \e[32mcolor\e[37m and \e[1mstyle\e[22m? (y/N) "
 #define PROMPT_ACCOUNT_CHOICE               "Enter action: "
 #define PROMPT_CHARACTER_FORMAT             "Character names must be 4 to 64 characters and must contain capitalized alphabetic characters, \"'\", \"-\", or spaces.\n"
 #define PROMPT_CHARACTER_ENTER              "Enter new character name: "

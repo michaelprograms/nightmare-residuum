@@ -119,15 +119,6 @@ protected nomask varargs void account_input (int state, mixed extra, string inpu
                 __Account->set_setting("screenreader", "off");
             }
             write("Setting screenreader mode " + __Account->query_setting("screenreader") + ".\n");
-            if (__Account->query_setting("screenreader") == "off") input_next((: account_input, STATE_ANSI_HANDLE, 0 :), PROMPT_ANSI_PROMPT);
-            else account_input(STATE_ACCOUNT_COMPLETE);
-            break;
-
-        case STATE_ANSI_HANDLE:
-            if (input && strlen(input) > 0 && lower_case(input)[0..0] == "y") {
-                __Account->set_setting("ansi", "on");
-            }
-            write("Setting ansi mode " + __Account->query_setting("ansi") + ".\n");
             account_input(STATE_ACCOUNT_COMPLETE);
             break;
 
@@ -145,11 +136,7 @@ protected nomask varargs void account_input (int state, mixed extra, string inpu
         case STATE_ACCOUNT_PASSWORD:
             if (crypt(input, __Account->query_password()) == __Account->query_password()) {
                 __Account->set_last_on();
-                if (member_array("screenreader", keys(__Account->query_settings())) == -1) {
-                    input_next((: account_input, STATE_SCREENREADER_HANDLE, 0 :), PROMPT_SCREENREADER_ENTER);
-                } else if (__Account->query_setting("screenreader") == "off" && member_array("ansi", keys(__Account->query_settings())) == -1) {
-                    input_next((: account_input, STATE_ANSI_HANDLE, 0 :), PROMPT_ANSI_PROMPT);
-                } else if (!__Account->query_has_playable_characters()) {
+                if (!__Account->query_has_playable_characters()) {
                     write("\nWelcome, "+__Account->query_name()+"! You will now create a character.\n");
                     account_input(STATE_CHARACTER_ENTER);
                 } else {
