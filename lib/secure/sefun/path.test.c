@@ -84,18 +84,34 @@ void test_sanitize_path () {
         testOb->sanitize_path("/dir/.././dir2/../."),
     }), "/", "sanitize_path handled . and ..");
 
-    expect_array_strings_equal(({
+    expect_arrays_equal(({
         testOb->sanitize_path("^"),
-        // testOb->sanitize_path("^."),
+        testOb->sanitize_path("^."),
         testOb->sanitize_path("^/"),
         testOb->sanitize_path("^/."),
-        testOb->sanitize_path("^/dir/.."),
-        testOb->sanitize_path("^/dir/../."),
-        testOb->sanitize_path("^/dir/dir/../.."),
-        testOb->sanitize_path("^/dir/dir/../../."),
-        testOb->sanitize_path("^/dir/dir/.././../."),
-        testOb->sanitize_path("^/dir/.././dir2/../."),
-    }), "/domain/", "sanitize_path handled ^");
+        testOb->sanitize_path("^/Dir/.."),
+        testOb->sanitize_path("^/Dir/../."),
+        testOb->sanitize_path("^/Dir/dir/../.."),
+        testOb->sanitize_path("^/Dir/dir/../../."),
+        testOb->sanitize_path("^/Dir/dir/.././../."),
+        testOb->sanitize_path("^/Dir/.././Dir2/../."),
+        testOb->sanitize_path("^Dir"),
+        testOb->sanitize_path("^Dir/dir/.."),
+    }), ({
+        "/domain/",
+        "/domain/",
+        "/domain/",
+        "/domain/",
+        "/domain/",
+        "/domain/",
+        "/domain/",
+        "/domain/",
+        "/domain/",
+        "/domain/",
+        "/domain/Dir/",
+        "/domain/Dir/",
+    }), "sanitize_path handled ^");
+
 
     // mockCharacter = new("/std/object/id.c");
     // mockCharacter->set_key_name("tester");

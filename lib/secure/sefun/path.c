@@ -25,10 +25,11 @@ string sanitize_path (string path) {
     }
 
     if (path[0] == '^') {
-        path = replace_string(path, "^", "domain");
+        path = replace_string(path, "^", "domain/");
         domain = 1;
     } // else if (path[0] == "~") {
         // @TODO
+        // path = replace_string(path, "^", "realm/" + previous_object->quey_key_name);
     // }
     parts = explode(path, "/") - ({ "", "." });
     if (!sizeof(parts)) {
