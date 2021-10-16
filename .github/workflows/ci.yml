@@ -46,3 +46,12 @@ jobs:
     - name: Run Tests
       run: ./run-tests.sh
       shell: bash
+  
+    - uses: pCYSl5EDgo/cat@master
+      id: Runtime Log
+      with:
+        path: lib/log/runtime
+
+    - run: echo $TEXT
+      env:
+        TEXT: ${{ steps.logs.outputs.text }}
