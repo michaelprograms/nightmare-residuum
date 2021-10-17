@@ -16,6 +16,7 @@ void create () {
 
     __User = previous_object() || previous_object(1);
     if (__User != this_user() && !regexp(file_name(__User), "\\.test$")) {
+        write("illegal shell object created? "+identify(__User)+"\n");
         error("illegal shell object created?");
         destruct();
     }
