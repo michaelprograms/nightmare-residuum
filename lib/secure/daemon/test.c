@@ -146,9 +146,7 @@ varargs void update_test_data (string path, string ignore) {
     }
 }
 
-varargs void run (int callShutdown) {
-
-    remove_call_out();
+void reset_data () {
     currentTest = 0;
     totalTests = 0;
     totalFiles = 0;
@@ -157,8 +155,15 @@ varargs void run (int callShutdown) {
     totalFnsTested = 0;
     totalFnsUntested = 0;
     __Tests = ([]);
+    tests = ({});
+}
+
+varargs void run (int callShutdown) {
 
     shutdownAfterTests = callShutdown;
+
+    remove_call_out();
+    reset_data();
 
     write("Scanning for test files...\n");
     update_test_data("/secure/", "/secure/cmd");

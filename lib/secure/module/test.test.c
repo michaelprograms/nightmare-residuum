@@ -53,6 +53,13 @@ void test_expects_passing () {
     }), arr1, "expect_arrays_array_equal(arrOfArrs, *arr, msg) should pass");
 
     expect_function("expect_function", testOb);
+
+    expect_catch((: error("Test catch") :), "*Test catch\n", "expect_catch should pass");
+    expect_catches(({
+        (: error("Test catches") :),
+        (: error("Test catches") :),
+        (: error("Test catches") :),
+    }), "*Test catches\n", "expect_catches should pass");
 }
 
 void test_expects_failing () {
@@ -97,24 +104,41 @@ void test_expects_failing () {
 
     expect_next_failure();
     expect_arrays_equal(
-        ({ "zero giraffes", "zero giraffes", "zero giraffe", "zero giraffe", "zeri giraffes", "zero giraffes", "zeri giraffe" }),
-        ({ "zero giraffes", "zero giraffe", "zero giraffes", "zeri giraffes", "zero giraffe", "zeri giraffe", "zero giraffes" }),
+        ({ "zero giraffes", "zero giraffes", "zero giraffe", "zero giraffe", "zero giraffes" }),
+        ({ "zero giraffes", "zero giraffe", "zero giraffes", "zeri giraffes", "zeri giraffe" }),
         "format_array_differences should fail"
     );
 
     expect_next_failure();
     expect_function("nonexistant_function", testOb);
+
+    expect_next_failure();
+    expect_catch(function () {
+        return "No error";
+    }, "*Test catch\n", "expect_catch should fail");
+
+    expect_next_failure();
+    expect_catches(({
+        function () { return "No error"; },
+        function () { return "No error"; },
+        function () { return "No error"; },
+    }), "*Test catches\n", "expect_catches should fail");
 }
 
 void test_lifecycle_events () {
-
     expect_true(nBeforeAll == 1, "before_all_tests() ran once");
-
     expect_true(nBeforeEach == sizeof(testOrder), "before_each_test() ran before each test");
-    // this test has not finished yet
+    // the current test has not finished yet
     expect_true(nAfterEach == sizeof(testOrder) - 1, "after_each_test() ran after each test");
-
     expect_true(nTestOrder == 1, "test_order() called once");
+
+    expect_true(query_expect_catch() == 0, "query_expect_catch is disabled");
+    expect_catch(function () {
+        if (query_expect_catch()) {
+            error("Catch");
+        }
+    }, "*Catch\n", "query_expect_catch is enabled during expect_catch");
+    expect_true(query_expect_catch() == 0, "query_expect_catch is disabled");
 }
 
 void test_should_be_ignored () {

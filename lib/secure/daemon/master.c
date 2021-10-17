@@ -195,7 +195,10 @@ void error_handler (mapping e, int caught) {
     string ret, file = caught ? "catch" : "runtime";
 
     if (caught && sizeof(e["trace"]) > 1 && e["trace"][1]["program"] == D_TEST) {
-        // debug_message("--- CAUGHT DURING TEST:\n" + standard_trace(e) + "\n---");
+        object test = filter_array(e["trace"], (: $1["file"] == M_TEST :))[0]["object"];
+        if (test && !test->query_expect_catch()) {
+            write("--- CAUGHT DURING TEST:\n" + standard_trace(e) + "\n---\n");
+        }
         return;
     }
 

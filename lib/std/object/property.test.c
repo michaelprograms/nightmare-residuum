@@ -17,8 +17,6 @@ string *test_order () {
 }
 
 void test_property_bad_arguments () {
-    string *values, *results;
-
     expect_function("query_property", testOb);
     expect_function("query_properties", testOb);
     expect_function("set_property", testOb);
@@ -27,101 +25,63 @@ void test_property_bad_arguments () {
     expect_function("add_property", testOb);
     expect_function("remove_property", testOb);
 
-    values = ({});
-    results = ({});
-    values += ({ catch(testOb->query_property()) });
-    results += ({ "*Bad argument 1 to property->query_property\n" });
-    values += ({ catch(testOb->query_property(0)) });
-    results += ({ "*Bad argument 1 to property->query_property\n" });
-    values += ({ catch(testOb->query_property(0.0)) });
-    results += ({ "*Bad argument 1 to property->query_property\n" });
-    values += ({ catch(testOb->query_property("")) });
-    results += ({ "*Bad argument 1 to property->query_property\n" });
-    values += ({ catch(testOb->query_property(({}))) });
-    results += ({ "*Bad argument 1 to property->query_property\n" });
-    values += ({ catch(testOb->query_property(([]))) });
-    results += ({ "*Bad argument 1 to property->query_property\n" });
-    expect_arrays_equal(values, results, "query_property handled invalid inputs");
+    expect_catches (({
+        (: testOb->query_property() :),
+        (: testOb->query_property(0) :),
+        (: testOb->query_property(0.0) :),
+        (: testOb->query_property("") :),
+        (: testOb->query_property(({})) :),
+        (: testOb->query_property(([])) :),
+    }), "*Bad argument 1 to property->query_property\n", "query_property handled invalid argument 1");
 
-    values = ({});
-    results = ({});
-    values += ({ catch(testOb->set_properties()) });
-    results += ({ "*Bad argument 1 to property->set_properties\n" });
-    values += ({ catch(testOb->set_properties(0)) });
-    results += ({ "*Bad argument 1 to property->set_properties\n" });
-    values += ({ catch(testOb->set_properties(1.0)) });
-    results += ({ "*Bad argument 1 to property->set_properties\n" });
-    values += ({ catch(testOb->set_properties("")) });
-    results += ({ "*Bad argument 1 to property->set_properties\n" });
-    values += ({ catch(testOb->set_properties(({}))) });
-    results += ({ "*Bad argument 1 to property->set_properties\n" });
-    values += ({ catch(testOb->set_properties(([]))) });
-    results += ({ "*Bad argument 1 to property->set_properties\n" });
-    expect_arrays_equal(values, results, "set_properties handled invalid inputs");
+    expect_catches (({
+        (: testOb->set_properties() :),
+        (: testOb->set_properties(0) :),
+        (: testOb->set_properties(1.0) :),
+        (: testOb->set_properties("") :),
+        (: testOb->set_properties(({})) :),
+        (: testOb->set_properties(([])) :),
+    }), "*Bad argument 1 to property->set_properties\n", "set_properties handled invalid argument 1");
 
-    values = ({});
-    results = ({});
-    values += ({ catch(testOb->set_property()) });
-    results += ({ "*Bad argument 1 to property->set_property\n" });
-    values += ({ catch(testOb->set_property(0, 0)) });
-    results += ({ "*Bad argument 1 to property->set_property\n" });
-    values += ({ catch(testOb->set_property(0.0, 0.0)) });
-    results += ({ "*Bad argument 1 to property->set_property\n" });
-    values += ({ catch(testOb->set_property("", "")) });
-    results += ({ "*Bad argument 1 to property->set_property\n" });
-    values += ({ catch(testOb->set_property(({}), ({}))) });
-    results += ({ "*Bad argument 1 to property->set_property\n" });
-    values += ({ catch(testOb->set_property(([]), ([]))) });
-    results += ({ "*Bad argument 1 to property->set_property\n" });
-    values += ({ catch(testOb->set_property("test_key")) });
-    results += ({ "*Bad argument 2 to property->set_property\n" });
-    values += ({ catch(testOb->set_property("test_key", "")) });
-    results += ({ "*Bad argument 2 to property->set_property\n" });
-    values += ({ catch(testOb->set_property("test_key", ({}))) });
-    results += ({ "*Bad argument 2 to property->set_property\n" });
-    values += ({ catch(testOb->set_property("test_key", ([]))) });
-    results += ({ "*Bad argument 2 to property->set_property\n" });
-    expect_arrays_equal(values, results, "set_property handled invalid inputs");
+    expect_catches (({
+        (: testOb->set_property() :),
+        (: testOb->set_property(0, 0) :),
+        (: testOb->set_property(0.0, 0.0) :),
+        (: testOb->set_property("", "") :),
+        (: testOb->set_property(({}), ({})) :),
+        (: testOb->set_property(([]), ([])) :),
+        (: testOb->set_property() :),
+    }), "*Bad argument 1 to property->set_property\n", "set_property handled invalid argument 1");
+    expect_catches (({
+        (: testOb->set_property("test_key") :),
+        (: testOb->set_property("test_key", "") :),
+        (: testOb->set_property("test_key", ({})) :),
+        (: testOb->set_property("test_key", ([])) :),
+    }), "*Bad argument 2 to property->set_property\n", "set_property handled invalid argument 2");
 
-    values = ({});
-    results = ({});
-    values += ({ catch(testOb->add_property()) });
-    results += ({ "*Bad argument 1 to property->add_property\n" });
-    values += ({ catch(testOb->add_property(0, 0)) });
-    results += ({ "*Bad argument 1 to property->add_property\n" });
-    values += ({ catch(testOb->add_property(0.0, 0.0)) });
-    results += ({ "*Bad argument 1 to property->add_property\n" });
-    values += ({ catch(testOb->add_property("", "")) });
-    results += ({ "*Bad argument 1 to property->add_property\n" });
-    values += ({ catch(testOb->add_property(({}), ({}))) });
-    results += ({ "*Bad argument 1 to property->add_property\n" });
-    values += ({ catch(testOb->add_property(([]), ([]))) });
-    results += ({ "*Bad argument 1 to property->add_property\n" });
-    values += ({ catch(testOb->add_property("test_key")) });
-    results += ({ "*Bad argument 2 to property->add_property\n" });
-    values += ({ catch(testOb->add_property("test_key", "")) });
-    results += ({ "*Bad argument 2 to property->add_property\n" });
-    values += ({ catch(testOb->add_property("test_key", ({}))) });
-    results += ({ "*Bad argument 2 to property->add_property\n" });
-    values += ({ catch(testOb->add_property("test_key", ([]))) });
-    results += ({ "*Bad argument 2 to property->add_property\n" });
-    expect_arrays_equal(values, results, "add_property handled invalid inputs");
+    expect_catches (({
+        (: testOb->add_property() :),
+        (: testOb->add_property(0, 0) :),
+        (: testOb->add_property(0.0, 0.0) :),
+        (: testOb->add_property("", "") :),
+        (: testOb->add_property(({}), ({})) :),
+        (: testOb->add_property(([]), ([])) :),
+    }), "*Bad argument 1 to property->add_property\n", "add_property handled invalid argument 1");
+    expect_catches (({
+        (: testOb->add_property("test_key") :),
+        (: testOb->add_property("test_key", "") :),
+        (: testOb->add_property("test_key", ({})) :),
+        (: testOb->add_property("test_key", ([])) :),
+    }), "*Bad argument 2 to property->add_property\n", "add_property handled invalid argument 2");
 
-    values = ({});
-    results = ({});
-    values += ({ catch(testOb->remove_property()) });
-    results += ({ "*Bad argument 1 to property->remove_property\n" });
-    values += ({ catch(testOb->remove_property(0)) });
-    results += ({ "*Bad argument 1 to property->remove_property\n" });
-    values += ({ catch(testOb->remove_property(0.0)) });
-    results += ({ "*Bad argument 1 to property->remove_property\n" });
-    values += ({ catch(testOb->remove_property("")) });
-    results += ({ "*Bad argument 1 to property->remove_property\n" });
-    values += ({ catch(testOb->remove_property(({}))) });
-    results += ({ "*Bad argument 1 to property->remove_property\n" });
-    values += ({ catch(testOb->remove_property(([]))) });
-    results += ({ "*Bad argument 1 to property->remove_property\n" });
-    expect_arrays_equal(values, results, "remove_property handled invalid inputs");
+    expect_catches (({
+        (: testOb->remove_property() :),
+        (: testOb->remove_property(0) :),
+        (: testOb->remove_property(0.0) :),
+        (: testOb->remove_property("") :),
+        (: testOb->remove_property(({})) :),
+        (: testOb->remove_property(([])) :),
+    }), "*Bad argument 1 to property->remove_property\n", "remove_property handled invalid argument 1");
 }
 
 void test_property_single () {

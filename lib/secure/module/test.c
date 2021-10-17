@@ -11,9 +11,14 @@ nosave protected mixed UNDEFINED = (([])[0]); // equivalent of UNDEFINED
 
 // -----------------------------------------------------------------------------
 
-private nosave int currentTestPassed = 0, currentTestRegex = 0;
-private nosave int failingExpects = 0, passingExpects = 0;
-private nosave string currentTestLog;
+nosave private int currentTestPassed = 0, currentTestRegex = 0;
+nosave private int failingExpects = 0, passingExpects = 0;
+nosave private int expectCatch = 0;
+nosave private string currentTestLog;
+
+int query_expect_catch () {
+    return expectCatch;
+}
 
 // -----------------------------------------------------------------------------
 
@@ -36,11 +41,6 @@ string *test_ignore () {
         "init",
         "reset",
     });
-}
-protected expect_next_failure () {
-    if (base_name(this_object()) == replace_string(M_TEST, ".c", ".test") && failingExpects == 0) {
-        failingExpects --;
-    }
 }
 
 // -----------------------------------------------------------------------------
@@ -83,7 +83,7 @@ public int execute_test (function done) {
         timeAfter = rusage()["utime"] + rusage()["stime"];
 
         currentTestLog = "  " + UNDERLINE + BOLD + testFn + RESET + " (" + ORANGE + (timeAfter - timeBefore) + RESET + " ms):" + currentTestLog;
-        write(currentTestLog+"\n");
+        write(currentTestLog + "\n");
     }
 
 
@@ -95,6 +95,7 @@ public int execute_test (function done) {
             write("    " + RED + "?" + RESET + " " + fn + "\n");
         }
     }
+    // @TODO mapping?
     evaluate(done, sizeof(testFns), passingExpects, failingExpects, sizeof(testObjectFns), sizeof(testObjectUntestedFns));
 }
 
@@ -113,9 +114,18 @@ protected object clone_object (string name) {
     return ob;
 }
 
+// -----------------------------------------------------------------------------
+
 private string format_string_difference (string actual, string expect) {
     int n, al, el;
     string result;
+
+    if (!stringp(actual)) {
+        actual = identify(actual);
+    }
+    if (!stringp(expect)) {
+        expect = identify(expect);
+    }
 
     actual = replace_string(replace_string(actual, "\n", "\\n"), "\e", "\\e");
     expect = replace_string(replace_string(expect, "\n", "\\n"), "\e", "\\e");
@@ -144,6 +154,8 @@ private string format_array_differences (mixed *actual, mixed *expect) {
     }
     return result;
 }
+
+// -----------------------------------------------------------------------------
 
 // message should start with the function being tested
 private void validate_expect (mixed value1, mixed value2, string message) {
@@ -256,6 +268,38 @@ void expect_function (string fn, object testOb) {
     if (currentTestPassed) {
         testObjectUntestedFns -= ({ fn });
     } else {
-        validate_expect ("false", "true", fn +" does not exist");
+        validate_expect ("false", "true", fn + " does not exist");
     }
+}
+
+protected void expect_next_failure () {
+    if (base_name(this_object()) == replace_string(M_TEST, ".c", ".test") && failingExpects == 0) {
+        failingExpects --;
+    }
+}
+varargs void expect_catch (mixed expr, string right, string message) {
+    mixed err;
+    expectCatch ++;
+    err = catch(evaluate(expr));
+    expectCatch --;
+    currentTestPassed = !!err && err == right;
+    if (!err) {
+        err = "Not Caught";
+    }
+    validate_expect (err, right, message);
+}
+varargs void expect_catches (mixed *expr, string right, string message) {
+    mixed err;
+    string *values = ({});
+    expectCatch ++;
+    foreach (mixed e in expr) {
+        err = catch(evaluate(e));
+        if (!err) {
+            values += ({ "Not Caught" });
+        } else {
+            values += ({ err });
+        }
+    }
+    expectCatch --;
+    expect_array_strings_equal(values, right, message);
 }

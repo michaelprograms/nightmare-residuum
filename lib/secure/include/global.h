@@ -15,7 +15,7 @@
 #define M_SAVE          "/secure/module/save.c"
 
 // secure modules
-#define M_TEST          "/secure/module/test.c" // @TODO /secure/std/module/test
+#define M_TEST          "/secure/module/test.c"
 
 // daemon
 #define D_ACCESS        "/secure/daemon/access.c"

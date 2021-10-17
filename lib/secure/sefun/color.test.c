@@ -40,23 +40,14 @@ void test_hex_to_int () {
     results += ({ 255 });
     expect_arrays_equal(values, results, "hex_to_int handled base16");
 
-
-    values = ({});
-    results = ({});
-    values += ({ catch(testOb->hex_to_int()) });
-    results += ({ "*Bad argument 1 to color->hex_to_int\n" });
-    values += ({ catch(testOb->hex_to_int(0)) });
-    results += ({ "*Bad argument 1 to color->hex_to_int\n" });
-    values += ({ catch(testOb->hex_to_int("")) });
-    results += ({ "*Bad argument 1 to color->hex_to_int\n" });
-    values += ({ catch(testOb->hex_to_int(({}))) });
-    results += ({ "*Bad argument 1 to color->hex_to_int\n" });
-    values += ({ catch(testOb->hex_to_int(([]))) });
-    results += ({ "*Bad argument 1 to color->hex_to_int\n" });
-    values += ({ catch(testOb->hex_to_int("A")) });
-    results += ({ "*Bad argument 1 to color->hex_to_int\n" });
-    values += ({ catch(testOb->hex_to_int("GG")) });
-    results += ({ "*Bad argument 1 to color->hex_to_int\n" });
-    expect_arrays_equal(values, results, "hex_to_int bandled bad inputs");
+    expect_catches (({
+        (: testOb->hex_to_int() :),
+        (: testOb->hex_to_int(0) :),
+        (: testOb->hex_to_int("") :),
+        (: testOb->hex_to_int(({})) :),
+        (: testOb->hex_to_int(([])) :),
+        (: testOb->hex_to_int("A") :),
+        (: testOb->hex_to_int("GG") :),
+    }), "*Bad argument 1 to color->hex_to_int\n", "hex_to_int bandled bad inputs");
 
 }

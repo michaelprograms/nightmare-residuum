@@ -9,12 +9,13 @@ void after_all_tests () {
 }
 
 void test_efuns () {
-    mixed err;
     expect_function("input_to", testOb);
-    err = catch(input_to());
-    expect_strings_equal(err, "*efun::input_to disabled\n", "input_to threw error");
 
-    expect_function("this_player", testOb);
-    err = catch(this_player());
-    expect_strings_equal(err, "*efun::this_player disabled\n", "this_player threw error");
+    expect_catches (({
+        (: input_to() :),
+    }), "*efun::input_to disabled\n", "input_to threw error");
+
+    expect_catches (({
+        (: this_player() :),
+    }), "*efun::this_player disabled\n", "this_player() threw error");
 }
