@@ -11,7 +11,7 @@ void after_all_tests () {
 }
 
 string *test_order () {
-    return ({ "test_variables", "test_variable_hooks" });
+    return ({ "test_set_variables", "test_set_variable_hooks" });
 }
 
 void test_set_variables () {
