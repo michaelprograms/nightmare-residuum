@@ -18,6 +18,7 @@ void restore_data () {
 }
 void save_data () {
     if (stringp(__SavePath)) {
+        assure_path(__SavePath);
         unguarded((: save_object, __SavePath :));
     }
 }
