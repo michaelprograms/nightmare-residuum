@@ -30,10 +30,10 @@ string sanitize_path (string path) {
         path = replace_string(path, "^", "domain/");
         trailingSlash = 1;
     } else if (path[0] == '~') {
-        // write("sanitize_path("+path+"): "+identify(previous_object())+" "+identify(previous_object()->query_character())+" "+identify(previous_object()->query_character()->query_key_name())+"\n");
+        write("sanitize_path("+path+"): "+identify(previous_object())+" "+identify(previous_object()->query_character())+" "+identify(previous_object()->query_character()->query_key_name())+"\n");
         path = replace_string(path, "~", "realm/" + previous_object()->query_character()->query_key_name() + "/");
         trailingSlash = 1;
-        // write("path is now: "+path+"\n");
+        write("path is now: "+path+"\n");
     }
     parts = explode(path, "/") - ({ "", "." });
     if (!sizeof(parts)) {

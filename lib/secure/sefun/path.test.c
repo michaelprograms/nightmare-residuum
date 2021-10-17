@@ -112,10 +112,13 @@ void test_sanitize_path () {
         "/domain/Dir/",
     }), "sanitize_path handled ^");
 
+    write("creating mockCharacter\n");
     mockCharacter = new("/std/object/id.c");
     mockCharacter->set_key_name("tester");
+    write("creating mockShell\n");
     mockShell = new("/secure/shell/shell.c");
     mockShell->start_shell();
+    write("starting sanitize_path tests\n");
     expect_array_strings_equal(({
         testOb->sanitize_path("~"),
         testOb->sanitize_path("~."),
