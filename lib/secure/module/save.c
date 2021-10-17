@@ -12,7 +12,7 @@ void set_save_path (string path) {
 }
 
 void restore_data () {
-    if (stringp(__SavePath) && file_size(__SavePath) > 0) {
+    if (stringp(__SavePath) && unguarded((: file_size, __SavePath :)) > 0) {
         unguarded((: restore_object, __SavePath :));
     }
 }
