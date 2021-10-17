@@ -114,7 +114,7 @@ void test_sanitize_path () {
 
     mockCharacter = new("/std/object/id.c");
     mockCharacter->set_key_name("tester");
-    mockShell = new("/secure/shell/shell.c"));
+    mockShell = new("/secure/shell/shell.c");
     mockShell->start_shell();
     expect_array_strings_equal(({
         testOb->sanitize_path("~"),
