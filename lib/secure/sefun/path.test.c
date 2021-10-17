@@ -61,6 +61,8 @@ void test_base_path() {
 }
 
 void test_sanitize_path () {
+    mixed err;
+
     expect_function("sanitize_path", testOb);
 
     expect_array_strings_equal(({
@@ -116,7 +118,8 @@ void test_sanitize_path () {
     mockCharacter = new("/std/object/id.c");
     mockCharacter->set_key_name("tester");
     write("creating mockShell\n");
-    mockShell = new("/secure/shell/shell.c");
+    err = catch(mockShell = new("/secure/shell/shell.c"));
+    if (err) write("err: "+identify(err)+"\n");
     write("mockShell: "+identify(mockShell)+"\n");
     mockShell->start_shell();
     write("starting sanitize_path tests\n");
