@@ -30,10 +30,8 @@ string sanitize_path (string path) {
         path = replace_string(path, "^", "domain/");
         trailingSlash = 1;
     } else if (path[0] == '~') {
-        write("sanitize_path("+path+"): "+"/secure/sefun/string"->identify(previous_object())+" "+"/secure/sefun/string"->identify(previous_object()->query_character())+" "+"/secure/sefun/string"->identify(previous_object()->query_character()->query_key_name())+"\n");
         path = replace_string(path, "~", "realm/" + previous_object()->query_character()->query_key_name() + "/");
         trailingSlash = 1;
-        write("path is now: "+path+"\n");
     }
     parts = explode(path, "/") - ({ "", "." });
     if (!sizeof(parts)) {
