@@ -128,6 +128,13 @@ void test_sanitize_path () {
         testOb->sanitize_path("~/dir/dir/.././../."),
         testOb->sanitize_path("~/dir/.././dir2/../."),
     }), "/realm/tester/", "sanitize_path handled ~");
+
+    mockShell->set_variable("cwd", "/realm/tester/testdir/");
+    expect_array_strings_equal(({
+        testOb->sanitize_path(""),
+        testOb->sanitize_path(),
+        testOb->sanitize_path("test"),
+    }), "/realm/tester/testdir/", "sanitize_path handled cwd");
 }
 
 void test_absolute_path () {

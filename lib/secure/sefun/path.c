@@ -17,20 +17,21 @@ string base_path (string path) {
 string sanitize_path (string path) {
     string *parts;
     int i = 0;
-    int trailingSlash = (path[<1] == '/');
+    int trailingSlash;
 
-    if (!path || (path[0] != '/' && path[0] != '~' && path[0] != '^')) {
+    if (undefinedp(path) || !path || path == "" || (path[0] != '/' && path[0] != '~' && path[0] != '^')) {
         if (previous_object() && previous_object()->query_shell()) {
             path = previous_object()->query_shell()->query_variable("cwd");
         }
     }
 
+    trailingSlash = (strlen(path) > 0 && path[<1] == '/');
     if (path[0] == '^') {
         path = replace_string(path, "^", "domain/");
         trailingSlash = 1;
     } else if (path[0] == '~') {
         // write("sanitize_path("+path+"): "+identify(previous_object())+" "+identify(previous_object()->query_character())+" "+identify(previous_object()->query_character()->query_key_name())+"\n");
-        path = replace_string(path, "~", "realm/" + previous_object()->query_character()->query_key_name());
+        path = replace_string(path, "~", "realm/" + previous_object()->query_character()->query_key_name() + "/");
         trailingSlash = 1;
         // write("path is now: "+path+"\n");
     }
