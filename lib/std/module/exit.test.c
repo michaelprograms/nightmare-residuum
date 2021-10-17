@@ -111,7 +111,7 @@ void test_handle_go () {
 
     expect_arrays_equal(values, results, "handle_go moved object");
 
-    ob->clean_up();
-    r1->clean_up();
-    r2->clean_up();
+    destruct(ob);
+    destruct(r1);
+    destruct(r2);
 }

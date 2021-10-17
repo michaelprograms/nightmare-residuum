@@ -135,6 +135,8 @@ void test_sanitize_path () {
         testOb->sanitize_path(),
         testOb->sanitize_path("test"),
     }), "/realm/tester/testdir/", "sanitize_path handled cwd");
+    destruct(mockCharacter);
+    destruct(mockShell);
 }
 
 void test_absolute_path () {

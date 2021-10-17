@@ -21,8 +21,13 @@ string *test_order () {
 }
 
 void test_applies () {
+    object ob;
+
     expect_function("connect", testOb);
-    expect_strings_equal(base_name(testOb->connect()), OBJ_USER, "connect returned OBJ_USER");
+
+    expect_strings_equal(base_name(ob = testOb->connect()), OBJ_USER, "connect returned OBJ_USER");
+
+    destruct(ob);
 }
 
 void test_startup_applies () {

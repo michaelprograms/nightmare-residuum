@@ -48,6 +48,8 @@ void test_move () {
     results += ({ 0 });
 
     expect_arrays_equal(values, results, "handle_move moved objects");
+    destruct(ob);
+    destruct(ob2);
 }
 
 void test_parser_applies () {
