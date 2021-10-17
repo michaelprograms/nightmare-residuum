@@ -6,7 +6,7 @@ inherit M_SAVE;
 inherit "/secure/shell/alias.c";
 inherit "/secure/shell/variable.c";
 
-nosave private object __User;
+nosave private object __Owner;
 nosave private mapping __ShellCommands = ([]);
 
 void create () {
@@ -14,17 +14,16 @@ void create () {
         return;
     }
 
-    __User = previous_object() || previous_object(1);
-    if (__User != this_user() && !regexp(file_name(__User), "\\.test$")) {
-        write("illegal shell object created? "+identify(__User)+"\n");
+    __Owner = previous_object() || previous_object(1);
+    if (__Owner != this_user() && !regexp(file_name(__Owner), "\\.test$")) {
         error("illegal shell object created?");
         destruct();
     }
 
-    if (__User) {
-        string keyName = __User->query_character()->query_key_name();
+    if (__Owner) {
+        string keyName = __Owner->query_character()->query_key_name();
         set_save_path(sprintf("/save/shell"+"/%c/%s.o", keyName[0], keyName));
-        restore_data(); // @TODO check if exists first?
+        restore_data();
     }
 
     alias::create();
@@ -32,7 +31,7 @@ void create () {
 }
 
 void handle_remove () {
-    if (origin() != ORIGIN_LOCAL && __User && __User != previous_object()) {
+    if (origin() != ORIGIN_LOCAL && __Owner && __Owner != previous_object()) {
         error("illegal attempt to remove shell object?");
     }
 
@@ -53,7 +52,7 @@ void execute_command (string input) {
 
     if (path = D_COMMAND->query_command(action)) {
         call_other(path+"/"+action, "command", args); // @TODO is this right?
-    } else if (!__User->query_character()->do_command(input)) {
+    } else if (!__Owner->query_character()->do_command(input)) {
         write("$ What?\n");
     }
 }
@@ -87,7 +86,7 @@ protected mixed query_prompt () {
 }
 
 void shell_start () {
-    if ((__User != this_user() || __User != previous_object()) && !regexp(file_name(__User), "\\.test$")) {
+    if ((__Owner != this_user() || __Owner != previous_object()) && !regexp(file_name(__Owner), "\\.test$")) {
         error("illegal attempt to take over shell?");
     }
 
