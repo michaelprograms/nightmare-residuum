@@ -65,6 +65,10 @@ public int execute_test (function done) {
     write("\nEvaluating '" + CYAN + UNDERLINE + file_name(this_object()) + RESET + "'"+"\n");
     before_all_tests();
     foreach (string testFn in testFns) {
+        if (!function_exists(testFn, this_object())) {
+            write("    " + RED + "x" + RESET + " Function "+testFn+" not found.\n");
+            continue;
+        }
         currentTestLog = "";
         timeBefore = rusage()["utime"] + rusage()["stime"];
         before_each_test();
