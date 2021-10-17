@@ -46,8 +46,11 @@ void execute_file (string file, string input) {
     t = rusage()["utime"] + rusage()["stime"];
     ret = (mixed)call_other(file, "eval");
     t = rusage()["utime"] + rusage()["stime"] - t;
-    if (regexp(input, "return")) write("Result (%^ORANGE%^"+t+" ms%^RESET%^) = " + identify(ret)+"\n");
-    else write ("Complete (%^ORANGE%^"+t+" ms%^RESET%^)\n");
+    if (regexp(input, "return")) {
+        write("Result (%^ORANGE%^"+t+" ms%^RESET%^) = " + identify(ret)+"\n");
+    } else {
+        write("Complete (%^ORANGE%^"+t+" ms%^RESET%^)\n");
+    }
 }
 
 void clear_file (string file) {
