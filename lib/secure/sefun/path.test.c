@@ -117,6 +117,7 @@ void test_sanitize_path () {
     mockCharacter->set_key_name("tester");
     write("creating mockShell\n");
     mockShell = new("/secure/shell/shell.c");
+    write("mockShell: "+identify(mockShell)+"\n");
     mockShell->start_shell();
     write("starting sanitize_path tests\n");
     expect_array_strings_equal(({
