@@ -39,21 +39,29 @@ varargs void done (int numTests, int numPassed, int numFailed, int fnsTested, in
     }
 }
 
+void process_file (string file, function done) {
+    object t;
+    if (t = find_object(file)) {
+        destruct(t);
+    }
+    if (!inherits(M_TEST, load_object(file))) {
+        done();
+        return;
+    }
+    // call_out clears the call stack, call_other will chain the tests
+    call_out_walltime(function(string test) {
+        mixed err = catch(test->execute_test((: done :)));
+        if (err) {
+            write("\n    " + test + " encountered an errored:\n" + err + "\n");
+            done();
+        }
+    }, 0, file);
+}
+
 void process () {
     __Mode = "ALL";
     if (currentTest < sizeof(tests)) {
-        object t;
-        if (t = find_object(tests[currentTest])) destruct(t);
-        if (!inherits(M_TEST, load_object(tests[currentTest]))) done();
-        else {
-            // call_out clears the call stack, call_other will chain the tests
-            call_out(function() {
-                mixed err = catch(tests[currentTest]->execute_test((: done :)));
-                if (err) {
-                    write(err + "\n");
-                }
-            }, 0);
-        }
+        process_file(tests[currentTest], (: done :));
     } else {
         int totalExpects = totalPassed + totalFailed;
         timeAfter = rusage()["utime"] + rusage()["stime"];

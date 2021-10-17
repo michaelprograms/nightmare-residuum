@@ -49,16 +49,7 @@ void command (string input) {
         }
         keep = ({});
         if (file_size(test) > 0) {
-            if (find_object(test)) {
-                catch(destruct(find_object(test)));
-            }
-            call_other(test, "???");
-            call_out_walltime(function(string t) {
-                mixed err = catch(t->execute_test((: done :)));
-                if (err) {
-                    message("system", err + "\n", this_user());
-                }
-            }, 0, test);
+            D_TEST->process_file(test, (: done :));
         }
     } else {
         message("system", input + ": Error in update\n" + tmp+"\n", this_user());
