@@ -61,8 +61,6 @@ void test_base_path() {
 }
 
 void test_sanitize_path () {
-    mixed err;
-
     expect_function("sanitize_path", testOb);
 
     expect_array_strings_equal(({
@@ -114,15 +112,10 @@ void test_sanitize_path () {
         "/domain/Dir/",
     }), "sanitize_path handled ^");
 
-    write("creating mockCharacter\n");
     mockCharacter = new("/std/object/id.c");
     mockCharacter->set_key_name("tester");
-    write("creating mockShell\n");
-    err = catch(mockShell = new("/secure/shell/shell.c"));
-    if (err) write("err: "+identify(err)+"\n");
-    write("mockShell: "+identify(mockShell)+"\n");
+    mockShell = new("/secure/shell/shell.c"));
     mockShell->start_shell();
-    write("starting sanitize_path tests\n");
     expect_array_strings_equal(({
         testOb->sanitize_path("~"),
         testOb->sanitize_path("~."),
