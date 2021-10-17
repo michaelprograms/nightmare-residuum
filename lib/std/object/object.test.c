@@ -9,22 +9,6 @@ void after_all_tests () {
     if (objectp(testOb)) destruct(testOb);
 }
 
-void test_handle_remove () {
-    int *values = ({});
-
-    expect_function("handle_remove", testOb);
-    expect_true(member_array("internal_remove", functions(testOb, 0)) > -1 && !function_exists("internal_remove", testOb), "internal_remove is protected");
-
-    values += ({ objectp(testOb) });
-    values += ({ testOb->handle_remove() });
-    values += ({ objectp(testOb) });
-    expect_arrays_equal(values, ({
-        1,  // objectp
-        1,  // handle_remove
-        0,  // objectp
-    }), "handle_remove behaves");
-}
-
 void test_lifecycle_functions () {
     // @TODO test these better
 
