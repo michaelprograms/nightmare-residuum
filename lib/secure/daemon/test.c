@@ -47,7 +47,12 @@ void process () {
         if (!inherits(M_TEST, load_object(tests[currentTest]))) done();
         else {
             // call_out clears the call stack, call_other will chain the tests
-            call_out(function() { tests[currentTest]->execute_test((: done :)); }, 0);
+            call_out(function() {
+                mixed err = catch(tests[currentTest]->execute_test((: done :)));
+                if (err) {
+                    message("system", err + "\n", this_user());
+                }
+            }, 0);
         }
     } else {
         int totalExpects = totalPassed + totalFailed;

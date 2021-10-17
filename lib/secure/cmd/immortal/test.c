@@ -25,7 +25,10 @@ void command (string input) {
             }
             call_other(test, "???");
             call_out_walltime(function(string t) {
-                t->execute_test((: done :));
+                mixed err = catch(t->execute_test((: done :)));
+                if (err) {
+                    message("system", err + "\n", this_user());
+                }
             }, 0, test);
         } else {
             message("system", "Unable to find test file for " + input + ".\n", this_user());
