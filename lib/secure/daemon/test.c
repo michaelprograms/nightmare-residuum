@@ -50,7 +50,7 @@ void process () {
             call_out(function() {
                 mixed err = catch(tests[currentTest]->execute_test((: done :)));
                 if (err) {
-                    message("system", err + "\n", this_user());
+                    write(err + "\n");
                 }
             }, 0);
         }
