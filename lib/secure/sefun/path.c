@@ -30,7 +30,7 @@ string sanitize_path (string path) {
         path = replace_string(path, "^", "domain/");
         trailingSlash = 1;
     } else if (path[0] == '~') {
-        path = replace_string(path, "~", "realm/" + this_character()->query_key_name() + "/");
+        path = replace_string(path, "~", "realm/" + SEFUN->this_character()->query_key_name() + "/");
         trailingSlash = 1;
     }
     parts = explode(path, "/") - ({ "", "." });
