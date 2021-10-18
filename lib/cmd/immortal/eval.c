@@ -15,9 +15,13 @@ void create_tmp_file (string file, string input);
 // void abort () { }
 
 void command (string input) {
-    string file;
+    string file = user_path(this_character()->query_key_name());
 
-    file = "/tmp/CMD_EVAL_FILE." + this_character()->query_key_name() + ".c";
+    if (file_size(file) != -2) {
+        write("You must have a valid home directory.\n");
+        return;
+    }
+    file += "/CMD_EVAL_FILE.c";
     if (!write_file(file, "")) {
         write("You must have write access.\n");
         return;
