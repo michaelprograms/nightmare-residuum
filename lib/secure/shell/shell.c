@@ -93,7 +93,3 @@ void shell_start () {
     this_user()->input_push((: shell_input :), query_prompt());
     shell_init();
 }
-
-void set_cwd (string path) {
-    set_variable("cwd", path);
-}
