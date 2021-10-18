@@ -104,7 +104,7 @@ int query_allowed (object caller, string fn, string file, string mode) {
         if (!stack[i]) continue;
 
         // skip if stack entry is member of the access system
-        if (stack[i] == this_object() || stack[i] == master() || file_name(stack[i]) == SEFUN) continue;
+        if (stack[i] == this_object() || file_name(stack[i]) == MASTER || file_name(stack[i]) == SEFUN) continue;
 
         // access check fails due to no privs found for stack entry
         if (!(priv = query_privs(stack[i]))) return 0;

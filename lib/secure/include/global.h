@@ -29,6 +29,7 @@
 
 #define OBJ_USER        "/secure/user/user"
 
+#define MASTER          "/secure/daemon/master"
 #define SEFUN           "/secure/sefun/sefun"
 
 #endif /* __GLOBAL_H__ */
