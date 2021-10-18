@@ -58,6 +58,13 @@ void process_file (string file, function done) {
     }, 0, file);
 }
 
+private string format_total_line (string name, int current, int total) {
+    string tmp = sprintf("%-12s", name + ":");
+    tmp += sprintf("%3d", current) + " / " + sprintf("%-3d", total);
+    tmp += " (" + sprintf("%6.2f", current * 100.0 / total) + "%)";
+    return tmp;
+}
+
 void process () {
     __Mode = "ALL";
     if (currentTest < sizeof(tests)) {
@@ -65,10 +72,10 @@ void process () {
     } else {
         int totalExpects = totalPassed + totalFailed;
         timeAfter = rusage()["utime"] + rusage()["stime"];
-        write("\nFiles:     " + sprintf("%3d", currentTest) + " / " + sprintf("%3d", totalFiles) + " (" + sprintf("%3d", to_int(currentTest * 100 / totalFiles)) + "%)"+"\n");
-        write("Passed:    " + sprintf("%3d", totalPassed) + " / " + sprintf("%3d", totalExpects) + " (" + sprintf("%3d", to_int(totalPassed * 100 / totalExpects)) + "%)"+"\n");
-        write("Failed:    " + sprintf("%3d", totalFailed) + " / " + sprintf("%3d", totalExpects) + " (" + sprintf("%3d", to_int(totalFailed * 100 / totalExpects)) + "%)"+"\n");
-        write("Functions: " + sprintf("%3d", totalFnsTested) + " / " + sprintf("%3d", (totalFnsTested + totalFnsUntested)) + " (" + sprintf("%3d", to_int(totalFnsTested * 100 / (totalFnsTested + totalFnsUntested))) + "%)"+"\n");
+        write("\n" + format_total_line("Files", currentTest, totalFiles) + "\n");
+        write(format_total_line("Passed", totalPassed, totalExpects) + "\n");
+        write(format_total_line("Failed", totalFailed, totalExpects) + "\n");
+        write(format_total_line("Functions", totalFnsTested, totalFnsTested + totalFnsUntested) + "\n");
         write("Time:      " + (timeAfter - timeBefore) + " ms for "+totalTests+" tests\n\n");
         // call_out((: watch_all :), 2, 0);
         if (shutdownAfterTests) {
