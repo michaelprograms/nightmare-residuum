@@ -22,12 +22,26 @@ string *test_order () {
 
 void test_applies () {
     object ob;
+    mapping stats;
 
     expect_function("connect", testOb);
 
     expect_strings_equal(base_name(ob = testOb->connect()), OBJ_USER, "connect returned OBJ_USER");
 
     destruct(ob);
+
+    expect_function("get_mud_stats", testOb);
+
+    stats = testOb->get_mud_stats();
+    expect_arrays_equal(({
+        stats["NAME"],
+        member_array("PLAYERS", keys(stats)) > -1,
+        member_array("UPTIME", keys(stats)) > -1,
+    }), ({
+        mud_name(),
+        1,
+        1,
+    }), "get_mud_stats has stats");
 }
 
 void test_startup_applies () {
@@ -147,7 +161,6 @@ void test_parsing_applies () {
     expect_function("handle_parse_refresh", testOb);
     // @TODO test handle_parse_refresh
 }
-// TODO? expect_function("get_mud_stats", testOb);
 
 // UNUSED expect_function("view_errors", testOb);
 // UNUSED expect_function("authorfile", testOb);
