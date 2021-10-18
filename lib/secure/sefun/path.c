@@ -82,8 +82,9 @@ int assure_dir (string path) {
     dirs = split_path(path);
     dirs = explode(dirs[0], "/") + (!regexp(dirs[1], "\\.") ? ({ dirs[1] }) : ({}));
     for (int i = 0; check && i < sizeof(dirs); i ++) {
-        if (file_size(dir = dir + "/" + dirs[i]) == -1) {
-            check = D_ACCESS->unguarded((: mkdir, dir :));
+        dir = dir + "/" + dirs[i];
+        if (SEFUN->unguarded((: file_size, dir :)) == -1) {
+            check = SEFUN->unguarded((: mkdir, dir :));
         }
     }
     return check;
