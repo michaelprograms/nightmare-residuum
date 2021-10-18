@@ -18,6 +18,10 @@ void command (string input) {
         write("Update which file?\n");
         return;
     } else {
+        if (input[0] != '/' && input[0] != '~' && input[0] != '^') {
+            input = this_user()->query_shell()->query_variable("cwd") + "/" + input;
+        }
+        input = sanitize_path(input);
         write("Updating "+input+"...\n");
     }
 
