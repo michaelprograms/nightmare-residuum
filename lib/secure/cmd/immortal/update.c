@@ -17,6 +17,8 @@ void command (string input) {
     if (!input) {
         write("Update which file?\n");
         return;
+    } if (input == "here") {
+        input = file_name(environment(this_character()));
     } else {
         if (input[0] != '/' && input[0] != '~' && input[0] != '^') {
             input = this_user()->query_shell()->query_variable("cwd") + "/" + input;
@@ -56,6 +58,6 @@ void command (string input) {
             D_TEST->process_file(test, (: done :));
         }
     } else {
-        message("system", input + ": Error in update\n" + tmp+"\n", this_user());
+        message("system", input + ": Error in update\n", this_user());
     }
 }
