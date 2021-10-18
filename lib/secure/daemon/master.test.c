@@ -99,6 +99,8 @@ void test_security_applies () {
 }
 
 void test_valid_applies () {
+    object basicOb;
+
     // expect_function("valid_bind", testOb);
     // expect_function("valid_database", testOb);
     // expect_function("valid_hide", testOb);
@@ -106,10 +108,13 @@ void test_valid_applies () {
     // expect_function("valid_object", testOb);
 
     expect_function("valid_read", testOb);
-    expect_true(testOb->valid_read("/", testOb, "read_file"), "valid_read handled calls from master()");
-    expect_function("valid_write", testOb);
-    expect_true(testOb->valid_write("/", testOb, "write_file"), "valid_write handled calls from master()");
+    expect_true(testOb->valid_read("/", testOb, "read_file"), "valid_read handled allowed call");
+    // @TODO find something that doesn't have valid read
 
+    expect_function("valid_write", testOb);
+    expect_true(testOb->valid_write("/", testOb, "write_file"), "valid_write handled allowed call");
+    expect_false(testOb->valid_write("/save", (basicOb = new (STD_OBJECT)), "write_file"), "valid_write handled denied call");
+    destruct(basicOb);
 
     // expect_function("valid_save_binary", testOb);
     // expect_function("valid_seteuid", testOb);

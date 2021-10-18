@@ -330,31 +330,39 @@ int valid_socket (object caller, string fn, mixed *info) {
 }
 
 /*
-Read efuns:
-    file_size, get_dir, include, load_object, read_bytes, read_file,
-    restore_object, stat,
-Read/write efuns:
-    ed_start, compress_file, move_file,
-Write efuns:
-    debugmalloc, dumpallobj, mkdir, remove_file, rename, rmdir,
-    save_object, sqlite3_connect, trace_start, write_bytes, write_file,
+    Read efuns:
+        file_size, get_dir, include, load_object, read_bytes, read_file,
+        restore_object, stat,
+    Read/write efuns:
+        ed_start, compress_file, move_file,
+    Write efuns:
+        debugmalloc, dumpallobj, mkdir, remove_file, rename, rmdir,
+        save_object, sqlite3_connect, trace_start, write_bytes, write_file,
 */
 // This apply is called for each of the read efuns
 int valid_read (string file, mixed caller, string fn) {
     int valid = 0;
     file = sanitize_path(file);
-    if (regexp(file_name(caller), "/secure/daemon/master") > 0) valid = 1; // @TODO this_object()
-    else if (regexp(file_name(caller), "/secure/daemon/access") > 0) valid = 1;
-    else valid = D_ACCESS->query_allowed(caller, fn, file, "read");
+
+    if (!(valid = regexp(file_name(caller), "/secure/daemon/[master|access]"))) {
+        valid = D_ACCESS->query_allowed(caller, fn, file, "read");
+    }
+    if (!valid && !regexp(file_name(previous_object()), "\\.test$")) {
+        debug_message(file_name(caller)+" denied read ("+fn+") to "+file);
+    }
     return valid;
 }
 // This apply is called for each of the write efuns
 int valid_write (string file, mixed caller, string fn) {
     int valid = 0;
     file = sanitize_path(file);
-    if (regexp(file_name(caller), "/secure/daemon/master") > 0) valid = 1; // @TODO this_object()
-    else if (regexp(file_name(caller), "/secure/daemon/access") > 0) valid = 1;
-    else valid = D_ACCESS->query_allowed(caller, fn, file, "write");
+
+    if (!(valid = regexp(file_name(caller), "/secure/daemon/[master|access]"))) {
+        valid = D_ACCESS->query_allowed(caller, fn, file, "write");
+    }
+    if (!valid && !regexp(file_name(previous_object()), "\\.test$")) {
+        debug_message(file_name(caller)+" denied write ("+fn+") to "+file);
+    }
     return valid;
 }
 
