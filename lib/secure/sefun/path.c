@@ -4,7 +4,7 @@ string user_path (string name) {
 
 string *split_path (string path) {
     int pos;
-    while(path[<1] == '/' && strlen(path) > 1) path = path[0..<2];
+    while (path[<1] == '/' && strlen(path) > 1) path = path[0..<2];
     pos = strsrch(path, '/', -1);
     return ({ path[0..pos], path[pos+1..] });
 }
