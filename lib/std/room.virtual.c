@@ -31,10 +31,28 @@ void set_layout (string layout) {
                 __LayoutMap[x][y] = 0;
             }
             if (lines[y][x..x] != " ") {
-                __LayoutMap[x][y] = 1;
+                __LayoutMap[x][y] = lines[y][x..x];
             }
         }
     }
+}
+void set_layout_file (string filename) {
+    string *lines;
+    string *layout = ({});
+
+    if (file_length(filename) < 1) {
+        error("Bad argument 1 to room.virtual->set_layout_file");
+    }
+    lines = explode(read_file(filename), "\n");
+    foreach (string line in lines) {
+        string l = "";
+        foreach (string t in explode(line, ",")) {
+            if (t == "0") l += " ";
+            else l += t;
+        }
+        layout += ({ l });
+    }
+    set_layout(implode(layout, "\n"));
 }
 mapping query_layout_map () {
     return __LayoutMap;
@@ -130,11 +148,24 @@ varargs string *query_map (string mode) {
         string *rooms = ({});
         for (int x = ax; x <= bx; x ++) {
             if (__LayoutMap[x] && __LayoutMap[x][y]) {
-                if (thisx == x && thisy == y) {
-                    rooms += ({ "[X]" });
-                } else {
-                    rooms += ({ "[ ]" });
+                string center = (thisx == x && thisy == y ? "X" : " ");
+                string color = "";
+                if (__LayoutMap[x][y] == "7") {
+                    color = "%^BOLD%^";
+                } else if (__LayoutMap[x][y] == "6") {
+                    color = "%^ORANGE%^";
+                } else if (__LayoutMap[x][y] == "5") {
+                    color = "%^GREEN%^BOLD%^";
+                } else if (__LayoutMap[x][y] == "4") {
+                    color = "%^GREEN%^";
+                } else if (__LayoutMap[x][y] == "3") {
+                    color = "%^YELLOW%^";
+                } else if (__LayoutMap[x][y] == "2") {
+                    color = "%^CYAN%^";
+                } else if (__LayoutMap[x][y] == "1") {
+                    color = "%^BLUE%^";
                 }
+                rooms += ({ color + "[%^RESET%^" + center + color + "]%^RESET%^" });
             } else {
                 rooms += ({ "   " });
             }
