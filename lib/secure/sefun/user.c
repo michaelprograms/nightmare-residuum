@@ -7,8 +7,12 @@ object this_account () {
 }
 object this_character () {
     object c;
-    if (this_user() && (c = this_user()->query_character())) return c;
-    else return 0;
+    foreach (object ob in ({ previous_object(), previous_object(1), this_user() })) {
+        if (ob && (c = ob->query_character())) {
+            break;
+        }
+    }
+    return c;
 }
 object find_character (string name) {
     object *results = filter_array(children(STD_CHARACTER), (: $1 && $1->query_key_name() == $2:), sanitize_name(name));
