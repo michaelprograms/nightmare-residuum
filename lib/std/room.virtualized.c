@@ -9,10 +9,10 @@ string query_server () {
     return __Server;
 }
 
-string *query_map () {
+string *query_map (string mode) {
     if (!__Server) {
         return 0;
     } else {
-        return __Server->query_map();
+        return __Server->query_map(mode);
     }
 }

@@ -100,7 +100,7 @@ object virtual_create (string arg) {
     return room;
 }
 
-varargs string *query_map (mixed mode) {
+varargs string *query_map (string mode) {
     string *lines;
     string strx, stry;
     int thisx, thisy;
