@@ -225,25 +225,37 @@ private string *read_file_disabled_warnings (string file) {
 void log_error (string file, string msg) {
     string dest, lcMsg, nom, tmp;
 
-    if (base_name(previous_object()) == "/secure/daemon/test") debug_message(msg);
+    if (base_name(previous_object()) == "/secure/daemon/test") {
+        debug_message(msg);
+    }
 
-    if (file[0] != '/') file = "/" + file;
-    if (sscanf(file, "/realm/%s/%s", nom, tmp) == 2) dest = nom;
-    else if (sscanf(file, "/domain/%s/%s", nom, tmp) == 2) dest = nom;
-    else if (sscanf(file, "/%s/%s", nom, tmp) == 2) dest = nom;
-    if(!dest) dest = "log";
+    if (file[0] != '/') {
+        file = "/" + file;
+    }
+    if (sscanf(file, "/realm/%s/%s", nom, tmp) == 2) {
+        dest = nom;
+    } else if (sscanf(file, "/domain/%s/%s", nom, tmp) == 2) {
+        dest = nom;
+    } else if (sscanf(file, "/%s/%s", nom, tmp) == 2) {
+        dest = nom;
+    }
+    if (!dest) {
+        dest = "log";
+    }
 
-    if(regexp(msg, "Warning: ")) {
+    if (regexp(msg, "Warning: ")) {
         lcMsg = lower_case(msg);
         foreach (string warning in read_file_disabled_warnings(file)) {
-            if (regexp(lcMsg, lower_case(warning))) return;
+            if (regexp(lcMsg, lower_case(warning))) {
+                return;
+            }
         }
         msg = replace_string(msg, "Warning: ", "%^ORANGE%^Warning%^RESET%^: ", 1);
     } else {
         if (file_size("/log/" + dest) > 20000) { // 20 kb
             rename("/log/" + dest, "/log/" + dest+"-"+time());
         }
-        write_file("/log/" + dest, ctime(time())+" "+msg);
+        write_file("/log/" + dest, ctime() + " " + msg);
         msg = replace_string(msg, ": ", ": %^RED%^BOLD%^Error%^RESET%^: ", 1);
     }
     if (msg && this_user(1) ) { // @TODO && (find_object(OB_SIMUL_EFUN) && creatorp(this_user(1)))) {

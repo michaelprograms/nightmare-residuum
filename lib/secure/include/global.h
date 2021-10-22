@@ -22,8 +22,10 @@
 #define D_ACCOUNT       "/secure/daemon/account.c"
 #define D_CHARACTER     "/secure/daemon/character.c"
 #define D_COMMAND       "/secure/daemon/command.c"
+#define D_IPC           "/secure/daemon/ipc.c"
 #define D_TEST          "/secure/daemon/test.c" // needs .c
 #define D_ANSI          "/daemon/ansi.c"
+#define D_LOG           "/daemon/log.c"
 #define D_SOUL          "/daemon/soul.c"
 #define D_WELCOME       "/daemon/welcome.c"
 
