@@ -20,7 +20,7 @@ nosave private int __Socket;
 
 void create () {
     set_no_clean(1);
-    setup_ipc ();
+    setup_ipc();
     call_out((: monitor_ipc :), IPC_INTERVAL);
 }
 
