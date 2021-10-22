@@ -15,7 +15,8 @@ nosave private string __IPAddr;
 /* --- interactive apply --- */
 
 nomask void logon () {
-    debug_message(ctime() + " connect from " + query_ip_number()); // @TODO LOG_D
+    debug_message(ctime() + " connect from " + query_ip_number()); // @TODO log_file
+    D_LOG->log("connect", ctime() + " " + query_ip_number());
 
     calloutBanner = call_out_walltime(function () {
         if (!calloutBanner) {

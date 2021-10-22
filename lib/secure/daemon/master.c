@@ -202,6 +202,7 @@ void error_handler (mapping e, int caught) {
         return;
     }
 
+    // @TODO D_LOG->log log_file
     ret = "--- " + ctime(time()) + "\n" + standard_trace(e) + "\n";
     if (file_size("/log/"+file) > 20000) { // 20 kb
         rename("/log/"+file, "/log/"+file+"-"+time());
@@ -360,7 +361,7 @@ int valid_read (string file, mixed caller, string fn) {
         valid = D_ACCESS->query_allowed(caller, fn, file, "read");
     }
     if (!valid && !regexp(file_name(previous_object()), "\\.test$")) {
-        debug_message(file_name(caller)+" denied read ("+fn+") to "+file);
+        debug_message(ctime()+" "+file_name(caller)+" denied read ("+fn+") to "+file);
     }
     return valid;
 }
@@ -373,7 +374,7 @@ int valid_write (string file, mixed caller, string fn) {
         valid = D_ACCESS->query_allowed(caller, fn, file, "write");
     }
     if (!valid && !regexp(file_name(previous_object()), "\\.test$")) {
-        debug_message(file_name(caller)+" denied write ("+fn+") to "+file);
+        debug_message(ctime()+" "+file_name(caller)+" denied write ("+fn+") to "+file);
     }
     return valid;
 }
