@@ -48,7 +48,15 @@ void set_layout_file (string filename) {
         string l = "";
         foreach (string t in explode(line, ",")) {
             if (t == "0") l += " ";
-            else l += t;
+            else {
+                if (t == "10") t = "A";
+                else if (t == "11") t = "B";
+                else if (t == "12") t = "C";
+                else if (t == "13") t = "D";
+                else if (t == "14") t = "E";
+                else if (t == "15") t = "F";
+                l += t;
+            }
         }
         layout += ({ l });
     }
@@ -138,10 +146,10 @@ varargs string *query_map (string mode) {
         ay = thisy - 2;
         by = thisy + 2;
     } else if (mode == "all") {
-        ax = 0;
-        bx = __MaxX;
-        ay = 0;
-        by = __MaxY;
+        ax = max(({ thisx - 15, 0 }));
+        bx = min(({ thisx + 15, __MaxX }));
+        ay = max(({ thisy - 15, 0 }));
+        by = min(({ thisy + 15, __MaxY }));
     }
 
     for (int y = ay; y <= by; y ++) {
@@ -149,23 +157,33 @@ varargs string *query_map (string mode) {
         for (int x = ax; x <= bx; x ++) {
             if (__LayoutMap[x] && __LayoutMap[x][y]) {
                 string center = (thisx == x && thisy == y ? "X" : " ");
-                string color = "";
-                if (__LayoutMap[x][y] == "7") {
-                    color = "%^BOLD%^";
-                } else if (__LayoutMap[x][y] == "6") {
-                    color = "%^ORANGE%^";
-                } else if (__LayoutMap[x][y] == "5") {
-                    color = "%^GREEN%^BOLD%^";
-                } else if (__LayoutMap[x][y] == "4") {
-                    color = "%^GREEN%^";
-                } else if (__LayoutMap[x][y] == "3") {
-                    color = "%^YELLOW%^";
-                } else if (__LayoutMap[x][y] == "2") {
-                    color = "%^CYAN%^";
-                } else if (__LayoutMap[x][y] == "1") {
-                    color = "%^BLUE%^";
+                string color = "", wrapper;
+                switch (__LayoutMap[x][y][0]) {
+                    case '0'..'3':
+                        color = "%^BLUE%^";
+                        break;
+                    case '4'..'5':
+                        color = "%^BLUE%^BOLD%^";
+                        break;
+                    case '6':
+                        color = "%^YELLOW%^";
+                        break;
+                    case '7':
+                        color = "%^GREEN%^BOLD%^";
+                        break;
+                    case '8':
+                        color = "%^GREEN%^";
+                        break;
+                    case '9'..'A':
+                        color = "%^ORANGE%^";
+                        break;
+                    case 'B'..'F':
+                        color = "%^BOLD%^";
+                        break;
+                    default:
+                        color = "%^RED%^";
                 }
-                rooms += ({ color + "[%^RESET%^" + center + color + "]%^RESET%^" });
+                rooms += ({ color + (wrapper ? wrapper : "[") + "%^RESET%^" + center + color + (wrapper ? wrapper : "]") + "%^RESET%^" });
             } else {
                 rooms += ({ "   " });
             }

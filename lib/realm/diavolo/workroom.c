@@ -7,6 +7,6 @@ void create() {
     set_exits(([
         "void": "/domain/Nowhere/void.c",
         "freezer": "/domain/Nowhere/freezer.",
-        "planet": "/domain/Planet/virtual/room/planet/3.3",
+        "planet": "/domain/Planet/virtual/room/terrain/Terra/20.20",
     ]));
 }
