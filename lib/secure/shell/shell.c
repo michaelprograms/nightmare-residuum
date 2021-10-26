@@ -1,6 +1,7 @@
 #include <driver/origin.h>
 #include "shell.h"
 
+inherit M_CLEAN;
 inherit M_SAVE;
 
 inherit "/secure/shell/alias.c";
@@ -8,6 +9,10 @@ inherit "/secure/shell/variable.c";
 
 nosave private object __Owner;
 nosave private mapping __ShellCommands = ([]);
+
+object query_name () {
+    return __Owner;
+}
 
 void create () {
     if (!clonep()) {
@@ -92,4 +97,11 @@ void shell_start () {
 
     this_user()->input_push((: shell_input :), query_prompt());
     shell_init();
+}
+
+int clean_up () {
+    if (__Owner) {
+        return clean::clean_later();
+    }
+    return clean::clean_up();
 }

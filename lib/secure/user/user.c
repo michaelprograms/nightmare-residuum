@@ -113,7 +113,7 @@ nomask void quit_character (int destructing) {
 
 nomask void quit_account () {
     quit_character(1);
-    destruct(this_object());
+    handle_remove();
 }
 
 nomask void reset_connect_timeout () {
