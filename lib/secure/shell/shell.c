@@ -25,7 +25,7 @@ void create () {
         destruct();
     }
 
-    if (__Owner) {
+    if (__Owner && __Owner->query_character()) {
         string keyName = __Owner->query_character()->query_key_name();
         set_save_path(sprintf("/save/shell"+"/%c/%s.o", keyName[0], keyName));
         restore_data();
