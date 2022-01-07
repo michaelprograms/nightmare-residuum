@@ -1,3 +1,4 @@
+inherit M_PARENT;
 inherit M_SAVE;
 
 private string __AccountName;
@@ -29,6 +30,10 @@ private int __EdSetup;  // @TODO
 nosave private string *__AccountCharacterNames = ({});
 
 // -----------------------------------------------------------------------------
+
+void create () {
+    parent::create();
+}
 
 int is_account () { return 1; }
 

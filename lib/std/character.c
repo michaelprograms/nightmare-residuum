@@ -1,4 +1,5 @@
 inherit STD_LIVING;
+inherit M_PARENT;
 inherit M_SAVE;
 
 private int __LastAction;
@@ -13,6 +14,7 @@ int is_character () { return 1; }
 
 void create() {
     living::create();
+    parent::create();
 }
 
 void set_name (string name) {

@@ -2,6 +2,7 @@
 #include "shell.h"
 
 inherit M_CLEAN;
+inherit M_PARENT;
 inherit M_SAVE;
 
 inherit "/secure/shell/alias.c";
@@ -31,6 +32,7 @@ void create () {
         restore_data();
     }
 
+    parent::create();
     alias::create();
     variable::create();
 }
