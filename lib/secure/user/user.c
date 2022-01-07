@@ -131,8 +131,17 @@ protected nomask int handle_login_commands (string input) {
 nomask varargs void handle_remove (string message) {
     if (!undefinedp(calloutTimeout)) remove_call_out(calloutTimeout);
     if (message) message("system", message, this_object());
-    if (query_shell()) shell_stop();
-    if (query_character()) quit_character(1);
+
+    if (query_shell()) {
+        shell_stop();
+    }
+    if (query_character()) {
+        quit_character(1);
+    }
+    if (query_account()) {
+        destruct(query_account());
+    }
+
     flush_messages();
     destruct(this_object());
 }
