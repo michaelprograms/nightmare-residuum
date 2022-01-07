@@ -39,7 +39,7 @@ jobs:
       if: steps.cache.outputs.cache-hit != 'true'
       run: ./build.sh
       shell: bash
-      timeout-minutes: 5
+      timeout-minutes: 10
       
     - name: Run Tests
       run: ./run-tests.sh
