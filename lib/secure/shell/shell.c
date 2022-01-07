@@ -59,7 +59,7 @@ void execute_command (string input) {
 
     if (path = D_COMMAND->query_command(action)) {
         call_other(path+"/"+action, "command", args); // @TODO is this right?
-    } else if (!__Owner->query_character()->do_command(input)) {
+    } else if (__Owner->query_character() && !__Owner->query_character()->do_command(input)) {
         write("$ What?\n");
     }
 }
