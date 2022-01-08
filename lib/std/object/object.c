@@ -30,9 +30,11 @@ int handle_move (mixed dest) {
     if (!ob || ob == this_object()) return 0;
     // if (living(this_object()) && living(ob)) return 0; // @TODO
     if (!(ob->can_receive(this_object()))) return 0;
-    if (__LastEnv = environment()) environment()->handle_release_object();
+    if (__LastEnv = environment()) {
+        environment()->handle_release(this_object());
+    }
     move_object(ob);
-    environment()->handle_receive_object();
+    environment()->handle_receive(this_object());
     return (__LastEnv != environment());
 }
 

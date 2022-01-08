@@ -3,7 +3,7 @@ inherit M_TEST;
 private nosave object testOb;
 void before_each_test () {
     if (objectp(testOb)) destruct(testOb);
-    testOb = clone_object("/std/container");
+    testOb = clone_object("/std/container.c");
 }
 void after_all_tests () {
     if (objectp(testOb)) destruct(testOb);
@@ -15,8 +15,8 @@ void test_receive () {
 
     expect_function("can_receive", testOb);
     expect_function("can_release", testOb);
-    expect_function("handle_receive_object", testOb);
-    expect_function("handle_release_object", testOb);
+    expect_function("handle_receive", testOb);
+    expect_function("handle_release", testOb);
 
     values += ({ testOb->can_receive(ob) });
     results += ({ 1 });
@@ -24,7 +24,7 @@ void test_receive () {
     values += ({ testOb->can_release(ob) });
     results += ({ 0 });
 
-    values += ({ testOb->handle_receive_object(ob) });
+    values += ({ testOb->handle_receive(ob) });
     results += ({ 1 });
 
     values += ({ ob->handle_move(testOb) });
@@ -36,7 +36,7 @@ void test_receive () {
     values += ({ testOb->can_release(ob) });
     results += ({ 1 });
 
-    values += ({ testOb->handle_release_object(ob) });
+    values += ({ testOb->handle_release(ob) });
     results += ({ 1 });
 
     expect_arrays_equal(values, results, "receive and release behave");
