@@ -1,4 +1,4 @@
-string *sort_instance(string *list) {
+string *sort_instance (string *list) {
     return sort_array(list, (: explode($1, "#")[<1] > explode($2, "#")[<1] :));
 }
 string format_object (string path, string *children, int indent) {
