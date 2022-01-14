@@ -26,7 +26,9 @@ int handle_move (mixed dest) {
             }
             ob = find_object(dest);
         }
-    } else ob = dest;
+    } else {
+        ob = dest;
+    }
     if (!ob || ob == this_object()) return 0;
     // if (living(this_object()) && living(ob)) return 0; // @TODO
     if (!(ob->can_receive(this_object()))) return 0;
