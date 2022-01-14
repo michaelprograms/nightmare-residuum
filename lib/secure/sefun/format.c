@@ -16,7 +16,7 @@ varargs string format_header_bar (string title, string optional) {
         for (int i = strlen(strip_colour(bar)); i < width; i ++) bar += "=";
         bar += "%^RESET%^";
     } else {
-        bar = title + ": " + optional;
+        bar = title + (optional ? ": " + optional : "");
     }
     return bar;
 }
