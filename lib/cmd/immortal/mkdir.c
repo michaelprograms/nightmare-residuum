@@ -2,6 +2,7 @@ void command (string input) {
     string cwd, dir;
     if (!input) {
         write("Syntax: mkdir [directory]\n");
+        return;
     }
 
     cwd = this_user()->query_shell()->query_variable("cwd");
