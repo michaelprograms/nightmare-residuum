@@ -20,5 +20,4 @@ void command (string input) {
     foreach (string line in lines) {
         write(line + "\n");
     }
-    return;
 }
