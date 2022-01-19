@@ -3,6 +3,11 @@ void command (string input) {
 
     write(format_header_bar("ACTIONS") + "\n");
 
+    if (input == "rescan") {
+        D_COMMAND->scan();
+        write("\n%^BOLD%^Commands and verbs rescanned.%^RESET%^\n");
+    }
+
     foreach (string path in D_COMMAND->query_paths()) {
         string type = split_path(path)[<1];
         if (!actions[type]) actions[type] = ({});

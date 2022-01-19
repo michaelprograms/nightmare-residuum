@@ -4,27 +4,18 @@ nosave private string *__Paths = ({});
 nosave private mapping __Commands = ([]);
 nosave private mapping __Verbs = ([]);
 
-void scan (string *paths, string type);
-
 string *query_paths () { return __Paths; }
 mapping query_debug_commands () { return __Commands; }
 mapping query_debug_verbs () { return __Verbs; }
+void scan (string *paths, string type);
+void scan_all ();
 
 void create () {
     set_no_clean(1);
     __Paths = ({});
     __Commands = ([]);
     __Verbs = ([]);
-    scan(({
-        "/cmd/character",
-        "/cmd/immortal",
-        "/secure/cmd/character",
-        "/secure/cmd/immortal",
-    }), "command");
-    scan(({
-        "/cmd/verb",
-        "/secure/cmd/verb",
-    }), "verb");
+    scan_all();
 }
 
 // @TODO used by help
@@ -105,4 +96,17 @@ void scan (string *paths, string type) {
         }
         __Paths = distinct_array(__Paths + ({ path }));
     }
+}
+
+void scan_all () {
+    scan(({
+        "/cmd/character",
+        "/cmd/immortal",
+        "/secure/cmd/character",
+        "/secure/cmd/immortal",
+    }), "command");
+    scan(({
+        "/cmd/verb",
+        "/secure/cmd/verb",
+    }), "verb");
 }
