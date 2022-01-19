@@ -4,7 +4,7 @@ void command (string input) {
     write(format_header_bar("ACTIONS") + "\n");
 
     if (input == "rescan") {
-        D_COMMAND->scan();
+        D_COMMAND->scan_all();
         write("\n%^BOLD%^Commands and verbs rescanned.%^RESET%^\n");
     }
 
