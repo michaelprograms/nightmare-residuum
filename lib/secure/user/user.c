@@ -59,6 +59,8 @@ void receive_message (string type, string message) {
     } else if (type == "room_exits") {
         message = "%^GREEN%^" + replace_string(message, ":", ":%^RESET%^") + "%^RESET%^";
         receive(wrap(message));
+    } else if (type == "no_ansi") {
+        receive(message);
     } else {
         receive(wrap(message, 0, 0));
     }
