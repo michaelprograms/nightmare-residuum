@@ -97,7 +97,7 @@ void shell_start () {
         error("illegal attempt to take over shell?");
     }
 
-    this_user()->input_push((: shell_input :), query_prompt());
+    this_user()->input_push((: shell_input :), (: query_prompt :));
     shell_init();
 }
 
