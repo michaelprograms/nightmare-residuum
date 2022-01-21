@@ -74,7 +74,6 @@ nomask private void character_enter (int newbie) {
         __Character->enter_world();
 
         if (newbie) {
-            set_immortal(1); // @TODO FTUE
             __Character->save_data();
         }
     }
@@ -115,4 +114,3 @@ nomask protected void character_exit () {
 nomask protected void character_linkdead () {
     __Character->update_last_action();
     __Character->enter_freezer();
-}
