@@ -6,13 +6,14 @@
 #define STD_ACCOUNT     "/std/account.c"
 #define STD_CHARACTER   "/std/character.c"
 #define STD_CONTAINER   "/std/container.c"
-#define STD_LIVING      "/std/living/living.c"
+#define STD_LIVING      "/std/living.c"
 #define STD_ROOM        "/std/room.c"
 
 // std modules
 #define M_CLEAN         "/std/module/clean.c"
 #define M_EXIT          "/std/module/exit.c"
 #define M_PARENT        "/std/module/parent.c"
+#define M_STORY         "/std/module/story.c"
 
 // secure modules
 #define M_SAVE          "/secure/module/save.c"
