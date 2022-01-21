@@ -2,7 +2,7 @@ inherit M_TEST;
 
 private nosave object testOb;
 void before_all_tests () {
-    testOb = clone_object("/std/living/body");
+    testOb = clone_object("/std/living/body.c");
 }
 void after_all_tests () {
     if (objectp(testOb)) destruct(testOb);
@@ -33,4 +33,22 @@ void test_gender () {
     results += ({ "none" });
 
     expect_arrays_equal(values, results, "gender handled");
+}
+
+void test_level () {
+    int *values = ({}), *results = ({});
+
+    expect_function("set_level", testOb);
+    expect_function("query_level", testOb);
+
+    values += ({ intp(testOb->query_level()) });
+    results += ({ 1 });
+    values += ({ testOb->query_level() });
+    results += ({ 0 });
+
+    testOb->set_level(123);
+    values += ({ testOb->query_level() });
+    results += ({ 123 });
+
+    expect_arrays_equal(values, results, "level handled");
 }

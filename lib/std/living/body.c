@@ -1,4 +1,5 @@
 private string __Gender = "none";
+private int __Level = 0;
 
 string query_gender () {
     return __Gender;
@@ -11,4 +12,11 @@ void set_gender (string str) {
     default:
         __Gender = "none";
     }
+}
+
+int query_level () {
+    return __Level;
+}
+void set_level (int l) {
+    __Level = l;
 }
