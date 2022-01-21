@@ -178,3 +178,29 @@ void test_assure_dir () {
 
     expect_arrays_equal(values, results, "assure_dir handled dirs");
 }
+
+void test_wild_card () {
+    string *values = ({}), *results = ({});
+
+    expect_function("wild_card", testOb);
+
+    values += ({ identify(wild_card(0, 0)) });
+    results += ({ "({ })" });
+    values += ({ identify(wild_card("", "")) });
+    results += ({ "({ })" });
+
+    values += ({ identify(wild_card("/", "/")) });
+    results += ({ "({ \"/\" })" });
+
+    values += ({ identify(wild_card("/secure/sefun/path*.c", "")) });
+    results += ({ "({ \"/secure/sefun/path.c\", \"/secure/sefun/path.test.c\" })" });
+    values += ({ identify(wild_card("/secure/sefun/path*.c", "/")) });
+    results += ({ "({ \"/secure/sefun/path.c\", \"/secure/sefun/path.test.c\" })" });
+    values += ({ identify(wild_card("/secure/sefun/path*.c", "/domain")) });
+    results += ({ "({ \"/secure/sefun/path.c\", \"/secure/sefun/path.test.c\" })" });
+    values += ({ identify(wild_card("../secure/sefun/path*.c", "/realm")) });
+    results += ({ "({ \"/secure/sefun/path.c\", \"/secure/sefun/path.test.c\" })" });
+
+    expect_arrays_equal(values, results, "wild_card matched paths");
+
+}

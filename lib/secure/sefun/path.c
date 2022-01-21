@@ -57,7 +57,7 @@ string sanitize_path (string path) {
 
 varargs string absolute_path (string relative_path, mixed relative_to) {
     if (!relative_to) relative_to = previous_object();
-    if (relative_path[0] != '/') {
+    if (relative_path && relative_path[0] != '/') {
         if (objectp(relative_to)) {
             relative_path = base_path(file_name(relative_to)) + "/" + relative_path;
         } else if (stringp(relative_to)) {
@@ -88,4 +88,41 @@ int assure_dir (string path) {
         }
     }
     return check;
+}
+
+string *wild_card (string path, string relative_to) {
+    string cwd, *split, *match;
+
+    if (!path || sizeof(path) < 1) {
+        return ({});
+    }
+    cwd = absolute_path(path, relative_to);
+    if (cwd == "/") {
+        return ({ "/" });
+    }
+    split = split_path(cwd);
+    if (split[0] == "/") {
+        split[0] = "";
+    }
+    match = get_dir(cwd);
+    if (!match) {
+        match = ({});
+    } else {
+        match -= ({ "." });
+        match -= ({ ".." });
+    }
+    if (!path || path[0] != '.') {
+        match = filter_array(match, (: $1[0] != '.' :));
+    }
+    for (int i = 0; i < sizeof(match); i ++) {
+        if (file_size(split[0] + split[1]) == -2) {
+            match[i] = split[0];
+        } else {
+            match[i] = split[0] + match[i];
+        }
+        if (strlen(match[i]) > 1 && match[i][0..1] == "//") {
+            match[i] = match[i][1..<1];
+        }
+    }
+    return match;
 }
