@@ -26,7 +26,7 @@ void test_applies () {
 
     expect_function("connect", testOb);
 
-    expect_strings_equal(base_name(ob = testOb->connect()), OBJ_USER, "connect returned OBJ_USER");
+    expect_strings_equal((ob ? base_name(ob = testOb->connect()) : "OBJ_USER did not load", OBJ_USER, "connect returned OBJ_USER");
 
     destruct(ob);
 
