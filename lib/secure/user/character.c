@@ -114,3 +114,4 @@ nomask protected void character_exit () {
 nomask protected void character_linkdead () {
     __Character->update_last_action();
     __Character->enter_freezer();
+}
