@@ -2,10 +2,10 @@ nosave private function __EndFn;
 
 nomask private string query_prompt () {
     switch (query_ed_mode()) {
-        case -2: case 0:
-            return "";
-        default:
+        case 0:
             return ":";
+        case -2: default:
+            return "";
     }
 }
 
