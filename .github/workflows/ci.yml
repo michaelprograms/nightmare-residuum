@@ -45,23 +45,3 @@ jobs:
       run: ./run-tests.sh
       shell: bash
       timeout-minutes: 1
-
-    - name: Get Catch Log
-      uses: pCYSl5EDgo/cat@master
-      id: catch_logs
-      with:
-        path: lib/log/catch
-    - name: View Catch Log
-      run: echo $TEXT
-      env:
-        TEXT: ${{ steps.catch_logs.outputs.text }}
-        
-    - name: Get Runtime Log
-      uses: pCYSl5EDgo/cat@master
-      id: runtime_logs
-      with:
-        path: lib/log/runtime
-    - name: View Runtime Log
-      run: echo $TEXT
-      env:
-        TEXT: ${{ steps.runtime_logs.outputs.text }}
