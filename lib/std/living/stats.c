@@ -1,3 +1,5 @@
+#include "living.h"
+
 private mapping __Stats = ([
     "strength": 0,
     "perception": 0,

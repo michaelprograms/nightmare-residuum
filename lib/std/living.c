@@ -1,3 +1,5 @@
+#include "living/living.h"
+
 inherit STD_CONTAINER;
 
 inherit "/std/living/body.c";

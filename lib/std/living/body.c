@@ -1,3 +1,5 @@
+#include "living.h"
+
 private string __Gender = "none";
 private int __Level = 0;
 
@@ -18,5 +20,8 @@ int query_level () {
     return __Level;
 }
 void set_level (int l) {
+    if (l < 0) {
+        l = abs(l);
+    }
     __Level = l;
 }

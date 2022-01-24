@@ -41,12 +41,18 @@ void test_level () {
     expect_function("set_level", testOb);
     expect_function("query_level", testOb);
 
-    values += ({ intp(testOb->query_level()) });
-    results += ({ 1 });
     values += ({ testOb->query_level() });
     results += ({ 0 });
 
     testOb->set_level(123);
+    values += ({ testOb->query_level() });
+    results += ({ 123 });
+
+    testOb->set_level(0);
+    values += ({ testOb->query_level() });
+    results += ({ 0 });
+
+    testOb->set_level(-123);
     values += ({ testOb->query_level() });
     results += ({ 123 });
 
