@@ -89,7 +89,11 @@ protected void shell_init () {
 }
 
 protected mixed query_prompt () {
-    return "> ";
+    object tc = query_parent()->query_character();
+    string hp = tc->query_hp() + "/" + tc->query_max_hp() + " hp";
+    string sp = tc->query_sp() + "/" + tc->query_max_sp() + " sp";
+    string mp = tc->query_mp() + "/" + tc->query_max_mp() + " mp";
+    return hp + " " + sp + " " + mp + " > ";
 }
 
 void shell_start () {
