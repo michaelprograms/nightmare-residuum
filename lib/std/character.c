@@ -1,3 +1,5 @@
+#include "living/living.h";
+
 inherit STD_LIVING;
 inherit M_PARENT;
 inherit M_SAVE;
@@ -52,8 +54,10 @@ void setup_character () {
     __LastAction = time();
     if (!D_CHARACTER->query_exists(query_key_name())) {
         save_data();
+        update_vitals(1);
     } else {
         restore_data();
+        update_vitals(0);
     }
 }
 

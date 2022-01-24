@@ -4,6 +4,7 @@ inherit STD_CONTAINER;
 
 inherit "/std/living/body.c";
 inherit "/std/living/stats.c";
+inherit "/std/living/vitals.c";
 
 private string __Type;
 private string __LastEnvironment;
