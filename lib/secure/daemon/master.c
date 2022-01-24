@@ -226,9 +226,6 @@ private string *read_file_disabled_warnings (string file) {
 void log_error (string file, string msg) {
     string dest, lcMsg, nom, tmp;
 
-    if (base_name(previous_object()) == "/secure/daemon/test") {
-        debug_message(msg);
-    }
 
     if (file[0] != '/') {
         file = "/" + file;
@@ -258,6 +255,9 @@ void log_error (string file, string msg) {
         }
         write_file("/log/" + dest, ctime() + " " + msg);
         msg = replace_string(msg, ": ", ": %^RED%^BOLD%^Error%^RESET%^: ", 1);
+    }
+    if (base_name(previous_object(-1)[<1..<1]) == D_TEST[0..<2]) {
+        write(msg);
     }
     if (msg && this_user(1) ) { // @TODO && (find_object(OB_SIMUL_EFUN) && creatorp(this_user(1)))) {
         message("error", msg, this_user(1));
