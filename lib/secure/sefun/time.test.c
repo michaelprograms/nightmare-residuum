@@ -92,3 +92,34 @@ void test_time_ago () {
 
     expect_arrays_equal(values, results, "time_ago handled times");
 }
+
+void test_time_from_seconds () {
+    string *values = ({}), *results = ({});
+
+    expect_function("time_from_seconds", testOb);
+
+    values += ({ testOb->time_from_seconds(0) });
+    results += ({ "0s" });
+    values += ({ testOb->time_from_seconds(1) });
+    results += ({ "1s" });
+    values += ({ testOb->time_from_seconds(MINUTE_IN_SECS - 1) });
+    results += ({ "59s" });
+    values += ({ testOb->time_from_seconds(MINUTE_IN_SECS) });
+    results += ({ "1m" });
+    values += ({ testOb->time_from_seconds(MINUTE_IN_SECS + 1) });
+    results += ({ "1m 1s" });
+    values += ({ testOb->time_from_seconds(MINUTE_IN_SECS * 2 + 2) });
+    results += ({ "2m 2s" });
+    values += ({ testOb->time_from_seconds(HOUR_IN_SECS + MINUTE_IN_SECS) });
+    results += ({ "1h 1m" });
+    values += ({ testOb->time_from_seconds(DAY_IN_SECS + HOUR_IN_SECS + MINUTE_IN_SECS) });
+    results += ({ "1d 1h 1m" });
+    values += ({ testOb->time_from_seconds(WEEK_IN_SECS + DAY_IN_SECS + HOUR_IN_SECS + MINUTE_IN_SECS) });
+    results += ({ "1w 1d 1h 1m" });
+    values += ({ testOb->time_from_seconds(MONTH_IN_SECS) });
+    results += ({ "4w 2d 10h" });
+    values += ({ testOb->time_from_seconds(MONTH_IN_SECS + WEEK_IN_SECS + 3 * DAY_IN_SECS + 4 * HOUR_IN_SECS + 17 * MINUTE_IN_SECS + 23) });
+    results += ({ "5w 5d 14h 17m 23s" });
+
+    expect_arrays_equal(values, results, "time_from_seconds handled times");
+}

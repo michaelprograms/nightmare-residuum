@@ -52,3 +52,35 @@ varargs string time_ago (int timestamp, int granularity) {
 
     return "very recently";
 }
+
+string time_from_seconds (int seconds) {
+    int s = seconds, w, d, h, m;
+    string *results = ({});
+
+    w = s / WEEK_IN_SECS;
+    s = s - (w * WEEK_IN_SECS);
+    d = s / DAY_IN_SECS;
+    s = s - (d * DAY_IN_SECS);
+    h = s / HOUR_IN_SECS;
+    s = s - (h * HOUR_IN_SECS);
+    m = s / MINUTE_IN_SECS;
+    s = s - (m * MINUTE_IN_SECS);
+
+    if (w) {
+        results += ({ w + "w" });
+    }
+    if (d) {
+        results += ({ d + "d" });
+    }
+    if (h) {
+        results += ({ h + "h" });
+    }
+    if (m) {
+        results += ({ m + "m" });
+    }
+    if (s || (!w && !d && !h && !m && !s)) {
+        results += ({ s + "s" });
+    }
+
+    return implode(results, " ");
+}
