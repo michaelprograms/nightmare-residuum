@@ -67,7 +67,7 @@ void set_mp (int n) {
     }
 }
 
-void update_vitals (int heal) {
+varargs void update_vitals (int heal) {
     int level = this_object()->query_level() || 1;
     int statHP = this_object()->query_stat("endurance") || 0;
     int statSP = this_object()->query_stat("agility") || 0;
@@ -81,6 +81,16 @@ void update_vitals (int heal) {
     int maxSP = (1 + level + statSP) * ( 5 + adjSP);
     int maxMP = (1 + level + statMP) * ( 5 + adjMP);
 
+    if (!__Vitals) {
+        __Vitals = ([
+            "hp": 0,
+            "hpMax": 0,
+            "sp": 0,
+            "spMax": 0,
+            "mp": 0,
+            "mpMax": 0,
+        ]);
+    }
     __Vitals["hpMax"] = maxHP;
     __Vitals["spMax"] = maxSP;
     __Vitals["mpMax"] = maxMP;
