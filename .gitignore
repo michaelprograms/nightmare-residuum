@@ -3,8 +3,11 @@
 !/build/bin/driver
 
 # Save Files
-/lib/save/
+/lib/save
 !/lib/save/daemon/soul.o
+
+# Personal Files
+/lib/realm
 
 # Log Files
 /lib/log
