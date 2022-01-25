@@ -93,7 +93,8 @@ protected mixed query_prompt () {
     string hp = tc->query_hp() + "/" + tc->query_max_hp() + " hp";
     string sp = tc->query_sp() + "/" + tc->query_max_sp() + " sp";
     string mp = tc->query_mp() + "/" + tc->query_max_mp() + " mp";
-    return hp + " " + sp + " " + mp + " > ";
+    string cwd = query_variable("cwd") || "";
+    return hp + " " + sp + " " + mp + " | " + cwd + " %^ORANGE%^>%^RESET%^ ";
 }
 
 void shell_start () {
