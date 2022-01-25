@@ -27,6 +27,7 @@ void command (string input) {
         foreach(string a in actions[type]) {
             line += ({ a });
         }
+        line = sort_array(line, 1);
         write(implode(line, ", ")+"\n");
     }
     write("\n" + format_footer_bar() + "\n");
