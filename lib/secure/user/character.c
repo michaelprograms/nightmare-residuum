@@ -88,10 +88,9 @@ nomask private void character_override () {
     chars = filter_array(children(STD_CHARACTER) - ({ __Character }), (: $1 && $1->query_key_name() == __Character->query_key_name():));
     if (sizeof(chars) > 0 && (char = chars[0])) {
         destruct(__Character);
-        // Notify and remove old user
+        // Swap character's user
         __Character = char;
         char->query_user()->handle_character_override();
-        char->query_user()->handle_remove("\nYour connection has been overriden.\n\n");
         __Character->set_user(this_object());
         write("\n\nOverriding connection of " + __Character->query_name() + "...\n\n");
         shell_start();
@@ -105,8 +104,11 @@ nomask private void character_override () {
 }
 
 nomask void handle_character_override () {
-    // @TODO security? previous_object() == account && name == name
-    __Character = 0;
+    object po;
+    if (base_name(po = previous_object()) == OBJ_USER && po->query_character() == __Character) {
+        __Character = 0;
+        handle_remove("\nYour connection has been overriden from " + query_ip_number(po) + ".\n\n");
+    }
 }
 
 nomask protected void character_exit () {
