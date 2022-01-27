@@ -61,14 +61,12 @@ void setup_character () {
     }
 }
 
-void enter_world () {
+varargs void enter_world (int override) {
     master()->handle_parse_refresh();
-    if (query_last_environment()) {
-        handle_move(query_last_environment());
-    } else {
-        handle_move("/domain/Nowhere/void.c");
+    if (!override) {
+        handle_move(query_last_environment() || "/domain/Nowhere/void.c");
+        message("connection", query_name()+" enters "+mud_name()+".\n", environment()->query_living_contents(), this_object());
     }
-    message("connection", query_name()+" enters "+mud_name()+".\n", environment()->query_living_contents(), this_object());
     describe_environment();
 }
 

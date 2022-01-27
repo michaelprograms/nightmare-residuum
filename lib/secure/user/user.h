@@ -66,6 +66,7 @@ int query_immortal ();
 void set_immortal (int i);
 nomask private void character_enter (int newbie);
 nomask private void character_override ();
+nomask void handle_character_override ();
 nomask protected void character_exit ();
 nomask protected void character_linkdead ();
 
