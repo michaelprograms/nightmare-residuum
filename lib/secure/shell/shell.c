@@ -58,7 +58,7 @@ void execute_command (string input) {
     // @TODO D_CHANNEL
 
     if (path = D_COMMAND->query_command(action)) {
-        call_other(path+"/"+action, "command", args); // @TODO is this right?
+        call_other(path + "/" + action, "command", args);
     } else if (__Owner->query_character() && !__Owner->query_character()->do_command(input)) {
         write("$ What?\n");
     }
@@ -86,15 +86,43 @@ protected void shell_input (mixed input) {
 
 protected void shell_init () {
     set_variable("cwd", "/", 1);
+    set_variable("prompt", "$hp/$HP hp $sp/$SP sp $mp/$MP mp > ", 1);
 }
 
 protected mixed query_prompt () {
     object tc = query_parent()->query_character();
-    string hp = tc->query_hp() + "/" + tc->query_max_hp() + " hp";
-    string sp = tc->query_sp() + "/" + tc->query_max_sp() + " sp";
-    string mp = tc->query_mp() + "/" + tc->query_max_mp() + " mp";
-    string cwd = query_variable("cwd") || "";
-    return hp + " " + sp + " " + mp + " | " + cwd + " %^ORANGE%^>%^RESET%^ ";
+    string prompt = query_variable("prompt");
+    int i;
+
+    while((i = strsrch(prompt, "$")) != -1) {
+        if(i + 2 > strlen(prompt) - 1) break;
+        switch(prompt[i+1..i+2]) {
+            case "hp":
+                prompt = replace_string(prompt, "$hp", ""+tc->query_hp());
+                break;
+            case "sp":
+                prompt = replace_string(prompt, "$sp", ""+tc->query_sp());
+                break;
+            case "mp":
+                prompt = replace_string(prompt, "$mp", ""+tc->query_mp());
+                break;
+            case "HP":
+                prompt = replace_string(prompt, "$HP", ""+tc->query_max_hp());
+                break;
+            case "SP":
+                prompt = replace_string(prompt, "$SP", ""+tc->query_max_sp());
+                break;
+            case "MP":
+                prompt = replace_string(prompt, "$MP", ""+tc->query_max_mp());
+                break;
+            case "cd":
+                prompt = replace_string(prompt, "$cd", query_variable("cwd"));
+                break;
+            default:
+                prompt = replace_string(prompt, "$", "");
+        }
+    }
+    return prompt + " ";
 }
 
 void shell_start () {
@@ -109,6 +137,7 @@ void shell_start () {
 int clean_up () {
     if (__Owner) {
         return clean::clean_later();
+    } else {
+        return clean::clean_up();
     }
-    return clean::clean_up();
 }
