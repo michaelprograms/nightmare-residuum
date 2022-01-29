@@ -53,7 +53,7 @@ string consolidate (int n, string str) {
 }
 
 // named possessive of an object
-string possessive_noun (mixed value) { // @TODO rename?
+string possessive_noun (mixed value) {
     if (!value) {
         return "Its";
     }
