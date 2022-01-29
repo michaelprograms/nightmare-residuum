@@ -42,8 +42,8 @@ void test_id () {
     nameResults += ({ UNDEFINED });
     adjValues += ({ testOb->query_adjective() });
     adjResults += ({ ({}) });
-    pluralsValues += ({ identify(testOb->query_plural()) });
-    pluralsResults += ({ "({ })" });
+    pluralsValues += ({ implode(testOb->query_plural(), ",") });
+    pluralsResults += ({ "" });
 
     testOb->set_name("Testee");
     nameValues += ({ testOb->query_name() });
@@ -52,50 +52,50 @@ void test_id () {
     nameResults += ({ "testee" });
 
     testOb->set_id(({"testee", "man"}));
-    idValues += ({ identify(testOb->query_id()) });
-    idResults += ({ identify(({ "testee", "man" })) });
+    idValues += ({ implode(testOb->query_id(), ",") });
+    idResults += ({ "testee,man" });
     idValues += ({ testOb->query_key_id() });
     idResults += ({ "testee" });
-    pluralsValues += ({ identify(testOb->query_plural()) });
-    pluralsResults += ({ identify(({ "testees", "men"})) });
+    pluralsValues += ({ implode(testOb->query_plural(), ",") });
+    pluralsResults += ({ "testees,men" });
 
     testOb->add_plural("nads");
-    pluralsValues += ({ identify(testOb->query_plural()) });
-    pluralsResults += ({ identify(({"testees", "men", "nads"})) });
+    pluralsValues += ({ implode(testOb->query_plural(), ",") });
+    pluralsResults += ({ "testees,men,nads" });
     testOb->remove_plural("nads");
-    pluralsValues += ({ identify(testOb->query_plural()) });
-    pluralsResults += ({ identify(({"testees", "men"})) });
+    pluralsValues += ({ implode(testOb->query_plural(), ",") });
+    pluralsResults += ({ "testees,men" });
 
-    appliesValues += ({ identify(testOb->query_id()) });
-    appliesResults += ({ identify(testOb->parse_command_id_list()) });
-    appliesValues += ({ identify(testOb->query_adjective()) });
-    appliesResults += ({ identify(testOb->parse_command_adjectiv_id_list()) });
-    appliesValues += ({ identify(testOb->query_plural()) });
-    appliesResults += ({ identify(testOb->parse_command_plural_id_list()) });
+    appliesValues += ({ implode(testOb->query_id(), ",") });
+    appliesResults += ({ implode(testOb->parse_command_id_list(), ",") });
+    appliesValues += ({ implode(testOb->query_adjective(), ",") });
+    appliesResults += ({ implode(testOb->parse_command_adjectiv_id_list(), ",") });
+    appliesValues += ({ implode(testOb->query_plural(), ",") });
+    appliesResults += ({ implode(testOb->parse_command_plural_id_list(), ",") });
 
     testOb->set_adjective(({ "large" }));
-    adjValues += ({ identify(testOb->query_adjective()) });
-    adjResults += ({ identify(({ "large" })) });
+    adjValues += ({ implode(testOb->query_adjective(), ",") });
+    adjResults += ({ "large" });
     adjValues += ({ testOb->query_key_adjective() });
     adjResults += ({ "large" });
     testOb->add_adjective("big");
-    adjValues += ({ identify(testOb->query_adjective()) });
-    adjResults += ({ identify(({ "large", "big" })) });
+    adjValues += ({ implode(testOb->query_adjective(), ",") });
+    adjResults += ({ "large,big" });
     adjValues += ({ testOb->query_key_adjective() });
     adjResults += ({ "large" });
     testOb->remove_adjective("large");
-    adjValues += ({ identify(testOb->query_adjective()) });
-    adjResults += ({ identify(({ "big" })) });
+    adjValues += ({ implode(testOb->query_adjective(), ",") });
+    adjResults += ({ "big" });
     adjValues += ({ testOb->query_key_adjective() });
     adjResults += ({ "big" });
 
     testOb->remove_id(({"man"}));
-    idValues += ({ identify(testOb->query_id()) });
-    idResults += ({ identify(({ "testee" })) });
+    idValues += ({ implode(testOb->query_id(), ",") });
+    idResults += ({ "testee" });
     idValues += ({ testOb->query_key_id() });
     idResults += ({ "testee" });
-    pluralsValues += ({ identify(testOb->query_plural()) });
-    pluralsResults += ({ identify(({ "testees" })) });
+    pluralsValues += ({ implode(testOb->query_plural(), ",") });
+    pluralsResults += ({ "testees" });
 
     expect_arrays_equal(nameValues, nameResults, "id handled names");
     expect_arrays_equal(idValues, idResults, "id handled ids");
@@ -119,4 +119,53 @@ void test_id_bad_arguments () {
         (: testOb->set_name(({})) :),
         (: testOb->set_name(([])) :),
     }), "*Bad argument 1 to id->set_name\n", "set_name handled invalid argument 1");
+    expect_catches (({
+        (: testOb->set_id(0) :),
+        (: testOb->set_id(0.0) :),
+        (: testOb->set_id("") :),
+        (: testOb->set_id(({})) :),
+        (: testOb->set_id(([])) :),
+    }), "*Bad argument 1 to id->set_id\n", "set_id handled invalid argument 1");
+    expect_catches (({
+        (: testOb->remove_id(0) :),
+        (: testOb->remove_id(0.0) :),
+        (: testOb->remove_id("") :),
+        (: testOb->remove_id(({})) :),
+        (: testOb->remove_id(([])) :),
+    }), "*Bad argument 1 to id->remove_id\n", "remove_id handled invalid argument 1");
+    expect_catches (({
+        (: testOb->set_adjective(0) :),
+        (: testOb->set_adjective(0.0) :),
+        (: testOb->set_adjective("") :),
+        (: testOb->set_adjective(({})) :),
+        (: testOb->set_adjective(([])) :),
+    }), "*Bad argument 1 to id->set_adjective\n", "set_adjective handled invalid argument 1");
+    expect_catches (({
+        (: testOb->add_adjective(0) :),
+        (: testOb->add_adjective(0.0) :),
+        (: testOb->add_adjective("") :),
+        (: testOb->add_adjective(({})) :),
+        (: testOb->add_adjective(([])) :),
+    }), "*Bad argument 1 to id->add_adjective\n", "add_adjective handled invalid argument 1");
+    expect_catches (({
+        (: testOb->remove_adjective(0) :),
+        (: testOb->remove_adjective(0.0) :),
+        (: testOb->remove_adjective("") :),
+        (: testOb->remove_adjective(({})) :),
+        (: testOb->remove_adjective(([])) :),
+    }), "*Bad argument 1 to id->remove_adjective\n", "remove_adjective handled invalid argument 1");
+    expect_catches (({
+        (: testOb->add_plural(0) :),
+        (: testOb->add_plural(0.0) :),
+        (: testOb->add_plural("") :),
+        (: testOb->add_plural(({})) :),
+        (: testOb->add_plural(([])) :),
+    }), "*Bad argument 1 to id->add_plural\n", "add_plural handled invalid argument 1");
+    expect_catches (({
+        (: testOb->remove_plural(0) :),
+        (: testOb->remove_plural(0.0) :),
+        (: testOb->remove_plural("") :),
+        (: testOb->remove_plural(({})) :),
+        (: testOb->remove_plural(([])) :),
+    }), "*Bad argument 1 to id->remove_plural\n", "remove_plural handled invalid argument 1");
 }
