@@ -395,14 +395,14 @@ string *parse_command_plural_id_list () {
 }
 // List of prepositions that are permitted
 string *parse_command_prepos_list () {
-    // @TODO prune some?
-    return ({ "in", "from", "on", "under", "behind", "beside", "of", "for","to",
-      "with", "at", "off", "out", "down", "up", "around", "over", "into","onto",
-      "about", "out of", "aboard", "above", "against", "alongside", "beneath",
-      "below", "besides", "by", "inside", "outside", "through", "underneath",
-      "upon", "within", "without", "alongside of", "back of", "down from",
-      "inside of", "round about", "near to", "next to", "over to", "outside of",
-      "up to", "in front of", "in back of", "on top of", "off of" });
+    return ({ "in", "from", "on", "under", "behind", "beside", "of", "for",
+        "to", "with", "at", "off", "out", "down", "up", "around", "over",
+        "into", "onto", "about", "out of", "aboard", "above", "against",
+        "alongside", "beneath", "below", "besides", "by", "inside", "outside",
+        "through", "underneath", "upon", "within", "without", "alongside of",
+        "back of", "down from", "inside of", "round about", "near to",
+        "next to", "over to", "outside of", "up to", "in front of",
+        "in back of", "on top of", "off of" });
 }
 // A word that refers to everything in an environment
 string parse_command_all_word () {
