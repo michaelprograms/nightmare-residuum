@@ -1,11 +1,11 @@
 #define ANSI(p) "\e["+(p)+"m"
-#define RESET ANSI(0)
-#define BOLD ANSI(1)
-#define UNDERLINE ANSI(4)
-#define RED ANSI(31)
-#define GREEN ANSI(32)
-#define ORANGE ANSI(33)
-#define CYAN ANSI(36)
+#define RESET (this_user() ? "%^RESET%^" : ANSI(0))
+#define BOLD (this_user() ? "%^BOLD%^" : ANSI(1))
+#define UNDERLINE (this_user() ? "%^UNDERLINE%^" : ANSI(4))
+#define RED (this_user() ? "%^RED%^" : ANSI(31))
+#define GREEN (this_user() ? "%^GREEN%^" : ANSI(32))
+#define ORANGE (this_user() ? "%^ORANGE%^" : ANSI(33))
+#define CYAN (this_user() ? "%^CYAN%^" : ANSI(36))
 
 nosave protected mixed UNDEFINED = (([])[0]); // equivalent of UNDEFINED
 
