@@ -113,8 +113,8 @@ private void refresh_id () {
     //     else __Short = __KeyID;
     // } else __Short = "nondescript thing";
 
-    if (!sizeof(__ID) && query_key_name()) {
-        set_id(({ query_key_name() }));
+    if (__KeyName && member_array(__KeyName, __ID) == -1) {
+        set_id(({ __KeyName }));
     }
 
     parse_refresh();
@@ -132,7 +132,7 @@ void create () {
 
 // List of nouns that apply to this object
 string *parse_command_id_list () {
-    return __ID; // @TODO + ({ __Name })?
+    return __ID;
 }
 // List of adjectives that apply to this object
 string *parse_command_adjectiv_id_list () {
