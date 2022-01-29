@@ -98,6 +98,8 @@ void test_sanitize_path () {
         testOb->sanitize_path("^Dir"),
         testOb->sanitize_path("^Dir/dir/.."),
     }), ({
+        "/domain",
+        "/domain",
         "/domain/",
         "/domain/",
         "/domain/",
@@ -106,9 +108,7 @@ void test_sanitize_path () {
         "/domain/",
         "/domain/",
         "/domain/",
-        "/domain/",
-        "/domain/",
-        "/domain/Dir/",
+        "/domain/Dir",
         "/domain/Dir/",
     }), "sanitize_path handled ^");
 
@@ -116,7 +116,7 @@ void test_sanitize_path () {
     mockCharacter->set_key_name("tester");
     mockShell = new("/secure/shell/shell.c");
     mockShell->start_shell();
-    expect_array_strings_equal(({
+    expect_arrays_equal(({
         testOb->sanitize_path("~"),
         testOb->sanitize_path("~."),
         testOb->sanitize_path("~/"),
@@ -127,7 +127,18 @@ void test_sanitize_path () {
         testOb->sanitize_path("~/dir/dir/../../."),
         testOb->sanitize_path("~/dir/dir/.././../."),
         testOb->sanitize_path("~/dir/.././dir2/../."),
-    }), "/realm/tester/", "sanitize_path handled ~");
+    }), ({
+        "/realm/tester",
+        "/realm/tester",
+        "/realm/tester/",
+        "/realm/tester/",
+        "/realm/tester/",
+        "/realm/tester/",
+        "/realm/tester/",
+        "/realm/tester/",
+        "/realm/tester/",
+        "/realm/tester/",
+    }), "sanitize_path handled ~");
 
     mockShell->set_variable("cwd", "/realm/tester/testdir/");
     expect_array_strings_equal(({
@@ -146,13 +157,22 @@ void test_absolute_path () {
     expect_strings_equal(testOb->absolute_path("dir/file.c", "/realm/username"), "/realm/username/dir/file.c", "absolute_path handled realm dir/file");
     expect_strings_equal(testOb->absolute_path("dir/file.c", this_object()), "/secure/sefun/dir/file.c", "absolute_path handled relative_to dir/file");
 
-    // @TODO
-    // expect_strings_equal(testOb->absolute_path("^", "/"), "/realm/username", "absolute_path handled ^");
-    // expect_strings_equal(testOb->absolute_path("^/", "/"), "/realm/username", "absolute_path handled ^/");
-    // expect_strings_equal(testOb->absolute_path("^file.c", "/"), "/realm/username/file.c", "absolute_path handled ^file");
-    // expect_strings_equal(testOb->absolute_path("~", "/"), "/domain", "absolute_path handled ^");
-    // expect_strings_equal(testOb->absolute_path("~file.c", "/"), "/domain/file.c", "absolute_path handled ~file");
-    // expect_strings_equal(testOb->absolute_path("~dir/file.c", "/"), "/domain/dir/file.c", "absolute_path handled ~dir/file");
+    mockCharacter = new("/std/object/id.c");
+    mockCharacter->set_key_name("tester");
+    mockShell = new("/secure/shell/shell.c");
+    mockShell->start_shell();
+    expect_strings_equal(testOb->absolute_path("~", "/"), "/realm/tester", "absolute_path handled ~");
+    expect_strings_equal(testOb->absolute_path("~/", "/"), "/realm/tester/", "absolute_path handled ~/");
+    expect_strings_equal(testOb->absolute_path("~file.c", "/"), "/realm/tester/file.c", "absolute_path handled ~file");
+    expect_strings_equal(testOb->absolute_path("~/file.c", "/"), "/realm/tester/file.c", "absolute_path handled ~/file");
+    destruct(mockCharacter);
+    destruct(mockShell);
+
+    expect_strings_equal(testOb->absolute_path("^", "/"), "/domain", "absolute_path handled ^");
+    expect_strings_equal(testOb->absolute_path("^/", "/"), "/domain/", "absolute_path handled ^/");
+    expect_strings_equal(testOb->absolute_path("^file.c", "/"), "/domain/file.c", "absolute_path handled ^file");
+    expect_strings_equal(testOb->absolute_path("^/file.c", "/"), "/domain/file.c", "absolute_path handled ^/file");
+    expect_strings_equal(testOb->absolute_path("^dir/file.c", "/"), "/domain/dir/file.c", "absolute_path handled ^dir/file");
 }
 
 void test_assure_dir () {

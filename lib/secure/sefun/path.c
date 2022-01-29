@@ -25,13 +25,11 @@ string sanitize_path (string path) {
         }
     }
 
-    trailingSlash = (strlen(path) > 0 && path[<1] == '/');
+    trailingSlash = (strlen(path) > 0 && (path[<1] == '/' || path[<2..] == "/." || path[<3..] == "/.."));
     if (path[0] == '^') {
         path = replace_string(path, "^", "domain/");
-        trailingSlash = 1;
     } else if (path[0] == '~') {
         path = replace_string(path, "~", "realm/" + SEFUN->this_character()->query_key_name() + "/");
-        trailingSlash = 1;
     }
     parts = explode(path, "/") - ({ "", "." });
     if (!sizeof(parts)) {
@@ -52,12 +50,16 @@ string sanitize_path (string path) {
         i ++;
     }
 
+    if (!sizeof(parts) && trailingSlash) {
+        trailingSlash = 0;
+    }
+
     return "/" + implode(parts, "/") + (trailingSlash ? "/" : "");
 }
 
 varargs string absolute_path (string relative_path, mixed relative_to) {
     if (!relative_to) relative_to = previous_object();
-    if (relative_path && relative_path[0] != '/') {
+    if (relative_path && relative_path[0] != '/' && relative_path[0] != '^' && relative_path[0] != '~') {
         if (objectp(relative_to)) {
             relative_path = base_path(file_name(relative_to)) + "/" + relative_path;
         } else if (stringp(relative_to)) {
