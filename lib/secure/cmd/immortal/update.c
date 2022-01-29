@@ -27,7 +27,14 @@ void command (string input) {
         write("Updating "+input+"...\n");
     }
 
-    // @TODO check file exists, check container contents
+    switch (file_size(input)) {
+        case -1:
+            write("update: " + input + " not found.\n");
+            return;
+        case 0:
+            write("update: " + input + " is empty.\n");
+            return;
+    }
     ob = find_object(input);
     if (ob) {
         if (ob->is_room()) {
