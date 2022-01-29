@@ -62,17 +62,17 @@ mapping get_mud_stats () {
 
         /* --- Generic --- */
         "CODEBASE"          : mudlib_version(),
-        // "CONTACT"           : "@TODO",
+        // "CONTACT"           : "",
         "CRAWL DELAY"       : "-1",
         "CREATED"           : "2021",
-        // "HOSTNAME"          : "@TODO",
-        // "ICON"              : "@TODO",
+        // "HOSTNAME"          : "",
+        // "ICON"              : "",
         // "IP"                : "",
         // "IPV6"              : "",
         "LANGUAGE"          : "English",
         "LOCATION"          : "US",
         "PORT"              : ""+(driver_port()),
-        // "WEBSITE"           : "@TODO",
+        // "WEBSITE"           : "",
 
         /* --- Generic --- */
         "FAMILY"            : "LPMud",
@@ -84,19 +84,19 @@ mapping get_mud_stats () {
         // "INTERMUD"          : "",
 
         /* --- World --- */
-        // "AREAS"             : "@TODO",
-        // "HELPFILES"         : "@TODO",
-        // "MOBILES"           : "@TODO",
-        // "OBJECTS"           : "@TODO",
-        // "ROOMS"             : "@TODO",
-        // "CLASSES"           : "@TODO",
-        // "LEVELS"            : "@TODO",
-        // "RACES"             : "@TODO",
-        // "SKILLS"            : "@TODO",
+        // "AREAS"             : "",
+        // "HELPFILES"         : "",
+        // "MOBILES"           : "",
+        // "OBJECTS"           : "",
+        // "ROOMS"             : "",
+        // "CLASSES"           : "",
+        // "LEVELS"            : "",
+        // "RACES"             : "",
+        // "SKILLS"            : "",
 
         /* --- Protocols --- */
         "ANSI"              : "1",
-        // "MSP"               : "@TODO",
+        // "MSP"               : "",
         "UTF-8"             : "1",
         "VT100"             : "0",
         "XTERM 256 COLORS"  : "0",
