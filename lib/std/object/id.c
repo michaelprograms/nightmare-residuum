@@ -35,10 +35,14 @@ string *query_id () {
 string query_key_id () {
     return __KeyID;
 }
-void set_id (string *id) {
-    if (undefinedp(id) || !arrayp(id)) error("Bad argument 1 to id->set_id");
-    __ID += id;
-    __Plural += map_array(id, (: pluralize :));
+void set_id (string *ids) {
+    if (undefinedp(ids) || !arrayp(ids)) error("Bad argument 1 to id->set_id");
+    foreach (string id in ids) {
+        if (member_array(id, __ID) == -1) {
+            __ID += ({ id });
+            __Plural += ({ pluralize(id) });
+        }
+    }
     refresh_id();
 }
 void remove_id (string *id) {
@@ -68,6 +72,9 @@ void add_adjective (string adj) {
 void remove_adjective (string adj) {
     if (!stringp(adj) || adj == "") error("Bad argument 1 to id->add_adjective");
     __Adj -= ({ adj });
+    if (__KeyAdj == adj) {
+        __KeyAdj = 0;
+    }
     refresh_id();
 }
 
@@ -77,6 +84,11 @@ string *query_plural () {
 void add_plural (string plural) {
     if (!stringp(plural) || plural == "") error("Bad argument 1 to id->add_plural");
     __Plural += ({ plural });
+    refresh_id();
+}
+void remove_plural (string plural) {
+    if (!stringp(plural) || plural == "") error("Bad argument 1 to id->remove_plural");
+    __Plural -= ({ plural });
     refresh_id();
 }
 
