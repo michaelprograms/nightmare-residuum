@@ -200,6 +200,7 @@ varargs void expect_false (mixed value, string message) {
     currentTestPassed = !value;
     validate_expect((currentTestPassed ? "false" : "true"), "false", message);
 }
+// Compares an array of arrays (left) to an array (right)
 varargs void expect_arrays_array_equal (mixed *left, mixed *right, string message) {
     mixed *rightArr = ({});
     for (int i = 0; i < sizeof(left); i ++) {
@@ -211,6 +212,8 @@ varargs void expect_arrays_array_equal (mixed *left, mixed *right, string messag
                     break;
                 }
             }
+        } else {
+            currentTestPassed = 0;
         }
     }
     for (int i = 0; i < sizeof(left); i ++) {
@@ -218,6 +221,7 @@ varargs void expect_arrays_array_equal (mixed *left, mixed *right, string messag
     }
     validate_expect(left, rightArr, message);
 }
+// Compares an array of strings (left) to a string (right)
 varargs void expect_array_strings_equal (string *left, string right, string message) {
     string *rightArr = ({});
     currentTestPassed = 0;

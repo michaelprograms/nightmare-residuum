@@ -48,7 +48,7 @@ void test_split_path () {
     expect_arrays_array_equal(({
         testOb->split_path("/domain/area/dir"),
         testOb->split_path("/domain/area/dir/"),
-     }), ({ "/domain/", "area/", "dir" }), "get_include_path handled subdir");
+     }), ({ "/domain/area/", "dir" }), "get_include_path handled subdir");
 }
 
 void test_base_path() {
