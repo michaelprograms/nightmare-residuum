@@ -102,9 +102,6 @@ void test_identify () {
         testOb->identify(undefFn),
     }), "UNDEFINED", "identify handled undefined");
 
-    // @TODO how create test nullp when undefinedp is true also
-    // expect_strings_equal(testOb->identify(nullParam), "NULL", "identify handled null");
-
     expect_arrays_equal(({
         testOb->identify(1),
         testOb->identify(0),

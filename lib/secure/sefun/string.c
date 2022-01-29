@@ -38,9 +38,6 @@ varargs string identify (mixed a) {
     if (undefinedp(a)) {
         return "UNDEFINED";
     }
-    if (nullp(a)) {
-        return "NULL";
-    }
     if (intp(a) || floatp(a)) {
         return "" + a;
     }
