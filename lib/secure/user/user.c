@@ -125,13 +125,6 @@ nomask void reset_connect_timeout () {
     calloutTimeout = call_out((: handle_remove, "\nTime exceeded. Connection terminated.\n" :), CONNECT_TIMEOUT);
 }
 
-protected nomask int handle_login_commands (string input) {
-    // Handle any commands from the login prompt here
-    // if (grepp(input, "MSSP-REQUEST")) { /* from Dead Souls */ }
-    // @TODO
-    return 0;
-}
-
 nomask varargs void handle_remove (string message) {
     if (!undefinedp(calloutTimeout)) remove_call_out(calloutTimeout);
     if (message) message("system", message, this_object());

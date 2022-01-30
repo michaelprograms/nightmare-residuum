@@ -11,7 +11,6 @@ string query_terminal_color();
 nomask void quit_character (int destructing);
 nomask void quit_account ();
 nomask void reset_connect_timeout ();
-protected nomask int handle_login_commands (string input);
 nomask varargs void handle_remove (string message);
 
 /* --- account --- */

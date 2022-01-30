@@ -50,7 +50,6 @@ protected nomask varargs void account_input (int state, mixed extra, string inpu
             if (!input || input == "") {
                 return handle_remove("\nInvalid entry. Connection terminated.\n");
             }
-            if (this_object()->handle_login_commands(input)) return; // @TODO clean this up
             if (!D_ACCOUNT->query_valid_name(input)) {
                 write("\nThe account '"+input+"' is not a valid account name.\n");
                 write(PROMPT_ACCOUNT_FORMAT + "\n");
@@ -58,7 +57,6 @@ protected nomask varargs void account_input (int state, mixed extra, string inpu
                 return;
             } else if (D_ACCOUNT->query_exists(input)) {
                 write("\nExisting account '"+input+"'...\n");
-                // @TODO check children(STD_ACCOUNT) and take over instead of destroy on net_dead?
                 __Account = new(STD_ACCOUNT);
                 __Account->set_name(input);
                 input_next((: account_input, STATE_ACCOUNT_PASSWORD, 0 :), PROMPT_PASSWORD_ENTER, 1);
