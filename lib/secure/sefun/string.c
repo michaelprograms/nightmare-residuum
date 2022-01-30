@@ -70,10 +70,9 @@ varargs string identify (mixed a) {
         return sprintf("%O", a);
     }
     if (classp(a)) {
-        ret = replace_string(sprintf("%O",a),"\n","");
-        return ret;
+        return replace_string(sprintf("%O", a), "\n", "");
     }
-    if (pointerp(a)) {
+    if (arrayp(a)) {
         ret = "({ ";
         s = sizeof(a);
         for (i = 0; i < s; i ++) {

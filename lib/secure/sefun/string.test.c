@@ -15,6 +15,14 @@ object query_account () {
     return __MockAccount;
 }
 
+class TestClass {
+    string  str;
+    string *strArr;
+    int     i;
+    float   f;
+    mapping m;
+    object  o;
+}
 
 void test_strip_colour () {
     string text = "%^BOLD%^Text%^RESET%^";
@@ -89,6 +97,8 @@ void test_identify () {
     string tString = "Here it is: \"abc123\".", undefStr;
     mapping tMap = ([ "test1": "abc", "test2": 123 ]), undefMap;
     function tFn = function(int a, int b) { return a + b; }, undefFn;
+    class TestClass tc = new(class TestClass);
+    string *classValues = ({}), *classResults = ({});
 
     expect_function("identify", testOb);
 
@@ -180,10 +190,24 @@ void test_identify () {
     }), "identify handled function");
 
     // class
-    // @TODO
+    classValues += ({ testOb->identify(tc) });
+    classResults += ({ "CLASS( 6 elements  0,  0,  0,  0,  0,  0 )" });
+    tc->str = "test string";
+    tc->strArr = ({ "test string 1", "test string 2", });
+    tc->i = 123;
+    tc->f = 1.0;
+    tc->m = ([ "test": 123, ]);
+    tc->o = this_object();
+    classValues += ({ testOb->identify(tc) });
+    classResults += ({ "CLASS( 6 elements  \"test string\",  ({ /* sizeof() == 2 */    \"test string 1\",    \"test string 2\"  }),  123,  1.000000,  ([ /* sizeof() == 1 */    \"test\" : 123,  ]),  /secure/sefun/string.test )" });
+    expect_arrays_equal(classValues, classResults, "identify handled class");
 
-    // pointer
-    // @TODO
+    // array
+    expect_arrays_equal(({
+        testOb->identify(({ 1, 2, 3})),
+    }), ({
+        "({ 1, 2, 3 })",
+    }), "identify handled class");
 
     // unknown
     // @TODO
