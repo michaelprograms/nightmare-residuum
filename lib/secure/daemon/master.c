@@ -410,7 +410,7 @@ string parse_command_all_word () {
 }
 // A list of objects that can match remote living objects.
 object *parse_command_users () {
-    return users()->query_character(); // @TODO characters() efun?
+    return users()->query_character();
 }
 // This apply is called to generate error responses to user input.
 string parser_error_message (int type, object ob, mixed arg, int plural) {
