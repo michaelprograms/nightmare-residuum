@@ -155,7 +155,6 @@ varargs void update_test_data (string path, string ignore) {
     mixed *dir = get_dir(path, -1); // Assumes path has trailing / for dirs
     string *codeFiles = ({}), tmp;
 
-    write("path is: "+path+" "+identify(dir)+"\n");
     foreach (mixed *file in dir) {
         if (path + file[0] == ignore) continue;
         if (file[1] == -2) {
