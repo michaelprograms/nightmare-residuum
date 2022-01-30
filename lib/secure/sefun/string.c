@@ -99,10 +99,12 @@ varargs string wrap (string str, int width, int indent) {
     } else {
         term = D_ANSI->query_unknown_term();
     }
-    // if(strlen(str)>8190) str=str[0..8190]; // @TODO __LARGEST_PRINTABLE_STRING__
     str = terminal_colour(str, term, width, indent);
     str = replace_string(str, "\e[49;49m", "");
     str = replace_string(str, "\e[0;10m", "");
+    if (strlen(str) > __LARGEST_PRINTABLE_STRING__) {
+        str = str[0..__LARGEST_PRINTABLE_STRING__ - 1];
+    }
     return str;
 }
 

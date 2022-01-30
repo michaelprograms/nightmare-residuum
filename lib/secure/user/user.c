@@ -62,6 +62,9 @@ void receive_message (string type, string message) {
         message = "%^GREEN%^" + replace_string(message, ":", ":%^RESET%^") + "%^RESET%^";
         receive(wrap(message));
     } else if (type == "no_ansi") {
+        if (strlen(message) > __LARGEST_PRINTABLE_STRING__) {
+            message = message[0..__LARGEST_PRINTABLE_STRING__ - 1];
+        }
         receive(message);
     } else {
         receive(wrap(message, 0, 0));
