@@ -32,7 +32,6 @@ int handle_remove () {
 }
 
 int clean_up () {
-    // @TODO check driver origin
     if (origin() == "driver" || environment() || __NoClean) {
         return clean_never();
     }
