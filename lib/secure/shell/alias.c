@@ -15,7 +15,7 @@ nomask class ShellAlias query_alias (string alias) {
 varargs void add_alias (string name, string template, string *defaults, int xverb) {
     class ShellAlias new_alias;
     int i;
-    string tmp;
+    string *tmp;
 
     if (sizeof(__Aliases) >= MAX_ALIAS_COUNT) {
         write("You have reached the maxmimum amount of aliases.\n");
