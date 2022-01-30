@@ -60,16 +60,16 @@ mixed expand_alias (string input) {
     int numArgs = sizeof(argv) - 1, i, j;
 
     xverbMatches = filter_array(__XAliases, (: strsrch($2, $1) == 0 :), argv[0]);
-    if (sizeof(xverbMatches) != 1) {
+    if (sizeof(xverbMatches) > 1) {
         error("Alias conflict: can't distinguish between " + implode(xverbMatches, ", "));
-    }
-
-    sscanf(argv[0], xverbMatches[0] + "%s", argv[0]);
-    if (argv[0] == "") {
-        argv[0] = xverbMatches[0];
-    } else {
-        numArgs ++;
-        argv = xverbMatches + argv;
+    } else if (sizeof(xverbMatches) == 1) {
+        sscanf(argv[0], xverbMatches[0] + "%s", argv[0]);
+        if (argv[0] == "") {
+            argv[0] = xverbMatches[0];
+        } else {
+            numArgs ++;
+            argv = xverbMatches + argv;
+        }
     }
 
     if (!(currentAlias = __Aliases[argv[0]])) {
