@@ -63,12 +63,17 @@ mixed handle_go (object ob, string dir) {
     // if(query_verb() == "go" && interactive(ob)) {
     //     // @TODO check standng/sitting?
     // }
-    if (__Exits[dir] && __Exits[dir]["pre"] && !(evaluate(__Exits[dir]["pre"], dir)))
+    if (!__Exits[dir]) {
+        return 0;
+    } else if (__Exits[dir]["before"] && !(evaluate(__Exits[dir]["before"], ob, dir))) {
         return 1;
-    if (__Exits[dir] && __Exits[dir]["room"]) {
-        ob->handle_move(__Exits[dir]["room"]); //,0,0,dir);
-        if (__Exits[dir]["post"] ) evaluate(__Exits[dir]["post"], dir);
+    } else if (__Exits[dir]["room"]) {
+        ob->handle_move(__Exits[dir]["room"]);
+        if (__Exits[dir]["after"]) {
+            evaluate(__Exits[dir]["after"], ob, dir);
+        }
         return 1;
+    } else {
+        return 0;
     }
-    return 0;
 }

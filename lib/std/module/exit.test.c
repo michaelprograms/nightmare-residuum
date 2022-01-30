@@ -8,6 +8,9 @@ void before_each_test () {
 void after_all_tests () {
     if (objectp(testOb)) destruct(testOb);
 }
+string *test_order () {
+    return ({ "test_exits", "test_handle_go", "test_exits_before_after" });
+}
 
 void test_exits () {
     mixed *values = ({}), *results = ({});
@@ -71,8 +74,43 @@ void test_exits () {
     results += ({ ({ "n", "s", "e", "se", "ne", "w", "sw", "nw" }) });
 
     expect_arrays_equal(values, results, "exits handled adding and removing");
+}
 
-    // @TODO test pre/post
+nosave private int checkBefore = 0, checkAfter = 0;
+
+void test_exits_before_after () {
+    mixed *values = ({}), *results = ({});
+    object r1, r2, ob;
+
+    checkBefore = 0;
+    checkAfter = 0;
+
+    r1 = new(STD_ROOM);
+    r2 = new(STD_ROOM);
+    ob = new(STD_OBJECT);
+
+    r1->set_exit("east", file_name(r2), function (object ob, string dir) {
+        checkBefore ++;
+        return 1;
+    }, function (object ob, string dir) {
+        checkAfter ++;
+    });
+    r2->set_exit("west", file_name(r1));
+
+    values += ({ ob->handle_move(r1) });
+    results += ({ 1 });
+    values += ({ r1->handle_go(ob, "east") });
+    results += ({ 1 });
+    values += ({ checkBefore });
+    results += ({ 1 });
+    values += ({ checkAfter });
+    results += ({ 1 });
+
+    expect_arrays_equal(values, results, "exits handled before and after functions");
+
+    destruct(ob);
+    destruct(r1);
+    destruct(r2);
 }
 
 void test_handle_go () {
