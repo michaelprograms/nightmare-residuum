@@ -54,7 +54,7 @@ void test_clean_up () {
     values += ({ testOb->clean_up() });
     results += ({ 1 });
     values += ({ objectp(testOb) });
-    results += ({ 1 }); // @TODO should be 0? object is not destructing because children > 1
+    results += ({ 0 });
 
     // @TODO check contents moved after internal_remove ?
 

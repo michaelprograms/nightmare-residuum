@@ -21,7 +21,7 @@ protected int internal_remove () {
     if (env = environment(this_object())) {
         i = sizeof(inv = all_inventory(this_object()));
         while (i--) {
-            if (inv[i]) inv[i]->eventMove(env); // @TODO
+            if (inv[i]) inv[i]->eventMove(env); // @TODO should clean_up instead?
         }
     }
     destruct(this_object());
@@ -34,9 +34,6 @@ int handle_remove () {
 int clean_up () {
     if (origin() == "driver" || environment() || __NoClean) {
         return clean_never();
-    }
-    if (sizeof(children(base_name(this_object()))) > 1) {
-        return clean_later();
     }
     if (!function_exists("handle_remove", this_object())) {
         debug_message(identify(this_object())+" tried to clean_up but no handle_remove");
