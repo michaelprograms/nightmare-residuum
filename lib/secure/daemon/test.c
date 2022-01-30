@@ -16,8 +16,29 @@ private nosave int shutdownAfterTests = 0;
 
 // -----------------------------------------------------------------------------
 
+void reset_data ();
+varargs void done (int numTests, int numPassed, int numFailed, int fnsTested, int fnsUntested);
+varargs void process_file (string file, function done, int reset);
+private string format_total_line (string name, int current, int total);
 void process ();
+// private void update_and_execute (string path);
 // void watch_all ();
+varargs void update_test_data (string path, string ignore);
+varargs void run (int callShutdown);
+
+// -----------------------------------------------------------------------------
+
+void reset_data () {
+    currentTest = 0;
+    totalTests = 0;
+    totalFiles = 0;
+    totalPassed = 0;
+    totalFailed = 0;
+    totalFnsTested = 0;
+    totalFnsUntested = 0;
+    __Tests = ([]);
+    tests = ({});
+}
 
 // -----------------------------------------------------------------------------
 
@@ -30,32 +51,37 @@ varargs void done (int numTests, int numPassed, int numFailed, int fnsTested, in
         totalFnsUntested += fnsUntested;
         currentTest ++;
         process();
-    } else if (__Mode == "WATCH") {
-        totalTests = numTests;
-        totalPassed = numPassed;
-        totalFailed = numFailed;
-        totalFnsTested = fnsTested;
-        totalFnsUntested = fnsUntested;
+    // } else if (__Mode == "WATCH") {
+    //     totalTests = numTests;
+    //     totalPassed = numPassed;
+    //     totalFailed = numFailed;
+    //     totalFnsTested = fnsTested;
+    //     totalFnsUntested = fnsUntested;
     }
 }
 
-void process_file (string file, function done) {
+varargs void process_file (string file, function doneCallback, int reset) {
     object t;
+
+    if (reset) {
+        reset_data();
+        // update_test_data(file);
+    }
     if (t = find_object(file)) {
         destruct(t);
     }
     if (!inherits(M_TEST, load_object(file))) {
-        done();
+        evaluate(doneCallback);
         return;
     }
     // call_out clears the call stack, call_other will chain the tests
-    call_out_walltime(function(string test) {
-        mixed err = catch(test->execute_test((: done :)));
+    call_out_walltime(function(string test, function doneCallback) {
+        mixed err = catch(test->execute_test(doneCallback));
         if (err) {
             write("\n    " + test + " encountered an errored:\n" + err + "\n");
-            done();
+            evaluate(doneCallback);
         }
-    }, 0, file);
+    }, 0, file, doneCallback);
 }
 
 private string format_total_line (string name, int current, int total) {
@@ -68,7 +94,7 @@ private string format_total_line (string name, int current, int total) {
 void process () {
     __Mode = "ALL";
     if (currentTest < sizeof(tests)) {
-        process_file(tests[currentTest], (: done :));
+        process_file(tests[currentTest], (: done :), 0);
     } else {
         int totalExpects = totalPassed + totalFailed;
         timeAfter = rusage()["utime"] + rusage()["stime"];
@@ -84,11 +110,11 @@ void process () {
     }
 }
 
-private void update_and_execute (string path) {
-    call_other(path, "???");
-    // call_out clears the call stack, call_other will chain the tests
-    call_out(function() { tests[currentTest]->execute_test((: done :)); }, 0);
-}
+// private void update_and_execute (string path) {
+//     call_other(path, "???");
+//     // call_out clears the call stack, call_other will chain the tests
+//     call_out(function() { tests[currentTest]->execute_test((: done :)); }, 0);
+// }
 
 
 // void watch_all () {
@@ -126,9 +152,10 @@ private void update_and_execute (string path) {
 // }
 
 varargs void update_test_data (string path, string ignore) {
-    mixed *dir = get_dir(path, -1); // Assumes path has trailing /
+    mixed *dir = get_dir(path, -1); // Assumes path has trailing / for dirs
     string *codeFiles = ({}), tmp;
 
+    write("path is: "+path+" "+identify(dir)+"\n");
     foreach (mixed *file in dir) {
         if (path + file[0] == ignore) continue;
         if (file[1] == -2) {
@@ -146,23 +173,11 @@ varargs void update_test_data (string path, string ignore) {
         tmp = path + replace_string(file[0], ".c", ".test.c", 1);
         if (__Tests[tmp]) {
             __Tests[tmp]["code"] = path + file[0];
-            __Tests[tmp]["codeTouched"] = file[2];
+            // __Tests[tmp]["codeTouched"] = file[2];
         } else {
             write("Missing " + path + file[0][0..<2] + "test.c"+"\n");
         }
     }
-}
-
-void reset_data () {
-    currentTest = 0;
-    totalTests = 0;
-    totalFiles = 0;
-    totalPassed = 0;
-    totalFailed = 0;
-    totalFnsTested = 0;
-    totalFnsUntested = 0;
-    __Tests = ([]);
-    tests = ({});
 }
 
 varargs void run (int callShutdown) {

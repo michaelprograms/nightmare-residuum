@@ -62,7 +62,7 @@ void command (string input) {
         }
         keep = ({});
         if (file_size(test) > 0) {
-            D_TEST->process_file(test, (: done :));
+            D_TEST->process_file(test, (: done :), 1);
         }
     } else {
         message("system", input + ": Error in update\n", this_user());
