@@ -62,6 +62,7 @@ varargs void done (int numTests, int numPassed, int numFailed, int fnsTested, in
 
 varargs void process_file (string file, function doneCallback, int reset) {
     object t;
+    string tmp;
 
     if (reset) {
         reset_data();
@@ -69,6 +70,10 @@ varargs void process_file (string file, function doneCallback, int reset) {
     }
     if (t = find_object(file)) {
         destruct(t);
+    }
+    tmp = catch (call_other(file, "???"));
+    if (tmp) {
+        message("system", "Error in test: " + tmp + "\n", this_user());
     }
     if (!inherits(M_TEST, load_object(file))) {
         evaluate(doneCallback);
