@@ -8,12 +8,14 @@ void before_each_test () {
 void after_all_tests () {
     if (objectp(testOb)) destruct(testOb);
 }
+string *test_order () {
+    return ({ "test_handle_remove", "test_internal_remove", "test_clean_up" });
+}
 
 void test_handle_remove () {
     int *values = ({});
 
     expect_function("handle_remove", testOb);
-    expect_true(member_array("internal_remove", functions(testOb, 0)) > -1 && !function_exists("internal_remove", testOb), "internal_remove is protected");
 
     values += ({ objectp(testOb) });
     values += ({ testOb->handle_remove() });
@@ -23,6 +25,30 @@ void test_handle_remove () {
         1,  // handle_remove
         0,  // objectp
     }), "handle_remove behaves");
+}
+
+void test_internal_remove () {
+    int *values = ({}), *results = ({});
+    object container, ob;
+
+    expect_true(member_array("internal_remove", functions(testOb, 0)) > -1 && !function_exists("internal_remove", testOb), "internal_remove is protected");
+
+    container = new(STD_CONTAINER);
+    ob = new(STD_OBJECT);
+    ob->handle_move(container);
+    values += ({ environment(ob) == container });
+    results += ({ 1 });
+
+    values += ({ container->handle_remove() });
+    results += ({ 1 });
+
+    values += ({ objectp(ob) });
+    results += ({ 0 });
+
+    expect_arrays_equal(values, results, "internal_remove behaves");
+
+    if (objectp(container)) destruct(container);
+    if (objectp(ob)) destruct(ob);
 }
 
 void test_clean_up () {
@@ -48,15 +74,13 @@ void test_clean_up () {
     results += ({ 0 });
     testOb->set_no_clean(0);
     values += ({ testOb->query_no_clean() });
-    results += ({ 0 }); // clean_later()
+    results += ({ 0 });
     values += ({ objectp(testOb) });
     results += ({ 1 });
     values += ({ testOb->clean_up() });
     results += ({ 1 });
     values += ({ objectp(testOb) });
     results += ({ 0 });
-
-    // @TODO check contents moved after internal_remove ?
 
     expect_arrays_equal(values, results, "clean_up behaves");
 }

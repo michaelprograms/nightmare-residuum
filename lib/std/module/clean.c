@@ -15,14 +15,9 @@ nomask int clean_later () {
 }
 
 protected int internal_remove () {
-    object env, *inv;
-    int i;
-
+    object env;
     if (env = environment(this_object())) {
-        i = sizeof(inv = all_inventory(this_object()));
-        while (i--) {
-            if (inv[i]) inv[i]->eventMove(env); // @TODO should clean_up instead?
-        }
+        map(all_inventory(this_object()), (: $1->handle_move($(env)) :));
     }
     destruct(this_object());
     return !(this_object());
@@ -34,9 +29,6 @@ int handle_remove () {
 int clean_up () {
     if (origin() == "driver" || environment() || __NoClean) {
         return clean_never();
-    }
-    if (!function_exists("handle_remove", this_object())) {
-        debug_message(identify(this_object())+" tried to clean_up but no handle_remove");
     }
     return this_object()->handle_remove();
 }
