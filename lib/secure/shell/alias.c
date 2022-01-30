@@ -1,3 +1,5 @@
+#define MAX_ALIAS_COUNT 100
+
 inherit "/std/class/shell_alias.c";
 
 private mapping __Aliases = ([]);
@@ -10,13 +12,15 @@ nomask class ShellAlias query_alias (string alias) {
     return __Aliases[alias];
 }
 
-
 varargs void add_alias (string name, string template, string *defaults, int xverb) {
     class ShellAlias new_alias;
     int i;
+    string tmp;
 
-    // @TODO
-    // if (query_alias_count() >= MAX_NUMBER_OF_ALIASES) write("Sorry, you already have too many aliases.\n");
+    if (sizeof(__Aliases) >= MAX_ALIAS_COUNT) {
+        write("You have reached the maxmimum amount of aliases.\n");
+        return;
+    }
 
     if (strsrch(template, "$*") == -1) {
         template += " $*";
@@ -25,30 +29,29 @@ varargs void add_alias (string name, string template, string *defaults, int xver
     new_alias = new(class ShellAlias);
     new_alias->template = template;
     new_alias->defaults = defaults;
-    new_alias->num_args = max(map(explode(template[strsrch(template, "$")..], "$"),
-        function (string s) {
-            int d;
-            sscanf(s, "%d%s", d, s);
-            return d;
-        }
-    ));
+    tmp = explode(template[strsrch(template, "$")..], "$");
+    new_alias->num_args = max(map(tmp, function (string s) {
+        int d;
+        sscanf(s, "%d%s", d, s);
+        return d;
+    }));
 
     if (!arrayp(new_alias->defaults)) {
-        new_alias->defaults = ({});
+        new_alias->defaults = ({ });
     }
     i = new_alias->num_args - (sizeof(defaults) - 1);
     while (i--) {
-        new_alias->defaults += ({""});
+        new_alias->defaults += ({ "" });
     }
 
-    if(xverb) {
+    if (xverb) {
         __XAliases += ({ name });
     }
     __Aliases[name] = new_alias;
     this_object()->save_data();
 }
 
-// remove_alias
+// @TODO remove_alias
 
 mixed expand_alias (string input) {
     string *argv = explode(input, " ");
@@ -57,18 +60,16 @@ mixed expand_alias (string input) {
     int numArgs = sizeof(argv) - 1, i, j;
 
     xverbMatches = filter_array(__XAliases, (: strsrch($2, $1) == 0 :), argv[0]);
-    if (sizeof(xverbMatches) == 1) {
-        sscanf(argv[0], xverbMatches[0] + "%s", argv[0]);
-        if (argv[0] == "") {
-            argv[0] = xverbMatches[0];
-        } else {
-            numArgs ++;
-            argv = xverbMatches + argv;
-        }
-    } else if (sizeof(xverbMatches) > 1) {
-        // @TODO is this necessary?
-        printf("ERROR: Alias conflict: can't destinguish between: %s.\n", implode(xverbMatches,", "));
-        return "";
+    if (sizeof(xverbMatches) != 1) {
+        error("Alias conflict: can't distinguish between " + implode(xverbMatches, ", "));
+    }
+
+    sscanf(argv[0], xverbMatches[0] + "%s", argv[0]);
+    if (argv[0] == "") {
+        argv[0] = xverbMatches[0];
+    } else {
+        numArgs ++;
+        argv = xverbMatches + argv;
     }
 
     if (!(currentAlias = __Aliases[argv[0]])) {
@@ -90,14 +91,12 @@ mixed expand_alias (string input) {
         expandedInput = replace_string(expandedInput, "$*", currentAlias->defaults[0]);
     }
 
-  return trim(replace_string(expandedInput, sprintf("%c", 255), "$"));
+    return trim(replace_string(expandedInput, sprintf("%c", 255), "$"));
 }
 
 void create () {
     if (clonep()) {
-        // @TODO
-        // defaults shouldn't count against player num
-        // immortal aliases also
+        // @TODO defaults shouldn't count against player num
         if (!sizeof(__Aliases)) {
             add_alias("l", "look");
             add_alias("n", "go north");
@@ -115,8 +114,4 @@ void create () {
             add_alias("'", "say", 0, 1);
         }
     }
-}
-
-varargs protected void cmd_alias (mixed argv, string *implode_info) {
-    write("cmd_alias!\n");
 }

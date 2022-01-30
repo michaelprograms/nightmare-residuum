@@ -15,7 +15,6 @@ nomask string *query_alias_names ();
 varargs void add_alias (string name, string template, string *defaults, int xverb);
 // remove_alias
 mixed expand_alias (string input);
-varargs protected void cmd_alias (mixed argv, string *implode_info);
 
 /* --- variable --- */
 mixed query_variable (string v);
