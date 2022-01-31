@@ -14,7 +14,7 @@ nosave protected mixed UNDEFINED = (([])[0]); // equivalent of UNDEFINED
 nosave private int currentTestPassed = 0, currentTestRegex = 0;
 nosave private int failingExpects = 0, passingExpects = 0;
 nosave private int expectCatch = 0;
-nosave private string currentTestLog;
+nosave private string currentTestLog, currentFailLog, totalFailLog = "";
 
 int query_expect_catch () {
     return expectCatch;
@@ -62,7 +62,7 @@ public int execute_test (function done) {
     failingExpects = 0;
     passingExpects = 0;
 
-    write("\nEvaluating '" + CYAN + UNDERLINE + file_name(this_object()) + RESET + "'"+"\n");
+    write("\nEvaluating " + CYAN + UNDERLINE + file_name(this_object()) + RESET + "\n");
     before_all_tests();
     foreach (string testFn in testFns) {
         if (!function_exists(testFn, this_object())) {
@@ -70,6 +70,7 @@ public int execute_test (function done) {
             continue;
         }
         currentTestLog = "";
+        currentFailLog = "";
         timeBefore = rusage()["utime"] + rusage()["stime"];
         before_each_test();
         failingExpectsBefore = failingExpects;
@@ -84,8 +85,10 @@ public int execute_test (function done) {
 
         currentTestLog = "  " + UNDERLINE + BOLD + testFn + RESET + " (" + ORANGE + (timeAfter - timeBefore) + RESET + " ms):" + currentTestLog;
         write(currentTestLog + "\n");
+        if (strlen(currentFailLog) > 0) {
+            totalFailLog += CYAN + UNDERLINE + file_name(this_object()) + RESET + ": " + UNDERLINE + BOLD + testFn + RESET + " (" + ORANGE + (timeAfter - timeBefore) + RESET + " ms):" + currentFailLog;
+        }
     }
-
 
     after_all_tests();
     write("  " + passingExpects + " Pass " + (failingExpects ? failingExpects + " Fail" : "")+"\n");
@@ -95,8 +98,16 @@ public int execute_test (function done) {
             write("    " + RED + "?" + RESET + " " + fn + "\n");
         }
     }
-    // @TODO mapping?
-    evaluate(done, sizeof(testFns), passingExpects, failingExpects, sizeof(testObjectFns), sizeof(testObjectUntestedFns));
+
+    evaluate(done, ([
+        "numTests": sizeof(testFns),
+        "numPassed": passingExpects,
+        "numFailed": failingExpects,
+        "fnsTested": sizeof(testObjectFns),
+        "fnsUntested": sizeof(testObjectUntestedFns),
+        "failingExpects": totalFailLog,
+    ]));
+
 }
 
 // -----------------------------------------------------------------------------
@@ -172,6 +183,7 @@ private void validate_expect (mixed value1, mixed value2, string message) {
             currentTestLog += "\n    " + GREEN + "+" + RESET + " " + RED + "x" + RESET + " " + message;
         } else {
             currentTestLog += "\n    " + RED + "x" + RESET + " " + message;
+            currentFailLog += "\n    " + RED + "x" + RESET + " " + message;
         }
         failingExpects ++;
     } else {
@@ -240,7 +252,7 @@ varargs void expect_array_strings_equal (string *left, string right, string mess
 }
 varargs void expect_arrays_equal (mixed *left, mixed *right, string message) {
     currentTestPassed = 0;
-    if (sizeof(left) == sizeof(right)) {
+    if (sizeof(left) == sizeof(right) && sizeof(left) > 0) {
         currentTestPassed = 1;
         for (int i = 0; i < sizeof(left); i ++) {
             if (identify(left[i]) != identify(right[i])) {
@@ -249,8 +261,8 @@ varargs void expect_arrays_equal (mixed *left, mixed *right, string message) {
             }
         }
     }
-    left = map_array(left, (:identify:));
-    right = map_array(right, (:identify:));
+    left = map(left, (:identify:));
+    right = map(right, (:identify:));
     validate_expect(left, right, message);
 }
 varargs void expect_strings_equal (string left, string right, string message) {

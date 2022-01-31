@@ -1,5 +1,5 @@
-private nosave string *tests = ({}), __Mode;
-private nosave mapping __Tests = ([
+nosave private string *tests = ({}), __Mode;
+nosave private mapping __Tests = ([
     /* Data format:
     "/secure/module/test.test.c": ([
         "touched": 16000000,
@@ -9,10 +9,12 @@ private nosave mapping __Tests = ([
     ])
     */
 ]);
-private nosave int currentTest = 0, totalTests = 0, totalFiles = 0;
-private nosave int totalPassed = 0, totalFailed = 0, totalFnsTested = 0, totalFnsUntested = 0;
-private nosave int timeBefore, timeAfter;
-private nosave int shutdownAfterTests = 0;
+nosave private int currentTest = 0, shutdownAfterTests = 0;
+nosave private int totalTests = 0, totalFiles = 0;
+nosave private int totalPassed = 0, totalFailed = 0;
+nosave private int totalFnsTested = 0, totalFnsUntested = 0;
+nosave private int timeBefore, timeAfter;
+nosave private string *failingExpects = ({});
 
 // -----------------------------------------------------------------------------
 
@@ -42,21 +44,26 @@ void reset_data () {
 
 // -----------------------------------------------------------------------------
 
-varargs void done (int numTests, int numPassed, int numFailed, int fnsTested, int fnsUntested) {
+void done (mapping results) {
     if (__Mode == "ALL") {
-        totalTests += numTests;
-        totalPassed += numPassed;
-        totalFailed += numFailed;
-        totalFnsTested += fnsTested;
-        totalFnsUntested += fnsUntested;
+        if (results) {
+            totalTests += results["numTests"];
+            totalPassed += results["numPassed"];
+            totalFailed += results["numFailed"];
+            totalFnsTested += results["fnsTested"];
+            totalFnsUntested += results["fnsUntested"];
+            if (strlen(results["failingExpects"]) > 0) {
+                failingExpects += ({ results["failingExpects"] });
+            }
+        }
         currentTest ++;
         process();
     // } else if (__Mode == "WATCH") {
-    //     totalTests = numTests;
-    //     totalPassed = numPassed;
-    //     totalFailed = numFailed;
-    //     totalFnsTested = fnsTested;
-    //     totalFnsUntested = fnsUntested;
+    //     totalTests = results["numTests"];
+    //     totalPassed = results["numPassed"];
+    //     totalFailed = results["numFailed"];
+    //     totalFnsTested = results["fnsTested"];
+    //     totalFnsUntested = results["fnsUntested"];
     }
 }
 
@@ -66,7 +73,7 @@ varargs void process_file (string file, function doneCallback, int reset) {
 
     if (reset) {
         reset_data();
-        // update_test_data(file);
+        update_test_data(file);
     }
     if (t = find_object(file)) {
         destruct(t);
@@ -107,7 +114,11 @@ void process () {
         write(format_total_line("Passed", totalPassed, totalExpects) + "\n");
         write(format_total_line("Failed", totalFailed, totalExpects) + "\n");
         write(format_total_line("Functions", totalFnsTested, totalFnsTested + totalFnsUntested) + "\n");
-        write("Time:      " + (timeAfter - timeBefore) + " ms for "+totalTests+" tests\n\n");
+        write("Time:      " + (timeAfter - timeBefore) + " ms for " + totalTests + " tests\n\n");
+        if (sizeof(failingExpects) > 0) {
+            write("Failing expects:\n" + implode(failingExpects, "\n") + "\n\n");
+            failingExpects = ({});
+        }
         // call_out((: watch_all :), 2, 0);
         if (shutdownAfterTests) {
             shutdown(totalFailed > 0 ? -1 : 0);

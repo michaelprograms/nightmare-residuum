@@ -1,12 +1,15 @@
-varargs void done (int numTests, int numPassed, int numFailed, int fnsTested, int fnsUntested) {
-    int numExpects = numPassed + numFailed;
+void done (mapping results) {
+    int numExpects = results["numPassed"] + results["numFailed"];
     if (!numExpects) {
         message("system", "\nNo expects found.\n", this_user());
         return;
     }
-    message("system", "\nPassed:    " + sprintf("%3d", numPassed) + " / " + sprintf("%3d", numExpects) + " (" + sprintf("%3d", to_int(numPassed * 100 / numExpects)) + "%)"+"\n", this_user());
-    message("system", "Failed:    " + sprintf("%3d", numFailed) + " / " + sprintf("%3d", numExpects) + " (" + sprintf("%3d", to_int(numFailed * 100 / numExpects)) + "%)"+"\n", this_user());
-    message("system", "Functions: " + sprintf("%3d", fnsTested) + " / " + sprintf("%3d", (fnsTested + fnsUntested)) + " (" + sprintf("%3d", to_int(fnsTested * 100 / (fnsTested + fnsUntested))) + "%)"+"\n\n", this_user());
+    message("system", "\nPassed:    " + sprintf("%3d", results["numPassed"]) + " / " + sprintf("%3d", numExpects) + " (" + sprintf("%3d", to_int(results["numPassed"] * 100 / numExpects)) + "%)"+"\n", this_user());
+    message("system", "Failed:    " + sprintf("%3d", results["numFailed"]) + " / " + sprintf("%3d", numExpects) + " (" + sprintf("%3d", to_int(results["numFailed"] * 100 / numExpects)) + "%)"+"\n", this_user());
+    message("system", "Functions: " + sprintf("%3d", results["fnsTested"]) + " / " + sprintf("%3d", (results["fnsTested"] + results["fnsUntested"])) + " (" + sprintf("%3d", to_int(results["fnsTested"] * 100 / (results["fnsTested"] + results["fnsUntested"]))) + "%)"+"\n\n", this_user());
+    if (strlen(results["failingExpects"]) > 0) {
+        message("system","Failing expects:\n" + results["failingExpects"] + "\n\n", this_user());
+    }
 }
 
 void command (string input) {
