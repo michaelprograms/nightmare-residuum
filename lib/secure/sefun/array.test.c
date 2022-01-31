@@ -13,6 +13,6 @@ void test_distinct_array () {
 
     expect_function("distinct_array", testOb);
     expect_arrays_equal(testOb->distinct_array(arr1), ({3, 2, 1}), "distinct array returned distinct members");
-    expect_arrays_equal(testOb->distinct_array(({})), ({}), "distinct array handled empty array");
-    expect_arrays_equal(testOb->distinct_array(0), ({}), "distinct array handled blank parameter");
+    expect_true(testOb->distinct_array(({})) == ({}), "distinct array handled empty array");
+    expect_true(testOb->distinct_array(0) == ({}), "distinct array handled blank parameter");
 }
