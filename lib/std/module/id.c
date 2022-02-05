@@ -1,6 +1,3 @@
-
-#include "object.h"
-
 nosave private string __Name;
 nosave private string __KeyName;
 nosave private string __KeyID;
@@ -8,6 +5,25 @@ nosave private string __KeyAdj;
 nosave private string *__ID = ({});
 nosave private string *__Adj = ({});
 nosave private string *__Plural = ({});
+
+// -----------------------------------------------------------------------------
+
+string query_name ();
+string query_key_name ();
+void set_name (string name);
+void set_key_name (string name);
+string *query_id ();
+string query_key_id ();
+void set_id (string *id);
+void remove_id (string *id);
+string *query_adjective ();
+void set_adjective (string *adjs);
+void add_adjective (string adj);
+void remove_adjective (string adj);
+void refresh_id ();
+string *parse_command_id_list ();
+string *parse_command_adjectiv_id_list ();
+string *parse_command_plural_id_list ();
 
 // -----------------------------------------------------------------------------
 

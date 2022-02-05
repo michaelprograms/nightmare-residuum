@@ -1,7 +1,7 @@
-inherit "/std/object/description.c";
-inherit "/std/object/id.c";
+inherit "/std/module/description.c";
+inherit "/std/module/id.c";
 
-#include "/std/object/object.h"
+// -----------------------------------------------------------------------------
 
 nosave private object __LastEnv = 0;
 
