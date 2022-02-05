@@ -39,14 +39,6 @@ string *parse_command_id_list ();
 string *parse_command_adjectiv_id_list ();
 string *parse_command_plural_id_list ();
 
-/* --- property --- */
-mapping query_properties ();
-mixed query_property (string key);
-mixed set_property (string key, mixed value);
-mapping set_properties (mapping properties);
-mixed add_property (string key, mixed value);
-int remove_property (string key);
-
 /*  --- */
 
 #endif /* __OBJECT_H__ */

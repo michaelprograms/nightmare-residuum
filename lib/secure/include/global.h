@@ -13,6 +13,7 @@
 #define M_CLEAN         "/std/module/clean.c"
 #define M_EXIT          "/std/module/exit.c"
 #define M_PARENT        "/std/module/parent.c"
+#define M_PROPERTY      "/std/module/property.c"
 #define M_STORY         "/std/module/story.c"
 
 // secure modules

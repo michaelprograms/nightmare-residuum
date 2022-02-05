@@ -1,6 +1,5 @@
 inherit "/std/object/description.c";
 inherit "/std/object/id.c";
-inherit "/std/object/property.c";
 
 #include "/std/object/object.h"
 
