@@ -15,7 +15,7 @@ void test_gender () {
     expect_function("query_gender", testOb);
 
     values += ({ testOb->query_gender() });
-    results += ({ "none" });
+    results += ({ "neither" });
     testOb->set_gender("male");
     values += ({ testOb->query_gender() });
     results += ({ "male" });
