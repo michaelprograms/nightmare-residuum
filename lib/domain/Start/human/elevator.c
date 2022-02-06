@@ -12,7 +12,7 @@ string *query_story_lines (object character) {
 }
 
 void story_action_final (object character) {
-    set_exit("north", "/domain/Start/human/structure.c", 0, function (object ob, string dir) {
+    set_exit("north", "/domain/Start/human/4_2_0_enter.c", 0, function (object ob, string dir) {
         this_object()->remove_exit(dir);
         message("action", "The doors close behind you.\n", ob);
         message("action", "The doors close behind " + ob->query_name() + ".\n", environment(ob), ob);
