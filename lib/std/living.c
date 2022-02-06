@@ -90,12 +90,10 @@ varargs int do_command (string str, int debug) {
         return 1;
     default:
         write("Unexpected result.\n");
-        if (undefinedp(result)) debug_message("Result was undefined.");
-        else debug_message( "Error was: "+identify(result));
         return 1;
     }
     if (environment() && environment()->query_exit(str)) {
-        resultGo = parse_sentence("go "+str);
+        resultGo = parse_sentence("go " + str);
         if (resultGo == 1) {
             return 1;
         }
@@ -104,7 +102,7 @@ varargs int do_command (string str, int debug) {
         }
     }
     if (stringp(result) && (result[0..12] != "You can't go " && result[0..11] != "There is no ")) {
-        write(result+"\n");
+        write(result + "\n");
         return 1;
     }
 
