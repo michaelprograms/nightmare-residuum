@@ -6,7 +6,7 @@ string *query_story_lines (object target) {
         "You are naught...nowhere...nobody...nothing...",
         "A shock of creation sparks existence into being.",
         "The pumping of blood pounds in your ears momentarily.",
-        "Gasping breathes turn to rhythmic aspirations.",
+        "Gasping breaths turn to rhythmic aspirations.",
         "All of your skin goosebumps at the sensation of flowing air.",
         "Your eyes finally shrug off the weight of unconsciousness.",
     });
@@ -95,6 +95,7 @@ mixed can_done () {
 }
 void do_done () {
     message("action", "You press the done button.\nThe tank glass pops open.\n", this_character());
-    this_character()->handle_go("/domain/Start/human/tank_hallway" + ({"1","3"})[random(2)], "eject", "out of the tank");
+    this_character()->handle_go("/domain/Start/human/tank_hallway" + (1 + random(3)), "eject", "out of the tank");
+    this_character()->describe_environment();
     message("action", this_character()->query_name() + " is ejected out of the tank.\n", environment(this_character()), this_character());
 }

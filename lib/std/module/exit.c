@@ -69,6 +69,7 @@ mixed handle_go (object ob, string dir) {
         return 1;
     } else if (__Exits[dir]["room"]) {
         ob->handle_move(__Exits[dir]["room"]);
+        ob->describe_environment();
         if (__Exits[dir]["after"]) {
             evaluate(__Exits[dir]["after"], ob, dir);
         }
