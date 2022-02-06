@@ -16,7 +16,7 @@ void command (string input) {
 
     write("Name: " + char->query_name() + "\n");
     // write("Account: " + char->query_account() + "\n");
-    write("Type: " + char->query_type() + "\n");
+    write("Species: " + char->query_species() + "\n");
     write("Created: " + ctime(char->query_created()) + "\n");
     write("Last Action: " + time_ago(char->query_last_action()) + "\n");
 

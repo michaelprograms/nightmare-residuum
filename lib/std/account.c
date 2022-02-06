@@ -1,5 +1,6 @@
 inherit M_PARENT;
 inherit M_SAVE;
+inherit M_PROPERTY;
 
 private string __Name;
 private string __Password;
@@ -104,7 +105,7 @@ void update_character_data (object character) {
     if (!character || !(name = character->query_key_name())) {
         return;
     }
-    __Characters[name]["type"] = character->query_type();
+    __Characters[name]["species"] = character->query_species();
     __Characters[name]["level"] = character->query_level();
     __Characters[name]["last_action"] = character->query_last_action();
     __Characters[name]["last_location"] = character->query_last_location();

@@ -1,24 +1,23 @@
 #include "living/living.h"
 
 inherit STD_CONTAINER;
-
 inherit "/std/living/body.c";
 inherit "/std/living/stats.c";
 inherit "/std/living/vitals.c";
 
-private string __Type;
+private string __Species;
 private string __LastEnvironment;
 
 void create () {
     container::create();
 }
 
-string query_type () {
-    return __Type;
+string query_species () {
+    return __Species;
 }
-void set_type (string type) {
+void set_species (string species) {
     // @TODO security
-    __Type = type;
+    __Species = species;
 }
 string query_last_environment () {
     return __LastEnvironment;

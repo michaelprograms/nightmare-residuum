@@ -34,8 +34,8 @@ private void display_account_menu ();
 #define STATE_PASSWORD_DELETE_CONFIRM       25
 #define STATE_CHARACTER_OVERRIDE            26
 #define STATE_CHARACTER_OVERRIDE_CONFIRM    27
-#define STATE_TYPE_ENTER                    30
-#define STATE_TYPE_HANDLE                   31
+#define STATE_SPECIES_ENTER                 30
+#define STATE_SPECIES_HANDLE                31
 #define STATE_SETTINGS_ENTER                40
 #define STATE_SETTINGS_HANDLE               41
 #define PROMPT_ACCOUNT_ENTER                "Enter account name: "
@@ -51,15 +51,15 @@ private void display_account_menu ();
 #define PROMPT_CHARACTER_CONFIRM_NAME       "Confirm character name? (y/N) "
 #define PROMPT_CHARACTER_DELETE             "Delete which character? "
 #define PROMPT_CHARACTER_OVERRIDE           "Confirm connection override? (y/N) "
-#define PROMPT_TYPE_ENTER                   "Enter character race: "
+#define PROMPT_SPECIES_ENTER                "Enter character species: "
 #define PROMPT_CHARACTER_DELETE_CONFIRM     "Enter character name to confirm deletion: "
 #define PROMPT_PASSWORD_DELETE_CONFIRM      "Enter account password to confirm deletion: "
 #define PROMPT_SETTINGS_ENTER               "Enter settings action: "
 
 /* --- character --- */
 private void set_character_name (string name);
-private void set_character_type (string type);
-string query_character_type ();
+private void set_character_species (string species);
+string query_character_species ();
 object query_character ();
 int query_immortal ();
 void set_immortal (int i);

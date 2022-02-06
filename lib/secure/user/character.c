@@ -1,6 +1,6 @@
 #include "user.h"
 
-nosave private string __BodyType;
+nosave private string __Species;
 nosave private object __Character;
 private int __Immortal;
 
@@ -20,11 +20,12 @@ private void set_character_name (string name) {
         __Character = clone_object(STD_CHARACTER);
     }
 }
-private void set_character_type (string type) {
-    __BodyType = type;
+private void set_character_species (string species) {
+    __Species = species;
+    __Character->set_species(species);
 }
-string query_character_type () {
-    return __BodyType;
+string query_character_species () {
+    return __Species;
 }
 object query_character () {
     return __Character;
@@ -63,7 +64,7 @@ nomask private void character_enter (int newbie) {
         __Character->setup_character(); // this calls restore_data/save_data
 
         if (newbie) {
-            if (__Character->query_type() == "human") {
+            if (__Character->query_species() == "human") {
                 __Character->set_last_location("/domain/Start/human/enter.c");
             } else {
                 __Character->set_last_location("/domain/Nowhere/void.c");
@@ -116,7 +117,7 @@ nomask protected void character_exit () {
         __Character->update_last_action();
         query_account()->update_character_data(__Character);
         __Character->exit_world();
-        __BodyType = 0;
+        __Species = 0;
     }
 }
 

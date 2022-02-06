@@ -38,6 +38,15 @@ private void display_account_menu () {
     input_next((: account_input, STATE_ACCOUNT_MENU, 0 :), PROMPT_ACCOUNT_CHOICE);
 }
 
+private string query_unlocked_species () {
+    string *unlocks;
+    if (!sizeof(unlocks = explode(__Account->query_property("unlockedSpecies") || "", ","))) {
+        return "The only species unlocked is human.\n";
+    } else {
+        return "The following species are unlocked:\n" + implode(({"human"}) + unlocks, ", ") + "\n";
+    }
+}
+
 protected nomask varargs void account_input (int state, mixed extra, string input) {
     switch (state) {
         case STATE_ACCOUNT_ENTER:
@@ -121,7 +130,7 @@ protected nomask varargs void account_input (int state, mixed extra, string inpu
             break;
 
         case STATE_ACCOUNT_COMPLETE:
-            // @TODO log_file("account/new", sprintf("%s : %s : %s\n", ctime(time()), query_ip_number(), __Account->query_name()));
+            D_LOG->log("account/new", sprintf("%s : %s : %s\n", ctime(time()), query_ip_number(), __Account->query_name()));
             if (!__Account->query_has_playable_characters()) {
                 write("\nWelcome, "+__Account->query_name()+"! You will now create a character.\n");
                 account_input(STATE_CHARACTER_ENTER);
@@ -219,13 +228,11 @@ protected nomask varargs void account_input (int state, mixed extra, string inpu
                 return;
             }
             reset_connect_timeout();
-            // account_input(STATE_TYPE_ENTER);
-            __Account->add_character(query_character()->query_name(), query_character()->query_key_name(), 0);
-            write("Entering as " + query_character()->query_name() + "...\n");
-
-            // @TODO log_file("character/new", sprintf("%s : %s : %s\n", ctime(time()), query_ip_number(), input));
-
-            character_enter(1);
+            account_input(STATE_SPECIES_ENTER);
+            // __Account->add_character(query_character()->query_name(), query_character()->query_key_name(), 0);
+            // D_LOG->log("character/new", sprintf("%s : %s : %s\n", ctime(time()), query_ip_number(), input));
+            // write("Entering as " + query_character()->query_name() + "...\n");
+            // character_enter(1);
             break;
 
         case STATE_CHARACTER_DELETE:
@@ -275,28 +282,25 @@ protected nomask varargs void account_input (int state, mixed extra, string inpu
             character_override();
             break;
 
-        // case STATE_TYPE_ENTER:
-        //     write("Characters must select a type.\n");
-        //     // @TODO check account properties for unlocks
-        //     write("\nThe only one type option available to your account is human.\n");
-        //     input_next((: account_input, STATE_TYPE_HANDLE, 0 :), PROMPT_TYPE_ENTER);
-        //     break;
+        case STATE_SPECIES_ENTER:
+            write("Characters must have a species.\n\n");
+            write(query_unlocked_species() + "\n");
+            input_next((: account_input, STATE_SPECIES_HANDLE, 0 :), PROMPT_SPECIES_ENTER);
+            break;
 
-        // case STATE_TYPE_HANDLE:
-        //     if (input != "human") {
-        //         write("\nThe only one type option available to your account is human.\n");
-        //         input_next((: account_input, STATE_TYPE_HANDLE, 0 :), PROMPT_TYPE_ENTER);
-        //         return;
-        //     }
-        //     write(query_character_name() + " is now a " + input + "...\n");
-        //     set_character_type(input);
-        //     __Account->add_character(query_character()->query_name(), query_character()->query_key_name(), query_character_type());
-        //     write("Entering as " + query_character_name() + "...\n");
-
-        //     // @TODO log_file("character/new", sprintf("%s : %s : %s\n", ctime(time()), query_ip_number(), input));
-
-        //     character_enter(1);
-        //     break;
+        case STATE_SPECIES_HANDLE:
+            if (input != "human") {
+                write("\nThe only one type option available to your account is human.\n");
+                input_next((: account_input, STATE_SPECIES_HANDLE, 0 :), PROMPT_SPECIES_ENTER);
+                return;
+            }
+            write(query_character()->query_name() + " is a " + input + "!\n\n");
+            set_character_species(input);
+            __Account->add_character(query_character()->query_name(), query_character()->query_key_name(), query_character()->query_species());
+            D_LOG->log("character/new", sprintf("%s : %s : %s\n", ctime(time()), query_ip_number(), input));
+            write("Entering as " + query_character()->query_name() + "...\n");
+            character_enter(1);
+            break;
 
         case STATE_SETTINGS_ENTER:
             write("Settings Actions  : %^CYAN%^[back] [(setting) (option)]%^RESET%^\n\n");
