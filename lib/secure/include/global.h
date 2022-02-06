@@ -7,6 +7,7 @@
 #define STD_CHARACTER   "/std/character.c"
 #define STD_CONTAINER   "/std/container.c"
 #define STD_LIVING      "/std/living.c"
+#define STD_NPC         "/std/npc.c"
 #define STD_ROOM        "/std/room.c"
 
 // std modules
