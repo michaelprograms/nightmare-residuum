@@ -68,12 +68,16 @@ mixed handle_go (object ob, string dir) {
     } else if (__Exits[dir]["before"] && !(evaluate(__Exits[dir]["before"], ob, dir))) {
         return 1;
     } else if (__Exits[dir]["room"]) {
-        ob->handle_move(__Exits[dir]["room"]);
-        ob->describe_environment();
-        if (__Exits[dir]["after"]) {
-            evaluate(__Exits[dir]["after"], ob, dir);
+        if ((regexp(__Exits[dir]["room"], "#[0-9]+") && find_object(__Exits[dir]["room"])) || (file_size(__Exits[dir]["room"]) > 0)) {
+            ob->handle_move(__Exits[dir]["room"]);
+            ob->describe_environment();
+            if (__Exits[dir]["after"]) {
+                evaluate(__Exits[dir]["after"], ob, dir);
+            }
+            return 1;
+        } else {
+            return 0;
         }
-        return 1;
     } else {
         return 0;
     }

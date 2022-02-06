@@ -1,37 +1,36 @@
 inherit STD_ROOM;
 inherit M_STORY;
 
-string *query_story_lines (object target) {
+string *query_story_lines (object character) {
     return ({
-        "Doors quickly close behind you before seemlessly meeting the other walls.",
-        "You feel a downwards pull as the room seems to be moving with an upwards momentum.",
-        "The pull begins to subside with the whistling of air outside the enclosure.",
+        "You feel a downwards pull as the room starts moving with upwards momentum.",
+        "The pull begins to fade while air whistles past in a rush.",
         "The room shakes a little but continues gliding upwards.",
         "The upwards motion begins to slow and the whistling stalls out.",
-        "Suddenly the doors open before you, revealing a large enclosed area.",
+        "With a *ding!*, the doors open to the north, revealing a large cavernous area.",
     });
 }
 
-void close_door (object ob, string dir) {
-    this_object()->remove_exit(dir);
-}
-void story_action_final (object target) {
-    set_exit("north", "/domain/Start/human/structure.c", 0, (: close_door :));
+void story_action_final (object character) {
+    set_exit("north", "/domain/Start/human/structure.c", 0, function (object ob, string dir) {
+        this_object()->remove_exit(dir);
+        message("action", "The doors close behind you.\n", ob);
+        message("action", "The doors close behind " + ob->query_name() + ".\n", environment(ob), ob);
+    });
 }
 
 void create () {
     ::create();
     set_short("a small room");
     set_long("An enclosed room with smooth blank walls.");
-    set_exits(([
 
-    ]));
 }
 
 int handle_receive (object ob) {
     int result = ::handle_receive(ob);
     if (result && ob->is_character()) {
         story_start(ob);
+        message("action", "\nThe doors close behind you.\n\n", ob);
     }
     return result;
 }

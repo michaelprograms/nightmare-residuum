@@ -125,6 +125,7 @@ void test_handle_go () {
 
     r1->set_exit("east", file_name(r2));
     r2->set_exit("west", file_name(r1));
+    r2->set_exit("east", "/invalid/path.c");
 
     values += ({ regexp(r1->query_exit("east"), "/std/room#[0-9]+") });
     results += ({ 1 });
@@ -148,6 +149,12 @@ void test_handle_go () {
     results += ({ 1 });
 
     expect_arrays_equal(values, results, "handle_go moved object");
+
+    values = ({});
+    results = ({});
+    values += ({ r2->handle_go(ob, "east") });
+    results += ({ 0 });
+    expect_arrays_equal(values, results, "handle_go handled invalid path");
 
     destruct(ob);
     destruct(r1);

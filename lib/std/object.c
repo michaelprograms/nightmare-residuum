@@ -10,7 +10,6 @@ nosave private object __LastEnv = 0;
 int handle_move (mixed dest) {
     object ob;
     int x;
-    string str;
 
     if (!this_object()) return 0;
     if (environment()) {
@@ -19,8 +18,7 @@ int handle_move (mixed dest) {
     }
     if (stringp(dest)) {
         if (!(ob = find_object(dest))) {
-            if (str = catch(call_other(dest, "???")) ) {
-                // if (creatorp()) message("error", str, this_object()); // @TODO creatorp
+            if (catch(call_other(dest, "???")) ) {
                 return 0;
             }
             ob = find_object(dest);
