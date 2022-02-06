@@ -6,6 +6,7 @@ inherit M_SAVE;
 
 private int __LastAction;
 private int __Created = time();
+private int __Immortal;
 nosave private object __User;
 
 void describe_environment ();
@@ -38,6 +39,17 @@ object query_user () {
 void set_user (object user) {
     // @TODO security?
     __User = user;
+}
+
+int query_immortal () {
+    return __Immortal;
+}
+void set_immortal (int i) {
+    // @TODO security?
+    __Immortal = i;
+    if (file_size("/realm/" + query_key_name() + "/") == -1) {
+        mkdir("/realm/" + query_key_name() + "/");
+    }
 }
 
 int query_created () {

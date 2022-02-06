@@ -1,8 +1,9 @@
 #include "user.h"
 
+#define QUERY_FIRST_IMMORTAL !!filter_array(get_dir("/realm/"), (:$1 && $1[0..0] != ".":))
+
 nosave private string __Species;
 nosave private object __Character;
-private int __Immortal;
 
 // -----------------------------------------------------------------------------
 
@@ -29,12 +30,6 @@ string query_character_species () {
 }
 object query_character () {
     return __Character;
-}
-
-int query_immortal () { return __Immortal; }
-void set_immortal (int i) {
-    // @TODO security
-    __Immortal = i;
 }
 
 // -----------------------------------------------------------------------------
@@ -75,6 +70,10 @@ nomask private void character_enter (int newbie) {
         __Character->enter_world();
 
         if (newbie) {
+            if (QUERY_FIRST_IMMORTAL) {
+                __Character->set_immortal(1);
+                write("\n%^BOLD%^Since this appears to be the first connection, you have been set as immortal.%^RESET%^\n\n");
+            }
             __Character->save_data();
         }
     }
