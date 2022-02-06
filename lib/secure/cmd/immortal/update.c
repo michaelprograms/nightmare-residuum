@@ -64,6 +64,7 @@ void command (string input) {
         foreach (object l in keep) {
             l->handle_move(input);
         }
+        keep->describe_environment();
         keep = ({});
         if (file_size(test) > 0) {
             D_TEST->process_file(test, (: done :), 1);
