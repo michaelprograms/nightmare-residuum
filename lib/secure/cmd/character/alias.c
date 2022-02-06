@@ -30,6 +30,9 @@ void command (string input) {
     if (!input) {
         print_all_aliases(this_user()->query_shell());
     } else {
-        // @TODO
+        string *argv = explode(input, " ");
+        string alias = implode(argv[1..], " ");
+        write("Adding alias: " + argv[0] + " as " + alias + "\n");
+        this_user()->query_shell()->add_alias(argv[0], alias);
     }
 }
