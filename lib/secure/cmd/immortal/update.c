@@ -22,6 +22,7 @@ void command (string input) {
         return;
     } if (input == "here") {
         input = file_name(environment(this_character()));
+        if (file_size(input) == -1 && file_size(input + ".c") > 0) input += ".c";
     } else {
         if (input[0] != '/' && input[0] != '~' && input[0] != '^') {
             input = this_user()->query_shell()->query_variable("cwd") + "/" + input;
