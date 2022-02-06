@@ -5,10 +5,10 @@ string *query_story_lines (object target) {
     return ({
         "You are naught...nowhere...nobody...nothing...",
         "A shock of creation sparks existence into being.",
-        "The pumping of blood pounds in your ears.",
+        "The pumping of blood pounds in your ears momentarily.",
         "Gasping breathes turn to rhythmic aspirations.",
-        "Skin goosebumps as flowing air is sensed.",
-        "Your eyes shrug off the weight of unconsciousness.",
+        "All of your skin goosebumps at the sensation of flowing air.",
+        "Your eyes finally shrug off the weight of unconsciousness.",
     });
 }
 
@@ -90,7 +90,11 @@ void do_randomize () {
     write("You become " + gender + ".\n");
 }
 
+mixed can_done () {
+    return environment(this_character()) == this_object();
+}
 void do_done () {
-    write("You press the done button.\n");
-    this_character()->handle_go("/domain/Start/human/tank_hallway" + ({"1","3"})[random(2)]);
+    message("action", "You press the done button.\nThe tank glass pops open.\n", this_character());
+    this_character()->handle_go("/domain/Start/human/tank_hallway" + ({"1","3"})[random(2)], "eject", "out of the tank");
+    message("action", this_character()->query_name() + " is ejected out of the tank.\n", environment(this_character()), this_character());
 }
