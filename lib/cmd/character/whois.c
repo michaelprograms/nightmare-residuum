@@ -15,7 +15,10 @@ void command (string input) {
     write(format_header_bar("WHOIS") + "\n\n");
 
     write("Name: " + char->query_name() + "\n");
-    // write("Account: " + char->query_account() + "\n");
+    if (this_character()->query_immortal()) {
+        write("Account: " + char->query_account() + "\n");
+        // @TODO ip
+    }
     write("Species: " + char->query_species() + "\n");
     write("Created: " + ctime(char->query_created()) + "\n");
     write("Last Action: " + time_ago(char->query_last_action()) + "\n");
