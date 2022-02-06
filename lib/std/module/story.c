@@ -20,14 +20,14 @@ int query_delay () {
 /* ----- ----- */
 
 void story_action (object target, string line) {
-    if (!target) return;
+    if (!target || environment(target) != this_object()) return;
     message("story", line + "\n", target);
 }
 
 void story_start (object target) {
     string *lines;
 
-    if (!target) return;
+    if (!target || environment(target) != this_object()) return;
     lines = query_story_lines(target);
     for (int i = 0; i < sizeof(lines); i ++) {
         call_out((: story_action, target, lines[i] :), (i+1) * __Delay);
