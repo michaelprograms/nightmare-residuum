@@ -12,6 +12,9 @@ void command (string input) {
         this_character()->describe_environment();
         return;
     } else {
+        if (file_size(input) == -1) {
+            input = this_user()->query_shell()->query_variable("cwd") + "/" + input;
+        }
         write("Going...\n");
         this_character()->handle_go(input, "teleport", "away");
         this_character()->describe_environment();
