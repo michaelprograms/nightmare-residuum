@@ -1,6 +1,7 @@
 private int __Delay = 3;
 
-void story_action (object target, string line);
+void story_action (object target, string line, int final);
+void story_action_final (object target);
 
 /* ----- ----- */
 
@@ -19,9 +20,14 @@ int query_delay () {
 
 /* ----- ----- */
 
-void story_action (object target, string line) {
+void story_action (object target, string line, int final) {
     if (!target || environment(target) != this_object()) return;
     message("story", line + "\n", target);
+    if (final) story_action_final(target);
+}
+
+void story_action_final (object target) {
+    /* Override */
 }
 
 void story_start (object target) {
@@ -30,6 +36,6 @@ void story_start (object target) {
     if (!target || environment(target) != this_object()) return;
     lines = query_story_lines(target);
     for (int i = 0; i < sizeof(lines); i ++) {
-        call_out((: story_action, target, lines[i] :), (i+1) * __Delay);
+        call_out((: story_action, target, lines[i], (i+1 == sizeof(lines)) :), (i+1) * __Delay);
     }
 }
