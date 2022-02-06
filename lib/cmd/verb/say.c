@@ -2,8 +2,7 @@ inherit "/std/verb.c";
 
 void create () {
     verb::create();
-    add_rules(({ "" }));
-    add_rules(({ "STR" }));
+    add_rules(({ "", "STR" }));
 }
 
 int can_say () { return 1; }
