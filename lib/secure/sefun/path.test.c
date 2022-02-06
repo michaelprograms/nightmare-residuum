@@ -112,7 +112,7 @@ void test_sanitize_path () {
         "/domain/Dir/",
     }), "sanitize_path handled ^");
 
-    mockCharacter = new("/std/object/id.c");
+    mockCharacter = new("/std/module/id.c");
     mockCharacter->set_key_name("tester");
     mockShell = new("/secure/shell/shell.c");
     mockShell->start_shell();
@@ -157,7 +157,7 @@ void test_absolute_path () {
     expect_strings_equal(testOb->absolute_path("dir/file.c", "/realm/username"), "/realm/username/dir/file.c", "absolute_path handled realm dir/file");
     expect_strings_equal(testOb->absolute_path("dir/file.c", this_object()), "/secure/sefun/dir/file.c", "absolute_path handled relative_to dir/file");
 
-    mockCharacter = new("/std/object/id.c");
+    mockCharacter = new("/std/module/id.c");
     mockCharacter->set_key_name("tester");
     mockShell = new("/secure/shell/shell.c");
     mockShell->start_shell();
