@@ -1,8 +1,15 @@
 inherit STD_CONTAINER;
+inherit M_RESET;
 inherit M_EXIT;
 
 void create () {
     container::create();
+    reset::create();
+    reset();
+}
+
+void reset () {
+    reset::reset();
 }
 
 int is_room () { return 1; }
