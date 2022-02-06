@@ -2,7 +2,7 @@
 #define __GLOBAL_H__
 
 // std
-#define STD_OBJECT      "/std/object/object.c"
+#define STD_OBJECT      "/std/object.c"
 #define STD_ACCOUNT     "/std/account.c"
 #define STD_CHARACTER   "/std/character.c"
 #define STD_CONTAINER   "/std/container.c"

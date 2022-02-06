@@ -22,7 +22,7 @@ void test_query_file_privs () {
     values += ({ testOb->query_file_privs("/daemon/something.c") });
     results += ({ ACCESS_MUDLIB });
 
-    values += ({ testOb->query_file_privs("/std/object/object.c") });
+    values += ({ testOb->query_file_privs("/std/object.c") });
     results += ({ ACCESS_ASSIST });
     values += ({ testOb->query_file_privs("/std/module/save.c") });
     results += ({ ACCESS_ASSIST });
