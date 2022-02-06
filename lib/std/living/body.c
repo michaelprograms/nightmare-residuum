@@ -1,6 +1,6 @@
 #include "living.h"
 
-private string __Gender = "none";
+private string __Gender = "neither";
 private int __Level = 0;
 
 string query_gender () {
