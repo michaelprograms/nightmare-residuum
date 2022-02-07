@@ -63,10 +63,10 @@ mixed handle_go (object ob, string dir) {
     // if(query_verb() == "go" && interactive(ob)) {
     //     // @TODO check standng/sitting?
     // }
-    if (!__Exits[dir]) {
+    if (!__Exits[dir] || environment(ob) != this_object()) {
         return 0;
     } else if (__Exits[dir]["before"] && !(evaluate(__Exits[dir]["before"], ob, dir))) {
-        return 1;
+        return 0;
     } else if (__Exits[dir]["room"]) {
         if ((regexp(__Exits[dir]["room"], "#[0-9]+") && find_object(__Exits[dir]["room"])) || (file_size(__Exits[dir]["room"]) > 0)) {
             ob->handle_move(__Exits[dir]["room"]);

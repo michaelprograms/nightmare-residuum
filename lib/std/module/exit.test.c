@@ -106,6 +106,15 @@ void test_exits_before_after () {
     values += ({ checkAfter });
     results += ({ 1 });
 
+    r1->set_exit("east", file_name(r2), function (object ob, string dir) {
+        return 0;
+    });
+
+    values += ({ ob->handle_move(r1) });
+    results += ({ 1 });
+    values += ({ r1->handle_go(ob, "east") });
+    results += ({ 0 });
+
     expect_arrays_equal(values, results, "exits handled before and after functions");
 
     destruct(ob);
@@ -143,6 +152,8 @@ void test_handle_go () {
     results += ({ 0 });
     values += ({ r1->handle_go(ob, "east") });
     results += ({ 1 });
+    values += ({ r1->handle_go(ob, "east") });
+    results += ({ 0 });
     values += ({ sizeof(r1->query_item_contents()) });
     results += ({ 0 });
     values += ({ sizeof(r2->query_item_contents()) });
