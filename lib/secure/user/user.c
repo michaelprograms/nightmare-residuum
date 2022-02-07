@@ -55,8 +55,8 @@ void receive_message (string type, string message) {
     } else if (type == "room_living_contents") {
         message = "%^RED%^BOLD%^" + message + "%^RESET%^";
         receive(wrap(message));
-    } else if (type == "room_nonliving_contents") {
-        message = "%^MAGENTA%^" + message + "%^RESET%^";
+    } else if (type == "room_item_contents") {
+        message = "%^MAGENTA%^" + replace_string(message, "%^DEFAULT%^", "%^MAGENTA%^") + "%^RESET%^";
         receive(wrap(message));
     } else if (type == "room_exits") {
         message = "%^GREEN%^" + replace_string(message, ":", ":%^RESET%^") + "%^RESET%^";

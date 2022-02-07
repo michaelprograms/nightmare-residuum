@@ -10,6 +10,6 @@ void create () {
     }
     capName = capitalize(name);
     set_name(capName);
-    set_short(name);
+    set_short(capName);
     set_long("A cloned human by the name of " + capName + ".");
 }

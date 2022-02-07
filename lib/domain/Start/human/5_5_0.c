@@ -11,6 +11,8 @@ void create () {
     ]));
     set_reset(([
         "/domain/Start/human/item/obelisk.c": 1,
-        "/domain/Start/human/npc/clone.c": 4,
+        "/domain/Start/human/item/tree_pear.c": 1,
+        "/domain/Start/human/item/bench.c": 2,
+        "/domain/Start/human/npc/clone.c": 5,
     ]));
 }

@@ -131,21 +131,21 @@ void test_handle_go () {
     results += ({ 1 });
     values += ({ regexp(r2->query_exit("west"), "/std/room#[0-9]+") });
     results += ({ 1 });
-    values += ({ sizeof(r1->query_nonliving_contents()) });
+    values += ({ sizeof(r1->query_item_contents()) });
     results += ({ 0 });
-    values += ({ sizeof(r2->query_nonliving_contents()) });
+    values += ({ sizeof(r2->query_item_contents()) });
     results += ({ 0 });
     values += ({ ob->handle_move(r1) });
     results += ({ 1 });
-    values += ({ sizeof(r1->query_nonliving_contents()) });
+    values += ({ sizeof(r1->query_item_contents()) });
     results += ({ 1 });
-    values += ({ sizeof(r2->query_nonliving_contents()) });
+    values += ({ sizeof(r2->query_item_contents()) });
     results += ({ 0 });
     values += ({ r1->handle_go(ob, "east") });
     results += ({ 1 });
-    values += ({ sizeof(r1->query_nonliving_contents()) });
+    values += ({ sizeof(r1->query_item_contents()) });
     results += ({ 0 });
-    values += ({ sizeof(r2->query_nonliving_contents()) });
+    values += ({ sizeof(r2->query_item_contents()) });
     results += ({ 1 });
 
     expect_arrays_equal(values, results, "handle_go moved object");
