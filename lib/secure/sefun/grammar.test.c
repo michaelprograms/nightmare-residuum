@@ -109,6 +109,7 @@ void test_consolidate () {
     values += ({ testOb->consolidate(0, "giraffe") });
     results += ({ "zero giraffes" });
 
+
     values += ({ testOb->consolidate(25, "cat") });
     results += ({ "twenty-five cats" });
 
@@ -117,6 +118,9 @@ void test_consolidate () {
 
     values += ({ testOb->consolidate(-54321, "care") });
     results += ({ "negative fifty-four thousand, three hundred and twenty-one cares" });
+
+    values += ({ testOb->consolidate(2, "Paul") });
+    results += ({ "two Pauls" });
 
     expect_arrays_equal(values, results, "consolidate handled words");
 }
