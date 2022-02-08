@@ -43,7 +43,7 @@ void test_looks () {
     values += ({ testOb->query_looks() });
     results += ({ ({ "exam", "test" }) });
 
-    testOb->set_looks(([ "new": "New.", "newFunc": function() {} ]));  // set_looks clears existing
+    testOb->set_looks(([ "new": "New.", "newFunc": function() {} ]));
     values += ({ testOb->query_looks() });
     results += ({ ({ "new", "newFunc" }) });
 
@@ -51,6 +51,20 @@ void test_looks () {
     results += ({ "New." });
     values += ({ !!functionp(testOb->query_look("newFunc")) });
     results += ({ 1 });
+
+    testOb->set_looks(([
+        ({ "rocks", "stones" }): "Rocks and stones.",
+    ]));
+    values += ({ testOb->query_looks() });
+    results += ({ ({ "rocks", "stones" }) });
+    values += ({ testOb->query_look("rock") });
+    results += ({ "Rocks and stones." });
+    values += ({ testOb->query_look("stone") });
+    results += ({ "Rocks and stones." });
+    values += ({ testOb->query_look("rocks") });
+    results += ({ "Rocks and stones." });
+    values += ({ testOb->query_look("stones") });
+    results += ({ "Rocks and stones." });
 
     expect_arrays_equal(values, results, "look handled adding, removing, and querying");
 }
