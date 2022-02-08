@@ -20,6 +20,8 @@ int hex_to_int (string base16);
 varargs string format_header_bar (string title, string optional);
 string format_divider_bar ();
 string format_footer_bar ();
+string format_exit_brief (string dir);
+string format_exit_verbose (string dir);
 
 /* --- grammar --- */
 string remove_article (string str);

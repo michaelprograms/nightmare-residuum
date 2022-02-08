@@ -2,9 +2,7 @@ inherit "/std/verb.c";
 
 void create () {
     verb::create();
-    add_rules(({ "", "STR", "into STR" }));
-    // clear_flag(NEED_TO_SEE);
-    // clear_flag(NEED_TO_BE_ALIVE);
+    add_rules(({ "", "STR" }));
 }
 
 mixed can_go () {
@@ -14,14 +12,10 @@ mixed can_go () {
 mixed can_go_str (string str) {
     if (!environment(this_character())) return "You are nowhere.";
     // if (this_character()->query_paralyzed()) return "You are unable to move."; // @TODO
+    str = format_exit_verbose(str);
     if (!environment(this_character())->query_exit(str)) return "You cannot go that way.";
     return 1;
 }
 mixed do_go_str (string str) {
     return environment(previous_object())->handle_go(previous_object(), str);
-}
-
-mixed can_go_into_str (string str) { return 1; }
-mixed do_go_into_str (string str) {
-    tell(previous_object(), "Go into " + str + "\n");
 }

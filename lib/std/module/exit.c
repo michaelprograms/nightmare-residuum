@@ -6,19 +6,7 @@ string *query_exit_directions () { return keys(__Exits); }
 string *query_exit_dirs () { // shorthand directions
     string *exits = keys(__Exits);
     for (int i = 0; i < sizeof(exits); i ++) {
-        switch (exits[i]) {
-        case "north": exits[i] = "n"; break;
-        case "northeast": exits[i] = "ne"; break;
-        case "east": exits[i] = "e"; break;
-        case "southeast": exits[i] = "se"; break;
-        case "south": exits[i] = "s"; break;
-        case "southwest": exits[i] = "sw"; break;
-        case "west": exits[i] = "w"; break;
-        case "northwest": exits[i] = "nw"; break;
-        case "up": exits[i] = "u"; break;
-        case "down": exits[i] = "d"; break;
-        case "enter": exits[i] = "en"; break;
-        }
+        exits[i] = format_exit_brief(exits[i]);
     }
     return exits;
 }
@@ -26,6 +14,7 @@ string *query_exit_destinations () {
     return values(__Exits);
 }
 string query_exit (string dir) {
+    dir = format_exit_verbose (dir);
     return __Exits[dir] && __Exits[dir]["room"];
 }
 
@@ -63,6 +52,9 @@ mixed handle_go (object ob, string dir) {
     // if(query_verb() == "go" && interactive(ob)) {
     //     // @TODO check standng/sitting?
     // }
+
+    dir = format_exit_verbose(dir);
+
     if (!__Exits[dir] || environment(ob) != this_object()) {
         return 0;
     } else if (__Exits[dir]["before"] && !(evaluate(__Exits[dir]["before"], ob, dir))) {
