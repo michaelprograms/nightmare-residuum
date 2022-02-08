@@ -14,7 +14,6 @@ string *query_exit_destinations () {
     return values(__Exits);
 }
 string query_exit (string dir) {
-    dir = format_exit_verbose (dir);
     return __Exits[dir] && __Exits[dir]["room"];
 }
 

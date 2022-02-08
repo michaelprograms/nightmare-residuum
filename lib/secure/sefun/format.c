@@ -47,6 +47,7 @@ string format_footer_bar () {
 
 string format_exit_brief (string dir) {
     string *result = ({});
+    if (!stringp(dir)) error("Bad argument 1 to format->format_exit_brief");
     foreach (string part in explode(dir, " ")) {
         switch (part) {
             case "north": result += ({ "n" }); break;
@@ -67,6 +68,7 @@ string format_exit_brief (string dir) {
 }
 string format_exit_verbose (string dir) {
     string *result = ({});
+    if (!stringp(dir)) error("Bad argument 1 to format->format_exit_verbose");
     foreach (string part in explode(dir, " ")) {
         switch (part) {
             case "n": result += ({ "north" }); break;
