@@ -171,3 +171,5 @@ void test_handle_go () {
     destruct(r1);
     destruct(r2);
 }
+
+// @TODO bad arguments

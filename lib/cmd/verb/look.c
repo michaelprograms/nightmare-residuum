@@ -63,7 +63,7 @@ varargs mixed do_look_at_liv (object ob, mixed arg) {
 
     if (sizeof(str) && str[<1] != '\n') str += "\n";
     write("You look over " + ob->query_name() + " the " + ob->query_species() + "...\n");
-    write(str);
+    write(str + "\n");
     return 1;
 }
 varargs mixed do_look_liv (object ob, mixed *args...) {

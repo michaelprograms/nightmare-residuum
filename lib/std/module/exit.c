@@ -1,5 +1,5 @@
 nosave private mapping __Exits = ([]);
-nosave private mapping __Door = ([]);
+nosave private mapping __Door = ([]); // @TODO
 
 mapping query_exits () { return copy(__Exits); }
 string *query_exit_directions () { return keys(__Exits); }
