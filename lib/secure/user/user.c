@@ -61,7 +61,7 @@ void receive_message (string type, string message) {
     } else if (type == "room_long" || type == "room_look") {
         receive(wrap(message));
     } else if (type == "room_exits") {
-        message = "%^GREEN%^" + replace_string(message, ":", ":%^RESET%^") + "%^RESET%^";
+        message = "%^GREEN%^" + replace_string(replace_string(message, "%^DEFAULT%^", "%^GREEN%^"), ":", ":%^RESET%^") + "%^RESET%^";
         receive(wrap(message));
     } else if (type == "no_ansi") {
         if (strlen(message) > __LARGEST_PRINTABLE_STRING__) {

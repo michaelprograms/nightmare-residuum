@@ -200,9 +200,18 @@ void describe_environment () {
     message("room_long", env->query_long()+"\n\n", this_object());
 
     if (!sizeof(exits = env->query_exit_dirs())) {
-        message("room_exits", "There are no exits visible.\n\n", this_object());
+        message("room_exits", "There are no exits.\n\n", this_object());
     } else {
-        message("room_exits", "There are " + cardinal(sizeof(exits) ) +" exits: " + implode(map_array(exits, (: "%^CYAN%^" + $1 + "%^RESET%^" :)), ", ") + "\n\n", this_object());
+        string conjunction = "";
+        int i, max;
+        for (i = 0, max = sizeof(exits); i < max; i ++) {
+            if (i == max - 1 && max > 1) conjunction += "and ";
+            conjunction += "%^CYAN%^BOLD%^" + exits[i] + "%^RESET%^DEFAULT%^";
+            if (i == max - 1) conjunction += ".";
+            else if (max > 2) conjunction += ", ";
+            else conjunction += " ";
+        }
+        message("room_exits", "There are " + cardinal(sizeof(exits) ) + " exits: " + conjunction + "\n\n", this_object());
     }
 
     describe_living_contents();
