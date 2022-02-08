@@ -2,17 +2,17 @@
 #define __GLOBAL_H__
 
 // std
-#define STD_OBJECT      "/std/object.c"
 #define STD_ACCOUNT     "/std/account.c"
 #define STD_CHARACTER   "/std/character.c"
 #define STD_CONTAINER   "/std/container.c"
+#define STD_ITEM        "/std/item.c"
 #define STD_LIVING      "/std/living.c"
 #define STD_NPC         "/std/npc.c"
+#define STD_OBJECT      "/std/object.c"
 #define STD_ROOM        "/std/room.c"
 
 // std modules
 #define M_CLEAN         "/std/module/clean.c"
-#define M_EXIT          "/std/module/exit.c"
 #define M_PARENT        "/std/module/parent.c"
 #define M_PROPERTY      "/std/module/property.c"
 #define M_RESET         "/std/module/reset.c"

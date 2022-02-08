@@ -8,6 +8,8 @@ inherit "/std/living/vitals.c";
 private string __Species;
 private string __LastEnvironment;
 
+int is_living () { return 1; }
+
 void create () {
     container::create();
 }
@@ -109,6 +111,10 @@ varargs int do_command (string str, int debug) {
     return 0;
 }
 
-int is_living () {
-    return 1;
+mixed direct_look_at_liv () {
+    return environment() == environment(previous_object());
+}
+
+mixed direct_look_liv () {
+    return direct_look_at_liv();
 }

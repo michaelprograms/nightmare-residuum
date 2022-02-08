@@ -1,6 +1,7 @@
 inherit STD_CONTAINER;
 inherit M_RESET;
-inherit M_EXIT;
+inherit "/std/module/exit.c";
+inherit "/std/module/look.c";
 
 void create () {
     container::create();

@@ -58,6 +58,8 @@ void receive_message (string type, string message) {
     } else if (type == "room_item_contents") {
         message = "%^MAGENTA%^" + replace_string(message, "%^DEFAULT%^", "%^MAGENTA%^") + "%^RESET%^";
         receive(wrap(message));
+    } else if (type == "room_long" || type == "room_look") {
+        receive(wrap(message));
     } else if (type == "room_exits") {
         message = "%^GREEN%^" + replace_string(message, ":", ":%^RESET%^") + "%^RESET%^";
         receive(wrap(message));
