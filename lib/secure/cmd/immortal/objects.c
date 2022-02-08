@@ -21,10 +21,18 @@ void command (string input) {
             if (!arrayp(structure[file_name(parent)])) {
                 structure[file_name(parent)] = ({});
             }
-            structure[file_name(parent)] += ({ file_name(ob)});
+            structure[file_name(parent)] += ({ file_name(ob) });
         } else {
-            if (!arrayp(structure[file_name(ob)])) {
-                structure[file_name(ob)] = ({});
+            object env;
+            if (env = environment(ob)) {
+                if (!arrayp(structure[file_name(env)])) {
+                    structure[file_name(env)] = ({});
+                }
+                structure[file_name(env)] += ({ file_name(ob) });
+            } else {
+                if (!arrayp(structure[file_name(ob)])) {
+                    structure[file_name(ob)] = ({});
+                }
             }
         }
     }
