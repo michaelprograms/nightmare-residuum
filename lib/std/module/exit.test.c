@@ -87,7 +87,7 @@ void test_exits_before_after () {
 
     r1 = new(STD_ROOM);
     r2 = new(STD_ROOM);
-    ob = new(STD_OBJECT);
+    ob = new(STD_NPC);
 
     r1->set_exit("east", file_name(r2), function (object ob, string dir) {
         checkBefore ++;
@@ -99,7 +99,7 @@ void test_exits_before_after () {
 
     values += ({ ob->handle_move(r1) });
     results += ({ 1 });
-    values += ({ r1->handle_go(ob, "east") });
+    values += ({ r1->handle_go(ob, "walk", "east") });
     results += ({ 1 });
     values += ({ checkBefore });
     results += ({ 1 });
@@ -112,7 +112,7 @@ void test_exits_before_after () {
 
     values += ({ ob->handle_move(r1) });
     results += ({ 1 });
-    values += ({ r1->handle_go(ob, "east") });
+    values += ({ r1->handle_go(ob, "walk", "east") });
     results += ({ 0 });
 
     expect_arrays_equal(values, results, "exits handled before and after functions");
@@ -130,7 +130,7 @@ void test_handle_go () {
 
     r1 = new(STD_ROOM);
     r2 = new(STD_ROOM);
-    ob = new(STD_OBJECT);
+    ob = new(STD_NPC);
 
     r1->set_exit("east", file_name(r2));
     r2->set_exit("west", file_name(r1));
@@ -140,30 +140,37 @@ void test_handle_go () {
     results += ({ 1 });
     values += ({ regexp(r2->query_exit("west"), "/std/room#[0-9]+") });
     results += ({ 1 });
-    values += ({ sizeof(r1->query_item_contents()) });
+    values += ({ sizeof(r1->query_living_contents()) });
     results += ({ 0 });
-    values += ({ sizeof(r2->query_item_contents()) });
+    values += ({ sizeof(r2->query_living_contents()) });
     results += ({ 0 });
     values += ({ ob->handle_move(r1) });
     results += ({ 1 });
-    values += ({ sizeof(r1->query_item_contents()) });
+    values += ({ sizeof(r1->query_living_contents()) });
     results += ({ 1 });
-    values += ({ sizeof(r2->query_item_contents()) });
+    values += ({ sizeof(r2->query_living_contents()) });
     results += ({ 0 });
-    values += ({ r1->handle_go(ob, "east") });
+    values += ({ r1->handle_go(ob, "walk", "east") });
     results += ({ 1 });
-    values += ({ r1->handle_go(ob, "east") });
-    results += ({ 0 });
-    values += ({ sizeof(r1->query_item_contents()) });
-    results += ({ 0 });
-    values += ({ sizeof(r2->query_item_contents()) });
-    results += ({ 1 });
-
+    values += ({ file_name(environment(ob)) });
+    results += ({ file_name(r2) });
     expect_arrays_equal(values, results, "handle_go moved object");
 
     values = ({});
     results = ({});
-    values += ({ r2->handle_go(ob, "east") });
+    ob->handle_move(r2);
+    values += ({ r1->handle_go(ob, "walk", "east") });
+    results += ({ 0 });
+    values += ({ sizeof(r1->query_living_contents()) });
+    results += ({ 0 });
+    values += ({ sizeof(r2->query_living_contents()) });
+    results += ({ 1 });
+    expect_arrays_equal(values, results, "handle_go didn't move object it shouldn't");
+
+
+    values = ({});
+    results = ({});
+    values += ({ r2->handle_go(ob, "walk", "east") });
     results += ({ 0 });
     expect_arrays_equal(values, results, "handle_go handled invalid path");
 

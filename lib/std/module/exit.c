@@ -48,7 +48,7 @@ void remove_exit (string dir) {
 
 // -----------------------------------------------------------------------------
 
-mixed handle_go (object ob, string dir) {
+mixed handle_go (object ob, string method, string dir) {
     // if(query_verb() == "go" && interactive(ob)) {
     //     // @TODO check standng/sitting?
     // }
@@ -61,7 +61,7 @@ mixed handle_go (object ob, string dir) {
         return 0;
     } else if (__Exits[dir]["room"]) {
         if ((regexp(__Exits[dir]["room"], "#[0-9]+") && find_object(__Exits[dir]["room"])) || (file_size(__Exits[dir]["room"]) > 0)) {
-            ob->handle_move(__Exits[dir]["room"]);
+            ob->handle_go(__Exits[dir]["room"], method, dir);
             ob->describe_environment();
             if (__Exits[dir]["after"]) {
                 evaluate(__Exits[dir]["after"], ob, dir);

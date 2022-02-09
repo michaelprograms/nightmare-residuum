@@ -16,5 +16,5 @@ mixed can_go_str (string str) {
     return 1;
 }
 mixed do_go_str (string str) {
-    return environment(previous_object())->handle_go(previous_object(), str);
+    return environment(previous_object())->handle_go(previous_object(), "walk", str);
 }
