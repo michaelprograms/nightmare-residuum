@@ -63,11 +63,10 @@ string conjunction (string *list) {
     for (i = 0, max = sizeof(list); i < max; i ++) {
         if (i == max - 1 && max > 1) result += "and ";
         result += list[i];
-        if (i == max - 1) result += ".";
+        if (i == max - 1) continue;
         else if (max > 2) result += ", ";
         else result += " ";
     }
-
     return result;
 }
 

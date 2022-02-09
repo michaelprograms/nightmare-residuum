@@ -33,13 +33,13 @@ void test_conjunction () {
     expect_function("conjunction", testOb);
 
     values += ({ testOb->conjunction(({ "1" })) });
-    results += ({ "1." });
+    results += ({ "1" });
     values += ({ testOb->conjunction(({ "1", "2" })) });
-    results += ({ "1 and 2." });
+    results += ({ "1 and 2" });
     values += ({ testOb->conjunction(({ "1", "2", "3" })) });
-    results += ({ "1, 2, and 3." });
+    results += ({ "1, 2, and 3" });
     values += ({ testOb->conjunction(({ "1", "2", "3", "4", "5", "6", "7", "8", "9", "10" })) });
-    results += ({ "1, 2, 3, 4, 5, 6, 7, 8, 9, and 10." });
+    results += ({ "1, 2, 3, 4, 5, 6, 7, 8, 9, and 10" });
 
     expect_arrays_equal(values, results, "conjunction handled list");
 

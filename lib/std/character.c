@@ -22,6 +22,7 @@ void create() {
 
 void set_name (string name) {
     living::set_name(name);
+    set_short(name);
     set_save_path(D_CHARACTER->query_save_path(query_key_name()));
 }
 
@@ -102,60 +103,33 @@ void exit_freezer () {
 
 // -----------------------------------------------------------------------------
 
-private mapping group_contents (object *obs) {
-    mapping list = ([]);
-    string tmp;
-    int i;
-
-    if (i = sizeof(obs)) {
-        while (i --) {
-            if (!(tmp = obs[i]->query_short())) {
-                tmp = obs[i]->query_name();
-            }
-            if (!tmp) continue;
-            if (!list[tmp]) list[tmp] = ({});
-            list[tmp] += ({ obs[i] });
-        }
-    }
-    return list;
-}
-
 private void describe_environment_living_contents () {
     object env = environment();
-    mapping list;
-    string *shorts, result = "";
-    int i, x;
+    string *list, *shorts;
 
     if (!env || !env->is_room()) return;
 
-    list = group_contents(filter_array(env->query_living_contents(), (: $1 != this_object() :)));
-
-    i = sizeof(shorts = keys(list));
-    while (i --) {
-        if((x = sizeof(list[shorts[i]])) < 2) {
-            result = sprintf("%s%s\n", result, capitalize(shorts[i]));
-        } else {
-            result = sprintf("%s%s\n", result, capitalize(consolidate(x, shorts[i])));
-        }
+    list = filter_array(env->query_living_contents(), (: $1 != this_object() :));
+    list = unique_array(list, (: $1->query_short() :));
+    if (sizeof(list)) {
+        shorts = sort_array(map_array(list, (: consolidate(sizeof($1), $1[0]->query_short()) :)), 1);
+        shorts = map_array(shorts, (: $1 :));
+        message("room_living_contents", implode(shorts, "\n") + "\n\n", this_object());
     }
-    if (strlen(result) > 0) {
-        message("room_living_contents", result + "\n", this_object());
-    }
-
 }
 
 private void describe_environment_item_contents () {
     object env = environment();
-    string *items, *shorts;
+    string *list, *shorts;
 
     if (!env || !env->is_room()) return;
 
-    items = unique_array(env->query_item_contents(), (: $1->query_short() :));
-    if (sizeof(items)) {
-        shorts = sort_array(map_array(items, (: consolidate(sizeof($1), $1[0]->query_short()) :)), 1);
+    list = unique_array(env->query_item_contents(), (: $1->query_short() :));
+    if (sizeof(list)) {
+        shorts = sort_array(map_array(list, (: consolidate(sizeof($1), $1[0]->query_short()) :)), 1);
         shorts[0] = capitalize(shorts[0]);
         shorts = map_array(shorts, (: "%^BOLD%^" + $1 + "%^BOLD_OFF%^DEFAULT%^" :));
-        message("room_item_contents", conjunction(shorts) + "\n", this_object());
+        message("room_item_contents", conjunction(shorts) + " are here.\n", this_object());
     }
 }
 
@@ -168,7 +142,7 @@ private void describe_environment_exits () {
         message("room_exits", "There are no exits.\n\n", this_object());
     } else {
         exits = map_array(exits, (: "%^CYAN%^BOLD%^" + $1 + "%^BOLD_OFF%^DEFAULT%^" :));
-        message("room_exits", "There " + (numExits > 1 ? "are" : "is") + " " + cardinal(numExits) + " exit" + (numExits > 1 ? "s" : "") + ": " + conjunction(exits) + "\n\n", this_object());
+        message("room_exits", "There " + (numExits > 1 ? "are" : "is") + " " + cardinal(numExits) + " exit" + (numExits > 1 ? "s" : "") + ": " + conjunction(exits) + ".\n\n", this_object());
     }
 }
 
