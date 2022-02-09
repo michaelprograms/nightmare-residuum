@@ -112,7 +112,7 @@ private void describe_environment_living_contents () {
     list = filter_array(env->query_living_contents(), (: $1 != this_object() :));
     list = unique_array(list, (: $1->query_short() :));
     if (sizeof(list)) {
-        shorts = sort_array(map_array(list, (: consolidate(sizeof($1), $1[0]->query_short()) :)), 1);
+        shorts = sort_array(map_array(list, (: capitalize(consolidate(sizeof($1), $1[0]->query_short())) :)), 1);
         shorts = map_array(shorts, (: $1 :));
         message("room_living_contents", implode(shorts, "\n") + "\n\n", this_object());
     }
