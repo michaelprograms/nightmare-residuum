@@ -120,7 +120,7 @@ private mapping group_contents (object *obs) {
     return list;
 }
 
-private void describe_living_contents () {
+private void describe_environment_living_contents () {
     object env = environment();
     mapping list;
     string *shorts, result = "";
@@ -144,7 +144,7 @@ private void describe_living_contents () {
 
 }
 
-private void describe_item_contents () {
+private void describe_environment_item_contents () {
     object env = environment();
     mapping list;
     string *shorts, result = "";
@@ -180,9 +180,22 @@ private void describe_item_contents () {
     }
 }
 
+private void describe_environment_exits () {
+    object env = environment();
+    string *exits;
+    int numExits;
+
+    if (!(numExits = sizeof(exits = env->query_exit_dirs()))) {
+        message("room_exits", "There are no exits.\n\n", this_object());
+    } else {
+        exits = map_array(exits, (: "%^CYAN%^BOLD%^" + $1 + "%^BOLD_OFF%^DEFAULT%^" :));
+        message("room_exits", "There " + (numExits > 1 ? "are" : "is") + " " + cardinal(numExits) + " exit" + (numExits > 1 ? "s" : "") + ": " + conjunction(exits) + "\n\n", this_object());
+    }
+}
+
 void describe_environment () {
     object env;
-    string *map, *exits;
+    string *map;
 
     if (!(env = environment()) || !env->is_room()) {
         message("system", "You do not have an environment.\n", this_object());
@@ -196,24 +209,10 @@ void describe_environment () {
     if (query_immortal()) {
         message("room_file", file_name(env)+"\n", this_object());
     }
+
     message("room_short", env->query_short()+"\n", this_object());
     message("room_long", env->query_long()+"\n\n", this_object());
-
-    if (!sizeof(exits = env->query_exit_dirs())) {
-        message("room_exits", "There are no exits.\n\n", this_object());
-    } else {
-        string conjunction = "";
-        int i, max;
-        for (i = 0, max = sizeof(exits); i < max; i ++) {
-            if (i == max - 1 && max > 1) conjunction += "and ";
-            conjunction += "%^CYAN%^BOLD%^" + exits[i] + "%^RESET%^DEFAULT%^";
-            if (i == max - 1) conjunction += ".";
-            else if (max > 2) conjunction += ", ";
-            else conjunction += " ";
-        }
-        message("room_exits", "There are " + cardinal(sizeof(exits) ) + " exits: " + conjunction + "\n\n", this_object());
-    }
-
-    describe_living_contents();
-    describe_item_contents();
+    describe_environment_exits();
+    describe_environment_living_contents();
+    describe_environment_item_contents();
 }

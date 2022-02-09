@@ -27,6 +27,33 @@ void test_remove_article () {
     expect_arrays_equal(values, results, "remove_article handled articles");
 }
 
+void test_conjunction () {
+    string *values = ({}), *results = ({});
+
+    expect_function("conjunction", testOb);
+
+    values += ({ testOb->conjunction(({ "1" })) });
+    results += ({ "1." });
+    values += ({ testOb->conjunction(({ "1", "2" })) });
+    results += ({ "1 and 2." });
+    values += ({ testOb->conjunction(({ "1", "2", "3" })) });
+    results += ({ "1, 2, and 3." });
+    values += ({ testOb->conjunction(({ "1", "2", "3", "4", "5", "6", "7", "8", "9", "10" })) });
+    results += ({ "1, 2, 3, 4, 5, 6, 7, 8, 9, and 10." });
+
+    expect_arrays_equal(values, results, "conjunction handled list");
+
+    expect_catches (({
+        (: testOb->conjunction(0) :),
+        (: testOb->conjunction(0.0) :),
+        (: testOb->conjunction(({})) :),
+        (: testOb->conjunction(({ 1, 2, 3 })) :),
+        (: testOb->conjunction(({ "", "", "" })) :),
+        (: testOb->conjunction(([])) :),
+        (: testOb->conjunction((: 1 :)) :),
+    }), "*Bad argument 1 to grammar->conjunction\n", "conjunction handled invalid argument 1");
+}
+
 void test_cardinal () {
     string *values = ({}), *results = ({});
 

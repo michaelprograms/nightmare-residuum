@@ -28,6 +28,7 @@ string remove_article (string str);
 string cardinal (int n);
 string pluralize (mixed single);
 string consolidate (int n, string str);
+string conjunction (string *list);
 string possessive_noun (mixed value);
 string subjective (mixed value);
 string objective (mixed value);

@@ -12,7 +12,6 @@ mixed can_go () {
 mixed can_go_str (string str) {
     if (!environment(this_character())) return "You are nowhere.";
     // if (this_character()->query_paralyzed()) return "You are unable to move."; // @TODO
-    str = format_exit_verbose(str);
     if (!environment(this_character())->query_exit(str)) return "You cannot go that way.";
     return 1;
 }

@@ -52,6 +52,25 @@ string consolidate (int n, string str) {
     return result;
 }
 
+string conjunction (string *list) {
+    string result = "";
+    int i, max;
+
+    if (arrayp(list)) {
+        list = filter_array(list, (: stringp($1) && strlen($1) > 0 :));
+    }
+    if (!arrayp(list) || !sizeof(list)) error("Bad argument 1 to grammar->conjunction");
+    for (i = 0, max = sizeof(list); i < max; i ++) {
+        if (i == max - 1 && max > 1) result += "and ";
+        result += list[i];
+        if (i == max - 1) result += ".";
+        else if (max > 2) result += ", ";
+        else result += " ";
+    }
+
+    return result;
+}
+
 // named possessive of an object
 string possessive_noun (mixed value) {
     if (!value) {
