@@ -146,37 +146,16 @@ private void describe_environment_living_contents () {
 
 private void describe_environment_item_contents () {
     object env = environment();
-    mapping list;
-    string *shorts, result = "";
-    int i, x;
+    string *items, *shorts;
 
     if (!env || !env->is_room()) return;
 
-    list = group_contents(env->query_item_contents());
-
-    if (!(i = sizeof(shorts = keys(list)))) {
-        return;
-    }
-
-    if ((x = sizeof(list[shorts[-- i]])) == 1) {
-        result = "%^BOLD%^" + capitalize(shorts[i]) + "%^BOLD_OFF%^";
-    } else {
-        result = "%^BOLD%^" + capitalize(consolidate(x, shorts[i])) + "%^BOLD_OFF%^";
-    }
-    if (!i) {
-        result = sprintf("%s %s here.", result + "%^DEFAULT%^", (x < 2 ? "is" : "are"));
-    } else if(i == 1) {
-        result = sprintf("%s and %s are here.", result + "%^DEFAULT%^", "%^BOLD%^" + consolidate(sizeof(list[shorts[0]]), shorts[0]) + "%^BOLD_OFF%^DEFAULT%^");
-    } else {
-        while (i --) {
-            if (!i) result = sprintf("%s, and ", result);
-            else result = sprintf("%s, ", result);
-            result = sprintf("%s%s", result, "%^BOLD%^" + consolidate(sizeof(list[shorts[i]]), shorts[i]) + "%^BOLD_OFF%^");
-        }
-        result = sprintf("%s are here.", result + "%^DEFAULT%^");
-    }
-    if (strlen(result) > 0) {
-        message("room_item_contents", result + "\n", this_object());
+    items = unique_array(env->query_item_contents(), (: $1->query_short() :));
+    if (sizeof(items)) {
+        shorts = sort_array(map_array(items, (: consolidate(sizeof($1), $1[0]->query_short()) :)), 1);
+        shorts[0] = capitalize(shorts[0]);
+        shorts = map_array(shorts, (: "%^BOLD%^" + $1 + "%^BOLD_OFF%^DEFAULT%^" :));
+        message("room_item_contents", conjunction(shorts) + "\n", this_object());
     }
 }
 
