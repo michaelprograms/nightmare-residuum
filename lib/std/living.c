@@ -55,16 +55,22 @@ int handle_go (mixed dest, string method, string dir) {
 
 varargs int do_command (string str, int debug) {
     // string action;
-    string verb, input;
+    // string verb, input;
     mixed result, resultGo;
-    sscanf(str, "%s %s", verb, input);
 
+    // sscanf(str, "%s %s", verb, input);
     // action = D_COMMAND->query_command(verb);
     // if(stringp(action)) {
     //     call_other(action, "command", input); // @TODO is this right here?
     // } else
     if (!environment()) {
         return 0;
+    }
+
+    if (strsrch(str, "enter") == 0) {
+        str = "go " + str;
+    } else if (strsrch(str, "out") == 0) {
+        str = "go " + str;
     }
 
     result = parse_sentence(str, debug);

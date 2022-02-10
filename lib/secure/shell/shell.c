@@ -57,10 +57,11 @@ void execute_command (string input) {
     // Channel
     // @TODO D_CHANNEL
 
+    // @TODO move to STD_LIVING->do_command
     if (path = D_COMMAND->query_command(action)) {
         call_other(path + "/" + action, "command", args);
     } else if (__Owner->query_character() && !__Owner->query_character()->do_command(input)) {
-        write("$ What?\n");
+        write("Do what?\n");
     }
 }
 

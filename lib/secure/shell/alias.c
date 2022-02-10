@@ -109,7 +109,7 @@ void create () {
             add_alias("nw", "go northwest");
             add_alias("u", "go up");
             add_alias("d", "go down");
-            add_alias("en", "enter");
+            add_alias("ent", "go enter");
             // add_alias("cl", "climb");
             add_alias("'", "say", 0, 1);
         }

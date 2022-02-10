@@ -32,11 +32,11 @@ void test_format_exit_brief () {
     values += ({ testOb->format_exit_brief("northwest") });
     results += ({ "nw" });
     values += ({ testOb->format_exit_brief("enter") });
-    results += ({ "en" });
+    results += ({ "ent" });
     values += ({ testOb->format_exit_brief("out") });
     results += ({ "out" });
     values += ({ testOb->format_exit_brief("enter north") });
-    results += ({ "en n" });
+    results += ({ "ent n" });
     values += ({ testOb->format_exit_brief("up") });
     results += ({ "u" });
     values += ({ testOb->format_exit_brief("down") });
@@ -78,11 +78,11 @@ void test_format_exit_verbose () {
     results += ({ "west" });
     values += ({ testOb->format_exit_verbose("nw") });
     results += ({ "northwest" });
-    values += ({ testOb->format_exit_verbose("en") });
+    values += ({ testOb->format_exit_verbose("ent") });
     results += ({ "enter" });
     values += ({ testOb->format_exit_verbose("out") });
     results += ({ "out" });
-    values += ({ testOb->format_exit_verbose("en n") });
+    values += ({ testOb->format_exit_verbose("ent n") });
     results += ({ "enter north" });
     values += ({ testOb->format_exit_verbose("u") });
     results += ({ "up" });

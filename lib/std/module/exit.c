@@ -17,6 +17,14 @@ string query_exit (string dir) {
     dir = format_exit_verbose (dir);
     return __Exits[dir] && __Exits[dir]["room"];
 }
+string query_default_enter () {
+    string *enters = filter_array(keys(__Exits), (: strsrch($1, "enter") > -1 :));
+    return sizeof(enters) == 1 ? enters[0] : 0;
+}
+string query_default_out () {
+    string *outs = filter_array(keys(__Exits), (: strsrch($1, "out") > -1 :));
+    return sizeof(outs) == 1 ? outs[0] : 0;
+}
 
 varargs void set_exit (string dir, string dest, function before, function after) {
     if (!stringp(dir)) error("Bad argument 1 to exit->set_exit");

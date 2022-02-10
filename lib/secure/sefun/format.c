@@ -60,7 +60,7 @@ string format_exit_brief (string dir) {
             case "northwest": result += ({ "nw" }); break;
             case "up": result += ({ "u" }); break;
             case "down": result += ({ "d" }); break;
-            case "enter": result += ({ "en" }); break;
+            case "enter": result += ({ "ent" }); break;
             default: result += ({ part });
         }
     }
@@ -81,7 +81,7 @@ string format_exit_verbose (string dir) {
             case "nw": result += ({ "northwest" }); break;
             case "u": result += ({ "up" }); break;
             case "d": result += ({ "down" }); break;
-            case "en": result += ({ "enter" }); break;
+            case "ent": result += ({ "enter" }); break;
             default: result += ({ part });
         }
     }

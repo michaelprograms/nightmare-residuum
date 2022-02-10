@@ -167,7 +167,6 @@ void test_handle_go () {
     results += ({ 1 });
     expect_arrays_equal(values, results, "handle_go didn't move object it shouldn't");
 
-
     values = ({});
     results = ({});
     values += ({ r2->handle_go(ob, "walk", "east") });
@@ -177,6 +176,61 @@ void test_handle_go () {
     destruct(ob);
     destruct(r1);
     destruct(r2);
+}
+
+void test_query_defaults () {
+    string *enterValues = ({}), *enterResults = ({});
+    string *outValues = ({}), *outResults = ({});
+    object r1, r2;
+
+    expect_function("query_default_enter", testOb);
+    expect_function("query_default_out", testOb);
+
+    r1 = new(STD_ROOM);
+    r2 = new(STD_ROOM);
+
+    enterValues += ({ r1->query_default_enter() });
+    enterResults += ({ 0 });
+    outValues += ({ r2->query_default_out() });
+    outResults += ({ 0 });
+
+    r1->set_exits(([ "enter": file_name(r2) ]));
+    r2->set_exits(([ "out": file_name(r1) ]));
+    enterValues += ({ r1->query_default_enter() });
+    enterResults += ({ "enter" });
+    outValues += ({ r2->query_default_out() });
+    outResults += ({ "out" });
+
+    r1->set_exits(([ "enter east": file_name(r2) ]));
+    r2->set_exits(([ "out west": file_name(r1) ]));
+    enterValues += ({ r1->query_default_enter() });
+    enterResults += ({ "enter east" });
+    outValues += ({ r2->query_default_out() });
+    outResults += ({ "out west" });
+
+    r1->set_exits(([
+        "enter east": file_name(r2),
+        "enter west": file_name(r2),
+    ]));
+    r2->set_exits(([
+        "out west": file_name(r1),
+        "out east": file_name(r1),
+    ]));
+    enterValues += ({ r1->query_default_enter() });
+    enterResults += ({ 0 });
+    outValues += ({ r2->query_default_out() });
+    outResults += ({ 0 });
+
+    r1->remove_exit("enter east");
+    r2->remove_exit("out west");
+    enterValues += ({ r1->query_default_enter() });
+    enterResults += ({ "enter west" });
+    outValues += ({ r2->query_default_out() });
+    outResults += ({ "out east" });
+
+
+    expect_arrays_equal(enterValues, enterResults, "query_default_enter behaved");
+    expect_arrays_equal(outValues, outResults, "query_default_out behaved");
 }
 
 // @TODO bad arguments
