@@ -173,9 +173,9 @@ void test_handle_go () {
     results += ({ 0 });
     expect_arrays_equal(values, results, "handle_go handled invalid path");
 
-    destruct(ob);
-    destruct(r1);
-    destruct(r2);
+    if (ob) destruct(ob);
+    if (r1) destruct(r1);
+    if (r2) destruct(r2);
 }
 
 void test_query_defaults () {
@@ -228,9 +228,11 @@ void test_query_defaults () {
     outValues += ({ r2->query_default_out() });
     outResults += ({ "out east" });
 
-
     expect_arrays_equal(enterValues, enterResults, "query_default_enter behaved");
     expect_arrays_equal(outValues, outResults, "query_default_out behaved");
+
+    if (r1) destruct(r1);
+    if (r2) destruct(r2);
 }
 
 // @TODO bad arguments
