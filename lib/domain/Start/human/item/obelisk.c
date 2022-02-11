@@ -1,4 +1,4 @@
-inherit STD_OBJECT;
+inherit STD_ITEM;
 
 void create () {
     ::create();

@@ -25,8 +25,9 @@ string prepare_long () {
     string long = "The embrace of warm air in the confinement of a tank.";
     if (tc = this_character()) {
         long += "\n\nA diagnostic display is projected onto the glass.\n\n";
-        long += sprintf("%-10s", "Species:") + " " + tc->query_species() + "\n";
-        long += sprintf("%-10s", "Gender:") + " " + tc->query_gender() + "\n";
+        long += sprintf("%-15s", "Species:") + " " + tc->query_species() + "\n";
+        long += sprintf("%-15s", "Maturation Age:") + " " + 18 + "\n"; // @TODO
+        long += sprintf("%-15s", "Gender:") + " " + tc->query_gender() + "\n";
         long += "Options:\n";
         long += "  %^CYAN%^[become female|male|neither]%^RESET%^\n";
         long += "  %^CYAN%^[randomize]%^RESET%^\n\n";
