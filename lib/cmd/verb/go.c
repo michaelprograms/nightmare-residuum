@@ -9,33 +9,33 @@ mixed can_go () {
     return "Go where?";
 }
 
-mixed can_go_str (string str) {
+varargs mixed can_go_str (string dir) {
     object env;
     string exit;
 
     if (!(env = environment(previous_object()))) return "You are nowhere.";
-    if (str == "enter") {
-        if (exit = env->query_default_enter()) str = exit;
+    if (dir == "enter") {
+        if (exit = env->query_default_enter()) dir = exit;
         else return "Go enter which way?";
-    } else if (str == "out") {
-        if (exit = env->query_default_out()) str = exit;
+    } else if (dir == "out") {
+        if (exit = env->query_default_out()) dir = exit;
         else return "Go out which way?";
     }
-    if (!env->query_exit(str)) return "You cannot go that way.";
+    if (!env->query_exit(dir)) return "You cannot go that way.";
     return 1;
 }
-mixed do_go_str (string str) {
+varargs mixed do_go_str (string dir) {
     object env;
     string exit;
 
     if (!(env = environment(previous_object()))) return "You are nowhere.";
 
-    if (str == "enter") {
-        if (exit = env->query_default_enter()) str = exit;
+    if (dir == "enter") {
+        if (exit = env->query_default_enter()) dir = exit;
         else return "Enter which way?";
-    } else if (str == "out") {
-        if (exit = env->query_default_out()) str = exit;
+    } else if (dir == "out") {
+        if (exit = env->query_default_out()) dir = exit;
         else return "Go out which way?";
     }
-    return environment(previous_object())->handle_go(previous_object(), "walk", str);
+    return environment(previous_object())->handle_go(previous_object(), "walk", dir);
 }

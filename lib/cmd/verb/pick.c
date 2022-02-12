@@ -10,8 +10,8 @@ void do_pick () {
     write("Pick what?\n");
 }
 
-int can_pick_obj () { return 1; }
-void do_pick_obj (object ob) {
+int can_pick_obj (object ob, string verb) { return 1; }
+void do_pick_obj (object ob, string verb) {
     object p;
 
     message("action", "ob: "+identify(ob)+"\n", this_character());
