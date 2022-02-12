@@ -1,4 +1,4 @@
-inherit "/std/verb.c";
+inherit STD_VERB;
 
 void create () {
     verb::create();

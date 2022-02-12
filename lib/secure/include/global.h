@@ -10,6 +10,7 @@
 #define STD_NPC         "/std/npc.c"
 #define STD_OBJECT      "/std/object.c"
 #define STD_ROOM        "/std/room.c"
+#define STD_VERB        "/std/verb.c"
 
 // std modules
 #define M_CLEAN         "/std/module/clean.c"
