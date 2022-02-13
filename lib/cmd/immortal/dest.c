@@ -10,7 +10,7 @@ void command (string input) {
     if (!ob) ob = present(input, environment(this_character()));
     if (ob) {
         if (ob->handle_remove()) {
-            write("You dest " + str + ".\n");
+            write("You dest " + input + ".\n");
         } else {
             write("dest: cannot dest " + ob->query_name() + ".\n");
         }
