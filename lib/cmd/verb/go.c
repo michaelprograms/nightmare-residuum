@@ -11,12 +11,14 @@ mixed can_go () {
 
 varargs mixed can_go_str (string dir) {
     object env;
-    string exit;
+    string exit, *split = explode(dir, " ");
 
     if (!(env = environment(previous_object()))) return "You are nowhere.";
     if (dir == "enter") {
         if (exit = env->query_default_enter()) dir = exit;
         else return "Go enter which way?";
+    } else if (split[0] == "enter" && !env->query_exit(dir)) {
+        return "Go enter which way?";
     } else if (dir == "out") {
         if (exit = env->query_default_out()) dir = exit;
         else return "Go out which way?";
@@ -28,14 +30,12 @@ varargs void do_go_str (string dir) {
     object env;
     string exit;
 
-    if (!(env = environment(previous_object()))) return "You are nowhere.";
-
     if (dir == "enter") {
         if (exit = env->query_default_enter()) dir = exit;
-        else return "Enter which way?";
+        else return;
     } else if (dir == "out") {
         if (exit = env->query_default_out()) dir = exit;
-        else return "Go out which way?";
+        else return;
     }
     environment(previous_object())->handle_go(previous_object(), "walk", dir);
 }
