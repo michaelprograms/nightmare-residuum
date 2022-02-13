@@ -124,3 +124,7 @@ mixed direct_look_at_liv () {
 mixed direct_look_liv () {
     return direct_look_at_liv();
 }
+mixed indirect_give_obj_to_liv (object ob, object liv, string obStr, mixed livStr) {
+    if (previous_object() == liv && environment(ob) == liv) return "You already have that.";
+    return 1;
+}

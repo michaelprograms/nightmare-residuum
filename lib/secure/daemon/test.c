@@ -88,11 +88,13 @@ varargs void process_file (string file, function doneCallback, int reset) {
     }
     // call_out clears the call stack, call_other will chain the tests
     call_out_walltime(function(string test, function doneCallback) {
-        mixed err = catch(test->execute_test(doneCallback));
+        object testFile = clone_object(test);
+        mixed err = catch(testFile->execute_test(doneCallback));
         if (err) {
             write("\n    " + test + " encountered an errored:\n" + err + "\n");
             evaluate(doneCallback);
         }
+        if (testFile) destruct(testFile);
     }, 0, file, doneCallback);
 }
 

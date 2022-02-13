@@ -11,18 +11,14 @@ inherit "/secure/shell/variable.c";
 nosave private object __Owner;
 nosave private mapping __ShellCommands = ([]);
 
-object query_name () {
-    return __Owner;
-}
-
 void create () {
     if (!clonep()) {
         return;
     }
 
     __Owner = previous_object() || previous_object(1);
-    if (__Owner != this_user() && !regexp(file_name(__Owner), "\\.test$")) {
-        error("illegal shell object created?");
+    if (__Owner != this_user() && !regexp(file_name(__Owner), "\\.test")) {
+        error("illegal shell object created: " + file_name(__Owner));
         destruct();
     }
 

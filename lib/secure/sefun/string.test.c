@@ -199,7 +199,7 @@ void test_identify () {
     tc->m = ([ "test": 123, ]);
     tc->o = this_object();
     classValues += ({ testOb->identify(tc) });
-    classResults += ({ "CLASS( 6 elements  \"test string\",  ({ /* sizeof() == 2 */    \"test string 1\",    \"test string 2\"  }),  123,  1.000000,  ([ /* sizeof() == 1 */    \"test\" : 123,  ]),  /secure/sefun/string.test )" });
+    classResults += ({ "CLASS( 6 elements  \"test string\",  ({ /* sizeof() == 2 */    \"test string 1\",    \"test string 2\"  }),  123,  1.000000,  ([ /* sizeof() == 1 */    \"test\" : 123,  ]),  " + file_name(this_object()) + " )" });
     expect_arrays_equal(classValues, classResults, "identify handled class");
 
     // array
