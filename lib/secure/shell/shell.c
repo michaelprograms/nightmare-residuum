@@ -131,7 +131,7 @@ void shell_start () {
     shell_init();
 }
 
-int clean_up () {
+int clean_up (int inherited) {
     if (__Owner) {
         return clean::clean_later();
     } else {

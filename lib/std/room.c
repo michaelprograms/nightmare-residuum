@@ -22,7 +22,7 @@ object *query_item_contents () {
     return filter_array(all_inventory(this_object()), (: !$1->is_living() :));
 }
 
-int clean_up () {
+int clean_up (int inherited) {
     foreach (object ob in deep_inventory(this_object())) {
         if (ob->query_user() && userp(ob->query_user())) {
             return ::clean_later();
