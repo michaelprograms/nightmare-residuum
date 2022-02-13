@@ -120,7 +120,6 @@ varargs int do_command (string str, int debug) {
 mixed direct_look_at_liv () {
     return environment() == environment(previous_object());
 }
-
 mixed direct_look_liv () {
     return direct_look_at_liv();
 }
