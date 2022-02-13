@@ -27,7 +27,7 @@ varargs mixed can_go_str (string dir) {
     return 1;
 }
 varargs void do_go_str (string dir) {
-    object env;
+    object env = environment(previous_object());
     string exit;
 
     if (dir == "enter") {
@@ -37,5 +37,5 @@ varargs void do_go_str (string dir) {
         if (exit = env->query_default_out()) dir = exit;
         else return;
     }
-    environment(previous_object())->handle_go(previous_object(), "walk", dir);
+    env->handle_go(previous_object(), "walk", dir);
 }
