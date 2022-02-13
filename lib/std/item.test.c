@@ -36,14 +36,13 @@ void test_item_verb_applies () {
     results += ({ r });
     values += ({ this_object()->handle_move(r) });
     results += ({ 1 });
+    values += ({ environment(this_object()) });
+    results += ({ r });
 
-    // values += ({ environment(this_object()) });
-    // results += ({ r });
-
-    // values += ({ testOb->direct_look_at_obj() });
-    // results += ({ 1 });
-    // values += ({ testOb->direct_look_obj() });
-    // results += ({ 1 });
+    values += ({ testOb->direct_look_at_obj() });
+    results += ({ 1 });
+    values += ({ testOb->direct_look_obj() });
+    results += ({ 1 });
 
     values += ({ this_object()->handle_move("/domain/Nowhere/void.c") });
     results += ({ 1 });
