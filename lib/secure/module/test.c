@@ -62,7 +62,7 @@ public int execute_test (function done) {
     failingExpects = 0;
     passingExpects = 0;
 
-    write("\nEvaluating " + CYAN + UNDERLINE + file_name(this_object()) + RESET + "\n");
+    write("\nEvaluating " + CYAN + UNDERLINE + base_name(this_object()) + RESET + "\n");
     before_all_tests();
     foreach (string testFn in testFns) {
         if (!function_exists(testFn, this_object())) {
@@ -86,7 +86,7 @@ public int execute_test (function done) {
         currentTestLog = "  " + UNDERLINE + BOLD + testFn + RESET + " (" + ORANGE + (timeAfter - timeBefore) + RESET + " ms):" + currentTestLog;
         write(currentTestLog + "\n");
         if (strlen(currentFailLog) > 0) {
-            totalFailLog += CYAN + UNDERLINE + file_name(this_object()) + RESET + ": " + UNDERLINE + BOLD + testFn + RESET + " (" + ORANGE + (timeAfter - timeBefore) + RESET + " ms):" + currentFailLog;
+            totalFailLog += (sizeof(totalFailLog) > 0 ? "\n" : "") + CYAN + UNDERLINE + base_name(this_object()) + RESET + ": " + UNDERLINE + BOLD + testFn + RESET + " (" + ORANGE + (timeAfter - timeBefore) + RESET + " ms):" + currentFailLog;
         }
     }
 
