@@ -8,7 +8,7 @@ nosave private object __LastEnv = 0;
 // -----------------------------------------------------------------------------
 
 int handle_move (mixed dest) {
-    object ob;
+    object destOb;
     int x;
 
     if (!this_object()) return 0;
@@ -17,22 +17,22 @@ int handle_move (mixed dest) {
         if (!x /* && !archp(this_object()) */) return 0; // @TODO archp? assistp?
     }
     if (stringp(dest)) {
-        if (!(ob = find_object(dest))) {
+        if (!(destOb = find_object(dest))) {
             if (catch(call_other(dest, "???")) ) {
                 return 0;
             }
-            ob = find_object(dest);
+            destOb = find_object(dest);
         }
     } else {
-        ob = dest;
+        destOb = dest;
     }
-    if (!ob || ob == this_object()) return 0;
-    // if (living(this_object()) && living(ob)) return 0; // @TODO
-    if (!(ob->can_receive(this_object()))) return 0;
+    if (!destOb || destOb == this_object()) return 0;
+    // if (living(this_object()) && living(destOb)) return 0; // @TODO
+    if (!destOb->can_receive(this_object())) return 0;
     if (__LastEnv = environment()) {
         environment()->handle_release(this_object());
     }
-    move_object(ob);
+    move_object(destOb);
     environment()->handle_receive(this_object());
     return (__LastEnv != environment());
 }

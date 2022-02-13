@@ -14,10 +14,8 @@ int can_pick_obj (object ob, string verb) { return 1; }
 void do_pick_obj (object ob, string verb) {
     object p;
 
-    message("action", "ob: "+identify(ob)+"\n", this_character());
-
     if (ob->query_picks() < 1 || !ob->query_pickable()) {
-        message("verb", ob->query_name() + " has nothing to pick.\n", this_character());
+        message("verb", capitalize(ob->query_name()) + " has nothing to pick.\n", this_character());
         return;
     }
 

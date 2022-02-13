@@ -10,7 +10,6 @@ void create () {
 
 void reset () {
     ::reset();
-    message("action", ctime()+" tree_plum " + identify(this_object())+" reset.\n", users());
     if (!environment()) return;
 
     if (__Picks < __MaxPicks) {
@@ -36,6 +35,6 @@ void handle_pick () {
     __Picks --;
 }
 
-mixed direct_pick_obj () {
-    return environment() == environment(previous_object());
+mixed direct_pick_obj (object ob, string str) {
+    return environment() == environment(ob);
 }
