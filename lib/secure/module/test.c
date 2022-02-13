@@ -108,6 +108,7 @@ public int execute_test (function done) {
         "failingExpects": totalFailLog,
     ]));
 
+    if (environment()) destruct(this_object());
 }
 
 // -----------------------------------------------------------------------------
