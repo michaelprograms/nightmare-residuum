@@ -12,17 +12,16 @@ mixed can_drop () {
 mixed can_drop_obj (object ob, string str) {
     return 1;
 }
-mixed do_drop_obj (object ob, string str) {
+void do_drop_obj (object ob, string str) {
     write("You drop " + ob->query_name() + ".\n");
-    return ob->handle_move(environment(this_character()));
+    ob->handle_move(environment(this_character()));
 }
-mixed do_drop_obs (mixed *info, string str) {
+void do_drop_obs (mixed *info, string str) {
     foreach (mixed item in info) {
         if (stringp(item)) {
             write(item + "\n");
         } else {
-            write("You drop " + item->query_name() + ".\n");
-            item->handle_move(environment(this_character()));
+            do_drop_obj(item, str);
         }
     }
 }

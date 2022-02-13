@@ -12,26 +12,24 @@ mixed can_get () {
 mixed can_get_obj (object ob, string str) {
     return 1;
 }
-mixed do_get_obj (object ob, string str) {
+void do_get_obj (object ob, string str) {
     write("You get " + ob->query_name() + ".\n");
-    return ob->handle_move(this_character());
+    ob->handle_move(this_character());
 }
-mixed do_get_obs (mixed *info, string str) {
+void do_get_obs (mixed *info, string str) {
     foreach (mixed item in info) {
         if (stringp(item)) {
             write(item + "\n");
         } else {
-            write("You get " + item->query_name() + ".\n");
-            item->handle_move(this_character());
+            do_get_obj(item, str);
         }
     }
-    return 1;
 }
 
 // @TODO if currency
 // varargs mixed can_get_wrd_str (string word, string str) {
 //     write("can_get_wrd_str " + word + " " + str + "\n");
 // }
-// varargs mixed do_get_wrd_str (string word, string str) {
+// varargs void do_get_wrd_str (string word, string str) {
 //     write("do_get_wrd_str " + word + " " + str + "\n");
 // }

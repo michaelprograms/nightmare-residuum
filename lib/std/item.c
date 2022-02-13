@@ -8,10 +8,10 @@ mixed direct_look_obj () {
     return direct_look_at_obj();
 }
 mixed direct_drop_obj (object ob, string str) {
-    if (environment() != this_character()) {
-        return "You can't drop what you don't have.";
-    }
-    return 1;
+    return (environment() == this_character());
+}
+mixed direct_give_obj_to_liv (object ob, mixed liv, string str, string str2) {
+    return (environment() == this_character());
 }
 mixed direct_get_obj (object ob, string str) {
     object env = environment();

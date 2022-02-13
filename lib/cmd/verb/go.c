@@ -24,7 +24,7 @@ varargs mixed can_go_str (string dir) {
     if (!env->query_exit(dir)) return "You cannot go that way.";
     return 1;
 }
-varargs mixed do_go_str (string dir) {
+varargs void do_go_str (string dir) {
     object env;
     string exit;
 
@@ -37,5 +37,5 @@ varargs mixed do_go_str (string dir) {
         if (exit = env->query_default_out()) dir = exit;
         else return "Go out which way?";
     }
-    return environment(previous_object())->handle_go(previous_object(), "walk", dir);
+    environment(previous_object())->handle_go(previous_object(), "walk", dir);
 }
