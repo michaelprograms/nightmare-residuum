@@ -103,7 +103,7 @@ public int execute_test (function done) {
         "numTests": sizeof(testFns),
         "numPassed": passingExpects,
         "numFailed": failingExpects,
-        "fnsTested": sizeof(testObjectFns),
+        "fnsTested": sizeof(testObjectFns - testObjectUntestedFns),
         "fnsUntested": sizeof(testObjectUntestedFns),
         "failingExpects": totalFailLog,
     ]));
