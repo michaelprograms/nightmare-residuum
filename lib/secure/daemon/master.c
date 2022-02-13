@@ -241,7 +241,7 @@ void log_error (string file, string msg) {
     }
 
     if (regexp(msg, "Warning: ")) {
-        if (base_name(previous_object(-1)[<1]) != D_TEST[0..<2]) {
+        if (sizeof(previous_object(-1)) > 0 && base_name(previous_object(-1)[<1]) != D_TEST[0..<2]) {
             return;
         }
         lcMsg = lower_case(msg);
