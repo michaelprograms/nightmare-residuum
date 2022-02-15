@@ -43,15 +43,13 @@ void handle_remove () {
 }
 
 void execute_command (string input) {
-    string *split = explode(input, " ");
+    string *split = explode(input, " ") - ({ "" });
     string action = split[0], path;
     string args = sizeof(split) > 1 ? input[(strlen(action)+1)..] : 0;
 
-    split -= ({ "" });
-
-
-    // Channel
-    // @TODO D_CHANNEL
+    if (D_CHANNEL->query_valid_channel(action)) {
+        return D_CHANNEL->send(action, args);
+    }
 
     // @TODO move to STD_LIVING->do_command
     if (path = D_COMMAND->query_command(action)) {
