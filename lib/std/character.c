@@ -105,7 +105,8 @@ void exit_freezer () {
 
 private void describe_environment_living_contents () {
     object env = environment();
-    string *list, *shorts;
+    mixed *list;
+    string *shorts;
 
     if (!env || !env->is_room()) return;
 
@@ -120,7 +121,8 @@ private void describe_environment_living_contents () {
 
 private void describe_environment_item_contents () {
     object env = environment();
-    string *list, *shorts;
+    mixed *list;
+    string *shorts;
 
     if (!env || !env->is_room()) return;
 
