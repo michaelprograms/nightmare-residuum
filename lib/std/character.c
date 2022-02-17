@@ -15,7 +15,7 @@ int is_character () { return 1; }
 
 // -----------------------------------------------------------------------------
 
-void create() {
+void create () {
     living::create();
     parent::create();
 }
