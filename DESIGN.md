@@ -17,12 +17,17 @@ As a user enters the world with a character, a shell is created for the user whi
 Due to this design, the standard `this_player()` efun is ambigious into whether you are referring to a user object, a character object, or a shell object. These different objects may be referenced via sefuns:
 
 `this_user()` - returns the interactive user's USER object
+
 `this_account()` - returns [STD_ACCOUNT](lib/doc/build/STD_ACCOUNT.md) of the interactive user
+
 `this_character()` - returns [STD_CHARACTER](lib/doc/build/STD_CHARACTER.md) object of the interactive user
 
 Chaining off of `this_user()` is also possible.
+
 `this_user()->query_account()`
+
 `this_user()->query_character()`
+
 `this_user()->query_shell()`
 
 With the separation of account and characters, savefiles are much smaller than a standard MUD since each savefile does not contain a full account's data. A second effect is that the data for each of these user objects can be stored separate from one another, for example, /save/account/ will contain all account data, while /save/character/ will contain all character data, and the savefiles contained will consist of only the minimal amount of data necessary for that object type. This removes ambiguity of which modules include which variables into a savefile.
