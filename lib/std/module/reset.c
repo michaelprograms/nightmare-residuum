@@ -27,12 +27,16 @@ void reset () {
             count = 0;
             if (counts[key] && (count = counts[key]) >= val) continue;
             while (count < val) {
-                clone_object(key)->handle_move(this_object());
+                object ob = clone_object(key);
+                ob->handle_move(this_object());
+                ob->reset();
                 count ++;
             }
         } else if (functionp(val)) {
             if (evaluate(val)) {
-                clone_object(key)->handle_move(this_object());
+                object ob = clone_object(key);
+                ob->handle_move(this_object());
+                ob->reset();
             }
         }
     }
