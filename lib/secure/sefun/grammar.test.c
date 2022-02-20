@@ -1,5 +1,3 @@
-#include <time.h>
-
 inherit M_TEST;
 
 private nosave object testOb;
