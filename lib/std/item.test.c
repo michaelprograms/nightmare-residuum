@@ -1,5 +1,3 @@
-#include <time.h>
-
 inherit M_TEST;
 inherit STD_CONTAINER;
 
@@ -51,6 +49,8 @@ void test_item_verb_look_applies () {
     results += ({ 1 });
 
     expect_arrays_equal(values, results, "item handled verb apply direct_look_at_obj");
+
+    if (r) destruct(r);
 }
 
 void test_item_verb_drop_applies () {

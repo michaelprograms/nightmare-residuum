@@ -1,4 +1,4 @@
-inherit STD_ITEM;
+inherit STD_FOOD;
 
 void create () {
     ::create();
@@ -7,4 +7,5 @@ void create () {
     set_adjective(({ "juicy" }));
     set_short("a juicy %^RESET%^MAGENTA%^plum");
     set_long("A plum.");
+    set_strength(5);
 }

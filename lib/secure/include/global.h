@@ -5,6 +5,7 @@
 #define STD_ACCOUNT     "/std/account.c"
 #define STD_CHARACTER   "/std/character.c"
 #define STD_CONTAINER   "/std/container.c"
+#define STD_FOOD        "/std/food.c"
 #define STD_ITEM        "/std/item.c"
 #define STD_LIVING      "/std/living.c"
 #define STD_NPC         "/std/npc.c"

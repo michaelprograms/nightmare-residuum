@@ -24,3 +24,11 @@ mixed direct_get_obj (object ob, string str) {
     }
     return 1;
 }
+
+// void create () {
+//     ::create();
+// }
+
+// void reset () {
+//     ::reset();
+// }
