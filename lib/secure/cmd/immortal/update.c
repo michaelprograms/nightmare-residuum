@@ -1,5 +1,9 @@
 void done (mapping results) {
-    int numExpects = results["numPassed"] + results["numFailed"];
+    int numExpects;
+
+    if (mapp(results)) {
+        numExpects = results["numPassed"] + results["numFailed"];
+    }
     if (!numExpects) {
         message("system", "\nNo expects found.\n", this_user());
         return;
