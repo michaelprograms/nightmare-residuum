@@ -10,6 +10,6 @@
         "editor.rulers": [80, 100],
         "editor.tabSize": 4,
         "editor.bracketPairColorization.enabled": true,
-        "files.eol": "lf",
+        "files.eol": "\n",
     }
 }
