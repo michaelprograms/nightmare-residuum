@@ -46,8 +46,51 @@ void test_strength () {
     expect_arrays_equal(values, results, "food handled strength");
 }
 
-// void test_handle_eat () {
-// }
+void test_handle_eat () {
+    mixed *values = ({}), *results = ({});
+    object r;
+
+    r = new(STD_ROOM);
+
+    expect_function("handle_eat", testOb);
+
+    // setup food
+    testOb->set_strength(5);
+    values += ({ testOb->query_strength() });
+    results += ({ 5 });
+
+    // setup test object
+    values += ({ this_object()->handle_move(r) });
+    results += ({ 1 });
+    this_object()->update_vitals(); // initialize vitals
+    this_object()->add_hp(5);
+    values += ({ this_object()->query_hp() });
+    results += ({ 5 });
+    this_object()->add_sp(5);
+    values += ({ this_object()->query_sp() });
+    results += ({ 5 });
+    this_object()->add_mp(5);
+    values += ({ this_object()->query_mp() });
+    results += ({ 5 });
+
+    // test eating
+    testOb->handle_eat(this_object());
+    values += ({ this_object()->query_hp() });
+    results += ({ 10 });
+    values += ({ this_object()->query_sp() });
+    results += ({ 10 });
+    values += ({ this_object()->query_mp() });
+    results += ({ 10 });
+
+    values += ({ objectp(testOb) });
+    results += ({ 0 });
+
+    expect_arrays_equal(values, results, "food handle_eat behaved");
+
+    // cleanup
+    this_object()->handle_move("/domain/Nowhere/void.c");
+    if (r) destruct(r);
+}
 
 void test_item_verb_eat_applies () {
     mixed *values = ({}), *results = ({});
