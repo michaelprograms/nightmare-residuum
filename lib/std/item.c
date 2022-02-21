@@ -21,7 +21,7 @@ mixed direct_get_obj (object ob, string str) {
         if (env == previous_object()) {
             return 0;
         } else {
-            return "You can't get what you isn't here.";
+            return "You can't get what isn't here.";
         }
     }
     return 1;
