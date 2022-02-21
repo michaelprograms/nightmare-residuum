@@ -41,3 +41,7 @@ The game world is represented by [STD_ROOM](lib/doc/build/STD_ROOM.md), which co
 Basic objects that characters can interact with, such as getting, dropping, giving, or putting, are represented by [STD_ITEM](lib/doc/build/STD_ITEM.md).
 
 Basic NPCs that can populate rooms are referenced by [STD_NPC](lib/doc/build/STD_NPC.md).
+
+## Unit Tests
+
+This project was built with testing in mind from the start with the [M_TEST](lib/doc/build/M_TEST.md) module for writing tests and D_TEST for running tests among the first files to be coded. Objects are broken down into small, easily testable modules that are as independent of other components as possible.

@@ -19,10 +19,10 @@
 #define M_PROPERTY      "/std/module/property.c"
 #define M_RESET         "/std/module/reset.c"
 #define M_STORY         "/std/module/story.c"
+#define M_TEST          "/std/module/test.c"
 
 // secure modules
 #define M_SAVE          "/secure/module/save.c"
-#define M_TEST          "/secure/module/test.c"
 
 // daemons
 #define D_ANSI          "/daemon/ansi.c"

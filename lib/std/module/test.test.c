@@ -12,7 +12,7 @@ private string *testOrder = ({
 
 private nosave object testOb;
 void before_all_tests () {
-    testOb = clone_object("/secure/module/test");
+    testOb = clone_object("/std/module/test.c");
     nBeforeAll ++;
 }
 void after_all_tests () {

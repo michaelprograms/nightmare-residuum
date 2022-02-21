@@ -169,8 +169,8 @@ private string format_array_differences (mixed *actual, mixed *expect) {
 
 // -----------------------------------------------------------------------------
 
-// message should start with the function being tested
 private void validate_expect (mixed value1, mixed value2, string message) {
+    // message can start with the function being tested to count as tested
     foreach (string fn in testObjectUntestedFns) {
         if (regexp(message, fn + "[ :(]") > 0) {
             testObjectUntestedFns -= ({ fn });
@@ -205,15 +205,17 @@ private void validate_expect (mixed value1, mixed value2, string message) {
     }
 }
 
+// Compare the value to true
 varargs void expect_true (mixed value, string message) {
     currentTestPassed = !!value;
     validate_expect((currentTestPassed ? "true" : "false"), "true", message);
 }
+// Compare the value to false
 varargs void expect_false (mixed value, string message) {
     currentTestPassed = !value;
     validate_expect((currentTestPassed ? "false" : "true"), "false", message);
 }
-// Compares an array of arrays (left) to an array (right)
+// Compare each array in the array left is equal to the array right
 varargs void expect_arrays_array_equal (mixed *left, mixed *right, string message) {
     mixed *rightArr = ({});
     for (int i = 0; i < sizeof(left); i ++) {
@@ -234,7 +236,7 @@ varargs void expect_arrays_array_equal (mixed *left, mixed *right, string messag
     }
     validate_expect(left, rightArr, message);
 }
-// Compares an array of strings (left) to a string (right)
+// Compare the string array left to the string right
 varargs void expect_array_strings_equal (string *left, string right, string message) {
     string *rightArr = ({});
     currentTestPassed = 0;
@@ -251,6 +253,7 @@ varargs void expect_array_strings_equal (string *left, string right, string mess
     validate_expect(left, rightArr, message);
 
 }
+// Compare the array left to the array right
 varargs void expect_arrays_equal (mixed *left, mixed *right, string message) {
     currentTestPassed = 0;
     if (sizeof(left) == sizeof(right) && sizeof(left) > 0) {
@@ -266,20 +269,24 @@ varargs void expect_arrays_equal (mixed *left, mixed *right, string message) {
     right = map(right, (:identify:));
     validate_expect(left, right, message);
 }
+// Compare the string left to the string right
 varargs void expect_strings_equal (string left, string right, string message) {
     currentTestPassed = (left == right);
     validate_expect(left, right, message);
 }
+// Compare the string left to the regular expression right
 varargs void expect_strings_regexp (string left, string right, string message) {
     currentTestRegex = 1;
     currentTestPassed = strlen(left) > 0 && strlen(right) > 0 && regexp(left, right);
     validate_expect(left, right, message);
     currentTestRegex = 0;
 }
+// Compare the integer left to the integer right
 varargs void expect_integers_equal (int left, int right, string message) {
     currentTestPassed = (left == right);
     validate_expect(""+left, ""+right, message);
 }
+// Assert that testOb contains a public function matching fn
 void expect_function (string fn, object testOb) {
     currentTestPassed = !!function_exists(fn, testOb);
     if (currentTestPassed) {
@@ -288,12 +295,7 @@ void expect_function (string fn, object testOb) {
         validate_expect ("false", "true", fn + " does not exist");
     }
 }
-
-protected void expect_next_failure () {
-    if (base_name(this_object()) == replace_string(M_TEST, ".c", ".test") && failingExpects == 0) {
-        failingExpects --;
-    }
-}
+// Compare expr evaluation for an error matching to right
 varargs void expect_catch (mixed expr, string right, string message) {
     mixed err;
     expectCatch ++;
@@ -305,6 +307,7 @@ varargs void expect_catch (mixed expr, string right, string message) {
     }
     validate_expect (err, right, message);
 }
+// Compare an array of expr evaluations for any errors matching right
 varargs void expect_catches (mixed *expr, string right, string message) {
     mixed err;
     string *values = ({});
@@ -319,4 +322,10 @@ varargs void expect_catches (mixed *expr, string right, string message) {
     }
     expectCatch --;
     expect_array_strings_equal(values, right, message);
+}
+// Used by test.test.c to verify failing expects
+protected void expect_next_failure () {
+    if (base_name(this_object()) == replace_string(M_TEST, ".c", ".test") && failingExpects == 0) {
+        failingExpects --;
+    }
 }

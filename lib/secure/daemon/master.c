@@ -325,7 +325,7 @@ varargs int valid_override (string file, string efun_name, string main_file) {
         case "get_char":
             return file == "/secure/user/input";
         case "clone_object":
-            return file == "/secure/module/test";
+            return file == "/std/module/test";
     }
     return regexp(file, "/secure/sefun");
 }

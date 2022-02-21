@@ -1,10 +1,10 @@
 nosave private string *tests = ({}), __Mode;
 nosave private mapping __Tests = ([
     /* Data format:
-    "/secure/module/test.test.c": ([
+    "/std/module/test.test.c": ([
         "touched": 16000000,
         "ran": 16000000,
-        "code": "/secure/module/test.c",
+        "code": "/std/module/test.c",
         "codeTouched": 160000000,
     ])
     */
