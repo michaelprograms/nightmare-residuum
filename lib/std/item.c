@@ -1,6 +1,8 @@
 inherit STD_OBJECT;
 inherit M_CLEAN;
 
+int is_item () { return 1; }
+
 mixed direct_look_at_obj () {
     return environment() && environment() == environment(previous_object());
 }

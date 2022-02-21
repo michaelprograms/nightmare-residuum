@@ -10,6 +10,11 @@ void after_each_test () {
     if (objectp(testOb)) destruct(testOb);
 }
 
+void test_is_item () {
+    expect_function("is_item", testOb);
+    expect_true(testOb->is_item(), "item->is_item returns true");
+}
+
 void test_item_verb_look_applies () {
     mixed *values = ({}), *results = ({});
     object r;
