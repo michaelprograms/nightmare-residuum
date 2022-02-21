@@ -9,11 +9,11 @@ An [LPMud](https://en.wikipedia.org/wiki/LPMud) inspired by the [Nightmare Mudli
 
 Please reference [Mudlib Design](DESIGN.md) for explanations on how this project works.
 
-## Driver
+## Fluffos Driver
 
 ### Requirements
 
-The driver builds and runs best on Ubuntu 20.04 with the following dependencies installed (reference this repository's [Github Action for build-and-test](.github/workflows/ci.yml)):
+The fluffos driver builds and runs best on Ubuntu 20.04 with the following dependencies installed (reference this repository's [Github Action for build-and-test](.github/workflows/ci.yml)):
 
 ```
 sudo apt install -y build-essential clang-6.0 autoconf automake bison expect libevent-dev libmysqlclient-dev libpcre3-dev libpq-dev libsqlite3-dev libssl-dev libtool libz-dev telnet libgtest-dev libjemalloc-dev
