@@ -103,7 +103,7 @@ void enter_freezer () {
 void exit_freezer () {
     handle_move(query_last_environment());
     D_CHANNEL->send_system("connection", query_name() + " reconnects.");
-    message("connection", query_name()+" suddenly appears from existence.\n", environment(this_object()), this_object());
+    message("connection", query_name()+" suddenly appears into existence.\n", environment(this_object()), this_object());
     describe_environment();
     set_heart_beat(1);
 }
