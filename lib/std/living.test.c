@@ -13,3 +13,19 @@ void test_living () {
 
     expect_true(testOb->is_living(), "is_living handled");
 }
+
+void test_species () {
+    mixed *values = ({}), *results = ({});
+
+    expect_function("query_species", testOb);
+    expect_function("set_species", testOb);
+
+    values += ({ testOb->query_species() });
+    results += ({ "unknown" });
+
+    testOb->set_species("human");
+    values += ({ testOb->query_species() });
+    results += ({ "human" });
+
+    expect_arrays_equal(values, results, "living handled species");
+}

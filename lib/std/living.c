@@ -35,7 +35,7 @@ private void handle_passive_heal () {
 }
 
 string query_species () {
-    return __Species;
+    return stringp(__Species) ? __Species : "unknown";
 }
 void set_species (string species) {
     // @TODO security
