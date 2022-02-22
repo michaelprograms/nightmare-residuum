@@ -16,4 +16,5 @@ int query_stat (string stat) {
 void set_stat (string stat, int n) {
     // @TODO security
     __Stats[stat] = n;
+    this_object()->update_vitals();
 }
