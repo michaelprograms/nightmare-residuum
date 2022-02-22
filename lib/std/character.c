@@ -79,30 +79,33 @@ varargs void enter_world (int override) {
     if (!override) {
         handle_move(query_last_environment() || "/domain/Nowhere/void.c");
         D_CHANNEL->send_system("connection", query_name() + " connects.");
-        message("connection", query_name()+" enters "+mud_name()+".\n", environment()->query_living_contents(), this_object());
+        message("connection", query_name()+" enters "+mud_name()+".\n", environment(this_object()), this_object());
     }
     describe_environment();
+    set_heart_beat(1);
 }
 
 void exit_world () {
     save_data();
-    message("connection", query_name()+" exits "+mud_name()+".\n", environment()->query_living_contents(), this_object());
+    message("connection", query_name()+" exits "+mud_name()+".\n", environment(this_object()), this_object());
     D_CHANNEL->send_system("connection", query_name() + " exits.");
     call_out((: master()->handle_parse_refresh() :), 0);
     handle_remove();
 }
 
 void enter_freezer () {
-    message("connection", query_name()+" suddenly fades from existence.\n", environment()->query_living_contents(), this_object());
+    message("connection", query_name()+" suddenly fades from existence.\n", environment(this_object()), this_object());
     handle_move("/domain/Nowhere/freezer.c");
     D_CHANNEL->send_system("connection", query_name() + " disconnects.");
+    set_heart_beat(0);
 }
 
 void exit_freezer () {
     handle_move(query_last_environment());
     D_CHANNEL->send_system("connection", query_name() + " reconnects.");
-    message("connection", query_name()+" suddenly appears from existence.\n", environment()->query_living_contents(), this_object());
+    message("connection", query_name()+" suddenly appears from existence.\n", environment(this_object()), this_object());
     describe_environment();
+    set_heart_beat(1);
 }
 
 // -----------------------------------------------------------------------------

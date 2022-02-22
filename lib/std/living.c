@@ -7,11 +7,31 @@ inherit "/std/living/vitals.c";
 
 private string __Species;
 private string __LastEnvironment;
+nosave private int __NextHeal;
 
 int is_living () { return 1; }
 
 void create () {
     container::create();
+}
+
+void heart_beat () {
+    if (!clonep(this_object())) return;
+
+    handle_passive_heal();
+}
+
+private void handle_passive_heal () {
+    if (!__NextHeal) {
+        __NextHeal = time() + 10;
+        return;
+    } else if (__NextHeal <= time()) {
+        int amt = to_int(ceil((query_level() / 5.0) + (query_stat("endurance") / 10.0)));
+        add_hp(amt);
+        add_sp(amt);
+        add_mp(amt);
+        __NextHeal = time() + 10;
+    }
 }
 
 string query_species () {
