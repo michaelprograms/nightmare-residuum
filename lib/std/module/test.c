@@ -40,6 +40,7 @@ string *test_ignore () {
         "create",
         "init",
         "reset",
+        "heart_beat",
     });
 }
 
