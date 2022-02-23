@@ -9,8 +9,7 @@ void after_all_tests () {
 }
 
 void test_hex_to_int () {
-    string *values = ({});
-    int *results = ({});
+    int *values = ({}), *results = ({});
 
     expect_function("hex_to_int", testOb);
 
