@@ -8,6 +8,7 @@
 #define STD_FOOD        "/std/food.c"
 #define STD_ITEM        "/std/item.c"
 #define STD_LIVING      "/std/living.c"
+#define STD_MONSTER     "/std/monster.c"
 #define STD_NPC         "/std/npc.c"
 #define STD_OBJECT      "/std/object.c"
 #define STD_ROOM        "/std/room.c"
