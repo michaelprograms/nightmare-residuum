@@ -25,6 +25,6 @@ object *query_living_contents ()
 returns a list of all objects inheriting STD_LIVING within this object
 
 ```c
-int clean_u p()
+int clean_up ()
 ```
 overrides M_CLEAN->clean_up() to prevent clean up in certain situations.
