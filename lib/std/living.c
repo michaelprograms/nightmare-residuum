@@ -64,12 +64,14 @@ int handle_move (mixed dest) {
     return move;
 }
 
-int handle_go (mixed dest, string method, string dir) {
+int handle_go (mixed dest, string verb, string dir) {
     int move;
-    message("go", "You "+method+" "+dir+".\n", this_object());
-    message("go", query_name()+" "+pluralize(method)+" "+dir+".\n", environment()->query_living_contents(), ({ this_object() }));
+    string verbs = pluralize(verb);
+    dir = "%^DIR%^"+dir+"%^DEFAULT%^";
+    message("go", "You " + verb + " " + dir + ".\n", this_object());
+    message("go", query_name() + " " + verbs + " " + dir + ".\n", environment()->query_living_contents(), this_object());
     move = handle_move(dest);
-    message("go", query_name()+" "+pluralize(method)+" in.\n", environment()->query_living_contents(), ({ this_object() }));
+    message("go", query_name() + " " + verbs + " %^DIR%^in%^DEFAULT%^.\n", environment()->query_living_contents(), this_object());
     return move;
 }
 

@@ -50,6 +50,8 @@ void receive_message (string type, string message) {
         message = "%^CYAN%^" + replace_string(message, ":", ":%^RESET%^");
         receive(wrap(message));
     } else if (type == "go") {
+        message = replace_string(message, "%^DIR%^", "%^CYAN%^");
+        message = replace_string(message, "%^DEFAULT%^", "%^GREEN%^");
         message = "%^GREEN%^BOLD%^" + message + "%^RESET%^";
         receive(wrap(message));
     } else if (type == "room_living_contents") {
