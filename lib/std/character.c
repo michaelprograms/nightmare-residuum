@@ -139,7 +139,7 @@ private void describe_environment_item_contents () {
         shorts[0] = capitalize(shorts[0]);
         shorts = map_array(shorts, (: "%^BOLD%^" + $1 + "%^BOLD_OFF%^DEFAULT%^" :));
         conjunctions = conjunction(shorts);
-        message("room_item_contents", conjunctions + " " + (regexp(conjunctions, "and") ? "are" : "is") + " here.\n", this_object());
+        message("room_item_contents", conjunctions + " " + (regexp(conjunctions, " and ") ? "are" : "is") + " here.\n", this_object());
     }
 }
 
