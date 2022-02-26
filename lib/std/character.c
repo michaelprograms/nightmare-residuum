@@ -129,7 +129,7 @@ private void describe_environment_living_contents () {
 private void describe_environment_item_contents () {
     object env = environment();
     mixed *list;
-    string *shorts;
+    string *shorts, conjunctions;
 
     if (!env || !env->is_room()) return;
 
@@ -138,7 +138,8 @@ private void describe_environment_item_contents () {
         shorts = sort_array(map_array(list, (: consolidate(sizeof($1), $1[0]->query_short()) :)), 1);
         shorts[0] = capitalize(shorts[0]);
         shorts = map_array(shorts, (: "%^BOLD%^" + $1 + "%^BOLD_OFF%^DEFAULT%^" :));
-        message("room_item_contents", conjunction(shorts) + " are here.\n", this_object());
+        conjunctions = conjunction(shorts);
+        message("room_item_contents", conjunctions + " " + (regexp(conjunctions, "and") ? "are" : "is") + " here.\n", this_object());
     }
 }
 
