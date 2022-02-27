@@ -7,6 +7,7 @@ inherit M_SAVE;
 private int __LastAction;
 private int __Created = time();
 private int __Immortal;
+private int __ConnectionTime;
 nosave private object __User;
 
 void describe_environment ();
@@ -18,6 +19,13 @@ int is_character () { return 1; }
 void create () {
     living::create();
     parent::create();
+    __ConnectionTime = 0;
+}
+
+void heart_beat () {
+    int diff;
+    ::heart_beat();
+    __ConnectionTime ++; // 1 second heartbeat
 }
 
 void set_name (string name) {
@@ -61,6 +69,9 @@ void update_last_action () { // @TODO set_last_action?
 }
 int query_last_action () {
     return __LastAction;
+}
+int query_connection_time () {
+    return __ConnectionTime;
 }
 
 void setup_character () {
