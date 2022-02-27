@@ -17,6 +17,11 @@ void set_gender (string str);
 int query_level ();
 void set_level (int l);
 
+/* --- combat --- */
+int add_hostile (object ob);
+int remove_hostile (object ob);
+object *query_hostiles ();
+
 /* --- stats --- */
 int query_stat (string stat);
 void set_stat (string stat, int n);

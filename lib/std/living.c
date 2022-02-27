@@ -2,6 +2,7 @@
 
 inherit STD_CONTAINER;
 inherit "/std/living/body.c";
+inherit "/std/living/combat.c";
 inherit "/std/living/stats.c";
 inherit "/std/living/vitals.c";
 
@@ -12,6 +13,7 @@ nosave private int __NextHeal;
 int is_living () { return 1; }
 
 void create () {
+    combat::create();
     container::create();
 }
 
