@@ -20,6 +20,7 @@ void set_level (int l);
 /* --- combat --- */
 int add_hostile (object ob);
 int remove_hostile (object ob);
+int query_hostile (object ob);
 object *query_hostiles ();
 
 /* --- stats --- */
