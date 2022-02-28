@@ -8,6 +8,7 @@ void create () {
     } else {
         name = ({ "aeryn", "athena", "beverly", "clara", "dana", "dasha", "delenn", "diana", "donna", "elise", "ezri", "gamora", "holly", "inara", "janice", "jenny", "jessica", "kathryn", "kira", "leia", "liara", "lorraine", "maggie", "martha", "maya", "missy", "monica", "moya", "padme", "rey", "ripley", "river", "rose", "serina", "tasha", "theora", "vala", "zephyra", "zyla", "zhora" })[random(40)];
     }
+    set_id(({ name, "clone" }));
     capName = capitalize(name);
     set_name(capName);
     set_short(capName);
