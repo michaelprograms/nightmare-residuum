@@ -15,6 +15,7 @@ void test_hostiles () {
 
     expect_function("add_hostile", testOb);
     expect_function("remove_hostile", testOb);
+    expect_function("query_hostile", testOb);
     expect_function("query_hostiles", testOb);
 
     // test adding and removing
@@ -24,6 +25,8 @@ void test_hostiles () {
     results += ({ 1 }); // 1st hostile added
     values += ({ sizeof(testOb->query_hostiles()) });
     results += ({ 1 }); // 1 hostile
+    values += ({ testOb->query_hostile(ob1) });
+    results += ({ 1 }); // 1st hostile found
     values += ({ testOb->add_hostile(ob1) });
     results += ({ 0 }); // can't add same hostile
     values += ({ sizeof(testOb->query_hostiles()) });
@@ -32,6 +35,8 @@ void test_hostiles () {
     results += ({ 1 }); // 2nd hostile added
     values += ({ sizeof(testOb->query_hostiles()) });
     results += ({ 2 }); // 2 hostiles
+    values += ({ testOb->query_hostile(ob2) });
+    results += ({ 1 }); // 2nd hostile found
     values += ({ testOb->remove_hostile(ob1) });
     results += ({ 1 }); // 1st hostile removed
     values += ({ sizeof(testOb->query_hostiles()) });
@@ -44,6 +49,10 @@ void test_hostiles () {
     results += ({ 1 }); // 2nd hostile removed
     values += ({ sizeof(testOb->query_hostiles()) });
     results += ({ 0 }); // 0 hostiles
+    values += ({ testOb->query_hostile(ob1) });
+    results += ({ 0 }); // 1st hostile not found
+    values += ({ testOb->query_hostile(ob2) });
+    results += ({ 0 }); // 2nd hostile not found
 
     // test filtering undefined
     values += ({ testOb->add_hostile(ob1) });

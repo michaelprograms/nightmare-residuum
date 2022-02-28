@@ -24,9 +24,13 @@ object *query_hostiles () {
     __Hostiles = filter_array(__Hostiles, (: !undefinedp($1) :));
     return __Hostiles;
 }
+int query_hostile (object ob) {
+    return member_array(ob, __Hostiles) > -1;
+}
 
 /* ----- parser applies ----- */
 
 mixed direct_attack_liv () {
-    return environment() == environment(previous_object()) && previous_object() != this_object();
+    object ob = previous_object();
+    return environment() == environment(ob) && ob != this_object() && !query_hostile(ob);
 }
