@@ -21,5 +21,6 @@ int remove_hostile (object ob) {
     return 1;
 }
 object *query_hostiles () {
+    __Hostiles = filter_array(__Hostiles, (: !undefinedp($1) :));
     return __Hostiles;
 }

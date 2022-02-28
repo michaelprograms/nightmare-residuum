@@ -17,6 +17,7 @@ void test_hostiles () {
     expect_function("remove_hostile", testOb);
     expect_function("query_hostiles", testOb);
 
+    // test adding and removing
     values += ({ sizeof(testOb->query_hostiles()) });
     results += ({ 0 }); // no hostiles
     values += ({ testOb->add_hostile(ob1) });
@@ -43,6 +44,16 @@ void test_hostiles () {
     results += ({ 1 }); // 2nd hostile removed
     values += ({ sizeof(testOb->query_hostiles()) });
     results += ({ 0 }); // 0 hostiles
+
+    // test filtering undefined
+    values += ({ testOb->add_hostile(ob1) });
+    results += ({ 1 }); // 1st hostile added
+    values += ({ testOb->add_hostile(ob2) });
+    results += ({ 1 }); // 2nd hostile added
+    values += ({ ob2->handle_remove() });
+    results += ({ 1 }); // 2nd hostile destructed
+    values += ({ sizeof(testOb->query_hostiles()) });
+    results += ({ 1 }); // only 1 hostile
 
     expect_arrays_equal(values, results, "handled adding and removing hostiles");
 
