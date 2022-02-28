@@ -260,7 +260,7 @@ varargs mixed *get_soul (string verb, string rule, mixed *args) {
     return result;
 }
 
-void display_soul(object *who, string *msgs, mixed others) {
+void display_soul (object *who, string *msgs, mixed others) {
     mapping done = ([]);
 
     for (int i = 0; i < sizeof(who); i ++) {
