@@ -65,6 +65,12 @@ void receive_message (string type, string message) {
     } else if (type == "room_exits") {
         message = "%^GREEN%^" + replace_string(replace_string(message, "%^DEFAULT%^", "%^GREEN%^"), ":", ":%^RESET%^") + "%^RESET%^";
         receive(wrap(message));
+    } else if (type == "combat hit") {
+        message = "%^RED%^" + message + "%^RESET%^";
+        receive(wrap(message));
+    } else if (type == "combat miss") {
+        message = "%^GREEN%^" + message + "%^RESET%^";
+        receive(wrap(message));
     } else if (type == "no_ansi") {
         if (strlen(message) > __LARGEST_PRINTABLE_STRING__) {
             message = message[0..__LARGEST_PRINTABLE_STRING__ - 1];

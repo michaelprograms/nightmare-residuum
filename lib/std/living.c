@@ -18,9 +18,10 @@ void create () {
 }
 
 void heart_beat () {
-    if (!clonep(this_object())) return;
+    if (!clonep()) return;
 
     handle_passive_heal();
+    handle_combat();
 }
 
 private void handle_passive_heal () {

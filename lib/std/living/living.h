@@ -18,10 +18,14 @@ int query_level ();
 void set_level (int l);
 
 /* --- combat --- */
+protected void handle_combat ();
+private void handle_combat_hit (object target);
+int handle_damage (int damage);
 int add_hostile (object ob);
 int remove_hostile (object ob);
 int query_hostile (object ob);
 object *query_hostiles ();
+object *query_present_hostiles ();
 
 /* --- stats --- */
 int query_stat (string stat);
