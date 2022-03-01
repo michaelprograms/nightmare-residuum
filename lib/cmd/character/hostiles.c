@@ -3,7 +3,7 @@ void command (string input) {
 
     write(format_header_bar("HOSTILES") + "\n");
 
-    if (hostiles) {
+    if (hostiles && sizeof(hostiles)) {
         foreach (object ob in this_character()->query_hostiles()) {
             write("\n    " + ob->query_name());
         }
