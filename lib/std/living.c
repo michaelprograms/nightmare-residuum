@@ -3,6 +3,7 @@
 inherit STD_CONTAINER;
 inherit "/std/living/body.c";
 inherit "/std/living/combat.c";
+inherit "/std/living/skills.c";
 inherit "/std/living/stats.c";
 inherit "/std/living/vitals.c";
 
