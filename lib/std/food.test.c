@@ -88,7 +88,7 @@ void test_handle_eat () {
     expect_arrays_equal(values, results, "food handle_eat behaved");
 
     // cleanup
-    this_object()->handle_move("/domain/Nowhere/void.c");
+    this_object()->handle_move("/domain/Nowhere/room/void.c");
     if (r) destruct(r);
 }
 

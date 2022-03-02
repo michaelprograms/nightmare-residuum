@@ -83,7 +83,7 @@ void test_applies () {
     values += ({ testOb->direct_look_str() });
     results += ({ 0 });
 
-    // move_object("/domain/Nowhere/void.c");
+    // move_object("/domain/Nowhere/room/void.c");
     // values += ({ testOb->direct_look_at_str() });
     // results += ({ 0 }); // @TODO should be 1 but testOb needs handle_move
     // values += ({ testOb->direct_look_str() });

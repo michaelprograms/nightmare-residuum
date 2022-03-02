@@ -88,7 +88,7 @@ void setup_character () {
 varargs void enter_world (int override) {
     master()->handle_parse_refresh();
     if (!override) {
-        handle_move(query_last_environment() || "/domain/Nowhere/void.c");
+        handle_move(query_last_environment() || "/domain/Nowhere/room/void.c");
         D_CHANNEL->send_system("connection", query_name() + " connects.");
         message("connection", query_name()+" enters "+mud_name()+".\n", environment(this_object()), this_object());
     }
@@ -106,7 +106,7 @@ void exit_world () {
 
 void enter_freezer () {
     message("connection", query_name()+" suddenly fades from existence.\n", environment(this_object()), this_object());
-    handle_move("/domain/Nowhere/freezer.c");
+    handle_move("/domain/Nowhere/room/freezer.c");
     D_CHANNEL->send_system("connection", query_name() + " disconnects.");
     set_heart_beat(0);
 }

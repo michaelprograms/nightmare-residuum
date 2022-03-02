@@ -49,7 +49,7 @@ void command (string input) {
             foreach (object l in ob->query_living_contents()) {
                 if (l->is_character()) {
                     keep += ({ l });
-                    l->handle_move("/domain/Nowhere/void.c");
+                    l->handle_move("/domain/Nowhere/room/void.c");
                 }
             }
         }

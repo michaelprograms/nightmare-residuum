@@ -62,7 +62,7 @@ nomask private void character_enter (int newbie) {
             if (__Character->query_species() == "human") {
                 __Character->set_last_location("/domain/Start/human/enter.c");
             } else {
-                __Character->set_last_location("/domain/Nowhere/void.c");
+                __Character->set_last_location("/domain/Nowhere/room/void.c");
             }
         }
 

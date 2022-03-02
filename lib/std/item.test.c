@@ -4,7 +4,7 @@ inherit STD_CONTAINER;
 private nosave object testOb;
 void before_each_test () {
     if (!testOb) testOb = clone_object("/std/item.c");
-    this_object()->handle_move("/domain/Nowhere/void.c");
+    this_object()->handle_move("/domain/Nowhere/room/void.c");
 }
 void after_each_test () {
     if (objectp(testOb)) destruct(testOb);
@@ -27,7 +27,7 @@ void test_item_verb_look_applies () {
     values += ({ environment(testOb) });
     results += ({ 0 });
     values += ({ environment(this_object()) });
-    results += ({ find_object("/domain/Nowhere/void.c") });
+    results += ({ find_object("/domain/Nowhere/room/void.c") });
 
     values += ({ testOb->direct_look_at_obj() });
     results += ({ 0 });
@@ -48,9 +48,9 @@ void test_item_verb_look_applies () {
     values += ({ testOb->direct_look_obj() });
     results += ({ 1 });
 
-    values += ({ testOb->handle_move("/domain/Nowhere/void.c") });
+    values += ({ testOb->handle_move("/domain/Nowhere/room/void.c") });
     results += ({ 1 });
-    values += ({ this_object()->handle_move("/domain/Nowhere/void.c") });
+    values += ({ this_object()->handle_move("/domain/Nowhere/room/void.c") });
     results += ({ 1 });
 
     expect_arrays_equal(values, results, "item handled verb apply direct_look_at_obj");
@@ -66,7 +66,7 @@ void test_item_verb_drop_applies () {
     values += ({ environment(testOb) });
     results += ({ 0 });
     values += ({ environment(this_object()) });
-    results += ({ find_object("/domain/Nowhere/void.c") });
+    results += ({ find_object("/domain/Nowhere/room/void.c") });
 
     values += ({ testOb->direct_drop_obj() });
     results += ({ 0 }); // can't drop item yet
@@ -79,7 +79,7 @@ void test_item_verb_drop_applies () {
     values += ({ testOb->direct_drop_obj() });
     results += ({ 1 }); // can drop item
 
-    values += ({ testOb->handle_move("/domain/Nowhere/void.c") });
+    values += ({ testOb->handle_move("/domain/Nowhere/room/void.c") });
     results += ({ 1 });
 
     expect_arrays_equal(values, results, "item handled verb apply direct_drop_obj");
@@ -115,15 +115,15 @@ void test_item_verb_get_applies () {
     values += ({ environment(testOb) });
     results += ({ 0 });
     values += ({ environment(this_object()) });
-    results += ({ find_object("/domain/Nowhere/void.c") });
+    results += ({ find_object("/domain/Nowhere/room/void.c") });
 
     values += ({ testOb->direct_get_obj() });
     results += ({ "You can't get what isn't here." });
 
-    values += ({ testOb->handle_move("/domain/Nowhere/void.c") });
+    values += ({ testOb->handle_move("/domain/Nowhere/room/void.c") });
     results += ({ 1 });
     values += ({ environment(testOb) });
-    results += ({ find_object("/domain/Nowhere/void.c") });
+    results += ({ find_object("/domain/Nowhere/room/void.c") });
 
     values += ({ testOb->direct_get_obj() });
     results += ({ 1 }); // can get item

@@ -60,9 +60,9 @@ void set_last_location (string location) {
 
 int handle_move (mixed dest) {
     int move = ::handle_move(dest);
-    if (stringp(dest) && dest != "/domain/Nowhere/freezer.c") {
+    if (stringp(dest) && dest != "/domain/Nowhere/room/freezer.c") {
         __LastEnvironment = dest;
-    } else if (objectp(dest) && file_name(dest) != "/domain/Nowhere/freezer.c") {
+    } else if (objectp(dest) && file_name(dest) != "/domain/Nowhere/room/freezer.c") {
         __LastEnvironment = file_name(dest);
     }
     return move;
