@@ -60,12 +60,12 @@ int id (string id) {
 }
 
 // @TODO
-int move_or_destruct (object parent) {
+// int move_or_destruct (object parent) {
     // Interactive should handle this.
     /*
     If an object is to be destructed, prior to its destruction this apply is called on its contents. 'parent' is the object that will be destructed. If the target object of this apply does not move itself out of the object being destructed, it will be destructed as well.
     */
-}
+// }
 
 void reset () {
 }
