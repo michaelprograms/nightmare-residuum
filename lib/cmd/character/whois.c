@@ -20,6 +20,7 @@ void command (string input) {
         // @TODO ip
     }
     write("Species: " + char->query_species() + "\n");
+    write("Level: " + char->query_level() + "\n");
     write("Created: " + ctime(char->query_created()) + "\n");
     write("Last Action: " + time_ago(char->query_last_action()) + "\n");
 
