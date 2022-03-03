@@ -1,4 +1,5 @@
 inherit STD_CONTAINER;
+inherit M_PROPERTY;
 inherit M_RESET;
 inherit "/std/module/exit.c";
 inherit "/std/module/look.c";
