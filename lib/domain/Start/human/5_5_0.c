@@ -2,6 +2,9 @@ inherit STD_ROOM;
 
 void create () {
     ::create();
+    set_properties(([
+        "no attack": 1,
+    ]));
     set_short("a village crossroads");
     set_long("Amongst a village center where two central paths form a crossroads. A plaza of stone pavers blends the intersection into a public square. Brick dwellings covered in dark ivy form a cozy enclosure around the outer circumference of the plaza. Birch trees branch over the perimeter between the dwellings and the plaza. A framework of hexagons glimmer overhead.");
     set_looks(([

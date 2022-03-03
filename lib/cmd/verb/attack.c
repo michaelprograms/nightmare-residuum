@@ -10,6 +10,7 @@ mixed can_attack () {
 }
 
 mixed can_attack_liv (object lv, string str) {
+    if (environment(this_character())->query_property("no attack")) return "You cannot attack here.";
     return 1;
 }
 void do_attack_liv (object ob, string str) {
