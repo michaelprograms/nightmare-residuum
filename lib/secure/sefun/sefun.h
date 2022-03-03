@@ -22,6 +22,7 @@ string format_divider_bar ();
 string format_footer_bar ();
 string format_exit_brief (string dir);
 string format_exit_verbose (string dir);
+varargs string format_page (string *items, int columns, int pad);
 
 /* --- grammar --- */
 string remove_article (string str);

@@ -87,3 +87,20 @@ string format_exit_verbose (string dir) {
     }
     return implode(result, " ");
 }
+
+varargs string format_page (string *items, int columns, int pad) {
+    int width, i, j, n = sizeof(items)
+    string result = "";
+
+    if (!columns) columns = 2;
+    width = this_user() ? this_user()->query_account()->query_setting("width") : 80;
+    width = (width / columns) + pad;
+    for(i = 0; i < n; i += columns) {
+        for (j = 0; j < columns; j ++) {
+            if (i + j >= n) break;
+            result += pad_right(items[i + j], width); // @TODO for longer strings
+        }
+        result += "\n";
+    }
+    return result;
+}
