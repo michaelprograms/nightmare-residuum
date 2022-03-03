@@ -89,7 +89,7 @@ string format_exit_verbose (string dir) {
 }
 
 varargs string format_page (string *items, int columns, int pad) {
-    int width, i, j, n = sizeof(items)
+    int width, i, j, n = sizeof(items);
     string result = "";
 
     if (!columns) columns = 2;
