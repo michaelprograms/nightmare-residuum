@@ -150,8 +150,9 @@ private void describe_environment_living_contents () {
     });
     list = unique_array(list, (: $1->query_short() :));
     if (sizeof(list)) {
-        shorts = map_array(list, (: capitalize(consolidate(sizeof($1), $1[0]->query_short())) :));
+        shorts = map_array(list, (: consolidate(sizeof($1), $1[0]->query_short()) :));
         shorts = map_array(shorts, (: $1 :));
+        shorts[0] = capitalize(shorts[0]);
         // message("room_living_contents", implode(shorts, "\n") + "\n\n", this_object());
         shorts = map_array(shorts, (: "%^BOLD%^" + $1 + "%^BOLD_OFF%^DEFAULT%^" :));
         conjunctions = conjunction(shorts);
