@@ -10,5 +10,11 @@ void command (string input) {
     write("Created: " + ctime(tc->query_created()) + "\n");
     write("Last Action: " + time_ago(tc->query_last_action()) + "\n");
 
+    write("\nVictories: " + tc->query_victory() + "\n");
+    write("Defeats: " + tc->query_defeat() + "\n");
+
+    write("Experience: " + tc->query_experience() + "\n");
+    write("Total Experience: " + tc->query_total_experience() + "\n");
+
     write("\n" + format_footer_bar() + "\n");
 }

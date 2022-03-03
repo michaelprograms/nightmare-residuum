@@ -16,10 +16,20 @@ string query_gender ();
 void set_gender (string str);
 int query_level ();
 void set_level (int l);
+int query_experience ();
+int query_total_experience ();
+void add_experience (int exp);
+void spend_experience (int exp);
+void add_victory ();
+void add_defeat ();
+int query_victory ();
+int query_defeat ();
+void handle_defeat ();
 
 /* --- combat --- */
 protected void handle_combat ();
 private void handle_combat_hit (object target);
+varargs void check_lifesigns (object source);
 int handle_damage (int damage);
 int add_hostile (object ob);
 int remove_hostile (object ob);

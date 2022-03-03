@@ -23,6 +23,7 @@ protected void handle_combat () {
     for (int h = 0; h < hits; h ++) {
         handle_combat_hit(target);
     }
+    target->check_lifesigns(this_object());
 }
 
 private void handle_combat_hit (object target) {
@@ -69,27 +70,20 @@ private void handle_combat_hit (object target) {
     }
 }
 
+varargs void check_lifesigns (object source) {
+    if (query_hp() < 1) {
+        message("system", "\nYou have been %^BOLD%^RED%^defeated%^RESET%^!\n\n", this_object());
+        message("system", "\n" + this_object()->query_name() + " has been %^BOLD%^RED%^defeated%^RESET%^!\n\n", environment(this_object()), this_object());
+        if (source) source->handle_victory(this_object());
+        handle_defeat();
+    }
+}
+
 varargs int handle_damage (int damage, object source) {
     add_hp(-damage);
     if (query_max_hp() < query_hp()) set_hp(query_max_hp());
     if (this_object()->is_character()) {
         message("system", sprintf("hp: %d    sp: %d    mp: %d\n", query_hp(), query_sp(), query_mp()), this_object());
-    }
-    if (query_hp() < 1) {
-        message("system", "\nYou have been \n\n", this_object());
-        message("system", "\n" + this_object()->query_name() + " has been %^BOLD%^RED%^defeated%^RESET%^!\n\n", environment(this_object()), this_object());
-
-        if (this_object()->is_character()) {
-            handle_move("/domain/Nowhere/room/defeat.c");
-            // @TODO STD_CHARACTER handle_defeat(source)
-        } else {
-            if (source && source->is_character()) {
-                int exp = D_EXPERIENCE->query_value(this_object());
-                message("system", "You gain " + exp + " experience.\n", source);
-                // @TODO source->add_exp(exp);
-            }
-            this_object()->handle_remove(); // @TODO STD_MONSTER and STD_NPC handle_defeat(source)
-        }
     }
     return damage;
 }
