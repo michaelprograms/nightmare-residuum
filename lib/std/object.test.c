@@ -19,7 +19,7 @@ void test_lifecycle_functions () {
     expect_function("id", testOb);
     // Tests for id handled by /std/module/id.test.c
 
-    expect_function("move_or_destruct", testOb);
+    // expect_function("move_or_destruct", testOb);
 
     expect_function("reset", testOb);
 
