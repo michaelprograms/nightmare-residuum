@@ -14,6 +14,8 @@ protected void handle_combat () {
     if (!sizeof(targets = query_present_hostiles())) return;
 
     target = targets[0];
+    if (!target->query_hostile(this_object())) target->add_hostile(this_object());
+
     min = 1 + query_stat("agility") / 100;
     max = 1 + query_stat("agility") / 50;
     hits = min + secure_random(max - min + 1);
@@ -24,14 +26,12 @@ protected void handle_combat () {
 }
 
 private void handle_combat_hit (object target) {
-    int hit = 0;
-    int damage = 0;
+    int hit = 0, damage = 0;
+    string type;
 
     // Miss chance
     hit -= target->query_stat("agility") * 3 / 4 + secure_random(target->query_stat("luck") / 10 + 1);
-    write("hit: "+hit+"\n");
     hit += query_stat("agility") / 2 - secure_random(query_stat("agility") / 2) + secure_random(target->query_stat("luck") / 20 + 1);
-    write("hit: "+hit+"\n");
     if (hit < 1) {
         message("combat miss", "You miss " + target->query_name() + ".\n", this_object());
         message("combat miss", this_object()->query_name() + " misses you.\n", target);
@@ -39,34 +39,57 @@ private void handle_combat_hit (object target) {
         return;
     }
 
+    // @TODO determine type
+    type = "melee";
+
     // Base Damage
     damage += query_stat("strength") / 10;
     damage += secure_random(query_stat("strength") / 10 + 1);
     damage += secure_random(query_sp() / 50 + 1);
-    damage += secure_random(query_stat("luck") / 5 + 1);
+    damage += secure_random(query_stat("luck") / 20 + 1);
+    damage += secure_random(query_skill(type + " attack") / 5 + 1);
 
     // apply target mitigations
-    // @TODO
+    damage -= secure_random(query_skill(type + " defense") / 5 + 1);
+    damage -= secure_random(query_stat("endurance") / 10 + 1);
 
     if (damage < 1) {
         message("combat hit", "You hit " + target->query_name() + " ineffectively!\n", this_object());
         message("combat hit", this_object()->query_name() + " hits you ineffectively!\n", target);
         message("combat hit", this_object()->query_name() + " hits " + target->query_name() + " ineffectively!\n", environment(this_object()), ({ this_object(), target }));
     } else {
-        message("combat hit", "You hit " + target->query_name() + "!\n", this_object());
-        message("combat hit", this_object()->query_name() + " hits you!\n", target);
-        message("combat hit", this_object()->query_name() + " hits " + target->query_name() + "!\n", environment(this_object()), ({ this_object(), target }));
-    }
+        // @TODO messages based upon type
+        message("combat hit", "You hit " + target->query_name() + ".\n", this_object());
+        message("combat hit", this_object()->query_name() + " hits you.\n", target);
+        message("combat hit", this_object()->query_name() + " hits " + target->query_name() + ".\n", environment(this_object()), ({ this_object(), target }));
 
-    handle_damage(damage);
+        train_skill(type + " attack");
+        target->handle_damage(damage, this_object());
+        target->train_skill(type + " defense");
+    }
 }
 
-int handle_damage (int damage) {
+varargs int handle_damage (int damage, object source) {
     add_hp(-damage);
     if (query_max_hp() < query_hp()) set_hp(query_max_hp());
-    message("system", sprintf("hp: %d    sp: %d    mp: %d\n", query_hp(), damage, query_sp(), query_mp()), this_object());
+    if (this_object()->is_character()) {
+        message("system", sprintf("hp: %d    sp: %d    mp: %d\n", query_hp(), query_sp(), query_mp()), this_object());
+    }
     if (query_hp() < 1) {
-        message("system", "\n%^BOLD%^RED%^You have perished!%^RESET%^\n\n", this_object());
+        message("system", "\nYou have been \n\n", this_object());
+        message("system", "\n" + this_object()->query_name() + " has been %^BOLD%^RED%^defeated%^RESET%^!\n\n", environment(this_object()), this_object());
+
+        if (this_object()->is_character()) {
+            handle_move("/domain/Nowhere/room/defeat.c");
+            // @TODO STD_CHARACTER handle_defeat(source)
+        } else {
+            if (source && source->is_character()) {
+                int exp = D_EXPERIENCE->query_value(this_object());
+                message("system", "You gain " + exp + " experience.\n", source);
+                // @TODO source->add_exp(exp);
+            }
+            this_object()->handle_remove(); // @TODO STD_MONSTER and STD_NPC handle_defeat(source)
+        }
     }
     return damage;
 }

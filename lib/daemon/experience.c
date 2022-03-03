@@ -8,6 +8,11 @@ int query_level_cost (int level) {
     return 0;
 }
 
+int query_skill_cost (int level) {
+    // @TODO skill tiers
+    return 100 + to_int(0.25 * pow(level, 3.0)) + (0.25 * pow(level, 3.25));
+}
+
 // -----------------------------------------------------------------------------
 
 int query_value (mixed m) {

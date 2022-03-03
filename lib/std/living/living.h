@@ -31,7 +31,7 @@ object *query_present_hostiles ();
 private mapping query_default_skills ();
 private int query_skill_next_points (string skill);
 string *query_all_skills ();
-int query_skill_progress (string skill);
+string query_skill_progress (string skill);
 int query_skill (string skill);
 void set_skill (string skill, int level);
 varargs void train_skill (string skill, float multiplier);
