@@ -11,6 +11,7 @@ void create () {
     set_id(({ name, "clone" }));
     capName = capitalize(name);
     set_name(capName);
-    set_short(capName);
+    set_short(capName + " the clone");
     set_long("A cloned human by the name of " + capName + ".");
+    set_level(1);
 }

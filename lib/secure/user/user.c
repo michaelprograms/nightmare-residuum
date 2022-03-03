@@ -55,7 +55,7 @@ void receive_message (string type, string message) {
         message = "%^GREEN%^BOLD%^" + message + "%^RESET%^";
         receive(wrap(message));
     } else if (type == "room_living_contents") {
-        message = "%^RED%^BOLD%^" + message + "%^RESET%^";
+        message = "%^RED%^" + replace_string(message, "%^DEFAULT%^", "%^RED%^") + "%^RESET%^";
         receive(wrap(message));
     } else if (type == "room_item_contents") {
         message = "%^MAGENTA%^" + replace_string(message, "%^DEFAULT%^", "%^MAGENTA%^") + "%^RESET%^";

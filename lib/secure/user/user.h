@@ -61,7 +61,6 @@ private void set_character_name (string name);
 private void set_character_species (string species);
 string query_character_species ();
 object query_character ();
-int query_immortal ();
 void set_immortal (int i);
 nomask private void character_enter (int newbie);
 nomask private void character_override ();

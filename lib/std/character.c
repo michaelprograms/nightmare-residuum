@@ -11,6 +11,7 @@ private int __ConnectionTime;
 nosave private object __User;
 
 void describe_environment ();
+int query_immortal ();
 
 int is_character () { return 1; }
 
@@ -28,9 +29,18 @@ void heart_beat () {
     __ConnectionTime ++; // 1 second heartbeat
 }
 
+string query_character_short () {
+    string short = query_name();
+
+    if (query_immortal()) short += " the immortal";
+    else short += " the character";
+
+    return short;
+}
+
 void set_name (string name) {
     living::set_name(name);
-    set_short(name);
+    set_short((: query_character_short :));
     set_save_path(D_CHARACTER->query_save_path(query_key_name()));
 }
 
@@ -122,18 +132,30 @@ void exit_freezer () {
 // -----------------------------------------------------------------------------
 
 private void describe_environment_living_contents () {
-    object env = environment();
+    object env = environment(), *characters;
     mixed *list;
-    string *shorts;
+    string *shorts, conjunctions;
 
     if (!env || !env->is_room()) return;
 
     list = filter_array(env->query_living_contents(), (: $1 != this_object() :));
+    list = sort_array(list, function (object a, object b) {
+        if (a->is_character()) {
+            if (b->is_character()) return strcmp(a->query_name(), b->query_name());
+            else return -1;
+        } else if (b->is_character()) {
+            if (a->is_character()) return strcmp(a->query_name(), b->query_name());
+            else return 1;
+        } else return strcmp(a->query_name(), b->query_name());
+    });
     list = unique_array(list, (: $1->query_short() :));
     if (sizeof(list)) {
-        shorts = sort_array(map_array(list, (: capitalize(consolidate(sizeof($1), $1[0]->query_short())) :)), 1);
+        shorts = map_array(list, (: capitalize(consolidate(sizeof($1), $1[0]->query_short())) :));
         shorts = map_array(shorts, (: $1 :));
-        message("room_living_contents", implode(shorts, "\n") + "\n\n", this_object());
+        // message("room_living_contents", implode(shorts, "\n") + "\n\n", this_object());
+        shorts = map_array(shorts, (: "%^BOLD%^" + $1 + "%^BOLD_OFF%^DEFAULT%^" :));
+        conjunctions = conjunction(shorts);
+        message("room_living_contents", conjunctions + " " + (regexp(conjunctions, " and ") ? "are" : "is") + " here.\n\n", this_object());
     }
 }
 
