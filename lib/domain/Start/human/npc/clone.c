@@ -14,4 +14,5 @@ void create () {
     set_short(capName + " the clone");
     set_long("A cloned human by the name of " + capName + ".");
     set_level(1);
+    set_species("human");
 }
