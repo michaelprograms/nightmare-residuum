@@ -60,6 +60,7 @@ mixed can_look_liv (string str, string verb) {
 }
 varargs mixed do_look_at_liv (object ob, mixed arg) {
     string str = ob->query_long();
+    object *wielded;
 
     if (sizeof(str) && str[<1] != '\n') str += "\n";
     write("You look over " + ob->query_name() + " the " + ob->query_species() + "...\n");
@@ -68,6 +69,10 @@ varargs mixed do_look_at_liv (object ob, mixed arg) {
         write("Level: "+ob->query_level()+"\n");
         write("Stats: "+ob->query_stat("strength")+" str, "+ob->query_stat("perception")+" per, "+ob->query_stat("endurance")+" end, "+ob->query_stat("charisma")+" cha, "+ob->query_stat("intelligence")+" int, "+ob->query_stat("agility")+" agi, "+ob->query_stat("luck")+" luck\n");
         write("Vitals: "+ob->query_hp()+"/"+ob->query_max_hp()+" "+ob->query_sp()+"/"+ob->query_max_sp()+" "+ob->query_mp()+"/"+ob->query_max_mp()+"\n");
+    }
+
+    foreach (string weapon in ob->query_wielded_weapons()) {
+        write("  " + weapon->query_short() + "\n");
     }
     return 1;
 }

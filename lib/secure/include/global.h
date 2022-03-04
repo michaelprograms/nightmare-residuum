@@ -13,6 +13,7 @@
 #define STD_OBJECT      "/std/object.c"
 #define STD_ROOM        "/std/room.c"
 #define STD_VERB        "/std/verb.c"
+#define STD_WEAPON      "/std/weapon.c"
 
 // std modules
 #define M_CLEAN         "/std/module/clean.c"

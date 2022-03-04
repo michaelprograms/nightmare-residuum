@@ -37,10 +37,19 @@ string query_character_short () {
 
     return short;
 }
+string query_character_long () {
+    string long = query_name();
+
+    if (query_immortal()) long += " the immortal.";
+    else long += " the character.";
+
+    return long;
+}
 
 void set_name (string name) {
     living::set_name(name);
     set_short((: query_character_short :));
+    set_long((: query_character_long :));
     set_save_path(D_CHARACTER->query_save_path(query_key_name()));
 }
 
@@ -93,6 +102,7 @@ void setup_character () {
         restore_data();
         update_vitals(0);
     }
+    this_object()->update_limbs(); // @TODO is this the right spot for this?
 }
 
 varargs void enter_world (int override) {
@@ -107,10 +117,16 @@ varargs void enter_world (int override) {
 }
 
 void exit_world () {
-    save_data();
     message("connection", query_name()+" exits "+mud_name()+".\n", environment(this_object()), this_object());
     D_CHANNEL->send_system("connection", query_name() + " exits.");
     call_out((: master()->handle_parse_refresh() :), 0);
+
+    // remove equipment
+    foreach (object weapon in this_object()->query_wielded_weapons()) {
+        this_object()->handle_unwield(weapon);
+    }
+
+    save_data();
     handle_remove();
 }
 

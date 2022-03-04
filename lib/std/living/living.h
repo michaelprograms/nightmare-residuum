@@ -27,6 +27,14 @@ void add_defeat ();
 int query_victory ();
 int query_defeat ();
 void handle_defeat ();
+private void update_limbs ();
+string *query_limbs ();
+mapping query_limb (string limb);
+string *query_wieldable_limbs ();
+object query_wielded (string limb);
+object *query_wielded_weapons ();
+varargs int handle_wield (object weapon, string limb);
+varargs int handle_unwield (object weapon, string limb);
 
 /* --- combat --- */
 protected void handle_combat ();
