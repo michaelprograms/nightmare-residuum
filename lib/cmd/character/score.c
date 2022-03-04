@@ -11,7 +11,7 @@ void command (string input) {
     list += ({ sprintf("  %-18s %s", "Name:", tc->query_name()) });
     list += ({ sprintf("  %-18s %s", "Account:", this_user()->query_account()->query_name()) });
 
-    list += ({ sprintf("  %-18s %s", "Species:", capitalize(tc->query_species())) });
+    list += ({ sprintf("  %-18s %s", "Species:", capitalize(tc->query_gender()) + " " + capitalize(tc->query_species())) });
     list += ({ sprintf("  %-18s %d", "Level:", tc->query_level()) });
 
     list += ({ sprintf("  %-18s %s", "Created:", strftime("%Y/%m/%u", tc->query_created())) });
