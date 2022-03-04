@@ -7,7 +7,6 @@ inherit "/std/living/skills.c";
 inherit "/std/living/stats.c";
 inherit "/std/living/vitals.c";
 
-private string __Species;
 private string __LastEnvironment;
 nosave private int __NextHeal;
 
@@ -38,13 +37,6 @@ private void handle_passive_heal () {
     }
 }
 
-string query_species () {
-    return stringp(__Species) ? __Species : "unknown";
-}
-void set_species (string species) {
-    // @TODO security
-    __Species = species;
-}
 string query_last_environment () {
     return __LastEnvironment;
 }

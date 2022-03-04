@@ -14,6 +14,8 @@ private void handle_passive_heal ();
 /* --- body --- */
 string query_gender ();
 void set_gender (string str);
+string query_species ();
+void set_species ();
 int query_level ();
 void set_level (int l);
 int query_experience ();

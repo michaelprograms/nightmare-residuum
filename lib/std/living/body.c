@@ -1,11 +1,10 @@
 #include "living.h"
 
 private string __Gender = "neither";
+private string __Species;
 private int __Level = 0;
-private int __Experience = 0;
-private int __TotalExperience = 0;
-private int __Victory = 0;
-private int __Defeat = 0;
+private int __Experience = 0, __TotalExperience = 0;
+private int __Victory = 0, __Defeat = 0;
 
 string query_gender () {
     return __Gender;
@@ -18,6 +17,14 @@ void set_gender (string str) {
     default:
         __Gender = "none";
     }
+}
+
+string query_species () {
+    return stringp(__Species) ? __Species : "unknown";
+}
+void set_species (string species) {
+    // @TODO security
+    __Species = species;
 }
 
 int query_level () {
