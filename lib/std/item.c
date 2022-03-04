@@ -4,7 +4,7 @@ inherit M_CLEAN;
 int is_item () { return 1; }
 
 mixed direct_look_at_obj () {
-    return environment() && environment() == environment(previous_object());
+    return environment() && (environment() == environment(previous_object()) || environment() == previous_object());
 }
 mixed direct_look_obj () {
     return direct_look_at_obj();
