@@ -65,6 +65,12 @@ void receive_message (string type, string message) {
     } else if (type == "room_exits") {
         message = "%^GREEN%^" + replace_string(replace_string(message, "%^DEFAULT%^", "%^GREEN%^"), ":", ":%^RESET%^") + "%^RESET%^";
         receive(wrap(message));
+    } else if (type == "channel") {
+        message = replace_string(message, "[[", "%^GREEN%^[%^BOLD%^");
+        message = replace_string(message, "]]", "%^BOLD_OFF%^GREEN%^]%^RESET%^");
+        message = replace_string(message, "((", "%^CYAN%^[%^BOLD%^");
+        message = replace_string(message, "))", "%^BOLD_OFF%^CYAN%^]%^RESET%^");
+        receive(wrap(message));
     } else if (type == "combat hit") {
         message = "%^RED%^" + message + "%^RESET%^";
         receive(wrap(message));

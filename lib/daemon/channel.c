@@ -9,7 +9,7 @@ string *query_system_channels () {
 }
 
 int query_valid_channel (string channel) {
-    return member_array(channel, __Channels) > -1 && member_array(channel, this_character()->query_channels()) > -1;
+    return member_array(channel, __Channels) > -1 || member_array(channel, __SystemChannels) > -1;
 }
 
 void create () {
@@ -21,18 +21,36 @@ void create () {
     }
 }
 
+private string format_channel_name (string channel) {
+    return (member_array(channel, query_channels()) > -1 ? "[[" : "((") + channel + (member_array(channel, query_channels()) > -1 ? "]]" : "))" );
+}
+
 private void handle_send (string name, string channel, string msg) {
-    string info = (name ? name + " [" : "(") + channel + (name ? name "]" : ")");
-    message("channel", info + " " + msg  + "\n", users());
+    string *listeners = filter_array(characters(), (: !$1->query_channel_blocked($(channel)) :));
+    message("channel", (name ? name + " " : "") + format_channel_name(channel) + " " + msg  + "\n", listeners);
 }
 
 void send (string channel, string msg) {
-    string name;
+    if (!channel || member_array(channel, __Channels + __SystemChannels) == -1) return;
 
-    if (!channel || member_array(channel, __Channels) == -1) return;
-
-    name = this_character()->query_name();
-    handle_send(name, channel, msg);
+    if (!msg) {
+        int status = 0;
+        this_character()->toggle_channel_blocked(channel);
+        if (this_character()->query_channel_blocked(channel)) {
+            message("channel",  "Channel " + format_channel_name(channel) + " is now blocked.\n", this_character());
+        } else {
+            message("channel",  "Channel " + format_channel_name(channel) + " is no longer blocked.\n", this_character());
+        }
+        return;
+    } else if (msg && member_array(channel, __SystemChannels) > -1) {
+        message("channel",  "Channel " + format_channel_name(channel) + " is read only.\n", this_character());
+        return;
+    }
+    if (this_character()->query_channel_blocked(channel)) {
+        this_character()->toggle_channel_blocked(channel);
+        message("channel",  "Channel " + format_channel_name(channel) + " is no longer blocked.\n", this_character());
+    }
+    handle_send(this_character()->query_name(), channel, msg);
 }
 
 void send_system (string channel, string msg) {
