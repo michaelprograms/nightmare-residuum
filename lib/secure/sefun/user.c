@@ -20,5 +20,5 @@ object find_character (string name) {
 }
 
 object *characters () {
-    return map_array(filter_array(users() || ({}), (: $1 && interactive($1) && $1->query_character() :)), (: $1->query_character() :));
+    return map_array(filter_array(users() || ({}), (: $1 && interactive($1) && $1->query_character() :)) || ({}), (: $1->query_character() :)) || ({});
 }
