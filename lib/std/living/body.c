@@ -120,6 +120,12 @@ mapping query_limb (string limb) {
     if (limb && __Limbs[limb]) return __Limbs[limb];
     return 0;
 }
+string query_random_limb () {
+    string *limbs = query_limbs();
+    if (sizeof(limbs)) {
+        return limbs[random(sizeof(limbs))];
+    } else return 0;
+}
 
 string *query_wieldable_limbs () {
     string *wieldable = ({ });

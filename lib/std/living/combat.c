@@ -29,7 +29,7 @@ protected void handle_combat () {
 
 private void handle_combat_hit (object target, mixed weapon) {
     int hit = 0;
-    string type, name, possessive;
+    string type, name, possessive, limb;
 
     if (objectp(weapon)) {
         type = weapon->query_type();
@@ -49,10 +49,11 @@ private void handle_combat_hit (object target, mixed weapon) {
 
     hit -= target->query_stat("agility") * 75 / 100;
     hit -= secure_random(target->query_stat("agility") * 25 / 100 + 1);
-    hit -= secure_random(target->query_stat("luck") * 10 / 100 + 1);
+    hit -= secure_random(target->query_stat("luck") * 5 / 100 + 1);
     hit -= secure_random(target->query_skill(type + " defense") * 20 / 100 + 1);
 
     possessive = possessive(this_object());
+    limb = target->query_random_limb();
 
     if (hit < 1 || query_sp() < 1) {
         message("combat miss", "You miss " + target->query_name() + " with your " + name + ".\n", this_object());
@@ -76,8 +77,9 @@ private void handle_combat_hit (object target, mixed weapon) {
         damage -= secure_random(query_hp() * 10 / 100 + 1);
         damage -= secure_random(query_stat("luck") * 10 / 100 + 1);
         damage -= secure_random(query_skill(type + " defense") * 20 / 100 + 1);
+        // @TODO damage -= target->query_protected(limb);
 
-        display_combat_message(this_object(), target, weapon, type, damage);
+        display_combat_message(this_object(), target, limb, weapon, type, damage);
         if (damage > 0) target->handle_damage(damage, this_object());
 
         train_skill(type + " attack");
