@@ -1,7 +1,7 @@
 void command (string input) {
     mapping actions = ([]);
 
-    write(format_header_bar("ACTIONS") + "\n");
+    write(format_header_bar("COMMANDS") + "\n");
 
     if (input == "rescan") {
         D_COMMAND->scan_all();
