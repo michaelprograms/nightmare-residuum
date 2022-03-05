@@ -26,7 +26,7 @@ void add_victory ();
 void add_defeat ();
 int query_victory ();
 int query_defeat ();
-void handle_defeat ();
+void handle_defeat (int keep);
 private void update_limbs ();
 string *query_limbs ();
 mapping query_limb (string limb);
