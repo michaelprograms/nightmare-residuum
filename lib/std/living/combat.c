@@ -8,6 +8,7 @@ void create () {
 
 protected void handle_combat () {
     object *targets, target;
+    mixed *weapons;
     int min, max, hits;
 
     if (time() % 2) return;
@@ -16,56 +17,80 @@ protected void handle_combat () {
     target = targets[0];
     if (!target->query_hostile(this_object())) target->add_hostile(this_object());
 
-    min = 1 + query_stat("agility") / 100;
+    weapons = query_wielded_weapons() + query_wieldable_limbs();
+    min = sizeof(weapons) + query_stat("agility") / 100;
     max = 1 + query_stat("agility") / 50;
     hits = min + secure_random(max - min + 1);
 
     for (int h = 0; h < hits; h ++) {
-        handle_combat_hit(target);
+        handle_combat_hit(target, weapons[random(sizeof(weapons))]);
     }
+    add_sp(-(secure_random(hits) + 1));
     target->check_lifesigns(this_object());
 }
 
-private void handle_combat_hit (object target) {
-    int hit = 0, damage = 0;
-    string type;
+private void handle_combat_hit (object target, mixed weapon) {
+    int hit = 0;
+    string type, name, possessive;
 
-    // Miss chance
-    hit -= target->query_stat("agility") * 3 / 4 + secure_random(target->query_stat("luck") / 10 + 1);
-    hit += query_stat("agility") / 2 - secure_random(query_stat("agility") / 2) + secure_random(target->query_stat("luck") / 20 + 1);
-    if (hit < 1) {
-        message("combat miss", "You miss " + target->query_name() + ".\n", this_object());
-        message("combat miss", this_object()->query_name() + " misses you.\n", target);
-        message("combat miss", this_object()->query_name() + " misses " + target->query_name() + ".\n", environment(this_object()), ({ this_object(), target }));
-        return;
+    if (objectp(weapon)) {
+        type = weapon->query_type();
+        name = weapon->query_name();
+    } else if (stringp(weapon)) {
+        type = "melee";
+        name = weapon;
+    } else {
+        return; // invalid weapon
     }
 
-    // @TODO determine type
-    type = "melee";
+    // Miss chance
+    hit = query_stat("agility") * 25 / 100;
+    hit += secure_random(query_stat("agility") * 75 / 100 + 1);
+    hit += secure_random(target->query_stat("luck") * 5 / 100 + 1);
+    hit += secure_random(query_skill(type + " attack") * 20 / 100 + 1);
 
-    // Base Damage
-    damage += query_stat("strength") / 10;
-    damage += secure_random(query_stat("strength") / 10 + 1);
-    damage += secure_random(query_sp() / 50 + 1);
-    damage += secure_random(query_stat("luck") / 20 + 1);
-    damage += secure_random(query_skill(type + " attack") / 5 + 1);
+    hit -= target->query_stat("agility") * 75 / 100;
+    hit -= secure_random(target->query_stat("agility") * 25 / 100 + 1);
+    hit -= secure_random(target->query_stat("luck") * 10 / 100 + 1);
+    hit -= secure_random(target->query_skill(type + " defense") * 20 / 100 + 1);
 
-    // apply target mitigations
-    damage -= secure_random(query_skill(type + " defense") / 5 + 1);
-    damage -= secure_random(query_stat("endurance") / 10 + 1);
+    possessive = possessive(this_object());
 
-    if (damage < 1) {
-        message("combat hit", "You hit " + target->query_name() + " ineffectively!\n", this_object());
-        message("combat hit", this_object()->query_name() + " hits you ineffectively!\n", target);
-        message("combat hit", this_object()->query_name() + " hits " + target->query_name() + " ineffectively!\n", environment(this_object()), ({ this_object(), target }));
+    if (hit < 1 || query_sp() < 1) {
+        message("combat miss", "You miss " + target->query_name() + " with your " + name + ".\n", this_object());
+        message("combat miss", this_object()->query_name() + " misses you with " + possessive + " " + name + ".\n", target);
+        message("combat miss", this_object()->query_name() + " misses " + target->query_name() + " with " + possessive + " " + name + ".\n", environment(this_object()), ({ this_object(), target }));
+        train_skill(type + " attack", 0.5);
+        target->train_skill(type + " defense", 0.5);
     } else {
-        // @TODO messages based upon type
-        message("combat hit", "You hit " + target->query_name() + ".\n", this_object());
-        message("combat hit", this_object()->query_name() + " hits you.\n", target);
-        message("combat hit", this_object()->query_name() + " hits " + target->query_name() + ".\n", environment(this_object()), ({ this_object(), target }));
+        int damage = 0;
 
+        // Base Damage
+        damage = query_stat("strength") * 10 / 100;
+        damage += secure_random(query_stat("strength") * 10 / 100 + 1);
+        damage += secure_random(query_sp() * 10 / 100 + 1);
+        damage += secure_random(query_stat("luck") * 5 / 100 + 1);
+        damage += secure_random(query_skill(type + " attack") * 20 / 100 + 1);
+
+        // apply target mitigations
+        damage -= query_stat("endurance") * 10 / 100;
+        damage -= secure_random(query_stat("endurance") * 10 / 100 + 1);
+        damage -= secure_random(query_hp() * 10 / 100 + 1);
+        damage -= secure_random(query_stat("luck") * 10 / 100 + 1);
+        damage -= secure_random(query_skill(type + " defense") * 20 / 100 + 1);
+
+        if (damage < 1) {
+            message("combat hit", "You hit " + target->query_name() + " ineffectively with your " + name + "\n", this_object());
+            message("combat hit", this_object()->query_name() + " hits you ineffectively with " + possessive + " " + name + ".\n", target);
+            message("combat hit", this_object()->query_name() + " hits " + target->query_name() + " ineffectively with " + possessive + " " + name + ".\n", environment(this_object()), ({ this_object(), target }));
+        } else {
+            // @TODO messages based upon type
+            message("combat hit", "You hit " + target->query_name() + " with your " + name + ".\n", this_object());
+            message("combat hit", this_object()->query_name() + " hits you with " + possessive + " " +name + ".\n", target);
+            message("combat hit", this_object()->query_name() + " hits " + target->query_name() + " with " + possessive + " " + name +".\n", environment(this_object()), ({ this_object(), target }));
+            target->handle_damage(damage, this_object());
+        }
         train_skill(type + " attack");
-        target->handle_damage(damage, this_object());
         target->train_skill(type + " defense");
     }
 }

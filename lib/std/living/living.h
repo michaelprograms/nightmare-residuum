@@ -38,7 +38,7 @@ varargs int handle_unwield (object weapon, string limb);
 
 /* --- combat --- */
 protected void handle_combat ();
-private void handle_combat_hit (object target);
+private void handle_combat_hit (object target, mixed weapon);
 varargs void check_lifesigns (object source);
 int handle_damage (int damage);
 int add_hostile (object ob);
