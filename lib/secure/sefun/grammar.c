@@ -113,8 +113,8 @@ string objective (mixed value) {
 string possessive (mixed value) {
     switch (objectp(value) ? value->query_gender() : value) {
     case "male": return "his";
-    case "female": return "hers";
-    case "neither": return "theirs";
+    case "female": return "her";
+    case "neither": return "their";
     default: return "its";
     }
 }

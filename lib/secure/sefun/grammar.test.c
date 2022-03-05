@@ -293,9 +293,9 @@ void test_possessive () {
     values += ({ testOb->possessive("male") });
     results += ({ "his" });
     values += ({ testOb->possessive("female") });
-    results += ({ "hers" });
+    results += ({ "her" });
     values += ({ testOb->possessive("neither") });
-    results += ({ "theirs" });
+    results += ({ "their" });
     values += ({ testOb->possessive("nonexistant") });
     results += ({ "its" });
     expect_arrays_equal(values, results, "possessive handled names");
@@ -311,10 +311,10 @@ void test_possessive () {
     results += ({ "his" });
     ob->set_gender("female");
     values += ({ testOb->possessive(ob) });
-    results += ({ "hers" });
+    results += ({ "her" });
     ob->set_gender("neither");
     values += ({ testOb->possessive(ob) });
-    results += ({ "theirs" });
+    results += ({ "their" });
     ob->set_gender("nonexistant");
     values += ({ testOb->possessive(ob) });
     results += ({ "its" });
