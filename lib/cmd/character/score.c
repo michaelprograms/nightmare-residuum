@@ -27,20 +27,9 @@ void command (string input) {
     list += ({ sprintf("  %-18s %d", "Experience:", tc->query_experience()) });
     list += ({ sprintf("  %-18s %d", "Total Experience:", tc->query_total_experience()) });
 
-    // write("  Name: " + tc->query_name() + "\n");
-    // write("  Account: " +  + "\n");
-    // write("  Species: " + tc->query_species() + "\n");
-    // write("Level: " + tc->query_level() + "\n");
-    // write("Created: " +  + "\n");
-    // write("Last Action: " +  + "\n");
-
-    // write("\nVictories: " + tc->query_victory() + "\n");
-    // write("Defeats: " + tc->query_defeat() + "\n");
-
-    // write("Experience: " + tc->query_experience() + "\n");
-    // write("Total Experience: " + tc->query_total_experience() + "\n");
-
     write(format_page(list, columns));
+
+    write("\n" + sprintf("  %-18s %s", "Connection time:", time_from_seconds(tc->query_connection_time())) + "\n");
 
     write("\n" + format_footer_bar() + "\n");
 }
