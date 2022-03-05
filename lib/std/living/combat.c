@@ -7,15 +7,11 @@ void create () {
 }
 
 protected void handle_combat () {
-    object *targets, target;
+    object target;
     mixed *weapons;
     int min, max, hits;
 
-    if (time() % 2) return;
-    if (!sizeof(targets = query_present_hostiles())) return;
-
-    target = targets[0];
-    if (!target->query_hostile(this_object())) target->add_hostile(this_object());
+    if (time() % 2 || !(target = query_target_hostile())) return;
 
     weapons = query_wielded_weapons() + query_wieldable_limbs();
     min = sizeof(weapons) + query_stat("agility") / 100;
@@ -26,6 +22,8 @@ protected void handle_combat () {
         handle_combat_hit(target, weapons[random(sizeof(weapons))]);
     }
     add_sp(-(secure_random(hits) + 1));
+
+    if (!target->query_hostile(this_object())) target->add_hostile(this_object());
     target->check_lifesigns(this_object());
 }
 
@@ -79,17 +77,9 @@ private void handle_combat_hit (object target, mixed weapon) {
         damage -= secure_random(query_stat("luck") * 10 / 100 + 1);
         damage -= secure_random(query_skill(type + " defense") * 20 / 100 + 1);
 
-        if (damage < 1) {
-            message("combat hit", "You hit " + target->query_name() + " ineffectively with your " + name + "\n", this_object());
-            message("combat hit", this_object()->query_name() + " hits you ineffectively with " + possessive + " " + name + ".\n", target);
-            message("combat hit", this_object()->query_name() + " hits " + target->query_name() + " ineffectively with " + possessive + " " + name + ".\n", environment(this_object()), ({ this_object(), target }));
-        } else {
-            // @TODO messages based upon type
-            message("combat hit", "You hit " + target->query_name() + " with your " + name + ".\n", this_object());
-            message("combat hit", this_object()->query_name() + " hits you with " + possessive + " " +name + ".\n", target);
-            message("combat hit", this_object()->query_name() + " hits " + target->query_name() + " with " + possessive + " " + name +".\n", environment(this_object()), ({ this_object(), target }));
-            target->handle_damage(damage, this_object());
-        }
+        display_combat_message(this_object(), target, weapon, type, damage);
+        if (damage > 0) target->handle_damage(damage, this_object());
+
         train_skill(type + " attack");
         target->train_skill(type + " defense");
     }
@@ -138,6 +128,10 @@ object *query_hostiles () {
 }
 object *query_present_hostiles () {
     return filter_array(query_hostiles(), (: environment($1) == environment(this_object()) :));
+}
+object query_target_hostile () {
+    object *hostiles = query_present_hostiles();
+    return sizeof(hostiles) ? hostiles[0] : 0;
 }
 
 /* ----- parser applies ----- */

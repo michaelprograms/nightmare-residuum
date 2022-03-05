@@ -46,6 +46,7 @@ int remove_hostile (object ob);
 int query_hostile (object ob);
 object *query_hostiles ();
 object *query_present_hostiles ();
+object query_target_hostile ();
 
 /* --- skills --- */
 private mapping query_default_skills ();

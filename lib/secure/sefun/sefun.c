@@ -3,6 +3,7 @@
 inherit "/secure/sefun/access.c";
 inherit "/secure/sefun/array.c";
 inherit "/secure/sefun/color.c";
+inherit "/secure/sefun/combat.c";
 inherit "/secure/sefun/format.c";
 inherit "/secure/sefun/grammar.c";
 inherit "/secure/sefun/override.c";

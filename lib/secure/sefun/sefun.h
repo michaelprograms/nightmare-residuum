@@ -16,6 +16,9 @@ mixed *distinct_array (mixed *arr);
 /* --- color --- */
 int hex_to_int (string base16);
 
+/* --- combat --- */
+void display_combat_message (object source, object target, mixed weapon, string type, int damage);
+
 /* --- format --- */
 varargs string format_header_bar (string title, string optional);
 string format_divider_bar ();
