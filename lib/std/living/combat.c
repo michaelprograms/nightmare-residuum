@@ -15,7 +15,7 @@ protected void handle_combat () {
 
     weapons = query_wielded_weapons() + query_wieldable_limbs();
     min = sizeof(weapons) + query_stat("agility") / 100;
-    max = 1 + query_stat("agility") / 50;
+    max = sizeof(weapons) + query_stat("agility") / 50;
     hits = min + secure_random(max - min + 1);
 
     for (int h = 0; h < hits; h ++) {
