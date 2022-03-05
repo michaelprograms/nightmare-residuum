@@ -2,7 +2,7 @@
 int log_unique (string filename, string entry) {
     string *lines;
 
-    if (!filename || filename == "") {
+    if (!filename || filename == "" || !entry || entry == "") {
         return 0;
     }
 
@@ -17,9 +17,9 @@ int log_unique (string filename, string entry) {
         return 0; // dummy extension for assure_dir
     }
 
-    lines = explode(read_file(filename), "\n");
+    lines = explode(read_file(filename) || "", "\n");
     if (member_array(entry, lines) == -1) {
-        return write_file(filename, entry);
+        return write_file(filename, entry + "\n");
     }
     return 0;
 }
