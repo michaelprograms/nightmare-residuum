@@ -9,7 +9,7 @@ inherit "/secure/user/shell.c";
 
 nosave private int calloutBanner, calloutTimeout;
 nosave private string __TerminalType;
-nosave private string __TerminalColor = "rgb";
+nosave private string __TerminalColor = "256";
 nosave private string __IPAddr;
 
 /* --- interactive apply --- */
@@ -82,11 +82,17 @@ void receive_message (string type, string message) {
 }
 
 void terminal_type (string term) {
-    __TerminalType = term;
-    // @TODO LOG_D->log_unique(term);
+    D_LOG->log_unique("term", term);
 
+    __TerminalType = term;
     term = lower_case(explode(term, " ")[0]);
-    if (term == "mudslinger") {
+
+    if (member_array(term, ({ "cmud", })) > -1) {
+        set_encoding("ascii");
+    } else if (member_array(term, ({ "zmud", })) > -1) {
+        set_encoding("ascii");
+        __TerminalColor = "16";
+    } else if (member_array(term, ({ "mudslinger", "xterm-256color", })) > -1) {
         __TerminalColor = "16";
     }
 
@@ -110,10 +116,10 @@ void receive_environ (string var, string value) {
 
 /* --- interactive non-apply */
 
-string query_terminal_type() {
+string query_terminal_type () {
     return __TerminalType;
 }
-string query_terminal_color() {
+string query_terminal_color () {
     return __TerminalColor;
 }
 
