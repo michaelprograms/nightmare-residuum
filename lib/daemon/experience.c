@@ -1,6 +1,6 @@
 int query_stat_cost (string stat, int level) {
-
-    return 0;
+    float adj = 0 + 0; // @TODO class + species modifiers
+    return 1000 + to_int(1.0 * pow(level, 3.0) + 1.25 * pow(level, 3.25));
 }
 
 int query_level_cost (int level) {
@@ -10,7 +10,7 @@ int query_level_cost (int level) {
 
 int query_skill_cost (int level) {
     // @TODO skill tiers
-    return 100 + to_int(0.25 * pow(level, 3.0)) + (0.25 * pow(level, 3.25));
+    return 100 + to_int(0.25 * pow(level, 3.0) + 0.25 * pow(level, 3.25));
 }
 
 // -----------------------------------------------------------------------------
