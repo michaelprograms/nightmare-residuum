@@ -18,7 +18,7 @@ int handle_move (mixed dest) {
     }
     if (stringp(dest)) {
         if (!(destOb = find_object(dest))) {
-            if (catch(call_other(dest, "???")) ) {
+            if (catch(load_object(dest)) ) {
                 return 0;
             }
             destOb = find_object(dest);

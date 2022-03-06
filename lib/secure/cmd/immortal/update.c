@@ -61,7 +61,7 @@ void command (string input) {
         destruct(ob);
     }
 
-    tmp = catch (call_other(input, "???"));
+    tmp = catch (load_object(input));
     if (!tmp) {
         string test = input[0..<2] + "test.c";
         message("system", input + ": Ok\n", this_user());

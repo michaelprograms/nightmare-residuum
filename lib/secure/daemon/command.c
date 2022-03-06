@@ -48,32 +48,13 @@ varargs string *query_verbs (string str) {
     return tmp;
 }
 
-// string query_action (string str) {
-//     if (__Verbs[str] && __Verbs[str][0]) {
-//         // verbs have to be loaded for parsing rules to apply
-//         if (!catch (call_other(__Verbs[str][0]+"/"+str+".c", "???"))) {
-//             write(__Verbs[str][0]+"/"+str+".c: Ok\n");
-//         } else write(__Verbs[str][0]+"/"+str+".c: not loaded?\n");
-//         return 1;
-//     } else if (__Commands[str]) {
-//         return 1;
-//     } else return 0;
-// }
-// varargs string *query_actions (string str) {
-//     string *actions, *tmp;
-//     int i;
-
-//     if (!str) return keys(__Commands) + keys(__Actions);
-
-// }
-
 string query_command (string command) {
     return __Commands[command] ? __Commands[command][0] : 0;
 }
 string query_verb (string verb) {
     if (__Verbs[verb] && __Verbs[verb][0]) {
         // verbs have to be loaded for parsing rules to apply
-        call_other(__Verbs[verb][0]+"/"+verb+".c", "???");
+        load_object(__Verbs[verb][0] + "/" + verb + ".c");
     }
     return __Verbs[verb] ? __Verbs[verb][0] : 0;
 }
@@ -91,7 +72,7 @@ void scan (string *paths, string type) {
             } else if (type == "verb") {
                 if (!arrayp(__Verbs[cmd])) __Verbs[cmd] = ({ });
                 __Verbs[cmd] += ({ path });
-                call_other(path + "/" + file, "???");
+                load_object(path + "/" + file);
             }
         }
         __Paths = distinct_array(__Paths + ({ path }));

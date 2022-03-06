@@ -179,13 +179,13 @@ void test_identify () {
         testOb->identify(function() {}),
         testOb->identify((: uptime :)),
         testOb->identify((: $1 + $2 :)),
-        testOb->identify((: call_other, this_object(), "???" :)),
+        testOb->identify((: call_other, this_object(), "query_name" :)),
         testOb->identify(tFn),
     }), ({
         "(: <code>() :)",
         "(: uptime :)",
         "(: <code>($1, $2) :)",
-        "(: call_other, "+file_name(this_object())+", \"???\" :)",
+        "(: call_other, "+file_name(this_object())+", \"query_name\" :)",
         "(: <code>($1, $2) :)",
     }), "identify handled function");
 
