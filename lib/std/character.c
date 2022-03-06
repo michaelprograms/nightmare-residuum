@@ -3,12 +3,13 @@
 inherit STD_LIVING;
 inherit M_PARENT;
 inherit M_SAVE;
+inherit "/std/character/channel.c";
 
 private int __LastAction;
 private int __Created = time();
 private int __Immortal;
 private int __ConnectionTime = 0;
-private string *__ChannelsBlocked = ({ });
+
 nosave private object __User;
 
 void describe_environment ();
@@ -235,30 +236,4 @@ void describe_environment () {
     describe_environment_exits();
     describe_environment_living_contents();
     describe_environment_item_contents();
-}
-
-/* ----- channels ----- */
-
-string *query_channels_available () {
-    if (!arrayp(__ChannelsBlocked)) __ChannelsBlocked = ({ });
-    return D_CHANNEL->query_channels() - __ChannelsBlocked;
-}
-string *query_channels_blocked () {
-    if (!arrayp(__ChannelsBlocked)) __ChannelsBlocked = ({ });
-    return __ChannelsBlocked;
-}
-int query_channel_blocked (string channel) {
-    if (!arrayp(__ChannelsBlocked)) __ChannelsBlocked = ({ });
-    return member_array(channel, __ChannelsBlocked) > -1;
-}
-int toggle_channel_blocked (string channel) {
-    if (member_array(channel, D_CHANNEL->query_channels() + D_CHANNEL->query_system_channels()) == -1) return 0;
-
-    if (member_array(channel, __ChannelsBlocked) > -1) {
-        __ChannelsBlocked -= ({ channel });
-        return 0;
-    } else {
-        __ChannelsBlocked += ({ channel });
-        return 1;
-    }
 }
