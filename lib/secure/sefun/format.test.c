@@ -101,3 +101,47 @@ void test_format_exit_verbose () {
         (: testOb->format_exit_verbose((: 1 :)) :),
     }), "*Bad argument 1 to format->format_exit_verbose\n", "format_exit_verbose handled invalid argument 1");
 }
+
+void test_format_integer () {
+    string *values = ({}), *results = ({});
+
+    expect_function("format_integer", testOb);
+
+    // positives
+    values += ({ testOb->format_integer(0) });
+    results += ({ "0" });
+    values += ({ testOb->format_integer(1) });
+    results += ({ "1" });
+    values += ({ testOb->format_integer(123) });
+    results += ({ "123" });
+    values += ({ testOb->format_integer(1234) });
+    results += ({ "1,234" });
+    values += ({ testOb->format_integer(123456) });
+    results += ({ "123,456" });
+    values += ({ testOb->format_integer(1234567) });
+    results += ({ "1,234,567" });
+    values += ({ testOb->format_integer(1234567890) });
+    results += ({ "1,234,567,890" });
+
+    // negatives
+    values += ({ testOb->format_integer(-0) });
+    results += ({ "0" });
+    values += ({ testOb->format_integer(-1) });
+    results += ({ "-1" });
+    values += ({ testOb->format_integer(-1234) });
+    results += ({ "-1,234" });
+    values += ({ testOb->format_integer(-123456789) });
+    results += ({ "-123,456,789" });
+    values += ({ testOb->format_integer(-1234567890) });
+    results += ({ "-1,234,567,890" });
+
+    expect_arrays_equal(values, results, "format_integer handled integers");
+
+    expect_catches (({
+        (: testOb->format_integer("") :),
+        (: testOb->format_integer(0.0) :),
+        (: testOb->format_integer(({})) :),
+        (: testOb->format_integer(([])) :),
+        (: testOb->format_integer((: 1 :)) :),
+    }), "*Bad argument 1 to format->format_integer\n", "format_integer handled invalid argument 1");
+}

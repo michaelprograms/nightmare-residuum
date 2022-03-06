@@ -88,6 +88,24 @@ string format_exit_verbose (string dir) {
     return implode(result, " ");
 }
 
+string format_integer (int num) {
+    string *digits, result = "";
+    int neg, s;
+
+    if (!intp(num)) error("Bad argument 1 to format->format_integer");
+
+    neg = (num < 0);
+    num = abs(num);
+    digits = explode(""+to_int(num), "");
+    s = sizeof(digits) - 1;
+
+    for(int i = s; i >= 0; i --) {
+        result = digits[i] + (i != s && (s-i)%3 == 0 ? "," : "") + result;
+    }
+
+    return (neg ? "-" : "") + result;
+}
+
 varargs string format_page (string *items, int columns, int pad) {
     int width, i, j, n = sizeof(items);
     string result = "";
