@@ -88,6 +88,35 @@ string format_exit_verbose (string dir) {
     return implode(result, " ");
 }
 
+string format_stat_brief (string stat) {
+    string result = "";
+    if (!stringp(stat)) error("Bad argument 1 to format->format_stat_brief");
+    switch (stat) {
+        case "strength": result = "str"; break;
+        case "perception": result = "per"; break;
+        case "endurance": result = "end"; break;
+        case "charisma": result = "cha"; break;
+        case "intelligence": result = "int"; break;
+        case "agility": result = "agi"; break;
+        case "luck": result = "lck"; break;
+    }
+    return result;
+}
+string format_stat_verbose (string stat) {
+    string result = "";
+    if (!stringp(stat)) error("Bad argument 1 to format->format_stat_verbose");
+    switch (stat) {
+        case "str": result = "strength"; break;
+        case "per": result = "perception"; break;
+        case "end": result = "endurance"; break;
+        case "cha": result = "charisma"; break;
+        case "int": result = "intelligence"; break;
+        case "agi": result = "agility"; break;
+        case "lck": result = "luck"; break;
+    }
+    return result;
+}
+
 string format_integer (int num) {
     string *digits, result = "";
     int neg, s;

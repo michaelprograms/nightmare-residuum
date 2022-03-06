@@ -54,7 +54,6 @@ void test_format_exit_brief () {
         (: testOb->format_exit_brief((: 1 :)) :),
     }), "*Bad argument 1 to format->format_exit_brief\n", "format_exit_brief handled invalid argument 1");
 }
-
 void test_format_exit_verbose () {
     string *values = ({}), *results = ({});
 
@@ -100,6 +99,71 @@ void test_format_exit_verbose () {
         (: testOb->format_exit_verbose(([])) :),
         (: testOb->format_exit_verbose((: 1 :)) :),
     }), "*Bad argument 1 to format->format_exit_verbose\n", "format_exit_verbose handled invalid argument 1");
+}
+
+void test_format_stat_brief () {
+    string *values = ({}), *results = ({});
+
+    expect_function("format_stat_brief", testOb);
+
+    values += ({ testOb->format_stat_brief("strength") });
+    results += ({ "str" });
+    values += ({ testOb->format_stat_brief("perception") });
+    results += ({ "per" });
+    values += ({ testOb->format_stat_brief("endurance") });
+    results += ({ "end" });
+    values += ({ testOb->format_stat_brief("charisma") });
+    results += ({ "cha" });
+    values += ({ testOb->format_stat_brief("intelligence") });
+    results += ({ "int" });
+    values += ({ testOb->format_stat_brief("agility") });
+    results += ({ "agi" });
+    values += ({ testOb->format_stat_brief("luck") });
+    results += ({ "lck" });
+    values += ({ testOb->format_stat_brief("unknown") });
+    results += ({ "" });
+
+    expect_arrays_equal(values, results, "format_stat_brief handled exits");
+
+    expect_catches (({
+        (: testOb->format_stat_brief(0) :),
+        (: testOb->format_stat_brief(0.0) :),
+        (: testOb->format_stat_brief(({})) :),
+        (: testOb->format_stat_brief(([])) :),
+        (: testOb->format_stat_brief((: 1 :)) :),
+    }), "*Bad argument 1 to format->format_stat_brief\n", "format_stat_brief handled invalid argument 1");
+}
+void test_format_stat_verbose () {
+    string *values = ({}), *results = ({});
+
+    expect_function("format_stat_verbose", testOb);
+
+    values += ({ testOb->format_stat_verbose("str") });
+    results += ({ "strength" });
+    values += ({ testOb->format_stat_verbose("per") });
+    results += ({ "perception" });
+    values += ({ testOb->format_stat_verbose("end") });
+    results += ({ "endurance" });
+    values += ({ testOb->format_stat_verbose("cha") });
+    results += ({ "charisma" });
+    values += ({ testOb->format_stat_verbose("int") });
+    results += ({ "intelligence" });
+    values += ({ testOb->format_stat_verbose("agi") });
+    results += ({ "agility" });
+    values += ({ testOb->format_stat_verbose("lck") });
+    results += ({ "luck" });
+    values += ({ testOb->format_stat_verbose("unknown") });
+    results += ({ "" });
+
+    expect_arrays_equal(values, results, "format_stat_verbose handled exits");
+
+    expect_catches (({
+        (: testOb->format_stat_verbose(0) :),
+        (: testOb->format_stat_verbose(0.0) :),
+        (: testOb->format_stat_verbose(({})) :),
+        (: testOb->format_stat_verbose(([])) :),
+        (: testOb->format_stat_verbose((: 1 :)) :),
+    }), "*Bad argument 1 to format->format_stat_verbose\n", "format_stat_verbose handled invalid argument 1");
 }
 
 void test_format_integer () {
