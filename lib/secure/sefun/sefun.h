@@ -27,6 +27,7 @@ string format_exit_brief (string dir);
 string format_exit_verbose (string dir);
 string format_stat_brief (string stat);
 string format_stat_verbose (string stat);
+string format_exit_reverse (string dir);
 string format_integer (int num);
 varargs string format_page (string *items, int columns, int pad);
 

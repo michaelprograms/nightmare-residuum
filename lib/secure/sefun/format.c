@@ -87,6 +87,28 @@ string format_exit_verbose (string dir) {
     }
     return implode(result, " ");
 }
+string format_exit_reverse (string dir) {
+    string *result = ({});
+    if (!stringp(dir)) error("Bad argument 1 to format->format_exit_reverse");
+    foreach (string part in explode(dir, " ")) {
+        switch (part) {
+            case "north": result += ({ "south" }); break;
+            case "northeast": result += ({ "southwest" }); break;
+            case "east": result += ({ "west" }); break;
+            case "southeast": result += ({ "northwest" }); break;
+            case "south": result += ({ "north" }); break;
+            case "southwest": result += ({ "northeast" }); break;
+            case "west": result += ({ "east" }); break;
+            case "northwest": result += ({ "southeast" }); break;
+            case "up": result += ({ "down" }); break;
+            case "down": result += ({ "up" }); break;
+            case "enter": result += ({ "out" }); break;
+            case "out": result += ({ "enter" }); break;
+            default: result += ({ part });
+        }
+    }
+    return implode(result, " ");
+}
 
 string format_stat_brief (string stat) {
     string result = "";

@@ -63,11 +63,10 @@ int handle_move (mixed dest) {
 int handle_go (mixed dest, string verb, string dir) {
     int move;
     string verbs = pluralize(verb);
-    dir = "%^DIR%^"+dir+"%^DEFAULT%^";
-    message("go", "You " + verb + " " + dir + ".\n", this_object());
-    message("go", query_name() + " " + verbs + " " + dir + ".\n", environment()->query_living_contents(), this_object());
+    message("go", "You " + verb + " %^DIR%^"+dir+"%^DEFAULT%^.\n", this_object());
+    message("go", query_name() + " " + verbs + " %^DIR%^"+dir+"%^DEFAULT%^.\n", environment()->query_living_contents(), this_object());
     move = handle_move(dest);
-    message("go", query_name() + " " + verbs + " %^DIR%^in%^DEFAULT%^.\n", environment()->query_living_contents(), this_object());
+    message("go", query_name() + " " + verbs + " %^DIR%^in%^DEFAULT%^ from " + (!regexp(dir, "^(enter|out|down|up)") ? "the " : "") + "%^DIR%^" + format_exit_reverse(dir) + "%^DEFAULT%^.\n", environment()->query_living_contents(), this_object());
     return move;
 }
 

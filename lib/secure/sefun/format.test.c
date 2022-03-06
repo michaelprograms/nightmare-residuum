@@ -101,6 +101,53 @@ void test_format_exit_verbose () {
     }), "*Bad argument 1 to format->format_exit_verbose\n", "format_exit_verbose handled invalid argument 1");
 }
 
+void test_format_exit_reverse () {
+    string *values = ({}), *results = ({});
+
+    expect_function("format_exit_reverse", testOb);
+
+    values += ({ testOb->format_exit_reverse("south") });
+    results += ({ "north" });
+    values += ({ testOb->format_exit_reverse("southwest") });
+    results += ({ "northeast" });
+    values += ({ testOb->format_exit_reverse("west") });
+    results += ({ "east" });
+    values += ({ testOb->format_exit_reverse("northwest") });
+    results += ({ "southeast" });
+    values += ({ testOb->format_exit_reverse("north") });
+    results += ({ "south" });
+    values += ({ testOb->format_exit_reverse("northeast") });
+    results += ({ "southwest" });
+    values += ({ testOb->format_exit_reverse("east") });
+    results += ({ "west" });
+    values += ({ testOb->format_exit_reverse("southeast") });
+    results += ({ "northwest" });
+    values += ({ testOb->format_exit_reverse("out") });
+    results += ({ "enter" });
+    values += ({ testOb->format_exit_reverse("enter") });
+    results += ({ "out" });
+    values += ({ testOb->format_exit_reverse("enter north") });
+    results += ({ "out south" });
+    values += ({ testOb->format_exit_reverse("out north") });
+    results += ({ "enter south" });
+    values += ({ testOb->format_exit_reverse("down") });
+    results += ({ "up" });
+    values += ({ testOb->format_exit_reverse("up") });
+    results += ({ "down" });
+    values += ({ testOb->format_exit_reverse("exit") });
+    results += ({ "exit" });
+
+    expect_arrays_equal(values, results, "format_exit_reverse handled exits");
+
+    expect_catches (({
+        (: testOb->format_exit_reverse(0) :),
+        (: testOb->format_exit_reverse(0.0) :),
+        (: testOb->format_exit_reverse(({})) :),
+        (: testOb->format_exit_reverse(([])) :),
+        (: testOb->format_exit_reverse((: 1 :)) :),
+    }), "*Bad argument 1 to format->format_exit_reverse\n", "format_exit_reverse handled invalid argument 1");
+}
+
 void test_format_stat_brief () {
     string *values = ({}), *results = ({});
 
