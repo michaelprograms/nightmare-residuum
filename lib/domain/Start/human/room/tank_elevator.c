@@ -1,3 +1,5 @@
+#include "human.h"
+
 inherit STD_ROOM;
 inherit M_STORY;
 
@@ -7,12 +9,12 @@ string *query_story_lines (object character) {
         "The pull begins to fade while air whistles past in a rush.",
         "The room shakes a little but continues gliding upwards.",
         "The upwards motion begins to slow and the whistling stalls out.",
-        "With a *ding!*, the doors open to the north, revealing a large cavernous area.",
+        "With a ding, the doors open to the north, revealing a large cavernous area.",
     });
 }
 
 void story_action_final (object character) {
-    set_exit("north", "/domain/Start/human/4_2_0_enter.c", 0, function (object ob, string dir) {
+    set_exit("out north", HUMAN_ROOM + "stone_structure.c", 0, function (object ob, string dir) {
         this_object()->remove_exit(dir);
         message("action", "The doors close behind you.\n", ob);
         message("action", "The doors close behind " + ob->query_name() + ".\n", environment(ob), ob);
