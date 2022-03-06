@@ -22,6 +22,7 @@
 #define M_RESET         "/std/module/reset.c"
 #define M_STORY         "/std/module/story.c"
 #define M_TEST          "/std/module/test.c"
+#define M_TRAIN         "/std/module/train.c"
 
 // secure modules
 #define M_SAVE          "/secure/module/save.c"

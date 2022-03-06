@@ -25,6 +25,8 @@ string format_divider_bar ();
 string format_footer_bar ();
 string format_exit_brief (string dir);
 string format_exit_verbose (string dir);
+string format_stat_brief (string stat);
+string format_stat_verbose (string stat);
 string format_integer (int num);
 varargs string format_page (string *items, int columns, int pad);
 

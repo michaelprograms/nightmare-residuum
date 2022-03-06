@@ -122,6 +122,20 @@ void test_format_stat_brief () {
     results += ({ "lck" });
     values += ({ testOb->format_stat_brief("unknown") });
     results += ({ "" });
+    values += ({ testOb->format_stat_brief("str") });
+    results += ({ "str" });
+    values += ({ testOb->format_stat_brief("per") });
+    results += ({ "per" });
+    values += ({ testOb->format_stat_brief("end") });
+    results += ({ "end" });
+    values += ({ testOb->format_stat_brief("cha") });
+    results += ({ "cha" });
+    values += ({ testOb->format_stat_brief("int") });
+    results += ({ "int" });
+    values += ({ testOb->format_stat_brief("agi") });
+    results += ({ "agi" });
+    values += ({ testOb->format_stat_brief("lck") });
+    results += ({ "lck" });
 
     expect_arrays_equal(values, results, "format_stat_brief handled exits");
 
@@ -154,6 +168,20 @@ void test_format_stat_verbose () {
     results += ({ "luck" });
     values += ({ testOb->format_stat_verbose("unknown") });
     results += ({ "" });
+    values += ({ testOb->format_stat_verbose("strength") });
+    results += ({ "strength" });
+    values += ({ testOb->format_stat_verbose("perception") });
+    results += ({ "perception" });
+    values += ({ testOb->format_stat_verbose("endurance") });
+    results += ({ "endurance" });
+    values += ({ testOb->format_stat_verbose("charisma") });
+    results += ({ "charisma" });
+    values += ({ testOb->format_stat_verbose("intelligence") });
+    results += ({ "intelligence" });
+    values += ({ testOb->format_stat_verbose("agility") });
+    results += ({ "agility" });
+    values += ({ testOb->format_stat_verbose("luck") });
+    results += ({ "luck" });
 
     expect_arrays_equal(values, results, "format_stat_verbose handled exits");
 

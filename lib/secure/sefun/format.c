@@ -92,13 +92,13 @@ string format_stat_brief (string stat) {
     string result = "";
     if (!stringp(stat)) error("Bad argument 1 to format->format_stat_brief");
     switch (stat) {
-        case "strength": result = "str"; break;
-        case "perception": result = "per"; break;
-        case "endurance": result = "end"; break;
-        case "charisma": result = "cha"; break;
-        case "intelligence": result = "int"; break;
-        case "agility": result = "agi"; break;
-        case "luck": result = "lck"; break;
+        case "strength": case "str": result = "str"; break;
+        case "perception": case "per": result = "per"; break;
+        case "endurance": case "end": result = "end"; break;
+        case "charisma": case "cha": result = "cha"; break;
+        case "intelligence": case "int": result = "int"; break;
+        case "agility": case "agi": result = "agi"; break;
+        case "luck": case "lck": result = "lck"; break;
     }
     return result;
 }
@@ -106,13 +106,13 @@ string format_stat_verbose (string stat) {
     string result = "";
     if (!stringp(stat)) error("Bad argument 1 to format->format_stat_verbose");
     switch (stat) {
-        case "str": result = "strength"; break;
-        case "per": result = "perception"; break;
-        case "end": result = "endurance"; break;
-        case "cha": result = "charisma"; break;
-        case "int": result = "intelligence"; break;
-        case "agi": result = "agility"; break;
-        case "lck": result = "luck"; break;
+        case "str": case "strength": result = "strength"; break;
+        case "per": case "perception": result = "perception"; break;
+        case "end": case "endurance": result = "endurance"; break;
+        case "cha": case "charisma": result = "charisma"; break;
+        case "int": case "intelligence": result = "intelligence"; break;
+        case "agi": case "agility": result = "agility"; break;
+        case "lck": case "luck": result = "luck"; break;
     }
     return result;
 }
