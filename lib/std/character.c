@@ -116,7 +116,7 @@ void setup_character () {
 varargs void enter_world (int override) {
     master()->handle_parse_refresh();
     if (!override) {
-        handle_move(query_last_environment() || "/domain/Nowhere/room/void.c");
+        handle_move(query_last_location());
         D_CHANNEL->send_system("connection", query_name() + " connects.");
         message("connection", query_name()+" enters "+mud_name()+".\n", environment(this_object()), this_object());
     }
@@ -146,7 +146,7 @@ void enter_freezer () {
 }
 
 void exit_freezer () {
-    handle_move(query_last_environment());
+    handle_move(query_last_location());
     D_CHANNEL->send_system("connection", query_name() + " reconnects.");
     message("connection", query_name()+" suddenly appears into existence.\n", environment(this_object()), this_object());
     describe_environment();

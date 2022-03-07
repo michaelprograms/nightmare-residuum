@@ -2,9 +2,6 @@
 #define __LIVING_H__
 
 /*  --- living --- */
-string query_last_environment ();
-string query_last_location ();
-void set_last_location (string location);
 int handle_move (mixed dest);
 int handle_go (mixed dest, string method, string dir);
 varargs int do_command (string str, int debug);
@@ -47,6 +44,10 @@ int query_hostile (object ob);
 object *query_hostiles ();
 object *query_present_hostiles ();
 object query_target_hostile ();
+
+/* --- location --- */
+string query_last_location ();
+void set_last_location (string location);
 
 /* --- skills --- */
 private mapping query_default_skills ();

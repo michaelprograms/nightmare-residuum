@@ -3,11 +3,11 @@
 inherit STD_CONTAINER;
 inherit "/std/living/body.c";
 inherit "/std/living/combat.c";
+inherit "/std/living/location.c";
 inherit "/std/living/skills.c";
 inherit "/std/living/stats.c";
 inherit "/std/living/vitals.c";
 
-private string __LastEnvironment;
 nosave private int __NextHeal;
 
 int is_living () { return 1; }
@@ -35,39 +35,6 @@ private void handle_passive_heal () {
         add_mp(amt);
         __NextHeal = time() + 10;
     }
-}
-
-string query_last_environment () {
-    return __LastEnvironment;
-}
-string query_last_location () {
-    if (!__LastEnvironment) return 0;
-    return __LastEnvironment->query_short();
-}
-void set_last_location (string location) {
-    if (location) {
-        __LastEnvironment = location;
-    }
-}
-
-int handle_move (mixed dest) {
-    int move = ::handle_move(dest);
-    if (stringp(dest) && dest != "/domain/Nowhere/room/freezer.c") {
-        __LastEnvironment = dest;
-    } else if (objectp(dest) && file_name(dest) != "/domain/Nowhere/room/freezer.c") {
-        __LastEnvironment = file_name(dest);
-    }
-    return move;
-}
-
-int handle_go (mixed dest, string verb, string dir) {
-    int move;
-    string verbs = pluralize(verb);
-    message("go", "You " + verb + " %^DIR%^"+dir+"%^DEFAULT%^.\n", this_object());
-    message("go", query_name() + " " + verbs + " %^DIR%^"+dir+"%^DEFAULT%^.\n", environment()->query_living_contents(), this_object());
-    move = handle_move(dest);
-    message("go", query_name() + " " + verbs + " %^DIR%^in%^DEFAULT%^ from " + (!regexp(dir, "^(enter|out|down|up)") ? "the " : "") + "%^DIR%^" + format_exit_reverse(dir) + "%^DEFAULT%^.\n", environment()->query_living_contents(), this_object());
-    return move;
 }
 
 varargs int do_command (string str, int debug) {
@@ -132,6 +99,26 @@ varargs int do_command (string str, int debug) {
     }
 
     return 0;
+}
+
+int handle_move (mixed dest) {
+    int move = ::handle_move(dest);
+    if (stringp(dest) && dest != "/domain/Nowhere/room/freezer.c") {
+        set_last_location(dest);
+    } else if (objectp(dest) && file_name(dest) != "/domain/Nowhere/room/freezer.c") {
+        set_last_location(file_name(dest));
+    }
+    return move;
+}
+
+int handle_go (mixed dest, string verb, string dir) {
+    int move;
+    string verbs = pluralize(verb);
+    message("go", "You " + verb + " %^DIR%^"+dir+"%^DEFAULT%^.\n", this_object());
+    message("go", query_name() + " " + verbs + " %^DIR%^" + dir + "%^DEFAULT%^.\n", environment()->query_living_contents(), this_object());
+    move = handle_move(dest);
+    message("go", query_name() + " " + verbs + " %^DIR%^in%^DEFAULT%^ from " + (!regexp(dir, "^(enter|out|down|up)") ? "the " : "") + "%^DIR%^" + format_exit_reverse(dir) + "%^DEFAULT%^.\n", environment()->query_living_contents(), this_object());
+    return move;
 }
 
 mixed direct_look_at_liv () {
