@@ -1,6 +1,7 @@
 #include "living/living.h"
 
 inherit STD_CONTAINER;
+inherit "/std/living/biography.c";
 inherit "/std/living/body.c";
 inherit "/std/living/combat.c";
 inherit "/std/living/location.c";

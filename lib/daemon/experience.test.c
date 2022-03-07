@@ -12,9 +12,7 @@ string *test_ignore () {
 }
 
 nosave private int __MockLevel, __MockLiving;
-int query_level () {
-    return __MockLevel;
-}
+int query_level () { return __MockLevel; }
 int is_living () { return __MockLiving; }
 
 void test_query_value () {

@@ -8,13 +8,7 @@ varargs int do_command (string str, int debug);
 int is_living ();
 private void handle_passive_heal ();
 
-/* --- body --- */
-string query_gender ();
-void set_gender (string str);
-string query_species ();
-void set_species ();
-int query_level ();
-void set_level (int l);
+/* --- biography --- */
 int query_experience ();
 int query_total_experience ();
 void add_experience (int exp);
@@ -23,7 +17,16 @@ void add_victory ();
 void add_defeat ();
 int query_victory ();
 int query_defeat ();
+void handle_victory (object source);
 void handle_defeat (int keep);
+
+/* --- body --- */
+string query_gender ();
+void set_gender (string str);
+string query_species ();
+void set_species ();
+int query_level ();
+void set_level (int l);
 private void update_limbs ();
 string *query_limbs ();
 mapping query_limb (string limb);
