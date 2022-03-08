@@ -5,7 +5,7 @@ void create () {
     set_name("plum tree");
     set_id(({"tree", "plum tree" }));
     set_adjective(({ "bushy" }));
-    set_short("a bushy %^RESET%^MAGENTA%^plum%^BOLD%^DEFAULT%^ tree");
+    set_short("a bushy plum tree");
     set_long("A plum tree.");
     // @TODO set_no_get("You cannot get that.");
     set_max_picks(5);
