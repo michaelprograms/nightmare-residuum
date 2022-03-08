@@ -66,19 +66,19 @@ string *query_wieldable_limbs () {
     string *wieldable = ({ });
 
     foreach (string l in query_limbs()) {
-        if (__Limbs[l]["limbtype"] == "WIELD" && !__Wielded[l]) wieldable += ({ l });
+        if (__Limbs[l]["type"] == "WIELD" && !__Wielded[l]) wieldable += ({ l });
     }
 
     return wieldable;
 }
 object query_wielded (string limb) {
-    if (limb && __Limbs[limb]["limbtype"] == "WIELD" && __Wielded[limb]) return __Wielded[limb];
+    if (limb && __Limbs[limb]["type"] == "WIELD" && __Wielded[limb]) return __Wielded[limb];
     return 0;
 }
 object *query_wielded_weapons () {
     object *weapons = ({ });
     foreach (string l in query_limbs()) {
-        if (__Limbs[l]["limbtype"] == "WIELD" && __Wielded[l]) weapons += ({ query_wielded(l) });
+        if (__Limbs[l]["type"] == "WIELD" && __Wielded[l]) weapons += ({ query_wielded(l) });
     }
     return weapons;
 }
@@ -98,7 +98,7 @@ varargs int handle_unwield (object weapon, string limb) {
     if (!mapp(__Wielded)) __Wielded = ([]);
     if (!limb) {
         foreach (string l in query_limbs()) {
-            if (__Limbs[l]["limbtype"] == "WIELD" && __Wielded[l] == weapon) {
+            if (__Limbs[l]["type"] == "WIELD" && __Wielded[l] == weapon) {
                 limb = l;
                 break;
             }

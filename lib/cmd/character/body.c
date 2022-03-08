@@ -11,10 +11,10 @@ void command (string input) {
 
     limbs = target->query_limbs();
     sorted = ({ });
-    foreach (string type in ({"head","torso","arm","hand","tail","leg","foot","paw",})) {
+    foreach (string type in ({"head","torso","arm","hand","leg","tail","foot","paw",})) {
         foreach (string l in sort_array(filter_array(limbs, (: regexp($1, $(type)) :)), 1)) {
             mapping limb = target->query_limb(l);
-            write(sprintf("  %-16s %3s", l, (limb["damage"]*100/limb["max_damage"])+"%") + "\n");
+            write(sprintf("  %-16s %3s", l, (limb["damage"]*100/limb["maxdamage"])+"%") + "\n");
         }
     }
 

@@ -19,7 +19,7 @@ void test_npc () {
     values += ({ testOb->is_monster() });
     results += ({ 1 });
     values += ({ testOb->is_npc() });
-    results += ({ UNDEFINED });
+    results += ({ 0 });
     values += ({ testOb->is_character() });
     results += ({ UNDEFINED });
 

@@ -1,5 +1,4 @@
-inherit STD_LIVING;
+inherit STD_NPC;
 
+int is_npc () { return 0; }
 int is_monster () { return 1; }
-
-// @TODO what does monster need?
