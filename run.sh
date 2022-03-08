@@ -1,2 +1,2 @@
 #!/bin/bash
-./build/bin/driver lib/etc/nightmare-residuum.config
+./build/bin/driver lib/secure/etc/nightmare-residuum.config
