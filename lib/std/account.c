@@ -108,7 +108,7 @@ void update_character_data (object character) {
     __Characters[name]["species"] = character->query_species();
     __Characters[name]["level"] = character->query_level();
     __Characters[name]["last_action"] = character->query_last_action();
-    __Characters[name]["last_location"] = character->query_last_location();
+    __Characters[name]["last_location"] = character->query_last_location()->query_short();
     save_data();
 }
 
