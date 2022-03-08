@@ -33,6 +33,7 @@
 #define D_EXPERIENCE    "/daemon/experience.c"
 #define D_LOG           "/daemon/log.c"
 #define D_SOUL          "/daemon/soul.c"
+#define D_SPECIES       "/daemon/species.c"
 #define D_WELCOME       "/daemon/welcome.c"
 
 // secure daemons

@@ -110,7 +110,7 @@ void setup_character () {
         restore_data();
         update_vitals(0);
     }
-    this_object()->update_limbs(); // @TODO is this the right spot for this?
+    living::update_limbs();
 }
 
 varargs void enter_world (int override) {
