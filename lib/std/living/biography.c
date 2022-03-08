@@ -46,9 +46,7 @@ void handle_defeat (int keep) {
 
     add_defeat();
 
-    message("debug", "about to make a corpse in "+identify(env)+"\n", characters());
-    new("/std/item/corpse.c")->handle_move(environment(this_object()));
-    message("debug", "made a corpse: "+identify(environment(this_object()))+"\n", characters());
+    if (env) new("/std/item/corpse.c")->handle_move(env);
 
     if (keep) this_object()->handle_move("/domain/Nowhere/room/defeat.c");
     else this_object()->handle_remove();
