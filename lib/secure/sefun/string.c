@@ -17,12 +17,6 @@ varargs string center (string str, int width) {
     pad = (width - len) / 2;
     return sprintf("%"+sprintf("%d", pad)+"s", " ") + str + sprintf("%"+sprintf("%d", width - len - pad)+"s", " ");
 }
-varargs string pad_left (string text, int n, string pad) {
-    if (n < 0 || n > 80) return text;
-    if (undefinedp(pad)) pad = " ";
-    while (sizeof(text) < n) text = pad + text;
-    return text;
-}
 varargs string pad_right (string text, int n, string pad) {
     if (n < 0 || n > 80) return text;
     if (undefinedp(pad)) pad = " ";

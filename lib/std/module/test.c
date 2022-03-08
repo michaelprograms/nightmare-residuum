@@ -163,7 +163,7 @@ private string format_array_differences (mixed *actual, mixed *expect) {
             else e = expect[i];
         } else e = "";
 
-        result += "\n        " + pad_left(""+i, 2) + ". " + format_string_difference(a, e);
+        result += "\n        " + sprintf("%2d", i) + ". " + format_string_difference(a, e);
     }
     return result;
 }

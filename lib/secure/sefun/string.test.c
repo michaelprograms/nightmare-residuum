@@ -53,25 +53,6 @@ void test_center () {
     }), text, "center handled width < strlen");
 }
 
-void test_pad_left () {
-    string *values = ({}), *results = ({});
-
-    expect_function("pad_left", testOb);
-
-    values += ({ testOb->pad_left("test", 4) });
-    results += ({ "test" });
-    values += ({ testOb->pad_left("test", 5) });
-    results += ({ " test" });
-    values += ({ testOb->pad_left("test", 10) });
-    results += ({ "      test" });
-    values += ({ testOb->pad_left("test", 20) });
-    results += ({ "                test" });
-    values += ({ testOb->pad_left("test", 2) });
-    results += ({ "test" });
-
-    expect_arrays_equal (values, results, "pad_left handled padding");
-}
-
 void test_pad_right () {
     string *values = ({}), *results = ({});
 
