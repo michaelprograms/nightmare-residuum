@@ -29,7 +29,7 @@ void heart_beat () {
     ::heart_beat();
     __ConnectionTime ++; // 1 second heartbeat
 
-    if (__ConnectionTime % 60) { // autosave
+    if (__ConnectionTime % 60 == 0) { // autosave
         if (__User && __User->query_account()) {
             __User->query_account()->update_character_data(this_object());
         }
