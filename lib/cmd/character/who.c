@@ -11,7 +11,7 @@ void command (string input) {
             if (this_user() != user) {
                 characterName += " " + time_from_seconds(query_idle(user));
             }
-            write("    "+pad_right(characterName, 50) + capitalize(user->query_character()->query_species()+"") + "\n");
+            write("    "+sprintf("%-50s", characterName) + capitalize(user->query_character()->query_species()+"") + "\n");
         } else {
             write("    ("+user->query_account()->query_name()+" - "+identify(user)+"\n");
         }

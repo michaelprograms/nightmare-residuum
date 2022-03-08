@@ -21,17 +21,17 @@ private void display_account_menu () {
     // @TODO different format for screenreader here?
     foreach(string name in __Account->query_character_names()) {
         mapping character = __Account->query_character(name);
-        string tmp = "%^CYAN%^" + pad_right("[" + character["name"] + "]", 20) + "%^RESET%^";
-        tmp += pad_right(capitalize(character["type"]+""), 20);
-        tmp += pad_right(character["last_location"], 20);
+        string tmp = "%^CYAN%^" + sprintf("%-20s", "["+character["name"]+"]") + "%^RESET%^";
+        tmp += sprintf("%-16s", capitalize(character["type"]+""));
+        tmp += sprintf("%-24s", character["last_location"]);
         // @TODO change for connected / disconnected
-        tmp += pad_right(time_ago(character["last_action"]), 20);
+        tmp += sprintf("%-20s", time_ago(character["last_action"]));
         tmp += "\n";
         characterMsg += tmp;
     }
 
     if (strlen(characterMsg) > 0) {
-        msg += "Character           Type                Location            Last Seen\n" + characterMsg;
+        msg += "Character           Type            Location                Last Seen\n" + characterMsg;
     }
 
     write(msg + "\n");
@@ -229,10 +229,6 @@ protected nomask varargs void account_input (int state, mixed extra, string inpu
             }
             reset_connect_timeout();
             account_input(STATE_SPECIES_ENTER);
-            // __Account->add_character(query_character()->query_name(), query_character()->query_key_name(), 0);
-            // D_LOG->log("character/new", sprintf("%s : %s : %s\n", ctime(time()), query_ip_number(), input));
-            // write("Entering as " + query_character()->query_name() + "...\n");
-            // character_enter(1);
             break;
 
         case STATE_CHARACTER_DELETE:
@@ -311,7 +307,7 @@ protected nomask varargs void account_input (int state, mixed extra, string inpu
                 } else {
                     display = __Account->query_setting(setting);  // @TODO ?
                 }
-                write("  " + pad_right(setting, 24) + "  " + display + "\n");
+                write("  " + sprintf("%-24s", setting) + "  " + display + "\n");
             }
             write("\n");
             input_next((: account_input, STATE_SETTINGS_HANDLE, 0 :), PROMPT_SETTINGS_ENTER);

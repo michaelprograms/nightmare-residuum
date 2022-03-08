@@ -167,7 +167,7 @@ varargs string format_page (string *items, int columns, int pad) {
     for(i = 0; i < n; i += columns) {
         for (j = 0; j < columns; j ++) {
             if (i + j >= n) break;
-            result += pad_right(items[i + j], width); // @TODO for longer strings
+            result += sprintf("%-"+sprintf("%d", width)+"s", items[i + j]); // @TODO for longer strings
         }
         result += "\n";
     }

@@ -53,24 +53,6 @@ void test_center () {
     }), text, "center handled width < strlen");
 }
 
-void test_pad_right () {
-    string *values = ({}), *results = ({});
-
-    expect_function("pad_right", testOb);
-
-    values += ({ testOb->pad_right("test", 4) });
-    results += ({ "test" });
-    values += ({ testOb->pad_right("test", 5) });
-    results += ({ "test " });
-    values += ({ testOb->pad_right("test", 10) });
-    results += ({ "test      " });
-    values += ({ testOb->pad_right("test", 20) });
-    results += ({ "test                " });
-    values += ({ testOb->pad_right("test", 2) });
-    results += ({ "test" });
-    expect_arrays_equal (values, results, "pad_right handled padding");
-}
-
 void test_identify () {
     int tInt = 123, undefInt;
     float tFloat = 123.0, undefFloat;
