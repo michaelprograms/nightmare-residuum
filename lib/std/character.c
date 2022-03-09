@@ -117,16 +117,16 @@ varargs void enter_world (int override) {
     master()->handle_parse_refresh();
     if (!override) {
         handle_move(query_last_location());
-        D_CHANNEL->send_system("connection", query_cap_name() + " connects.");
-        message("connection", query_cap_name()+" enters "+mud_name()+".\n", environment(this_object()), this_object());
+        D_CHANNEL->send_system("connection", query_cap_name() + " enters " + mud_name() + ".");
+        message("system", query_cap_name() + " suddenly appears into existence.\n", environment(), this_object());
     }
     describe_environment();
     set_heart_beat(1);
 }
 
 void exit_world () {
-    message("connection", query_cap_name()+" exits "+mud_name()+".\n", environment(this_object()), this_object());
-    D_CHANNEL->send_system("connection", query_cap_name() + " exits.");
+    message("system", query_cap_name() + " suddenly fades from existence.\n", environment(), this_object());
+    D_CHANNEL->send_system("connection", query_cap_name() + " exits " + mud_name() + ".");
     call_out((: master()->handle_parse_refresh() :), 0);
 
     // remove equipment
@@ -139,16 +139,16 @@ void exit_world () {
 }
 
 void enter_freezer () {
-    message("connection", query_cap_name()+" suddenly fades from existence.\n", environment(this_object()), this_object());
+    message("system", query_cap_name()+" suddenly fades from existence.\n", environment(), this_object());
     handle_move("/domain/Nowhere/room/freezer.c");
-    D_CHANNEL->send_system("connection", query_cap_name() + " disconnects.");
+    D_CHANNEL->send_system("connection", query_cap_name() + " disconnects from " + mud_name() + ".");
     set_heart_beat(0);
 }
 
 void exit_freezer () {
     handle_move(query_last_location());
-    D_CHANNEL->send_system("connection", query_cap_name() + " reconnects.");
-    message("connection", query_cap_name()+" suddenly appears into existence.\n", environment(this_object()), this_object());
+    D_CHANNEL->send_system("connection", query_cap_name() + " reconnects to " + mud_name() + ".");
+    message("system", query_cap_name()+" suddenly appears into existence.\n", environment(), this_object());
     describe_environment();
     set_heart_beat(1);
 }
