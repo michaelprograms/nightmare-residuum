@@ -42,12 +42,12 @@ private void handle_combat_hit (object target, mixed weapon) {
     }
 
     // Miss chance
-    hit = query_stat("agility") * 25 / 100;
+    hit = (query_stat("agility") * 75 / 100);
     hit += secure_random(query_stat("agility") * 75 / 100 + 1);
     hit += secure_random(target->query_stat("luck") * 5 / 100 + 1);
     hit += secure_random(query_skill(type + " attack") * 20 / 100 + 1);
 
-    hit -= target->query_stat("agility") * 75 / 100;
+    hit -= (target->query_stat("agility") * 25 / 100);
     hit -= secure_random(target->query_stat("agility") * 25 / 100 + 1);
     hit -= secure_random(target->query_stat("luck") * 5 / 100 + 1);
     hit -= secure_random(target->query_skill(type + " defense") * 20 / 100 + 1);
