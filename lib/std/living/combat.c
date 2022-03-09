@@ -56,9 +56,9 @@ private void handle_combat_hit (object target, mixed weapon) {
     limb = target->query_random_limb();
 
     if (hit < 1 || query_sp() < 1) {
-        message("combat miss", "You miss " + target->query_name() + " with your " + name + ".\n", this_object());
-        message("combat miss", this_object()->query_name() + " misses you with " + possessive + " " + name + ".\n", target);
-        message("combat miss", this_object()->query_name() + " misses " + target->query_name() + " with " + possessive + " " + name + ".\n", environment(this_object()), ({ this_object(), target }));
+        message("combat miss", "You miss " + target->query_cap_name() + " with your " + name + ".\n", this_object());
+        message("combat miss", this_object()->query_cap_name() + " misses you with " + possessive + " " + name + ".\n", target);
+        message("combat miss", this_object()->query_cap_name() + " misses " + target->query_cap_name() + " with " + possessive + " " + name + ".\n", environment(this_object()), ({ this_object(), target }));
         train_skill(type + " attack", 0.5);
         target->train_skill(type + " defense", 0.5);
     } else {
@@ -90,7 +90,7 @@ private void handle_combat_hit (object target, mixed weapon) {
 varargs void check_lifesigns (object source) {
     if (query_hp() < 1) {
         message("system", "\nYou have been %^BOLD%^RED%^defeated%^RESET%^!\n\n", this_object());
-        message("system", "\n" + this_object()->query_name() + " has been %^BOLD%^RED%^defeated%^RESET%^!\n\n", environment(this_object()), this_object());
+        message("system", "\n" + this_object()->query_cap_name() + " has been %^BOLD%^RED%^defeated%^RESET%^!\n\n", environment(this_object()), this_object());
         if (source) source->handle_victory(this_object());
         handle_defeat(this_object()->is_character());
     }

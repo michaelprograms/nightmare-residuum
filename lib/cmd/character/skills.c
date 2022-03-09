@@ -8,7 +8,7 @@ void command (string input) {
         else if(present(input, environment(tc))) target = present(input, environment(tc));
     }
 
-    write(format_header_bar("SKILLS", (target != tc ? target->query_name() : 0)) + "\n\n");
+    write(format_header_bar("SKILLS", (target != tc ? target->query_cap_name() : 0)) + "\n\n");
 
     if (sizeof(skills)) {
         width = this_user()->query_account()->query_setting("width") || 80;

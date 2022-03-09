@@ -5,7 +5,7 @@ void command (string input) {
 
     if (hostiles && sizeof(hostiles)) {
         foreach (object ob in this_character()->query_hostiles()) {
-            write("\n    " + ob->query_name());
+            write("\n    " + ob->query_cap_name());
         }
         write("\n");
     } else {

@@ -15,12 +15,12 @@ void command (string input) {
 
     ob = clone_object(file);
     if (ob->is_living()) {
-        message("action", "You clone " + ob->query_name() + " into your environment.\n", this_character());
-        message("action", this_character()->query_name() + " clones " + ob->query_name() + ".\n", environment(this_character()), this_character());
+        message("action", "You clone " + ob->query_cap_name() + " into your environment.\n", this_character());
+        message("action", this_character()->query_cap_name() + " clones " + ob->query_cap_name() + ".\n", environment(this_character()), this_character());
         ob->handle_move(environment(this_character()));
     } else {
         message("action", "You clone " + ob->query_name() + " into your inventory.\n", this_character());
-        message("action", this_character()->query_name() + " clones " + ob->query_name() + ".\n", environment(this_character()), this_character());
+        message("action", this_character()->query_cap_name() + " clones " + ob->query_name() + ".\n", environment(this_character()), this_character());
         ob->handle_move(this_character());
     }
 }

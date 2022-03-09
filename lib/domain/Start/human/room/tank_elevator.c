@@ -17,7 +17,7 @@ void story_action_final (object character) {
     set_exit("out north", HUMAN_ROOM + "stone_structure.c", 0, function (object ob, string dir) {
         this_object()->remove_exit(dir);
         message("action", "The doors close behind you.\n", ob);
-        message("action", "The doors close behind " + ob->query_name() + ".\n", environment(ob), ob);
+        message("action", "The doors close behind " + ob->query_cap_name() + ".\n", environment(ob), ob);
     });
 }
 

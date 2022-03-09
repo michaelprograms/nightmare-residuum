@@ -20,7 +20,7 @@ void do_wield_obj (object ob, string str) {
     }
     if (this_character()->handle_wield(ob)) {
         message("action", "You wield " + ob->query_name() + ".\n", this_character());
-        message("action", "You wield " + ob->query_name() + ".\n", environment(this_character()), this_character());
+        message("action", this_character()->query_cap_name() + " wields " + ob->query_name() + ".\n", environment(this_character()), this_character());
     } else {
         message("action", "You try to wield " + ob->query_name() + " but fail for some reason.\n", this_character());
     }

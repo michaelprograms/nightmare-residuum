@@ -8,7 +8,7 @@ void command (string input) {
 
     write(format_header_bar("SCORE") + "\n\n");
 
-    list += ({ sprintf("  %-18s %s", "Name:", tc->query_name()) });
+    list += ({ sprintf("  %-18s %s", "Name:", tc->query_cap_name()) });
     list += ({ sprintf("  %-18s %s", "Account:", this_user()->query_account()->query_name()) });
 
     list += ({ sprintf("  %-18s %s", "Species:", capitalize(tc->query_gender()) + " " + capitalize(tc->query_species())) });

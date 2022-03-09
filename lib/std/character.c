@@ -38,7 +38,7 @@ void heart_beat () {
 }
 
 string query_character_short () {
-    string short = query_name();
+    string short = query_cap_name();
 
     if (query_immortal()) short += " the immortal";
     else short += " the character";
@@ -46,7 +46,7 @@ string query_character_short () {
     return short;
 }
 string query_character_long () {
-    string long = query_name();
+    string long = query_cap_name();
 
     if (query_immortal()) long += " the immortal.";
     else long += " the character.";
@@ -117,16 +117,16 @@ varargs void enter_world (int override) {
     master()->handle_parse_refresh();
     if (!override) {
         handle_move(query_last_location());
-        D_CHANNEL->send_system("connection", query_name() + " connects.");
-        message("connection", query_name()+" enters "+mud_name()+".\n", environment(this_object()), this_object());
+        D_CHANNEL->send_system("connection", query_cap_name() + " connects.");
+        message("connection", query_cap_name()+" enters "+mud_name()+".\n", environment(this_object()), this_object());
     }
     describe_environment();
     set_heart_beat(1);
 }
 
 void exit_world () {
-    message("connection", query_name()+" exits "+mud_name()+".\n", environment(this_object()), this_object());
-    D_CHANNEL->send_system("connection", query_name() + " exits.");
+    message("connection", query_cap_name()+" exits "+mud_name()+".\n", environment(this_object()), this_object());
+    D_CHANNEL->send_system("connection", query_cap_name() + " exits.");
     call_out((: master()->handle_parse_refresh() :), 0);
 
     // remove equipment
@@ -139,16 +139,16 @@ void exit_world () {
 }
 
 void enter_freezer () {
-    message("connection", query_name()+" suddenly fades from existence.\n", environment(this_object()), this_object());
+    message("connection", query_cap_name()+" suddenly fades from existence.\n", environment(this_object()), this_object());
     handle_move("/domain/Nowhere/room/freezer.c");
-    D_CHANNEL->send_system("connection", query_name() + " disconnects.");
+    D_CHANNEL->send_system("connection", query_cap_name() + " disconnects.");
     set_heart_beat(0);
 }
 
 void exit_freezer () {
     handle_move(query_last_location());
-    D_CHANNEL->send_system("connection", query_name() + " reconnects.");
-    message("connection", query_name()+" suddenly appears into existence.\n", environment(this_object()), this_object());
+    D_CHANNEL->send_system("connection", query_cap_name() + " reconnects.");
+    message("connection", query_cap_name()+" suddenly appears into existence.\n", environment(this_object()), this_object());
     describe_environment();
     set_heart_beat(1);
 }
@@ -165,12 +165,12 @@ private void describe_environment_living_contents () {
     list = filter_array(env->query_living_contents(), (: $1 != this_object() :));
     list = sort_array(list, function (object a, object b) {
         if (a->is_character()) {
-            if (b->is_character()) return strcmp(a->query_name(), b->query_name());
+            if (b->is_character()) return strcmp(a->query_cap_name(), b->query_cap_name());
             else return -1;
         } else if (b->is_character()) {
-            if (a->is_character()) return strcmp(a->query_name(), b->query_name());
+            if (a->is_character()) return strcmp(a->query_cap_name(), b->query_cap_name());
             else return 1;
-        } else return strcmp(a->query_name(), b->query_name());
+        } else return strcmp(a->query_cap_name(), b->query_cap_name());
     });
     list = unique_array(list, (: $1->query_short() :));
     if (sizeof(list)) {

@@ -14,7 +14,7 @@ void command (string input) {
 
     write(format_header_bar("WHOIS") + "\n\n");
 
-    write("Name: " + char->query_name() + "\n");
+    write("Name: " + char->query_cap_name() + "\n");
     if (this_character()->query_immortal()) {
         write("Account: " + char->query_account() + "\n");
         // @TODO ip

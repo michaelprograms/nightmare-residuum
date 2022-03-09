@@ -100,5 +100,5 @@ void do_done () {
     message("action", "You press the done button.\nThe tank glass pops open.\n", this_character());
     this_character()->handle_go(HUMAN_ROOM + "tank_hallway" + (1 + random(3)), "eject", "out of the tank");
     this_character()->describe_environment();
-    message("action", this_character()->query_name() + " is ejected out of the tank.\n", environment(this_character()), this_character());
+    message("action", this_character()->query_cap_name() + " is ejected out of the tank.\n", environment(this_character()), this_character());
 }

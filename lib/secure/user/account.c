@@ -290,11 +290,11 @@ protected nomask varargs void account_input (int state, mixed extra, string inpu
                 input_next((: account_input, STATE_SPECIES_HANDLE, 0 :), PROMPT_SPECIES_ENTER);
                 return;
             }
-            write(query_character()->query_name() + " is a " + input + "!\n\n");
+            write(query_character()->query_cap_name() + " is a " + input + "!\n\n");
             set_character_species(input);
-            __Account->add_character(query_character()->query_name(), query_character()->query_key_name(), query_character()->query_species());
+            __Account->add_character(query_character()->query_cap_name(), query_character()->query_key_name(), query_character()->query_species());
             D_LOG->log("character/new", sprintf("%s : %s : %s\n", ctime(time()), query_ip_number(), input));
-            write("Entering as " + query_character()->query_name() + "...\n");
+            write("Entering as " + query_character()->query_cap_name() + "...\n");
             character_enter(1);
             break;
 

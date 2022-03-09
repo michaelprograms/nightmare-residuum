@@ -17,6 +17,7 @@ void test_id () {
     string *pluralsValues = ({}), *pluralsResults = ({});
 
     expect_function("query_name", testOb);
+    expect_function("query_cap_name", testOb);
     expect_function("query_key_name", testOb);
     expect_function("set_name", testOb);
     expect_function("set_key_name", testOb);
@@ -38,6 +39,8 @@ void test_id () {
 
     nameValues += ({ testOb->query_name() });
     nameResults += ({ UNDEFINED });
+    nameValues += ({ testOb->query_cap_name() });
+    nameResults += ({ UNDEFINED });
     nameValues += ({ testOb->query_key_name() });
     nameResults += ({ UNDEFINED });
     adjValues += ({ testOb->query_adjective() });
@@ -47,6 +50,8 @@ void test_id () {
 
     testOb->set_name("Testee");
     nameValues += ({ testOb->query_name() });
+    nameResults += ({ "testee" });
+    nameValues += ({ testOb->query_cap_name() });
     nameResults += ({ "Testee" });
     nameValues += ({ testOb->query_key_name() });
     nameResults += ({ "testee" });

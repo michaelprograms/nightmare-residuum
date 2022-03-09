@@ -49,9 +49,9 @@ void display_combat_message (object source, object target, string limb, mixed we
     verbs = pluralize(verb);
     adverb = stringp(adverb) ? " " + adverb + " " : " ";
 
-    sourceMsg = sprintf("You %s %s%sin the %s with your %s.", verb, target->query_name(), adverb, limb, weaponName);
-    targetMsg = sprintf("%s %s you%sin the %s with %s %s.", source->query_name(), verbs, adverb, limb, sourcePossessive, weaponName);
-    envMsg = sprintf("%s %s %s%sin the %s with %s %s.", source->query_name(), verbs, target->query_name(), adverb, limb, sourcePossessive, weaponName);
+    sourceMsg = sprintf("You %s %s%sin the %s with your %s.", verb, target->query_cap_name(), adverb, limb, weaponName);
+    targetMsg = sprintf("%s %s you%sin the %s with %s %s.", source->query_cap_name(), verbs, adverb, limb, sourcePossessive, weaponName);
+    envMsg = sprintf("%s %s %s%sin the %s with %s %s.", source->query_cap_name(), verbs, target->query_cap_name(), adverb, limb, sourcePossessive, weaponName);
 
     message("combat hit", sourceMsg + "\n", source);
     message("combat hit", targetMsg + "\n", target);

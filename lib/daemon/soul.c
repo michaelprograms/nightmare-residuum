@@ -136,12 +136,12 @@ varargs string compose_message (object forwhom, string msg, object *who, mixed *
                         break;
                     }
                     has[who[num]]++;
-                    bit = who[num]->query_name(); // @TODO name vs short
+                    bit = who[num]->query_cap_name(); // @TODO name vs short
                     break;
                 }
             }
             has[who[num]]++;
-            bit = who[num]->query_name(); // @TODO name vs short
+            bit = who[num]->query_cap_name(); // @TODO name vs short
             break;
         case 'R':
         case 'r':

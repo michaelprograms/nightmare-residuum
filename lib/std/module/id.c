@@ -1,4 +1,5 @@
 nosave private string __Name;
+nosave private string __CapName;
 nosave private string __KeyName;
 nosave private string __KeyID;
 nosave private string __KeyAdj;
@@ -9,6 +10,7 @@ nosave private string *__Plural = ({});
 // -----------------------------------------------------------------------------
 
 string query_name ();
+string query_cap_name ();
 string query_key_name ();
 void set_name (string name);
 void set_key_name (string name);
@@ -30,6 +32,9 @@ string *parse_command_plural_id_list ();
 string query_name () {
     return __Name;
 }
+string query_cap_name () {
+    return __CapName;
+}
 string query_key_name () {
     return __KeyName;
 }
@@ -37,7 +42,8 @@ void set_name (string name) {
     if (!stringp(name) || name == "") {
         error("Bad argument 1 to id->set_name");
     }
-    __Name = name;
+    __Name = lower_case(name);
+    __CapName = capitalize(name);
     __KeyName = sanitize_name(name);
     refresh_id();
 }

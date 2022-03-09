@@ -4,7 +4,7 @@ void command (string input) {
 
     foreach (object user in users()) {
         if (user->query_character()) {
-            string characterName = user->query_character()->query_name();
+            string characterName = user->query_character()->query_cap_name();
             if (this_character()->query_immortal()) {
                 characterName += " (" + user->query_account()->query_name() + ")";
             }

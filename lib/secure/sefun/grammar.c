@@ -76,7 +76,7 @@ string possessive_noun (mixed value) {
         return "Its";
     }
     if (objectp(value)) {
-        value = value->query_name();
+        value = value->query_cap_name();
         if (!value) {
             value = "It";
         }

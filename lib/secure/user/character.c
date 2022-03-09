@@ -14,7 +14,7 @@ private void set_character_name (string name) {
     }
     // @TODO check if already have a name?
     if (name) {
-        __Character->set_name(capitalize(name));
+        __Character->set_name(name);
         // __Character->set_key_name(sanitize_name(name)); // @TODO this should be automatic when sanitize_name is a sefun
     } else {
         destruct(__Character);
@@ -43,7 +43,7 @@ nomask private void character_enter (int newbie) {
     chars = filter_array(children(STD_CHARACTER) - ({ __Character }), (: $1 && $1->query_key_name() == __Character->query_key_name() && $1->query_user() :));
     if (sizeof(chars) > 0 && (char = chars[0])) {
         if (interactive(char->query_user())) {
-            write(char->query_name()+" is connected and interactive.\n");
+            write(char->query_cap_name()+" is connected and interactive.\n");
             account_input(STATE_CHARACTER_OVERRIDE);
             return;
         } else {
@@ -51,7 +51,7 @@ nomask private void character_enter (int newbie) {
             __Character = char;
             __Character->set_user(this_object());
             shell_start();
-            write("\n\nReturning " + __Character->query_name() + " from linkdeath...\n\n");
+            write("\n\nReturning " + __Character->query_cap_name() + " from linkdeath...\n\n");
             __Character->exit_freezer();
             return;
         }
@@ -92,12 +92,12 @@ nomask private void character_override () {
         __Character = char;
         char->query_user()->handle_character_override();
         __Character->set_user(this_object());
-        write("\n\nOverriding connection of " + __Character->query_name() + "...\n\n");
+        write("\n\nOverriding connection of " + __Character->query_cap_name() + "...\n\n");
         shell_start();
         __Character->enter_world(1);
         return;
     } else {
-        write("\n"+__Character->query_key_name()+" no longer available to override.\n");
+        write("\n"+__Character->query_cap_name()+" no longer available to override.\n");
         character_enter(0);
         return;
     }

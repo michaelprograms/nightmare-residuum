@@ -19,5 +19,5 @@ void command (string input) {
     input = "\n// " + replace_string(input, "\n", "\n// ") + "\n";
 
     message("no_ansi", "You codesay:" + input, this_character());
-    message("no_ansi", this_character()->query_name() + " codesays:" + input, environment(this_character()), this_character());
+    message("no_ansi", this_character()->query_cap_name() + " codesays:" + input, environment(this_character()), this_character());
 }

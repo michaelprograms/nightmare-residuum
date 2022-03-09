@@ -50,7 +50,7 @@ void send (string channel, string msg) {
         this_character()->toggle_channel_blocked(channel);
         message("channel",  "Channel " + format_channel_name(channel) + " is no longer blocked.\n", this_character());
     }
-    handle_send(this_character()->query_name(), channel, msg);
+    handle_send(this_character()->query_cap_name(), channel, msg);
 }
 
 void send_system (string channel, string msg) {
