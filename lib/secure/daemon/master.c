@@ -341,6 +341,7 @@ varargs int valid_override (string file, string efun_name, string main_file) {
 int valid_socket (object caller, string fn, mixed *info) {
     int valid = 0;
     if (regexp(file_name(caller), "/secure/daemon/ipc") > 0) valid = 1;
+    else if (regexp(file_name(caller), "/cmd/immortal/cat") > 0) valid = 1;
     // @TODO D_ACCESS->query_allowed(caller, fn, 0, "socket")
     return valid;
 }
