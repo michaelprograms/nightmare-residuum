@@ -20,6 +20,6 @@ void do_say_str (string str) {
         default: verb = "say";
     }
 
-    message("say", "You "+verb+": "+str+"\n", this_character());
-    message("say", this_character()->query_cap_name()+" "+verb+"s: "+str+"\n", environment(this_character()), this_character());
+    message("say", "You "+verb+": "+str+"\n", previous_object());
+    message("say", previous_object()->query_cap_name()+" "+verb+"s: "+str+"\n", environment(previous_object()), previous_object());
 }

@@ -8,11 +8,11 @@ void create () {
 /* -------------------- */
 
 mixed can_look () {
-    if (!environment(this_character())) return "There is nothing.";
+    if (!environment(previous_object())) return "There is nothing.";
     else return 1;
 }
 mixed do_look () {
-    this_character()->describe_environment();
+    previous_object()->describe_environment();
     return 1;
 }
 
@@ -25,7 +25,7 @@ mixed can_look_str (string str, string verb) {
     return can_look_at_str(str, verb);
 }
 void do_look_at_str (string str) {
-    environment(this_character())->do_look_at_str(str);
+    environment(previous_object())->do_look_at_str(str);
 }
 void do_look_str (string str) {
     do_look_at_str(str);
@@ -62,15 +62,16 @@ varargs mixed do_look_at_liv (object ob, mixed arg) {
     string str;
     object *wielded;
 
-    write("You look over " + ob->query_cap_name() + " the " + ob->query_gender() + " " + ob->query_species() + "...\n");
-    message("action", this_character()->query_cap_name() + " looks you over.\n", ob);
-    message("action", this_character()->query_cap_name() + " looks over " + ob->query_cap_name() + ".\n", environment(ob), ({ this_character(), ob }));
+    str = (ob->query_gender() == "neither" || ob->query_gender() == "none" ? "" : ob->query_gender() + " ");
+    write("You look over " + ob->query_cap_name() + " the " + str + ob->query_species() + "...\n");
+    message("action", previous_object()->query_cap_name() + " looks you over.\n", ob);
+    message("action", previous_object()->query_cap_name() + " looks over " + ob->query_cap_name() + ".\n", environment(ob), ({ previous_object(), ob }));
 
     if (str = ob->query_long()) {
         if (sizeof(str) && str[<1] != '\n') str += "\n";
         write(str + "\n");
     }
-    if (this_character()->query_immortal()) {
+    if (previous_object()->query_immortal()) {
         write("Level: "+ob->query_level()+"\n");
         write("Vitals: "+ob->query_hp()+"/"+ob->query_max_hp()+" "+ob->query_sp()+"/"+ob->query_max_sp()+" "+ob->query_mp()+"/"+ob->query_max_mp()+"\n");
     }

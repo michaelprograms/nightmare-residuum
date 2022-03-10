@@ -63,7 +63,7 @@ mapping setup_body (object ob) {
         if (limbs[limb]["limbtype"]) body[limb]["type"] = limbs[limb]["limbtype"];
         if (limbs[limb]["attach"]) body[limb]["attach"] = limbs[limb]["attach"];
         body[limb]["pct"] = limbs[limb]["percent"];
-        body[limb]["maxdamage"] = ob->query_max_hp() * body[limb]["pct"] / 100;
+        body[limb]["maxdamage"] = 1 + ob->query_max_hp() * body[limb]["pct"] / 100;
         body[limb]["damage"] = 0;
     }
 
