@@ -31,9 +31,7 @@ mixed direct_wield_obj (object ob, string str) {
     string *wieldable = this_character()->query_wieldable_limbs();
 
     if (!sizeof(wieldable)) return "You are out of free hands.";
-
-    if (environment() != previous_object()) return 0;
-    return 1;
+    return environment() == previous_object();
 }
 mixed direct_unwield_obj (object ob, string str) {
     object po = previous_object();

@@ -2,7 +2,7 @@ inherit STD_VERB;
 
 void create () {
     verb::create();
-    add_rules( ({ "", "OBJ", }) );
+    add_rules(({ "", "OBJ", }));
 }
 
 mixed can_unwield () {
