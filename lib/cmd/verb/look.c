@@ -82,7 +82,7 @@ varargs mixed do_look_at_liv (object ob, mixed arg) {
             write("  " + weapon->query_short() + "\n");
         }
     }
-    if (sizeof(worn = ob->query_worn_armor())) {
+    if (sizeof(worn = ob->query_all_armor())) {
         write(capitalize(subjective(ob)) + " is wearing:\n");
         foreach (string armor in worn) {
             write("  " + armor->query_short() + "\n");

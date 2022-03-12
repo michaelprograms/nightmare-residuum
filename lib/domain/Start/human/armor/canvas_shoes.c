@@ -8,4 +8,5 @@ void create () {
     set_long("A pair of flimsy canvas shoes.");
     set_type("boots");
     set_limbs(({ "left foot", "right foot" }));
+    set_ac(1);
 }

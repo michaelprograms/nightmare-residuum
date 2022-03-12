@@ -8,4 +8,5 @@ void create () {
     set_long("A set of flimsy straw hat.");
     set_type("hat");
     set_limbs(({ "head" }));
+    set_ac(1);
 }

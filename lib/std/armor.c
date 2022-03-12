@@ -2,6 +2,7 @@ inherit STD_ITEM;
 
 nosave string __Type, *__Limbs;
 nosave object __Worn;
+nosave int __AC;
 
 object query_worn ();
 
@@ -34,11 +35,18 @@ void set_worn (object wearer) {
     __Worn = wearer;
 }
 
+int query_ac () {
+    return __AC;
+}
+void set_ac (int ac) {
+    __AC = ac;
+}
+
 mixed direct_wear_obj (object ob, string str) {
     object po = previous_object();
     return environment() == po && !__Worn && po->query_can_wear_armor(this_object());
 }
 mixed direct_unwear_obj (object ob, string str) {
     object po = previous_object();
-    return environment() == po && __Worn == po && member_array(this_object(), po->query_worn_armor()) > -1;
+    return environment() == po && __Worn == po && member_array(this_object(), po->query_all_armor()) > -1;
 }

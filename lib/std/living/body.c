@@ -49,7 +49,7 @@ protected void update_limbs () {
     __Limbs = D_SPECIES->setup_body(this_object());
 }
 string *query_limbs () {
-    return keys(__Limbs || ([]));
+    return keys(__Limbs || ([ ]));
 }
 mapping query_limb (string limb) {
     if (limb && __Limbs[limb]) return __Limbs[limb];
@@ -63,8 +63,22 @@ string query_random_limb () {
 
 /* ----- wearing ----- */
 
-object *query_worn_armor () {
-    object *worn = ({});
+int query_limb_armor (string limb) {
+    int ac = 0;
+
+    if (!mapp(__Worn)) __Worn = ([ ]);
+
+    foreach (object ob in __Worn[limb] || ({})) {
+        ac += ob->query_ac();
+    }
+
+    return ac;
+}
+object *query_all_armor () {
+    object *worn = ({ });
+
+    if (!mapp(__Worn)) __Worn = ([ ]);
+
     foreach (string limb in keys(__Worn)) {
         foreach (object ob in __Worn[limb]) {
             if (member_array(ob, worn) == -1) {
@@ -75,6 +89,8 @@ object *query_worn_armor () {
     return worn;
 }
 int query_can_wear_armor (object ob) {
+    if (!mapp(__Worn)) __Worn = ([ ]);
+
     foreach (string limb in ob->query_limbs()) {
         if (!arrayp(__Worn[limb])) continue;
         foreach (object worn in __Worn[limb]) {
@@ -87,7 +103,7 @@ int query_can_wear_armor (object ob) {
 }
 
 varargs mixed handle_wear (object ob) {
-    if (!mapp(__Worn)) __Worn = ([]);
+    if (!mapp(__Worn)) __Worn = ([ ]);
 
     if (ob->query_worn()) return "You are already wearing " + ob->query_name() + ".";
     if (!query_can_wear_armor(ob)) return "You are already wearing " + ob->query_type() + ".";
@@ -135,7 +151,7 @@ object *query_wielded_weapons () {
     return weapons;
 }
 string *query_wielded_limbs (object ob) {
-    string *limbs = ({});
+    string *limbs = ({ });
     foreach (string l in query_limbs()) {
         if (__Limbs[l]["type"] == "WIELD" && __Wielded[l] == ob) {
             limbs += ({ l });
@@ -145,21 +161,21 @@ string *query_wielded_limbs (object ob) {
 }
 
 varargs mixed handle_wield (object ob, string limb) {
-    if (!mapp(__Wielded)) __Wielded = ([]);
+    if (!mapp(__Wielded)) __Wielded = ([ ]);
 
     if (ob->query_wielded()) return "You are already wielding " + ob->query_name() + ".";
     if (!limb) {
         string *limbs = query_wieldable_limbs();
         if (sizeof(limbs)) limb = limbs[0];
     }
-    if (!limb) return "You are out of wieldable limbs.";
+    if (!limb) return "You are out of limbs to wield " + ob->query_name() + ".";
 
     ob->set_wielded(this_object());
     __Wielded[limb] = ob;
     return 1;
 }
 varargs mixed handle_unwield (object ob, string limb) {
-    if (!mapp(__Wielded)) __Wielded = ([]);
+    if (!mapp(__Wielded)) __Wielded = ([ ]);
 
     if (!ob->query_wielded()) return "You are not wielding " + ob->query_name() + ".";
     if (!limb) {

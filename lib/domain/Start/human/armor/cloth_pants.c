@@ -8,4 +8,5 @@ void create () {
     set_long("A pair of flimsy cloth pants.");
     set_type("pants");
     set_limbs(({ "left leg", "right leg" }));
+    set_ac(1);
 }

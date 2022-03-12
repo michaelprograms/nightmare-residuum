@@ -8,4 +8,5 @@ void create () {
     set_long("A flimsy cloth shirt.");
     set_type("shirt");
     set_limbs(({ "torso", "left arm", "right arm" }));
+    set_ac(1);
 }

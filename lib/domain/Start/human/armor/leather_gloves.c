@@ -8,4 +8,5 @@ void create () {
     set_long("A set of flimsy leather gloves.");
     set_type("gloves");
     set_limbs(({ "left hand", "right hand" }));
+    set_ac(1);
 }
