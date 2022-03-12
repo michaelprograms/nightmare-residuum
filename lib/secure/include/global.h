@@ -3,6 +3,7 @@
 
 // std
 #define STD_ACCOUNT     "/std/account.c"
+#define STD_ARMOR       "/std/armor.c"
 #define STD_CHARACTER   "/std/character.c"
 #define STD_CONTAINER   "/std/container.c"
 #define STD_FOOD        "/std/food.c"

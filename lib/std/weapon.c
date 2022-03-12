@@ -28,10 +28,9 @@ void set_wielded (object wielder) {
 }
 
 mixed direct_wield_obj (object ob, string str) {
-    string *wieldable = this_character()->query_wieldable_limbs();
-
-    if (!sizeof(wieldable)) return "You are out of free hands.";
-    return environment() == previous_object();
+    object po = previous_object();
+    string *wieldable = po->query_wieldable_limbs();
+    return environment() == po && !__Wielder && member_array(this_object(), po->query_wielded_weapons()) == -1;
 }
 mixed direct_unwield_obj (object ob, string str) {
     object po = previous_object();

@@ -30,11 +30,17 @@ void set_level (int l);
 private void update_limbs ();
 string *query_limbs ();
 mapping query_limb (string limb);
+string query_random_limb ();
+object *query_worn_armor ();
+int query_can_wear_armor (object ob);
+varargs mixed handle_wear (object armor);
+varargs mixed handle_unwear (object armor);
 string *query_wieldable_limbs ();
 object query_wielded (string limb);
 object *query_wielded_weapons ();
-varargs int handle_wield (object weapon, string limb);
-varargs int handle_unwield (object weapon, string limb);
+string query_wielded_limbs (object ob);
+varargs mixed handle_wield (object weapon, string limb);
+varargs mixed handle_unwield (object weapon, string limb);
 
 /* --- combat --- */
 protected void handle_combat ();

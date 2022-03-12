@@ -5,6 +5,7 @@ private string __Species;
 private int __Level = 0;
 mapping __Limbs = ([]);
 private nosave mapping __Wielded = ([]);
+private nosave mapping __Worn = ([]);
 
 /* ----- gender and species ----- */
 
@@ -60,19 +61,70 @@ string query_random_limb () {
     else return 0;
 }
 
-/* ----- weapons ----- */
+/* ----- wearing ----- */
+
+object *query_worn_armor () {
+    object *worn = ({});
+    foreach (string limb in keys(__Worn)) {
+        foreach (object ob in __Worn[limb]) {
+            if (member_array(ob, worn) == -1) {
+                worn += ({ ob });
+            }
+        }
+    }
+    return worn;
+}
+int query_can_wear_armor (object ob) {
+    foreach (string limb in ob->query_limbs()) {
+        if (!arrayp(__Worn[limb])) continue;
+        foreach (object worn in __Worn[limb]) {
+            if (ob->query_type() == worn->query_type()) {
+                return 0;
+            }
+        }
+    }
+    return 1;
+}
+
+varargs mixed handle_wear (object ob) {
+    if (!mapp(__Worn)) __Worn = ([]);
+
+    if (ob->query_worn()) return "You are already wearing " + ob->query_name() + ".";
+    if (!query_can_wear_armor(ob)) return "You are already wearing " + ob->query_type() + ".";
+
+    foreach (string limb in ob->query_limbs()) {
+        if (!arrayp(__Worn[limb])) __Worn[limb] = ({ });
+        __Worn[limb] += ({ ob });
+    }
+    ob->set_worn(this_object());
+    return 1;
+}
+varargs mixed handle_unwear (object ob) {
+    if (!mapp(__Worn)) __Worn = ([]);
+
+    if (!ob->query_worn()) return "You are not wearing " + ob->query_name() + ".";
+
+    foreach (string limb in ob->query_limbs()) {
+        if (!arrayp(__Worn[limb])) __Worn[limb] = ({ });
+        if (member_array(ob, __Worn[limb]) > -1) {
+            __Worn[limb] -= ({ ob });
+        }
+    }
+    ob->set_worn(0);
+    return 1;
+}
+
+/* ----- wielding ----- */
 
 string *query_wieldable_limbs () {
     string *wieldable = ({ });
-
     foreach (string l in query_limbs()) {
         if (__Limbs[l]["type"] == "WIELD" && !__Wielded[l]) wieldable += ({ l });
     }
-
     return wieldable;
 }
-object query_wielded (string limb) {
-    if (limb && __Limbs[limb]["type"] == "WIELD" && __Wielded[limb]) return __Wielded[limb];
+object query_wielded (string l) {
+    if (l && __Limbs[l]["type"] == "WIELD" && __Wielded[l]) return __Wielded[l];
     return 0;
 }
 object *query_wielded_weapons () {
@@ -82,30 +134,45 @@ object *query_wielded_weapons () {
     }
     return weapons;
 }
+string *query_wielded_limbs (object ob) {
+    string *limbs = ({});
+    foreach (string l in query_limbs()) {
+        if (__Limbs[l]["type"] == "WIELD" && __Wielded[l] == ob) {
+            limbs += ({ l });
+        }
+    }
+    return limbs;
+}
 
-varargs int handle_wield (object weapon, string limb) {
+varargs mixed handle_wield (object ob, string limb) {
+    if (!mapp(__Wielded)) __Wielded = ([]);
+
+    if (ob->query_wielded()) return "You are already wielding " + ob->query_name() + ".";
     if (!limb) {
         string *limbs = query_wieldable_limbs();
         if (sizeof(limbs)) limb = limbs[0];
     }
-    if (!limb) return 0;
-    weapon->set_wielded(this_object());
-    if (!mapp(__Wielded)) __Wielded = ([]);
-    __Wielded[limb] = weapon;
+    if (!limb) return "You are out of wieldable limbs.";
+
+    ob->set_wielded(this_object());
+    __Wielded[limb] = ob;
     return 1;
 }
-varargs int handle_unwield (object weapon, string limb) {
+varargs mixed handle_unwield (object ob, string limb) {
     if (!mapp(__Wielded)) __Wielded = ([]);
+
+    if (!ob->query_wielded()) return "You are not wielding " + ob->query_name() + ".";
     if (!limb) {
         foreach (string l in query_limbs()) {
-            if (__Limbs[l]["type"] == "WIELD" && __Wielded[l] == weapon) {
+            if (__Limbs[l]["type"] == "WIELD" && __Wielded[l] == ob) {
                 limb = l;
                 break;
             }
         }
     }
-    if (!limb) return 0;
-    weapon->set_wielded(0);
+    if (!limb) return "You are not wielding anything in your " + limb + ".";
+
+    ob->set_wielded(0);
     __Wielded[limb] = 0;
     return 1;
 }
