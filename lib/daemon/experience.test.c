@@ -70,3 +70,42 @@ void test_query_value () {
         (: testOb->query_value((: 1 :)) :),
     }), "*Bad argument 1 to experience->query_value\n", "query_value handled invalid argument 1");
 }
+
+void test_query_stat_cost () {
+    mixed *values = ({}), *results = ({});
+
+    expect_function("query_stat_cost", testOb);
+
+    values += ({ testOb->query_stat_cost("strength", 0) });
+    results += ({ 0 });
+    values += ({ testOb->query_stat_cost("strength", -1) });
+    results += ({ 0 });
+    values += ({ testOb->query_stat_cost("strength", -50) });
+    results += ({ 0 });
+    values += ({ testOb->query_stat_cost("strength", 1) > 0 });
+    results += ({ 1 });
+    values += ({ testOb->query_stat_cost("strength", 2) > values[<1] });
+    results += ({ 1 });
+    values += ({ testOb->query_stat_cost("strength", 100) > values[<1] });
+    results += ({ 1 });
+    values += ({ testOb->query_stat_cost("strength", 1000) > values[<1] });
+    results += ({ 1 });
+
+    // check error conditions
+    expect_catches (({
+        (: testOb->query_stat_cost(this_object()) :),
+        (: testOb->query_stat_cost(1) :),
+        (: testOb->query_stat_cost(1.0) :),
+        (: testOb->query_stat_cost(({})) :),
+        (: testOb->query_stat_cost(([])) :),
+        (: testOb->query_stat_cost((: 1 :)) :),
+    }), "*Bad argument 1 to experience->query_stat_cost\n", "query_stat_cost handled invalid argument 1");
+    expect_catches (({
+        (: testOb->query_stat_cost("strength", this_object()) :),
+        (: testOb->query_stat_cost("strength", 1.0) :),
+        (: testOb->query_stat_cost("strength", "") :),
+        (: testOb->query_stat_cost("strength", ({})) :),
+        (: testOb->query_stat_cost("strength", ([])) :),
+        (: testOb->query_stat_cost("strength", (: 1 :)) :),
+    }), "*Bad argument 2 to experience->query_stat_cost\n", "query_stat_cost handled invalid argument 2");
+}

@@ -1,5 +1,9 @@
 int query_stat_cost (string stat, int level) {
     float adj = 0 + 0; // @TODO class + species modifiers
+
+    if (!stringp(stat)) error("Bad argument 1 to experience->query_stat_cost");
+    if (!intp(level)) error("Bad argument 2 to experience->query_stat_cost");
+
     return 1000 + to_int(1.0 * pow(level, 3.0) + 1.25 * pow(level, 3.25));
 }
 
