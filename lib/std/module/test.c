@@ -117,7 +117,7 @@ public int execute_test (function done) {
 protected object clone_object (string name) {
     string *fns;
     object ob = efun::clone_object(name);
-    fns = filter_array(functions(ob, 2), (: function_exists($1, $2) :), ob) - (name == M_TEST ? ({}) : test_ignore());
+    fns = filter_array(functions(ob, 2), (: function_exists($1, $2) :), ob) - test_ignore();
     foreach(string fn in fns) {
         if (member_array(fn, testObjectFns) == -1) {
             testObjectFns += ({ fn });
