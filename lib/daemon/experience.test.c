@@ -35,6 +35,8 @@ void test_query_stat_cost () {
     values += ({ testOb->query_stat_cost("strength", 1000) > values[<1] });
     results += ({ 1 });
 
+    expect_arrays_equal(values, results, "query_stat_cost returned ascending values");
+
     // check error conditions
     expect_catches (({
         (: testOb->query_stat_cost(this_object()) :),
@@ -73,6 +75,8 @@ void test_query_skill_cost () {
     results += ({ 1 });
     values += ({ testOb->query_skill_cost(1000) > values[<1] });
     results += ({ 1 });
+
+    expect_arrays_equal(values, results, "query_skill_cost returned ascending values");
 
     // check error conditions
     expect_catches (({

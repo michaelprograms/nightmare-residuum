@@ -4,6 +4,10 @@ int query_stat_cost (string stat, int level) {
     if (!stringp(stat)) error("Bad argument 1 to experience->query_stat_cost");
     if (!intp(level)) error("Bad argument 2 to experience->query_stat_cost");
 
+    if (level < 1) {
+        return 0;
+    }
+
     return 1000 + to_int(1.0 * pow(level, 3.0) + 1.25 * pow(level, 3.25));
 }
 
@@ -11,6 +15,10 @@ int query_skill_cost (int level) {
     // @TODO skill tiers
 
     if (!intp(level)) error("Bad argument 1 to experience->query_skill_cost");
+
+    if (level < 1) {
+        return 0;
+    }
 
     return 100 + to_int(0.25 * pow(level, 3.0) + 0.25 * pow(level, 3.25));
 }
