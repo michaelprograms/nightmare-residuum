@@ -8,34 +8,26 @@ void after_all_tests () {
     if (objectp(testOb)) destruct(testOb);
 }
 string *test_ignore () {
-    return ::test_ignore() + ({ "query_level", "is_living" });
+    return ::test_ignore() + ({ "query_level", "set_mock_level", "is_living" });
 }
 
 nosave private int __MockLevel, __MockLiving;
 int query_level () { return __MockLevel; }
+int set_mock_level (int l) { __MockLevel = l; return 1; }
 int is_living () { return __MockLiving; }
 
 void test_query_stat_cost () {
-    mixed *values = ({}), *results = ({});
-
     expect_function("query_stat_cost", testOb);
 
-    values += ({ testOb->query_stat_cost("strength", 0) });
-    results += ({ 0 });
-    values += ({ testOb->query_stat_cost("strength", -1) });
-    results += ({ 0 });
-    values += ({ testOb->query_stat_cost("strength", -50) });
-    results += ({ 0 });
-    values += ({ testOb->query_stat_cost("strength", 1) > 0 });
-    results += ({ 1 });
-    values += ({ testOb->query_stat_cost("strength", 2) > values[<1] });
-    results += ({ 1 });
-    values += ({ testOb->query_stat_cost("strength", 100) > values[<1] });
-    results += ({ 1 });
-    values += ({ testOb->query_stat_cost("strength", 1000) > values[<1] });
-    results += ({ 1 });
-
-    expect_arrays_equal(values, results, "query_stat_cost returned ascending values");
+    expect("query_stat_cost returns ascending values", (: ({
+        assert((: testOb->query_stat_cost("luck", 0) :), "==", 0),
+        assert((: testOb->query_stat_cost("luck", -1) :), "==", 0),
+        assert((: testOb->query_stat_cost("luck", -50) :), "==", 0),
+        assert((: testOb->query_stat_cost("luck", 1) :), ">", 0),
+        assert((: testOb->query_stat_cost("luck", 2) :), ">", (: testOb->query_stat_cost("luck", 1) :)),
+        assert((: testOb->query_stat_cost("luck", 100) :), ">", (: testOb->query_stat_cost("luck", 2) :)),
+        assert((: testOb->query_stat_cost("luck", 1000) :), ">", (: testOb->query_stat_cost("luck", 100) :)),
+    }) :));
 
     // check error conditions
     expect_catches (({
@@ -57,26 +49,17 @@ void test_query_stat_cost () {
 }
 
 void test_query_skill_cost () {
-    mixed *values = ({}), *results = ({});
-
     expect_function("query_skill_cost", testOb);
 
-    values += ({ testOb->query_skill_cost(0) });
-    results += ({ 0 });
-    values += ({ testOb->query_skill_cost(-1) });
-    results += ({ 0 });
-    values += ({ testOb->query_skill_cost(-50) });
-    results += ({ 0 });
-    values += ({ testOb->query_skill_cost(1) > 0 });
-    results += ({ 1 });
-    values += ({ testOb->query_skill_cost(2) > values[<1] });
-    results += ({ 1 });
-    values += ({ testOb->query_skill_cost(100) > values[<1] });
-    results += ({ 1 });
-    values += ({ testOb->query_skill_cost(1000) > values[<1] });
-    results += ({ 1 });
-
-    expect_arrays_equal(values, results, "query_skill_cost returned ascending values");
+    expect("query_skill_cost returns ascending values", (: ({
+        assert((: testOb->query_skill_cost(0) :), "==", 0),
+        assert((: testOb->query_skill_cost(-1) :), "==", 0),
+        assert((: testOb->query_skill_cost(-50) :), "==", 0),
+        assert((: testOb->query_skill_cost(1) :), ">", 0),
+        assert((: testOb->query_skill_cost(2) :), ">", (: testOb->query_skill_cost(1) :)),
+        assert((: testOb->query_skill_cost(100) :), ">", (: testOb->query_skill_cost(2) :)),
+        assert((: testOb->query_skill_cost(1000) :), ">", (: testOb->query_skill_cost(100) :)),
+    }) :));
 
     // check error conditions
     expect_catches (({
@@ -94,44 +77,38 @@ void test_query_value () {
 
     expect_function("query_value", testOb);
 
-    values += ({ testOb->query_value(0) });
-    results += ({ 0 });
-    values += ({ testOb->query_value(-1) });
-    results += ({ 0 });
-    values += ({ testOb->query_value(-50) });
-    results += ({ 0 });
-    values += ({ testOb->query_value(1) > 0 });
-    results += ({ 1 });
-    values += ({ testOb->query_value(2) > values[<1] });
-    results += ({ 1 });
-    values += ({ testOb->query_value(100) > values[<1] });
-    results += ({ 1 });
-    values += ({ testOb->query_value(1000) > values[<1] });
-    results += ({ 1 });
+    expect("query_value returns ascending values", (: ({
+        assert((: testOb->query_value(0) :), "==", 0),
+        assert((: testOb->query_value(-1) :), "==", 0),
+        assert((: testOb->query_value(-50) :), "==", 0),
+        assert((: testOb->query_value(1) :), ">", 0),
+        assert((: testOb->query_value(2) :), ">", (: testOb->query_value(1) :)),
+        assert((: testOb->query_value(100) :), ">", (: testOb->query_value(2) :)),
+        assert((: testOb->query_value(1000) :), ">", (: testOb->query_value(100) :)),
+    }) :));
 
-    // repeat tests for object
+    // tests for integer parameter
+    expect("query_value returns ascending values for integer parameter", (: ({
+        assert((: testOb->query_value(0) :), "==", 0),
+        assert((: testOb->query_value(-1) :), "==", 0),
+        assert((: testOb->query_value(-50) :), "==", 0),
+        assert((: testOb->query_value(1) :), ">", 0),
+        assert((: testOb->query_value(2) :), ">", (: testOb->query_value(1) :)),
+        assert((: testOb->query_value(100) :), ">", (: testOb->query_value(2) :)),
+        assert((: testOb->query_value(1000) :), ">", (: testOb->query_value(100) :)),
+    }) :));
+
+    // tests for object parameter
     __MockLiving = 1;
-    __MockLevel = 0;
-    values += ({ testOb->query_value(this_object()) });
-    results += ({ 0 });
-    __MockLevel = -1;
-    values += ({ testOb->query_value(this_object()) });
-    results += ({ 0 });
-    __MockLevel = -50;
-    values += ({ testOb->query_value(this_object()) });
-    results += ({ 0 });
-    __MockLevel = 1;
-    values += ({ testOb->query_value(this_object()) > 0 });
-    results += ({ 1 });
-    __MockLevel = 2;
-    values += ({ testOb->query_value(this_object()) > values[<1] });
-    results += ({ 1 });
-    values += ({ testOb->query_value(this_object()) > values[<1] });
-    results += ({ 1 });
-    values += ({ testOb->query_value(this_object()) > values[<1] });
-    results += ({ 1 });
-
-    expect_arrays_equal(values, results, "query_value returned ascending values");
+    expect("query_value returns ascending values for object parameter", (: ({
+        set_mock_level(0) && assert((: testOb->query_value(this_object()) :), "==", 0),
+        set_mock_level(-1) && assert((: testOb->query_value(this_object()) :), "==", 0),
+        set_mock_level(-50) && assert((: testOb->query_value(this_object()) :), "==", 0),
+        set_mock_level(1) && assert((: testOb->query_value(this_object()) :), ">", 0),
+        set_mock_level(2) && assert((: testOb->query_value(this_object()) :), ">", (: testOb->query_value(1) :)),
+        set_mock_level(100) && assert((: testOb->query_value(this_object()) :), ">", (: testOb->query_value(2) :)),
+        set_mock_level(1000) && assert((: testOb->query_value(this_object()) :), ">", (: testOb->query_value(100) :)),
+    }) :));
 
     // check error conditions
     __MockLiving = 0;

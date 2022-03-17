@@ -266,8 +266,8 @@ varargs void expect_arrays_equal (mixed *left, mixed *right, string message) {
             }
         }
     }
-    left = map(left, (:identify:));
-    right = map(right, (:identify:));
+    left = map(left, (: identify :));
+    right = map(right, (: identify :));
     validate_expect(left, right, message);
 }
 // Compare the string left to the string right
@@ -300,7 +300,7 @@ void expect_function (string fn, object testOb) {
 varargs void expect_catch (mixed expr, string right, string message) {
     mixed err;
     expectCatch ++;
-    err = catch(evaluate(expr));
+    err = catch (evaluate(expr));
     expectCatch --;
     currentTestPassed = !!err && err == right;
     if (!err) {
@@ -314,7 +314,7 @@ varargs void expect_catches (mixed *expr, string right, string message) {
     string *values = ({});
     expectCatch ++;
     foreach (mixed e in expr) {
-        err = catch(evaluate(e));
+        err = catch (evaluate(e));
         if (!err) {
             values += ({ "Not Caught" });
         } else {
@@ -328,5 +328,65 @@ varargs void expect_catches (mixed *expr, string right, string message) {
 protected void expect_next_failure () {
     if (base_name(this_object()) == replace_string(M_TEST, ".c", ".test") && failingExpects == 0) {
         failingExpects --;
+    }
+}
+
+nosave private string currentTestMessage;
+nosave private mixed *leftResults, *rightResults;
+void expect (string message, function fn) {
+
+    if (!stringp(message)) error("Bad argument 1 to test->expect");
+    if (!functionp(fn)) error("Bad argument 2 to test->expect");
+
+    currentTestMessage = message;
+    currentTestPassed = 1;
+    leftResults = ({ });
+    rightResults = ({ });
+
+    evaluate(fn);
+
+    validate_expect(leftResults, rightResults, currentTestMessage);
+
+    currentTestMessage = 0;
+    leftResults = 0;
+    rightResults = 0;
+}
+void assert (function left, string condition, mixed right) {
+    mixed err, leftResult, rightResult;
+
+    if (!stringp(currentTestMessage)) error("test->assert outside of test->expect");
+    if (!functionp(left)) error("Bad argument 1 to test->assert");
+    if (!stringp(condition)) error("Bad argument 2 to test->assert");
+    if (undefinedp(right)) error("Bad argument 2 to test->assert");
+
+    err = catch (leftResult = evaluate(left));
+    if (err) {
+        leftResult = err;
+        currentTestPassed = 0;
+    }
+    leftResults += ({ leftResult });
+
+    if (functionp(right)) {
+        err = catch (rightResult = evaluate(right));
+        if (err) {
+            rightResult = err;
+            currentTestPassed = 0;
+        }
+    } else {
+        rightResult = right;
+    }
+    rightResults += ({ rightResult });
+
+    if (!currentTestPassed) return;
+     else if (condition == "==") {
+        currentTestPassed = !undefinedp(rightResult) && leftResult == rightResult;
+    } else if (condition == ">") {
+        currentTestPassed = !undefinedp(rightResult) && leftResult > rightResult;
+    } else if (condition == ">=") {
+        currentTestPassed = !undefinedp(rightResult) && leftResult <= rightResult;
+    } else if (condition == "<") {
+        currentTestPassed = !undefinedp(rightResult) && leftResult < rightResult;
+    } else if (condition == "<=") {
+        currentTestPassed = !undefinedp(rightResult) && leftResult <= rightResult;
     }
 }

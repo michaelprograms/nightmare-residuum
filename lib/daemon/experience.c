@@ -23,10 +23,10 @@ int query_skill_cost (int level) {
     return 100 + to_int(0.25 * pow(level, 3.0) + 0.25 * pow(level, 3.25));
 }
 
-int query_level_cost (int level) {
+// int query_level_cost (int level) {
 
-    return 0;
-}
+//     return 0;
+// }
 
 int query_value (mixed m) {
     float lvl, exp;
