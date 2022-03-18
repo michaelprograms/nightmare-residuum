@@ -9,10 +9,12 @@ void after_all_tests () {
 }
 
 void test_distinct_array () {
-    int *arr1 = ({1, 2, 2, 3, 2, 1, 3, 2, 1});
-
     expect_function("distinct_array", testOb);
-    expect_arrays_equal(testOb->distinct_array(arr1), ({3, 2, 1}), "distinct array returned distinct members");
-    expect_true(testOb->distinct_array(({})) == ({}), "distinct array handled empty array");
-    expect_true(testOb->distinct_array(0) == ({}), "distinct array handled blank parameter");
+
+    expect("distinct_array handles inputs", (: ({
+        assert((: testOb->distinct_array(({ 1, 2, 2, 3, 2, 1, 3, 2, 1 })) :), "==", ({ 3, 2, 1 })),
+        assert((: testOb->distinct_array(({ 1, 4, 4, 3, 4, 1, 3, 2, 1 })) :), "==", ({ 4, 3, 2, 1 })),
+        assert((: testOb->distinct_array(({})) :), "==", ({})),
+        assert((: testOb->distinct_array(0) :), "==", ({})),
+    }) :));
 }
