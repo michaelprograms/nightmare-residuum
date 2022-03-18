@@ -155,15 +155,15 @@ private string format_array_differences (mixed *actual, mixed *expect) {
     l = sizeof(actual) < sizeof(expect) ? sizeof(expect) : sizeof(actual);
     for (int i = 0; i < l; i ++) {
         if (i < sizeof(actual)) {
-            if (arrayp(actual[i])) a = implode(actual[i], ",");
+            if (arrayp(actual[i])) a = implode(map(actual[i], (: identify($1) :)), ",");
             else a = actual[i];
         } else a = "";
         if (i < sizeof(expect)) {
-            if (arrayp(expect[i])) e = implode(expect[i], ",");
+            if (arrayp(expect[i])) e = implode(map(expect[i], (: identify($1) :)), ",");
             else e = expect[i];
         } else e = "";
 
-        result += "\n        " + sprintf("%2d", i) + ". " + format_string_difference(a, e);
+        result += "\n      " + sprintf("%2d", i) + ". " + format_string_difference(a, e);
     }
     return result;
 }
@@ -376,6 +376,9 @@ void assert (function left, string condition, mixed right) {
         rightResult = right;
     }
     rightResults += ({ rightResult });
+
+    if (arrayp(leftResult)) leftResult = identify(leftResult);
+    if (arrayp(rightResult)) rightResult = identify(rightResult);
 
     if (!currentTestPassed) return;
      else if (condition == "==") {
