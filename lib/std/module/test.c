@@ -358,27 +358,30 @@ void expect (string message, function fn) {
     rightResults = 0;
 }
 void assert (function left, string condition, mixed right) {
-    mixed err, leftResult, rightResult;
+    mixed leftErr, rightErr, leftResult, rightResult;
 
     if (!stringp(currentTestMessage)) error("test->assert outside of test->expect");
     if (!functionp(left)) error("Bad argument 1 to test->assert");
     if (!stringp(condition)) error("Bad argument 2 to test->assert");
     if (undefinedp(right)) error("Bad argument 2 to test->assert");
 
-    if (err = catch (leftResult = evaluate(left))) {
-        leftResult = err;
-        currentTestPassed = 0;
+    if (condition == "catch") expectCatch = 1;
+
+    if (leftErr = catch (leftResult = evaluate(left))) {
+        leftResult = leftErr;
+        currentTestPassed = condition == "catch";
     }
     leftResults += ({ leftResult });
 
     if (functionp(right)) {
-        if (err = catch (rightResult = evaluate(right))) {
-            rightResult = err;
-            currentTestPassed = 0;
+        if (rightErr = catch (rightResult = evaluate(right))) {
+            rightResult = rightErr;
+            currentTestPassed = condition == "catch";
         }
     } else {
         rightResult = right;
     }
+    if (condition == "catch") expectCatch = 0;
 
     if (arrayp(leftResult)) leftResult = identify(leftResult);
     if (arrayp(rightResult)) rightResult = identify(rightResult);
@@ -401,6 +404,8 @@ void assert (function left, string condition, mixed right) {
         currentTestPassed = !undefinedp(rightResult) && leftResult <= rightResult;
     } else if (condition == "regex") {
         currentTestPassed = regexp(leftResult, rightResult) > 0;
+    } else if (condition == "catch") {
+        currentTestPassed = !!leftErr && leftErr == rightResult;
     } else {
         currentTestPassed = 0;
     }
