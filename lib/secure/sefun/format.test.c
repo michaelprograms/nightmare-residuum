@@ -27,13 +27,13 @@ void test_format_header_bar () {
         assert((: testOb->format_header_bar("Title2", "optional") :), "regex", "Title2: optional"),
         assert((: testOb->format_header_bar("Something", "else") :), "regex", "Something: else"),
         assert((: testOb->format_header_bar("Title") :), "==", "==/ Title \\====================================================================="),
-        assert((: sizeof(testOb->format_header_bar("Title")) :), "==", __MockAccount->query_setting("width")),
+        assert((: strlen(testOb->format_header_bar("Title")) :), "==", 80),
     }) :));
 
     __MockAccount->set_setting("width", 60);
     expect("format_header_bar handled screenreader=off ansi=off width=60", (: ({
         assert((: testOb->format_header_bar("Title") :), "==", "==/ Title \\================================================="),
-        assert((: sizeof(testOb->format_header_bar("Title")) :), "==", __MockAccount->query_setting("width")),
+        assert((: strlen(testOb->format_header_bar("Title")) :), "==", 60),
     }) :));
 
     __MockAccount->set_setting("screenreader", "on");
@@ -80,14 +80,50 @@ void test_format_footer_bar () {
 
     expect("format_footer_bar handled screenreader=off ansi=off width=80", (: ({
         assert((: testOb->format_footer_bar() :), "regex", "====="),
-        assert((: sizeof(testOb->format_footer_bar()) :), "==", __MockAccount->query_setting("width")),
+        assert((: strlen(testOb->format_footer_bar()) :), "==", 80),
     }) :));
 
     __MockAccount->set_setting("screenreader", "on");
     expect("format_footer_bar handled screenreader=on", (: ({
         assert((: testOb->format_footer_bar() :), "==", ""),
-        assert((: sizeof(testOb->format_footer_bar()) :), "==", 0),
+        assert((: strlen(testOb->format_footer_bar()) :), "==", 0),
     }) :));
+
+    destruct(__MockAccount);
+}
+
+void test_format_page () {
+    expect_function("format_page", testOb);
+
+    __MockAccount = new(STD_ACCOUNT);
+
+    expect("format_page handled width=80", (: ({
+        assert((: testOb->format_page(({ "a", "b" })) :), "regex", "^a +b +\n$"),
+        assert((: testOb->format_page(({ "a", "b", "c" })) :), "regex", "^a +b +\nc +\n$"),
+        assert((: testOb->format_page(({ "a", "b", "c" }), 1) :), "regex", "^a +\nb +\nc +\n$"),
+        assert((: testOb->format_page(({ "a", "b", "c" }), 2) :), "regex", "^a +b +\nc +\n$"),
+        assert((: testOb->format_page(({ "a", "b", "c" }), 3) :), "regex", "^a +b +c +\n$"),
+        assert((: strlen(explode(testOb->format_page(({ "a", "b", "c" }), 2), "\n")[0]) :), "==", 80),
+    }) :));
+
+    __MockAccount->set_setting("width", 60);
+    expect("format_page handled width=60", (: ({
+        assert((: testOb->format_page(({ "a", "b" })) :), "regex", "^a +b +\n$"),
+        assert((: testOb->format_page(({ "a", "b", "c" })) :), "regex", "^a +b +\nc +\n$"),
+        assert((: testOb->format_page(({ "a", "b", "c" }), 1) :), "regex", "^a +\nb +\nc +\n$"),
+        assert((: testOb->format_page(({ "a", "b", "c" }), 3) :), "regex", "^a +b +c +\n$"),
+        assert((: testOb->format_page(({ "a", "b", "c" }), 2) :), "regex", "^a +b +\nc +\n$"),
+        assert((: strlen(explode(testOb->format_page(({ "a", "b", "c" }), 2), "\n")[0]) :), "==", 60),
+    }) :));
+
+    expect_catches (({
+        (: testOb->format_page() :),
+        (: testOb->format_page(0) :),
+        (: testOb->format_page(0.0) :),
+        (: testOb->format_page(({})) :),
+        (: testOb->format_page(([])) :),
+        (: testOb->format_page((: 1 :)) :),
+    }), "*Bad argument 1 to format->format_page\n", "format_page handled invalid argument 1");
 
     destruct(__MockAccount);
 }

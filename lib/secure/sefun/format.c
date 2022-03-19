@@ -67,6 +67,27 @@ string format_footer_bar () {
     return bar;
 }
 
+varargs string format_page (string *items, int columns, int pad) {
+    int width, i, j, n;
+    string result = "";
+
+    if (!arrayp(items) || !sizeof(items)) error("Bad argument 1 to format->format_page");
+
+    if (!columns) columns = 2;
+    width = to_int(query_account_setting("width"));
+    width = (width / columns) + pad;
+    n = sizeof(items);
+
+    for (i = 0; i < n; i += columns) {
+        for (j = 0; j < columns; j ++) {
+            if (i + j >= n) break;
+            result += sprintf("%-"+sprintf("%d", width)+"s", items[i + j]); // @TODO for longer strings
+        }
+        result += "\n";
+    }
+    return result;
+}
+
 string format_exit_brief (string dir) {
     string *result = ({});
     if (!stringp(dir)) error("Bad argument 1 to format->format_exit_brief");
@@ -177,21 +198,4 @@ string format_integer (int num) {
     }
 
     return (neg ? "-" : "") + result;
-}
-
-varargs string format_page (string *items, int columns, int pad) {
-    int width, i, j, n = sizeof(items);
-    string result = "";
-
-    if (!columns) columns = 2;
-    width = this_user() ? this_user()->query_account()->query_setting("width") : 80;
-    width = (width / columns) + pad;
-    for(i = 0; i < n; i += columns) {
-        for (j = 0; j < columns; j ++) {
-            if (i + j >= n) break;
-            result += sprintf("%-"+sprintf("%d", width)+"s", items[i + j]); // @TODO for longer strings
-        }
-        result += "\n";
-    }
-    return result;
 }
