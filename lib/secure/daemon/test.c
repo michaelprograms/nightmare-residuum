@@ -211,12 +211,10 @@ varargs void run (int callShutdown) {
 
     tests = keys(__Tests);
     tests = sort_array(tests, function(string a, string b) {
-        if (regexp(a, "^\\/secure\\/module\\/test")) return -1;
-        else if (regexp(b, "^\\/secure\\/module\\/test")) return 1;
-        else if (regexp(a, "^\\/secure\\/master\\/master")) return -1;
-        else if (regexp(b, "^\\/secure\\/master\\/master")) return 1;
-        else if (regexp(a, "^\\/secure\\/master\\/")) return -1;
-        else if (regexp(b, "^\\/secure\\/master\\/")) return 1;
+        if (regexp(a, "^\\/std\\/module\\/test")) return -1;
+        else if (regexp(b, "^\\/std\\/module\\/test")) return 1;
+        else if (regexp(a, "^\\/secure\\/daemon\\/master")) return -1;
+        else if (regexp(b, "^\\/secure\\/daemon\\/master")) return 1;
         else if (regexp(a, "^\\/secure\\/sefun\\/sefun")) return -1;
         else if (regexp(b, "^\\/secure\\/sefun\\/sefun")) return 1;
         else if (regexp(a, "^\\/secure\\/sefun\\/")) return -1;
