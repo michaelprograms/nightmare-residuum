@@ -1,50 +1,117 @@
 inherit M_TEST;
 
 private nosave object testOb;
-void before_all_tests () {
+void before_each_test () {
     testOb = clone_object("/secure/sefun/format.c");
 }
-void after_all_tests () {
+void after_each_test () {
     if (objectp(testOb)) destruct(testOb);
 }
 
-void test_format_exit_brief () {
-    string *values = ({}), *results = ({});
+string *test_ignore () { return ::test_ignore() + ({ "query_account" }); }
 
+nosave private object __MockAccount;
+object query_account () {
+    return __MockAccount;
+}
+
+void test_format_header_bar () {
+    expect_function("format_header_bar", testOb);
+
+    __MockAccount = new(STD_ACCOUNT);
+    __MockAccount->set_setting("ansi", "off"); // @TODO test for ansi on
+
+    expect("format_header_bar handled screenreader=off ansi=off width=80", (: ({
+        assert((: testOb->format_header_bar("Title") :), "regex", "Title"),
+        assert((: testOb->format_header_bar("Other Title") :), "regex", "Other Title"),
+        assert((: testOb->format_header_bar("Title2", "optional") :), "regex", "Title2: optional"),
+        assert((: testOb->format_header_bar("Something", "else") :), "regex", "Something: else"),
+        assert((: testOb->format_header_bar("Title") :), "==", "==/ Title \\====================================================================="),
+        assert((: sizeof(testOb->format_header_bar("Title")) :), "==", __MockAccount->query_setting("width")),
+    }) :));
+
+    __MockAccount->set_setting("width", 60);
+    expect("format_header_bar handled screenreader=off ansi=off width=60", (: ({
+        assert((: testOb->format_header_bar("Title") :), "==", "==/ Title \\================================================="),
+        assert((: sizeof(testOb->format_header_bar("Title")) :), "==", __MockAccount->query_setting("width")),
+    }) :));
+
+    __MockAccount->set_setting("screenreader", "on");
+    expect("format_header_bar handled screenreader=on", (: ({
+        assert((: testOb->format_header_bar("Title") :), "==", "Title"),
+        assert((: testOb->format_header_bar("Title", "optional") :), "==", "Title: optional"),
+        assert((: testOb->format_header_bar("Something", "else") :), "==", "Something: else"),
+    }) :));
+
+    expect_catches (({
+        (: testOb->format_header_bar(0) :),
+        (: testOb->format_header_bar(0.0) :),
+        (: testOb->format_header_bar(({})) :),
+        (: testOb->format_header_bar(([])) :),
+        (: testOb->format_header_bar((: 1 :)) :),
+    }), "*Bad argument 1 to format->format_header_bar\n", "format_header_bar handled invalid argument 1");
+
+    destruct(__MockAccount);
+}
+void test_format_divider_bar () {
+    expect_function("format_divider_bar", testOb);
+
+    __MockAccount = new(STD_ACCOUNT);
+    __MockAccount->set_setting("ansi", "off"); // @TODO test for ansi on
+
+    expect("format_divider_bar handled screenreader=off ansi=off width=80", (: ({
+        assert((: testOb->format_divider_bar() :), "regex", "----"),
+        assert((: sizeof(testOb->format_divider_bar()) :), "==", __MockAccount->query_setting("width")),
+    }) :));
+
+    __MockAccount->set_setting("screenreader", "on");
+    expect("format_divider_bar handled screenreader=on", (: ({
+        assert((: testOb->format_divider_bar() :), "==", ""),
+        assert((: sizeof(testOb->format_divider_bar()) :), "==", 0),
+    }) :));
+
+    destruct(__MockAccount);
+}
+void test_format_footer_bar () {
+    expect_function("format_footer_bar", testOb);
+
+    __MockAccount = new(STD_ACCOUNT);
+    __MockAccount->set_setting("ansi", "off"); // @TODO test for ansi on
+
+    expect("format_footer_bar handled screenreader=off ansi=off width=80", (: ({
+        assert((: testOb->format_footer_bar() :), "regex", "====="),
+        assert((: sizeof(testOb->format_footer_bar()) :), "==", __MockAccount->query_setting("width")),
+    }) :));
+
+    __MockAccount->set_setting("screenreader", "on");
+    expect("format_footer_bar handled screenreader=on", (: ({
+        assert((: testOb->format_footer_bar() :), "==", ""),
+        assert((: sizeof(testOb->format_footer_bar()) :), "==", 0),
+    }) :));
+
+    destruct(__MockAccount);
+}
+
+void test_format_exit_brief () {
     expect_function("format_exit_brief", testOb);
 
-    values += ({ testOb->format_exit_brief("north") });
-    results += ({ "n" });
-    values += ({ testOb->format_exit_brief("northeast") });
-    results += ({ "ne" });
-    values += ({ testOb->format_exit_brief("east") });
-    results += ({ "e" });
-    values += ({ testOb->format_exit_brief("southeast") });
-    results += ({ "se" });
-    values += ({ testOb->format_exit_brief("south") });
-    results += ({ "s" });
-    values += ({ testOb->format_exit_brief("southwest") });
-    results += ({ "sw" });
-    values += ({ testOb->format_exit_brief("west") });
-    results += ({ "w" });
-    values += ({ testOb->format_exit_brief("northwest") });
-    results += ({ "nw" });
-    values += ({ testOb->format_exit_brief("enter") });
-    results += ({ "ent" });
-    values += ({ testOb->format_exit_brief("out") });
-    results += ({ "out" });
-    values += ({ testOb->format_exit_brief("enter north") });
-    results += ({ "ent n" });
-    values += ({ testOb->format_exit_brief("up") });
-    results += ({ "u" });
-    values += ({ testOb->format_exit_brief("down") });
-    results += ({ "d" });
-    values += ({ testOb->format_exit_brief("n") });
-    results += ({ "n" });
-    values += ({ testOb->format_exit_brief("exit") });
-    results += ({ "exit" });
-
-    expect_arrays_equal(values, results, "format_exit_brief handled exits");
+    expect("format_exit_brief handled exits", (: ({
+        assert((: testOb->format_exit_brief("north") :), "==", "n"),
+        assert((: testOb->format_exit_brief("northeast") :), "==", "ne"),
+        assert((: testOb->format_exit_brief("east") :), "==", "e"),
+        assert((: testOb->format_exit_brief("southeast") :), "==", "se"),
+        assert((: testOb->format_exit_brief("south") :), "==", "s"),
+        assert((: testOb->format_exit_brief("southwest") :), "==", "sw"),
+        assert((: testOb->format_exit_brief("west") :), "==", "w"),
+        assert((: testOb->format_exit_brief("northwest") :), "==", "nw"),
+        assert((: testOb->format_exit_brief("enter") :), "==", "ent"),
+        assert((: testOb->format_exit_brief("out") :), "==", "out"),
+        assert((: testOb->format_exit_brief("enter north") :), "==", "ent n"),
+        assert((: testOb->format_exit_brief("up") :), "==", "u"),
+        assert((: testOb->format_exit_brief("down") :), "==", "d"),
+        assert((: testOb->format_exit_brief("n") :), "==", "n"),
+        assert((: testOb->format_exit_brief("exit") :), "==", "exit"),
+    }) :));
 
     expect_catches (({
         (: testOb->format_exit_brief(0) :),
@@ -55,42 +122,25 @@ void test_format_exit_brief () {
     }), "*Bad argument 1 to format->format_exit_brief\n", "format_exit_brief handled invalid argument 1");
 }
 void test_format_exit_verbose () {
-    string *values = ({}), *results = ({});
-
     expect_function("format_exit_verbose", testOb);
 
-    values += ({ testOb->format_exit_verbose("n") });
-    results += ({ "north" });
-    values += ({ testOb->format_exit_verbose("ne") });
-    results += ({ "northeast" });
-    values += ({ testOb->format_exit_verbose("e") });
-    results += ({ "east" });
-    values += ({ testOb->format_exit_verbose("se") });
-    results += ({ "southeast" });
-    values += ({ testOb->format_exit_verbose("s") });
-    results += ({ "south" });
-    values += ({ testOb->format_exit_verbose("sw") });
-    results += ({ "southwest" });
-    values += ({ testOb->format_exit_verbose("w") });
-    results += ({ "west" });
-    values += ({ testOb->format_exit_verbose("nw") });
-    results += ({ "northwest" });
-    values += ({ testOb->format_exit_verbose("ent") });
-    results += ({ "enter" });
-    values += ({ testOb->format_exit_verbose("out") });
-    results += ({ "out" });
-    values += ({ testOb->format_exit_verbose("ent n") });
-    results += ({ "enter north" });
-    values += ({ testOb->format_exit_verbose("u") });
-    results += ({ "up" });
-    values += ({ testOb->format_exit_verbose("d") });
-    results += ({ "down" });
-    values += ({ testOb->format_exit_verbose("north") });
-    results += ({ "north" });
-    values += ({ testOb->format_exit_verbose("exit") });
-    results += ({ "exit" });
-
-    expect_arrays_equal(values, results, "format_exit_verbose handled exits");
+    expect("format_exit_verbose handled exits", (: ({
+        assert((: testOb->format_exit_verbose("n") :), "==", "north"),
+        assert((: testOb->format_exit_verbose("ne") :), "==", "northeast"),
+        assert((: testOb->format_exit_verbose("e") :), "==", "east"),
+        assert((: testOb->format_exit_verbose("se") :), "==", "southeast"),
+        assert((: testOb->format_exit_verbose("s") :), "==", "south"),
+        assert((: testOb->format_exit_verbose("sw") :), "==", "southwest"),
+        assert((: testOb->format_exit_verbose("w") :), "==", "west"),
+        assert((: testOb->format_exit_verbose("nw") :), "==", "northwest"),
+        assert((: testOb->format_exit_verbose("ent") :), "==", "enter"),
+        assert((: testOb->format_exit_verbose("out") :), "==", "out"),
+        assert((: testOb->format_exit_verbose("ent n") :), "==", "enter north"),
+        assert((: testOb->format_exit_verbose("u") :), "==", "up"),
+        assert((: testOb->format_exit_verbose("d") :), "==", "down"),
+        assert((: testOb->format_exit_verbose("north") :), "==", "north"),
+        assert((: testOb->format_exit_verbose("exit") :), "==", "exit"),
+    }) :));
 
     expect_catches (({
         (: testOb->format_exit_verbose(0) :),
@@ -100,44 +150,26 @@ void test_format_exit_verbose () {
         (: testOb->format_exit_verbose((: 1 :)) :),
     }), "*Bad argument 1 to format->format_exit_verbose\n", "format_exit_verbose handled invalid argument 1");
 }
-
 void test_format_exit_reverse () {
-    string *values = ({}), *results = ({});
-
     expect_function("format_exit_reverse", testOb);
 
-    values += ({ testOb->format_exit_reverse("south") });
-    results += ({ "north" });
-    values += ({ testOb->format_exit_reverse("southwest") });
-    results += ({ "northeast" });
-    values += ({ testOb->format_exit_reverse("west") });
-    results += ({ "east" });
-    values += ({ testOb->format_exit_reverse("northwest") });
-    results += ({ "southeast" });
-    values += ({ testOb->format_exit_reverse("north") });
-    results += ({ "south" });
-    values += ({ testOb->format_exit_reverse("northeast") });
-    results += ({ "southwest" });
-    values += ({ testOb->format_exit_reverse("east") });
-    results += ({ "west" });
-    values += ({ testOb->format_exit_reverse("southeast") });
-    results += ({ "northwest" });
-    values += ({ testOb->format_exit_reverse("out") });
-    results += ({ "enter" });
-    values += ({ testOb->format_exit_reverse("enter") });
-    results += ({ "out" });
-    values += ({ testOb->format_exit_reverse("enter north") });
-    results += ({ "out south" });
-    values += ({ testOb->format_exit_reverse("out north") });
-    results += ({ "enter south" });
-    values += ({ testOb->format_exit_reverse("down") });
-    results += ({ "up" });
-    values += ({ testOb->format_exit_reverse("up") });
-    results += ({ "down" });
-    values += ({ testOb->format_exit_reverse("exit") });
-    results += ({ "exit" });
-
-    expect_arrays_equal(values, results, "format_exit_reverse handled exits");
+    expect("format_exit_reverse handled exits", (: ({
+        assert((: testOb->format_exit_reverse("south") :), "==", "north"),
+        assert((: testOb->format_exit_reverse("southwest") :), "==", "northeast"),
+        assert((: testOb->format_exit_reverse("west") :), "==", "east"),
+        assert((: testOb->format_exit_reverse("northwest") :), "==", "southeast"),
+        assert((: testOb->format_exit_reverse("north") :), "==", "south"),
+        assert((: testOb->format_exit_reverse("northeast") :), "==", "southwest"),
+        assert((: testOb->format_exit_reverse("east") :), "==", "west"),
+        assert((: testOb->format_exit_reverse("southeast") :), "==", "northwest"),
+        assert((: testOb->format_exit_reverse("out") :), "==", "enter"),
+        assert((: testOb->format_exit_reverse("enter") :), "==", "out"),
+        assert((: testOb->format_exit_reverse("enter north") :), "==", "out south"),
+        assert((: testOb->format_exit_reverse("out north") :), "==", "enter south"),
+        assert((: testOb->format_exit_reverse("down") :), "==", "up"),
+        assert((: testOb->format_exit_reverse("up") :), "==", "down"),
+        assert((: testOb->format_exit_reverse("exit") :), "==", "exit"),
+    }) :));
 
     expect_catches (({
         (: testOb->format_exit_reverse(0) :),
@@ -149,42 +181,25 @@ void test_format_exit_reverse () {
 }
 
 void test_format_stat_brief () {
-    string *values = ({}), *results = ({});
-
     expect_function("format_stat_brief", testOb);
 
-    values += ({ testOb->format_stat_brief("strength") });
-    results += ({ "str" });
-    values += ({ testOb->format_stat_brief("perception") });
-    results += ({ "per" });
-    values += ({ testOb->format_stat_brief("endurance") });
-    results += ({ "end" });
-    values += ({ testOb->format_stat_brief("charisma") });
-    results += ({ "cha" });
-    values += ({ testOb->format_stat_brief("intelligence") });
-    results += ({ "int" });
-    values += ({ testOb->format_stat_brief("agility") });
-    results += ({ "agi" });
-    values += ({ testOb->format_stat_brief("luck") });
-    results += ({ "lck" });
-    values += ({ testOb->format_stat_brief("unknown") });
-    results += ({ "" });
-    values += ({ testOb->format_stat_brief("str") });
-    results += ({ "str" });
-    values += ({ testOb->format_stat_brief("per") });
-    results += ({ "per" });
-    values += ({ testOb->format_stat_brief("end") });
-    results += ({ "end" });
-    values += ({ testOb->format_stat_brief("cha") });
-    results += ({ "cha" });
-    values += ({ testOb->format_stat_brief("int") });
-    results += ({ "int" });
-    values += ({ testOb->format_stat_brief("agi") });
-    results += ({ "agi" });
-    values += ({ testOb->format_stat_brief("lck") });
-    results += ({ "lck" });
-
-    expect_arrays_equal(values, results, "format_stat_brief handled exits");
+    expect("format_stat_brief handled exits", (: ({
+        assert((: testOb->format_stat_brief("strength") :), "==", "str"),
+        assert((: testOb->format_stat_brief("perception") :), "==", "per"),
+        assert((: testOb->format_stat_brief("endurance") :), "==", "end"),
+        assert((: testOb->format_stat_brief("charisma") :), "==", "cha"),
+        assert((: testOb->format_stat_brief("intelligence") :), "==", "int"),
+        assert((: testOb->format_stat_brief("agility") :), "==", "agi"),
+        assert((: testOb->format_stat_brief("luck") :), "==", "lck"),
+        assert((: testOb->format_stat_brief("unknown") :), "==", ""),
+        assert((: testOb->format_stat_brief("str") :), "==", "str"),
+        assert((: testOb->format_stat_brief("per") :), "==", "per"),
+        assert((: testOb->format_stat_brief("end") :), "==", "end"),
+        assert((: testOb->format_stat_brief("cha") :), "==", "cha"),
+        assert((: testOb->format_stat_brief("int") :), "==", "int"),
+        assert((: testOb->format_stat_brief("agi") :), "==", "agi"),
+        assert((: testOb->format_stat_brief("lck") :), "==", "lck"),
+    }) :));
 
     expect_catches (({
         (: testOb->format_stat_brief(0) :),
@@ -195,42 +210,25 @@ void test_format_stat_brief () {
     }), "*Bad argument 1 to format->format_stat_brief\n", "format_stat_brief handled invalid argument 1");
 }
 void test_format_stat_verbose () {
-    string *values = ({}), *results = ({});
-
     expect_function("format_stat_verbose", testOb);
 
-    values += ({ testOb->format_stat_verbose("str") });
-    results += ({ "strength" });
-    values += ({ testOb->format_stat_verbose("per") });
-    results += ({ "perception" });
-    values += ({ testOb->format_stat_verbose("end") });
-    results += ({ "endurance" });
-    values += ({ testOb->format_stat_verbose("cha") });
-    results += ({ "charisma" });
-    values += ({ testOb->format_stat_verbose("int") });
-    results += ({ "intelligence" });
-    values += ({ testOb->format_stat_verbose("agi") });
-    results += ({ "agility" });
-    values += ({ testOb->format_stat_verbose("lck") });
-    results += ({ "luck" });
-    values += ({ testOb->format_stat_verbose("unknown") });
-    results += ({ "" });
-    values += ({ testOb->format_stat_verbose("strength") });
-    results += ({ "strength" });
-    values += ({ testOb->format_stat_verbose("perception") });
-    results += ({ "perception" });
-    values += ({ testOb->format_stat_verbose("endurance") });
-    results += ({ "endurance" });
-    values += ({ testOb->format_stat_verbose("charisma") });
-    results += ({ "charisma" });
-    values += ({ testOb->format_stat_verbose("intelligence") });
-    results += ({ "intelligence" });
-    values += ({ testOb->format_stat_verbose("agility") });
-    results += ({ "agility" });
-    values += ({ testOb->format_stat_verbose("luck") });
-    results += ({ "luck" });
-
-    expect_arrays_equal(values, results, "format_stat_verbose handled exits");
+    expect("format_stat_brief handled exits", (: ({
+        assert((: testOb->format_stat_verbose("str") :), "==", "strength"),
+        assert((: testOb->format_stat_verbose("per") :), "==", "perception"),
+        assert((: testOb->format_stat_verbose("end") :), "==", "endurance"),
+        assert((: testOb->format_stat_verbose("cha") :), "==", "charisma"),
+        assert((: testOb->format_stat_verbose("int") :), "==", "intelligence"),
+        assert((: testOb->format_stat_verbose("agi") :), "==", "agility"),
+        assert((: testOb->format_stat_verbose("lck") :), "==", "luck"),
+        assert((: testOb->format_stat_verbose("unknown") :), "==", ""),
+        assert((: testOb->format_stat_verbose("strength") :), "==", "strength"),
+        assert((: testOb->format_stat_verbose("perception") :), "==", "perception"),
+        assert((: testOb->format_stat_verbose("endurance") :), "==", "endurance"),
+        assert((: testOb->format_stat_verbose("charisma") :), "==", "charisma"),
+        assert((: testOb->format_stat_verbose("intelligence") :), "==", "intelligence"),
+        assert((: testOb->format_stat_verbose("agility") :), "==", "agility"),
+        assert((: testOb->format_stat_verbose("luck") :), "==", "luck"),
+    }) :));
 
     expect_catches (({
         (: testOb->format_stat_verbose(0) :),
@@ -242,39 +240,25 @@ void test_format_stat_verbose () {
 }
 
 void test_format_integer () {
-    string *values = ({}), *results = ({});
-
     expect_function("format_integer", testOb);
 
-    // positives
-    values += ({ testOb->format_integer(0) });
-    results += ({ "0" });
-    values += ({ testOb->format_integer(1) });
-    results += ({ "1" });
-    values += ({ testOb->format_integer(123) });
-    results += ({ "123" });
-    values += ({ testOb->format_integer(1234) });
-    results += ({ "1,234" });
-    values += ({ testOb->format_integer(123456) });
-    results += ({ "123,456" });
-    values += ({ testOb->format_integer(1234567) });
-    results += ({ "1,234,567" });
-    values += ({ testOb->format_integer(1234567890) });
-    results += ({ "1,234,567,890" });
+    expect("format_integer handled integers", (: ({
+        // positives
+        assert((: testOb->format_integer(0) :), "==", "0"),
+        assert((: testOb->format_integer(1) :), "==", "1"),
+        assert((: testOb->format_integer(123) :), "==", "123"),
+        assert((: testOb->format_integer(1234) :), "==", "1,234"),
+        assert((: testOb->format_integer(123456) :), "==", "123,456"),
+        assert((: testOb->format_integer(1234567) :), "==", "1,234,567"),
+        assert((: testOb->format_integer(1234567890) :), "==", "1,234,567,890"),
 
-    // negatives
-    values += ({ testOb->format_integer(-0) });
-    results += ({ "0" });
-    values += ({ testOb->format_integer(-1) });
-    results += ({ "-1" });
-    values += ({ testOb->format_integer(-1234) });
-    results += ({ "-1,234" });
-    values += ({ testOb->format_integer(-123456789) });
-    results += ({ "-123,456,789" });
-    values += ({ testOb->format_integer(-1234567890) });
-    results += ({ "-1,234,567,890" });
-
-    expect_arrays_equal(values, results, "format_integer handled integers");
+        // negatives
+        assert((: testOb->format_integer(-0) :), "==", "0"),
+        assert((: testOb->format_integer(-1) :), "==", "-1"),
+        assert((: testOb->format_integer(-1234) :), "==", "-1,234"),
+        assert((: testOb->format_integer(-123456789) :), "==", "-123,456,789"),
+        assert((: testOb->format_integer(-1234567890) :), "==", "-1,234,567,890"),
+    }) :));
 
     expect_catches (({
         (: testOb->format_integer("") :),
