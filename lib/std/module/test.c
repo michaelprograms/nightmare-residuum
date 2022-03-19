@@ -149,7 +149,7 @@ private string format_string_difference (string actual, string expect) {
     return result;
 }
 
-private string format_array_differences (mixed *actual, mixed *expect) {
+varargs private string format_array_differences (mixed *actual, mixed *expect) {
     int l;
     string result = "", a, e;
     l = sizeof(actual) < sizeof(expect) ? sizeof(expect) : sizeof(actual);
@@ -163,7 +163,13 @@ private string format_array_differences (mixed *actual, mixed *expect) {
             else e = expect[i];
         } else e = "";
 
-        result += "\n      " + sprintf("%2d", i) + ". " + format_string_difference(a, e);
+        if (stringp(e) && e[0..0] == "/" && e[<1..<1] == "/") {
+            e = e[1..<2];
+            result += "\n      " + sprintf("%2d", i) + ". ";
+            result += replace_string(a, e, GREEN + e + RESET);
+        } else {
+            result += "\n      " + sprintf("%2d", i) + ". " + format_string_difference(a, e);
+        }
     }
     return result;
 }
@@ -359,29 +365,31 @@ void assert (function left, string condition, mixed right) {
     if (!stringp(condition)) error("Bad argument 2 to test->assert");
     if (undefinedp(right)) error("Bad argument 2 to test->assert");
 
-    err = catch (leftResult = evaluate(left));
-    if (err) {
+    if (err = catch (leftResult = evaluate(left))) {
         leftResult = err;
         currentTestPassed = 0;
     }
     leftResults += ({ leftResult });
 
     if (functionp(right)) {
-        err = catch (rightResult = evaluate(right));
-        if (err) {
+        if (err = catch (rightResult = evaluate(right))) {
             rightResult = err;
             currentTestPassed = 0;
         }
     } else {
         rightResult = right;
     }
-    rightResults += ({ rightResult });
 
     if (arrayp(leftResult)) leftResult = identify(leftResult);
     if (arrayp(rightResult)) rightResult = identify(rightResult);
 
-    if (!currentTestPassed) return;
-     else if (condition == "==") {
+    rightResults += ({
+        (condition == "regex" ? "/" + rightResult + "/" : rightResult)
+    });
+
+    if (!currentTestPassed) {
+        return;
+    } else if (condition == "==") {
         currentTestPassed = !undefinedp(rightResult) && leftResult == rightResult;
     } else if (condition == ">") {
         currentTestPassed = !undefinedp(rightResult) && leftResult > rightResult;
@@ -391,5 +399,9 @@ void assert (function left, string condition, mixed right) {
         currentTestPassed = !undefinedp(rightResult) && leftResult < rightResult;
     } else if (condition == "<=") {
         currentTestPassed = !undefinedp(rightResult) && leftResult <= rightResult;
+    } else if (condition == "regex") {
+        currentTestPassed = regexp(leftResult, rightResult) > 0;
+    } else {
+        currentTestPassed = 0;
     }
 }
