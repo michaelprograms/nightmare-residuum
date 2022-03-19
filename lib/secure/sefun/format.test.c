@@ -43,13 +43,13 @@ void test_format_header_bar () {
         assert((: testOb->format_header_bar("Something", "else") :), "==", "Something: else"),
     }) :));
 
-    expect_catches (({
-        (: testOb->format_header_bar(0) :),
-        (: testOb->format_header_bar(0.0) :),
-        (: testOb->format_header_bar(({})) :),
-        (: testOb->format_header_bar(([])) :),
-        (: testOb->format_header_bar((: 1 :)) :),
-    }), "*Bad argument 1 to format->format_header_bar\n", "format_header_bar handled invalid argument 1");
+    expect("format_header_bar handled invalid argument 1", (: ({
+        assert((: testOb->format_header_bar(0) :), "catch", "*Bad argument 1 to format->format_header_bar\n"),
+        assert((: testOb->format_header_bar(0.0) :), "catch", "*Bad argument 1 to format->format_header_bar\n"),
+        assert((: testOb->format_header_bar(({})) :), "catch", "*Bad argument 1 to format->format_header_bar\n"),
+        assert((: testOb->format_header_bar(([])) :), "catch", "*Bad argument 1 to format->format_header_bar\n"),
+        assert((: testOb->format_header_bar((: 1 :)) :), "catch", "*Bad argument 1 to format->format_header_bar\n"),
+    }) :));
 
     destruct(__MockAccount);
 }
@@ -116,14 +116,14 @@ void test_format_page () {
         assert((: strlen(explode(testOb->format_page(({ "a", "b", "c" }), 2), "\n")[0]) :), "==", 60),
     }) :));
 
-    expect_catches (({
-        (: testOb->format_page() :),
-        (: testOb->format_page(0) :),
-        (: testOb->format_page(0.0) :),
-        (: testOb->format_page(({})) :),
-        (: testOb->format_page(([])) :),
-        (: testOb->format_page((: 1 :)) :),
-    }), "*Bad argument 1 to format->format_page\n", "format_page handled invalid argument 1");
+    expect("format_page handled invalid argument 1", (: ({
+        assert((: testOb->format_page() :), "catch", "*Bad argument 1 to format->format_page\n"),
+        assert((: testOb->format_page(0) :), "catch", "*Bad argument 1 to format->format_page\n"),
+        assert((: testOb->format_page(0.0) :), "catch", "*Bad argument 1 to format->format_page\n"),
+        assert((: testOb->format_page(({})) :), "catch", "*Bad argument 1 to format->format_page\n"),
+        assert((: testOb->format_page(([])) :), "catch", "*Bad argument 1 to format->format_page\n"),
+        assert((: testOb->format_page((: 1 :)) :), "catch", "*Bad argument 1 to format->format_page\n"),
+    }) :));
 
     destruct(__MockAccount);
 }
@@ -149,13 +149,13 @@ void test_format_exit_brief () {
         assert((: testOb->format_exit_brief("exit") :), "==", "exit"),
     }) :));
 
-    expect_catches (({
-        (: testOb->format_exit_brief(0) :),
-        (: testOb->format_exit_brief(0.0) :),
-        (: testOb->format_exit_brief(({})) :),
-        (: testOb->format_exit_brief(([])) :),
-        (: testOb->format_exit_brief((: 1 :)) :),
-    }), "*Bad argument 1 to format->format_exit_brief\n", "format_exit_brief handled invalid argument 1");
+    expect("format_exit_brief handled invalid argument 1", (: ({
+        assert((: testOb->format_exit_brief(0) :), "catch", "*Bad argument 1 to format->format_exit_brief\n"),
+        assert((: testOb->format_exit_brief(0.0) :), "catch", "*Bad argument 1 to format->format_exit_brief\n"),
+        assert((: testOb->format_exit_brief(({})) :), "catch", "*Bad argument 1 to format->format_exit_brief\n"),
+        assert((: testOb->format_exit_brief(([])) :), "catch", "*Bad argument 1 to format->format_exit_brief\n"),
+        assert((: testOb->format_exit_brief((: 1 :)) :), "catch", "*Bad argument 1 to format->format_exit_brief\n"),
+    }) :));
 }
 void test_format_exit_verbose () {
     expect_function("format_exit_verbose", testOb);
@@ -178,13 +178,13 @@ void test_format_exit_verbose () {
         assert((: testOb->format_exit_verbose("exit") :), "==", "exit"),
     }) :));
 
-    expect_catches (({
-        (: testOb->format_exit_verbose(0) :),
-        (: testOb->format_exit_verbose(0.0) :),
-        (: testOb->format_exit_verbose(({})) :),
-        (: testOb->format_exit_verbose(([])) :),
-        (: testOb->format_exit_verbose((: 1 :)) :),
-    }), "*Bad argument 1 to format->format_exit_verbose\n", "format_exit_verbose handled invalid argument 1");
+    expect("format_exit_verbose handled invalid argument 1", (: ({
+        assert((: testOb->format_exit_verbose(0) :), "catch", "*Bad argument 1 to format->format_exit_verbose\n"),
+        assert((: testOb->format_exit_verbose(0.0) :), "catch", "*Bad argument 1 to format->format_exit_verbose\n"),
+        assert((: testOb->format_exit_verbose(({})) :), "catch", "*Bad argument 1 to format->format_exit_verbose\n"),
+        assert((: testOb->format_exit_verbose(([])) :), "catch", "*Bad argument 1 to format->format_exit_verbose\n"),
+        assert((: testOb->format_exit_verbose((: 1 :)) :), "catch", "*Bad argument 1 to format->format_exit_verbose\n"),
+    }) :));
 }
 void test_format_exit_reverse () {
     expect_function("format_exit_reverse", testOb);
@@ -207,13 +207,13 @@ void test_format_exit_reverse () {
         assert((: testOb->format_exit_reverse("exit") :), "==", "exit"),
     }) :));
 
-    expect_catches (({
-        (: testOb->format_exit_reverse(0) :),
-        (: testOb->format_exit_reverse(0.0) :),
-        (: testOb->format_exit_reverse(({})) :),
-        (: testOb->format_exit_reverse(([])) :),
-        (: testOb->format_exit_reverse((: 1 :)) :),
-    }), "*Bad argument 1 to format->format_exit_reverse\n", "format_exit_reverse handled invalid argument 1");
+    expect("format_exit_reverse handled invalid argument 1", (: ({
+        assert((: testOb->format_exit_reverse(0) :), "catch", "*Bad argument 1 to format->format_exit_reverse\n"),
+        assert((: testOb->format_exit_reverse(0.0) :), "catch", "*Bad argument 1 to format->format_exit_reverse\n"),
+        assert((: testOb->format_exit_reverse(({})) :), "catch", "*Bad argument 1 to format->format_exit_reverse\n"),
+        assert((: testOb->format_exit_reverse(([])) :), "catch", "*Bad argument 1 to format->format_exit_reverse\n"),
+        assert((: testOb->format_exit_reverse((: 1 :)) :), "catch", "*Bad argument 1 to format->format_exit_reverse\n"),
+    }) :));
 }
 
 void test_format_stat_brief () {
@@ -237,13 +237,13 @@ void test_format_stat_brief () {
         assert((: testOb->format_stat_brief("lck") :), "==", "lck"),
     }) :));
 
-    expect_catches (({
-        (: testOb->format_stat_brief(0) :),
-        (: testOb->format_stat_brief(0.0) :),
-        (: testOb->format_stat_brief(({})) :),
-        (: testOb->format_stat_brief(([])) :),
-        (: testOb->format_stat_brief((: 1 :)) :),
-    }), "*Bad argument 1 to format->format_stat_brief\n", "format_stat_brief handled invalid argument 1");
+    expect("format_stat_brief handled invalid argument 1", (: ({
+        assert((: testOb->format_stat_brief(0) :), "catch", "*Bad argument 1 to format->format_stat_brief\n"),
+        assert((: testOb->format_stat_brief(0.0) :), "catch", "*Bad argument 1 to format->format_stat_brief\n"),
+        assert((: testOb->format_stat_brief(({})) :), "catch", "*Bad argument 1 to format->format_stat_brief\n"),
+        assert((: testOb->format_stat_brief(([])) :), "catch", "*Bad argument 1 to format->format_stat_brief\n"),
+        assert((: testOb->format_stat_brief((: 1 :)) :), "catch", "*Bad argument 1 to format->format_stat_brief\n"),
+    }) :));
 }
 void test_format_stat_verbose () {
     expect_function("format_stat_verbose", testOb);
@@ -266,13 +266,13 @@ void test_format_stat_verbose () {
         assert((: testOb->format_stat_verbose("luck") :), "==", "luck"),
     }) :));
 
-    expect_catches (({
-        (: testOb->format_stat_verbose(0) :),
-        (: testOb->format_stat_verbose(0.0) :),
-        (: testOb->format_stat_verbose(({})) :),
-        (: testOb->format_stat_verbose(([])) :),
-        (: testOb->format_stat_verbose((: 1 :)) :),
-    }), "*Bad argument 1 to format->format_stat_verbose\n", "format_stat_verbose handled invalid argument 1");
+    expect("format_stat_verbose handled invalid argument 1", (: ({
+        assert((: testOb->format_stat_verbose(0) :), "catch", "*Bad argument 1 to format->format_stat_verbose\n"),
+        assert((: testOb->format_stat_verbose(0.0) :), "catch", "*Bad argument 1 to format->format_stat_verbose\n"),
+        assert((: testOb->format_stat_verbose(({})) :), "catch", "*Bad argument 1 to format->format_stat_verbose\n"),
+        assert((: testOb->format_stat_verbose(([])) :), "catch", "*Bad argument 1 to format->format_stat_verbose\n"),
+        assert((: testOb->format_stat_verbose((: 1 :)) :), "catch", "*Bad argument 1 to format->format_stat_verbose\n"),
+    }) :));
 }
 
 void test_format_integer () {
@@ -296,11 +296,11 @@ void test_format_integer () {
         assert((: testOb->format_integer(-1234567890) :), "==", "-1,234,567,890"),
     }) :));
 
-    expect_catches (({
-        (: testOb->format_integer("") :),
-        (: testOb->format_integer(0.0) :),
-        (: testOb->format_integer(({})) :),
-        (: testOb->format_integer(([])) :),
-        (: testOb->format_integer((: 1 :)) :),
-    }), "*Bad argument 1 to format->format_integer\n", "format_integer handled invalid argument 1");
+    expect("format_integer handled invalid argument 1", (: ({
+        assert((: testOb->format_integer("") :), "catch", "*Bad argument 1 to format->format_integer\n"),
+        assert((: testOb->format_integer(0.0) :), "catch", "*Bad argument 1 to format->format_integer\n"),
+        assert((: testOb->format_integer(({})) :), "catch", "*Bad argument 1 to format->format_integer\n"),
+        assert((: testOb->format_integer(([])) :), "catch", "*Bad argument 1 to format->format_integer\n"),
+        assert((: testOb->format_integer((: 1 :)) :), "catch", "*Bad argument 1 to format->format_integer\n"),
+    }) :));
 }
