@@ -35,16 +35,16 @@ void test_hex_to_int () {
         assert((: testOb->hex_to_int("ff") :), "==", 255),
     }) :));
 
-    expect_catches (({
-        (: testOb->hex_to_int() :),
-        (: testOb->hex_to_int(0) :),
-        (: testOb->hex_to_int("") :),
-        (: testOb->hex_to_int(({})) :),
-        (: testOb->hex_to_int(([])) :),
-        (: testOb->hex_to_int("A") :),
-        (: testOb->hex_to_int("GG") :),
-        (: testOb->hex_to_int("#A") :),
-        (: testOb->hex_to_int("-a") :),
-        (: testOb->hex_to_int("a ") :),
-    }), "*Bad argument 1 to color->hex_to_int\n", "hex_to_int bandled bad inputs");
+    expect("hex_to_int bandled bad inputs", (: ({
+        assert((: testOb->hex_to_int() :), "catch", "*Bad argument 1 to color->hex_to_int\n"),
+        assert((: testOb->hex_to_int(0) :), "catch", "*Bad argument 1 to color->hex_to_int\n"),
+        assert((: testOb->hex_to_int("") :), "catch", "*Bad argument 1 to color->hex_to_int\n"),
+        assert((: testOb->hex_to_int(({})) :), "catch", "*Bad argument 1 to color->hex_to_int\n"),
+        assert((: testOb->hex_to_int(([])) :), "catch", "*Bad argument 1 to color->hex_to_int\n"),
+        assert((: testOb->hex_to_int("A") :), "catch", "*Bad argument 1 to color->hex_to_int\n"),
+        assert((: testOb->hex_to_int("GG") :), "catch", "*Bad argument 1 to color->hex_to_int\n"),
+        assert((: testOb->hex_to_int("#A") :), "catch", "*Bad argument 1 to color->hex_to_int\n"),
+        assert((: testOb->hex_to_int("-a") :), "catch", "*Bad argument 1 to color->hex_to_int\n"),
+        assert((: testOb->hex_to_int("a ") :), "catch", "*Bad argument 1 to color->hex_to_int\n"),
+    }) :));
 }

@@ -16,6 +16,8 @@ void test_access () {
         assert((: testOb->unguarded(function () { return MAX_INT; }) :), "==", MAX_INT),
     }) :));
 
-    expect_catch((: testOb->unguarded() :), "*Bad argument 1 to access->unguarded\n", "unguarded handled bad arguments");
-    expect_catch((: testOb->unguarded("bad argument") :), "*Illegal unguarded.\n", "unguarded threw error");
+    expect("unguarded handled bad arguments", (: ({
+        assert((: testOb->unguarded() :), "catch", "*Bad argument 1 to access->unguarded\n"),
+        assert((: testOb->unguarded("bad argument") :), "catch", "*Illegal unguarded.\n"),
+    }) :));
 }
