@@ -53,11 +53,13 @@ string format_divider_bar () {
     return bar;
 }
 string format_footer_bar () {
-    int width, n = 0, ansi = query_account_setting("ansi") == "on";
+    int width, n = 0, ansi;
     string bar = "";
 
     if (query_account_setting("screenreader") != "on") {
+        ansi = query_account_setting("ansi") == "on";
         width = to_int(query_account_setting("width"));
+
         bar = (ansi?"%^RESET%^CYAN%^":"") + "=========================";
         for (int i = 25; i < width; i ++) bar += "=";
         bar += (ansi?"%^RESET%^":"");
