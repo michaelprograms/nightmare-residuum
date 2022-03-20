@@ -7,49 +7,39 @@ void before_each_test () {
     if (objectp(testOb)) destruct(testOb);
     testOb = clone_object("/secure/daemon/access.c");
 }
-void after_all_tests () {
+void after_each_test () {
     if (objectp(testOb)) destruct(testOb);
 }
 
 void test_query_file_privs () {
-    int *values = ({}), *results = ({});
+    expect_function("query_file_privs", testOb);
 
-    values += ({ testOb->query_file_privs("/etc/welcome") });
-    results += ({ ACCESS_ALL });
+    expect("query_file_privs handled files", (: ({
+        assert((: testOb->query_file_privs("/etc/welcome") :), "==", ACCESS_ALL),
+        assert((: testOb->query_file_privs("/daemon/ansi.c") :), "==", ACCESS_MUDLIB),
+        assert((: testOb->query_file_privs("/daemon/something.c") :), "==", ACCESS_MUDLIB),
+        assert((: testOb->query_file_privs("/std/object.c") :), "==", ACCESS_ASSIST),
+        assert((: testOb->query_file_privs("/std/module/save.c") :), "==", ACCESS_ASSIST),
+        assert((: testOb->query_file_privs("/secure/daemon/access.c") :), "==", ACCESS_SECURE),
+        assert((: testOb->query_file_privs("/secure/daemon/master.c") :), "==", ACCESS_SECURE),
+        assert((: testOb->query_file_privs("/realm/user/workroom.c") :), "==", "user"),
+        assert((: testOb->query_file_privs("/realm/user/header.h") :), "==", "user"),
+        assert((: testOb->query_file_privs("/domain/Area/room/room1.c") :), "==", "Area"),
+        assert((: testOb->query_file_privs("/domain/Area/include/area.h") :), "==", "Area"),
+        assert((: testOb->query_file_privs("/domain/CAPITALIZED/file.c") :), "==", "Capitalized"),
+        assert((: testOb->query_file_privs("") :), "==", 0),
+        assert((: testOb->query_file_privs("/") :), "==", 0),
+        assert((: testOb->query_file_privs("/nonexistantpath/file.c") :), "==", 0),
+    }) :));
+}
 
-    values += ({ testOb->query_file_privs("/daemon/ansi.c") });
-    results += ({ ACCESS_MUDLIB });
-    values += ({ testOb->query_file_privs("/daemon/something.c") });
-    results += ({ ACCESS_MUDLIB });
+void test_unguarded () {
+    expect_function("unguarded", testOb);
 
-    values += ({ testOb->query_file_privs("/std/object.c") });
-    results += ({ ACCESS_ASSIST });
-    values += ({ testOb->query_file_privs("/std/module/save.c") });
-    results += ({ ACCESS_ASSIST });
-
-    values += ({ testOb->query_file_privs("/secure/daemon/access.c") });
-    results += ({ ACCESS_SECURE });
-    values += ({ testOb->query_file_privs("/secure/daemon/master.c") });
-    results += ({ ACCESS_SECURE });
-
-    values += ({ testOb->query_file_privs("/realm/user/workroom.c") });
-    results += ({ "user" });
-    values += ({ testOb->query_file_privs("/realm/user/header.h") });
-    results += ({ "user" });
-
-    values += ({ testOb->query_file_privs("/domain/Area/room/room1.c") });
-    results += ({ "Area" });
-    values += ({ testOb->query_file_privs("/domain/Area/include/area.h") });
-    results += ({ "Area" });
-    values += ({ testOb->query_file_privs("/domain/CAPITALIZED/file.c") });
-    results += ({ "Capitalized" });
-
-    values += ({ testOb->query_file_privs("") });
-    results += ({ 0 });
-    values += ({ testOb->query_file_privs("/") });
-    results += ({ 0 });
-    values += ({ testOb->query_file_privs("/nonexistantpath/file.c") });
-    results += ({ 0 });
-
-    expect_arrays_equal(values, results, "query_file_privs handled files");
+    expect("unguarded handled bad arguments", (: ({
+        assert((: testOb->unguarded((: MAX_INT :)) :), "catch", "*Illegal unguarded.\n"),
+        assert((: testOb->unguarded(function () { return MAX_INT; }) :), "catch", "*Illegal unguarded.\n"),
+        assert((: testOb->unguarded() :), "catch", "*Illegal unguarded.\n"),
+        assert((: testOb->unguarded("bad argument") :), "catch", "*Illegal unguarded.\n"),
+    }) :));
 }
