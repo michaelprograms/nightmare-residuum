@@ -1,366 +1,234 @@
 inherit M_TEST;
 
 private nosave object testOb;
-void before_all_tests () {
-    testOb = clone_object("/secure/sefun/grammar");
+void before_each_test () {
+    testOb = clone_object("/secure/sefun/grammar.c");
 }
-void after_all_tests () {
+void after_each_test () {
     if (objectp(testOb)) destruct(testOb);
 }
 
 void test_remove_article () {
-    string *values = ({}), *results = ({});
-
     expect_function("remove_article", testOb);
 
-    values += ({ testOb->remove_article("thing") });
-    results += ({ "thing" });
-    values += ({ testOb->remove_article("the thing") });
-    results += ({ "thing" });
-    values += ({ testOb->remove_article("a thing") });
-    results += ({ "thing" });
-    values += ({ testOb->remove_article("an item") });
-    results += ({ "item" });
-
-    expect_arrays_equal(values, results, "remove_article handled articles");
+    expect("remove_article handles articles", (: ({
+        assert((: testOb->remove_article("thing") :), "==", "thing"),
+        assert((: testOb->remove_article("the thing") :), "==", "thing"),
+        assert((: testOb->remove_article("a thing") :), "==", "thing"),
+        assert((: testOb->remove_article("an item") :), "==", "item"),
+    }) :));
 }
 
 void test_conjunction () {
-    string *values = ({}), *results = ({});
-
     expect_function("conjunction", testOb);
 
-    values += ({ testOb->conjunction(({ "1" })) });
-    results += ({ "1" });
-    values += ({ testOb->conjunction(({ "1", "2" })) });
-    results += ({ "1 and 2" });
-    values += ({ testOb->conjunction(({ "1", "2", "3" })) });
-    results += ({ "1, 2, and 3" });
-    values += ({ testOb->conjunction(({ "1", "2", "3", "4", "5", "6", "7", "8", "9", "10" })) });
-    results += ({ "1, 2, 3, 4, 5, 6, 7, 8, 9, and 10" });
+    expect("conjunction handles list", (: ({
+        assert((: testOb->conjunction(({ "1" })) :), "==", "1"),
+        assert((: testOb->conjunction(({ "1", "2" })) :), "==", "1 and 2"),
+        assert((: testOb->conjunction(({ "1", "2", "3" })) :), "==", "1, 2, and 3"),
+        assert((: testOb->conjunction(({ "1", "2", "3", "4", "5", "6", "7", "8", "9", "10" })) :), "==", "1, 2, 3, 4, 5, 6, 7, 8, 9, and 10"),
+    }) :));
 
-    expect_arrays_equal(values, results, "conjunction handled list");
-
-    expect_catches (({
-        (: testOb->conjunction(0) :),
-        (: testOb->conjunction(0.0) :),
-        (: testOb->conjunction(({})) :),
-        (: testOb->conjunction(({ 1, 2, 3 })) :),
-        (: testOb->conjunction(({ "", "", "" })) :),
-        (: testOb->conjunction(([])) :),
-        (: testOb->conjunction((: 1 :)) :),
-    }), "*Bad argument 1 to grammar->conjunction\n", "conjunction handled invalid argument 1");
+    expect("conjunction handles invalid argument 1", (: ({
+        assert((: testOb->conjunction(0) :), "catch", "*Bad argument 1 to grammar->conjunction\n"),
+        assert((: testOb->conjunction(0.0) :), "catch", "*Bad argument 1 to grammar->conjunction\n"),
+        assert((: testOb->conjunction(({})) :), "catch", "*Bad argument 1 to grammar->conjunction\n"),
+        assert((: testOb->conjunction(({ 1, 2, 3 })) :), "catch", "*Bad argument 1 to grammar->conjunction\n"),
+        assert((: testOb->conjunction(({ "", "", "" })) :), "catch", "*Bad argument 1 to grammar->conjunction\n"),
+        assert((: testOb->conjunction(([])) :), "catch", "*Bad argument 1 to grammar->conjunction\n"),
+        assert((: testOb->conjunction((: 1 :)) :), "catch", "*Bad argument 1 to grammar->conjunction\n"),
+    }) :));
 }
 
 void test_cardinal () {
-    string *values = ({}), *results = ({});
-
     expect_function("cardinal", testOb);
 
-    values += ({ testOb->cardinal(0) });
-    results += ({ "zero" });
-    values += ({ testOb->cardinal(1) });
-    results += ({ "one" });
-    values += ({ testOb->cardinal(-1) });
-    results += ({ "negative one" });
-    values += ({ testOb->cardinal(10) });
-    results += ({ "ten" });
-    values += ({ testOb->cardinal(-10) });
-    results += ({ "negative ten" });
-    values += ({ testOb->cardinal(100) });
-    results += ({ "one hundred" });
-    values += ({ testOb->cardinal(1000) });
-    results += ({ "one thousand" });
-    values += ({ testOb->cardinal(10000) });
-    results += ({ "ten thousand" });
-    values += ({ testOb->cardinal(12345) });
-    results += ({ "twelve thousand, three hundred and forty-five" });
-    values += ({ testOb->cardinal(-12345) });
-    results += ({ "negative twelve thousand, three hundred and forty-five" });
-    values += ({ testOb->cardinal(100000) });
-    results += ({ "many" });
-    values += ({ testOb->cardinal(-100000) });
-    results += ({ "negative many" });
-
-    expect_arrays_equal(values, results, "cardinal handled numbers");
+    expect("cardinal handles numbers", (: ({
+        assert((: testOb->cardinal(0) :), "==", "zero"),
+        assert((: testOb->cardinal(1) :), "==", "one"),
+        assert((: testOb->cardinal(-1) :), "==", "negative one"),
+        assert((: testOb->cardinal(10) :), "==", "ten"),
+        assert((: testOb->cardinal(-10) :), "==", "negative ten"),
+        assert((: testOb->cardinal(100) :), "==", "one hundred"),
+        assert((: testOb->cardinal(1000) :), "==", "one thousand"),
+        assert((: testOb->cardinal(10000) :), "==", "ten thousand"),
+        assert((: testOb->cardinal(12345) :), "==", "twelve thousand, three hundred and forty-five"),
+        assert((: testOb->cardinal(-12345) :), "==", "negative twelve thousand, three hundred and forty-five"),
+        assert((: testOb->cardinal(100000) :), "==", "many"),
+        assert((: testOb->cardinal(-100000) :), "==", "negative many"),
+    }) :));
 }
 
 void test_pluralize () {
-    string *values = ({}), *results = ({});
     object ob;
 
     expect_function("pluralize", testOb);
 
-    // test parameter as string
-    values = ({});
-    results = ({});
-    values += ({ testOb->pluralize("elf") });
-    results += ({ "elves" });
-    values += ({ testOb->pluralize("staff") });
-    results += ({ "staves" });
-    values += ({ testOb->pluralize("a red house") });
-    results += ({ "red houses" });
-    values += ({ testOb->pluralize("a sack of rice") });
-    results += ({ "sacks of rice" });
-    values += ({ testOb->pluralize("plumbus") });
-    results += ({ "plumbi" });
-    values += ({ testOb->pluralize("gooblebox") });
-    results += ({ "goobleboxes" });
-    values += ({ testOb->pluralize("flooblecrank") });
-    results += ({ "flooblecranks" });
-    values += ({ testOb->pluralize("bloobleyank") });
-    results += ({ "bloobleyanks" });
-    expect_arrays_equal(values, results, "pluralize handled strings");
+    expect("pluralize handles strings", (: ({
+        assert((: testOb->pluralize("elf") :), "==", "elves"),
+        assert((: testOb->pluralize("staff") :), "==", "staves"),
+        assert((: testOb->pluralize("a red house") :), "==", "red houses"),
+        assert((: testOb->pluralize("a sack of rice") :), "==", "sacks of rice"),
+        assert((: testOb->pluralize("plumbus") :), "==", "plumbi"),
+        assert((: testOb->pluralize("gooblebox") :), "==", "goobleboxes"),
+        assert((: testOb->pluralize("flooblecrank") :), "==", "flooblecranks"),
+        assert((: testOb->pluralize("bloobleyank") :), "==", "bloobleyanks"),
+    }) :));
 
-    // test parameter as object
-    values = ({});
-    results = ({});
     ob = new(STD_OBJECT);
-    ob->set_name("tester");
-    values += ({ testOb->pluralize(ob) });
-    results += ({ "testers" });
-    expect_arrays_equal(values, results, "pluralize handled objects");
+    expect("pluralize handles objects", (: ({
+        assert((: $($(ob))->set_name("tester") :), "==", 0),
+        assert((: testOb->pluralize($($(ob))) :), "==", "testers"),
+        assert((: $($(ob))->set_name("staff") :), "==", 0),
+        assert((: testOb->pluralize($($(ob))) :), "==", "staves"),
+    }) :));
     destruct(ob);
 }
 
 void test_consolidate () {
-    string *values = ({}), *results = ({});
-
     expect_function("consolidate", testOb);
 
-    values += ({ testOb->consolidate(5, "elf") });
-    results += ({ "five elves" });
-
-    values += ({ testOb->consolidate(0, "giraffe") });
-    results += ({ "zero giraffes" });
-
-
-    values += ({ testOb->consolidate(25, "cat") });
-    results += ({ "twenty-five cats" });
-
-    values += ({ testOb->consolidate(54321, "dog") });
-    results += ({ "fifty-four thousand, three hundred and twenty-one dogs" });
-
-    values += ({ testOb->consolidate(-54321, "care") });
-    results += ({ "negative fifty-four thousand, three hundred and twenty-one cares" });
-
-    values += ({ testOb->consolidate(2, "Paul") });
-    results += ({ "two Pauls" });
-
-    expect_arrays_equal(values, results, "consolidate handled words");
+    expect("consolidate handles words", (: ({
+        assert((: testOb->consolidate(5, "elf") :), "==", "five elves"),
+        assert((: testOb->consolidate(0, "giraffe") :), "==", "zero giraffes"),
+        assert((: testOb->consolidate(25, "cat") :), "==", "twenty-five cats"),
+        assert((: testOb->consolidate(54321, "dog") :), "==", "fifty-four thousand, three hundred and twenty-one dogs"),
+        assert((: testOb->consolidate(-54321, "care") :), "==", "negative fifty-four thousand, three hundred and twenty-one cares"),
+        assert((: testOb->consolidate(2, "Paul") :), "==", "two Pauls"),
+    }) :));
 }
 
 void test_possessive_noun () {
-    string *values, *results;
     object ob;
 
     expect_function("possessive_noun", testOb);
 
-    // test parameter as a string
-    values = ({});
-    results = ({});
-    values += ({ testOb->possessive_noun() });
-    results += ({ "Its" });
-    values += ({ testOb->possessive_noun("Name") });
-    results += ({ "Name's" });
-    values += ({ testOb->possessive_noun("Hermes") });
-    results += ({ "Hermes'" });
-    values += ({ testOb->possessive_noun("Shax") });
-    results += ({ "Shax'" });
-    values += ({ testOb->possessive_noun("Chaz") });
-    results += ({ "Chaz'" });
-    expect_arrays_equal(values, results, "possessive_noun handled names");
+    expect("possessive_noun handles names", (: ({
+        assert((: testOb->possessive_noun() :), "==", "Its"),
+        assert((: testOb->possessive_noun("Name") :), "==", "Name's"),
+        assert((: testOb->possessive_noun("Hermes") :), "==", "Hermes'"),
+        assert((: testOb->possessive_noun("Shax") :), "==", "Shax'"),
+        assert((: testOb->possessive_noun("Chaz") :), "==", "Chaz'"),
+    }) :));
 
-    // test parameter as an object
-    values = ({});
-    results = ({});
     ob = new(STD_OBJECT);
-    values += ({ testOb->possessive_noun() });
-    results += ({ "Its" });
-    ob->set_name("Name");
-    values += ({ testOb->possessive_noun(ob) });
-    results += ({ "Name's" });
-    ob->set_name("Hermes");
-    values += ({ testOb->possessive_noun(ob) });
-    results += ({ "Hermes'" });
-    ob->set_name("Shax");
-    values += ({ testOb->possessive_noun(ob) });
-    results += ({ "Shax'" });
-    ob->set_name("Chaz");
-    values += ({ testOb->possessive_noun(ob) });
-    results += ({ "Chaz'" });
-    expect_arrays_equal(values, results, "possessive_noun handled objects");
+    expect("possessive_noun handles objects", (: ({
+        assert((: $($(ob))->set_name("Name") :), "==", 0),
+        assert((: testOb->possessive_noun($($(ob))) :), "==", "Name's"),
+        assert((: $($(ob))->set_name("Hermes") :), "==", 0),
+        assert((: testOb->possessive_noun($($(ob))) :), "==", "Hermes'"),
+        assert((: $($(ob))->set_name("Shax") :), "==", 0),
+        assert((: testOb->possessive_noun($($(ob))) :), "==", "Shax'"),
+        assert((: $($(ob))->set_name("Chaz") :), "==", 0),
+        assert((: testOb->possessive_noun($($(ob))) :), "==", "Chaz'"),
+    }) :));
     destruct(ob);
 }
 
 void test_subjective () {
-    string *values, *results;
     object ob;
 
     expect_function("subjective", testOb);
 
-    // test parameter as a string
-    values = ({});
-    results = ({});
-    values += ({ testOb->subjective() });
-    results += ({ "it" });
-    values += ({ testOb->subjective("male") });
-    results += ({ "he" });
-    values += ({ testOb->subjective("female") });
-    results += ({ "she" });
-    values += ({ testOb->subjective("neither") });
-    results += ({ "they" });
-    values += ({ testOb->subjective("nonexistant") });
-    results += ({ "it" });
-    expect_arrays_equal(values, results, "subjective handled names");
+    expect("subjective handles names", (: ({
+        assert((: testOb->subjective() :), "==", "it"),
+        assert((: testOb->subjective("male") :), "==", "he"),
+        assert((: testOb->subjective("female") :), "==", "she"),
+        assert((: testOb->subjective("neither") :), "==", "they"),
+        assert((: testOb->subjective("nonexistant") :), "==", "it"),
+    }) :));
 
-    // test parameter as an object
-    values = ({});
-    results = ({});
     ob = new(STD_LIVING);
-    values += ({ testOb->subjective() });
-    results += ({ "it" });
-    ob->set_gender("male");
-    values += ({ testOb->subjective(ob) });
-    results += ({ "he" });
-    ob->set_gender("female");
-    values += ({ testOb->subjective(ob) });
-    results += ({ "she" });
-    ob->set_gender("neither");
-    values += ({ testOb->subjective(ob) });
-    results += ({ "they" });
-    ob->set_gender("nonexistant");
-    values += ({ testOb->subjective(ob) });
-    results += ({ "it" });
-    expect_arrays_equal(values, results, "subjective handled objects");
+    expect("subjective handles objects", (: ({
+        assert((: $($(ob))->set_gender("male") :), "==", 0),
+        assert((: testOb->subjective($($(ob))) :), "==", "he"),
+        assert((: $($(ob))->set_gender("female") :), "==", 0),
+        assert((: testOb->subjective($($(ob))) :), "==", "she"),
+        assert((: $($(ob))->set_gender("neither") :), "==", 0),
+        assert((: testOb->subjective($($(ob))) :), "==", "they"),
+        assert((: $($(ob))->set_gender("nonexistant") :), "==", 0),
+        assert((: testOb->subjective($($(ob))) :), "==", "it"),
+    }) :));
     destruct(ob);
 }
 
 void test_objective () {
-    string *values, *results;
     object ob;
 
     expect_function("objective", testOb);
 
-    // test parameter as a string
-    values = ({});
-    results = ({});
-    values += ({ testOb->objective() });
-    results += ({ "it" });
-    values += ({ testOb->objective("male") });
-    results += ({ "him" });
-    values += ({ testOb->objective("female") });
-    results += ({ "her" });
-    values += ({ testOb->objective("neither") });
-    results += ({ "them" });
-    values += ({ testOb->objective("nonexistant") });
-    results += ({ "it" });
-    expect_arrays_equal(values, results, "objective handled names");
+    expect("objective handles names", (: ({
+        assert((: testOb->objective() :), "==", "it"),
+        assert((: testOb->objective("male") :), "==", "him"),
+        assert((: testOb->objective("female") :), "==", "her"),
+        assert((: testOb->objective("neither") :), "==", "them"),
+        assert((: testOb->objective("nonexistant") :), "==", "it"),
+    }) :));
 
-    // test parameter as an object
-    values = ({});
-    results = ({});
     ob = new(STD_LIVING);
-    values += ({ testOb->objective() });
-    results += ({ "it" });
-    ob->set_gender("male");
-    values += ({ testOb->objective(ob) });
-    results += ({ "him" });
-    ob->set_gender("female");
-    values += ({ testOb->objective(ob) });
-    results += ({ "her" });
-    ob->set_gender("neither");
-    values += ({ testOb->objective(ob) });
-    results += ({ "them" });
-    ob->set_gender("nonexistant");
-    values += ({ testOb->objective(ob) });
-    results += ({ "it" });
-    expect_arrays_equal(values, results, "objective handled objects");
+    expect("objective handles objects", (: ({
+        assert((: $($(ob))->set_gender("male") :), "==", 0),
+        assert((: testOb->objective($($(ob))) :), "==", "him"),
+        assert((: $($(ob))->set_gender("female") :), "==", 0),
+        assert((: testOb->objective($($(ob))) :), "==", "her"),
+        assert((: $($(ob))->set_gender("neither") :), "==", 0),
+        assert((: testOb->objective($($(ob))) :), "==", "them"),
+        assert((: $($(ob))->set_gender("nonexistant") :), "==", 0),
+        assert((: testOb->objective($($(ob))) :), "==", "it"),
+    }) :));
     destruct(ob);
 }
 
 void test_possessive () {
-    string *values, *results;
     object ob;
 
     expect_function("possessive", testOb);
 
-    // test parameter as a string
-    values = ({});
-    results = ({});
-    values += ({ testOb->possessive() });
-    results += ({ "its" });
-    values += ({ testOb->possessive("male") });
-    results += ({ "his" });
-    values += ({ testOb->possessive("female") });
-    results += ({ "her" });
-    values += ({ testOb->possessive("neither") });
-    results += ({ "their" });
-    values += ({ testOb->possessive("nonexistant") });
-    results += ({ "its" });
-    expect_arrays_equal(values, results, "possessive handled names");
+    expect("possessive handles names", (: ({
+        assert((: testOb->possessive() :), "==", "its"),
+        assert((: testOb->possessive("male") :), "==", "his"),
+        assert((: testOb->possessive("female") :), "==", "her"),
+        assert((: testOb->possessive("neither") :), "==", "their"),
+        assert((: testOb->possessive("nonexistant") :), "==", "its"),
+    }) :));
 
-    // test parameter as an object
-    values = ({});
-    results = ({});
     ob = new(STD_LIVING);
-    values += ({ testOb->possessive() });
-    results += ({ "its" });
-    ob->set_gender("male");
-    values += ({ testOb->possessive(ob) });
-    results += ({ "his" });
-    ob->set_gender("female");
-    values += ({ testOb->possessive(ob) });
-    results += ({ "her" });
-    ob->set_gender("neither");
-    values += ({ testOb->possessive(ob) });
-    results += ({ "their" });
-    ob->set_gender("nonexistant");
-    values += ({ testOb->possessive(ob) });
-    results += ({ "its" });
-    expect_arrays_equal(values, results, "possessive handled objects");
+    expect("possessive handles objects", (: ({
+        assert((: $($(ob))->set_gender("male") :), "==", 0),
+        assert((: testOb->possessive($($(ob))) :), "==", "his"),
+        assert((: $($(ob))->set_gender("female") :), "==", 0),
+        assert((: testOb->possessive($($(ob))) :), "==", "her"),
+        assert((: $($(ob))->set_gender("neither") :), "==", 0),
+        assert((: testOb->possessive($($(ob))) :), "==", "their"),
+        assert((: $($(ob))->set_gender("nonexistant") :), "==", 0),
+        assert((: testOb->possessive($($(ob))) :), "==", "its"),
+    }) :));
     destruct(ob);
 }
 
 void test_reflexive () {
-    string *values, *results;
     object ob;
 
     expect_function("reflexive", testOb);
 
-    // test parameter as a string
-    values = ({});
-    results = ({});
-    values += ({ testOb->reflexive() });
-    results += ({ "itself" });
-    values += ({ testOb->reflexive("male") });
-    results += ({ "himself" });
-    values += ({ testOb->reflexive("female") });
-    results += ({ "herself" });
-    values += ({ testOb->reflexive("neither") });
-    results += ({ "themself" });
-    values += ({ testOb->reflexive("nonexistant") });
-    results += ({ "itself" });
-    expect_arrays_equal(values, results, "reflexive handled names");
+    expect("reflexive handles names", (: ({
+        assert((: testOb->reflexive() :), "==", "itself"),
+        assert((: testOb->reflexive("male") :), "==", "himself"),
+        assert((: testOb->reflexive("female") :), "==", "herself"),
+        assert((: testOb->reflexive("neither") :), "==", "themself"),
+        assert((: testOb->reflexive("nonexistant") :), "==", "itself"),
+    }) :));
 
-    // test parameter as an object
-    values = ({});
-    results = ({});
     ob = new(STD_LIVING);
-    values += ({ testOb->reflexive() });
-    results += ({ "itself" });
-    ob->set_gender("male");
-    values += ({ testOb->reflexive(ob) });
-    results += ({ "himself" });
-    ob->set_gender("female");
-    values += ({ testOb->reflexive(ob) });
-    results += ({ "herself" });
-    ob->set_gender("neither");
-    values += ({ testOb->reflexive(ob) });
-    results += ({ "themself" });
-    ob->set_gender("nonexistant");
-    values += ({ testOb->reflexive(ob) });
-    results += ({ "itself" });
-    expect_arrays_equal(values, results, "reflexive handled objects");
+    expect("reflexive handles objects", (: ({
+        assert((: $($(ob))->set_gender("male") :), "==", 0),
+        assert((: testOb->reflexive($($(ob))) :), "==", "himself"),
+        assert((: $($(ob))->set_gender("female") :), "==", 0),
+        assert((: testOb->reflexive($($(ob))) :), "==", "herself"),
+        assert((: $($(ob))->set_gender("neither") :), "==", 0),
+        assert((: testOb->reflexive($($(ob))) :), "==", "themself"),
+        assert((: $($(ob))->set_gender("nonexistant") :), "==", 0),
+        assert((: testOb->reflexive($($(ob))) :), "==", "itself"),
+    }) :));
     destruct(ob);
 }
