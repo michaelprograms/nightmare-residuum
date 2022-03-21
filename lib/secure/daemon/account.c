@@ -7,6 +7,7 @@ int query_valid_name (string name) {
 }
 
 string query_save_path (string name) {
+    if (strlen(name) < 4) error("Bad argument 1 to account->query_save_path");
     return sprintf(DIR_SAVE_ACCOUNT+"/%c/%s.o", name[0], name);
 }
 
