@@ -363,7 +363,6 @@ void assert (function left, string condition, mixed right) {
     if (!stringp(currentTestMessage)) error("test->assert outside of test->expect");
     if (!functionp(left)) error("Bad argument 1 to test->assert");
     if (!stringp(condition)) error("Bad argument 2 to test->assert");
-    if (undefinedp(right)) error("Bad argument 2 to test->assert");
 
     if (condition == "catch") expectCatch = 1;
 
@@ -371,8 +370,6 @@ void assert (function left, string condition, mixed right) {
         leftResult = leftErr;
         currentTestPassed = condition == "catch";
     }
-    leftResults += ({ leftResult });
-
     if (functionp(right)) {
         if (rightErr = catch (rightResult = evaluate(right))) {
             rightResult = rightErr;
@@ -383,9 +380,10 @@ void assert (function left, string condition, mixed right) {
     }
     if (condition == "catch") expectCatch = 0;
 
-    if (arrayp(leftResult)) leftResult = identify(leftResult);
-    if (arrayp(rightResult)) rightResult = identify(rightResult);
+    if (arrayp(leftResult) || mapp(leftResult)) leftResult = identify(leftResult);
+    if (arrayp(rightResult) || mapp(rightResult)) rightResult = identify(rightResult);
 
+    leftResults += ({ leftResult });
     rightResults += ({
         (condition == "regex" ? "/" + rightResult + "/" : rightResult)
     });
@@ -393,15 +391,15 @@ void assert (function left, string condition, mixed right) {
     if (!currentTestPassed) {
         return;
     } else if (condition == "==") {
-        currentTestPassed = !undefinedp(rightResult) && leftResult == rightResult;
+        currentTestPassed = leftResult == rightResult;
     } else if (condition == ">") {
-        currentTestPassed = !undefinedp(rightResult) && leftResult > rightResult;
+        currentTestPassed = leftResult > rightResult;
     } else if (condition == ">=") {
-        currentTestPassed = !undefinedp(rightResult) && leftResult <= rightResult;
+        currentTestPassed = leftResult <= rightResult;
     } else if (condition == "<") {
-        currentTestPassed = !undefinedp(rightResult) && leftResult < rightResult;
+        currentTestPassed = leftResult < rightResult;
     } else if (condition == "<=") {
-        currentTestPassed = !undefinedp(rightResult) && leftResult <= rightResult;
+        currentTestPassed = leftResult <= rightResult;
     } else if (condition == "regex") {
         currentTestPassed = regexp(leftResult, rightResult) > 0;
     } else if (condition == "catch") {

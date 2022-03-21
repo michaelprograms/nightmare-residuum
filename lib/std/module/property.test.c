@@ -25,118 +25,101 @@ void test_property_bad_arguments () {
     expect_function("add_property", testOb);
     expect_function("remove_property", testOb);
 
-    expect_catches (({
-        (: testOb->query_property() :),
-        (: testOb->query_property(0) :),
-        (: testOb->query_property(0.0) :),
-        (: testOb->query_property("") :),
-        (: testOb->query_property(({})) :),
-        (: testOb->query_property(([])) :),
-    }), "*Bad argument 1 to property->query_property\n", "query_property handled invalid argument 1");
+    expect("query_property handled invalid argument 1", (: ({
+        assert((: testOb->query_property() :), "catch", "*Bad argument 1 to property->query_property\n"),
+        assert((: testOb->query_property(0) :), "catch", "*Bad argument 1 to property->query_property\n"),
+        assert((: testOb->query_property(0.0) :), "catch", "*Bad argument 1 to property->query_property\n"),
+        assert((: testOb->query_property("") :), "catch", "*Bad argument 1 to property->query_property\n"),
+        assert((: testOb->query_property(({})) :), "catch", "*Bad argument 1 to property->query_property\n"),
+        assert((: testOb->query_property(([])) :), "catch", "*Bad argument 1 to property->query_property\n"),
+    }) :));
 
-    expect_catches (({
-        (: testOb->set_properties() :),
-        (: testOb->set_properties(0) :),
-        (: testOb->set_properties(1.0) :),
-        (: testOb->set_properties("") :),
-        (: testOb->set_properties(({})) :),
-        (: testOb->set_properties(([])) :),
-    }), "*Bad argument 1 to property->set_properties\n", "set_properties handled invalid argument 1");
+    expect("set_properties handled invalid argument 1", (: ({
+        assert((: testOb->set_properties() :), "catch", "*Bad argument 1 to property->set_properties\n"),
+        assert((: testOb->set_properties(0) :), "catch", "*Bad argument 1 to property->set_properties\n"),
+        assert((: testOb->set_properties(1.0) :), "catch", "*Bad argument 1 to property->set_properties\n"),
+        assert((: testOb->set_properties("") :), "catch", "*Bad argument 1 to property->set_properties\n"),
+        assert((: testOb->set_properties(({})) :), "catch", "*Bad argument 1 to property->set_properties\n"),
+        assert((: testOb->set_properties(([])) :), "catch", "*Bad argument 1 to property->set_properties\n"),
+    }) :));
 
-    expect_catches (({
-        (: testOb->set_property() :),
-        (: testOb->set_property(0, 0) :),
-        (: testOb->set_property(0.0, 0.0) :),
-        (: testOb->set_property("", "") :),
-        (: testOb->set_property(({}), ({})) :),
-        (: testOb->set_property(([]), ([])) :),
-        (: testOb->set_property() :),
-    }), "*Bad argument 1 to property->set_property\n", "set_property handled invalid argument 1");
-    expect_catches (({
-        (: testOb->set_property("test_key") :),
-        (: testOb->set_property("test_key", "") :),
-        (: testOb->set_property("test_key", ({})) :),
-        (: testOb->set_property("test_key", ([])) :),
-    }), "*Bad argument 2 to property->set_property\n", "set_property handled invalid argument 2");
+    expect("set_property handled invalid argument 1", (: ({
+        assert((: testOb->set_property() :), "catch", "*Bad argument 1 to property->set_property\n"),
+        assert((: testOb->set_property(0, 0) :), "catch", "*Bad argument 1 to property->set_property\n"),
+        assert((: testOb->set_property(0.0, 0.0) :), "catch", "*Bad argument 1 to property->set_property\n"),
+        assert((: testOb->set_property("", "") :), "catch", "*Bad argument 1 to property->set_property\n"),
+        assert((: testOb->set_property(({}), ({})) :), "catch", "*Bad argument 1 to property->set_property\n"),
+        assert((: testOb->set_property(([]), ([])) :), "catch", "*Bad argument 1 to property->set_property\n"),
+        assert((: testOb->set_property() :), "catch", "*Bad argument 1 to property->set_property\n"),
+    }) :));
+    expect("set_property handled invalid argument 2", (: ({
+        assert((: testOb->set_property("test_key") :), "catch", "*Bad argument 2 to property->set_property\n"),
+        assert((: testOb->set_property("test_key", "") :), "catch", "*Bad argument 2 to property->set_property\n"),
+        assert((: testOb->set_property("test_key", ({})) :), "catch", "*Bad argument 2 to property->set_property\n"),
+        assert((: testOb->set_property("test_key", ([])) :), "catch", "*Bad argument 2 to property->set_property\n"),
+    }) :));
 
-    expect_catches (({
-        (: testOb->add_property() :),
-        (: testOb->add_property(0, 0) :),
-        (: testOb->add_property(0.0, 0.0) :),
-        (: testOb->add_property("", "") :),
-        (: testOb->add_property(({}), ({})) :),
-        (: testOb->add_property(([]), ([])) :),
-    }), "*Bad argument 1 to property->add_property\n", "add_property handled invalid argument 1");
-    expect_catches (({
-        (: testOb->add_property("test_key") :),
-        (: testOb->add_property("test_key", "") :),
-        (: testOb->add_property("test_key", ({})) :),
-        (: testOb->add_property("test_key", ([])) :),
-    }), "*Bad argument 2 to property->add_property\n", "add_property handled invalid argument 2");
+    expect("add_property handled invalid argument 1", (: ({
+        assert((: testOb->add_property() :), "catch", "*Bad argument 1 to property->add_property\n"),
+        assert((: testOb->add_property(0, 0) :), "catch", "*Bad argument 1 to property->add_property\n"),
+        assert((: testOb->add_property(0.0, 0.0) :), "catch", "*Bad argument 1 to property->add_property\n"),
+        assert((: testOb->add_property("", "") :), "catch", "*Bad argument 1 to property->add_property\n"),
+        assert((: testOb->add_property(({}), ({})) :), "catch", "*Bad argument 1 to property->add_property\n"),
+        assert((: testOb->add_property(([]), ([])) :), "catch", "*Bad argument 1 to property->add_property\n"),
+    }) :));
+    expect("add_property handled invalid argument 2", (: ({
+        assert((: testOb->add_property("test_key") :), "catch", "*Bad argument 2 to property->add_property\n"),
+        assert((: testOb->add_property("test_key", "") :), "catch", "*Bad argument 2 to property->add_property\n"),
+        assert((: testOb->add_property("test_key", ({})) :), "catch", "*Bad argument 2 to property->add_property\n"),
+        assert((: testOb->add_property("test_key", ([])) :), "catch", "*Bad argument 2 to property->add_property\n"),
+    }) :));
 
-    expect_catches (({
-        (: testOb->remove_property() :),
-        (: testOb->remove_property(0) :),
-        (: testOb->remove_property(0.0) :),
-        (: testOb->remove_property("") :),
-        (: testOb->remove_property(({})) :),
-        (: testOb->remove_property(([])) :),
-    }), "*Bad argument 1 to property->remove_property\n", "remove_property handled invalid argument 1");
+    expect("remove_property handled invalid argument 1", (: ({
+        assert((: testOb->remove_property() :), "catch", "*Bad argument 1 to property->remove_property\n"),
+        assert((: testOb->remove_property(0) :), "catch", "*Bad argument 1 to property->remove_property\n"),
+        assert((: testOb->remove_property(0.0) :), "catch", "*Bad argument 1 to property->remove_property\n"),
+        assert((: testOb->remove_property("") :), "catch", "*Bad argument 1 to property->remove_property\n"),
+        assert((: testOb->remove_property(({})) :), "catch", "*Bad argument 1 to property->remove_property\n"),
+        assert((: testOb->remove_property(([])) :), "catch", "*Bad argument 1 to property->remove_property\n"),
+    }) :));
 }
 
 void test_property_single () {
-    string *values = ({}), *results = ({});
+    expect("add, set, remove, and query property are handled", (: ({
+        assert((: testOb->query_property("test_key") :), "==", UNDEFINED),
 
-    values += ({ testOb->query_property("test_key") });
-    results += ({ UNDEFINED });
+        assert((: testOb->set_property("test_key1", "test_value") :), "==", "test_value"),
+        assert((: testOb->query_property("test_key1") :), "==", "test_value"),
 
-    testOb->set_property("test_key1", "test_value");
-    values += ({ testOb->query_property("test_key1") });
-    results += ({ "test_value" });
+        assert((: testOb->set_property("test_key2", to_float(123)) :), "==", to_float(123)),
+        assert((: testOb->query_property("test_key2") :), "==", to_float(123)),
 
-    testOb->set_property("test_key2", to_float(123));
-    values += ({ testOb->query_property("test_key2") });
-    results += ({ to_float(123) });
+        assert((: testOb->add_property("test_key3", 10) :), "==", 10),
+        assert((: testOb->query_property("test_key3") :), "==", 10),
+        assert((: testOb->add_property("test_key3", 1) :), "==", 11),
+        assert((: testOb->query_property("test_key3") :), "==", 11),
 
-    testOb->add_property("test_key3", 10);
-    values += ({ testOb->query_property("test_key3") });
-    results += ({ 10 });
-    testOb->add_property("test_key3", 1);
-    values += ({ testOb->query_property("test_key3") });
-    results += ({ 11 });
-
-    testOb->remove_property("test_key1");
-    values += ({ testOb->query_property("test_key1") });
-    results += ({ UNDEFINED });
-    testOb->remove_property("test_key2");
-    values += ({ testOb->query_property("test_key2") });
-    results += ({ UNDEFINED });
-
-    expect_arrays_equal(values, results, "add, set, remove, and query property are handled");
+        assert((: testOb->remove_property("test_key1") :), "==", 1),
+        assert((: testOb->query_property("test_key1") :), "==", UNDEFINED),
+        assert((: testOb->remove_property("test_key2") :), "==", 1),
+        assert((: testOb->query_property("test_key2") :), "==", UNDEFINED),
+    }) :));
 }
 
+private mapping tmp;
+private mapping m1 = ([ "test_key1": "test_value" ]);
+private mapping m2 = ([ "test_key2": to_float(123) ]);
+
 void test_properties_multiple () {
-    string *values = ({}), *results = ({});
-    mapping tmp;
-    mapping m1 = ([ "test_key1": "test_value" ]);
-    mapping m2 = ([ "test_key2": to_float(123) ]);
-
-    values += ({ identify(testOb->query_properties()) });
-    results += ({ identify(([])) });
-
-    tmp = m1;
-    testOb->set_properties(m1);
-    values += ({ identify(testOb->query_properties()) });
-    results += ({ identify(tmp) });
-
-    tmp += m2;
-    testOb->set_properties(m2);
-    values += ({ identify(testOb->query_properties()) });
-    results += ({ identify(tmp) });
-
-    testOb->remove_property("test_key2");
-    values += ({ identify(testOb->query_properties()) });
-    results += ({ identify(tmp) });
-
-    expect_arrays_equal(values, results, "set and query properties are handled");
+    expect("set and query properties are handled", (: ({
+        assert((: testOb->query_properties() :), "==", (: identify(([])) :)),
+        assert((: tmp = m1 :), "==", identify(m1)),
+        assert((: testOb->set_properties(m1) :), "==", identify(tmp)),
+        assert((: testOb->query_properties() :), "==", identify(tmp)),
+        assert((: tmp = tmp + m2 :), "==", identify(m1 + m2)),
+        assert((: testOb->set_properties(m2) :), "==", identify(tmp)),
+        assert((: testOb->query_properties() :), "==", identify(tmp)),
+        assert((: testOb->remove_property("test_key2") :), "==", 1),
+        assert((: testOb->query_properties() :), "==", identify(m1)),
+    }) :));
 }
