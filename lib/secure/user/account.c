@@ -31,7 +31,7 @@ private void display_account_menu () {
     }
 
     if (strlen(characterMsg) > 0) {
-        msg += "Character           Type            Location                Last Seen\n" + characterMsg;
+        msg += "Character           Species         Location                Last Seen\n" + characterMsg;
     }
 
     write(msg + "\n");
