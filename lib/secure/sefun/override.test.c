@@ -11,11 +11,10 @@ void after_all_tests () {
 void test_efuns () {
     expect_function("input_to", testOb);
 
-    expect_catches (({
-        (: input_to() :),
-    }), "*efun::input_to disabled\n", "input_to threw error");
-
-    expect_catches (({
-        (: this_player() :),
-    }), "*efun::this_player disabled\n", "this_player() threw error");
+    expect("input_to throws error", (: ({
+        assert((: input_to() :), "catch", "*efun::input_to disabled\n"),
+    }) :));
+    expect("this_player throws error", (: ({
+        assert((: this_player() :), "catch", "*efun::this_player disabled\n"),
+    }) :));
 }
