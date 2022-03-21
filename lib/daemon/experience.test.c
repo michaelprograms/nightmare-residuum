@@ -29,23 +29,22 @@ void test_query_stat_cost () {
         assert((: testOb->query_stat_cost("luck", 1000) :), ">", (: testOb->query_stat_cost("luck", 100) :)),
     }) :));
 
-    // check error conditions
-    expect_catches (({
-        (: testOb->query_stat_cost(this_object()) :),
-        (: testOb->query_stat_cost(1) :),
-        (: testOb->query_stat_cost(1.0) :),
-        (: testOb->query_stat_cost(({})) :),
-        (: testOb->query_stat_cost(([])) :),
-        (: testOb->query_stat_cost((: 1 :)) :),
-    }), "*Bad argument 1 to experience->query_stat_cost\n", "query_stat_cost handled invalid argument 1");
-    expect_catches (({
-        (: testOb->query_stat_cost("strength", this_object()) :),
-        (: testOb->query_stat_cost("strength", 1.0) :),
-        (: testOb->query_stat_cost("strength", "") :),
-        (: testOb->query_stat_cost("strength", ({})) :),
-        (: testOb->query_stat_cost("strength", ([])) :),
-        (: testOb->query_stat_cost("strength", (: 1 :)) :),
-    }), "*Bad argument 2 to experience->query_stat_cost\n", "query_stat_cost handled invalid argument 2");
+    expect("query_stat_cost handles invalid argument 1", (: ({
+        assert((: testOb->query_stat_cost(this_object()) :), "catch", "*Bad argument 1 to experience->query_stat_cost\n"),
+        assert((: testOb->query_stat_cost(1) :), "catch", "*Bad argument 1 to experience->query_stat_cost\n"),
+        assert((: testOb->query_stat_cost(1.0) :), "catch", "*Bad argument 1 to experience->query_stat_cost\n"),
+        assert((: testOb->query_stat_cost(({})) :), "catch", "*Bad argument 1 to experience->query_stat_cost\n"),
+        assert((: testOb->query_stat_cost(([])) :), "catch", "*Bad argument 1 to experience->query_stat_cost\n"),
+        assert((: testOb->query_stat_cost((: 1 :)) :), "catch", "*Bad argument 1 to experience->query_stat_cost\n"),
+    }) :));
+    expect("query_stat_cost handles invalid argument 2", (: ({
+        assert((: testOb->query_stat_cost("strength", this_object()) :), "catch", "*Bad argument 2 to experience->query_stat_cost\n"),
+        assert((: testOb->query_stat_cost("strength", 1.0) :), "catch", "*Bad argument 2 to experience->query_stat_cost\n"),
+        assert((: testOb->query_stat_cost("strength", "") :), "catch", "*Bad argument 2 to experience->query_stat_cost\n"),
+        assert((: testOb->query_stat_cost("strength", ({})) :), "catch", "*Bad argument 2 to experience->query_stat_cost\n"),
+        assert((: testOb->query_stat_cost("strength", ([])) :), "catch", "*Bad argument 2 to experience->query_stat_cost\n"),
+        assert((: testOb->query_stat_cost("strength", (: 1 :)) :), "catch", "*Bad argument 2 to experience->query_stat_cost\n"),
+    }) :));
 }
 
 void test_query_skill_cost () {
@@ -61,20 +60,17 @@ void test_query_skill_cost () {
         assert((: testOb->query_skill_cost(1000) :), ">", (: testOb->query_skill_cost(100) :)),
     }) :));
 
-    // check error conditions
-    expect_catches (({
-        (: testOb->query_skill_cost(this_object()) :),
-        (: testOb->query_skill_cost("") :),
-        (: testOb->query_skill_cost(1.0) :),
-        (: testOb->query_skill_cost(({})) :),
-        (: testOb->query_skill_cost(([])) :),
-        (: testOb->query_skill_cost((: 1 :)) :),
-    }), "*Bad argument 1 to experience->query_skill_cost\n", "query_skill_cost handled invalid argument 1");
+    expect("query_skill_cost handles invalid argument 1", (: ({
+        assert((: testOb->query_skill_cost(this_object()) :), "catch", "*Bad argument 1 to experience->query_skill_cost\n"),
+        assert((: testOb->query_skill_cost("") :), "catch", "*Bad argument 1 to experience->query_skill_cost\n"),
+        assert((: testOb->query_skill_cost(1.0) :), "catch", "*Bad argument 1 to experience->query_skill_cost\n"),
+        assert((: testOb->query_skill_cost(({})) :), "catch", "*Bad argument 1 to experience->query_skill_cost\n"),
+        assert((: testOb->query_skill_cost(([])) :), "catch", "*Bad argument 1 to experience->query_skill_cost\n"),
+        assert((: testOb->query_skill_cost((: 1 :)) :), "catch", "*Bad argument 1 to experience->query_skill_cost\n"),
+    }) :));
 }
 
 void test_query_value () {
-    mixed *values = ({}), *results = ({});
-
     expect_function("query_value", testOb);
 
     expect("query_value returns ascending values", (: ({
@@ -87,7 +83,6 @@ void test_query_value () {
         assert((: testOb->query_value(1000) :), ">", (: testOb->query_value(100) :)),
     }) :));
 
-    // tests for integer parameter
     expect("query_value returns ascending values for integer parameter", (: ({
         assert((: testOb->query_value(0) :), "==", 0),
         assert((: testOb->query_value(-1) :), "==", 0),
@@ -98,7 +93,6 @@ void test_query_value () {
         assert((: testOb->query_value(1000) :), ">", (: testOb->query_value(100) :)),
     }) :));
 
-    // tests for object parameter
     __MockLiving = 1;
     expect("query_value returns ascending values for object parameter", (: ({
         set_mock_level(0) && assert((: testOb->query_value(this_object()) :), "==", 0),
@@ -110,14 +104,13 @@ void test_query_value () {
         set_mock_level(1000) && assert((: testOb->query_value(this_object()) :), ">", (: testOb->query_value(100) :)),
     }) :));
 
-    // check error conditions
     __MockLiving = 0;
-    expect_catches (({
-        (: testOb->query_value(this_object()) :),
-        (: testOb->query_value(1.0) :),
-        (: testOb->query_value("") :),
-        (: testOb->query_value(({})) :),
-        (: testOb->query_value(([])) :),
-        (: testOb->query_value((: 1 :)) :),
-    }), "*Bad argument 1 to experience->query_value\n", "query_value handled invalid argument 1");
+    expect("query_value handled invalid argument 1", (: ({
+        assert((: testOb->query_value(this_object()) :), "catch", "*Bad argument 1 to experience->query_value\n"),
+        assert((: testOb->query_value(1.0) :), "catch", "*Bad argument 1 to experience->query_value\n"),
+        assert((: testOb->query_value("") :), "catch", "*Bad argument 1 to experience->query_value\n"),
+        assert((: testOb->query_value(({})) :), "catch", "*Bad argument 1 to experience->query_value\n"),
+        assert((: testOb->query_value(([])) :), "catch", "*Bad argument 1 to experience->query_value\n"),
+        assert((: testOb->query_value((: 1 :)) :), "catch", "*Bad argument 1 to experience->query_value\n"),
+    }) :));
 }
