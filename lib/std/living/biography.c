@@ -12,6 +12,7 @@ int query_total_experience () {
     return __TotalExperience;
 }
 void add_experience (int exp) {
+    if (!intp(exp)) error("Bad argument 1 to body->add_experience");
     __Experience = __Experience + exp;
     // @TODO if (__Experience > ExpMax) __Experience = ExpMax
 }
