@@ -357,18 +357,21 @@ void expect (string message, function fn) {
     leftResults = 0;
     rightResults = 0;
 }
-void assert (function left, string condition, mixed right) {
+void assert (mixed left, string condition, mixed right) {
     mixed leftErr, rightErr, leftResult, rightResult;
 
     if (!stringp(currentTestMessage)) error("test->assert outside of test->expect");
-    if (!functionp(left)) error("Bad argument 1 to test->assert");
     if (!stringp(condition)) error("Bad argument 2 to test->assert");
 
     if (condition == "catch") expectCatch = 1;
 
-    if (leftErr = catch (leftResult = evaluate(left))) {
-        leftResult = leftErr;
-        currentTestPassed = condition == "catch";
+    if (functionp(left)) {
+        if (leftErr = catch (leftResult = evaluate(left))) {
+            leftResult = leftErr;
+            currentTestPassed = condition == "catch";
+        }
+    } else {
+        leftResult = left;
     }
     if (functionp(right)) {
         if (rightErr = catch (rightResult = evaluate(right))) {
