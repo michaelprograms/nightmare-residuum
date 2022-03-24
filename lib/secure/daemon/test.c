@@ -81,6 +81,7 @@ varargs void process_file (string file, function doneCallback, int reset) {
     tmp = catch (call_other(file, "???"));
     if (tmp) {
         message("system", "Error in test: " + tmp + "\n", this_user());
+        return;
     }
     if (!inherits(M_TEST, load_object(file))) {
         evaluate(doneCallback);
