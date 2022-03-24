@@ -41,54 +41,28 @@ If overridden, can be used instruct D_TEST runner to ignore additional local pub
 ```c
 void expect_function (string fn, object testOb)
 ```
-Assert that testOb contains a public function matching fn. Due to limited ability of the test runner to determine if a function has been called, `expect_function(fn, testOb)` is used in a way that marks off the function as tested. Another way this can be done is by formatting the `message` of `expect_*` statements starts with the name of the function tested, but this is not always ideal.
+Assert that testOb contains a public function matching fn. Due to limited ability of the test runner to determine if a function has been called, `expect_function(fn, testOb)` is used in a way that marks off the function as tested. Another way this can be done is by formatting the `message` of `expect` statements starts with the name of the function tested, but this is not always ideal.
 
 ```c
-void expect_true (mixed value, string message)
+void expect (string message, function fn)
 ```
-Compare the value to true.
+Start an `expect`ation of `assert`ions in function `fn`, while string `message` contains a human-readable description of what is being tested. `fn` should consist of a function that returns an array of `assert` evaluations.
 
 ```c
-void expect_false (mixed value, string message)
+void assert (mixed left, string condition, mixed right)
 ```
-Compare the value to false.
+Evaluate an `assert`ion inside of an `expect`ation. `left` should contain a queried value or result while `right` should contain the expected answer. `condition` changes how the comparison should evaluate.
 
+Examples of conditions:
 ```c
-void expect_arrays_array_equal (mixed *left, mixed *right, string message)
+    expect("conditions all pass", (: ({
+        assert(1, "==", 1),
+        assert(0, "!=", 1),
+        assert(1, ">", 0),
+        assert(1, ">=", 0),
+        assert(0, "<", 1),
+        assert(0, "<=", 1),
+        assert("cat", "regex", "^.+at"),
+        assert((: error("Error") :), "catch", "*Error\n"),
+    }) :));
 ```
-Compare each array in the array left is equal to the array right.
-
-```c
-void expect_array_strings_equal (string *left, string right, string message)
-```
-Compare the string array left to the string right.
-
-```c
-void expect_arrays_equal (mixed *left, mixed *right, string message)
-```
-Compare the array left to the array right.
-
-```c
-void expect_strings_equal (string left, string right, string message)
-```
-Compare the string left to the string right.
-
-```c
-void expect_strings_regexp (string left, string right, string message)
-```
-Compare the string left to the regular expression right, example: `expect_strings_regexp(str, "^regular expression$", msg);`
-
-```c
-void expect_integers_equal (int left, int right, string message)
-```
-Compare the integer left to the integer right.
-
-```c
-void expect_catch (mixed expr, string right, string message)
-```
-Compare expr evaluation for an error matching to right.
-
-```c
-void expect_catches (mixed *expr, string right, string message)
-```
-Compare an array of expr evaluations for any errors matching right.

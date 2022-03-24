@@ -33,9 +33,6 @@ void test_expects_passing () {
     expect_function("expect", testOb);
     expect_function("assert", testOb);
 
-    expect_true(1, "expect_true(1) should pass");
-    expect_false(0, "expect_false(0) should pass");
-
     expect_strings_equal("abc", "abc", "expect_strings_equal(str1, str1, msg) should pass");
 
     expect_strings_regexp("bat cat rat", "cat", "expect_strings_regexp(str, regexp, msg) should pass");
@@ -66,12 +63,6 @@ void test_expects_passing () {
 void test_expects_failing () {
     string *arr1 = ({ "abc", "123", "!@#", });
     string *arr2 = ({ "XYZ", "999", ",.'", });
-
-    expect_next_failure();
-    expect_true(0, "expect_true(0) should fail");
-
-    expect_next_failure();
-    expect_false(1, "expect_false(1) should fail");
 
     expect_next_failure();
     expect_strings_equal("abc", "123", "expect_strings_equal(str1, str2) should fail");
@@ -122,23 +113,24 @@ void test_expects_failing () {
 }
 
 void test_lifecycle_events () {
-    expect_true(nBeforeAll == 1, "before_all_tests() ran once");
-    expect_true(nBeforeEach == sizeof(testOrder), "before_each_test() ran before each test");
-    // the current test has not finished yet
-    expect_true(nAfterEach == sizeof(testOrder) - 1, "after_each_test() ran after each test");
-    expect_true(nTestOrder == 1, "test_order() called once");
+    expect("lifecycle events execute in order", (: ({
+        assert(nBeforeAll, "==", 1), // before_all_tests
+        assert(nBeforeEach, "==", sizeof(testOrder)), // before_each_test
+
+        assert(nAfterEach, "==", sizeof(testOrder) - 1), // after_each_test not called for this test
+
+        assert(nTestOrder, "==", 1), // test_order
+    }) :));
 
     expect("query_expect_catch is enabled during expect > assert 'catch'", (: ({
         assert(query_expect_catch(), "==", 0),
-        assert(function () {
-            if (query_expect_catch()) {
-                error("Catch");
-            }
-        }, "catch", "*Catch\n"),
+        assert((: query_expect_catch() && error("Catch") :), "catch", "*Catch\n"),
         assert(query_expect_catch(), "==", 0),
     }) :));
 }
 
 void test_should_be_ignored () {
-    expect_true(0, "this test should be ignored");
+    expect("this test should be ignored", (: ({
+        assert(0, "==", 1),
+    }) :));
 }

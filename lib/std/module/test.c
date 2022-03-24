@@ -216,16 +216,6 @@ private void validate_expect (mixed value1, mixed value2, string message) {
     }
 }
 
-// Compare the value to true
-varargs void expect_true (mixed value, string message) {
-    currentTestPassed = !!value;
-    validate_expect((currentTestPassed ? "true" : "false"), "true", message);
-}
-// Compare the value to false
-varargs void expect_false (mixed value, string message) {
-    currentTestPassed = !value;
-    validate_expect((currentTestPassed ? "false" : "true"), "false", message);
-}
 // Compare each array in the array left is equal to the array right
 varargs void expect_arrays_array_equal (mixed *left, mixed *right, string message) {
     mixed *rightArr = ({});
