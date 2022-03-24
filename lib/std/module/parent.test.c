@@ -9,5 +9,7 @@ void after_all_tests () {
 }
 
 void test_query_parent () {
-    expect_true(testOb->query_parent() == this_object(), "query_parent returns this object");
+    expect("query_parent returns this_object", (: ({
+        assert(testOb->query_parent(), "==", this_object()),
+    }) :));
 }

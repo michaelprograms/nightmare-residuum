@@ -8,17 +8,7 @@ string strip_colour (string str) {
     return str;
 }
 
-varargs string center (string str, int width) {
-    int len, pad;
-    if (!str || str == "") return "";
-    len = strlen(strip_colour(str));
-    if (!width) width = 80;
-    else if (width < len) return str;
-    pad = (width - len) / 2;
-    return sprintf("%"+sprintf("%d", pad)+"s", " ") + str + sprintf("%"+sprintf("%d", width - len - pad)+"s", " ");
-}
-
-varargs string identify (mixed a) {
+string identify (mixed a) {
     int i, s;
     string ret;
     mapping RealMap;

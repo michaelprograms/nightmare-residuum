@@ -29,6 +29,10 @@ string *test_ignore () { return ::test_ignore() + ({ "test_should_be_ignored" })
 void test_expects_passing () {
     string *arr1 = ({ "abc", "123", "!@#", });
 
+    expect_function("expect_function", testOb);
+    expect_function("expect", testOb);
+    expect_function("assert", testOb);
+
     expect_true(1, "expect_true(1) should pass");
     expect_false(0, "expect_false(0) should pass");
 
@@ -52,14 +56,11 @@ void test_expects_passing () {
         arr1,
     }), arr1, "expect_arrays_array_equal(arrOfArrs, *arr, msg) should pass");
 
-    expect_function("expect_function", testOb);
-
-    expect_catch((: error("Test catch") :), "*Test catch\n", "expect_catch should pass");
-    expect_catches(({
-        (: error("Test catches") :),
-        (: error("Test catches") :),
-        (: error("Test catches") :),
-    }), "*Test catches\n", "expect_catches should pass");
+    expect("expect > assert 'catch' catches errors", (: ({
+        assert((: error("Test catch") :), "catch", "*Test catch\n"),
+        assert((: error("Test catch 2") :), "catch", "*Test catch 2\n"),
+        assert((: error("Different error") :), "catch", "*Different error\n"),
+    }) :));
 }
 
 void test_expects_failing () {
@@ -113,16 +114,11 @@ void test_expects_failing () {
     expect_function("nonexistant_function", testOb);
 
     expect_next_failure();
-    expect_catch(function () {
-        return "No error";
-    }, "*Test catch\n", "expect_catch should fail");
-
-    expect_next_failure();
-    expect_catches(({
-        function () { return "No error"; },
-        function () { return "No error"; },
-        function () { return "No error"; },
-    }), "*Test catches\n", "expect_catches should fail");
+    expect("expect > assert 'catch' should fail", (: ({
+        assert((: "No error" :), "catch", "*Test Error\n"),
+        assert((: "Not an error" :), "catch", "*Test Error\n"),
+        assert((: "Success" :), "catch", "*Test Error\n"),
+    }) :));
 }
 
 void test_lifecycle_events () {
@@ -132,13 +128,15 @@ void test_lifecycle_events () {
     expect_true(nAfterEach == sizeof(testOrder) - 1, "after_each_test() ran after each test");
     expect_true(nTestOrder == 1, "test_order() called once");
 
-    expect_true(query_expect_catch() == 0, "query_expect_catch is disabled");
-    expect_catch(function () {
-        if (query_expect_catch()) {
-            error("Catch");
-        }
-    }, "*Catch\n", "query_expect_catch is enabled during expect_catch");
-    expect_true(query_expect_catch() == 0, "query_expect_catch is disabled");
+    expect("query_expect_catch is enabled during expect > assert 'catch'", (: ({
+        assert(query_expect_catch(), "==", 0),
+        assert(function () {
+            if (query_expect_catch()) {
+                error("Catch");
+            }
+        }, "catch", "*Catch\n"),
+        assert(query_expect_catch(), "==", 0),
+    }) :));
 }
 
 void test_should_be_ignored () {

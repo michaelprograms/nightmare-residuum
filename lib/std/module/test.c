@@ -46,7 +46,7 @@ string *test_ignore () {
 
 // -----------------------------------------------------------------------------
 
-string *testObjectFns = ({ }), *testObjectUntestedFns = ({ });
+private string *testObjectFns = ({ }), *testObjectUntestedFns = ({ });
 
 public int execute_test (function done) {
     string *testFns, *otherTestFns;
@@ -301,34 +301,6 @@ void expect_function (string fn, object testOb) {
     } else {
         validate_expect ("false", "true", fn + " does not exist");
     }
-}
-// Compare expr evaluation for an error matching to right
-varargs void expect_catch (mixed expr, string right, string message) {
-    mixed err;
-    expectCatch ++;
-    err = catch (evaluate(expr));
-    expectCatch --;
-    currentTestPassed = !!err && err == right;
-    if (!err) {
-        err = "Not Caught";
-    }
-    validate_expect (err, right, message);
-}
-// Compare an array of expr evaluations for any errors matching right
-varargs void expect_catches (mixed *expr, string right, string message) {
-    mixed err;
-    string *values = ({});
-    expectCatch ++;
-    foreach (mixed e in expr) {
-        err = catch (evaluate(e));
-        if (!err) {
-            values += ({ "Not Caught" });
-        } else {
-            values += ({ err });
-        }
-    }
-    expectCatch --;
-    expect_array_strings_equal(values, right, message);
 }
 // Used by test.test.c to verify failing expects
 protected void expect_next_failure () {

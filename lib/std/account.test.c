@@ -11,5 +11,8 @@ void after_all_tests () {
 void test_account () {
     expect_function("is_account", testOb);
 
-    expect_true(testOb->is_account(), "is_account handled");
+    expect("is_account returns true", (: ({
+        assert(testOb->is_account(), "==", 1),
+        assert(testOb->is_character(), "==", 0),
+    }) :));
 }

@@ -10,5 +10,8 @@ void after_each_test () {
 
 void test_is_room () {
     expect_function("is_room", testOb);
-    expect_true(testOb->is_room(), "room->is_room returns true");
+
+    expect("is_room returns true", (: ({
+        assert(testOb->is_room(), "==", 1),
+    }) :));
 }

@@ -1,10 +1,10 @@
 inherit M_TEST;
 
 private nosave object testOb;
-void before_all_tests () {
-    testOb = clone_object("/secure/sefun/string");
+void before_each_test () {
+    testOb = clone_object("/secure/sefun/string.c");
 }
-void after_all_tests () {
+void after_each_test () {
     if (objectp(testOb)) destruct(testOb);
 }
 
@@ -23,34 +23,19 @@ class TestClass {
     mapping m;
     object  o;
 }
+class TestClass tc = new(class TestClass);
 
 void test_strip_colour () {
     string text = "%^BOLD%^Text%^RESET%^";
+
     expect_function("strip_colour", testOb);
-    expect_strings_equal(testOb->strip_colour(text), "Text", "strip_colour removed ANSI tags");
-    expect_true(strlen(text) != 4 && strlen(testOb->strip_colour(text)) == 4, "strip_colour has correct strlen");
-    expect_true(strlen(testOb->strip_colour("%^RESET%^%^RESET%^RESET%^")) == 0, "strip_colour handled fluffos ANSI resets");
-}
 
-void test_center () {
-    string text = "Text";
-    string centered12 = "    Text    ";
-    string centered80 = sprintf("%38s", " ") + "Text" + sprintf("%38s", " ");
-    string undefStr;
-
-    expect_function("center", testOb);
-
-    expect_strings_equal(testOb->center(""), "", "center handled empty string");
-    expect_strings_equal(testOb->center(undefStr), "", "center handled undefined string");
-    expect_array_strings_equal(({
-        testOb->center(text),
-        testOb->center(text, 80)
-    }), centered80, "center handled width 80");
-    expect_strings_equal(testOb->center(text, 12), centered12, "center handled width 12");
-    expect_array_strings_equal(({
-        testOb->center(text, 2),
-        testOb->center(text, -20)
-    }), text, "center handled width < strlen");
+    expect("strip_colour removes ANSI resets", (: ({
+        assert(testOb->strip_colour($(text)), "==", "Text"),
+        assert(strlen($(text)), "!=", 4),
+        assert(strlen(testOb->strip_colour($(text))), "==", 4),
+        assert(strlen(testOb->strip_colour("%^RESET%^%^RESET%^RESET%^")), "==", 0),
+    }) :));
 }
 
 void test_identify () {
@@ -60,120 +45,81 @@ void test_identify () {
     string tString = "Here it is: \"abc123\".", undefStr;
     mapping tMap = ([ "test1": "abc", "test2": 123 ]), undefMap;
     function tFn = function(int a, int b) { return a + b; }, undefFn;
-    class TestClass tc = new(class TestClass);
-    string *classValues = ({}), *classResults = ({});
 
     expect_function("identify", testOb);
 
-    expect_array_strings_equal(({
-        testOb->identify(),
-        testOb->identify(undefInt),
-        testOb->identify(undefFloat),
-        testOb->identify(undefOb),
-        testOb->identify(undefStr),
-        testOb->identify(undefMap),
-        testOb->identify(undefFn),
-    }), "UNDEFINED", "identify handled undefined");
+    expect("identify handles undefined", (: ({
+        assert(testOb->identify(), "==", "UNDEFINED"),
+        assert(testOb->identify($(undefInt)), "==", "UNDEFINED"),
+        assert(testOb->identify($(undefFloat)), "==", "UNDEFINED"),
+        assert(testOb->identify($(undefOb)), "==", "UNDEFINED"),
+        assert(testOb->identify($(undefStr)), "==", "UNDEFINED"),
+        assert(testOb->identify($(undefMap)), "==", "UNDEFINED"),
+        assert(testOb->identify($(undefFn)), "==", "UNDEFINED"),
+    }) :));
 
-    expect_arrays_equal(({
-        testOb->identify(1),
-        testOb->identify(0),
-        testOb->identify(-1),
-        testOb->identify(MAX_INT),      // from driver
-        testOb->identify(MIN_INT),      // from driver
-        testOb->identify(tInt),
-    }), ({
-        "1",
-        "0",
-        "-1",
-        "9223372036854775807",
-        "-9223372036854775807",         // defined as +1
-        "123",
-    }), "identify handled int");
+    expect("identify handles int", (: ({
+        assert(testOb->identify(1), "==", "1"),
+        assert(testOb->identify(0), "==", "0"),
+        assert(testOb->identify(-1), "==", "-1"),
+        assert(testOb->identify(MAX_INT), "==", "9223372036854775807"),
+        assert(testOb->identify(MIN_INT), "==", "-9223372036854775807"),
+        assert(testOb->identify($(tInt)), "==", "123"),
+    }) :));
 
-    expect_arrays_equal(({
-        testOb->identify(1.0),
-        testOb->identify(0.0),
-        testOb->identify(-1.0),
-        testOb->identify(MAX_FLOAT),    // from driver
-        testOb->identify(MIN_FLOAT),    // from driver
-        testOb->identify(tFloat),
-    }), ({
-        "1.000000",
-        "0.000000",
-        "-1.000000",
-        "179769313486231570814527423731704356798070567525844996598917476803157260780028538760589558632766878171540458953514382464234321326889464182768467546703537516986049910576551282076245490090389328944075868508455133942304583236903222948165808559332123348274797826204144723168738177180919299881250404026184124858368.000000",
-        "0.000000",
-        "123.000000",
-    }), "identify handled float");
+    expect("identify handles float", (: ({
+        assert(testOb->identify(1.0), "==", "1.000000"),
+        assert(testOb->identify(0.0), "==", "0.000000"),
+        assert(testOb->identify(-1.0), "==", "-1.000000"),
+        assert(testOb->identify(MAX_FLOAT), "==", "179769313486231570814527423731704356798070567525844996598917476803157260780028538760589558632766878171540458953514382464234321326889464182768467546703537516986049910576551282076245490090389328944075868508455133942304583236903222948165808559332123348274797826204144723168738177180919299881250404026184124858368.000000"),
+        assert(testOb->identify(MIN_FLOAT), "==", "0.000000"),
+        assert(testOb->identify($(tFloat)), "==", "123.000000"),
+    }) :));
 
     tOb = new(STD_OBJECT);
-    expect_strings_regexp(testOb->identify(tOb), "OBJ\\("+replace_string(STD_OBJECT[0..<3], "/", "\\/")+"#(.+)\\)", "identify handled object");
+    expect("identify handles object", (: ({
+        assert(testOb->identify($(tOb)), "regex", "OBJ\\("+replace_string(STD_OBJECT[0..<3], "/", "\\/")+"#(.+)\\)"),
+    }) :));
     destruct(tOb);
 
-    // string
-    expect_arrays_equal(({
-        testOb->identify("abc"),
-        testOb->identify("123"),
-        testOb->identify("!@#"),
-        testOb->identify(tString),
-    }), ({
-        "\"abc\"",
-        "\"123\"",
-        "\"!@#\"",
-        "\"Here it is: \\\"abc123\\\".\"",
-    }), "identify handled string");
+    expect("identify handles string", (: ({
+        assert(testOb->identify("abc"), "==", "\"abc\""),
+        assert(testOb->identify("123"), "==", "\"123\""),
+        assert(testOb->identify("!@#"), "==", "\"!@#\""),
+        assert(testOb->identify($(tString)), "==", "\"Here it is: \\\"abc123\\\".\""),
+    }) :));
 
-    // map
-    expect_arrays_equal(({
-        testOb->identify(([])),
-        testOb->identify((["key1":"value1","key2":"value2",])),
-        testOb->identify(([0:1,1:2,])),
-        testOb->identify(tMap),
-    }), ({
-        "([ ])",
-        "([ \"key1\": \"value1\", \"key2\": \"value2\" ])",
-        "([ 0: 1, 1: 2 ])",
-        "([ \"test1\": \"abc\", \"test2\": 123 ])",
-    }), "identify handled map");
+    expect("identify handles map", (: ({
+        assert(testOb->identify(([])), "==", "([ ])"),
+        assert(testOb->identify((["key1":"value1","key2":"value2",])), "==", "([ \"key1\": \"value1\", \"key2\": \"value2\" ])"),
+        assert(testOb->identify(([0:1,1:2,])), "==", "([ 0: 1, 1: 2 ])"),
+        assert(testOb->identify($(tMap)), "==", "([ \"test1\": \"abc\", \"test2\": 123 ])"),
+    }) :));
 
-    // function
-    expect_arrays_equal(({
-        testOb->identify(function() {}),
-        testOb->identify((: uptime :)),
-        testOb->identify((: $1 + $2 :)),
-        testOb->identify((: call_other, this_object(), "query_name" :)),
-        testOb->identify(tFn),
-    }), ({
-        "(: <code>() :)",
-        "(: uptime :)",
-        "(: <code>($1, $2) :)",
-        "(: call_other, "+file_name(this_object())+", \"query_name\" :)",
-        "(: <code>($1, $2) :)",
-    }), "identify handled function");
+    expect("identify handles function", (: ({
+        assert(testOb->identify(function() {}), "==", "(: <code>() :)"),
+        assert(testOb->identify((: uptime :)), "==", "(: uptime :)"),
+        assert(testOb->identify((: $1 + $2 :)), "==", "(: <code>($1, $2) :)"),
+        assert(testOb->identify((: call_other, this_object(), "query_name" :)), "==", "(: call_other, "+file_name(this_object())+", \"query_name\" :)"),
+        assert(testOb->identify($(tFn)), "==", "(: <code>($1, $2) :)"),
+    }) :));
 
-    // class
-    classValues += ({ testOb->identify(tc) });
-    classResults += ({ "CLASS( 6 elements  0,  0,  0,  0,  0,  0 )" });
-    tc->str = "test string";
-    tc->strArr = ({ "test string 1", "test string 2", });
-    tc->i = 123;
-    tc->f = 1.0;
-    tc->m = ([ "test": 123, ]);
-    tc->o = this_object();
-    classValues += ({ testOb->identify(tc) });
-    classResults += ({ "CLASS( 6 elements  \"test string\",  ({ /* sizeof() == 2 */    \"test string 1\",    \"test string 2\"  }),  123,  1.000000,  ([ /* sizeof() == 1 */    \"test\" : 123,  ]),  " + file_name(this_object()) + " )" });
-    expect_arrays_equal(classValues, classResults, "identify handled class");
+    expect("identify handles class", (: ({
+        assert(testOb->identify(tc), "==", "CLASS( 6 elements  0,  0,  0,  0,  0,  0 )"),
+        assert(function() {
+            tc->str = "test string";
+            tc->strArr = ({ "test string 1", "test string 2", });
+            tc->i = 123;
+            tc->f = 1.0;
+            tc->m = ([ "test": 123, ]);
+            tc->o = this_object();
+        }, "==", 0),
+        assert(testOb->identify(tc), "==", "CLASS( 6 elements  \"test string\",  ({ /* sizeof() == 2 */    \"test string 1\",    \"test string 2\"  }),  123,  1.000000,  ([ /* sizeof() == 1 */    \"test\" : 123,  ]),  " + file_name(this_object()) + " )"),
+    }) :));
 
-    // array
-    expect_arrays_equal(({
-        testOb->identify(({ 1, 2, 3})),
-    }), ({
-        "({ 1, 2, 3 })",
-    }), "identify handled class");
-
-    // unknown
-    // @TODO
+    expect("identify handles array", (: ({
+        assert(testOb->identify(({ 1, 2, 3})), "==", "({ 1, 2, 3 })"),
+    }) :));
 }
 
 // @TODO swap this halfway thru tests from ansi to unknown
@@ -183,84 +129,57 @@ void test_identify () {
 // }
 
 void test_wrap () {
-    string *values = ({}), *results = ({});
     // string linewrap = "\e[0;37;40m\n"; // @TODO when unknown ansi
-    string linewrap = "\n";
+    // string linewrap = "\n";
 
     expect_function("wrap", testOb);
 
-    values += ({ testOb->wrap("test", 80) });
-    results += ({ "test" });
-    values += ({ testOb->wrap("testtesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttest") });
-    results += ({ "testtesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttest" + linewrap + "test" });
-    values += ({ testOb->wrap("testtest", 4) });
-    results += ({ "test" + linewrap + "test" });
+    expect("wrap handles wrapping text", (: ({
+        assert(testOb->wrap("test", 80), "==", "test"),
+        assert(testOb->wrap("testtesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttest"), "==", "testtesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttest\ntest"),
+        assert(testOb->wrap("testtest", 4), "==", "test\ntest"),
 
-    values += ({ testOb->wrap("testtesttest", 10) });
-    results += ({ "testtestte" + linewrap + "st" });
-    values += ({ testOb->wrap("testtesttest", 10, 2) });
-    results += ({ "testtestte" + linewrap + "  st" });
+        assert(testOb->wrap("testtesttest", 10), "==", "testtestte\nst"),
+        assert(testOb->wrap("testtesttest", 10, 2), "==", "testtestte\n  st"),
 
-    values += ({ testOb->wrap("", 80) });
-    results += ({ "" });
-    values += ({ testOb->wrap("test", -10) });
-    results += ({ "test" });
+        assert(testOb->wrap("", 80), "==", ""),
+        assert(testOb->wrap("test", -10), "==", "test"),
 
-    __MockAccount = new(STD_ACCOUNT);
-    __MockAccount->set_setting("ansi", "on");
+        assert(identify(__MockAccount = new(STD_ACCOUNT)), "regex", "OBJ\\("+replace_string(STD_ACCOUNT[0..<3], "/", "\\/")+"#(.+)\\)"),
+        assert(__MockAccount->set_setting("ansi", "on"), "==", 0),
 
-    values += ({ testOb->wrap("%^BOLD_OFF%^test", 80) });
-    results += ({ "\e[22mtest" });
-    values += ({ testOb->wrap("%^RED%^test%^RESET%^", 80) });
-    results += ({ "\e[31mtest\e[0;37;40m" });
-
-    expect_arrays_equal (values, results, "wrap handled wrapping");
+        assert(testOb->wrap("%^BOLD_OFF%^test", 80), "==", "\e[22mtest"),
+        assert(testOb->wrap("%^RED%^test%^RESET%^", 80), "==", "\e[31mtest\e[0;37;40m"),
+    }) :));
 
     destruct(__MockAccount);
 }
 
 void test_string_compare_same_until () {
-    int *values = ({}), *results = ({});
-
     expect_function("string_compare_same_until", testOb);
 
-    values += ({ testOb->string_compare_same_until("abc", "abc") });
-    results += ({ 3 });
-    values += ({ testOb->string_compare_same_until("abc", "ab") });
-    results += ({ 2 });
-    values += ({ testOb->string_compare_same_until("ab", "abc") });
-    results += ({ 2 });
-    values += ({ testOb->string_compare_same_until("a", "abc") });
-    results += ({ 1 });
-    values += ({ testOb->string_compare_same_until("abc", "a") });
-    results += ({ 1 });
-    values += ({ testOb->string_compare_same_until("f", "abc") });
-    results += ({ 0 });
-    values += ({ testOb->string_compare_same_until("abc", "f") });
-    results += ({ 0 });
-    values += ({ testOb->string_compare_same_until("staff", "staves") });
-    results += ({ 3 });
-    values += ({ testOb->string_compare_same_until("staffs", "staves") });
-    results += ({ 3 });
-    expect_arrays_equal (values, results, "string_compare_same_until handled comparing");
+    expect("string_compare_same_until handles comparing strings", (: ({
+        assert(testOb->string_compare_same_until("abc", "abc"), "==", 3),
+        assert(testOb->string_compare_same_until("abc", "ab"), "==", 2),
+        assert(testOb->string_compare_same_until("ab", "abc"), "==", 2),
+        assert(testOb->string_compare_same_until("a", "abc"), "==", 1),
+        assert(testOb->string_compare_same_until("abc", "a"), "==", 1),
+        assert(testOb->string_compare_same_until("f", "abc"), "==", 0),
+        assert(testOb->string_compare_same_until("abc", "f"), "==", 0),
+        assert(testOb->string_compare_same_until("staff", "staves"), "==", 3),
+        assert(testOb->string_compare_same_until("staffs", "staves"), "==", 3),
+    }) :));
 }
 
 void test_sanitize_name () {
-    string *values = ({}), *results = ({});
-
     expect_function("sanitize_name", testOb);
 
-    values += ({ testOb->sanitize_name("test") });
-    results += ({ "test" });
-    values += ({ testOb->sanitize_name("t'e's't") });
-    results += ({ "test" });
-    values += ({ testOb->sanitize_name("t e s t") });
-    results += ({ "test" });
-    values += ({ testOb->sanitize_name("t-e-s-t") });
-    results += ({ "test" });
-    values += ({ testOb->sanitize_name("TEST") });
-    results += ({ "test" });
-    values += ({ testOb->sanitize_name("T'- E'- S'- T") });
-    results += ({ "test" });
-    expect_arrays_equal (values, results, "sanitize_name handled names");
+    expect("sanitize_name handles names", (: ({
+        assert(testOb->sanitize_name("test"), "==", "test"),
+        assert(testOb->sanitize_name("t'e's't"), "==", "test"),
+        assert(testOb->sanitize_name("t e s t"), "==", "test"),
+        assert(testOb->sanitize_name("t-e-s-t"), "==", "test"),
+        assert(testOb->sanitize_name("TEST"), "==", "test"),
+        assert(testOb->sanitize_name("T'- E'- S'- T"), "==", "test"),
+    }) :));
 }

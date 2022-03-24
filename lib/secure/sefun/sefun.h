@@ -60,8 +60,7 @@ string *wild_card (string path, string relative_to);
 
 /* --- string --- */
 string strip_colour (string str);
-varargs string center (string str, int width);
-varargs string identify (mixed a);
+string identify (mixed a);
 varargs string wrap (string str, int width, int indent);
 int string_compare_same_until (string a, string b);
 string sanitize_name (string name);

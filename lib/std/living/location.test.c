@@ -5,34 +5,28 @@ void before_each_test () {
     if (objectp(testOb)) destruct(testOb);
     testOb = clone_object("/std/living/location.c");
 }
-void after_all_tests () {
+void after_each_test () {
     if (objectp(testOb)) destruct(testOb);
 }
 
 void test_last_location () {
-    string *values = ({}), *results = ({});
-
     expect_function("query_last_location", testOb);
     expect_function("set_last_location", testOb);
 
-    // test adding and removing
-    values += ({ testOb->query_last_location() });
-    results += ({ "/domain/Nowhere/room/void.c" }); // defaults to void
-    testOb->set_last_location("a location");
-    values += ({ testOb->query_last_location() });
-    results += ({ "a location" });
-    testOb->set_last_location("new location");
-    values += ({ testOb->query_last_location() });
-    results += ({ "new location" });
+    expect("handles setting and querying last location", (: ({
+    assert(testOb->query_last_location(), "==", "/domain/Nowhere/room/void.c"), // defaults to void
+    assert(testOb->set_last_location("a location"), "==", 0),
+    assert(testOb->query_last_location(), "==", "a location"),
+    assert(testOb->set_last_location("new location"), "==", 0),
+    assert(testOb->query_last_location(), "==", "new location"),
+    }) :));
 
-    expect_arrays_equal(values, results, "handled setting and querying last location");
-
-    expect_catches (({
-        (: testOb->set_last_location(0) :),
-        (: testOb->set_last_location(0.0) :),
-        (: testOb->set_last_location("") :),
-        (: testOb->set_last_location(({})) :),
-        (: testOb->set_last_location(([])) :),
-        (: testOb->set_last_location((: users :)) :),
-    }), "*Bad argument 1 to location->set_last_location\n", "set_last_location handled invalid argument 1");
+    expect("set_last_location handles invalid argument 1", (: ({
+        assert((: testOb->set_last_location(0) :), "catch", "*Bad argument 1 to location->set_last_location\n"),
+        assert((: testOb->set_last_location(0.0) :), "catch", "*Bad argument 1 to location->set_last_location\n"),
+        assert((: testOb->set_last_location("") :), "catch", "*Bad argument 1 to location->set_last_location\n"),
+        assert((: testOb->set_last_location(({})) :), "catch", "*Bad argument 1 to location->set_last_location\n"),
+        assert((: testOb->set_last_location(([])) :), "catch", "*Bad argument 1 to location->set_last_location\n"),
+        assert((: testOb->set_last_location((: users :)) :), "catch", "*Bad argument 1 to location->set_last_location\n"),
+    }) :));
 }

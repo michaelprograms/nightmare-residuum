@@ -10,17 +10,29 @@ void after_all_tests () {
 
 void test_driver_version () {
     expect_function("driver_version", testOb);
-    expect_true(testOb->driver_version(), "driver_version returned a version");
+    expect("driver_version returns a version", (: ({
+        assert(stringp(testOb->driver_version()), "==", 1),
+        assert(strlen(testOb->driver_version()) > 0, "==", 1),
+    }) :));
 }
 void test_mudlib_version () {
     expect_function("mudlib_version", testOb);
-    expect_strings_equal(testOb->mudlib_version(), "NR v0.1", "mudlib_version matched expected");
+    expect("mudlib_version returns a version", (: ({
+        assert(stringp(testOb->mudlib_version()), "==", 1),
+        assert(strlen(testOb->mudlib_version()) > 0, "==", 1),
+    }) :));
 }
 void test_mud_name () {
     expect_function("mud_name", testOb);
-    expect_strings_equal(testOb->mud_name(), "Nightmare Residuum", "mud_name matched expected");
+    expect("mud_name returns a name", (: ({
+        assert(stringp(testOb->mud_name()), "==", 1),
+        assert(strlen(testOb->mud_name()) > 0, "==", 1),
+    }) :));
 }
 void test_driver_port () {
     expect_function("driver_port", testOb);
-    expect_strings_equal(""+testOb->driver_port(), "6666", "driver_port matched expected");
+    expect("driver_port returns a port", (: ({
+        assert(intp(testOb->driver_port()), "==", 1),
+        assert(testOb->driver_port() > 0, "==", 1),
+    }) :));
 }
