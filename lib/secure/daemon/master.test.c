@@ -63,17 +63,20 @@ void test_build_applies () {
     expect_function("object_name", testOb);
 
     expect_function("get_include_path", testOb);
-    expect_arrays_equal(testOb->get_include_path("/test/Test"), ({ ":DEFAULT:" }), "get_include_path handled /test/Test");
-    expect_arrays_array_equal(({
-        testOb->get_include_path("/domain/Name"),
-        testOb->get_include_path("/domain/Name/test"),
-        testOb->get_include_path("/domain/Name/test/dir"),
-    }), ({ ":DEFAULT:", "/domain/Name/include" }), "get_include_path handled /domain/Name");
-    expect_arrays_array_equal(({
-        testOb->get_include_path("/realm/Name"),
-        testOb->get_include_path("/realm/Name/test"),
-        testOb->get_include_path("/realm/Name/test/dir"),
-    }), ({ ":DEFAULT:", "/realm/Name/include" }), "get_include_path handled /realm/Name");
+
+    expect("get_include_path handles paths", (: ({
+        assert(testOb->get_include_path("/test/Test"), "==", ({ ":DEFAULT:" })),
+        assert(testOb->get_include_path("/std/module"), "==", ({ ":DEFAULT:" })),
+        assert(testOb->get_include_path("/secure/module"), "==", ({ ":DEFAULT:" })),
+
+        assert(testOb->get_include_path("/domain/Name"), "==", ({ ":DEFAULT:", "/domain/Name/include" })),
+        assert(testOb->get_include_path("/domain/Name/test"), "==", ({ ":DEFAULT:", "/domain/Name/include" })),
+        assert(testOb->get_include_path("/domain/Name/test/dir"), "==", ({ ":DEFAULT:", "/domain/Name/include" })),
+
+        assert(testOb->get_include_path("/realm/Name"), "==", ({ ":DEFAULT:", "/realm/Name/include" })),
+        assert(testOb->get_include_path("/realm/Name/test"), "==", ({ ":DEFAULT:", "/realm/Name/include" })),
+        assert(testOb->get_include_path("/realm/Name/test/dir"), "==", ({ ":DEFAULT:", "/realm/Name/include" })),
+    }) :));
 }
 
 void test_error_applies () {
