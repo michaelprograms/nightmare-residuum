@@ -367,6 +367,8 @@ void assert (mixed left, string condition, mixed right) {
         return;
     } else if (condition == "==") {
         currentTestPassed = leftResult == rightResult;
+    } else if (condition == "!=") {
+        currentTestPassed = leftResult != rightResult;
     } else if (condition == ">") {
         currentTestPassed = leftResult > rightResult;
     } else if (condition == ">=") {
