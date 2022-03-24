@@ -128,7 +128,7 @@ void test_wrap () {
     expect_function("wrap", testOb);
 
     expect("wrap handles wrapping text", (: ({
-        assert(identify(__MockAccount = new(STD_ACCOUNT)), "regex", "OBJ\\("+replace_string(STD_ACCOUNT[0..<3], "/", "\\/")+"#(.+)\\)"),
+        assert(__MockAccount = new(STD_ACCOUNT), "regex", "OBJ\\("+replace_string(STD_ACCOUNT[0..<3], "/", "\\/")+"#(.+)\\)"),
         assert(__MockAccount->query_setting("ansi"), "==", "on"),
 
         assert(testOb->wrap("test", 80), "==", "test"),

@@ -359,8 +359,12 @@ void assert (mixed left, string condition, mixed right) {
     }
     if (condition == "catch") expectCatch = 0;
 
-    if (arrayp(leftResult) || mapp(leftResult)) leftResult = identify(leftResult);
-    if (arrayp(rightResult) || mapp(rightResult)) rightResult = identify(rightResult);
+    if (arrayp(leftResult) || mapp(leftResult) || (condition == "regex" && objectp(leftResult))) {
+        leftResult = identify(leftResult);
+    }
+    if (arrayp(rightResult) || mapp(rightResult)) {
+        rightResult = identify(rightResult);
+    }
 
     leftResults += ({ leftResult });
     rightResults += ({

@@ -20,35 +20,36 @@ string *test_order () {
      });
 }
 
+object userOb;
+mapping mudStats;
 void test_applies () {
-    object ob;
-    mapping stats;
-
     expect_function("connect", testOb);
 
-    ob = testOb->connect();
-    expect_strings_equal((ob ? base_name(ob) : "OBJ_USER did not load"), OBJ_USER, "connect returned OBJ_USER");
-    if (ob) {
-        destruct(ob);
-    }
+    expect("connect returns a valid user object", (: ({
+        assert(userOb = testOb->connect(), "regex", "OBJ\\("+replace_string(OBJ_USER, "/", "\\/")+"#(.+)\\)"),
+        assert(userOb->query_account(), "==", 0),
+        assert(userOb->query_character(), "==", 0),
+        assert(userOb->query_shell(), "==", 0),
+        assert(destruct(userOb), "==", 0),
+    }) :));
 
     expect_function("get_mud_stats", testOb);
 
-    stats = testOb->get_mud_stats();
-    expect_arrays_equal(({
-        stats["NAME"],
-        member_array("PLAYERS", keys(stats)) > -1,
-        member_array("UPTIME", keys(stats)) > -1,
-    }), ({
-        mud_name(),
-        1,
-        1,
-    }), "get_mud_stats has stats");
+    expect("get_mud_stats returns stats", (: ({
+        assert(mapp(mudStats = testOb->get_mud_stats()), "==", 1),
+        assert(mudStats["NAME"], "==", mud_name()),
+        assert(member_array("PLAYERS", keys(mudStats)) > -1, "==", 1),
+        assert(member_array("UPTIME", keys(mudStats)) > -1, "==", 1),
+    }) :));
 }
 
 void test_startup_applies () {
     expect_function("epilog", testOb);
-    expect_true(typeof(testOb->epilog()) == "array", "epilog returned preload array");
+
+    expect("epilog returns preload array", (: ({
+        assert(typeof(testOb->epilog()), "==", "array"),
+        assert(sizeof(testOb->epilog()) > 0, "==", 1),
+    }) :));
 
     expect_function("flag", testOb);
 
@@ -93,30 +94,21 @@ void test_ed_applies () {
 }
 
 void test_security_applies () {
-    int *values = ({}), *results = ({});
-
     expect_function("privs_file", testOb);
     // privs_file testing handled by D_ACCESS query_file_privs
 
     expect_function("valid_override", testOb);
-    values += ({ testOb->valid_override("/secure/sefun/override") });
-    results += ({ 1 });
 
-    values += ({ testOb->valid_override("/insecure") });
-    results += ({ 0 });
-
-    values += ({ testOb->valid_override("/secure/user/input", "input_to") });
-    results += ({ 1 });
-
-    values += ({ testOb->valid_override("/secure/user/input", "get_char") });
-    results += ({ 1 });
-
-    expect_arrays_equal(values, results, "valid_override handled requests");
+    expect("valid_override handles requests", (: ({
+        assert(testOb->valid_override("/secure/sefun/override"), "==", 1),
+        assert(testOb->valid_override("/insecure"), "==", 0),
+        assert(testOb->valid_override("/secure/user/input", "input_to"), "==", 1),
+        assert(testOb->valid_override("/secure/user/input", "get_char"), "==", 1),
+    }) :));
 }
 
+object basicOb;
 void test_valid_applies () {
-    object basicOb;
-
     // expect_function("valid_bind", testOb);
     // expect_function("valid_database", testOb);
     // expect_function("valid_hide", testOb);
@@ -124,35 +116,55 @@ void test_valid_applies () {
     // expect_function("valid_object", testOb);
 
     expect_function("valid_read", testOb);
-    expect_true(testOb->valid_read("/", testOb, "read_file"), "valid_read handled allowed call");
-    // @TODO find something that doesn't have valid read
+
+    expect("valid_read handles calls", (: ({
+        assert(basicOb = new(STD_OBJECT), "regex", "OBJ\\("+replace_string(STD_OBJECT[0..<3], "/", "\\/")+"#(.+)\\)"),
+        assert(testOb->valid_read("/", testOb, "read_file"), "==", 1),
+        assert(testOb->valid_read("/tmp/void/doesntexist", basicOb, "read_file"), "==", 0),
+    }) :));
 
     expect_function("valid_write", testOb);
-    expect_true(testOb->valid_write("/", testOb, "write_file"), "valid_write handled allowed call");
-    expect_false(testOb->valid_write("/save", (basicOb = new (STD_OBJECT)), "write_file"), "valid_write handled denied call");
-    destruct(basicOb);
+
+    expect("valid_write handles calls", (: ({
+        assert(testOb->valid_write("/", testOb, "write_file"), "==", 1),
+        assert(testOb->valid_write("/save", basicOb, "write_file"), "==", 0),
+        assert(destruct(basicOb), "==", 0),
+    }) :));
 
     // expect_function("valid_save_binary", testOb);
     // expect_function("valid_seteuid", testOb);
     // expect_function("valid_shadow", testOb);
-    // expect_function("valid_socket", testOb);
+
+    expect_function("valid_socket", testOb);
+    // @TODO test valid_socket
+
 }
 
 void test_parsing_applies () {
     expect_function("parse_command_id_list", testOb);
-    expect_strings_equal(implode(testOb->parse_command_id_list(), ","), "thing", "parse_command_id_list returns list of nouns");
+    expect("parse_command_id_list returns list of nouns", (: ({
+        assert(implode(testOb->parse_command_id_list(), ","), "==", "thing"),
+    }) :));
 
     expect_function("parse_command_adjectiv_id_list", testOb);
-    expect_strings_equal(implode(testOb->parse_command_adjectiv_id_list(), ","), "a,an,the", "parse_command_adjectiv_id_list returns list of adjectives");
+    expect("parse_command_adjectiv_id_list returns list of adjectives", (: ({
+        assert(implode(testOb->parse_command_adjectiv_id_list(), ","), "==", "a,an,the"),
+    }) :));
 
     expect_function("parse_command_plural_id_list", testOb);
-    expect_strings_equal(implode(testOb->parse_command_plural_id_list(), ","),  "things,them,everything", "parse_command_plural_id_list returns list of plurals");
+    expect("parse_command_plural_id_list returns list of plurals", (: ({
+        assert(implode(testOb->parse_command_plural_id_list(), ","), "==", "things,them,everything"),
+    }) :));
 
     expect_function("parse_command_prepos_list", testOb);
-    expect_integers_equal(sizeof(testOb->parse_command_prepos_list()), 50, "parse_command_prepos_list returns list of prepositions");
+    expect("parse_command_prepos_list returns list of prepositions", (: ({
+        assert(sizeof(testOb->parse_command_prepos_list()), "==", 50),
+    }) :));
 
     expect_function("parse_command_all_word", testOb);
-    expect_strings_equal(testOb->parse_command_all_word(), "all", "parse_command_all_word returns word");
+    expect("parse_command_all_word returns all word", (: ({
+        assert(testOb->parse_command_all_word(), "==", "all"),
+    }) :));
 
     expect_function("parse_command_users", testOb);
     // @TODO test parse_command_users
