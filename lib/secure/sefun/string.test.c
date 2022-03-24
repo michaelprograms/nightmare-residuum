@@ -122,34 +122,37 @@ void test_identify () {
     }) :));
 }
 
-// @TODO swap this halfway thru tests from ansi to unknown
-// string getenv(string str) {
-//     debug_message("getenv");
-//     return "unknown";
-// }
-
 void test_wrap () {
-    // string linewrap = "\e[0;37;40m\n"; // @TODO when unknown ansi
-    // string linewrap = "\n";
+    string resetANSI = "\e[0;37;40m", linewrap = "\n";
 
     expect_function("wrap", testOb);
 
     expect("wrap handles wrapping text", (: ({
+        assert(identify(__MockAccount = new(STD_ACCOUNT)), "regex", "OBJ\\("+replace_string(STD_ACCOUNT[0..<3], "/", "\\/")+"#(.+)\\)"),
+        assert(__MockAccount->query_setting("ansi"), "==", "on"),
+
         assert(testOb->wrap("test", 80), "==", "test"),
-        assert(testOb->wrap("testtesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttest"), "==", "testtesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttest\ntest"),
-        assert(testOb->wrap("testtest", 4), "==", "test\ntest"),
-
-        assert(testOb->wrap("testtesttest", 10), "==", "testtestte\nst"),
-        assert(testOb->wrap("testtesttest", 10, 2), "==", "testtestte\n  st"),
-
+        assert(testOb->wrap("testtesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttest"), "==", "testtesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttest" + $(resetANSI) + $(linewrap) + "test"),
+        assert(testOb->wrap("testtest", 4), "==", "test" + $(resetANSI) + $(linewrap) + "test"),
+        assert(testOb->wrap("testtesttest", 10), "==", "testtestte" + $(resetANSI) + $(linewrap) + "st"),
+        assert(testOb->wrap("testtesttest", 10, 2), "==", "testtestte" + $(resetANSI) + $(linewrap) + "  st"),
         assert(testOb->wrap("", 80), "==", ""),
         assert(testOb->wrap("test", -10), "==", "test"),
-
-        assert(identify(__MockAccount = new(STD_ACCOUNT)), "regex", "OBJ\\("+replace_string(STD_ACCOUNT[0..<3], "/", "\\/")+"#(.+)\\)"),
-        assert(__MockAccount->set_setting("ansi", "on"), "==", 0),
-
         assert(testOb->wrap("%^BOLD_OFF%^test", 80), "==", "\e[22mtest"),
         assert(testOb->wrap("%^RED%^test%^RESET%^", 80), "==", "\e[31mtest\e[0;37;40m"),
+
+        assert(__MockAccount->set_setting("ansi", "off"), "==", 0),
+        assert(__MockAccount->query_setting("ansi"), "==", "off"),
+
+        assert(testOb->wrap("test", 80), "==", "test"),
+        assert(testOb->wrap("testtesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttest"), "==", "testtesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttest" + $(linewrap) + "test"),
+        assert(testOb->wrap("testtest", 4), "==", "test" + $(linewrap) + "test"),
+        assert(testOb->wrap("testtesttest", 10), "==", "testtestte" + $(linewrap) + "st"),
+        assert(testOb->wrap("testtesttest", 10, 2), "==", "testtestte" + $(linewrap) + "  st"),
+        assert(testOb->wrap("", 80), "==", ""),
+        assert(testOb->wrap("test", -10), "==", "test"),
+        assert(testOb->wrap("%^BOLD_OFF%^test", 80), "==", "test"),
+        assert(testOb->wrap("%^RED%^test%^RESET%^", 80), "==", "test"),
     }) :));
 
     destruct(__MockAccount);

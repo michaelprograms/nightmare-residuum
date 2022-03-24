@@ -85,7 +85,11 @@ public int execute_test (function done) {
         timeAfter = rusage()["utime"] + rusage()["stime"];
 
         currentTestLog = "  " + UNDERLINE + BOLD + testFn + RESET + " (" + ORANGE + (timeAfter - timeBefore) + RESET + " ms):" + currentTestLog;
-        write(currentTestLog + "\n");
+        if (this_user()) {
+            message("system", currentTestLog + "\n", this_user());
+        } else {
+            debug_message(currentTestLog);
+        }
         if (strlen(currentFailLog) > 0) {
             totalFailLog += (sizeof(totalFailLog) > 0 ? "\n" : "") + CYAN + UNDERLINE + base_name(this_object()) + RESET + ": " + UNDERLINE + BOLD + testFn + RESET + " (" + ORANGE + (timeAfter - timeBefore) + RESET + " ms):" + currentFailLog;
         }
