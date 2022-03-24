@@ -153,9 +153,9 @@ void test_wrap () {
         assert(testOb->wrap("test", -10), "==", "test"),
         assert(testOb->wrap("%^BOLD_OFF%^test", 80), "==", "test"),
         assert(testOb->wrap("%^RED%^test%^RESET%^", 80), "==", "test"),
+        assert(destruct(__MockAccount), "==", 0),
     }) :));
 
-    destruct(__MockAccount);
 }
 
 void test_string_compare_same_until () {
