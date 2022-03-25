@@ -27,44 +27,32 @@ void test_lifecycle_functions () {
 }
 
 void test_move () {
-    int *values = ({}), *results = ({});
     object ob = new(STD_CONTAINER), ob2 = new(STD_CONTAINER);
 
     expect_function("handle_move", testOb);
 
-    values += ({ sizeof(all_inventory(ob)) });
-    results += ({ 0 });
-    values += ({ testOb->handle_move(ob) });
-    results += ({ 1 });
-    values += ({ sizeof(all_inventory(ob)) });
-    results += ({ 1 });
-    values += ({ sizeof(all_inventory(ob2)) });
-    results += ({ 0 });
-    values += ({ testOb->handle_move(ob2) });
-    results += ({ 1 });
-    values += ({ sizeof(all_inventory(ob2)) });
-    results += ({ 1 });
-    values += ({ sizeof(all_inventory(ob)) });
-    results += ({ 0 });
+    expect("handle_move relocates objects", (: ({
+        assert(sizeof(all_inventory($(ob))), "==", 0),
+        assert(testOb->handle_move($(ob)), "==", 1),
+        assert(sizeof(all_inventory($(ob))), "==", 1),
+        assert(sizeof(all_inventory($(ob2))), "==", 0),
+        assert(testOb->handle_move($(ob2)), "==", 1),
+        assert(sizeof(all_inventory($(ob2))), "==", 1),
+        assert(sizeof(all_inventory($(ob))), "==", 0),
+    }) :));
 
-    expect_arrays_equal(values, results, "handle_move moved objects");
     destruct(ob);
     destruct(ob2);
 }
 
 void test_parser_applies () {
-    int *values = ({}), *results = ({});
-
     expect_function("is_living", testOb);
     expect_function("inventory_visible", testOb);
     expect_function("inventory_accessible", testOb);
 
-    values += ({ testOb->is_living() });
-    results += ({ 0 });
-    values += ({ testOb->inventory_visible() });
-    results += ({ 0 });
-    values += ({ testOb->inventory_accessible() });
-    results += ({ 0 });
-
-    expect_arrays_equal(values, results, "parser applies handled");
+    expect("object handles parser applies", (: ({
+        assert(testOb->is_living(), "==", 0),
+        assert(testOb->inventory_visible(), "==", 0),
+        assert(testOb->inventory_accessible(), "==", 0),
+    }) :));
 }

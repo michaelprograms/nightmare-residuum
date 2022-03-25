@@ -10,8 +10,6 @@ void after_each_test () {
 }
 
 void test_npc () {
-    int *values = ({}), *results = ({});
-
     expect_function("is_monster", testOb);
     expect_function("is_npc", testOb);
 

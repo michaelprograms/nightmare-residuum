@@ -7,7 +7,7 @@ void before_each_test () {
     if (objectp(testOb)) destruct(testOb);
     testOb = clone_object("/secure/shell/variable.c");
 }
-void after_all_tests () {
+void after_each_test () {
     if (objectp(testOb)) destruct(testOb);
 }
 
@@ -16,61 +16,39 @@ string *test_order () {
 }
 
 void test_set_variables () {
-    int *values = ({}), *results = ({});
-
     expect_function("query_variable", testOb);
     expect_function("set_variable", testOb);
     expect_function("unset_variable", testOb);
 
-    values += ({ testOb->query_variable("testkey") });
-    results += ({ UNDEFINED });
+    expect("variables handles set/query", (: ({
+        assert(testOb->query_variable("testkey1"), "==", UNDEFINED),
 
-    values += ({ testOb->set_variable("testkey", 123) });
-    results += ({ 123 });
-    values += ({ testOb->query_variable("testkey") });
-    results += ({ 123 });
+        assert(testOb->set_variable("testkey1", 123), "==", 123),
+        assert(testOb->query_variable("testkey1"), "==", 123),
 
-    values += ({ testOb->unset_variable("testkey") });
-    results += ({ 1 });
-    values += ({ testOb->query_variable("testkey") });
-    results += ({ UNDEFINED });
+        assert(testOb->unset_variable("testkey1"), "==", 1),
+        assert(testOb->query_variable("testkey1"), "==", UNDEFINED),
 
-    values += ({ testOb->set_variable("testkey", "xyz") });
-    results += ({ "xyz" });
-    values += ({ testOb->query_variable("testkey") });
-    results += ({ "xyz" });
+        assert(testOb->set_variable("testkey1", "xyz"), "==", "xyz"),
+        assert(testOb->query_variable("testkey1"), "==", "xyz"),
+    }) :));
 
-    expect_arrays_equal(values, results, "variables handled");
-}
+    expect("variable_if_undefined handled", (: ({
+        assert(testOb->query_variable("testkey2"), "==", UNDEFINED),
 
-void test_set_variables_if_undefined () {
-    int *values = ({}), *results = ({});
+        assert(testOb->set_variable("testkey2", 123, 1), "==", 123),
+        assert(testOb->query_variable("testkey2"), "==", 123),
 
-    values += ({ testOb->query_variable("testkey") });
-    results += ({ UNDEFINED });
+        assert(testOb->set_variable("testkey2", 987, 1), "==", 123), // didn't set
 
-    values += ({ testOb->set_variable("testkey", 123, 1) });
-    results += ({ 123 });
-    values += ({ testOb->query_variable("testkey") });
-    results += ({ 123 });
+        assert(testOb->unset_variable("testkey2"), "==", 1),
+        assert(testOb->query_variable("testkey2"), "==", UNDEFINED),
 
-    values += ({ testOb->set_variable("testkey", 987, 1) });
-    results += ({ 123 }); // didn't set
-
-    values += ({ testOb->unset_variable("testkey") });
-    results += ({ 1 });
-    values += ({ testOb->query_variable("testkey") });
-    results += ({ UNDEFINED });
-
-    values += ({ testOb->set_variable("testkey", 987, 1) });
-    results += ({ 987 }); // did set
-
-    expect_arrays_equal(values, results, "variable_if_undefined handled");
+        assert(testOb->set_variable("testkey2", 987, 1), "==", 987), // did set
+    }) :));
 }
 
 void test_set_variable_hooks () {
-    int *values = ({}), *results = ({});
-
     expect_function("set_variable_hook", testOb);
 
     testOb->set_variable_hook("testkey", function (mixed value) {
@@ -78,18 +56,13 @@ void test_set_variable_hooks () {
         return value;
     });
 
-    values += ({ action });
-    results += ({ 0 });
+    expect("set_variable_hook handles hook", (: ({
+        assert(action, "==", 0),
 
-    values += ({ testOb->set_variable("testkey", 123) });
-    results += ({ 123 });
-    values += ({ action });
-    results += ({ 1 });
+        assert(testOb->set_variable("testkey", 123), "==", 123),
+        assert(action, "==", 1),
 
-    values += ({ testOb->set_variable("testkey", "xyz") });
-    results += ({ "xyz" });
-    values += ({ action });
-    results += ({ 2 });
-
-    expect_arrays_equal(values, results, "hooks handled");
+        assert(testOb->set_variable("testkey", "xyz"), "==", "xyz"),
+        assert(action, "==", 2),
+    }) :));
 }

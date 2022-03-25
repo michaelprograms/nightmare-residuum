@@ -1,60 +1,69 @@
 inherit M_TEST;
 
 private nosave object testOb;
-void before_all_tests () {
+void before_each_test () {
     testOb = clone_object("/std/living/body.c");
 }
-void after_all_tests () {
+void after_each_test () {
     if (objectp(testOb)) destruct(testOb);
 }
 
 void test_gender () {
-    string *values = ({}), *results = ({});
-
     expect_function("set_gender", testOb);
     expect_function("query_gender", testOb);
 
-    values += ({ testOb->query_gender() });
-    results += ({ "neither" });
-    testOb->set_gender("male");
-    values += ({ testOb->query_gender() });
-    results += ({ "male" });
-    testOb->set_gender("female");
-    values += ({ testOb->query_gender() });
-    results += ({ "female" });
-    testOb->set_gender("neither");
-    values += ({ testOb->query_gender() });
-    results += ({ "neither" });
-    testOb->set_gender(0);
-    values += ({ testOb->query_gender() });
-    results += ({ "none" });
-    testOb->set_gender("invalid");
-    values += ({ testOb->query_gender() });
-    results += ({ "none" });
+    expect("gender sets and queryable", (: ({
+        assert(testOb->query_gender(), "==", "neither"),
 
-    expect_arrays_equal(values, results, "gender handled");
+        testOb->set_gender("male"),
+        assert(testOb->query_gender(), "==", "male"),
+
+        testOb->set_gender("female"),
+        assert(testOb->query_gender(), "==", "female"),
+
+        testOb->set_gender("neither"),
+        assert(testOb->query_gender(), "==", "neither"),
+
+        testOb->set_gender(0),
+        assert(testOb->query_gender(), "==", "none"),
+
+        testOb->set_gender("invalid"),
+        assert(testOb->query_gender(), "==", "none"),
+    }) :));
 }
 
 void test_level () {
-    int *values = ({}), *results = ({});
-
     expect_function("set_level", testOb);
     expect_function("query_level", testOb);
 
-    values += ({ testOb->query_level() });
-    results += ({ 0 });
+    expect("level sets and queryable", (: ({
+        assert(testOb->query_level(), "==", 0),
 
-    testOb->set_level(123);
-    values += ({ testOb->query_level() });
-    results += ({ 123 });
+        testOb->set_level(123),
+        assert(testOb->query_level(), "==", 123),
 
-    testOb->set_level(0);
-    values += ({ testOb->query_level() });
-    results += ({ 0 });
+        testOb->set_level(0),
+        assert(testOb->query_level(), "==", 0),
 
-    testOb->set_level(-123);
-    values += ({ testOb->query_level() });
-    results += ({ 123 });
+        testOb->set_level(-123),
+        assert(testOb->query_level(), "==", 123),
+    }) :));
+}
 
-    expect_arrays_equal(values, results, "handled level");
+void test_species () {
+    expect_function("set_species", testOb);
+    expect_function("query_species", testOb);
+
+    expect("species sets and queryable", (: ({
+        assert(testOb->query_species(), "==", "human"),
+
+        testOb->set_species("synthetic"),
+        assert(testOb->query_species(), "==", "synthetic"),
+
+        assert((: testOb->set_species(0) :), "catch", "*Bad argument 1 to body->set_species\n"),
+        assert(testOb->query_species(), "==", "synthetic"),
+
+        assert((: testOb->set_species() :), "catch", "*Bad argument 1 to body->set_species\n"),
+        assert(testOb->query_species(), "==", "synthetic"),
+    }) :));
 }

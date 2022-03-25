@@ -27,33 +27,45 @@ string *test_order () {
 string *test_ignore () { return ::test_ignore() + ({ "test_should_be_ignored" }); }
 
 void test_expects_passing () {
-    string *arr1 = ({ "abc", "123", "!@#", });
-
     expect_function("expect_function", testOb);
     expect_function("expect", testOb);
     expect_function("assert", testOb);
 
-    expect_strings_equal("abc", "abc", "expect_strings_equal(str1, str1, msg) should pass");
+    expect("assert condition '==' passes", (: ({
+        assert(1, "==", 1),
+        assert(1.0, "==", 1.0),
+        assert("abc", "==", "abc"),
+        assert(({ 1, 2, 3 }), "==", ({ 1, 2, 3 })),
+        assert(([ 1: "a", ]), "==", ([ 1: "a", ])),
+        assert((: 1 :), "==", (: 1 :)),
+    }) :));
 
-    expect_strings_regexp("bat cat rat", "cat", "expect_strings_regexp(str, regexp, msg) should pass");
+    expect("assert condition '>' passes", (: ({
+        assert(1, ">", 0),
+        assert(321, ">", 123),
+    }) :));
 
-    expect_integers_equal(12345, 12345, "expect_integers_equal(int1, int1, msg) should pass");
+    expect("assert condition '>=' passes", (: ({
+        assert(1, ">=", 1),
+        assert(123, ">=", 123),
+    }) :));
 
-    expect_arrays_equal(arr1, arr1, "expect_arrays_equal(arr1, arr1, msg) should pass");
+    expect("assert condition '<' passes", (: ({
+        assert(0, "<", 1),
+        assert(123, "<", 321),
+    }) :));
 
-    expect_array_strings_equal(({
-        "abc",
-        "abc",
-        "abc",
-    }), "abc", "expect_array_strings_equal(arr, str, msg) should pass");
+    expect("assert condition '<=' passes", (: ({
+        assert(0, "<=", 1),
+        assert(123, "<=", 321),
+    }) :));
 
-    expect_arrays_array_equal(({
-        arr1,
-        arr1,
-        arr1,
-    }), arr1, "expect_arrays_array_equal(arrOfArrs, *arr, msg) should pass");
+    expect("assert condition 'regex' passes", (: ({
+        assert("bat", "regex", "^.+at"),
+        assert("cat", "regex", "^.+at"),
+    }) :));
 
-    expect("expect > assert 'catch' catches errors", (: ({
+    expect("assert condition 'catch' passes", (: ({
         assert((: error("Test catch") :), "catch", "*Test catch\n"),
         assert((: error("Test catch 2") :), "catch", "*Test catch 2\n"),
         assert((: error("Different error") :), "catch", "*Different error\n"),
@@ -65,47 +77,50 @@ void test_expects_failing () {
     string *arr2 = ({ "XYZ", "999", ",.'", });
 
     expect_next_failure();
-    expect_strings_equal("abc", "123", "expect_strings_equal(str1, str2) should fail");
-
-    expect_next_failure();
-    expect_strings_regexp("bat cat rat", "fat", "expect_strings_regexp(str, regexp, msg) should fail");
-
-    expect_next_failure();
-    expect_integers_equal(12345, 67890, "expect_integers_equal(int1, int2, msg) should fail");
-
-    expect_next_failure();
-    expect_arrays_equal(arr1, arr2, "expect_arrays_equal(*arr1, *arr2, msg) should fail");
-    expect_next_failure();
-    expect_arrays_equal(arr1, arr1[0..<2], "expect_arrays_equal(*arr1, *arr1[0..<2], msg) should fail");
-    expect_next_failure();
-    expect_arrays_equal(arr1[1..], arr1, "expect_arrays_equal(*arr1, *arr1[0..<2], msg) should fail");
-
-    expect_next_failure();
-    expect_array_strings_equal(({
-        "abc",
-        "123",
-        "!@#",
-    }), "abc", "expect_array_strings_equal(*arr, str, msg) should fail");
-
-    expect_next_failure();
-    expect_arrays_array_equal(({
-        arr1,
-        arr1,
-        arr2,
-    }), arr1, "expect_arrays_array_equal(*arrOfArrs, *arr, msg) should fail");
-
-    expect_next_failure();
-    expect_arrays_equal(
-        ({ "zero giraffes", "zero giraffes", "zero giraffe", "zero giraffe", "zero giraffes" }),
-        ({ "zero giraffes", "zero giraffe", "zero giraffes", "zeri giraffes", "zeri giraffe" }),
-        "format_array_differences should fail"
-    );
-
-    expect_next_failure();
     expect_function("nonexistant_function", testOb);
 
     expect_next_failure();
-    expect("expect > assert 'catch' should fail", (: ({
+    expect("assert condition '==' should fail", (: ({
+        assert(0, "==", 1),
+        assert(0.0, "==", 1.0),
+        assert("xyz", "==", "abc"),
+        assert(({ -1, -2, -3 }), "==", ({ 1, 2, 3 })),
+        assert(([ "a": 1, ]), "==", ([ 1: "a", ])),
+        assert((: 0 :), "==", (: 1 :)),
+    }) :));
+
+    expect_next_failure();
+    expect("assert condition '>' should fail", (: ({
+        assert(0, ">", 1),
+        assert(123, ">", 321),
+    }) :));
+
+    expect_next_failure();
+    expect("assert condition '>=' should fail", (: ({
+        assert(0, ">=", 1),
+        assert(123, ">=", 321),
+    }) :));
+
+    expect_next_failure();
+    expect("assert condition '<' should fail", (: ({
+        assert(1, "<", 0),
+        assert(321, "<", 123),
+    }) :));
+
+    expect_next_failure();
+    expect("assert condition '<=' should fail", (: ({
+        assert(1, "<=", 0),
+        assert(321, "<=", 123),
+    }) :));
+
+    expect_next_failure();
+    expect("assert condition 'regex' should fail", (: ({
+        assert("bar", "regex", "^.+at"),
+        assert("car", "regex", "^.+at"),
+    }) :));
+
+    expect_next_failure();
+    expect("assert condition 'catch' should fail", (: ({
         assert((: "No error" :), "catch", "*Test Error\n"),
         assert((: "Not an error" :), "catch", "*Test Error\n"),
         assert((: "Success" :), "catch", "*Test Error\n"),
@@ -122,7 +137,7 @@ void test_lifecycle_events () {
         assert(nTestOrder, "==", 1), // test_order
     }) :));
 
-    expect("query_expect_catch is enabled during expect > assert 'catch'", (: ({
+    expect("query_expect_catch is enabled during assert 'catch'", (: ({
         assert(query_expect_catch(), "==", 0),
         assert((: query_expect_catch() && error("Catch") :), "catch", "*Catch\n"),
         assert(query_expect_catch(), "==", 0),

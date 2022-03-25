@@ -11,46 +11,29 @@ void after_all_tests () {
 
 void test_receive () {
     object ob = new(STD_OBJECT);
-    int *values = ({}), *results = ({});
 
     expect_function("can_receive", testOb);
     expect_function("can_release", testOb);
     expect_function("handle_receive", testOb);
     expect_function("handle_release", testOb);
 
-    values += ({ testOb->can_receive(ob) });
-    results += ({ 1 });
-
-    values += ({ testOb->can_release(ob) });
-    results += ({ 0 });
-
-    values += ({ testOb->handle_receive(ob) });
-    results += ({ 1 });
-
-    values += ({ ob->handle_move(testOb) });
-    results += ({ 1 });
-
-    values += ({ testOb->can_receive(ob) });
-    results += ({ 0 });
-
-    values += ({ testOb->can_release(ob) });
-    results += ({ 1 });
-
-    values += ({ testOb->handle_release(ob) });
-    results += ({ 1 });
-
-    expect_arrays_equal(values, results, "receive and release behave");
+    expect("receive and release behaves", (: ({
+        assert(testOb->can_receive($(ob)), "==", 1),
+        assert(testOb->can_release($(ob)), "==", 0),
+        assert(testOb->handle_receive($(ob)), "==", 1),
+        assert($(ob)->handle_move(testOb), "==", 1),
+        assert(testOb->can_receive($(ob)), "==", 0),
+        assert(testOb->can_release($(ob)), "==", 1),
+        assert(testOb->handle_release($(ob)), "==", 1),
+    }) :));
 }
 
 void test_inventory () {
     expect_function("inventory_visible", testOb);
     expect_function("inventory_accessible", testOb);
 
-    expect_arrays_equal(({
-        testOb->inventory_visible(),
-        testOb->inventory_accessible(),
-    }), ({
-        1,
-        1,
-    }), "receive and release behave");
+    expect("inventory behaves", (: ({
+        assert(testOb->inventory_visible(), "==", 1),
+        assert(testOb->inventory_accessible(), "==", 1),
+    }) :));
 }

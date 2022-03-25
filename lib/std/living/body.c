@@ -27,6 +27,9 @@ string query_species () {
 }
 void set_species (string species) {
     // @TODO security
+
+    if (!stringp(species)) error("Bad argument 1 to body->set_species");
+
     __Species = species;
     update_limbs();
 }

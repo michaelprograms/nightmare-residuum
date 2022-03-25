@@ -5,9 +5,9 @@ inherit M_TEST;
 private nosave object testOb;
 void before_each_test () {
     if (objectp(testOb)) destruct(testOb);
-    testOb = clone_object("/secure/sefun/path");
+    testOb = clone_object("/secure/sefun/path.c");
 }
-void after_all_tests () {
+void after_each_test () {
     if (objectp(testOb)) destruct(testOb);
 }
 
@@ -15,14 +15,14 @@ string *test_ignore () { return ::test_ignore() + ({ "query_character", "query_s
 
 // -----------------------------------------------------------------------------
 
-object mockCharacter;
+object __MockCharacter;
 object query_character () {
-    return mockCharacter;
+    return __MockCharacter;
 }
 
-object mockShell;
+object __MockShell;
 object query_shell () {
-    return mockShell;
+    return __MockShell;
 }
 
 // -----------------------------------------------------------------------------
@@ -30,197 +30,173 @@ object query_shell () {
 void test_user_path () {
     expect_function("user_path", testOb);
 
-    expect_strings_equal(testOb->user_path("username"), "/realm/username", "user_path(username) returned /realm/username");
-
-    expect_array_strings_equal(({
-        testOb->user_path(0),
-        testOb->user_path("")
-    }), "/realm", "user_path(invalid) returned /realm");
+    expect("user_path handles names", (: ({
+        assert(testOb->user_path("username"), "==", "/realm/username"),
+        assert(testOb->user_path("somebody"), "==", "/realm/somebody"),
+    }) :));
+    expect("user_path handles invalid inputs", (: ({
+        assert(testOb->user_path(), "==", "/realm"),
+        assert(testOb->user_path(0), "==", "/realm"),
+        assert(testOb->user_path(""), "==", "/realm"),
+    }) :));
 }
 
 void test_split_path () {
     expect_function("split_path", testOb);
 
-    expect_arrays_array_equal(({
-        testOb->split_path("/domain/area"),
-        testOb->split_path("/domain/area/"),
-    }), ({ "/domain/", "area" }), "get_include_path handled path");
-    expect_arrays_array_equal(({
-        testOb->split_path("/domain/area/dir"),
-        testOb->split_path("/domain/area/dir/"),
-     }), ({ "/domain/area/", "dir" }), "get_include_path handled subdir");
+    expect("split_path handles paths", (: ({
+        assert(testOb->split_path("/domain/area"), "==", ({ "/domain/", "area" })),
+        assert(testOb->split_path("/domain/area/"), "==", ({ "/domain/", "area" })),
+
+        assert(testOb->split_path("/domain/area/dir"), "==", ({ "/domain/area/", "dir" })),
+        assert(testOb->split_path("/domain/area/dir/"), "==", ({ "/domain/area/", "dir" })),
+    }) :));
 }
 
 void test_base_path() {
     expect_function("base_path", testOb);
 
-    expect_array_strings_equal(({
-        testOb->base_path("/domain/area"),
-        testOb->base_path("/domain/area/"),
-    }), "/domain/", "get_include_path handled path");
+    expect("get_include_path handles paths", (: ({
+        assert(testOb->base_path("/domain/area"), "==", "/domain/"),
+        assert(testOb->base_path("/domain/area/"), "==", "/domain/"),
+    }) :));
 }
 
 void test_sanitize_path () {
     expect_function("sanitize_path", testOb);
 
-    expect_array_strings_equal(({
+    expect("sanitize_path handles //", (: ({
         testOb->sanitize_path("dir/"),
         testOb->sanitize_path("/dir/"),
         testOb->sanitize_path("//dir/"),
         testOb->sanitize_path("/dir//"),
         testOb->sanitize_path("//dir//"),
-    }), "/dir/", "sanitize_path handled //");
+    }) :));
 
-    expect_array_strings_equal(({
-        testOb->sanitize_path(""),
-        testOb->sanitize_path("."),
-        testOb->sanitize_path("/"),
-        testOb->sanitize_path("/."),
-        testOb->sanitize_path("/dir/.."),
-        testOb->sanitize_path("/dir/../."),
-        testOb->sanitize_path("/dir/dir/../.."),
-        testOb->sanitize_path("/dir/dir/../../."),
-        testOb->sanitize_path("/dir/dir/.././../."),
-        testOb->sanitize_path("/dir/.././dir2/../."),
-    }), "/", "sanitize_path handled . and ..");
+    expect("sanitize_path handles . and ..", (: ({
+        assert(testOb->sanitize_path(""), "==", "/"),
+        assert(testOb->sanitize_path("."), "==", "/"),
+        assert(testOb->sanitize_path("/"), "==", "/"),
+        assert(testOb->sanitize_path("/."), "==", "/"),
+        assert(testOb->sanitize_path("/dir/.."), "==", "/"),
+        assert(testOb->sanitize_path("/dir/../."), "==", "/"),
+        assert(testOb->sanitize_path("/dir/dir/../.."), "==", "/"),
+        assert(testOb->sanitize_path("/dir/dir/../../."), "==", "/"),
+        assert(testOb->sanitize_path("/dir/dir/.././../."), "==", "/"),
+        assert(testOb->sanitize_path("/dir/.././dir2/../."), "==", "/"),
+    }) :));
 
-    expect_arrays_equal(({
-        testOb->sanitize_path("^"),
-        testOb->sanitize_path("^."),
-        testOb->sanitize_path("^/"),
-        testOb->sanitize_path("^/."),
-        testOb->sanitize_path("^/Dir/.."),
-        testOb->sanitize_path("^/Dir/../."),
-        testOb->sanitize_path("^/Dir/dir/../.."),
-        testOb->sanitize_path("^/Dir/dir/../../."),
-        testOb->sanitize_path("^/Dir/dir/.././../."),
-        testOb->sanitize_path("^/Dir/.././Dir2/../."),
-        testOb->sanitize_path("^Dir"),
-        testOb->sanitize_path("^Dir/dir/.."),
-    }), ({
-        "/domain",
-        "/domain",
-        "/domain/",
-        "/domain/",
-        "/domain/",
-        "/domain/",
-        "/domain/",
-        "/domain/",
-        "/domain/",
-        "/domain/",
-        "/domain/Dir",
-        "/domain/Dir/",
-    }), "sanitize_path handled ^");
+    expect("sanitize_path handles ^", (: ({
+        assert(testOb->sanitize_path("^"), "==", "/domain"),
+        assert(testOb->sanitize_path("^."), "==", "/domain"),
+        assert(testOb->sanitize_path("^/"), "==", "/domain/"),
+        assert(testOb->sanitize_path("^/."), "==", "/domain/"),
+        assert(testOb->sanitize_path("^/Dir/.."), "==", "/domain/"),
+        assert(testOb->sanitize_path("^/Dir/../."), "==", "/domain/"),
+        assert(testOb->sanitize_path("^/Dir/dir/../.."), "==", "/domain/"),
+        assert(testOb->sanitize_path("^/Dir/dir/../../."), "==", "/domain/"),
+        assert(testOb->sanitize_path("^/Dir/dir/.././../."), "==", "/domain/"),
+        assert(testOb->sanitize_path("^/Dir/.././Dir2/../."), "==", "/domain/"),
+        assert(testOb->sanitize_path("^Dir"), "==", "/domain/Dir"),
+        assert(testOb->sanitize_path("^Dir/dir/.."), "==", "/domain/Dir/"),
+    }) :));
 
-    mockCharacter = new("/std/module/id.c");
-    mockCharacter->set_key_name("tester");
-    mockShell = new("/secure/shell/shell.c");
-    mockShell->start_shell();
-    expect_arrays_equal(({
-        testOb->sanitize_path("~"),
-        testOb->sanitize_path("~."),
-        testOb->sanitize_path("~/"),
-        testOb->sanitize_path("~/."),
-        testOb->sanitize_path("~/dir/.."),
-        testOb->sanitize_path("~/dir/../."),
-        testOb->sanitize_path("~/dir/dir/../.."),
-        testOb->sanitize_path("~/dir/dir/../../."),
-        testOb->sanitize_path("~/dir/dir/.././../."),
-        testOb->sanitize_path("~/dir/.././dir2/../."),
-    }), ({
-        "/realm/tester",
-        "/realm/tester",
-        "/realm/tester/",
-        "/realm/tester/",
-        "/realm/tester/",
-        "/realm/tester/",
-        "/realm/tester/",
-        "/realm/tester/",
-        "/realm/tester/",
-        "/realm/tester/",
-    }), "sanitize_path handled ~");
+    __MockCharacter = new("/std/module/id.c");
+    __MockCharacter->set_key_name("tester");
+    __MockShell = new("/secure/shell/shell.c");
+    __MockShell->start_shell();
+    expect("sanitize_path handles ~", (: ({
+        assert(testOb->sanitize_path("~"), "==", "/realm/tester"),
+        assert(testOb->sanitize_path("~."), "==", "/realm/tester"),
+        assert(testOb->sanitize_path("~/"), "==", "/realm/tester/"),
+        assert(testOb->sanitize_path("~/."), "==", "/realm/tester/"),
+        assert(testOb->sanitize_path("~/dir/.."), "==", "/realm/tester/"),
+        assert(testOb->sanitize_path("~/dir/../."), "==", "/realm/tester/"),
+        assert(testOb->sanitize_path("~/dir/dir/../.."), "==", "/realm/tester/"),
+        assert(testOb->sanitize_path("~/dir/dir/../../."), "==", "/realm/tester/"),
+        assert(testOb->sanitize_path("~/dir/dir/.././../."), "==", "/realm/tester/"),
+        assert(testOb->sanitize_path("~/dir/.././dir2/../."), "==", "/realm/tester/"),
+    }) :));
 
-    mockShell->set_variable("cwd", "/realm/tester/testdir/");
-    expect_array_strings_equal(({
-        testOb->sanitize_path(""),
-        testOb->sanitize_path(),
-        testOb->sanitize_path("test"),
-    }), "/realm/tester/testdir/", "sanitize_path handled cwd");
-    destruct(mockCharacter);
-    destruct(mockShell);
+    expect("sanitize_path handles cwd", (: ({
+        __MockShell->set_variable("cwd", "/realm/tester/testdir/"),
+        assert(testOb->sanitize_path(""), "==", "/realm/tester/testdir/"),
+        assert(testOb->sanitize_path(), "==", "/realm/tester/testdir/"),
+        assert(testOb->sanitize_path("test"), "==", "/realm/tester/testdir/"),
+
+        __MockShell->set_variable("cwd", "/realm/tester/otherdir/"),
+        assert(testOb->sanitize_path(""), "==", "/realm/tester/otherdir/"),
+        assert(testOb->sanitize_path(), "==", "/realm/tester/otherdir/"),
+        assert(testOb->sanitize_path("test"), "==", "/realm/tester/otherdir/"),
+    }) :));
+
+    destruct(__MockCharacter);
+    destruct(__MockShell);
 }
 
 void test_absolute_path () {
     expect_function("absolute_path", testOb);
 
-    expect_strings_equal(testOb->absolute_path("file.c", "/realm/username"), "/realm/username/file.c", "absolute_path handled realm file");
-    expect_strings_equal(testOb->absolute_path("dir/file.c", "/realm/username"), "/realm/username/dir/file.c", "absolute_path handled realm dir/file");
-    expect_strings_equal(testOb->absolute_path("dir/file.c", this_object()), "/secure/sefun/dir/file.c", "absolute_path handled relative_to dir/file");
+    expect("absolute_path handles relative_to", (: ({
+        assert(testOb->absolute_path("file.c", "/realm/username"), "==", "/realm/username/file.c"),
+        assert(testOb->absolute_path("dir/file.c", "/realm/username"), "==", "/realm/username/dir/file.c"),
+        assert(testOb->absolute_path("dir/file.c", this_object()), "==", "/secure/sefun/dir/file.c"),
+    }) :));
 
-    mockCharacter = new("/std/module/id.c");
-    mockCharacter->set_key_name("tester");
-    mockShell = new("/secure/shell/shell.c");
-    mockShell->start_shell();
-    expect_strings_equal(testOb->absolute_path("~", "/"), "/realm/tester", "absolute_path handled ~");
-    expect_strings_equal(testOb->absolute_path("~/", "/"), "/realm/tester/", "absolute_path handled ~/");
-    expect_strings_equal(testOb->absolute_path("~file.c", "/"), "/realm/tester/file.c", "absolute_path handled ~file");
-    expect_strings_equal(testOb->absolute_path("~/file.c", "/"), "/realm/tester/file.c", "absolute_path handled ~/file");
-    destruct(mockCharacter);
-    destruct(mockShell);
+    expect("absolute_path handles ^ alias for /domain", (: ({
+        assert(testOb->absolute_path("^", "/"), "==", "/domain"),
+        assert(testOb->absolute_path("^/", "/"), "==", "/domain/"),
+        assert(testOb->absolute_path("^file.c", "/"), "==", "/domain/file.c"),
+        assert(testOb->absolute_path("^/file.c", "/"), "==", "/domain/file.c"),
+        assert(testOb->absolute_path("^dir/file.c", "/"), "==", "/domain/dir/file.c"),
+    }) :));
 
-    expect_strings_equal(testOb->absolute_path("^", "/"), "/domain", "absolute_path handled ^");
-    expect_strings_equal(testOb->absolute_path("^/", "/"), "/domain/", "absolute_path handled ^/");
-    expect_strings_equal(testOb->absolute_path("^file.c", "/"), "/domain/file.c", "absolute_path handled ^file");
-    expect_strings_equal(testOb->absolute_path("^/file.c", "/"), "/domain/file.c", "absolute_path handled ^/file");
-    expect_strings_equal(testOb->absolute_path("^dir/file.c", "/"), "/domain/dir/file.c", "absolute_path handled ^dir/file");
+    __MockCharacter = new("/std/module/id.c");
+    __MockCharacter->set_key_name("tester");
+    __MockShell = new("/secure/shell/shell.c");
+    __MockShell->start_shell();
+
+    expect("absolute_path handles ~ alias for /realm", (: ({
+        assert(testOb->absolute_path("~", "/"), "==", "/realm/tester"),
+        assert(testOb->absolute_path("~/", "/"), "==", "/realm/tester/"),
+        assert(testOb->absolute_path("~file.c", "/"), "==", "/realm/tester/file.c"),
+        assert(testOb->absolute_path("~/file.c", "/"), "==", "/realm/tester/file.c"),
+    }) :));
+
+    destruct(__MockCharacter);
+    destruct(__MockShell);
 }
 
 void test_assure_dir () {
-    int *values = ({}), *results = ({});
-
     expect_function("assure_dir", testOb);
 
-    values += ({ testOb->assure_dir("/save/test") });
-    results += ({ 1 }); // test should exist already
+    expect("assure_dir creates dirs if missing", (: ({
+        assert(testOb->assure_dir("/save/test"), "==", 1), // test should exist already
 
-    unguarded((: rmdir, PATH_TEST_DIR :));
-    values += ({ file_size(PATH_TEST_DIR) });
-    results += ({ -1 }); // verify testdir doesn't exist
+        unguarded((: rmdir, PATH_TEST_DIR :)),
+        assert(file_size(PATH_TEST_DIR), "==", -1), // verify testdir doesn't exist
 
-    values += ({ testOb->assure_dir(PATH_TEST_DIR) });
-    results += ({ 1 }); // testdir has been created
-    values += ({ file_size(PATH_TEST_DIR) });
-    results += ({ -2 }); // verify testdir doesn't exist
+        assert(testOb->assure_dir(PATH_TEST_DIR), "==", 1), // testdir has been created
+        assert(file_size(PATH_TEST_DIR), "==", -2), // verify testdir doesn't exist
 
-    unguarded((: rmdir, PATH_TEST_DIR :));
-    values += ({ file_size(PATH_TEST_DIR) });
-    results += ({ -1 }); // verify testdir doesn't exist
+        unguarded((: rmdir, PATH_TEST_DIR :)),
+        assert(file_size(PATH_TEST_DIR), "==", -1), // verify testdir doesn't exist
 
-    expect_arrays_equal(values, results, "assure_dir handled dirs");
+    }) :));
 }
 
 void test_wild_card () {
-    string *values = ({}), *results = ({});
-
     expect_function("wild_card", testOb);
 
-    values += ({ identify(wild_card(0, 0)) });
-    results += ({ "({ })" });
-    values += ({ identify(wild_card("", "")) });
-    results += ({ "({ })" });
+    expect("wild_card matches paths", (: ({
+        assert(wild_card(0, 0), "==", "({ })"),
+        assert(wild_card("", ""), "==", "({ })"),
 
-    values += ({ identify(wild_card("/", "/")) });
-    results += ({ "({ \"/\" })" });
+        assert(wild_card("/", "/"), "==", "({ \"/\" })"),
 
-    values += ({ identify(wild_card("/secure/sefun/path*.c", "")) });
-    results += ({ "({ \"/secure/sefun/path.c\", \"/secure/sefun/path.test.c\" })" });
-    values += ({ identify(wild_card("/secure/sefun/path*.c", "/")) });
-    results += ({ "({ \"/secure/sefun/path.c\", \"/secure/sefun/path.test.c\" })" });
-    values += ({ identify(wild_card("/secure/sefun/path*.c", "/domain")) });
-    results += ({ "({ \"/secure/sefun/path.c\", \"/secure/sefun/path.test.c\" })" });
-    values += ({ identify(wild_card("../secure/sefun/path*.c", "/realm")) });
-    results += ({ "({ \"/secure/sefun/path.c\", \"/secure/sefun/path.test.c\" })" });
-
-    expect_arrays_equal(values, results, "wild_card matched paths");
-
+        assert(wild_card("/secure/sefun/path*.c", ""), "==", "({ \"/secure/sefun/path.c\", \"/secure/sefun/path.test.c\" })"),
+        assert(wild_card("/secure/sefun/path*.c", "/"), "==", "({ \"/secure/sefun/path.c\", \"/secure/sefun/path.test.c\" })"),
+        assert(wild_card("/secure/sefun/path*.c", "/domain"), "==", "({ \"/secure/sefun/path.c\", \"/secure/sefun/path.test.c\" })"),
+        assert(wild_card("../secure/sefun/path*.c", "/realm"), "==", "({ \"/secure/sefun/path.c\", \"/secure/sefun/path.test.c\" })"),
+    }) :));
 }
