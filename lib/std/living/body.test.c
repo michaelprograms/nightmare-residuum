@@ -12,7 +12,7 @@ void test_gender () {
     expect_function("set_gender", testOb);
     expect_function("query_gender", testOb);
 
-    expect("gender sets and queryable", (: ({
+    expect("gender settable and queryable", (: ({
         assert(testOb->query_gender(), "==", "neither"),
 
         testOb->set_gender("male"),
@@ -36,7 +36,7 @@ void test_level () {
     expect_function("set_level", testOb);
     expect_function("query_level", testOb);
 
-    expect("level sets and queryable", (: ({
+    expect("level settable and queryable", (: ({
         assert(testOb->query_level(), "==", 0),
 
         testOb->set_level(123),
@@ -54,16 +54,15 @@ void test_species () {
     expect_function("set_species", testOb);
     expect_function("query_species", testOb);
 
-    expect("species sets and queryable", (: ({
+    expect("species settable and queryable", (: ({
         assert(testOb->query_species(), "==", "human"),
 
-        testOb->set_species("synthetic"),
-        assert(testOb->query_species(), "==", "synthetic"),
+        testOb->set_species("robot"),
+        assert(testOb->query_species(), "==", "robot"),
 
         assert((: testOb->set_species(0) :), "catch", "*Bad argument 1 to body->set_species\n"),
-        assert(testOb->query_species(), "==", "synthetic"),
-
         assert((: testOb->set_species() :), "catch", "*Bad argument 1 to body->set_species\n"),
-        assert(testOb->query_species(), "==", "synthetic"),
+
+        assert(testOb->query_species(), "==", "robot"), // species was not changed
     }) :));
 }
