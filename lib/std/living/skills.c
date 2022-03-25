@@ -70,7 +70,7 @@ varargs void train_skill (string skill, float multiplier) {
 
     next = query_skill_next_points(skill);
     if (!multiplier) multiplier = 1.0;
-    train = to_int((1 + (query_level() / 2) + __Skills[skill]["level"]) * multiplier);
+    train = to_int((1 + (this_object()->query_level() / 2) + __Skills[skill]["level"]) * multiplier);
     __Skills[skill]["points"] += max(({train, 1}));
 
     if (__Skills[skill]["points"] >= next) {
