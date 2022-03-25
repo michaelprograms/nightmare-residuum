@@ -173,13 +173,13 @@ void test_assure_dir () {
     expect("assure_dir creates dirs if missing", (: ({
         assert(testOb->assure_dir("/save/test"), "==", 1), // test should exist already
 
-        unguarded((: rmdir, PATH_TEST_DIR :)),
+        rmdir(PATH_TEST_DIR),
         assert(file_size(PATH_TEST_DIR), "==", -1), // verify testdir doesn't exist
 
         assert(testOb->assure_dir(PATH_TEST_DIR), "==", 1), // testdir has been created
         assert(file_size(PATH_TEST_DIR), "==", -2), // verify testdir doesn't exist
 
-        unguarded((: rmdir, PATH_TEST_DIR :)),
+        rmdir(PATH_TEST_DIR),
         assert(file_size(PATH_TEST_DIR), "==", -1), // verify testdir doesn't exist
 
     }) :));
