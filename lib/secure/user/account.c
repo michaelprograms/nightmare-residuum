@@ -9,7 +9,7 @@ object query_account () { return __Account; }
 private void display_account_menu () {
     string msg = "", characterMsg = ""; // creatorMsg = "",
 
-    if (!__Account->query_has_playable_characters()) {
+    if (!__Account->query_playable_characters()) {
         write("\nYou have no characters. You will now create a character.\n");
         account_input(STATE_CHARACTER_ENTER);
         return;
@@ -131,7 +131,7 @@ protected nomask varargs void account_input (int state, mixed extra, string inpu
 
         case STATE_ACCOUNT_COMPLETE:
             D_LOG->log("account/new", sprintf("%s : %s : %s\n", ctime(time()), query_ip_number(), __Account->query_name()));
-            if (!__Account->query_has_playable_characters()) {
+            if (!__Account->query_playable_characters()) {
                 write("\nWelcome, "+__Account->query_name()+"! You will now create a character.\n");
                 account_input(STATE_CHARACTER_ENTER);
                 return;
@@ -143,7 +143,8 @@ protected nomask varargs void account_input (int state, mixed extra, string inpu
         case STATE_ACCOUNT_PASSWORD:
             if (crypt(input, __Account->query_password()) == __Account->query_password()) {
                 __Account->set_last_on();
-                if (!__Account->query_has_playable_characters()) {
+                __Account->save_data();
+                if (!__Account->query_playable_characters()) {
                     write("\nWelcome, "+__Account->query_name()+"! You will now create a character.\n");
                     account_input(STATE_CHARACTER_ENTER);
                 } else {
@@ -163,6 +164,7 @@ protected nomask varargs void account_input (int state, mixed extra, string inpu
                 display_account_menu();
             } else if (input == "exit") {
                 __Account->set_last_on();
+                __Account->save_data();
                 handle_remove("\nExiting account. Connection closed.\n");
             } else if (input == "settings") {
                 write("\nAccount Settings\n\n");
@@ -198,6 +200,7 @@ protected nomask varargs void account_input (int state, mixed extra, string inpu
             } else {
                 if (input && input == "exit") {
                     __Account->set_last_on();
+                    __Account->save_data();
                     handle_remove("\nExiting account. Connection closed.\n");
                 }
                 if (!D_CHARACTER->query_valid_name(input)) {
@@ -259,6 +262,7 @@ protected nomask varargs void account_input (int state, mixed extra, string inpu
                 write("\nDeleted character '" + extra + "'.\n");
                 __Account->set_deleted(extra);
                 __Account->set_last_on();
+                __Account->save_data();
             } else {
                 write("Invalid password. Character deletion cancelled.\n");
             }

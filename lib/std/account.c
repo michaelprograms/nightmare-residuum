@@ -9,7 +9,7 @@ private int __LastOn = time();
 private mapping __Characters = ([
     /* Data Format:
         STRING: ([                      // Name sanitized version
-            "type":             STRING, // Body type for BODY
+            "species":          STRING, // Species type for BODY
             "deleted":          INT,    // 0 or 1
             "level":            INT,
             "name":             STRING, // Name formatted version
@@ -57,7 +57,7 @@ string query_key_name () {
 
 nomask void set_password (string str) {
     if (base_name(previous_object()) != "/secure/user/user") {  // TODO better way to match?
-        error("illegal attempt to set_password");
+        error("Illegal attempt to account->set_password");
     }
     __Password = str;
     save_data();
@@ -74,15 +74,14 @@ int query_last_on () {
 }
 void set_last_on () {
     __LastOn = time();
-    save_data();
 }
 
-void add_character (string name, string nameClean, string type) {
+void add_character (string name, string nameClean, string species) {
     // @TODO security?
     __Characters[nameClean] = ([
         "name": name,
         "deleted": 0,
-        "type": type,
+        "species": species,
         "last_action": 0,
         "last_location": 0,
         "level": 0,
@@ -90,14 +89,16 @@ void add_character (string name, string nameClean, string type) {
     save_data();
 }
 mapping query_character (string name) {
-    return __Characters[name];
+    return copy(__Characters[name]);
 }
-int query_has_playable_characters () {
+int query_playable_characters () {
     mapping tmpCharacters = filter_mapping(__Characters, (: !$2["deleted"] :));
     __CharacterNames = sort_array(keys(tmpCharacters), 1);
     return sizeof(__CharacterNames) > 0;
 }
 string *query_character_names () {
+    mapping tmpCharacters = filter_mapping(__Characters, (: !$2["deleted"] :));
+    __CharacterNames = sort_array(keys(tmpCharacters), 1);
     return __CharacterNames;
 }
 void update_character_data (object character) {
@@ -114,7 +115,6 @@ void update_character_data (object character) {
 
 void set_deleted (string name) {
     __Characters[name]["deleted"] = 1;
-    save_data();
 }
 
 void set_setting (string key, mixed value) {
