@@ -9,7 +9,7 @@ void after_each_test () {
     if (objectp(testOb)) destruct(testOb);
 }
 string *test_order () {
-    return ({ "test_is_armor", "test_type", "test_limbs", "test_worn", "test_ac", }); // "test_item_verb_wield_applies",
+    return ({ "test_is_armor", "test_type", "test_limbs", "test_worn", "test_ac", "test_item_verb_wear_applies", });
 }
 string *test_ignore () {
     return ::test_ignore() + ({ "query_can_wear_armor", "query_all_armor" });
@@ -22,9 +22,6 @@ nosave private object *__AllArmor;
 object *query_all_armor () {
     return __AllArmor;
 };
-
-
-
 
 void test_is_armor () {
     expect_function("is_armor", testOb);
