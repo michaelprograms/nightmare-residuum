@@ -28,13 +28,13 @@ void test_strength () {
 
     expect("food handles strength", (: ({
         assert(testOb->query_strength(), "==", 0),
-        assert(testOb->set_strength(5), "==", 0),
+        testOb->set_strength(5),
         assert(testOb->query_strength(), "==", 5),
-        assert(testOb->set_strength(100), "==", 0),
+        testOb->set_strength(100),
         assert(testOb->query_strength(), "==", 100),
-        assert(testOb->set_strength(0), "==", 0),
+        testOb->set_strength(0),
         assert(testOb->query_strength(), "==", 0),
-        assert(testOb->set_strength(-5), "==", 0),
+        testOb->set_strength(-5),
         assert(testOb->query_strength(), "==", -5),
     }) :));
 }
@@ -58,7 +58,7 @@ void test_handle_eat () {
 
     expect("food handle_eat behaves", (: ({
         // setup food
-        assert(testOb->set_strength(5), "==", 0),
+        testOb->set_strength(5),
         assert(testOb->query_strength(), "==", 5),
 
         // setup test object
