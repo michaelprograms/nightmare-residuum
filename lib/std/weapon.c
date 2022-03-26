@@ -5,6 +5,8 @@ nosave object __Wielder;
 
 object query_wielded ();
 
+int is_weapon () { return 1; }
+
 string query_short () {
     string short = ::query_short();
 
