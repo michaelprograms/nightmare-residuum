@@ -74,8 +74,8 @@ void test_account_times () {
         assert(testOb->query_save_path(), "==", ACCOUNT_PATH),
         testOb->save_data(),
         assert(unguarded((: file_size(ACCOUNT_PATH) :)) > 0, "==", 1),
-        assert(testOb->query_created(), "==", $(now)),
-        assert(testOb->query_last_on(), "==", $(now)),
+        assert(testOb->query_created(), "==", now),
+        assert(testOb->query_last_on(), "==", now),
 
         // read in accounttest.o and modify the __LastOn
         unguarded((: write_file(ACCOUNT_PATH, implode(map(explode(read_file(ACCOUNT_PATH), "\n"), function (string line) {
@@ -86,10 +86,10 @@ void test_account_times () {
         }), "\n"), 1) :)),
         assert(unguarded((: file_size(ACCOUNT_PATH) :)) > 0, "==", 1),
         testOb->restore_data(),
-        assert(testOb->query_last_on(), "==", $(now) - 100),
+        assert(testOb->query_last_on(), "==", now - 100),
 
         testOb->set_last_on(),
-        assert(testOb->query_last_on(), "==", $(now)),
+        assert(testOb->query_last_on(), "==", now),
     }) :));
 }
 
