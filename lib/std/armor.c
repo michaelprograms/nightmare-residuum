@@ -6,6 +6,8 @@ nosave int __AC;
 
 object query_worn ();
 
+int is_armor () { return 1; }
+
 string query_short () {
     string short = ::query_short();
 

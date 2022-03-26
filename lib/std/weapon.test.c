@@ -9,7 +9,7 @@ void after_each_test () {
     if (objectp(testOb)) destruct(testOb);
 }
 string *test_order () {
-    return ({ "test_is_weapon", "test_type", "test_wielded", });
+    return ({ "test_is_weapon", "test_type", "test_wielded", "test_item_verb_wield_applies", });
 }
 string *test_ignore () {
     return ::test_ignore() + ({ "query_wieldable_limbs", "query_wielded_weapons" });
@@ -44,8 +44,23 @@ void test_type () {
         testOb->set_type("blade"),
         assert(testOb->query_type(), "==", "blade"),
 
+        testOb->set_type("blunt"),
+        assert(testOb->query_type(), "==", "blunt"),
+
         testOb->set_type("knife"),
         assert(testOb->query_type(), "==", "knife"),
+
+        testOb->set_type("melee"),
+        assert(testOb->query_type(), "==", "melee"),
+
+        testOb->set_type("projectile"),
+        assert(testOb->query_type(), "==", "projectile"),
+
+        testOb->set_type("psionic"),
+        assert(testOb->query_type(), "==", "psionic"),
+
+        testOb->set_type("ranged"),
+        assert(testOb->query_type(), "==", "ranged"),
     }) :));
 }
 
@@ -72,15 +87,20 @@ void test_item_verb_wield_applies () {
     __WieldableLimbs = ({ "left hand", "right hand" });
     __WieldedWeapons = ({ });
 
-    expect("weapon handles verb apply direct_wield_obj", (: ({
+    expect("weapon handles verb applies direct_wield_obj and direct_unwield_obj", (: ({
         assert(environment(testOb), "==", 0),
         assert(testOb->direct_wield_obj(), "==", 0),
+        assert(testOb->direct_unwield_obj(), "==", 0),
+
         assert(testOb->handle_move(this_object()), "==", 1),
         assert(environment(testOb), "==", this_object()),
+
         assert(testOb->direct_wield_obj(), "==", 1),
+        assert(testOb->direct_unwield_obj(), "==", 0),
 
         __WieldedWeapons += ({ testOb }),
         testOb->set_wielded(this_object()),
+        assert(testOb->direct_wield_obj(), "==", 0),
         assert(testOb->direct_unwield_obj(), "==", 1),
     }) :));
 
