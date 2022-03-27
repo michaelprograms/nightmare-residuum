@@ -53,7 +53,7 @@ int handle_release (object ob) {
     if (ob) {
         if (ob->is_living()) {
             foreach (object o in query_living_contents() + query_item_contents() - ({ ob })) {
-                o->handle_release_item_in_env(ob);
+                o->handle_release_living_in_env(ob);
             }
         } else if (ob->is_item()) {
             foreach (object o in query_living_contents() + query_item_contents() - ({ ob })) {
