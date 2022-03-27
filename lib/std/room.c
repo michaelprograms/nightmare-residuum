@@ -32,22 +32,34 @@ int clean_up (int inherited) {
     return ::clean_up();
 }
 
-void handle_receive_living (object living) {
-    foreach (object ob in query_living_contents() + query_item_contents() - ({ living })) {
-        ob->handle_receive_living(living);
-    }
-}
-void handle_receive_item (object item) {
-    foreach (object ob in query_living_contents() + query_item_contents() - ({ item })) {
-        ob->handle_receive_item(item);
-    }
-}
-
 int handle_receive (object ob) {
-    if (ob->is_living()) {
-        handle_receive_living(ob);
-    } else if (ob->is_item()) {
-        handle_receive_item(ob);
+    if (ob) {
+        if (ob->is_living()) {
+            foreach (object o in query_living_contents() + query_item_contents() - ({ ob })) {
+                // call out to delay fn til after move
+                call_out_walltime((: $(o)->handle_receive_living_in_env($(ob)) :), 0);
+            }
+        } else if (ob->is_item()) {
+            foreach (object o in query_living_contents() + query_item_contents() - ({ ob })) {
+                // call out to delay fn til after move
+                call_out_walltime((: $(o)->handle_receive_item_in_env($(ob)) :), 0);
+            }
+        }
     }
     return ::handle_receive(ob);
+}
+
+int handle_release (object ob) {
+    if (ob) {
+        if (ob->is_living()) {
+            foreach (object o in query_living_contents() + query_item_contents() - ({ ob })) {
+                o->handle_release_item_in_env(ob);
+            }
+        } else if (ob->is_item()) {
+            foreach (object o in query_living_contents() + query_item_contents() - ({ ob })) {
+                o->handle_release_item_in_env(ob);
+            }
+        }
+    }
+    return ::handle_release(ob);
 }

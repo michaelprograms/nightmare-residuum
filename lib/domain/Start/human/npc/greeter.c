@@ -9,11 +9,16 @@ void create () {
     set_species("synthetic");
 }
 
-void greet_character (object living) {
-    do_command("say Hello.");
+void greet_character (object living, string message) {
+    do_command("say " + message);
 }
 
-void handle_receive_living (object living) {
+void handle_receive_living_in_env (object living) {
     if (!living->is_character()) return;
-    call_out((: greet_character($(living)) :), 0);
+    greet_character(living, "Hello.");
+}
+
+void handle_release_living_in_env (object living) {
+    if (!living->is_character()) return;
+    greet_character(living, "Goodbye.");
 }
