@@ -1,5 +1,4 @@
 inherit M_TEST;
-inherit STD_OBJECT;
 
 private nosave object testOb;
 void before_each_test () {
@@ -133,7 +132,7 @@ void test_handle_defeat () {
 
     // setup test object
     if (testOb) destruct(testOb);
-    testOb = new(STD_LIVING); // need living for handle_move
+    testOb = new(STD_LIVING); // need biography's parent inherit living for handle_move
 
     expect("handle_defeat behaved", (: ({
         assert(testOb->query_experience(), "==", 0),
@@ -163,7 +162,6 @@ void test_handle_defeat () {
         assert(sizeof($(r)->query_item_contents()), "==", 1),
         assert(!!present("corpse", $(r)), "==", 1),
         assert(present("corpse", $(r))->handle_remove(), "==", 1),
-        assert(this_object()->handle_move("/domain/Nowhere/room/void.c"), "==", 1),
 
         // cleanup
         $(r) && destruct($(r)),

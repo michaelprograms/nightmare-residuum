@@ -64,7 +64,7 @@ void test_applies () {
 
     // setup test object
     // if (testOb) destruct(testOb);
-    // testOb = new(STD_LIVING); // need living for handle_move
+    // testOb = new(STD_LIVING); // need living for handle_move maybe?
 
     expect("look handles applies", (: ({
         assert(testOb->direct_look_at_str(), "==", 0),

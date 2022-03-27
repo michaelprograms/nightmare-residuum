@@ -104,10 +104,9 @@ varargs int do_command (string str, int debug) {
 
 int handle_move (mixed dest) {
     int move = ::handle_move(dest);
-    if (stringp(dest) && dest != "/domain/Nowhere/room/freezer.c") {
-        set_last_location(dest);
-    } else if (objectp(dest) && file_name(dest) != "/domain/Nowhere/room/freezer.c") {
-        set_last_location(file_name(dest));
+    string path = stringp(dest) ? dest : objectp(dest) ? file_name(dest) : "";
+    if (!regexp(path, "^/domain/Nowhere/room/(freezer|void).c$")) {
+        set_last_location(path);
     }
     return move;
 }
