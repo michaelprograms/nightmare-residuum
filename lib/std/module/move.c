@@ -36,7 +36,6 @@ int handle_move (mixed dest) {
     move_object(destOb);
     if (!regexp(file_name(destOb), "^/domain/Nowhere/room/(freezer|void)$")) {
         __EnvPath = file_name(destOb);
-        // if (!regexp(__EnvPath, "\.c$")) __EnvPath += ".c";
     }
     __CurrentEnv = environment();
     environment()->handle_receive(this_object());
@@ -51,28 +50,19 @@ string query_environment_path () {
     }
 }
 string query_environment_short () {
-    int shouldDestruct = 0;
-
     if (__CurrentEnv) {
-        write("__CurrentEnv: "+identify(__CurrentEnv)+"\n");
         return __CurrentEnv->query_short();
     } else if (__EnvPath) {
         object r;
         string short;
-        write("No __CurrentEnv, check __EnvPath: "+identify(__EnvPath)+"\n");
 
         if (!(r = find_object(__EnvPath))) {
-            write("r still not loaded "+identify(r)+"\n");
-            if (catch(r = load_object(__EnvPath)) ) {
-                write("trying to load_object for some reason\n");
+            if (catch(r = load_object(__EnvPath)) ) { // @TODO will this memory leak?
                 return 0;
             }
-            // if (r) shouldDestruct = 1;
         }
-        write("r is "+identify(r)+"\n");
 
         short = r->query_short();
-        // if (shouldDestruct) destruct(r);
         return short;
     } else {
         return "no where";
@@ -86,22 +76,4 @@ void set_environment_path (mixed dest) {
     }
 
     __EnvPath = file_name(destOb);
-    // if (!regexp(__EnvPath, "\.c$")) __EnvPath += ".c";
 }
-
-/*
-// @TODO cleanup query_environment_path vs query_environment_short
-
-// set_environment_path
-done    /secure/user/character.c->character_enter, line 63
-done    /secure/user/character.c->character_enter, line 65
-/std/account.test.c->test_account_characters, line 127
-done    /std/living.c->handle_move, line 108 (move this to /std/module/move.c)
-
-// query_environment_path <- query_last_location
-done    /std/character.c->enter_world, line 119
-done    /std/character.c->exit_freezer, line 149
-
-// query_environment_short <- query_last_location
-/std/acccount.c->update_character_data, line 112
-*/
