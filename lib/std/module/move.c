@@ -18,12 +18,11 @@ private object query_dest_ob (mixed dest) {
 
 int handle_move (mixed dest) {
     object destOb;
-    int x;
 
     if (!this_object()) return 0;
     if (environment()) {
-        x = environment()->can_release(this_object());
-        if (!x /* && !archp(this_object()) */) return 0; // @TODO archp? assistp?
+        int release = environment()->can_release(this_object());
+        if (!release && !this_object()->query_immortal()) return 0;
     }
     if (!(destOb = query_dest_ob(dest))) {
         error("Bad argument 1 to move->handle_move");

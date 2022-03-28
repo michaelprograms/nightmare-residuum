@@ -210,7 +210,9 @@ private void validate_expect (mixed value1, mixed value2, string message) {
     }
 
     if (!currentTestPassed) { // @TODO || displayExpects) {
-        currentTestLog += " ->";
+        if (sizeof(value1) || sizeof(value2)) {
+            currentTestLog += " ->";
+        }
         if (arrayp(value1) && arrayp(value2)) {
             currentTestLog += format_array_differences(value1, value2);
         } else if (currentTestRegex) {
