@@ -13,8 +13,10 @@ nosave protected mixed UNDEFINED = (([])[0]); // equivalent of UNDEFINED
 
 nosave private int currentTestPassed = 0, currentTestRegex = 0;
 nosave private int failingExpects = 0, passingExpects = 0;
+nosave private int failingAsserts = 0, passingAsserts = 0;
 nosave private int expectCatch = 0;
-nosave private string currentTestLog, currentFailLog, totalFailLog = "";
+nosave private string currentTestMsg, currentTestLog, currentFailLog, totalFailLog;
+nosave private mixed *leftResults, *rightResults;
 
 int query_expect_catch () {
     return expectCatch;
@@ -62,6 +64,7 @@ public int execute_test (function done) {
 
     failingExpects = 0;
     passingExpects = 0;
+    totalFailLog = "";
 
     write("\nEvaluating " + CYAN + UNDERLINE + base_name(this_object()) + RESET + "\n");
     before_all_tests();
@@ -111,6 +114,8 @@ public int execute_test (function done) {
         "fnsTested": sizeof(testObjectFns - testObjectUntestedFns),
         "fnsUntested": sizeof(testObjectUntestedFns),
         "failingExpects": totalFailLog,
+        "passingAsserts": passingAsserts,
+        "failingAsserts": failingAsserts,
     ]));
 
     if (environment()) destruct(this_object());
@@ -231,30 +236,30 @@ protected void expect_next_failure () {
     }
 }
 
-nosave private string currentTestMessage;
-nosave private mixed *leftResults, *rightResults;
 void expect (string message, function fn) {
 
     if (!stringp(message)) error("Bad argument 1 to test->expect");
     if (!functionp(fn)) error("Bad argument 2 to test->expect");
 
-    currentTestMessage = message;
+    currentTestMsg = message;
     currentTestPassed = 1;
     leftResults = ({ });
     rightResults = ({ });
 
+    passingAsserts = 0;
     evaluate(fn);
+    if (!passingAsserts) currentTestPassed = 0;
 
-    validate_expect(leftResults, rightResults, currentTestMessage);
+    validate_expect(leftResults, rightResults, currentTestMsg);
 
-    currentTestMessage = 0;
+    currentTestMsg = 0;
     leftResults = 0;
     rightResults = 0;
 }
 void assert (mixed left, string condition, mixed right) {
     mixed leftErr, rightErr, leftResult, rightResult;
 
-    if (!stringp(currentTestMessage)) error("test->assert outside of test->expect");
+    if (!stringp(currentTestMsg)) error("test->assert outside of test->expect");
     if (!stringp(condition)) error("Bad argument 2 to test->assert");
 
     if (condition == "catch") expectCatch = 1;
@@ -309,5 +314,11 @@ void assert (mixed left, string condition, mixed right) {
         currentTestPassed = !!leftErr && leftErr == rightResult;
     } else {
         currentTestPassed = 0;
+    }
+
+    if (currentTestPassed) {
+        passingAsserts ++;
+    } else {
+        failingAsserts ++;
     }
 }

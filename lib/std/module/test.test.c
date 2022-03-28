@@ -80,6 +80,11 @@ void test_expects_failing () {
     expect_function("nonexistant_function", testOb);
 
     expect_next_failure();
+    expect("expect without asserts should fail", (: ({
+        // no asserts should fail
+    }) :));
+
+    expect_next_failure();
     expect("assert condition '==' should fail", (: ({
         assert(0, "==", 1),
         assert(0.0, "==", 1.0),

@@ -66,11 +66,11 @@ void test_sanitize_path () {
     expect_function("sanitize_path", testOb);
 
     expect("sanitize_path handles //", (: ({
-        testOb->sanitize_path("dir/"),
-        testOb->sanitize_path("/dir/"),
-        testOb->sanitize_path("//dir/"),
-        testOb->sanitize_path("/dir//"),
-        testOb->sanitize_path("//dir//"),
+        assert(testOb->sanitize_path("dir/"), "==", "/dir/"),
+        assert(testOb->sanitize_path("/dir/"), "==", "/dir/"),
+        assert(testOb->sanitize_path("//dir/"), "==", "/dir/"),
+        assert(testOb->sanitize_path("/dir//"), "==", "/dir/"),
+        assert(testOb->sanitize_path("//dir//"), "==", "/dir/"),
     }) :));
 
     expect("sanitize_path handles . and ..", (: ({
