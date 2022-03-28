@@ -1,7 +1,7 @@
 #include "living.h"
 
 private string __Gender = "neither";
-private string __Species;
+private string __Species = "unknown";
 private int __Level = 0;
 mapping __Limbs = ([]);
 private nosave mapping __Wielded = ([]);

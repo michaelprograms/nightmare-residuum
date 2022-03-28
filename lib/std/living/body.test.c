@@ -55,6 +55,9 @@ void test_species () {
     expect_function("query_species", testOb);
 
     expect("species settable and queryable", (: ({
+        assert(testOb->query_species(), "==", "unknown"),
+
+        testOb->set_species("human"),
         assert(testOb->query_species(), "==", "human"),
 
         testOb->set_species("robot"),

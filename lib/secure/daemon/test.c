@@ -1,4 +1,3 @@
-nosave private string *tests = ({}), __Mode;
 nosave private mapping __Tests = ([
     /* Data format:
     "/std/module/test.test.c": ([
@@ -9,17 +8,17 @@ nosave private mapping __Tests = ([
     ])
     */
 ]);
+nosave private string *__TestFiles = ({});
+nosave private mapping __Results = ([]);
+
 nosave private int currentTest = 0, shutdownAfterTests = 0;
-nosave private int totalTests = 0, totalFiles = 0;
-nosave private int totalPassed = 0, totalFailed = 0;
-nosave private int totalFnsTested = 0, totalFnsUntested = 0;
-nosave private int timeBefore, timeAfter;
-nosave private string *failingExpects = ({});
+nosave private int totalFiles = 0;
+
+nosave private int timeBefore;
 
 // -----------------------------------------------------------------------------
 
 void reset_data ();
-varargs void done (int numTests, int numPassed, int numFailed, int fnsTested, int fnsUntested);
 varargs void process_file (string file, function done, int reset);
 private string format_total_line (string name, int current, int total);
 void process ();
@@ -32,39 +31,38 @@ varargs void run (int callShutdown);
 
 void reset_data () {
     currentTest = 0;
-    totalTests = 0;
+
+    __Results["numTests"] = 0;
+    __Results["passingExpects"] = 0;
+    __Results["failingExpects"] = 0;
+    __Results["testedFns"] = 0;
+    __Results["untestedFns"] = 0;
+    __Results["failLog"] = ({ });
+    __Results["passingAsserts"] = 0;
+    __Results["failingAsserts"] = 0;
+
     totalFiles = 0;
-    totalPassed = 0;
-    totalFailed = 0;
-    totalFnsTested = 0;
-    totalFnsUntested = 0;
-    __Tests = ([]);
-    tests = ({});
+    __Tests = ([ ]);
+    __TestFiles = ({ });
 }
 
 // -----------------------------------------------------------------------------
 
-void done (mapping results) {
-    if (__Mode == "ALL") {
-        if (results) {
-            totalTests += results["numTests"];
-            totalPassed += results["numPassed"];
-            totalFailed += results["numFailed"];
-            totalFnsTested += results["fnsTested"];
-            totalFnsUntested += results["fnsUntested"];
-            if (strlen(results["failingExpects"]) > 0) {
-                failingExpects += ({ results["failingExpects"] });
-            }
+void done_test (mapping results) {
+    if (results) {
+        __Results["numTests"] += results["numTests"];
+        __Results["passingExpects"] += results["passingExpects"];
+        __Results["failingExpects"] += results["failingExpects"];
+        __Results["testedFns"] += results["testedFns"];
+        __Results["untestedFns"] += results["untestedFns"];
+        __Results["passingAsserts"] += results["passingAsserts"];
+        __Results["failingAsserts"] += results["failingAsserts"];
+        if (strlen(results["failLog"]) > 0) {
+            __Results["failLog"] += ({ results["failLog"] });
         }
-        currentTest ++;
-        process();
-    // } else if (__Mode == "WATCH") {
-    //     totalTests = results["numTests"];
-    //     totalPassed = results["numPassed"];
-    //     totalFailed = results["numFailed"];
-    //     totalFnsTested = results["fnsTested"];
-    //     totalFnsUntested = results["fnsUntested"];
     }
+    currentTest ++;
+    process();
 }
 
 varargs void process_file (string file, function doneCallback, int reset) {
@@ -87,7 +85,7 @@ varargs void process_file (string file, function doneCallback, int reset) {
         evaluate(doneCallback);
         return;
     }
-    // call_out clears the call stack, call_other will chain the tests
+    // call out clears the call stack, call other will chain the tests
     call_out_walltime(function(string test, function doneCallback) {
         object testFile = clone_object(test);
         mixed err = catch(testFile->execute_test(doneCallback));
@@ -100,75 +98,51 @@ varargs void process_file (string file, function doneCallback, int reset) {
 }
 
 private string format_total_line (string name, int current, int total) {
-    string tmp = sprintf("%-12s", name + ":");
+    string tmp = sprintf("%-20s", name + ":");
     tmp += sprintf("%3d", current) + " / " + sprintf("%-3d", total);
-    tmp += " (" + sprintf("%6.2f", current * 100.0 / total) + "%)";
+    tmp += "  (" + sprintf("%6.2f", current * 100.0 / total) + "%)";
     return tmp;
 }
 
-void process () {
-    __Mode = "ALL";
-    if (currentTest < sizeof(tests)) {
-        process_file(tests[currentTest], (: done :), 0);
-    } else {
-        int totalExpects = totalPassed + totalFailed;
-        timeAfter = rusage()["utime"] + rusage()["stime"];
-        write("\n" + format_total_line("Files", currentTest, totalFiles) + "\n");
-        write(format_total_line("Passed", totalPassed, totalExpects) + "\n");
-        write(format_total_line("Failed", totalFailed, totalExpects) + "\n");
-        write(format_total_line("Functions", totalFnsTested, totalFnsTested + totalFnsUntested) + "\n");
-        write("Time:      " + (timeAfter - timeBefore) + " ms for " + totalTests + " tests\n\n");
-        if (sizeof(failingExpects) > 0) {
-            write("Failing expects:\n" + implode(failingExpects, "\n") + "\n\n");
-            failingExpects = ({});
-        }
-        // call_out((: watch_all :), 2, 0);
-        if (shutdownAfterTests) {
-            shutdown(totalFailed > 0 ? -1 : 0);
-        }
+void display_results (mapping results, int timeStart) {
+    int totalExpects = results["passingExpects"] + results["failingExpects"];
+    int totalAsserts = results["passingAsserts"] + results["failingAsserts"];
+    int totalFns = results["testedFns"] + results["untestedFns"];
+    int time;
+
+    if (!undefinedp(timeStart)) {
+        time = (rusage()["utime"] + rusage()["stime"]) - timeStart;
+    }
+
+    write("\n");
+    if (totalFiles > 1) {
+        write(format_total_line("Test Files", currentTest, totalFiles) + "\n");
+    }
+    write(format_total_line("Functions", results["testedFns"], totalFns) + "\n");
+    write(format_total_line("Expects Passed", results["passingExpects"], totalExpects) + "\n");
+    write(format_total_line("Asserts Passed", results["passingAsserts"], totalAsserts) + "\n");
+
+    if (!undefinedp(timeStart)) {
+        write("\n" + sprintf("%-20s", "Time" + ":") + time + " ms for " + results["numTests"] + " tests\n\n");
+    }
+
+    if (sizeof(results["failLog"]) > 0) {
+        write("Failing expects:\n" + implode(results["failLog"], "\n") + "\n\n");
+        results["failLog"] = ({});
     }
 }
 
-// private void update_and_execute (string path) {
-//     call_other(path, "???");
-//     // call_out clears the call stack, call_other will chain the tests
-//     call_out(function() { tests[currentTest]->execute_test((: done :)); }, 0);
-// }
+void process () {
+    if (currentTest < sizeof(__TestFiles)) {
+        process_file(__TestFiles[currentTest], (: done_test :), 0);
+    } else {
+        display_results(__Results, timeBefore);
 
-
-// void watch_all () {
-//     int flag, touched;
-//     string path;
-//     object testOb;
-
-//     __Mode = "WATCH";
-//     for (int i = 0; i < sizeof(tests); i ++) {
-//         flag = 0;
-//         path = tests[i];
-//         touched = stat(path)[1];
-//         if (__Tests[path]["touched"] < touched) {
-//             __Tests[path]["touched"] = touched;
-//             flag = 1;
-//         }
-//         touched = stat(__Tests[path]["code"])[1];
-//         if (__Tests[path]["codeTouched"] < touched) {
-//             __Tests[path]["codeTouched"] = touched;
-//             flag = 1;
-//         }
-//         if (flag) {
-//             write("\n" + path + " has been changed..."+"\n");
-//             totalTests = totalPassed = totalFailed = totalFnsTested = totalFnsUntested = 0;
-//             currentTest = i;
-//             timeBefore = rusage()["utime"] + rusage()["stime"];
-
-//             if (testOb = find_object(path)) destruct(testOb);
-//             catch (update_and_execute(path));
-//             timeAfter = rusage()["utime"] + rusage()["stime"];
-//         }
-//     }
-
-//     call_out((: watch_all :), 2, 0);
-// }
+        if (shutdownAfterTests) {
+            shutdown(__Results["failingExpects"] > 0 ? -1 : 0);
+        }
+    }
+}
 
 varargs void update_test_data (string path, string ignore) {
     mixed *dir = get_dir(path, -1); // Assumes path has trailing / for dirs
@@ -210,8 +184,8 @@ varargs void run (int callShutdown) {
     update_test_data("/daemon/");
     update_test_data("/std/", "/std/class");
 
-    tests = keys(__Tests);
-    tests = sort_array(tests, function(string a, string b) {
+    __TestFiles = keys(__Tests);
+    __TestFiles = sort_array(__TestFiles, function(string a, string b) {
         if (regexp(a, "^\\/std\\/module\\/test")) return -1;
         else if (regexp(b, "^\\/std\\/module\\/test")) return 1;
         else if (regexp(a, "^\\/secure\\/daemon\\/master")) return -1;
@@ -224,5 +198,5 @@ varargs void run (int callShutdown) {
     });
 
     timeBefore = rusage()["utime"] + rusage()["stime"];
-    call_out((: process :), 0);
+    call_out_walltime((: process :), 0);
 }

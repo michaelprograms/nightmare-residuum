@@ -109,13 +109,13 @@ public int execute_test (function done) {
 
     evaluate(done, ([
         "numTests": sizeof(testFns),
-        "numPassed": passingExpects,
-        "numFailed": failingExpects,
-        "fnsTested": sizeof(testObjectFns - testObjectUntestedFns),
-        "fnsUntested": sizeof(testObjectUntestedFns),
-        "failingExpects": totalFailLog,
+        "passingExpects": passingExpects,
+        "failingExpects": failingExpects,
+        "testedFns": sizeof(testObjectFns - testObjectUntestedFns),
+        "untestedFns": sizeof(testObjectUntestedFns),
         "passingAsserts": passingAsserts,
         "failingAsserts": failingAsserts,
+        "failLog": totalFailLog,
     ]));
 
     if (environment()) destruct(this_object());
@@ -269,7 +269,7 @@ void assert (mixed left, string condition, mixed right) {
     if (functionp(left)) {
         if (leftErr = catch (leftResult = evaluate(left))) {
             leftResult = leftErr;
-            currentTestPassed = condition == "catch";
+            currentTestPassed = currentTestPassed && condition == "catch";
         }
     } else {
         leftResult = left;
@@ -277,7 +277,7 @@ void assert (mixed left, string condition, mixed right) {
     if (functionp(right)) {
         if (rightErr = catch (rightResult = evaluate(right))) {
             rightResult = rightErr;
-            currentTestPassed = condition == "catch";
+            currentTestPassed = currentTestPassed && condition == "catch";
         }
     } else {
         rightResult = right;
@@ -296,31 +296,35 @@ void assert (mixed left, string condition, mixed right) {
         (condition == "regex" ? "/" + rightResult + "/" : rightResult)
     });
 
-    if (!currentTestPassed) {
-        return;
-    } else if (condition == "==") {
-        currentTestPassed = leftResult == rightResult;
-    } else if (condition == "!=") {
-        currentTestPassed = leftResult != rightResult;
-    } else if (condition == ">") {
-        currentTestPassed = leftResult > rightResult;
-    } else if (condition == ">=") {
-        currentTestPassed = leftResult <= rightResult;
-    } else if (condition == "<") {
-        currentTestPassed = leftResult < rightResult;
-    } else if (condition == "<=") {
-        currentTestPassed = leftResult <= rightResult;
-    } else if (condition == "regex") {
-        currentTestPassed = regexp(leftResult, rightResult) > 0;
-    } else if (condition == "catch") {
-        currentTestPassed = !!leftErr && leftErr == rightResult;
+    if (currentTestPassed) {
+        if (condition == "==") {
+            currentTestPassed = leftResult == rightResult;
+        } else if (condition == "!=") {
+            currentTestPassed = leftResult != rightResult;
+        } else if (condition == ">") {
+            currentTestPassed = leftResult > rightResult;
+        } else if (condition == ">=") {
+            currentTestPassed = leftResult <= rightResult;
+        } else if (condition == "<") {
+            currentTestPassed = leftResult < rightResult;
+        } else if (condition == "<=") {
+            currentTestPassed = leftResult <= rightResult;
+        } else if (condition == "regex") {
+            currentTestPassed = regexp(leftResult, rightResult) > 0;
+        } else if (condition == "catch") {
+            currentTestPassed = !!leftErr && leftErr == rightResult;
+        } else {
+            currentTestPassed = 0;
+        }
     } else {
-        currentTestPassed = 0;
+        return;
     }
 
-    if (currentTestPassed) {
+    if (currentTestPassed || failingExpects == -1) {
         passingAsserts ++;
     } else {
         failingAsserts ++;
+        write("failing assert: "+currentTestMsg+" "+condition+" "+leftResult+" "+rightResult+"\n");
+        totalFailLog += currentTestMsg+" "+condition+" "+leftResult+" "+rightResult+"\n";
     }
 }
