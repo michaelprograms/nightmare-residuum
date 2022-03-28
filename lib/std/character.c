@@ -114,10 +114,10 @@ void setup_character () {
 }
 
 varargs void enter_world (int override) {
-    master()->handle_parse_refresh();
     if (!override) {
         handle_move(query_environment_path());
         D_CHANNEL->send_system("connection", query_cap_name() + " enters " + mud_name() + ".");
+        master()->handle_parse_refresh();
         message("system", query_cap_name() + " suddenly appears into existence.\n", environment(), this_object());
     }
     describe_environment();
@@ -127,7 +127,7 @@ varargs void enter_world (int override) {
 void exit_world () {
     message("system", query_cap_name() + " suddenly fades from existence.\n", environment(), this_object());
     D_CHANNEL->send_system("connection", query_cap_name() + " exits " + mud_name() + ".");
-    call_out((: master()->handle_parse_refresh() :), 0);
+    master()->handle_parse_refresh();
 
     // remove equipment
     foreach (object weapon in this_object()->query_wielded_weapons()) {
