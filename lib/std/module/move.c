@@ -8,7 +8,7 @@ private object query_dest_ob (mixed dest) {
         destOb = dest;
     } else if (stringp(dest)) {
         if (!(destOb = find_object(dest))) {
-            if (catch(load_object(dest)) ) {
+            if (catch(destOb = load_object(dest)) ) {
                 return 0;
             }
         }
