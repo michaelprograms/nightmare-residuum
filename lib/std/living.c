@@ -4,7 +4,6 @@ inherit STD_CONTAINER;
 inherit "/std/living/biography.c";
 inherit "/std/living/body.c";
 inherit "/std/living/combat.c";
-inherit "/std/living/location.c";
 inherit "/std/living/skills.c";
 inherit "/std/living/stats.c";
 inherit "/std/living/vitals.c";
@@ -100,15 +99,6 @@ varargs int do_command (string str, int debug) {
     }
 
     return 0;
-}
-
-int handle_move (mixed dest) {
-    int move = ::handle_move(dest);
-    string path = stringp(dest) ? dest : objectp(dest) ? file_name(dest) : "";
-    if (!regexp(path, "^/domain/Nowhere/room/(freezer|void).c$")) {
-        set_last_location(path);
-    }
-    return move;
 }
 
 int handle_go (mixed dest, string verb, string dir) {

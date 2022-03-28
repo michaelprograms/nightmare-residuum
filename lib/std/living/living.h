@@ -55,10 +55,6 @@ object *query_hostiles ();
 object *query_present_hostiles ();
 object query_target_hostile ();
 
-/* --- location --- */
-string query_last_location ();
-void set_last_location (string location);
-
 /* --- skills --- */
 private mapping query_default_skills ();
 private int query_skill_next_points (string skill);

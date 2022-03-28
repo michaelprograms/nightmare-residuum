@@ -27,3 +27,23 @@ void test_move () {
     destruct(ob);
     destruct(ob2);
 }
+
+void test_last_location () {
+    expect_function("query_environment_path", testOb);
+    expect_function("set_environment_path", testOb);
+
+    expect("handles setting and querying last location", (: ({
+        assert(testOb->query_environment_path(), "==", "/domain/Nowhere/room/void"), // defaults to void
+        assert(testOb->set_environment_path("/domain/Nowhere/room/freezer"), "==", 0),
+        assert(testOb->query_environment_path(), "==", "/domain/Nowhere/room/freezer"),
+    }) :));
+
+    expect("set_environment_path handles invalid argument 1", (: ({
+        assert((: testOb->set_environment_path(0) :), "catch", "*Bad argument 1 to move->set_environment_path\n"),
+        assert((: testOb->set_environment_path(0.0) :), "catch", "*Bad argument 1 to move->set_environment_path\n"),
+        assert((: testOb->set_environment_path("") :), "catch", "*Bad argument 1 to move->set_environment_path\n"),
+        assert((: testOb->set_environment_path(({})) :), "catch", "*Bad argument 1 to move->set_environment_path\n"),
+        assert((: testOb->set_environment_path(([])) :), "catch", "*Bad argument 1 to move->set_environment_path\n"),
+        assert((: testOb->set_environment_path((: users :)) :), "catch", "*Bad argument 1 to move->set_environment_path\n"),
+    }) :));
+}

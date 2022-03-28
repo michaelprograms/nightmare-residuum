@@ -13,15 +13,15 @@ void after_each_test () {
     }
 }
 
-string *test_ignore () { return ::test_ignore() + ({ "query_key_name", "query_species", "query_level", "query_last_action", "query_last_location", }); }
+string *test_ignore () { return ::test_ignore() + ({ "query_key_name", "query_species", "query_level", "query_last_action", "query_environment_short", }); }
 
 nosave private string __KeyName = "accounttest";
 string query_key_name () { return __KeyName; }
 string query_species () { return "human"; }
 int query_level () { return 123; }
 int query_last_action () { return 123456; }
-nosave private object __LastLocation;
-object query_last_location () { return __LastLocation; }
+nosave private string __LastEnvShort;
+string query_environment_short () { return __LastEnvShort; }
 
 void test_account () {
     expect_function("is_account", testOb);
@@ -114,7 +114,6 @@ void test_account_settings () {
 
 nosave private mapping tmpCharacter;
 void test_account_characters () {
-
     expect_function("query_character_names", testOb);
     expect_function("query_playable_characters", testOb);
     expect_function("query_character", testOb);
@@ -123,8 +122,7 @@ void test_account_characters () {
     expect_function("set_deleted", testOb);
 
     __KeyName = "tester";
-    __LastLocation = new("/std/module/description.c");
-    __LastLocation->set_short("somewhere");
+    __LastEnvShort = "somewhere";
 
     expect("account characters can be added and deleted", (: ({
         assert(testOb->query_character_names(), "==", ({ })),
@@ -159,5 +157,6 @@ void test_account_characters () {
         assert(testOb->query_playable_characters(), "==", 0),
     }) :));
 
-    destruct(__LastLocation);
+    __KeyName = "accounttest";
+    __LastEnvShort = 0;
 }

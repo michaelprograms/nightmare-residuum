@@ -116,7 +116,7 @@ void setup_character () {
 varargs void enter_world (int override) {
     master()->handle_parse_refresh();
     if (!override) {
-        handle_move(query_last_location());
+        handle_move(query_environment_path());
         D_CHANNEL->send_system("connection", query_cap_name() + " enters " + mud_name() + ".");
         message("system", query_cap_name() + " suddenly appears into existence.\n", environment(), this_object());
     }
@@ -146,7 +146,7 @@ void enter_freezer () {
 }
 
 void exit_freezer () {
-    handle_move(query_last_location());
+    handle_move(query_environment_path());
     D_CHANNEL->send_system("connection", query_cap_name() + " reconnects to " + mud_name() + ".");
     message("system", query_cap_name()+" suddenly appears into existence.\n", environment(), this_object());
     describe_environment();
