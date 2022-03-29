@@ -120,7 +120,11 @@ void display_results (mapping results, int timeStart) {
     }
     if (totalFns > 0) {
         write(format_total_line("Functions", results["testedFns"], totalFns) + "\n");
+    }
+    if (totalExpects > 0) {
         write(format_total_line("Expects Passed", results["passingExpects"], totalExpects) + "\n");
+    }
+    if (totalAsserts > 0) {
         write(format_total_line("Asserts Passed", results["passingAsserts"], totalAsserts) + "\n");
     } else {
         write("No tests were found.\n");
@@ -131,7 +135,7 @@ void display_results (mapping results, int timeStart) {
     }
 
     if (sizeof(results["failLog"]) > 0) {
-        write("Failing expects:\n" + implode(results["failLog"], "\n") + "\n\n");
+        write("Failing expects:\n" + results["failLog"] + "\n\n");
         results["failLog"] = ({});
     }
 
