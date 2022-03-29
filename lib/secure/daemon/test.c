@@ -118,9 +118,13 @@ void display_results (mapping results, int timeStart) {
     if (totalFiles > 1) {
         write(format_total_line("Test Files", currentTest, totalFiles) + "\n");
     }
-    write(format_total_line("Functions", results["testedFns"], totalFns) + "\n");
-    write(format_total_line("Expects Passed", results["passingExpects"], totalExpects) + "\n");
-    write(format_total_line("Asserts Passed", results["passingAsserts"], totalAsserts) + "\n");
+    if (totalFns > 0) {
+        write(format_total_line("Functions", results["testedFns"], totalFns) + "\n");
+        write(format_total_line("Expects Passed", results["passingExpects"], totalExpects) + "\n");
+        write(format_total_line("Asserts Passed", results["passingAsserts"], totalAsserts) + "\n");
+    } else {
+        write("No tests were found.\n");
+    }
 
     if (!undefinedp(timeStart)) {
         write("\n" + sprintf("%-20s", "Time" + ":") + time + " ms for " + results["numTests"] + " tests\n\n");
@@ -130,6 +134,7 @@ void display_results (mapping results, int timeStart) {
         write("Failing expects:\n" + implode(results["failLog"], "\n") + "\n\n");
         results["failLog"] = ({});
     }
+
 }
 
 void process () {
