@@ -17,6 +17,7 @@
 #define STD_WEAPON      "/std/weapon.c"
 
 // std modules
+#define M_CURRENCY      "/std/module/currency.c"
 #define M_CLEAN         "/std/module/clean.c"
 #define M_MOVE          "/std/module/move.c"
 #define M_PARENT        "/std/module/parent.c"
