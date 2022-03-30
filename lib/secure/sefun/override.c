@@ -1,4 +1,4 @@
-#include "sefun.h";
+object this_character ();
 
 nomask varargs int input_to () {
     error("efun::input_to disabled");
@@ -9,7 +9,7 @@ nomask object this_player (int flag) {
 }
 
 object *users () {
-    return filter_array(efun::users(), (: $1->query_account() && $1->query_account()->query_name() :));
+    return filter(efun::users(), (: $1->query_account() && $1->query_account()->query_name() :));
 }
 
 nomask void write (string msg) {

@@ -53,7 +53,7 @@ string format_divider_bar () {
     return bar;
 }
 string format_footer_bar () {
-    int width, n = 0, ansi;
+    int width, ansi;
     string bar = "";
 
     if (query_account_setting("screenreader") != "on") {

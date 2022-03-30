@@ -1,4 +1,4 @@
-#include "sefun.h"
+string sanitize_name (string name);
 
 object this_account () {
     object a;
@@ -15,10 +15,10 @@ object this_character () {
     return c;
 }
 object find_character (string name) {
-    object *results = filter_array(children(STD_CHARACTER), (: $1 && $1->query_key_name() == $2:), sanitize_name(name));
+    object *results = filter(children(STD_CHARACTER), (: $1 && $1->query_key_name() == $2:), sanitize_name(name));
     return sizeof(results) ? results[0] : 0;
 }
 
 object *characters () {
-    return map_array(filter_array(users() || ({}), (: $1 && interactive($1) && $1->query_character() :)) || ({}), (: $1->query_character() :)) || ({});
+    return map(filter(users() || ({}), (: $1 && interactive($1) && $1->query_character() :)) || ({}), (: $1->query_character() :)) || ({});
 }
