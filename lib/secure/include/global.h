@@ -21,6 +21,7 @@
 #define M_CLEAN         "/std/module/clean.c"
 #define M_MOVE          "/std/module/move.c"
 #define M_PARENT        "/std/module/parent.c"
+#define M_PICKABLE      "/std/module/pickable.c"
 #define M_PROPERTY      "/std/module/property.c"
 #define M_RESET         "/std/module/reset.c"
 #define M_STORY         "/std/module/story.c"
