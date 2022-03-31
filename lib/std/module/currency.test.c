@@ -14,6 +14,10 @@ void test_currencies () {
     expect_function("query_currency", testOb);
     expect_function("add_currency", testOb);
 
+    expect("query_currency returns -1 for invalid currency", (: ({
+        assert(testOb->query_currency("unknown"), "==", -1),
+        assert(testOb->query_currency("invalid"), "==", -1),
+    }) :));
     expect("currency handles adding and querying", (: ({
         assert(testOb->query_currencies(), "==", ({ })),
         assert(testOb->query_currency("copper"), "==", 0),

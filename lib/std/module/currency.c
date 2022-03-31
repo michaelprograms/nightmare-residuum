@@ -10,7 +10,8 @@ string *query_currencies () {
 int query_currency (string type) {
     if (!mapp(__Currency)) __Currency = ([ ]);
 
-    if (!stringp(type) || member_array(type, VALID_CURRENCIES) == -1) error("Bad argument 1 to currency->query_currency");
+    if (!stringp(type)) error("Bad argument 1 to currency->query_currency");
+    if (member_array(type, VALID_CURRENCIES) == -1) return -1;
 
     if (undefinedp(__Currency[type])) return 0;
     else return __Currency[type];
