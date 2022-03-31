@@ -47,7 +47,7 @@ void handle_defeat (int keep) {
 
     add_defeat();
 
-    if (env) new("/std/item/corpse.c")->handle_move(env);
+    if (env) new(ITEM_CORPSE)->handle_move(env);
 
     if (keep) this_object()->handle_move("/domain/Nowhere/room/defeat.c");
     else this_object()->handle_remove();

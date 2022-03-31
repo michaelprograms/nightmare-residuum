@@ -16,6 +16,9 @@
 #define STD_VERB        "/std/verb.c"
 #define STD_WEAPON      "/std/weapon.c"
 
+#define ITEM_COINS      "/std/item/coins.c"
+#define ITEM_CORPSE     "/std/item/corpse.c"
+
 // std modules
 #define M_CURRENCY      "/std/module/currency.c"
 #define M_CLEAN         "/std/module/clean.c"
