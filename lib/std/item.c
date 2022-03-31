@@ -31,6 +31,11 @@ mixed direct_get_obj (object ob, string str) {
 //     ::create();
 // }
 
-// void reset () {
-//     ::reset();
-// }
+void reset () {
+    ::reset();
+
+    foreach (string file in inherit_list(this_object()) - ({ STD_ITEM })) {
+        string name = split_path(file)[1][0..<3];
+        call_other(this_object(), "reset_" + name);
+    }
+}
