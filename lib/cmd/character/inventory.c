@@ -1,9 +1,9 @@
 void command (string input) {
     mixed inventory = unique_array(all_inventory(this_character()), (: $1->query_short() :));
     mixed *list;
-    string *shorts;
+    string *shorts, *coins = ({});
 
-    write(format_header_bar("INVENTORY") + "\n\n");
+    message("action", format_header_bar("INVENTORY") + "\n\n", this_character());
 
     list = unique_array(all_inventory(this_character()), (: $1->query_short() :));
     if (sizeof(list)) {
@@ -15,5 +15,15 @@ void command (string input) {
         }
     }
 
-    write("\n" + format_footer_bar() + "\n");
+    foreach (string currency in this_character()->query_currencies()) {
+        int n;
+        if (n = this_character()->query_currency(currency)) {
+            coins += ({ n + " " + currency });
+        }
+    }
+    if (sizeof(coins)) {
+        message("action", "  Currency: " + conjunction(coins) + "\n", this_character());
+    }
+
+    message("action", "\n" + format_footer_bar() + "\n", this_character());
 }
