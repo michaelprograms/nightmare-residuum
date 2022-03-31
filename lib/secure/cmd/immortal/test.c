@@ -14,7 +14,7 @@ void command (string input) {
         }
         test = input + ".test.c";
         if (file_size(test) > 0) {
-            testStart = rusage()["utime"] + rusage()["stime"];
+            testStart = perf_counter_ns();
             D_TEST->process_file(test, (: done :), 1);
         } else {
             message("system", "Unable to find test file for " + input + ".\n", this_user());

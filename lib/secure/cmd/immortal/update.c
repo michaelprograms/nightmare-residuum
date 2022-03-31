@@ -58,7 +58,7 @@ void command (string input) {
         keep->describe_environment();
         keep = ({});
         if (file_size(test) > 0) {
-            testStart = rusage()["utime"] + rusage()["stime"];
+            testStart = perf_counter_ns();
             D_TEST->process_file(test, (: done :), 1);
         }
     } else {

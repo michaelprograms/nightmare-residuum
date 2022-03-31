@@ -1,10 +1,7 @@
 nosave private mapping __Tests = ([
     /* Data format:
     "/std/module/test.test.c": ([
-        "touched": 16000000,
-        "ran": 16000000,
         "code": "/std/module/test.c",
-        "codeTouched": 160000000,
     ])
     */
 ]);
@@ -22,8 +19,6 @@ void reset_data ();
 varargs void process_file (string file, function done, int reset);
 private string format_total_line (string name, int current, int total);
 void process ();
-// private void update_and_execute (string path);
-// void watch_all ();
 varargs void update_test_data (string path, string ignore);
 varargs void run (int callShutdown);
 
@@ -76,7 +71,7 @@ varargs void process_file (string file, function doneCallback, int reset) {
     if (t = find_object(file)) {
         destruct(t);
     }
-    tmp = catch (call_other(file, "???"));
+    tmp = catch (load_object(file));
     if (tmp) {
         message("system", "Error in test: " + tmp + "\n", this_user());
         return;
@@ -88,7 +83,7 @@ varargs void process_file (string file, function doneCallback, int reset) {
     // call out clears the call stack, call other will chain the tests
     call_out_walltime(function(string test, function doneCallback) {
         object testFile = clone_object(test);
-        mixed err = catch(testFile->execute_test(doneCallback));
+        mixed err = catch (testFile->execute_test(doneCallback));
         if (err) {
             write("\n    " + test + " encountered an errored:\n" + err + "\n");
             evaluate(doneCallback);
@@ -111,12 +106,12 @@ void display_results (mapping results, int timeStart) {
     int time;
 
     if (!undefinedp(timeStart)) {
-        time = (rusage()["utime"] + rusage()["stime"]) - timeStart;
+        time = perf_counter_ns() - timeStart;
     }
 
     write("\n");
     if (totalFiles > 1) {
-        write(format_total_line("Test Files", currentTest, totalFiles) + "\n");
+        write(format_total_line("Files", currentTest, totalFiles) + "\n");
     }
     if (totalFns > 0) {
         write(format_total_line("Functions", results["testedFns"], totalFns) + "\n");
@@ -131,14 +126,13 @@ void display_results (mapping results, int timeStart) {
     }
 
     if (!undefinedp(timeStart)) {
-        write("\n" + sprintf("%-20s", "Time" + ":") + time + " ms for " + results["numTests"] + " tests\n\n");
+        write("\n" + sprintf("%-20s", results["numTests"]+" tests:") + sprintf("%7.2f", time/1000000.0) + " ms\n\n");
     }
 
     if (sizeof(results["failLog"]) > 0) {
         write("Failing expects:\n" + results["failLog"] + "\n\n");
         results["failLog"] = ({});
     }
-
 }
 
 void process () {
@@ -162,9 +156,7 @@ varargs void update_test_data (string path, string ignore) {
         if (file[1] == -2) {
             update_test_data(path + file[0] + "/", ignore);
         } else if (regexp(file[0], "\\.test\\.c$")) {
-            __Tests[path+file[0]] = ([
-                "touched": file[2],
-            ]);
+            __Tests[path+file[0]] = ([ ]);
         } else if (regexp(file[0], "\\.c$")) {
             totalFiles ++;
             codeFiles += ({ file });
@@ -174,7 +166,6 @@ varargs void update_test_data (string path, string ignore) {
         tmp = path + replace_string(file[0], ".c", ".test.c", 1);
         if (__Tests[tmp]) {
             __Tests[tmp]["code"] = path + file[0];
-            // __Tests[tmp]["codeTouched"] = file[2];
         } else {
             write("Missing " + path + file[0][0..<2] + "test.c"+"\n");
         }
@@ -206,6 +197,6 @@ varargs void run (int callShutdown) {
         else return strcmp(a, b);
     });
 
-    timeBefore = rusage()["utime"] + rusage()["stime"];
+    timeBefore = perf_counter_ns();
     call_out_walltime((: process :), 0);
 }

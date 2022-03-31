@@ -75,7 +75,8 @@ public int execute_test (function done) {
         }
         currentTestLog = "";
         currentFailLog = "";
-        timeBefore = rusage()["utime"] + rusage()["stime"];
+        // timeBefore = rusage()["utime"] + rusage()["stime"];
+        timeBefore = perf_counter_ns();
         before_each_test();
         failingExpectsBefore = failingExpects;
         passingExpectsBefore = passingExpects;
@@ -85,16 +86,17 @@ public int execute_test (function done) {
         }
 
         after_each_test();
-        timeAfter = rusage()["utime"] + rusage()["stime"];
+        // timeAfter = rusage()["utime"] + rusage()["stime"];
+        timeAfter = perf_counter_ns();
 
-        currentTestLog = "  " + UNDERLINE + BOLD + testFn + RESET + " (" + ORANGE + (timeAfter - timeBefore) + RESET + " ms):" + currentTestLog;
+        currentTestLog = "  " + UNDERLINE + BOLD + testFn + RESET + " (" + ORANGE + sprintf("%.2f", (timeAfter - timeBefore)/1000000.0) + RESET + " ms):" + currentTestLog;
         if (this_user()) {
             message("system", currentTestLog + "\n", this_user());
         } else {
             debug_message(currentTestLog);
         }
         if (strlen(currentFailLog) > 0) {
-            totalFailLog += (sizeof(totalFailLog) > 0 ? "\n" : "") + CYAN + UNDERLINE + base_name(this_object()) + RESET + ": " + UNDERLINE + BOLD + testFn + RESET + " (" + ORANGE + (timeAfter - timeBefore) + RESET + " ms):" + currentFailLog;
+            totalFailLog += (sizeof(totalFailLog) > 0 ? "\n" : "") + CYAN + UNDERLINE + base_name(this_object()) + RESET + ": " + UNDERLINE + BOLD + testFn + RESET + " (" + ORANGE + sprintf("%.2f", (timeAfter - timeBefore)/1000000.0) + RESET + " ms):" + currentFailLog;
         }
     }
 
