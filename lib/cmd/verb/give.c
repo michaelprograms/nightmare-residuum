@@ -2,14 +2,14 @@ inherit STD_VERB;
 
 void create () {
     verb::create();
-    add_rules( ({ "", "OBS to LIV", }) ); // @TODO if currency "WRD STR to LIV" }));
+    add_rules( ({ "", "OBS to LIV", "WRD WRD to LIV" }) );
 }
 
 mixed can_give () {
     return "Give what to who?";
 }
 
-mixed can_give_obj_to_liv (mixed ob, mixed liv, string str, mixed d) {
+mixed can_give_obj_to_liv (mixed args...) {
     return 1;
 }
 varargs void do_give_obj_to_liv (object ob, object liv) {
@@ -30,10 +30,32 @@ void do_give_obs_to_liv (mixed *info, object liv) {
     }
 }
 
-// @TODO if currency
-// varargs mixed can_give_wrd_str (string word, string str) {
-//     write("can_give_wrd_str " + word + " " + str + "\n");
-// }
-// varargs mixed do_give_wrd_str (string word, string str) {
-//     write("do_give_wrd_str " + word + " " + str + "\n");
-// }
+mixed can_give_wrd_wrd_to_liv (mixed args...) {
+    int amount = to_int(args[0]), n;
+    string currency = args[1];
+
+    if (amount < 1) return 0;
+    if ((n = this_character()->query_currency(currency)) < 1) {
+        return "You do not have any " + currency + " to drop.";
+    }
+    if (n < amount) {
+        return "You do not have enough " + currency + " to drop that much.";
+    }
+    return 1;
+}
+mixed do_give_wrd_wrd_to_liv (mixed args...) {
+    int amount = to_int(args[0]);
+    string currency = args[1];
+    object liv = args[2];
+    object env = environment(this_character());
+
+    if (!liv) return "You can't give " + amount + " " + currency + " to that."; // default parser response
+
+    liv->add_currency(currency, amount);
+    this_character()->add_currency(currency, amount);
+
+    message("verb", "You give " + amount + " " + currency + " to " + liv->query_cap_name() + ".\n", this_character());
+    message("verb", this_character()->query_cap_name() + " gives you " + amount + " " + currency + ".\n", liv);
+    message("verb", this_character()->query_cap_name() + " gives " + liv->query_cap_name() + " some " + currency + ".\n", env, ({ this_character(), liv }));
+    return 1;
+}

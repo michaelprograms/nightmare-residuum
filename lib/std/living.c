@@ -130,3 +130,10 @@ mixed indirect_give_obj_to_liv (object ob, object liv, string obStr, mixed livSt
     if (previous_object() == liv && environment(ob) == liv) return "You already have that.";
     return 1;
 }
+mixed direct_give_wrd_wrd_to_liv (mixed args...) {
+    string word1 = args[0];
+    string word2 = args[1];
+    object liv = args[2];
+    if (previous_object() == liv) return "You already have that.";
+    return 1;
+}
