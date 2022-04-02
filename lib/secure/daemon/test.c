@@ -5,7 +5,7 @@ nosave private mapping __Tests = ([
     ])
     */
 ]);
-nosave private string *__TestFiles = ({});
+nosave private string *__TestFiles = ({}), *__TestsMissing = ({});
 nosave private mapping __Results = ([]);
 
 nosave private int currentTest = 0, shutdownAfterTests = 0;
@@ -133,6 +133,13 @@ void display_results (mapping results, int timeStart) {
         write("Failing expects:\n" + results["failLog"] + "\n\n");
         results["failLog"] = ({});
     }
+
+    if (sizeof(__TestsMissing)) {
+        foreach (string file in __TestsMissing) {
+            write("Missing " + file + "\n");
+        }
+        write("\n");
+    }
 }
 
 void process () {
@@ -167,7 +174,7 @@ varargs void update_test_data (string path, string ignore) {
         if (__Tests[tmp]) {
             __Tests[tmp]["code"] = path + file[0];
         } else {
-            write("Missing " + path + file[0][0..<2] + "test.c"+"\n");
+            __TestsMissing += ({ path + file[0][0..<2] + "test.c" });
         }
     }
 }
