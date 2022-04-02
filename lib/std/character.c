@@ -5,7 +5,6 @@ inherit "/std/character/channel.c";
 
 inherit M_PARENT;
 inherit M_SAVE;
-inherit M_CURRENCY;
 
 private int __LastAction;
 private int __Created = time();

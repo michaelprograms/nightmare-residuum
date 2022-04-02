@@ -8,6 +8,8 @@ inherit "/std/living/skills.c";
 inherit "/std/living/stats.c";
 inherit "/std/living/vitals.c";
 
+inherit M_CURRENCY;
+
 nosave private int __NextHeal;
 
 int is_living () { return 1; }
