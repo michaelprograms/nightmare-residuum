@@ -1,6 +1,8 @@
 inherit STD_ITEM;
 inherit M_CURRENCY;
 
+int is_currency () { return 1; }
+
 string query_long_coin () {
     string *coins = ({ });
     int n;
@@ -24,4 +26,11 @@ void create () {
     set_name("pile of coins");
     set_short("a pile of coins");
     set_long((: query_long_coin :));
+}
+
+void check_empty () {
+    foreach (string currency in query_currencies()) {
+        if (query_currency(currency)) return;
+    }
+    handle_remove();
 }
