@@ -15,7 +15,7 @@ string query_long_coin () {
         coins += ({ "coins of no value" });
     }
 
-    return "A pile of coins containing of " + conjunction(coins) + ".";
+    return "A pile of coins consisting of " + conjunction(coins) + ".";
 }
 
 void create () {

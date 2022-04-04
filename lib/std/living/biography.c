@@ -43,11 +43,22 @@ void handle_victory (object source) {
     add_victory();
 }
 void handle_defeat (int keep) {
-    object env = environment();
+    object env = environment(), corpse;
+    string *currencies;
 
     add_defeat();
 
-    if (env) new(ITEM_CORPSE)->handle_move(env);
+    if (env) {
+        corpse = new(ITEM_CORPSE);
+        if (sizeof(currencies = this_object()->query_currencies())) {
+            object coins = new(ITEM_COINS);
+            foreach (string currency in currencies) {
+                coins->add_currency(currency, this_object()->query_currency(currency));
+            }
+            coins->handle_move(corpse);
+        }
+        corpse->handle_move(env);
+    }
 
     if (keep) this_object()->handle_move("/domain/Nowhere/room/defeat.c");
     else this_object()->handle_remove();

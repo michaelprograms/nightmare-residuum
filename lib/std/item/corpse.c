@@ -1,7 +1,7 @@
-inherit STD_ITEM;
+inherit STD_STORAGE;
 
 void create () {
-    ::create();
+    storage::create();
     set_name("corpse");
     set_id(({"corpse"}));
     set_short("a corpse");
