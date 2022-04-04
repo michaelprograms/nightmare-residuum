@@ -326,7 +326,5 @@ void assert (mixed left, string condition, mixed right) {
         passingAsserts ++;
     } else {
         failingAsserts ++;
-        write("failing assert: "+currentTestMsg+" "+condition+" "+leftResult+" "+rightResult+"\n");
-        totalFailLog += currentTestMsg+" "+condition+" "+leftResult+" "+rightResult+"\n";
     }
 }

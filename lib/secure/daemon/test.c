@@ -5,8 +5,8 @@ nosave private mapping __Tests = ([
     ])
     */
 ]);
-nosave private string *__TestFiles = ({}), *__TestsMissing = ({});
-nosave private mapping __Results = ([]);
+nosave private string *__TestFiles = ({ }), *__TestsMissing = ({ });
+nosave private mapping __Results = ([ ]);
 
 nosave private int currentTest = 0, shutdownAfterTests = 0;
 nosave private int totalFiles = 0;
@@ -27,6 +27,7 @@ varargs void run (int callShutdown);
 void reset_data () {
     currentTest = 0;
 
+    __Results = ([ ]);
     __Results["numTests"] = 0;
     __Results["passingExpects"] = 0;
     __Results["failingExpects"] = 0;
@@ -39,6 +40,7 @@ void reset_data () {
     totalFiles = 0;
     __Tests = ([ ]);
     __TestFiles = ({ });
+    __TestsMissing = ({ });
 }
 
 // -----------------------------------------------------------------------------
@@ -130,7 +132,7 @@ void display_results (mapping results, int timeStart) {
     }
 
     if (sizeof(results["failLog"]) > 0) {
-        write("Failing expects:\n" + results["failLog"] + "\n\n");
+        write("Failing expects:\n" + (arrayp(results["failLog"]) ? implode(results["failLog"], "\n") : results["failLog"]) + "\n\n");
         results["failLog"] = ({});
     }
 
