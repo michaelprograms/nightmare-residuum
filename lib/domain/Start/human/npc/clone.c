@@ -17,4 +17,6 @@ void create () {
     set_long("A cloned human by the name of " + capName + ".");
     set_level(10);
     set_species("human");
+
+    add_currency("copper", 1 + random(10));
 }

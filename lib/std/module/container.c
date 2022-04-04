@@ -18,3 +18,10 @@ int inventory_visible () {
 int inventory_accessible () {
     return 1;
 }
+
+object *query_living_contents () {
+    return filter_array(all_inventory(this_object()), (: $1->is_living() :));
+}
+object *query_item_contents () {
+    return filter_array(all_inventory(this_object()), (: !$1->is_living() :));
+}
