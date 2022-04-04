@@ -1,6 +1,9 @@
 #include "living/living.h"
 
-inherit STD_CONTAINER;
+inherit STD_OBJECT;
+inherit M_CLEAN;
+inherit M_CONTAINER;
+
 inherit "/std/living/biography.c";
 inherit "/std/living/body.c";
 inherit "/std/living/combat.c";
@@ -16,7 +19,7 @@ int is_living () { return 1; }
 
 void create () {
     combat::create();
-    container::create();
+    object::create();
 }
 
 void heart_beat () {

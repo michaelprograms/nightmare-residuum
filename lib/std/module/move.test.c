@@ -1,5 +1,5 @@
 inherit M_TEST;
-inherit STD_CONTAINER;
+inherit M_CONTAINER;
 
 private nosave object testOb;
 void before_each_test () {
@@ -37,7 +37,7 @@ int handle_release (object ob) {
 }
 
 void test_move () {
-    object ob = new(STD_CONTAINER), ob2 = new(STD_CONTAINER);
+    object ob = new(M_CONTAINER), ob2 = new(M_CONTAINER);
 
     expect_function("handle_move", testOb);
 

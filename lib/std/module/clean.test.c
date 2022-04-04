@@ -23,23 +23,23 @@ void test_handle_remove () {
 }
 
 void test_internal_remove () {
-    object container, ob;
+    object storage, ob;
 
     expect("internal_remove is protected", (: ({
         assert(member_array("internal_remove", functions(testOb, 0)) > -1 && !function_exists("internal_remove", testOb), "==", 1),
     }) :));
 
-    container = new(STD_CONTAINER);
+    storage = new(STD_STORAGE);
     ob = new(STD_OBJECT);
-    ob->handle_move(container);
+    ob->handle_move(storage);
 
     expect("internal_remove behaves", (: ({
-        assert(environment($(ob)), "==", $(container)),
-        assert($(container)->handle_remove(), "==", 1),
+        assert(environment($(ob)), "==", $(storage)),
+        assert($(storage)->handle_remove(), "==", 1),
         assert(objectp($(ob)), "==", 0),
     }) :));
 
-    if (objectp(container)) destruct(container);
+    if (objectp(storage)) destruct(storage);
     if (objectp(ob)) destruct(ob);
 }
 

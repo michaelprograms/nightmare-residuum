@@ -5,7 +5,6 @@
 #define STD_ACCOUNT     "/std/account.c"
 #define STD_ARMOR       "/std/armor.c"
 #define STD_CHARACTER   "/std/character.c"
-#define STD_CONTAINER   "/std/container.c"
 #define STD_FOOD        "/std/food.c"
 #define STD_ITEM        "/std/item.c"
 #define STD_LIVING      "/std/living.c"
@@ -13,6 +12,7 @@
 #define STD_NPC         "/std/npc.c"
 #define STD_OBJECT      "/std/object.c"
 #define STD_ROOM        "/std/room.c"
+#define STD_STORAGE     "/std/storage.c"
 #define STD_VERB        "/std/verb.c"
 #define STD_WEAPON      "/std/weapon.c"
 
@@ -20,8 +20,11 @@
 #define ITEM_CORPSE     "/std/item/corpse.c"
 
 // std modules
+#define M_CONTAINER     "/std/module/container.c"
 #define M_CURRENCY      "/std/module/currency.c"
 #define M_CLEAN         "/std/module/clean.c"
+#define M_EXIT          "/std/module/exit.c"
+#define M_LOOK          "/std/module/look.c"
 #define M_MOVE          "/std/module/move.c"
 #define M_PARENT        "/std/module/parent.c"
 #define M_PICKABLE      "/std/module/pickable.c"

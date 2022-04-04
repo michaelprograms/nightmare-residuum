@@ -1,5 +1,5 @@
 inherit M_TEST;
-inherit STD_CONTAINER;
+inherit STD_STORAGE;
 
 private nosave object testOb;
 void before_each_test () {

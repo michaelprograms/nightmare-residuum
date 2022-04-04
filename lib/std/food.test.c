@@ -1,5 +1,5 @@
 inherit M_TEST;
-inherit STD_CONTAINER;
+inherit STD_STORAGE;
 inherit "/std/living/vitals";
 
 private nosave object testOb;

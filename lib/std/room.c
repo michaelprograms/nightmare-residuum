@@ -1,11 +1,14 @@
-inherit STD_CONTAINER;
+inherit STD_OBJECT;
+
+inherit M_CLEAN;
+inherit M_CONTAINER;
+inherit M_EXIT;
+inherit M_LOOK;
 inherit M_PROPERTY;
 inherit M_RESET;
-inherit "/std/module/exit.c";
-inherit "/std/module/look.c";
 
 void create () {
-    container::create();
+    object::create();
     reset::create();
     reset();
 }

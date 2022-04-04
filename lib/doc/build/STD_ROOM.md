@@ -2,7 +2,8 @@
 
 ## Inherits
 
-STD_CONTAINER - /std/container.c
+STD_OBJECT - /std/object.c
+M_CONTAINER - /std/module/container.c
 M_RESET - /std/module/reset.c
 /std/module/exit.c
 /std/module/look.c
