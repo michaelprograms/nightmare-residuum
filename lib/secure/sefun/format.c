@@ -69,7 +69,7 @@ string format_footer_bar () {
 
 varargs string format_page (string *items, int columns, int pad) {
     int width, i, j, n;
-    string result = "";
+    string *rows = ({});
 
     if (!arrayp(items) || !sizeof(items)) error("Bad argument 1 to format->format_page");
 
@@ -79,13 +79,14 @@ varargs string format_page (string *items, int columns, int pad) {
     n = sizeof(items);
 
     for (i = 0; i < n; i += columns) {
+        string row = "";
         for (j = 0; j < columns; j ++) {
             if (i + j >= n) break;
-            result += sprintf("%-"+sprintf("%d", width)+"s", items[i + j]); // @TODO for longer strings
+            row += sprintf("%-"+sprintf("%d", width)+"s", items[i + j]); // @TODO for longer strings
         }
-        result += "\n";
+        rows += ({ row });
     }
-    return result;
+    return implode(rows, "\n");
 }
 
 string format_exit_brief (string dir) {

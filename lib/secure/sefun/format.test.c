@@ -98,22 +98,26 @@ void test_format_page () {
     __MockAccount = new(STD_ACCOUNT);
 
     expect("format_page handled width=80", (: ({
-        assert(testOb->format_page(({ "a", "b" })), "regex", "^a +b +\n$"),
-        assert(testOb->format_page(({ "a", "b", "c" })), "regex", "^a +b +\nc +\n$"),
-        assert(testOb->format_page(({ "a", "b", "c" }), 1), "regex", "^a +\nb +\nc +\n$"),
-        assert(testOb->format_page(({ "a", "b", "c" }), 2), "regex", "^a +b +\nc +\n$"),
-        assert(testOb->format_page(({ "a", "b", "c" }), 3), "regex", "^a +b +c +\n$"),
+        assert(testOb->format_page(({ "a", "b" })), "regex", "^a +b +$"),
+        assert(testOb->format_page(({ "a", "b", "c" })), "regex", "^a +b +\nc +$"),
+        assert(testOb->format_page(({ "a", "b", "c" }), 1), "regex", "^a +\nb +\nc +$"),
+        assert(testOb->format_page(({ "a", "b", "c" }), 2), "regex", "^a +b +\nc +$"),
+        assert(testOb->format_page(({ "a", "b", "c" }), 3), "regex", "^a +b +c +$"),
         assert(strlen(explode(testOb->format_page(({ "a", "b", "c" }), 2), "\n")[0]), "==", 80),
+        assert(strlen(explode(testOb->format_page(({ "a", "b", "c" }), 2, -1), "\n")[0]), "==", 78),
+        assert(strlen(explode(testOb->format_page(({ "a", "b", "c" }), 2, 1), "\n")[0]), "==", 82),
     }) :));
 
     __MockAccount->set_setting("width", 60);
     expect("format_page handled width=60", (: ({
-        assert(testOb->format_page(({ "a", "b" })), "regex", "^a +b +\n$"),
-        assert(testOb->format_page(({ "a", "b", "c" })), "regex", "^a +b +\nc +\n$"),
-        assert(testOb->format_page(({ "a", "b", "c" }), 1), "regex", "^a +\nb +\nc +\n$"),
-        assert(testOb->format_page(({ "a", "b", "c" }), 3), "regex", "^a +b +c +\n$"),
-        assert(testOb->format_page(({ "a", "b", "c" }), 2), "regex", "^a +b +\nc +\n$"),
+        assert(testOb->format_page(({ "a", "b" })), "regex", "^a +b +$"),
+        assert(testOb->format_page(({ "a", "b", "c" })), "regex", "^a +b +\nc +$"),
+        assert(testOb->format_page(({ "a", "b", "c" }), 1), "regex", "^a +\nb +\nc +$"),
+        assert(testOb->format_page(({ "a", "b", "c" }), 3), "regex", "^a +b +c +$"),
+        assert(testOb->format_page(({ "a", "b", "c" }), 2), "regex", "^a +b +\nc +$"),
         assert(strlen(explode(testOb->format_page(({ "a", "b", "c" }), 2), "\n")[0]), "==", 60),
+        assert(strlen(explode(testOb->format_page(({ "a", "b", "c" }), 2, -1), "\n")[0]), "==", 58),
+        assert(strlen(explode(testOb->format_page(({ "a", "b", "c" }), 2, 1), "\n")[0]), "==", 62),
     }) :));
 
     expect("format_page handled invalid argument 1", (: ({
