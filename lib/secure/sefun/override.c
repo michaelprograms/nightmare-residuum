@@ -17,7 +17,6 @@ nomask void write (string msg) {
         this_character()->receive_message("wrap", msg);
     } else if (this_user()) {
         this_user()->receive_message("system", msg);
-        // tell(this_user(), msg);
     } else {
         if (msg[<1] == '\n') msg = msg[0..<2];
         debug_message(msg); // "]"
