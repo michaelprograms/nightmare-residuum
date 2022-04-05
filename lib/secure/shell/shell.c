@@ -42,19 +42,60 @@ void handle_remove () {
     destruct();
 }
 
-void execute_command (string input) {
-    string *split = explode(input, " ") - ({ "" });
-    string action = split[0], path;
-    string args = sizeof(split) > 1 ? input[(strlen(action)+1)..] : 0;
+// Parse the raw input for any command line flags provided
+// Flags must be at the beginning of raw input and in format:
+// -f           or      -flag
+// -f=text      or      -flag=text
+// -f=123.0     or      -flag=123.0
+mixed *parse_command_flags (string rawInput) {
+    string *args, input = "";
+    mapping flags = ([ ]);
+    int x, y, l;
+
+    if (!stringp(rawInput)) {
+        input = rawInput;
+    } else {
+        args = explode(rawInput, " ");
+        l = sizeof(args);
+
+        for (int i = 0; i < l; i ++) {
+            if (regexp(args[i], "^-")) {
+                if ((x = strlen(args[i])) > 1) {
+                    if ((y = strsrch(args[i], "=")) > -1) {
+                        flags[args[i][1..y-1]] = args[i][y+1..];
+                    } else {
+                        flags[args[i][1..]] = 1;
+                    }
+                }
+            } else {
+                input = implode(args[i..], " ");
+                break;
+            }
+        }
+    }
+
+    return ({ input, flags });
+}
+
+void execute_command (string command) {
+    string *split, action, input;
+    string cmdPath;
+
+    if (!command) return;
+
+    split = explode(command, " ") - ({ "" });
+    action = split[0];
+    input = sizeof(split) > 1 ? command[(strlen(action)+1)..] : 0;
 
     if (D_CHANNEL->query_valid_channel(action)) {
-        return D_CHANNEL->send(action, args);
+        return D_CHANNEL->send(action, input);
     }
 
     // @TODO move to STD_LIVING->do_command
-    if (path = D_COMMAND->query_command(action)) {
-        call_other(path + "/" + action, "command", args);
-    } else if (__Owner->query_character() && !__Owner->query_character()->do_command(input)) {
+    if (cmdPath = D_COMMAND->query_command(action)) {
+        mixed *parse = parse_command_flags(input);
+        call_other(cmdPath + "/" + action, "command", parse[0], parse[1]);
+    } else if (__Owner->query_character() && !__Owner->query_character()->do_command(command)) {
         write("Do what?\n");
     }
 }
@@ -89,9 +130,9 @@ protected mixed query_prompt () {
     string prompt = query_variable("prompt");
     int i;
 
-    while((i = strsrch(prompt, "$")) != -1) {
-        if(i + 2 > strlen(prompt) - 1) break;
-        switch(prompt[i+1..i+2]) {
+    while ((i = strsrch(prompt, "$")) != -1) {
+        if (i + 2 > strlen(prompt) - 1) break;
+        switch (prompt[i+1..i+2]) {
             case "hp":
                 prompt = replace_string(prompt, "$hp", ""+tc->query_hp());
                 break;
