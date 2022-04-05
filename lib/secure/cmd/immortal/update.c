@@ -3,13 +3,13 @@ void done (mapping results) {
     D_TEST->display_results(results, testStart);
 }
 
-void command (string input) {
+void command (string input, mapping flags) {
     string tmp;
     object ob;
-    object *keep = ({});
+    object *keep = ({ });
 
     if (!input) {
-        write("Update which file?\n");
+        message("system", "Update which file?\n", this_user());
         return;
     } if (input == "here") {
         input = file_name(environment(this_character()));
@@ -19,39 +19,82 @@ void command (string input) {
             input = this_user()->query_shell()->query_variable("cwd") + "/" + input;
         }
         input = sanitize_path(input);
-        write("Updating "+input+"...\n");
+        message("system", "Updating " + input + (flags["R"] ? " and deep inherits " : (flags["r"] ? " and inherits " : "")) + "...\n", this_user());
     }
 
     switch (file_size(input)) {
         case -1:
-            write("update: " + input + " not found.\n");
+            message("system", "update: " + input + " not found.\n", this_user());
             return;
         case 0:
-            write("update: " + input + " is empty.\n");
+            message("system", "update: " + input + " is empty.\n", this_user());
             return;
     }
+
     ob = find_object(input);
-    if (ob) {
-        if (ob->is_room()) {
-            foreach (object l in ob->query_living_contents()) {
-                if (l->is_character()) {
-                    keep += ({ l });
-                    l->handle_move("/domain/Nowhere/room/void.c");
-                }
+
+    if (flags["R"] || flags["r"]) {
+        string *list;
+        int i;
+
+        if (!ob) {
+            tmp = catch (ob = load_object(input));
+            if (tmp) {
+                message("system", "update failed: " + input + ":\n" + tmp + "\n", this_user());
+                return;
             }
         }
-        write("Attempting ob->handle_remove()...\n");
+
+        if (flags["R"]) {
+            list = deep_inherit_list(ob);
+        } else if (flags["r"]) {
+            list = inherit_list(ob);
+        }
+        i = sizeof(list);
+        while (i --) {
+            object o = find_object(list[i]);
+            if (o) {
+                o->handle_remove();
+            }
+            if (o) {
+                destruct(o);
+            }
+            tmp = catch (load_object(list[i]));
+
+            if (!tmp) {
+                // @TODO cleanup how testing on recursive updates work
+                // string test = list[i][0..<2] + "test.c";
+                message("system", "update: " + list[i] + ": Ok\n", this_user());
+                // if (file_size(test) > 0) {
+                //     testStart = perf_counter_ns();
+                //     D_TEST->process_file(test, (: done :), 1);
+                // }
+            } else {
+                message("system", "update failed: " + list[i] + ":\n" + tmp + "\n", this_user());
+                return;
+            }
+        }
+    }
+
+    if (ob && ob->query_living_contents()) {
+        foreach (object l in ob->query_living_contents()) {
+            if (l->is_character()) {
+                keep += ({ l });
+                l->handle_move("/domain/Nowhere/room/void.c");
+            }
+        }
+    }
+    if (ob) {
         ob->handle_remove();
     }
     if (ob) {
-        write("Attempting destruct(ob)...\n");
         destruct(ob);
     }
 
     tmp = catch (load_object(input));
     if (!tmp) {
         string test = input[0..<2] + "test.c";
-        message("system", input + ": Ok\n", this_user());
+        message("system", "update: " + input + ": Ok\n", this_user());
         foreach (object l in keep) {
             l->handle_move(input);
         }
@@ -62,6 +105,6 @@ void command (string input) {
             D_TEST->process_file(test, (: done :), 1);
         }
     } else {
-        message("system", input + ": Error in update\n", this_user());
+        message("system", "update failed: " + input + ":\n" + tmp + "\n", this_user());
     }
 }

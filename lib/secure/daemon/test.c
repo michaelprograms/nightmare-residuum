@@ -62,7 +62,7 @@ void done_test (mapping results) {
     process();
 }
 
-varargs void process_file (string file, function doneCallback, int reset) {
+varargs void process_file (string file, function done, int reset) {
     object t;
     string tmp;
 
@@ -79,19 +79,19 @@ varargs void process_file (string file, function doneCallback, int reset) {
         return;
     }
     if (!inherits(M_TEST, load_object(file))) {
-        evaluate(doneCallback);
+        evaluate(done);
         return;
     }
     // call out clears the call stack, call other will chain the tests
-    call_out_walltime(function(string test, function doneCallback) {
+    call_out_walltime(function(string test, function done) {
         object testFile = clone_object(test);
-        mixed err = catch (testFile->execute_test(doneCallback));
+        mixed err = catch (testFile->execute_test(done));
         if (err) {
             write("\n    " + test + " encountered an errored:\n" + err + "\n");
-            evaluate(doneCallback);
+            evaluate(done);
         }
         if (testFile) destruct(testFile);
-    }, 0, file, doneCallback);
+    }, 0, file, done);
 }
 
 private string format_total_line (string name, int current, int total) {
