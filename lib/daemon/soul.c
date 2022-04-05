@@ -1,7 +1,7 @@
 inherit M_SAVE;
 
-private mapping __Emotes = ([]);
-private string *__Adverbs = ({});
+private mapping __Emotes = ([ ]);
+private string *__Adverbs = ({ });
 
 void create () {
     set_save_path("/save/daemon/soul.o");
@@ -34,7 +34,7 @@ int add_emote (string verb, mixed rule, string *parts) {
     parse_add_rule(verb, rule);
 
     if (!__Emotes[verb]) {
-        __Emotes[verb] = ([]);
+        __Emotes[verb] = ([ ]);
     }
     if (sizeof(parts) > 1) {
         __Emotes[verb][rule] = parts;
@@ -75,7 +75,7 @@ varargs string compose_message (object forwhom, string msg, object *who, mixed *
     int num, subj;
     string str;
     string bit;
-    mapping has = ([]);
+    mapping has = ([ ]);
 
     fmt = reg_assoc(msg, ({ "\\$[OoTtNnRrVvPp][a-z0-9]*" }), ({ 1 }));
     fmt = fmt[0];
@@ -261,12 +261,12 @@ varargs mixed *get_soul (string verb, string rule, mixed *args) {
 }
 
 void display_soul (object *who, string *msgs, mixed others) {
-    mapping done = ([]);
+    mapping done = ([ ]);
 
     for (int i = 0; i < sizeof(who); i ++) {
         if (done[who[i]]) continue;
         done[who[i]] ++;
-        tell(who[i], msgs[i]);
+        message("soul", who[i], msgs[i]);
     }
     if (arrayp(others)) {
         message("soul", msgs[<1], others, who);

@@ -65,9 +65,6 @@ varargs string wrap (string str, int width, int indent);
 int string_compare_same_until (string a, string b);
 string sanitize_name (string name);
 
-/* --- tell --- */
-varargs void tell (mixed target, string msg);
-
 /* --- time --- */
 varargs string time_ago (int timestamp, int granularity);
 
