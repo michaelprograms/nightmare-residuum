@@ -16,7 +16,7 @@ nomask int clean_later () {
 
 protected int internal_remove () {
     object env;
-    if (env = environment(this_object())) {
+    if (env = environment()) {
         map(all_inventory(this_object()), (: $1->handle_move($(env)) :));
     }
     destruct(this_object());

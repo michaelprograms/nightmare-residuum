@@ -53,7 +53,7 @@ void test_item_verb_drop_applies () {
 
     expect("item handles verb apply direct_drop_obj", (: ({
         assert(environment(testOb), "==", 0),
-        assert(environment(this_object()), "==", find_object("/domain/Nowhere/room/void.c")),
+        assert(environment(), "==", find_object("/domain/Nowhere/room/void.c")),
         assert(testOb->direct_drop_obj(), "==", 0), // can't drop item
         assert(testOb->handle_move(this_object()), "==", 1),
         assert(environment(testOb), "==", this_object()),
@@ -79,7 +79,7 @@ void test_item_verb_get_applies () {
 
     expect("item handled verb apply direct_get_obj", (: ({
         assert(environment(testOb), "==", 0),
-        assert(environment(this_object()), "==", find_object("/domain/Nowhere/room/void.c")),
+        assert(environment(), "==", find_object("/domain/Nowhere/room/void.c")),
         assert(testOb->direct_get_obj(), "==", "You can't get what isn't here."),
         assert(testOb->handle_move("/domain/Nowhere/room/void.c"), "==", 1),
         assert(environment(testOb), "==", find_object("/domain/Nowhere/room/void.c")),
