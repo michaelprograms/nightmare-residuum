@@ -84,8 +84,10 @@ int query_immortal () {
 void set_immortal (int i) {
     // @TODO security?
     __Immortal = i;
-    if (file_size("/realm/" + query_key_name() + "/") == -1) {
-        mkdir("/realm/" + query_key_name() + "/");
+    if (__Immortal) {
+        if (file_size("/realm/" + query_key_name() + "/") == -1) {
+            mkdir("/realm/" + query_key_name() + "/");
+        }
     }
 }
 
