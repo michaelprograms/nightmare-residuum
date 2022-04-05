@@ -2,12 +2,14 @@
 #define __SHELL_H__
 
 /* --- shell --- */
-void execute_command (string input);
 void handle_remove ();
+mixed *parse_command_flags (string rawInput);
+void execute_command (string input);
 protected void shell_input (mixed input);
 protected void shell_init ();
 protected mixed query_prompt ();
 void shell_start ();
+int clean_up (int inherited);
 
 /* --- alias --- */
 nomask string *query_alias_names ();
