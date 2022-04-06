@@ -49,10 +49,15 @@ void test_save_path () {
 void test_exists () {
     expect_function("query_exists", testOb);
 
-    // @TODO valid test account
-
     expect("query_exists handles invalid accounts", (: ({
         assert(testOb->query_exists(""), "==", 0),
         assert(testOb->query_exists("testaccountinvalid"), "==", 0),
+    }) :));
+
+    expect("query_exists handles valid accounts", (: ({
+        // create a stub file
+        assert(unguarded((: write_file("/save/account/a/accounttest.o", "testaccount.o save file for test", 1) :)), "==", 1),
+        assert(testOb->query_exists("testaccount"), "==", 1),
+        assert(unguarded((: rm("/save/account/a/accounttest.o") :)), "==", 1),
     }) :));
 }
