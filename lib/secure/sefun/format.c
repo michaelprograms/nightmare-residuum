@@ -75,13 +75,17 @@ varargs string format_page (string *items, int columns, int pad) {
 
     if (!columns) columns = 2;
     width = to_int(query_account_setting("width"));
-    width = (width / columns) + pad;
+    width = (width - pad*2) / columns;
     n = sizeof(items);
 
     for (i = 0; i < n; i += columns) {
         string row = "";
         for (j = 0; j < columns; j ++) {
-            if (i + j >= n) break;
+            if (i + j >= n) {
+                // pad remainder of line
+                row += sprintf("%' '"+sprintf("%d", (columns-j)*width)+"s", " ");
+                break;
+            }
             row += sprintf("%-"+sprintf("%d", width)+"s", items[i + j]); // @TODO for longer strings
         }
         rows += ({ row });
