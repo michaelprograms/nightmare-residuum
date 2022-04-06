@@ -204,3 +204,178 @@ string format_integer (int num) {
 
     return (neg ? "-" : "") + result;
 }
+
+
+// create a unicode border around action output
+//
+// mapping data = ([
+// /*
+//     "title": "TITLE",
+//     "subtitle": "Subtitle",
+//     "header": ([
+//         "items": ({}),
+//         "columns": 2,
+//         "align": "left|center",
+//     ]),
+//     "body": ([
+//         "items": ({}),
+//         "columns": 2,
+//         "align": "left|center",
+//     ]),
+//     "footer": ([
+//         "items": ({}),
+//         "columns": 2,
+//         "align": "left|center",
+//     ]),
+// */
+// ]);
+string *format_border (mapping data) {
+    string *lines = ({ }), line;
+
+    int fTitle = !undefinedp(data["title"]);
+    int fSubtitle = !undefinedp(data["subtitle"]);
+    int fHeader = !undefinedp(data["header"]);
+    int fBody = !undefinedp(data["body"]);
+    int fFooter = !undefinedp(data["footer"]);
+
+    // @TODO
+    // string encoding;
+    // encoding = query_encoding();
+
+    if (query_account_setting("screenreader") != "on") {
+        int width, ansi, n;
+
+        ansi = query_account_setting("ansi") == "on";
+        width = to_int(query_account_setting("width"));
+        n = 0;
+
+        if (fTitle) {
+            // Title Line 1
+            line = (ansi?"%^RESET%^CYAN%^":"") + "   \u250c" + sprintf("%'\u2500'"+sprintf("%d", 2 + strlen(data["title"]) + (fSubtitle ? 2 + strlen(data["subtitle"]) : 0))+"s", "") + "\u2510";
+            lines += ({ line });
+
+            // Title Line 2
+            line = "\u250c" + (fHeader ? "\u252c" : "\u2500") + "\u2500";
+            line += "\u2524 " + (ansi?"%^WHITE%^BOLD%^":"") + data["title"];
+            n += 5 + strlen(data["title"]);
+            if (fSubtitle) {
+                line += ":" + (ansi?"%^BOLD_OFF%^":"") + " " + data["subtitle"];
+                n += 2 + strlen(data["subtitle"]);
+            } else {
+                line += (ansi?"%^BOLD_OFF%^":"");
+            }
+            line += " " + (ansi?"%^CYAN%^":"") + "\u251c\u2500";
+            n += 3;
+            line += sprintf("%'\u2500'"+sprintf("%d", width-2-n)+"s", "");
+            line += (fHeader ? "\u252c" : "\u2500") + "\u2510";
+            lines += ({ line });
+
+            // Title Line 3
+            line = "\u2502" + (fHeader ? "\u2502" : " ") + " ";
+            line += "\u2514" + sprintf("%'\u2500'"+sprintf("%d", 2 + strlen(data["title"]) + (data["subtitle"] ? 2 + strlen(data["subtitle"]) : 0))+"s", "") + "\u2518 ";
+            line += sprintf("%' '"+sprintf("%d", width-2-n)+"s", "");
+            line += (fHeader ? "\u2502" : " ") + "\u2502";
+            lines += ({ line });
+
+        } else { // no title
+            line = (ansi?"%^RESET%^CYAN%^":"") + "\u250c" + (fHeader ? "\u252c" : "\u2500") + sprintf("%'\u2500'"+sprintf("%d", width-4)+"s", "") + (fHeader ? "\u252c" : "\u2500") + "\u2510";
+            lines += ({ line });
+        }
+
+        if (fHeader) {
+            string format;
+            // Header Lines
+            if (data["header"]["align"] == "center" && data["header"]["columns"] == 1) {
+                foreach (string item in data["header"]["items"]) {
+                    line = "\u2502\u2502  " + (ansi?"%^RESET%^":"") + sprintf("%|"+sprintf("%d", width-8)+"s", item) + (ansi?"%^CYAN%^":"") + "  \u2502\u2502";
+                    lines += ({ line });
+                }
+            } else {
+                format = sizeof(data["header"]["items"]) > 0 ? format_page(data["header"]["items"], data["header"]["columns"], 4) : "";
+                foreach (string l in explode(format, "\n")) {
+                    line = "\u2502\u2502  " + (ansi ? "%^RESET%^" + l + "%^CYAN%^" : l) + "  \u2502\u2502";
+                    lines += ({ line });
+                }
+            }
+            // Header bottom line
+            line = "\u2502\u2514" + sprintf("%'\u2500'"+sprintf("%d", width - 4)+"s", "") + "\u2518\u2502";
+            lines += ({ line });
+        }
+
+        if (fBody) {
+            string format;
+            // Body top line
+            line = "\u2502" + sprintf("%' '"+sprintf("%d", width - 2)+"s", "") + "\u2502";
+            lines += ({ line });
+            // Body Lines
+            if (data["body"]["align"] == "center" && data["body"]["columns"] == 1) {
+                foreach (string item in data["body"]["items"]) {
+                    line = "\u2502   " + (ansi?"%^RESET%^":"") + sprintf("%|"+sprintf("%d", width - 8)+"s", item) + (ansi?"%^CYAN%^":"") + "   \u2502";
+                    lines += ({ line });
+                }
+            } else {
+                format = sizeof(data["body"]["items"]) > 0 ? format_page(data["body"]["items"], data["body"]["columns"], 4) : "";
+                foreach (string l in explode(format, "\n")) {
+                    line = "\u2502   " + (ansi ? "%^RESET%^" + l + "%^CYAN%^" : l) + "   \u2502";
+                    lines += ({ line });
+                }
+            }
+            // Body bottom line
+            line = "\u2502";
+            line += sprintf("%' '"+sprintf("%d", width - 2)+"s", "");
+            line += "\u2502";
+            lines += ({ line });
+        }
+
+        if (fFooter) {
+            string *list = ({}), format;
+            // Footer top line
+            line = "\u2502\u250c";
+            line += sprintf("%'\u2500'"+sprintf("%d", width - 4)+"s", "");
+            line += "\u2510\u2502";
+            lines += ({ line });
+            // Footer Lines
+            if (data["footer"]["align"] == "center" && data["footer"]["columns"] == 1) {
+                foreach (string item in data["footer"]["items"]) {
+                    line = "\u2502\u2502  " + (ansi?"%^RESET%^":"") + sprintf("%|"+sprintf("%d", width - 8)+"s", item) + (ansi?"%^CYAN%^":"") + "  \u2502\u2502";
+                    lines += ({ line });
+                }
+            } else {
+                format = sizeof(data["footer"]["items"]) > 0 ? format_page(data["footer"]["items"], data["footer"]["columns"], 4) : "";
+                foreach (string l in explode(format, "\n")) {
+                    line = "\u2502\u2502  " + (ansi ? "%^RESET%^" + l + "%^CYAN%^" : l) + "  \u2502\u2502";
+                    lines += ({ line });
+                }
+            }
+            // Bottom line
+            line = "\u2514\u2534" + sprintf("%'\u2500'"+sprintf("%d", width - 4)+"s", "") + "\u2534\u2518" + (ansi?"%^RESET%^":"");
+            lines += ({ line });
+        } else {
+            // Bottom line
+            line = "\u2514" + sprintf("%'\u2500'"+sprintf("%d", width - 2)+"s", "") + "\u2518" + (ansi?"%^RESET%^":"");
+            lines += ({ line });
+        }
+    } else { // screenreader
+        if (fTitle) {
+            line = data["title"] + (fSubtitle ? ": " + data["subtitle"] : "");
+            lines += ({ line });
+        }
+        if (fHeader) {
+            foreach (string item in data["header"]["items"]) {
+                lines += ({ item });
+            }
+        }
+        if (fBody) {
+            foreach (string item in data["body"]["items"]) {
+                lines += ({ item });
+            }
+        }
+        if (fFooter) {
+            foreach (string item in data["footer"]["items"]) {
+                lines += ({ item });
+            }
+        }
+    }
+
+    return lines;
+}

@@ -30,6 +30,7 @@ string format_stat_verbose (string stat);
 string format_exit_reverse (string dir);
 string format_integer (int num);
 varargs string format_page (string *items, int columns, int pad);
+string *format_border (mapping data);
 
 /* --- grammar --- */
 string remove_article (string str);
