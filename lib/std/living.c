@@ -26,6 +26,8 @@ void create () {
 void heart_beat () {
     if (!clonep()) return;
 
+    status::heart_beat();
+
     handle_passive_heal();
     handle_combat();
 }
