@@ -2,7 +2,7 @@ inherit STD_VERB;
 
 void create () {
     verb::create();
-    add_rules( ({ "", "OBS", }) ); // @TODO if currency "WRD STR" }));
+    add_rules( ({ "", "OBS", }) );
 }
 
 mixed can_get () {
@@ -25,11 +25,3 @@ void do_get_obs (mixed *info, string str) {
         }
     }
 }
-
-// @TODO if currency
-// varargs mixed can_get_wrd_str (string word, string str) {
-//     write("can_get_wrd_str " + word + " " + str + "\n");
-// }
-// varargs void do_get_wrd_str (string word, string str) {
-//     write("do_get_wrd_str " + word + " " + str + "\n");
-// }
