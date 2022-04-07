@@ -71,6 +71,11 @@ int query_allowed (object caller, string fn, string file, string mode) {
     object *stack;
     int i;
 
+    if (!objectp(caller)) error("Bad argument 1 to access->query_allowed");
+    if (!stringp(fn)) error("Bad argument 2 to access->query_allowed");
+    if (!stringp(file)) error("Bad argument 3 to access->query_allowed");
+    if (!stringp(mode)) error("Bad argument 4 to access->query_allowed");
+
     // attempt to match the target file path to __Read path permissions
     pathPrivs = match_path(__Read, file);
 

@@ -14,7 +14,7 @@ void after_each_test () {
 void test_query_file_privs () {
     expect_function("query_file_privs", testOb);
 
-    expect("query_file_privs handled files", (: ({
+    expect("query_file_privs handles files", (: ({
         assert(testOb->query_file_privs("/etc/welcome"), "==", ACCESS_ALL),
         assert(testOb->query_file_privs("/daemon/ansi.c"), "==", ACCESS_MUDLIB),
         assert(testOb->query_file_privs("/daemon/something.c"), "==", ACCESS_MUDLIB),
@@ -36,10 +36,35 @@ void test_query_file_privs () {
 void test_unguarded () {
     expect_function("unguarded", testOb);
 
-    expect("unguarded handled bad arguments", (: ({
+    expect("unguarded handles bad arguments", (: ({
         assert((: testOb->unguarded((: MAX_INT :)) :), "catch", "*Illegal unguarded.\n"),
         assert((: testOb->unguarded(function () { return MAX_INT; }) :), "catch", "*Illegal unguarded.\n"),
         assert((: testOb->unguarded() :), "catch", "*Illegal unguarded.\n"),
         assert((: testOb->unguarded("bad argument") :), "catch", "*Illegal unguarded.\n"),
     }) :));
+}
+
+void test_query_allowed () {
+    object basicOb;
+
+    expect_function("query_allowed", testOb);
+
+    basicOb = new(STD_OBJECT);
+    expect("query_allowed handles valid requests", (: ({
+        // query read/write on path with permissions
+        assert(testOb->query_allowed(testOb, "file_size", "/tmp/path", "read"), "==", 1),
+        assert(testOb->query_allowed(testOb, "write_file", "/tmp/path", "write"), "==", 1),
+
+        // query read/write on path without permissions
+        assert(testOb->query_allowed($(basicOb), "read_file", "/tmp/void/path", "read"), "==", 0),
+        assert(testOb->query_allowed($(basicOb), "write_file", "/tmp/void/path", "write"), "==", 0),
+    }) :));
+
+
+    // expect("query_allowed handles bad arguments", (: ({
+    //     assert((: testOb->query_allowed() :), "catch", "*Bad argument 1 to access->query_allowed\n"),
+    //     assert((: testOb->query_allowed(testOb) :), "catch", "*Bad argument 2 to access->query_allowed\n"),
+    //     assert((: testOb->query_allowed(testOb, "file_size") :), "catch", "*Bad argument 3 to access->query_allowed\n"),
+    //     assert((: testOb->query_allowed(testOb, "file_size", "/tmp/path") :), "catch", "*Bad argument 4 to access->query_allowed\n"),
+    // }) :));
 }
