@@ -19,5 +19,6 @@ void handle_eat (object character) {
     character->add_hp(__Strength);
     character->add_sp(__Strength);
     character->add_mp(__Strength);
+    character->set_disable(1);
     handle_remove();
 }
