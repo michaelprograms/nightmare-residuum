@@ -1,12 +1,10 @@
 inherit M_CLEAN;
 
-#define REQUIRE_SIGHT       1
-#define REQUIRE_ALIVE       2
-#define REQUIRE_THOUGHT     4
-#define TRY_TO_ACQUIRE      8
+#define REQUIREMENT_BUSY        (1 << 0)
+#define REQUIREMENT_DISABLE     (1 << 1)
 
+nosave private int __Requirements = 0;
 nosave private string __Verb = split_path(file_name())[1];
-// nosave private int __Requirements = REQUIRE_SIGHT | REQUIRE_ALIVE | REQUIRE_THOUGHT;
 
 protected varargs void add_rules (mixed *rules, mixed *syns) {
     foreach (string rule in rules) {
@@ -19,17 +17,17 @@ protected varargs void add_rules (mixed *rules, mixed *syns) {
     }
 }
 
-mixed check_requirements () {
-    // @TODO
-    // mixed tmp;
-    // if ((__Requirements & NEED_TO_SEE) && (tmp = check_vision()) != 1) return tmp;
-    // if ((__Requirements & NEED_TO_BE_ALIVE) && (tmp = check_ghost()) != 1) return tmp;
-    // if ((__Requirements & NEED_TO_THINK)) return check_condition();
-     return 1;
+void set_requirements (int requirements) {
+    __Requirements = requirements;
+}
+int query_requirements () {
+    return __Requirements;
 }
 
 mixed can_verb_rule (string verb, string rule) {
-    return check_requirements();
+    if ((__Requirements & REQUIREMENT_BUSY)) return "You are too busy to do that right now.\n";
+    if ((__Requirements & REQUIREMENT_DISABLE)) return "You are not able to do that right now.\n";
+    return 1;
 }
 
 void create () {
