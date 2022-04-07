@@ -4,7 +4,7 @@ private nosave object testOb;
 void before_each_test () {
     testOb = clone_object("/secure/sefun/override.c");
 }
-void after_eachg_test () {
+void after_each_test () {
     if (objectp(testOb)) destruct(testOb);
 }
 
