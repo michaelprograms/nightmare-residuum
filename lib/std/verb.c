@@ -1,9 +1,8 @@
+#include <verb.h>
+
 inherit M_CLEAN;
 
-#define REQUIREMENT_BUSY        (1 << 0)
-#define REQUIREMENT_DISABLE     (1 << 1)
-
-nosave private int __Requirements = 0;
+nosave private int __Requirements = REQUIREMENT_NONE;
 nosave private string __Verb = split_path(file_name())[1];
 
 protected varargs void add_rules (mixed *rules, mixed *syns) {
@@ -24,9 +23,25 @@ int query_requirements () {
     return __Requirements;
 }
 
+mixed check_busy () {
+    if (this_character()->query_busy() > 0) {
+        return "You are too busy to do that right now.";
+    } else {
+        return 1;
+    }
+}
+mixed check_disable () {;
+    if (this_character()->query_disable() > 0) {
+        return "You are not able to do that right now.";
+    } else {
+        return 1;
+    }
+}
+
 mixed can_verb_rule (string verb, string rule) {
-    if ((__Requirements & REQUIREMENT_BUSY)) return "You are too busy to do that right now.\n";
-    if ((__Requirements & REQUIREMENT_DISABLE)) return "You are not able to do that right now.\n";
+    mixed tmp;
+    if ((__Requirements & REQUIREMENT_BUSY) && (tmp = check_busy()) != 1) return tmp;
+    if ((__Requirements & REQUIREMENT_DISABLE) && (tmp = check_disable()) != 1) return tmp;
     return 1;
 }
 
