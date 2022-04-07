@@ -75,7 +75,6 @@ public int execute_test (function done) {
         }
         currentTestLog = "";
         currentFailLog = "";
-        // timeBefore = rusage()["utime"] + rusage()["stime"];
         timeBefore = perf_counter_ns();
         before_each_test();
         failingExpectsBefore = failingExpects;
@@ -86,7 +85,6 @@ public int execute_test (function done) {
         }
 
         after_each_test();
-        // timeAfter = rusage()["utime"] + rusage()["stime"];
         timeAfter = perf_counter_ns();
 
         currentTestLog = "  " + UNDERLINE + BOLD + testFn + RESET + " (" + ORANGE + sprintf("%.2f", (timeAfter - timeBefore)/1000000.0) + RESET + " ms):" + currentTestLog;

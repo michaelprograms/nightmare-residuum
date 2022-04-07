@@ -45,15 +45,15 @@ void command (string input) {
 
 void execute_file (string file, string input) {
     mixed ret;
-    int t = 0;
+    int timeBefore, timeAfter;
     create_tmp_file(file, input);
-    t = rusage()["utime"] + rusage()["stime"];
-    ret = (mixed)call_other(file, "eval");
-    t = rusage()["utime"] + rusage()["stime"] - t;
+    timeBefore = perf_counter_ns();
+    ret = call_other(file, "eval");
+    timeAfter = perf_counter_ns();
     if (regexp(input, "return")) {
-        write("Result (%^ORANGE%^"+t+" ms%^RESET%^) = " + identify(ret)+"\n");
+        write("Result (%^ORANGE%^" + sprintf("%.2f", (timeAfter - timeBefore)/1000000.0) + " ms%^RESET%^) = " + identify(ret)+"\n");
     } else {
-        write("Complete (%^ORANGE%^"+t+" ms%^RESET%^)\n");
+        write("Complete (%^ORANGE%^" + sprintf("%.2f", (timeAfter - timeBefore)/1000000.0) + " ms%^RESET%^)\n");
     }
 }
 
