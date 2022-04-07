@@ -25,7 +25,6 @@ void command (string input) {
                 characterName += " " + time_from_seconds(query_idle(user));
             }
             line = sprintf("%-50s", characterName) + sprintf("%-12s", capitalize(char->query_species())) + " " + sprintf("%3d", char->query_level());
-            write("line strlen: "+strlen(line)+"\n");
             if (char->query_immortal()) {
                 nImm ++;
                 headerList += ({ line });
