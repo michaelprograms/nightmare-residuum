@@ -1,11 +1,18 @@
-void command (string input) {
+void command (string input, mapping flags) {
+    object tc = this_character(), target = tc;
     mapping actions = ([]);
+    string *border, subtitle, *body = ({});
+    mapping header;
 
-    write(format_header_bar("COMMANDS") + "\n");
-
-    if (input == "rescan") {
+    if (flags["r"]) {
         D_COMMAND->scan_all();
-        write("\n%^BOLD%^Commands and verbs rescanned.%^RESET%^\n");
+
+        subtitle = "Rescanned";
+        header = ([
+            "items": ({ "Commands and verbs rescanned." }),
+            "columns": 1,
+            "align": "center",
+        ]);
     }
 
     foreach (string path in D_COMMAND->query_paths()) {
@@ -22,13 +29,24 @@ void command (string input) {
         }
     }
     foreach (string type in keys(actions)) {
-        string *line = ({});
-        write("\n%^BOLD%^" + type + "%^RESET%^\n");
+        mapping b = ([
+            "header": capitalize(type),
+            "columns": 4,
+            "items": ({ }),
+        ]);
         foreach(string a in actions[type]) {
-            line += ({ a });
+            b["items"] += ({ a });
         }
-        line = sort_array(line, 1);
-        write(implode(line, ", ")+"\n");
+        body += ({ b });
     }
-    write("\n" + format_footer_bar() + "\n");
+
+    border = format_border(([
+        "title": "COMMANDS",
+        "subtitle": subtitle,
+        "header": header,
+        "body": body,
+    ]));
+    foreach (string line in border) {
+        message("system", line + "\n", tc);
+    }
 }

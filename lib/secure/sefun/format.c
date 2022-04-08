@@ -221,7 +221,7 @@ string format_integer (int num) {
 //         "items": ({}),
 //         "columns": 2,
 //         "align": "left|center",
-//     ]),
+//     ]) || ({ /* array of mappings */ }),
 //     "footer": ([
 //         "items": ({}),
 //         "columns": 2,
@@ -302,29 +302,39 @@ string *format_border (mapping data) {
             lines += ({ line });
         }
 
-        if (fBody) {
+        if (fBody && mapp(data["body"])) {
+            data["body"] = ({ data["body"] });
+        }
+        if (fBody && arrayp(data["body"])) {
             string format;
             // Body top line
             line = "\u2502" + sprintf("%' '"+sprintf("%d", width - 2)+"s", "") + "\u2502";
             lines += ({ line });
-            // Body Lines
-            if (data["body"]["align"] == "center" && data["body"]["columns"] == 1) {
-                foreach (string item in data["body"]["items"]) {
-                    line = "\u2502   " + (ansi?"%^RESET%^":"") + sprintf("%|"+sprintf("%d", width - 8)+"s", item) + (ansi?"%^CYAN%^":"") + "   \u2502";
+            foreach (mapping child in data["body"]) {
+                // Body child header
+                if (stringp(child["header"])) {
+                    line = "\u2502   " + (ansi?"%^WHITE%^BOLD%^":"") + child["header"] + (ansi?"%^BOLD_OFF%^CYAN%^":"") + sprintf("%' '"+sprintf("%d", width - 8 - strlen(child["header"]))+"s", "") + "   \u2502";
                     lines += ({ line });
                 }
-            } else {
-                format = sizeof(data["body"]["items"]) > 0 ? format_page(data["body"]["items"], data["body"]["columns"], 4) : "";
-                foreach (string l in explode(format, "\n")) {
-                    line = "\u2502   " + (ansi ? "%^RESET%^" + l + "%^CYAN%^" : l) + "   \u2502";
-                    lines += ({ line });
+                // Body child lines
+                if (child["align"] == "center" && child["columns"] == 1) {
+                    foreach (string item in child["items"]) {
+                        line = "\u2502   " + (ansi?"%^RESET%^":"") + sprintf("%|"+sprintf("%d", width - 8)+"s", item) + (ansi?"%^CYAN%^":"") + "   \u2502";
+                        lines += ({ line });
+                    }
+                } else {
+                    format = sizeof(child["items"]) > 0 ? format_page(child["items"], child["columns"], 4) : "";
+                    foreach (string l in explode(format, "\n")) {
+                        line = "\u2502   " + (ansi ? "%^RESET%^" + l + "%^CYAN%^" : l) + "   \u2502";
+                        lines += ({ line });
+                    }
                 }
+                // Body child bottom line
+                line = "\u2502";
+                line += sprintf("%' '"+sprintf("%d", width - 2)+"s", "");
+                line += "\u2502";
+                lines += ({ line });
             }
-            // Body bottom line
-            line = "\u2502";
-            line += sprintf("%' '"+sprintf("%d", width - 2)+"s", "");
-            line += "\u2502";
-            lines += ({ line });
         }
 
         if (fFooter) {
