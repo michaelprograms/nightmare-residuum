@@ -67,15 +67,18 @@ public int execute_test (function done) {
     totalFailLog = "";
 
     write("\nEvaluating " + CYAN + UNDERLINE + base_name(this_object()) + RESET + "\n");
+
     before_all_tests();
     foreach (string testFn in testFns) {
         if (!function_exists(testFn, this_object())) {
             write("    " + RED + "x" + RESET + " Function "+testFn+" not found.\n");
             continue;
         }
+
         currentTestLog = "";
         currentFailLog = "";
         timeBefore = perf_counter_ns();
+
         before_each_test();
         failingExpectsBefore = failingExpects;
         passingExpectsBefore = passingExpects;
@@ -83,23 +86,28 @@ public int execute_test (function done) {
         if (failingExpects == failingExpectsBefore && passingExpects == passingExpectsBefore) {
             currentTestLog += "\n    " + ORANGE + "-" + RESET + " Warning: no expects found.";
         }
-
         after_each_test();
         timeAfter = perf_counter_ns();
 
-        currentTestLog = "  " + UNDERLINE + BOLD + testFn + RESET + " (" + ORANGE + sprintf("%.2f", (timeAfter - timeBefore)/1000000.0) + RESET + " ms):" + currentTestLog;
+        currentTestLog = "  " + UNDERLINE + BOLD + testFn + RESET + " (" + ORANGE + sprintf("%.2f", (timeAfter-timeBefore)/1000000.0) + RESET + " ms):" + currentTestLog;
         if (this_user()) {
             message("system", currentTestLog + "\n", this_user());
         } else {
             debug_message(currentTestLog);
         }
         if (strlen(currentFailLog) > 0) {
-            totalFailLog += (sizeof(totalFailLog) > 0 ? "\n" : "") + CYAN + UNDERLINE + base_name(this_object()) + RESET + ": " + UNDERLINE + BOLD + testFn + RESET + " (" + ORANGE + sprintf("%.2f", (timeAfter - timeBefore)/1000000.0) + RESET + " ms):" + currentFailLog;
+            totalFailLog += (sizeof(totalFailLog) > 0 ? "\n" : "") + CYAN + UNDERLINE + base_name(this_object()) + RESET + ": " + UNDERLINE + BOLD + testFn + RESET + " (" + ORANGE + sprintf("%.2f", (timeAfter-timeBefore)/1000000.0) + RESET + " ms):" + currentFailLog;
         }
     }
 
+    // Attempt to populate testObjectUntestedFns if no tests have run
+    if (!sizeof(testFns) || (passingExpects + failingExpects == 0)) {
+        before_each_test();
+        after_each_test();
+    }
+
     after_all_tests();
-    write("  " + passingExpects + " Pass " + (failingExpects ? failingExpects + " Fail" : "")+"\n");
+    write("  " + passingExpects + " Pass " + (failingExpects ? failingExpects + " Fail" : "") + "\n");
     if (sizeof(testObjectUntestedFns) > 0) {
         write("  " + UNDERLINE + BOLD + "Untested Functions" + RESET + "\n");
         foreach (string fn in testObjectUntestedFns) {
