@@ -257,7 +257,7 @@ void expect (string message, function fn) {
     rightResults = ({ });
 
     passingAsserts = 0;
-    evaluate(fn);
+    catch(evaluate(fn));
     if (!passingAsserts) currentTestPassed = 0;
 
     validate_expect(leftResults, rightResults, currentTestMsg);
