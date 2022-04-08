@@ -1,8 +1,8 @@
 private void output_long (string dir, string path) { // mixed *files) {
     string acc, loaded, filename;
 
-    acc = D_ACCESS->query_allowed(previous_object(), 0, dir, "read") ? "r" : "-";
-    acc += D_ACCESS->query_allowed(previous_object(), 0, dir, "write") ? "w" : "-";
+    acc = D_ACCESS->query_allowed(previous_object(), "read_file", dir, "read") ? "r" : "-";
+    acc += D_ACCESS->query_allowed(previous_object(), "write_file", dir, "write") ? "w" : "-";
     acc += member_array(dir[0..<2], D_COMMAND->query_paths()) > -1 ? "x" : "-";
 
     foreach (string file in get_dir(path, -1)) {
