@@ -19,6 +19,7 @@ void reset () {
 
     foreach (object ob in all_inventory(this_object())) {
         name = base_name(ob) + ".c";
+        if (!__Reset[name]) continue;
         if (!counts[name]) counts[name] = 0;
         counts[name] += 1;
     }
