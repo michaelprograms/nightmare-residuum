@@ -55,8 +55,9 @@ void test_exists () {
     }) :));
 
     expect("query_exists handles valid accounts", (: ({
-        // create a stub file
-        assert(unguarded((: assure_dir("/save/account/a") && write_file("/save/account/a/accounttest.o", "testaccount.o save file for test", 1) :)), "==", 1),
+        // create a mock account file
+        assert(unguaded((: assure_dir("/save/account/a") :), "==", 1),
+        assert(unguarded((: write_file("/save/account/a/accounttest.o", "testaccount.o mock save", 1) :)), "==", 1),
         assert(testOb->query_exists("testaccount"), "==", 1),
         assert(unguarded((: rm("/save/account/a/accounttest.o") :)), "==", 1),
     }) :));
