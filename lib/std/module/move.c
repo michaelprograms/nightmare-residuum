@@ -16,6 +16,14 @@ private object query_dest_ob (mixed dest) {
     return destOb;
 }
 
+void handle_released (object env) {
+
+}
+
+void handle_received (object env) {
+
+}
+
 int handle_move (mixed dest) {
     object destOb;
 
@@ -31,6 +39,7 @@ int handle_move (mixed dest) {
     if (!destOb->can_receive(this_object())) return 0;
     if (__LastEnv = environment()) {
         environment()->handle_release(this_object());
+        handle_released(environment());
     }
     move_object(destOb);
     if (!regexp(file_name(destOb), "^/domain/Nowhere/room/(freezer|void)$")) {
@@ -38,6 +47,7 @@ int handle_move (mixed dest) {
     }
     __CurrentEnv = environment();
     environment()->handle_receive(this_object());
+    handle_received(environment());
     return __LastEnv != environment();
 }
 
