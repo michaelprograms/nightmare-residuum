@@ -58,6 +58,9 @@ void handle_defeat (int keep) {
             coins->handle_move(corpse);
         }
         corpse->handle_move(env);
+        if (this_object()->query_cap_name()) {
+            message("system", this_object()->query_cap_name() + " drops %^RED%^dead%^RESET%^.\n", env, this_object());
+        }
     }
 
     if (keep) this_object()->handle_move("/domain/Nowhere/room/defeat.c");
