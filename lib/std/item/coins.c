@@ -36,14 +36,19 @@ void check_empty () {
 }
 
 void handle_received (object env) {
+    string *list = ({});
+
     ::handle_received(env);
 
     if (!env || !inherits(M_CURRENCY, env)) return;
-
     foreach (string c in query_currencies()) {
         int n = query_currency(c);
         env->add_currency(c, n);
         add_currency(c, -n);
+        list += ({ n + " " + c });
+    }
+    if (sizeof(list)) {
+        message("action", "You receive " + conjunction(list) + ".\n", env);
     }
     check_empty();
 }
