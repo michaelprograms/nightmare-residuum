@@ -128,22 +128,6 @@ int handle_go (mixed dest, string verb, string dir) {
     return move;
 }
 
-int handle_receive (object ob) {
-    if (ob) {
-        if (ob->is_currency()) {
-            foreach (string currency in ob->query_currencies()) {
-                int n = ob->query_currency(currency);
-                add_currency(currency, n);
-                ob->add_currency(currency, -n);
-            }
-            // call out to delay fn til after move
-            call_out_walltime((: $(ob)->check_empty() :), 0);
-        }
-    }
-    return ::handle_receive(ob);
-}
-
-
 mixed direct_look_at_liv () {
     return environment() == environment(previous_object());
 }
