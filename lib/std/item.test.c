@@ -65,7 +65,7 @@ void test_item_verb_drop_applies () {
 void test_item_verb_give_applies () {
     expect_function("direct_give_obj_to_liv", testOb);
 
-    expect("item handled verb apply direct_give_obj_to_liv", (: ({
+    expect("item handles verb apply direct_give_obj_to_liv", (: ({
         assert(environment(testOb), "==", 0),
         assert(testOb->direct_give_obj_to_liv(), "==", 0), // can't give item yet
         assert(testOb->handle_move(this_object()), "==", 1),
@@ -74,10 +74,10 @@ void test_item_verb_give_applies () {
     }) :));
 }
 
-void test_item_verb_get_applies () {
+void test_item_verb_get_obj_applies () {
     expect_function("direct_get_obj", testOb);
 
-    expect("item handled verb apply direct_get_obj", (: ({
+    expect("item handles verb apply direct_get_obj", (: ({
         assert(environment(testOb), "==", 0),
         assert(environment(), "==", find_object("/domain/Nowhere/room/void.c")),
         assert(testOb->direct_get_obj(), "==", "You can't get what isn't here."),
@@ -86,5 +86,20 @@ void test_item_verb_get_applies () {
         assert(testOb->direct_get_obj(), "==", 1), // can get item
         assert(testOb->handle_move(this_object()), "==", 1), // move item back
         assert(testOb->direct_get_obj(), "==", 0), // already has item get item
+    }) :));
+}
+
+void test_item_verb_get_obj_from_objapplies () {
+    expect_function("direct_get_obj_from_obj", testOb);
+
+    expect("item handles verb apply direct_get_obj_from_obj", (: ({
+        // fails without env
+        assert(environment(testOb), "==", 0),
+        assert(testOb->direct_get_obj_from_obj(), "==", "You can't get what isn't here."),
+
+        // passes with env
+        assert(environment(), "==", find_object("/domain/Nowhere/room/void.c")),
+        assert(testOb->handle_move(this_object()), "==", 1),
+        assert(testOb->direct_get_obj_from_obj(), "==", 1),
     }) :));
 }

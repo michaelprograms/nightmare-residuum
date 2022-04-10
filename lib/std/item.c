@@ -29,7 +29,10 @@ mixed direct_get_obj (object ob, string str) {
     return 1;
 }
 mixed direct_get_obj_from_obj (mixed args...) {
-    object env = environment(environment());
+    object env;
+    if (environment()) {
+        env = environment(environment());
+    }
     if (env != environment(previous_object())) {
         if (env == previous_object()) {
             return 0;
