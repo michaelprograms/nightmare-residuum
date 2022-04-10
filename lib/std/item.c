@@ -3,6 +3,8 @@ inherit M_CLEAN;
 
 int is_item () { return 1; }
 
+/* ----- parser applies ----- */
+
 mixed direct_look_at_obj () {
     return environment() && (environment() == environment(previous_object()) || environment() == previous_object());
 }
@@ -26,10 +28,19 @@ mixed direct_get_obj (object ob, string str) {
     }
     return 1;
 }
+mixed direct_get_obj_from_obj (mixed args...) {
+    object env = environment(environment());
+    if (env != environment(previous_object())) {
+        if (env == previous_object()) {
+            return 0;
+        } else {
+            return "You can't get what isn't here.";
+        }
+    }
+    return 1;
+}
 
-// void create () {
-//     ::create();
-// }
+/* ----- object applies ----- */
 
 void reset () {
     ::reset();

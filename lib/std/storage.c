@@ -17,3 +17,17 @@ string query_long () {
         return long;
     }
 }
+
+/* ----- parser applies ----- */
+
+mixed indirect_get_obj_from_obj (mixed args...) {
+    object env = environment();
+    if (env != environment(previous_object())) {
+        if (env == previous_object()) {
+            return 0;
+        } else {
+            return "You can't get what isn't here.";
+        }
+    }
+    return 1;
+}
