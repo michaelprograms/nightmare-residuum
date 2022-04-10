@@ -19,7 +19,7 @@ private void display_account_menu () {
     msg = "\nAccount Actions   : %^CYAN%^[settings] [password] [exit]%^RESET%^\nCharacter Actions : %^CYAN%^[new] [delete]%^RESET%^\n\n";
 
     // @TODO different format for screenreader here?
-    foreach(string name in __Account->query_character_names()) {
+    foreach (string name in __Account->query_character_names()) {
         mapping character = __Account->query_character(name);
         string tmp = "%^CYAN%^" + sprintf("%-20s", "["+character["name"]+"]") + "%^RESET%^";
         tmp += sprintf("%-16s", capitalize(character["type"]+""));
@@ -304,7 +304,7 @@ protected nomask varargs void account_input (int state, mixed extra, string inpu
 
         case STATE_SETTINGS_ENTER:
             write("Settings Actions  : %^CYAN%^[back] [(setting) (option)]%^RESET%^\n\n");
-            foreach(string setting in sort_array(keys(__Account->query_settings()), 1)) {
+            foreach (string setting in sort_array(keys(__Account->query_settings()), 1)) {
                 string display;
                 if (intp(__Account->query_setting(setting))) {
                     display = "" + __Account->query_setting(setting);

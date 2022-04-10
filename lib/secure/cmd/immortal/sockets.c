@@ -12,7 +12,7 @@ END;
 
     write("\n");
 
-    foreach(string key, int value in filter_array(network_stats(), (:strsrch($1, "socket") > -1:))) {
+    foreach (string key, int value in filter_array(network_stats(), (:strsrch($1, "socket") > -1:))) {
         write("    " + sprintf("%20s", key) + " : " + value + "\n");
     }
 

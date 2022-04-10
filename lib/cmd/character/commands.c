@@ -34,7 +34,7 @@ void command (string input, mapping flags) {
             "columns": 4,
             "items": ({ }),
         ]);
-        foreach(string a in actions[type]) {
+        foreach (string a in sort_array(actions[type], 1)) {
             b["items"] += ({ a });
         }
         body += ({ b });
