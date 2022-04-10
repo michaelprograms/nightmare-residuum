@@ -44,7 +44,7 @@ nomask void net_dead () {
 void receive_message (string type, string message) {
     if (type == "system") {
         receive(wrap(message, 0, 0));
-    } else if (type == "wrap") {
+    } else if (type == "wrap" || type == "verb" || type == "action") {
         receive(wrap(message));
     } else if (type == "say") {
         message = "%^CYAN%^" + replace_string(message, ":", ":%^RESET%^");
