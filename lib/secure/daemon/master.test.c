@@ -26,7 +26,7 @@ void test_applies () {
     expect_function("connect", testOb);
 
     expect("connect returns a valid user object", (: ({
-        assert(userOb = testOb->connect(), "regex", "OBJ\\("+replace_string(OBJ_USER, "/", "\\/")+"#(.+)\\)"),
+        assert(file_name(userOb = testOb->connect()), "regex", OBJ_USER+"#[0-9]+"),
         assert(userOb->query_account(), "==", 0),
         assert(userOb->query_character(), "==", 0),
         assert(userOb->query_shell(), "==", 0),
@@ -121,7 +121,7 @@ void test_valid_applies () {
     expect_function("valid_read", testOb);
 
     expect("valid_read handles calls", (: ({
-        assert(basicOb = new(STD_OBJECT), "regex", "OBJ\\("+replace_string(STD_OBJECT[0..<3], "/", "\\/")+"#(.+)\\)"),
+        assert(file_name(basicOb = new(STD_OBJECT)), "regex", STD_OBJECT[0..<3]+"#[0-9]+"),
         assert(testOb->valid_read("/", testOb, "read_file"), "==", 1),
         assert(testOb->valid_read("/tmp/void/doesntexist", basicOb, "read_file"), "==", 0),
     }) :));

@@ -11,7 +11,7 @@ nosave protected mixed UNDEFINED = (([])[0]); // equivalent of UNDEFINED
 
 // -----------------------------------------------------------------------------
 
-nosave private int currentTestPassed = 0, currentTestRegex = 0;
+nosave private int currentTestPassed = 0;
 nosave private int failingExpects = 0, passingExpects = 0;
 nosave private int failingAsserts = 0, passingAsserts = 0;
 nosave private int expectCatch = 0;
@@ -166,6 +166,16 @@ private string format_string_difference (string actual, string expect) {
     return result;
 }
 
+private string format_regex_difference (string actual, string regex) {
+    string *results = pcre_extract(actual, "(" + regex + ")");
+
+    if (sizeof(results) > 0) {
+        return regex + " matched: " + GREEN + results[0] + RESET;
+    } else {
+        return format_string_difference(actual, regex);
+    }
+}
+
 varargs private string format_array_differences (mixed *actual, mixed *expect) {
     int l;
     string result = "", a, e;
@@ -183,7 +193,8 @@ varargs private string format_array_differences (mixed *actual, mixed *expect) {
         if (stringp(e) && e[0..0] == "/" && e[<1..<1] == "/") {
             e = e[1..<2];
             result += "\n      " + sprintf("%2d", i) + ". ";
-            result += replace_string(a, e, GREEN + e + RESET);
+            result += format_regex_difference(a, e);
+
         } else {
             result += "\n      " + sprintf("%2d", i) + ". " + format_string_difference(a, e);
         }
@@ -223,8 +234,6 @@ private void validate_expect (mixed value1, mixed value2, string message) {
         }
         if (arrayp(value1) && arrayp(value2)) {
             currentTestLog += format_array_differences(value1, value2);
-        } else if (currentTestRegex) {
-            currentTestLog += " " + replace_string(value1, value2, GREEN + value2 + RESET);
         } else {
             currentTestLog += " " + format_string_difference(value1, value2);
         }
