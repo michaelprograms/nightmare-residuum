@@ -1,5 +1,7 @@
 inherit STD_STORAGE;
 
+int is_corpse () { return 1; }
+
 void create () {
     storage::create();
     set_name("corpse");

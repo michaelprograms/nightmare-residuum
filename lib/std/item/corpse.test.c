@@ -24,9 +24,9 @@ void test_received () {
     function_exists("handle_received", testOb);
 
     expect("handle_received sets expire timer", (: ({
-        assert(testObFile = file_name(testOb), "regex", "/std/item/corpse#\d"),
+        assert(testObFile = file_name(testOb), "regex", "/std/item/corpse#[0-9]+"),
 
-        // call handle_received to start the expire call_out
+        // start the expire call_out
         testOb->handle_received(0),
 
         // grab callout tied to the test corpse
@@ -34,5 +34,17 @@ void test_received () {
         assert(sizeof(calloutInfo), "==", 1),
         assert(sizeof(calloutInfo[0]), "==", 3),
         assert(calloutInfo[0][0], "==", testOb),
+    }) :));
+}
+
+void test_corpse () {
+    expect_function("is_corpse", testOb);
+
+    expect("is_corpse behaves", (: ({
+        assert(testOb->is_item(), "==", 1),
+        assert(testOb->is_corpse(), "==", 1),
+        assert(testOb->is_character(), "==", UNDEFINED),
+        assert(testOb->is_monster(), "==", UNDEFINED),
+        assert(testOb->is_npc(), "==", UNDEFINED),
     }) :));
 }
