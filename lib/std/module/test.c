@@ -66,7 +66,7 @@ public int execute_test (function done) {
     passingExpects = 0;
     totalFailLog = "";
 
-    write("\nEvaluating " + CYAN + UNDERLINE + base_name(this_object()) + RESET + "\n");
+    write("\nEvaluating " + CYAN + UNDERLINE + base_name() + RESET + "\n");
 
     before_all_tests();
     foreach (string testFn in testFns) {
@@ -96,7 +96,7 @@ public int execute_test (function done) {
             debug_message(currentTestLog);
         }
         if (strlen(currentFailLog) > 0) {
-            totalFailLog += (sizeof(totalFailLog) > 0 ? "\n" : "") + CYAN + UNDERLINE + base_name(this_object()) + RESET + ": " + UNDERLINE + BOLD + testFn + RESET + " (" + ORANGE + sprintf("%.2f", (timeAfter-timeBefore)/1000000.0) + RESET + " ms):" + currentFailLog;
+            totalFailLog += (sizeof(totalFailLog) > 0 ? "\n" : "") + CYAN + UNDERLINE + base_name() + RESET + ": " + UNDERLINE + BOLD + testFn + RESET + " (" + ORANGE + sprintf("%.2f", (timeAfter-timeBefore)/1000000.0) + RESET + " ms):" + currentFailLog;
         }
     }
 
@@ -126,7 +126,7 @@ public int execute_test (function done) {
         "failLog": totalFailLog,
     ]));
 
-    if (environment()) destruct(this_object());
+    if (environment()) destruct();
 }
 
 // -----------------------------------------------------------------------------
@@ -250,7 +250,7 @@ void expect_function (string fn, object testOb) {
 }
 // Used by test.test.c to verify failing expects
 protected void expect_next_failure () {
-    if (base_name(this_object()) == replace_string(M_TEST, ".c", ".test") && failingExpects == 0) {
+    if (base_name() == replace_string(M_TEST, ".c", ".test") && failingExpects == 0) {
         failingExpects --;
     }
 }

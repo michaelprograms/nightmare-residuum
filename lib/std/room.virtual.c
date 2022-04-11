@@ -89,7 +89,7 @@ void set_inheritable (string path) {
 void add_potential_exit (object room, string dir, int x, int y) {
     string path;
     if (query_within_layout(x, y)) {
-        path = replace_string(file_name(this_object()), "virtual/", "virtual/room/");
+        path = replace_string(file_name(), "virtual/", "virtual/room/");
         room->set_exit(dir, path + "/" + x + "." + y);
     }
 }
@@ -111,7 +111,7 @@ object virtual_create (string arg) {
     }
 
     room = new(__Inheritable);
-    room->set_server(file_name(this_object()));
+    room->set_server(file_name());
 
     // Setup exits
     add_potential_exit(room, "northwest", x - 1, y - 1);

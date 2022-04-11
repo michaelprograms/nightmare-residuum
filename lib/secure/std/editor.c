@@ -11,7 +11,7 @@ nomask private string query_prompt () {
 
 private nomask void editor_input (mixed s) {
     if (s == -1) {
-        return destruct(this_object());
+        return destruct();
     }
     message("no_ansi", ed_cmd(s), this_user());
     if (query_ed_mode() == -1) {
@@ -20,7 +20,7 @@ private nomask void editor_input (mixed s) {
         if (__EndFn) {
             evaluate(__EndFn);
         }
-        return destruct(this_object());
+        return destruct();
     }
 }
 void editor_start (string file, function endFn) {
@@ -32,7 +32,7 @@ void editor_start (string file, function endFn) {
 
 private int clean_up() {
     if (query_ed_mode() == -1) {
-        destruct(this_object());
+        destruct();
     } else {
         return 1;
     }

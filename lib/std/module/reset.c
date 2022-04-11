@@ -9,15 +9,15 @@ int query_resets () {
 }
 
 void create () {
-    __Reset = ([]);
+    __Reset = ([ ]);
     __Resets = 0;
 }
 void reset () {
-    mapping counts = ([]);
+    mapping counts = ([ ]);
     int count;
     string name;
 
-    foreach (object ob in all_inventory(this_object())) {
+    foreach (object ob in all_inventory()) {
         name = base_name(ob) + ".c";
         if (!__Reset[name]) continue;
         if (!counts[name]) counts[name] = 0;
@@ -45,7 +45,7 @@ void reset () {
 }
 
 void set_reset (mapping reset) {
-    __Reset = ([]);
+    __Reset = ([ ]);
     foreach (string key, mixed val in reset) {
         __Reset[key] = val;
     }

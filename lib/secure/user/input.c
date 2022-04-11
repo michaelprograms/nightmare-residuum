@@ -99,7 +99,7 @@ private nomask int create_handler () {
 
     if (!sizeof(stack)) {
         message("input", "Unable to process input.\n", this_object());
-        destruct(this_object());
+        destruct();
         return 1;
     }
     return 0;

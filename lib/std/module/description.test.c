@@ -20,7 +20,7 @@ void test_long () {
         assert(testOb->query_long(), "==", "Test long"),
 
         testOb->set_long((: base_name(previous_object(1)) :)),
-        assert(testOb->query_long(), "==", base_name(this_object())),
+        assert(testOb->query_long(), "==", base_name()),
 
         testOb->set_long(0),
         assert(testOb->query_long(), "==", 0),
@@ -38,7 +38,7 @@ void test_short () {
         assert(testOb->query_short(), "==", "Test short"),
 
         testOb->set_short((: base_name(previous_object(1)) :)),
-        assert(testOb->query_short(), "==", base_name(this_object())),
+        assert(testOb->query_short(), "==", base_name()),
 
         testOb->set_short(0),
         assert(testOb->query_short(), "==", 0),

@@ -69,7 +69,7 @@ mixed direct_get_obj_from_obj (mixed args...) {
 void reset () {
     ::reset();
 
-    foreach (string file in inherit_list(this_object()) - ({ STD_ITEM })) {
+    foreach (string file in inherit_list() - ({ STD_ITEM })) {
         string name = split_path(file)[1][0..<3];
         call_other(this_object(), "reset_" + name);
     }

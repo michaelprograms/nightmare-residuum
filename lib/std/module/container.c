@@ -1,8 +1,8 @@
 int can_receive (object ob) {
-    return member_array(ob, all_inventory(this_object())) == -1;
+    return member_array(ob, all_inventory()) == -1;
 }
 int can_release (object ob) {
-    return member_array(ob, all_inventory(this_object())) > -1;
+    return member_array(ob, all_inventory()) > -1;
 }
 
 int handle_receive (object ob) {
@@ -20,8 +20,8 @@ int inventory_accessible () {
 }
 
 object *query_living_contents () {
-    return filter_array(all_inventory(this_object()), (: $1->is_living() :));
+    return filter_array(all_inventory(), (: $1->is_living() :));
 }
 object *query_item_contents () {
-    return filter_array(all_inventory(this_object()), (: !$1->is_living() :));
+    return filter_array(all_inventory(), (: !$1->is_living() :));
 }

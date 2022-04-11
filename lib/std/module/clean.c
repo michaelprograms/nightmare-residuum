@@ -17,10 +17,10 @@ nomask int clean_later () {
 protected int internal_remove () {
     object env;
     if (env = environment()) {
-        map(all_inventory(this_object()), (: $1->handle_move($(env)) :));
+        map(all_inventory(), (: $1->handle_move($(env)) :));
     }
-    destruct(this_object());
-    return !(this_object());
+    destruct();
+    return !this_object();
 }
 int handle_remove () {
     return internal_remove();
@@ -30,5 +30,5 @@ int clean_up (int inherited) {
     if (origin() == "driver" || environment() || __NoClean) {
         return clean_never();
     }
-    return this_object()->handle_remove();
+    return handle_remove();
 }

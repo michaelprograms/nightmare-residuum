@@ -100,7 +100,7 @@ void test_identify () {
         assert(testOb->identify(function() {}), "==", "(: <code>() :)"),
         assert(testOb->identify((: uptime :)), "==", "(: uptime :)"),
         assert(testOb->identify((: $1 + $2 :)), "==", "(: <code>($1, $2) :)"),
-        assert(testOb->identify((: call_other, this_object(), "query_name" :)), "==", "(: call_other, "+file_name(this_object())+", \"query_name\" :)"),
+        assert(testOb->identify((: call_other, this_object(), "query_name" :)), "==", "(: call_other, " + file_name() + ", \"query_name\" :)"),
         assert(testOb->identify($(tFn)), "==", "(: <code>($1, $2) :)"),
     }) :));
 
@@ -114,7 +114,7 @@ void test_identify () {
             tc->m = ([ "test": 123, ]);
             tc->o = this_object();
         }, "==", 0),
-        assert(testOb->identify(tc), "==", "CLASS( 6 elements  \"test string\",  ({ /* sizeof() == 2 */    \"test string 1\",    \"test string 2\"  }),  123,  1.000000,  ([ /* sizeof() == 1 */    \"test\" : 123,  ]),  " + file_name(this_object()) + " )"),
+        assert(testOb->identify(tc), "==", "CLASS( 6 elements  \"test string\",  ({ /* sizeof() == 2 */    \"test string 1\",    \"test string 2\"  }),  123,  1.000000,  ([ /* sizeof() == 1 */    \"test\" : 123,  ]),  " + file_name() + " )"),
     }) :));
 
     expect("identify handles array", (: ({

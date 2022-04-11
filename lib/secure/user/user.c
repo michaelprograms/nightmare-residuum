@@ -164,5 +164,5 @@ nomask varargs void handle_remove (string message) {
     }
 
     flush_messages();
-    destruct(this_object());
+    destruct();
 }

@@ -20,7 +20,7 @@ void reset () {
 int is_room () { return 1; }
 
 int clean_up (int inherited) {
-    foreach (object ob in deep_inventory(this_object())) {
+    foreach (object ob in deep_inventory()) {
         if (ob->query_user() && userp(ob->query_user())) {
             return ::clean_later();
         }

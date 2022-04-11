@@ -1,6 +1,7 @@
 nosave private int __Picks, __MaxPicks;
 nosave private string __Item, __Message;
 
+// called by STD_ITEM->reset
 void reset_pickable () {
     if (!environment()) return;
 
