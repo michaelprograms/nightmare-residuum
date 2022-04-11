@@ -1,5 +1,5 @@
 inherit M_TEST;
-inherit STD_LIVING;
+inherit M_MOVE;
 
 private nosave object testOb;
 void before_each_test () {
@@ -10,7 +10,7 @@ void after_each_test () {
     if (objectp(testOb)) destruct(testOb);
 }
 string *test_order () {
-    return ({ "test_looks", "test_applies" });
+    return ({ "test_looks", "test_handle_look" });
 }
 
 void test_looks () {
@@ -53,39 +53,66 @@ void test_looks () {
         assert(testOb->query_look("rocks"), "==", "Rocks and stones."),
         assert(testOb->query_look("stones"), "==", "Rocks and stones."),
     }) :));
-}
 
-nosave private int LookCounter = 0;
-void test_applies () {
-    expect_function("direct_look_at_str", testOb);
-    expect_function("direct_look_str", testOb);
-    expect_function("do_look_at_str", testOb);
-    expect_function("do_look_str", testOb);
+    expect("set_look handles bad argument 1", (: ({
+        assert((: testOb->set_look() :), "catch", "*Bad argument 1 to look->set_look\n"),
+        assert((: testOb->set_look(0) :), "catch", "*Bad argument 1 to look->set_look\n"),
+        assert((: testOb->set_look(0.0) :), "catch", "*Bad argument 1 to look->set_look\n"),
+        assert((: testOb->set_look(({})) :), "catch", "*Bad argument 1 to look->set_look\n"),
+        assert((: testOb->set_look(([])) :), "catch", "*Bad argument 1 to look->set_look\n"),
+        assert((: testOb->set_look((: 1 :)) :), "catch", "*Bad argument 1 to look->set_look\n"),
+    }) :));
+    expect("set_look handles bad argument 2", (: ({
+        assert((: testOb->set_look("") :), "catch", "*Bad argument 2 to look->set_look\n"),
+        assert((: testOb->set_look("", 0) :), "catch", "*Bad argument 2 to look->set_look\n"),
+        assert((: testOb->set_look("", 0.0) :), "catch", "*Bad argument 2 to look->set_look\n"),
+        assert((: testOb->set_look("", ({})) :), "catch", "*Bad argument 2 to look->set_look\n"),
+        assert((: testOb->set_look("", ([])) :), "catch", "*Bad argument 2 to look->set_look\n"),
+    }) :));
 
-    // setup test object
-    // if (testOb) destruct(testOb);
-    // testOb = new(STD_LIVING); // need living for handle_move maybe?
+    expect("set_looks handles bad argument 1", (: ({
+        assert((: testOb->set_looks() :), "catch", "*Bad argument 1 to look->set_looks\n"),
+        assert((: testOb->set_looks("") :), "catch", "*Bad argument 1 to look->set_looks\n"),
+        assert((: testOb->set_looks(0) :), "catch", "*Bad argument 1 to look->set_looks\n"),
+        assert((: testOb->set_looks(0.0) :), "catch", "*Bad argument 1 to look->set_looks\n"),
+        assert((: testOb->set_looks(({})) :), "catch", "*Bad argument 1 to look->set_looks\n"),
+        assert((: testOb->set_looks((: 1 :)) :), "catch", "*Bad argument 1 to look->set_looks\n"),
+    }) :));
 
-    expect("look handles applies", (: ({
-        assert(testOb->direct_look_at_str(), "==", 0),
-        assert(testOb->direct_look_str(), "==", 0),
-
-        // @TODO how to test module/look when it doesn't have handle_move
-        // assert(testOb->handle_move("/domain/Nowhere/room/void.c"), "==", 1),
-        // assert(this_object()->handle_move("/domain/Nowhere/room/void.c"), "==", 1),
-        // assert(testOb->direct_look_at_str(), "==", 1),
-        // assert(testOb->direct_look_str(), "==", 1),
-
-        testOb->set_look("test", function(object character) {
-            LookCounter ++;
-            return; // @TODO check returning something and receive_message
-        }),
-        assert(testOb->query_looks(), "==", ({ "test" })),
-        testOb->do_look_at_str("test"),
-        assert(LookCounter, "==", 1),
-        testOb->do_look_str("test"),
-        assert(LookCounter, "==", 2),
+    expect("remove_look handles bad argument 1", (: ({
+        assert((: testOb->remove_look() :), "catch", "*Bad argument 1 to look->remove_look\n"),
+        assert((: testOb->remove_look(0) :), "catch", "*Bad argument 1 to look->remove_look\n"),
+        assert((: testOb->remove_look(0.0) :), "catch", "*Bad argument 1 to look->remove_look\n"),
+        assert((: testOb->remove_look(({})) :), "catch", "*Bad argument 1 to look->remove_look\n"),
+        assert((: testOb->remove_look(([])) :), "catch", "*Bad argument 1 to look->remove_look\n"),
+        assert((: testOb->remove_look((: 1 :)) :), "catch", "*Bad argument 1 to look->remove_look\n"),
     }) :));
 }
 
-// @TODO bad arguments
+nosave private int LookCounter = 0;
+void test_handle_look () {
+    expect_function("handle_look", testOb);
+
+    expect("handle_look returns description", (: ({
+        testOb->set_look("test", function(object character) {
+            LookCounter ++;
+            return "Test description. " + LookCounter;
+        }),
+        testOb->set_look("quiz", "Quiz description."),
+        assert(testOb->query_looks(), "==", ({ "quiz", "test", })),
+        assert(testOb->handle_look("test"), "==", "Test description. 1"),
+        assert(LookCounter, "==", 1),
+        assert(testOb->handle_look("test"), "==", "Test description. 2"),
+        assert(LookCounter, "==", 2),
+        assert(testOb->handle_look("quiz"), "==", "Quiz description."),
+    }) :));
+
+    expect("handle_look handles bad argument 1", (: ({
+        assert((: testOb->handle_look() :), "catch", "*Bad argument 1 to look->handle_look\n"),
+        assert((: testOb->handle_look(0) :), "catch", "*Bad argument 1 to look->handle_look\n"),
+        assert((: testOb->handle_look(0.0) :), "catch", "*Bad argument 1 to look->handle_look\n"),
+        assert((: testOb->handle_look(({})) :), "catch", "*Bad argument 1 to look->handle_look\n"),
+        assert((: testOb->handle_look(([])) :), "catch", "*Bad argument 1 to look->handle_look\n"),
+        assert((: testOb->handle_look((: 1 :)) :), "catch", "*Bad argument 1 to look->handle_look\n"),
+    }) :));
+}
