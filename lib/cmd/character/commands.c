@@ -1,5 +1,5 @@
 void command (string input, mapping flags) {
-    object tc = this_character(), target = tc;
+    object tc = this_character();
     mapping actions = ([]);
     string *border, subtitle, *body = ({});
     mapping header;
