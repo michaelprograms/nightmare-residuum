@@ -20,7 +20,7 @@ void test_is_item () {
     }) :));
 }
 
-void test_item_verb_look_applies () {
+void test_verb_look_applies () {
     object r = new(STD_ROOM);
 
     expect_function("direct_look_at_obj", testOb);
@@ -48,7 +48,7 @@ void test_item_verb_look_applies () {
     if (r) destruct(r);
 }
 
-void test_item_verb_drop_applies () {
+void test_verb_drop_applies () {
     expect_function("direct_drop_obj", testOb);
 
     expect("item handles verb apply direct_drop_obj", (: ({
@@ -62,7 +62,7 @@ void test_item_verb_drop_applies () {
     }) :));
 }
 
-void test_item_verb_give_applies () {
+void test_verb_give_applies () {
     expect_function("direct_give_obj_to_liv", testOb);
 
     expect("item handles verb apply direct_give_obj_to_liv", (: ({
@@ -74,7 +74,7 @@ void test_item_verb_give_applies () {
     }) :));
 }
 
-void test_item_verb_get_obj_applies () {
+void test_verb_get_obj_applies () {
     expect_function("direct_get_obj", testOb);
 
     expect("item handles verb apply direct_get_obj", (: ({
@@ -89,7 +89,43 @@ void test_item_verb_get_obj_applies () {
     }) :));
 }
 
-void test_item_verb_get_obj_from_objapplies () {
+nosave private int GetCounter = 0;
+void test_no_get () {
+    expect_function("query_no_get", testOb);
+    expect_function("set_no_get", testOb);
+
+    testOb->set_name("test item");
+
+    expect("set_no_get and direct_get_obj behave", (: ({
+        assert(environment(testOb), "==", 0),
+        assert(environment(), "==", find_object("/domain/Nowhere/room/void.c")),
+        assert(testOb->handle_move("/domain/Nowhere/room/void.c"), "==", 1),
+        assert(testOb->query_no_get(), "==", UNDEFINED),
+
+        // test int
+        testOb->set_no_get(1),
+        assert(testOb->query_no_get(), "==", 1),
+        assert(testOb->direct_get_obj(), "==", "You can't get the test item."),
+        assert(environment(testOb), "==", find_object("/domain/Nowhere/room/void.c")),
+
+        // test str
+        testOb->set_no_get("Nope, no get."),
+        assert(testOb->query_no_get(), "==", "Nope, no get."),
+        assert(testOb->direct_get_obj(), "==", "Nope, no get."),
+        assert(environment(testOb), "==", find_object("/domain/Nowhere/room/void.c")),
+
+        // test fn
+        testOb->set_no_get(function (object character) {
+            GetCounter ++;
+            return "Function says no.";
+        }),
+        assert(!!functionp(testOb->query_no_get()), "==", 1),
+        assert(testOb->direct_get_obj(), "==", "Function says no."),
+        assert(environment(testOb), "==", find_object("/domain/Nowhere/room/void.c")),
+    }) :));
+}
+
+void test_verb_get_obj_from_obj_applies () {
     expect_function("direct_get_obj_from_obj", testOb);
 
     expect("item handles verb apply direct_get_obj_from_obj", (: ({

@@ -1,7 +1,19 @@
 inherit STD_OBJECT;
 inherit M_CLEAN;
 
+nosave private mixed __NoGet;
+
 int is_item () { return 1; }
+
+mixed query_no_get () {
+    return __NoGet;
+}
+void set_no_get (mixed condition) {
+    if (!stringp(condition) && !intp(condition) && !functionp(condition)) {
+        error("Bad argument 1 to item->set_no_get");
+    }
+    __NoGet = condition;
+}
 
 /* ----- parser applies ----- */
 
@@ -24,6 +36,15 @@ mixed direct_get_obj (object ob, string str) {
             return 0;
         } else {
             return "You can't get what isn't here.";
+        }
+    }
+    if (__NoGet) {
+        if (functionp(__NoGet)) {
+            return evaluate(__NoGet, previous_object());
+        } else if (stringp(__NoGet)) {
+            return __NoGet;
+        } else if (intp(__NoGet)) {
+            return "You can't get the "+ query_name() + ".";
         }
     }
     return 1;

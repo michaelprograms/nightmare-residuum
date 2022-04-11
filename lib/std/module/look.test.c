@@ -94,7 +94,7 @@ void test_handle_look () {
     expect_function("handle_look", testOb);
 
     expect("handle_look returns description", (: ({
-        testOb->set_look("test", function(object character) {
+        testOb->set_look("test", function (object character) {
             LookCounter ++;
             return "Test description. " + LookCounter;
         }),

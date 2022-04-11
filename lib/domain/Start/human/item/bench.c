@@ -6,5 +6,5 @@ void create () {
     set_id(({"bench"}));
     set_short("a wooden bench");
     set_long("A wooden bench.");
-    // @TODO set_no_get("You cannot get that.");
+    set_no_get(1);
 }
