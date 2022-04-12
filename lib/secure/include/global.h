@@ -16,6 +16,7 @@
 #define STD_VERB        "/std/verb.c"
 #define STD_WEAPON      "/std/weapon.c"
 
+// std item
 #define ITEM_COINS      "/std/item/coins.c"
 #define ITEM_CORPSE     "/std/item/corpse.c"
 

@@ -23,6 +23,7 @@ void create () {
         "west": HUMAN_ROOM + "market_st_w1.c",
     ]));
     set_reset(([
+        HUMAN_ITEM + "storage_bin.c": 1,
         HUMAN_ITEM + "obelisk.c": 1,
         HUMAN_ITEM + "plum_tree.c": 1,
         HUMAN_ITEM + "bench.c": 2,
