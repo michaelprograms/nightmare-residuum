@@ -33,12 +33,20 @@ int handle_receive (object ob) {
         if (ob->is_living()) {
             foreach (object o in query_living_contents() + query_item_contents() - ({ ob })) {
                 // call out to delay fn til after move
-                call_out_walltime((: $(o)->handle_receive_living_in_env($(ob)) :), 0);
+                call_out_walltime(function (object ob, object o) {
+                    if (objectp(ob) && objectp(o)) {
+                        return o->handle_receive_living_in_env(ob);
+                    }
+                }, 0, ob, o);
             }
         } else if (ob->is_item()) {
             foreach (object o in query_living_contents() + query_item_contents() - ({ ob })) {
                 // call out to delay fn til after move
-                call_out_walltime((: $(o)->handle_receive_item_in_env($(ob)) :), 0);
+                call_out_walltime(function (object ob, object o) {
+                    if (objectp(ob) && objectp(o)) {
+                        return o->handle_receive_item_in_env(ob);
+                    }
+                }, 0, ob, o);
             }
         }
     }
