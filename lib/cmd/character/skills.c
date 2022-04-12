@@ -1,24 +1,32 @@
 void command (string input) {
     object tc = this_character(), target = tc;
-    string *skills = sort_array(tc->query_all_skills(), 1), *list = ({});
-    int width, columns;
+    string *skills;
+    string *border, subtitle, *body = ({});
 
     if (input && tc->query_immortal()) {
         if (find_character(input)) target = find_character(input);
         else if(present(input, environment(tc))) target = present(input, environment(tc));
     }
 
-    write(format_header_bar("SKILLS", (target != tc ? target->query_cap_name() : 0)) + "\n\n");
-
+    skills = sort_array(tc->query_all_skills(), 1);
     if (sizeof(skills)) {
-        width = this_user()->query_account()->query_setting("width") || 80;
-        columns = width / 40;
-
+        mapping b = ([
+            "header": "Combat",
+            "columns": 2,
+            "items": ({ }),
+        ]);
         foreach (string skill in skills) {
-            list += ({ sprintf("  %-18s %4s %4s", skill, "" + target->query_skill(skill), target->query_skill_progress(skill)) });
+            b["items"] += ({ sprintf("%-18s %4s %4s", skill, "" + target->query_skill(skill), target->query_skill_progress(skill)) });
         }
-        write(format_page(list, columns));
+        body += ({ b });
     }
 
-    write("\n" + format_footer_bar() + "\n");
+    border = format_border(([
+        "title": "SKILLS",
+        "subtitle": target->query_cap_name(),
+        "body": body,
+    ]));
+    foreach (string line in border) {
+        message("system", line + "\n", tc);
+    }
 }
