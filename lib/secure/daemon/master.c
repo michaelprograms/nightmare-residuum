@@ -30,8 +30,8 @@ string privs_file (string filename) {
 
 // This apply is called after master has been loaded.
 // Returns an array of filenames to preload.
-string *epilog (int load_empty) {
-    string *preload = ({});
+varargs string *epilog (int load_empty) {
+    string *preload = ({ });
     if (!load_empty && file_size(CFG_PRELOAD) > 0) {
         preload = filter_array(explode(read_file(CFG_PRELOAD), "\n") - ({ "" }), (: $1[0] != '#' :));
     }
@@ -49,7 +49,7 @@ void flag (string flag) {
 
 // This apply is called for each filename returned by epilog.
 void preload (string filename) {
-    catch(load_object(filename));
+    catch (load_object(filename));
 }
 
 // This apply is called by the driver during MSSP requests.

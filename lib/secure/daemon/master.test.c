@@ -26,7 +26,7 @@ void test_applies () {
     expect_function("connect", testOb);
 
     expect("connect returns a valid user object", (: ({
-        assert(file_name(userOb = testOb->connect()), "regex", OBJ_USER+"#[0-9]+"),
+        assert(file_name(userOb = testOb->connect(0)), "regex", OBJ_USER+"#[0-9]+"),
         assert(userOb->query_account(), "==", 0),
         assert(userOb->query_character(), "==", 0),
         assert(userOb->query_shell(), "==", 0),
@@ -47,8 +47,9 @@ void test_startup_applies () {
     expect_function("epilog", testOb);
 
     expect("epilog returns preload array", (: ({
-        assert(typeof(testOb->epilog()), "==", "array"),
-        assert(sizeof(testOb->epilog()) > 0, "==", 1),
+        assert(typeof(testOb->epilog(0)), "==", "array"),
+        assert(sizeof(testOb->epilog(0)) > 0, "==", 1),
+        assert(sizeof(testOb->epilog(1)) > 0, "==", 0),
     }) :));
 
     expect_function("flag", testOb);
