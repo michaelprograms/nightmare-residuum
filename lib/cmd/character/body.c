@@ -1,22 +1,35 @@
 void command (string input) {
     object tc = this_character(), target = tc;
-    string *limbs, *sorted;
+    string *border, subtitle, *items = ({ });
 
     if (input && tc->query_immortal()) {
         if (find_character(input)) target = find_character(input);
         else if(present(input, environment(tc))) target = present(input, environment(tc));
     }
 
-    write(format_header_bar("BODY", (target != tc ? target->query_cap_name() : 0)) + "\n\n");
-
-    limbs = target->query_limbs();
-    sorted = ({ });
-    foreach (string type in ({"head","torso","arm","hand","leg","tail","foot","paw",})) {
-        foreach (string l in sort_array(filter_array(limbs, (: regexp($1, $(type)) :)), 1)) {
+    foreach (string type in ({ "head", "torso", "arm", "hand", "leg", "foot", "paw", "tail", })) {
+        foreach (string l in sort_array(filter_array(target->query_limbs(), (: regexp($1, $(type)) :)), 1)) {
             mapping limb = target->query_limb(l);
-            write(sprintf("  %-16s %3s", l, (limb["damage"]*100/limb["maxdamage"])+"%") + "\n");
+            items += ({ sprintf("  %-16s %3s", l, (limb["damage"]*100/limb["maxdamage"])+"%") });
         }
     }
 
-    write("\n" + format_footer_bar() + "\n");
+    border = format_border(([
+        "title": "BODY",
+        "subtitle": target->query_cap_name(),
+        "header": ([
+            "items": ({
+                "You have the body of a " + target->query_species(),
+            }),
+            "columns": 1,
+            "align": "center",
+        ]),
+        "body": ([
+            "items": items,
+            "columns": 2,
+        ]),
+    ]));
+    foreach (string line in border) {
+        message("system", line + "\n", tc);
+    }
 }
