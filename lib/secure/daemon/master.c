@@ -241,9 +241,6 @@ void log_error (string file, string msg) {
     }
 
     if (regexp(msg, "Warning: ")) {
-        if (sizeof(previous_object(-1)) > 0 && base_name(previous_object(-1)[<1]) != D_TEST[0..<2]) {
-            return;
-        }
         lcMsg = lower_case(msg);
         foreach (string warning in read_file_disabled_warnings(file)) {
             if (regexp(lcMsg, lower_case(warning))) {
@@ -258,11 +255,11 @@ void log_error (string file, string msg) {
         write_file("/log/" + dest, ctime() + " " + msg);
         msg = replace_string(msg, ": ", ": %^RED%^BOLD%^Error%^RESET%^: ", 1);
     }
-    if (msg && this_user(1) ) { // @TODO && find_object(OB_SIMUL_EFUN) && this_user(1)->query_immortal()
-        message("error", msg, this_user(1));
-    } else if (sizeof(previous_object(-1)) > 1 && previous_object(-1)[<1]) { // @TODO check these <1..<1
-        if (base_name(previous_object(-1)[<1]) == D_TEST[0..<2]) {
-            write("??? " + msg + "\n");
+    if (msg && this_user() && this_user()->query_immortal()) {
+        message("error", msg, this_user());
+    } else if (sizeof(previous_object(-1)) > 1 && previous_object(-1)[<1]) {
+        if (base_name(previous_object(-1)[<1]) == D_TEST[0..<3]) {
+            write(msg + "\n");
         }
     }
 }
