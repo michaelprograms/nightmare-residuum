@@ -1,6 +1,6 @@
 void command (string input) {
     object tc = this_character(), target = tc;
-    string *border, subtitle, *items = ({ });
+    string *border, *items = ({ });
 
     if (input && tc->query_immortal()) {
         if (find_character(input)) target = find_character(input);
