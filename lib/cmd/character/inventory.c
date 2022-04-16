@@ -1,5 +1,4 @@
-void command (string input) {
-    mixed inventory = unique_array(all_inventory(this_character()), (: $1->query_short() :));
+void command (string input, mapping flags) {
     mixed *list;
     string *shorts, *coins = ({});
 
