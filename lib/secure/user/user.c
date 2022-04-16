@@ -129,7 +129,7 @@ string query_terminal_color () {
     return __TerminalColor;
 }
 
-nomask void quit_character (int destructing) {
+nomask varargs void quit_character (int destructing) {
     message("system", "Reality "+(random(2)?"explodes into an im":"implodes into an ex")+"plosion of irreality.\n", this_object());
     character_exit();
     shell_stop();
