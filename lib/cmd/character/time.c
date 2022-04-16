@@ -1,8 +1,17 @@
-void command (string input) {
-    write(format_header_bar("TIME", mud_name()) + "\n\n");
+void command (string input, mapping flags) {
+    string *border;
 
-    write("  %^BOLD%^" + sprintf("%-18s", "Servertime:") + "%^RESET%^ " + ctime(time()) + "\n");
-    write("  %^BOLD%^" + sprintf("%-18s", "Uptime:") + "%^RESET%^ " + time_from_seconds(uptime()) + "\n");
-
-    write("\n" + format_footer_bar() + "\n");
+    border = format_border(([
+        "title": "TIME",
+        "body": ([
+            "items": ({
+                sprintf("%-18s", "Servertime:") + " " + ctime(time()),
+                sprintf("%-18s", "Uptime:") + " " + time_from_seconds(uptime())
+            }),
+            "columns": 1,
+        ]),
+    ]));
+    foreach (string line in border) {
+        message("system", line + "\n", this_character());
+    }
 }
