@@ -255,7 +255,7 @@ void log_error (string file, string msg) {
         write_file("/log/" + dest, ctime() + " " + msg);
         msg = replace_string(msg, ": ", ": %^RED%^BOLD%^Error%^RESET%^: ", 1);
     }
-    if (msg && this_user() && this_user()->query_immortal()) {
+    if (msg && this_character() && this_character()->query_immortal()) {
         message("error", msg, this_user());
     } else if (sizeof(previous_object(-1)) > 1 && previous_object(-1)[<1]) {
         if (base_name(previous_object(-1)[<1]) == D_TEST[0..<3]) {
