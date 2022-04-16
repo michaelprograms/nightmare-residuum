@@ -26,7 +26,6 @@ void create () {
 }
 
 void heart_beat () {
-    int diff;
     ::heart_beat();
     __ConnectionTime ++; // 1 second heartbeat
 
@@ -159,7 +158,7 @@ void exit_freezer () {
 /* ----- describe environments ---- */
 
 private void describe_environment_living_contents () {
-    object env = environment(), *characters;
+    object env = environment();
     mixed *list;
     string *shorts, conjunctions;
 

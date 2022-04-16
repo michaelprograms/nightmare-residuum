@@ -24,7 +24,7 @@ void handle_defeat (int keep);
 string query_gender ();
 void set_gender (string str);
 string query_species ();
-void set_species ();
+void set_species (string species);
 int query_level ();
 void set_level (int l);
 private void update_limbs ();
@@ -39,7 +39,7 @@ varargs mixed handle_unwear (object armor);
 string *query_wieldable_limbs ();
 object query_wielded (string limb);
 object *query_wielded_weapons ();
-string query_wielded_limbs (object ob);
+string *query_wielded_limbs (object ob);
 varargs mixed handle_wield (object weapon, string limb);
 varargs mixed handle_unwield (object weapon, string limb);
 

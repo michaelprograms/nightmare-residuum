@@ -28,9 +28,6 @@ void test_lifecycle_functions () {
 
 void test_parser_applies () {
     expect_function("is_living", testOb);
-    expect_function("inventory_visible", testOb);
-    expect_function("inventory_accessible", testOb);
-
     expect("object handles parser applies", (: ({
         assert(testOb->is_living(), "==", 0),
         assert(testOb->inventory_visible(), "==", 0),
