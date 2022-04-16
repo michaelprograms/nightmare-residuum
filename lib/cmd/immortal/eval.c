@@ -14,7 +14,7 @@ void create_tmp_file (string file, string input);
 // }
 // void abort () { }
 
-void command (string input) {
+void command (string input, mapping flags) {
     string file = user_path(this_character()->query_key_name());
 
     if (file_size(file) != -2) {
