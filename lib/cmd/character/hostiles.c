@@ -1,16 +1,26 @@
 void command (string input) {
-    object *hostiles = this_character()->query_hostiles();
+    object tc = this_character(), target = tc;
+    string *border, *items = ({ });
 
-    write(format_header_bar("HOSTILES") + "\n");
-
-    if (hostiles && sizeof(hostiles)) {
-        foreach (object ob in this_character()->query_hostiles()) {
-            write("\n    " + ob->query_cap_name());
-        }
-        write("\n");
-    } else {
-        write("\n    No current hostiles\n");
+    if (input && tc->query_immortal()) {
+        if (find_character(input)) target = find_character(input);
+        else if(present(input, environment(tc))) target = present(input, environment(tc));
     }
 
-    write("\n" + format_footer_bar() + "\n");
+    foreach (object ob in target->query_hostiles()) {
+        items += ({ ob->query_cap_name() });
+    }
+
+    border = format_border(([
+        "title": "HOSTILES",
+        "subtitle": target->query_cap_name(),
+        "body": ([
+            "items": sizeof(items) ? items : ({ "No current hostiles" }),
+            "columns": sizeof(items) ? 2 : 1,
+            "align": sizeof(items) ? "left" : "center",
+        ]),
+    ]));
+    foreach (string line in border) {
+        message("system", line + "\n", tc);
+    }
 }
