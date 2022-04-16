@@ -9,7 +9,7 @@ string format_object (string path, string *children, int indent) {
     return line;
 }
 
-void command (string input) {
+void command (string input, mapping flags) {
     object *obs = filter_array(objects(), (:$1 && regexp(file_name($1), "#"):));
     mapping structure = ([]);
 
