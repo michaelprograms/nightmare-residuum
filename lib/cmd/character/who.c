@@ -1,4 +1,4 @@
-void command (string input) {
+void command (string input, mapping flags) {
     mapping data = ([
         "title": "WHO",
         "subtitle": mud_name(),
@@ -47,13 +47,12 @@ void command (string input) {
         ]);
         footerList += ({ nImm + " immortal" + (nImm > 1 ? "s" : "") });
     }
-    if (nChar > 0) {
-        data["body"] = ([
-            "items": bodyList,
-            "columns": 1,
-        ]);
-        footerList += ({ nChar + " character" + (nChar > 1 ? "s" : "") });
-    }
+    data["body"] = ([
+        "items": sizeof(bodyList) ? bodyList : ({ "No player characters connected" }),
+        "columns": 1,
+        "align": sizeof(bodyList) ? "left" : "center",
+    ]);
+    footerList += ({ nChar + " character" + (nChar != 1 ? "s" : "") });
     data["footer"]["items"] = ({ implode(footerList, ", ") });
 
     border = format_border(data);
