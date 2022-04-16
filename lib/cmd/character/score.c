@@ -1,4 +1,4 @@
-void command (string input) {
+void command (string input, mapping flags) {
     object tc = this_character(), target = tc;
     string *border;
 
