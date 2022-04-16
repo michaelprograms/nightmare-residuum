@@ -1,4 +1,4 @@
-void command (string input) {
+void command (string input, mapping flags) {
     if (!this_character()) {
         write("Quitting out...\n");
     } else {
