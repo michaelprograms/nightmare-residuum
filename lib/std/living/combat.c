@@ -12,6 +12,7 @@ protected void handle_combat () {
     int min, max, hits;
 
     if (time() % 2 || !(target = query_target_hostile())) return;
+    if (this_object()->query_disable()) return;
 
     weapons = query_wielded_weapons() + query_wieldable_limbs();
     min = sizeof(weapons) + query_stat("agility") / 100;
@@ -65,14 +66,15 @@ private void handle_combat_hit (object target, mixed weapon) {
         int damage = 0;
 
         // Base Damage
-        damage = query_stat("strength") * 10 / 100;
+        damage = secure_random(10);
+        damage += (query_stat("strength") * 10 / 100);
         damage += secure_random(query_stat("strength") * 10 / 100 + 1);
         damage += secure_random(query_sp() * 10 / 100 + 1);
         damage += secure_random(query_stat("luck") * 5 / 100 + 1);
         damage += secure_random(query_skill(type + " attack") * 20 / 100 + 1);
 
         // apply target mitigations
-        damage -= query_stat("endurance") * 10 / 100;
+        damage -= (query_stat("endurance") * 10 / 100);
         damage -= secure_random(query_stat("endurance") * 10 / 100 + 1);
         damage -= secure_random(query_hp() * 10 / 100 + 1);
         damage -= secure_random(query_stat("luck") * 10 / 100 + 1);
