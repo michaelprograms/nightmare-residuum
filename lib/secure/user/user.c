@@ -1,9 +1,10 @@
+#include "user.h"
+
 inherit "/secure/user/account.c";
 inherit "/secure/user/character.c";
 inherit "/secure/user/input.c";
+inherit "/secure/user/output.c";
 inherit "/secure/user/shell.c";
-
-#include "user.h"
 
 #define CONNECT_TIMEOUT 60
 

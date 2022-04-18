@@ -75,6 +75,9 @@ varargs nomask void input_next (function inputFn, mixed prompt, int secure, int 
 nomask void input_pop ();
 nomask void input_focus ();
 
+/* --- output --- */
+void handle_pager (mixed arg);
+
 /* --- shell --- */
 object query_shell ();
 protected nomask void shell_start ();
