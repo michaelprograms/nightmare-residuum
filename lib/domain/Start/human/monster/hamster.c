@@ -2,11 +2,7 @@ inherit STD_MONSTER;
 
 void create () {
     ::create();
-    if (secure_random(2)) {
-        set_gender("male");
-    } else {
-        set_gender("female");
-    }
+    set_gender(element_of(({ "male", "female" })));
     set_id(({ "hamster" }));
     set_adjective(({ "small" }));
     set_name("small hamster");
