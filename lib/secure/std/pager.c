@@ -3,6 +3,11 @@ nosave private string *__Lines;
 nosave private int __LineNum, __LinesCount;
 nosave private int __ChunkSize = 25;
 
+nomask private void done () {
+    __User->input_pop();
+    destruct(this_object());
+}
+
 nomask private string prompt () {
     int chunkEnd = __LineNum + __ChunkSize;
     int percent;
@@ -17,11 +22,10 @@ nomask private string prompt () {
 
     prompt = sprintf("Lines %i to %i of %i - %i%% ", __LineNum + 1, chunkEnd, __LinesCount, percent);
     message("system", "----- %^BOLD%^" + prompt + "%^RESET%^ -----", __User);
-}
 
-nomask private void done () {
-    __User->input_pop();
-    destruct(this_object());
+    if (chunkEnd == __LinesCount) {
+        done();
+    }
 }
 
 private void handle_page (mixed arg) {
@@ -46,8 +50,7 @@ private void handle_page (mixed arg) {
     for (i = __LineNum; i < l && i < __LineNum + __ChunkSize; i ++) {
         message("system", __Lines[i] + "\n", __User);
     }
-    if (__LinesCount >= __ChunkSize) { // && __LineNum + __ChunkSize < __LinesCount) {
-        write("__LineNum: "+__LineNum+"\n");
+    if (__LinesCount >= __ChunkSize) {
         return; // to prompt
     }
 
