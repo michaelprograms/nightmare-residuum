@@ -19,7 +19,7 @@ void close_call_back (int fd) {
     map_delete(fds, fd);
 }
 
-void command (string input) {
+void command (string input. mapping flags) {
     string cwd, file;
     string *params;
     int fd;

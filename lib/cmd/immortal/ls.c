@@ -12,7 +12,7 @@ private void output_long (string dir, string path) { // mixed *files) {
     }
 }
 
-void command (string input) {
+void command (string input, mapping flags) {
     string path, dir;
 
     if (!input || input == "") {

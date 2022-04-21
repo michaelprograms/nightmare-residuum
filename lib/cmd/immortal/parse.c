@@ -1,4 +1,4 @@
-void command (string input) {
+void command (string input, mapping flags) {
     if (!input) {
         write("parse: input required.\n");
         return;

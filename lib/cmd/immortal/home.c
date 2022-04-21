@@ -1,4 +1,4 @@
-void command (string input) {
+void command (string input, mapping flags) {
     if (!input) {
         input = "/realm/" + this_character()->query_key_name() + "/workroom.c";
     } else {
