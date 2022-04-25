@@ -14,7 +14,7 @@ void create () {
 
     ]));
     set_reset(([
-        HUMAN_ITEM + "plum_tree.c": 1,
+        HUMAN_ITEM + "apple_tree.c": 1,
         HUMAN_MONSTER + "ant.c": !random(3),
         HUMAN_MONSTER + "bee.c": !random(3),
         HUMAN_MONSTER + "beetle.c": !random(3),
