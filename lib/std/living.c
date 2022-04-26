@@ -128,11 +128,11 @@ int handle_go (mixed dest, string verb, string dir) {
     return move;
 }
 
-mixed direct_look_at_liv () {
+mixed direct_look_at_liv (mixed args...) {
     return environment() == environment(previous_object());
 }
-mixed direct_look_liv () {
-    return direct_look_at_liv();
+mixed direct_look_liv (mixed args...) {
+    return direct_look_at_liv(args);
 }
 mixed indirect_give_obj_to_liv (object ob, object liv, string obStr, mixed livStr) {
     if (previous_object() == liv && environment(ob) == liv) return "You already have that.";
