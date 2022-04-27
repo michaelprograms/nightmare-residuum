@@ -17,11 +17,11 @@ void set_no_get (mixed condition) {
 
 /* ----- parser applies ----- */
 
-mixed direct_look_at_obj () {
+mixed direct_look_at_obj (mixed args...) {
     return environment() && (environment() == environment(previous_object()) || environment() == previous_object());
 }
-mixed direct_look_obj () {
-    return direct_look_at_obj();
+mixed direct_look_obj (mixed args...) {
+    return direct_look_at_obj(args);
 }
 mixed direct_drop_obj (object ob, string str) {
     return (environment() == previous_object());
