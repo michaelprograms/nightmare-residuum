@@ -22,7 +22,7 @@ string *query_wieldable_limbs () {
 nosave private object *__WieldedWeapons;
 object *query_wielded_weapons () {
     return __WieldedWeapons;
-};
+}
 
 void test_is_weapon () {
     expect_function("is_weapon", testOb);
