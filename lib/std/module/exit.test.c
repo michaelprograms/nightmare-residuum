@@ -136,9 +136,6 @@ void test_handle_go () {
 }
 
 void test_query_defaults () {
-    string *enterValues = ({}), *enterResults = ({});
-    string *outValues = ({}), *outResults = ({});
-
     expect_function("query_default_enter", testOb);
     expect_function("query_default_out", testOb);
 
