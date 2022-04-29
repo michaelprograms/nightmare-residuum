@@ -29,12 +29,11 @@ void set_wielded (object wielder) {
     __Wielder = wielder;
 }
 
-mixed direct_wield_obj (object ob, string str) {
+mixed direct_wield_obj (mixed args...) {
     object po = previous_object();
-    string *wieldable = po->query_wieldable_limbs();
     return environment() == po && !__Wielder && member_array(this_object(), po->query_wielded_weapons()) == -1;
 }
-mixed direct_unwield_obj (object ob, string str) {
+mixed direct_unwield_obj (mixed args...) {
     object po = previous_object();
     return environment() == po && __Wielder == po && member_array(this_object(), po->query_wielded_weapons()) > -1;
 }
