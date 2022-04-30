@@ -76,6 +76,7 @@ mixed handle_go (object ob, string method, string dir) {
             }
             return 1;
         } else {
+            message("action", "Something prevents you from going in that direction.\n", ob);
             return 0;
         }
     } else {
