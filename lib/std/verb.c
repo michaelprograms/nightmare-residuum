@@ -38,7 +38,7 @@ mixed check_disable () {;
     }
 }
 
-mixed can_verb_rule (string verb, string rule) {
+mixed can_verb_rule (mixed args...) {
     mixed tmp;
     if ((__Requirements & REQUIREMENT_BUSY) && (tmp = check_busy()) != 1) return tmp;
     if ((__Requirements & REQUIREMENT_DISABLE) && (tmp = check_disable()) != 1) return tmp;
