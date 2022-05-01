@@ -1,16 +1,20 @@
 void command (string input, mapping flags) {
-    mixed *list;
-    string *shorts, *coins = ({});
+    object tc = this_character(), target = tc;
+    object *inv;
+    string *coins = ({ }), *items = ({ });
+    string *border;
+    mapping footer;
 
-    message("action", format_header_bar("INVENTORY") + "\n\n", this_character());
+    if (input && tc->query_immortal()) {
+        if (find_character(input)) target = find_character(input);
+        else if(present(input, environment(tc))) target = present(input, environment(tc));
+    }
 
-    list = unique_array(all_inventory(this_character()), (: $1->query_short() :));
-    if (sizeof(list)) {
-        shorts = sort_array(map_array(list, (: capitalize(consolidate(sizeof($1), $1[0]->query_short())) :)), 1);
-        shorts = map_array(shorts, (: $1 :));
-        message("action", implode(shorts, "\n") + "\n\n", this_object());
+    inv = unique_array(all_inventory(target), (: $1->query_short() :));
+    if (sizeof(inv)) {
+        string *shorts = map(sort_array(map(inv, (: capitalize(consolidate(sizeof($1), $1[0]->query_short())) :)), 1), (: $1 :));
         foreach (string short in shorts) {
-            message("action", "  " + short + "%^RESET%^\n", this_character());
+            items += ({ short });
         }
     }
 
@@ -21,8 +25,27 @@ void command (string input, mapping flags) {
         }
     }
     if (sizeof(coins)) {
-        message("action", "  Currency: " + conjunction(coins) + "\n", this_character());
+        footer = ([
+            "header": "Currency",
+            "items": ({
+                "Currenc" + (sizeof(coins) > 1 ? "ies" : "y") + ": " + conjunction(coins),
+            }),
+            "columns": 1,
+            "align": "center",
+        ]);
     }
 
-    message("action", "\n" + format_footer_bar() + "\n", this_character());
+    border = format_border(([
+        "title": "INVENTORY",
+        "subtitle": target->query_cap_name(),
+        "body": ([
+            "items": items,
+            "columns": 1,
+        ]),
+        "footer": footer,
+    ]));
+    foreach (string line in border) {
+        message("system", line + "\n", tc);
+    }
+
 }
