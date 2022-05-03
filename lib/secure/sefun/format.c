@@ -86,7 +86,7 @@ varargs string format_page (string *items, int columns, int pad) {
                 row += sprintf("%' '"+sprintf("%d", (columns-j)*width)+"s", " ");
                 break;
             }
-            row += sprintf("%-"+sprintf("%d", width)+"s", items[i + j]); // @TODO for longer strings
+            row += sprintf("%-"+sprintf("%d", width)+"s", ""+items[i + j]); // @TODO for longer strings
         }
         rows += ({ row });
     }
