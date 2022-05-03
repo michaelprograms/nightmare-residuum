@@ -1,7 +1,9 @@
 void command (string input, mapping flags) {
     string *border, *sockets = ({}), *netStats = ({ });
 
-    sockets = map(socket_status(), (: sprintf("%2d    %-9s    %-8s    %-20s", $1[0], $1[1], $1[2], $1[3]) :));
+    foreach (mixed *s in socket_status()) {
+        sockets += ({ s[0], s[1], s[2], s[3], });
+    }
 
     foreach (string key, int value in filter_array(network_stats(), (:strsrch($1, "socket") > -1:))) {
         key = replace_string(key, " sockets", "");
@@ -13,9 +15,9 @@ void command (string input, mapping flags) {
         "title": "SOCKETS",
         "subtitle": mud_name(),
         "body": ([
-            "header": "Fd    State        Mode        Local Address",
+            "header": ({ "Fd", "State", "Mode", "Local Address", }),
             "items": sockets,
-            "columns": 1,
+            "columns": 4,
         ]),
         "footer": ([
             "items": netStats,
