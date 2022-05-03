@@ -75,9 +75,6 @@ void test_expects_passing () {
 }
 
 void test_expects_failing () {
-    string *arr1 = ({ "abc", "123", "!@#", });
-    string *arr2 = ({ "XYZ", "999", ",.'", });
-
     expect_next_failure();
     expect_function("nonexistant_function", testOb);
 
@@ -129,9 +126,9 @@ void test_expects_failing () {
 
     expect_next_failure();
     expect("assert condition 'catch' should fail", (: ({
-        assert((: "No error" :), "catch", "*Test Error\n"),
-        assert((: "Not an error" :), "catch", "*Test Error\n"),
-        assert((: "Success" :), "catch", "*Test Error\n"),
+        assert((: sprintf("%s", "No error") :), "catch", "*Test Error\n"),
+        assert((: sprintf("%s", "Not an error") :), "catch", "*Test Error\n"),
+        assert((: sprintf("%s", "Success") :), "catch", "*Test Error\n"),
     }) :));
 }
 
