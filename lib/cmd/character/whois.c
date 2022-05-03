@@ -1,29 +1,43 @@
-void command (string input) {
+void command (string input, mapping flags) {
+    object tc = this_character();
+    string *border;
+
     object char;
 
     if (!input || input == "") {
-        write("Whois which character name?\n");
+        message("action", "Whois which character name?\n", tc);
         return;
     }
 
     char = D_CHARACTER->query_whois_character(input);
     if (!char) {
-        write("There is no character with that name on " + mud_name() + "\n");
+        message("action", "There is no character with that name on " + mud_name() + ".\n", tc);
         return;
     }
 
-    write(format_header_bar("WHOIS") + "\n\n");
-
-    write("Name: " + char->query_cap_name() + "\n");
-    if (this_character()->query_immortal()) {
-        write("Account: " + char->query_account() + "\n");
-        // @TODO ip
+    border = format_border(([
+        "title": "SCORE",
+        "subtitle": char->query_cap_name(),
+        "header": ([
+            "items": ({
+                sprintf("%12s", "Account") + ": " + identify(char->query_account()), // @TODO
+                sprintf("%12s", "Created") + ": " + strftime("%Y/%m/%u", char->query_created()),
+            }),
+            "columns": 2,
+        ]),
+        "body": ([
+            "items": ({
+                sprintf("%12s", "Species") + ": " + capitalize(char->query_gender()) + " " + capitalize(char->query_species()),
+                sprintf("%12s", "Level") + ": " + char->query_level(),
+                sprintf("%12s", "Victories") + ": " + char->query_victory(),
+                sprintf("%12s", "Defeats") + ": " + char->query_defeat(),
+            }),
+            "columns": 2,
+        ]),
+    ]));
+    foreach (string line in border) {
+        message("system", line + "\n", tc);
     }
-    write("Species: " + char->query_species() + "\n");
-    write("Level: " + char->query_level() + "\n");
-    write("Created: " + ctime(char->query_created()) + "\n");
-    write("Last Action: " + time_ago(char->query_last_action()) + "\n");
 
-    write("\n" + format_footer_bar() + "\n");
     destruct(char);
 }
