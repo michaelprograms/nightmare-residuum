@@ -20,9 +20,6 @@ int hex_to_int (string base16);
 void display_combat_message (object source, object target, string limb, mixed weapon, string type, int damage);
 
 /* --- format --- */
-varargs string format_header_bar (string title, string optional);
-string format_divider_bar ();
-string format_footer_bar ();
 string format_exit_brief (string dir);
 string format_exit_verbose (string dir);
 string format_stat_brief (string stat);

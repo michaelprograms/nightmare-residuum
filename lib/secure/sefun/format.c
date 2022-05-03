@@ -8,65 +8,6 @@ private string query_account_setting (string setting) {
     return account->query_setting(setting);
 }
 
-varargs string format_header_bar (string title, string optional) {
-    int width, n = 0, ansi;
-    string bar;
-
-    if (!stringp(title)) error("Bad argument 1 to format->format_header_bar");
-
-    if (query_account_setting("screenreader") != "on") {
-        ansi = query_account_setting("ansi") == "on";
-        width = to_int(query_account_setting("width"));
-
-        bar = (ansi?"%^RESET%^CYAN%^":"") + "==";
-        bar += (ansi?"%^RESET%^":"") + "/ " + (ansi?"%^RESET%^BOLD%^":"") + title;
-        n += 4 + strlen(title);
-
-        if (optional) {
-            bar += ":" + (ansi?"%^RESET%^":"") + " " + optional;
-            n += 2 + strlen(optional);
-        } else {
-            bar += (ansi?"%^RESET%^":"");
-        }
-        bar += " \\" + (ansi?"%^CYAN%^":"") + "=";
-        n += 3;
-
-        for (int i = n; i < width; i ++) bar += "=";
-        bar += (ansi?"%^RESET%^":"");
-    } else {
-        bar = title + (optional ? ": " + optional : "");
-    }
-    return bar;
-}
-string format_divider_bar () {
-    int width, ansi;
-    string bar = "";
-
-    if (query_account_setting("screenreader") != "on") {
-        ansi = query_account_setting("ansi") == "on";
-        width = to_int(query_account_setting("width"));
-
-        bar = (ansi?"%^RESET%^BLUE%^":"") + "-------------------------";
-        for (int i = 25; i < width; i ++) bar += "-";
-        bar += (ansi?"%^RESET%^":"");
-    }
-    return bar;
-}
-string format_footer_bar () {
-    int width, ansi;
-    string bar = "";
-
-    if (query_account_setting("screenreader") != "on") {
-        ansi = query_account_setting("ansi") == "on";
-        width = to_int(query_account_setting("width"));
-
-        bar = (ansi?"%^RESET%^CYAN%^":"") + "=========================";
-        for (int i = 25; i < width; i ++) bar += "=";
-        bar += (ansi?"%^RESET%^":"");
-    }
-    return bar;
-}
-
 varargs string format_page (string *items, int columns, int pad) {
     int width, i, j, n;
     string *rows = ({});
