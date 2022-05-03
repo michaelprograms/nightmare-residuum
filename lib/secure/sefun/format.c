@@ -218,6 +218,7 @@ string format_integer (int num) {
 //         "align": "left|center",
 //     ]),
 //     "body": ([
+//         "header": "string" || ({ /* array of items */ }),
 //         "items": ({}),
 //         "columns": 2,
 //         "align": "left|center",
@@ -315,6 +316,9 @@ string *format_border (mapping data) {
                 if (stringp(child["header"])) {
                     line = "\u2502   " + (ansi?"%^WHITE%^BOLD%^":"") + child["header"] + (ansi?"%^BOLD_OFF%^CYAN%^":"") + sprintf("%' '"+sprintf("%d", width - 8 - strlen(child["header"]))+"s", "") + "   \u2502";
                     lines += ({ line });
+                } else if (arrayp(child["header"])) {
+                    string l = format_page(child["header"], child["columns"], 4);
+                    lines += ({ "\u2502   " + (ansi?"%^WHITE%^BOLD%^":"") + l + (ansi?"%^BOLD_OFF%^CYAN%^":"") + "   \u2502" });
                 }
                 // Body child lines
                 if (child["align"] == "center" && child["columns"] == 1) {
