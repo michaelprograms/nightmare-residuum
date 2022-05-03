@@ -241,22 +241,25 @@ void log_error (string file, string msg) {
     }
 
     if (regexp(msg, "Warning: ")) {
+        if (sizeof(previous_object(-1)) > 1 && base_name(previous_object(-1)[<1]) == D_TEST[0..<3] && previous_object()->query_expect_catch()) {
+            return;
+        }
         lcMsg = lower_case(msg);
         foreach (string warning in read_file_disabled_warnings(file)) {
             if (regexp(lcMsg, lower_case(warning))) {
                 return;
             }
         }
-        msg = replace_string(msg, "Warning: ", "%^ORANGE%^Warning%^RESET%^: ", 1);
+        msg = replace_string(msg, "Warning: ", "\e[33mWarning\e[0m: ", 1);
     } else {
         if (file_size("/log/" + dest) > 20000) { // 20 kb
-            rename("/log/" + dest, "/log/" + dest+"-"+time());
+            rename("/log/" + dest, "/log/" + dest + "-" + time());
         }
         write_file("/log/" + dest, ctime() + " " + msg);
-        msg = replace_string(msg, ": ", ": %^RED%^BOLD%^Error%^RESET%^: ", 1);
+        msg = replace_string(msg, ": ", ": \e[31;1mError\e[0m: ", 1);
     }
     if (msg && this_character() && this_character()->query_immortal()) {
-        message("error", msg, this_user());
+        message("wrap", msg, this_user());
     } else if (sizeof(previous_object(-1)) > 1 && previous_object(-1)[<1]) {
         if (base_name(previous_object(-1)[<1]) == D_TEST[0..<3]) {
             write(msg + "\n");
