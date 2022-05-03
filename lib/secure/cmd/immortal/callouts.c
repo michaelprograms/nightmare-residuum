@@ -1,15 +1,29 @@
-void command (string input) {
+void command (string input, mapping flags) {
     mixed *callouts;
+    string *border, *items = ({ });
 
-    write(format_header_bar("CALLOUTS", mud_name()) + "\n\n");
-    if (!sizeof(callouts = call_out_info())) {
-        write("No pending callouts.\n");
-    } else {
-        write(sprintf("%:-40s %:-25s Delay", "Object", "Function") + "\n");
+    if (sizeof(callouts = call_out_info())) {
         foreach (mixed *callout in callouts) {
             callout[1] = replace_string(callout[1], "\n", "\\n");
-            write(sprintf("%:-40O %:-25s %d\n", callout...) + "\n");
+            items += ({ callout... });
         }
     }
-    write("\n" + format_footer_bar() + "\n");
+
+    border = format_border(([
+        "title": "SOCKETS",
+        "subtitle": mud_name(),
+        "body": ([
+            "header": ({ "Object", "Function", "Delay", }),
+            "items": items,
+            "columns": 3,
+        ]),
+        "footer": ([
+            "items": ({ sizeof(items) + " callouts" }),
+            "columns": 1,
+            "align": "center",
+        ]),
+    ]));
+    foreach (string line in border) {
+        message("system", line + "\n", this_character());
+    }
 }
