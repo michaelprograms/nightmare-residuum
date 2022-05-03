@@ -21,7 +21,7 @@ int query_can_wear_armor (object ob) {
 nosave private object *__AllArmor;
 object *query_all_armor () {
     return __AllArmor;
-};
+}
 
 void test_is_armor () {
     expect_function("is_armor", testOb);
