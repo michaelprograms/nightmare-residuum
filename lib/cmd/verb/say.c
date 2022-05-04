@@ -10,8 +10,9 @@ void do_say () {
     write("Say what?\n");
 }
 
-int can_say_str () { return 1; }
-void do_say_str (string str) {
+int can_say_str (mixed args...) { return 1; }
+void do_say_str (mixed args...) {
+    string str = args[0];
     string verb;
 
     switch (str[<1]) {
