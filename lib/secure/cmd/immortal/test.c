@@ -3,7 +3,7 @@ void done (mapping results) {
     D_TEST->display_results(results, testStart);
 }
 
-void command (string input) {
+void command (string input, mapping flags) {
     if (input == "all") {
         message("system", "Running all tests...\n", this_user());
         D_TEST->run(0);
