@@ -426,7 +426,7 @@ string parser_error_message (int type, object ob, mixed arg, int plural) {
     if (ob) err = ob->query_short();
     else err = "";
 
-    debug_message("parser_error_message: "+type+" "+identify(ob)+" "+arg+" "+plural);
+    debug_message("parser_error_message: "+type+" "+identify(ob || "no ob")+" "+arg+" "+plural);
     switch (type) {
     case 0:
         if (arg && objectp(arg)) wat = arg;
