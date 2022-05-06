@@ -1,10 +1,12 @@
 inherit M_CLEAN;
 
 nosave private string *__Paths = ({});
+nosave private mapping __Abilities = ([]);
 nosave private mapping __Commands = ([]);
 nosave private mapping __Verbs = ([]);
 
 string *query_paths () { return __Paths; }
+mapping query_debug_abiltiies () { return __Abilities; }
 mapping query_debug_commands () { return __Commands; }
 mapping query_debug_verbs () { return __Verbs; }
 void scan (string *paths, string type);
@@ -13,12 +15,27 @@ void scan_all ();
 void create () {
     set_no_clean(1);
     __Paths = ({});
+    __Abilities = ([]);
     __Commands = ([]);
     __Verbs = ([]);
     scan_all();
 }
 
 // @TODO used by help
+varargs string *query_abilities (string str) {
+    string *abilities, *tmp;
+    int i;
+
+    if (!str) return keys(__Abilities);
+    i = sizeof(abilities = keys(__Abilities));
+    tmp = ({});
+    while (i--) {
+        if (member_array(str, __Abilities[abilities[i]]) != -1) {
+            tmp += ({ abilities[i] });
+        }
+    }
+    return tmp;
+}
 varargs string *query_commands (string str) {
     string *cmds, *tmp;
     int i;
@@ -48,6 +65,9 @@ varargs string *query_verbs (string str) {
     return tmp;
 }
 
+string query_ability (string ability) {
+    return __Abilities[ability] ? __Abilities[ability][0] : 0;
+}
 string query_command (string command) {
     return __Commands[command] ? __Commands[command][0] : 0;
 }
@@ -66,7 +86,10 @@ void scan (string *paths, string type) {
         if (file_size(path) != -2) continue;
         foreach (string file in get_dir(path + "/*.c")) {
             string cmd = file[0..<3];
-            if (type == "command") {
+            if (type == "ability") {
+                if (!arrayp(__Abilities[cmd])) __Abilities[cmd] = ({ });
+                __Abilities[cmd] += ({ path });
+            } else if (type == "command") {
                 if (!arrayp(__Commands[cmd])) __Commands[cmd] = ({ });
                 __Commands[cmd] += ({ path });
             } else if (type == "verb") {
@@ -80,6 +103,9 @@ void scan (string *paths, string type) {
 }
 
 void scan_all () {
+    scan(({
+        "/cmd/ability",
+    }), "ability");
     scan(({
         "/cmd/character",
         "/cmd/immortal",

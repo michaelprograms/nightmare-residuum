@@ -23,6 +23,10 @@ void command (string input, mapping flags) {
             foreach (string action in D_COMMAND->query_commands(path)) {
                 actions[type] += ({ action });
             }
+        } else if (type == "ability") {
+            foreach (string action in D_COMMAND->query_abilities(path)) {
+                actions[type] += ({ action });
+            }
         } else if (type == "verb") {
             foreach (string action in D_COMMAND->query_verbs(path)) {
                 actions[type] += ({ action });
