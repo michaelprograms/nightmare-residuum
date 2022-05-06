@@ -99,6 +99,7 @@ varargs void check_lifesigns (object source) {
 }
 
 varargs int handle_damage (int damage, object source) {
+    // @TODO source
     add_hp(-damage);
     if (query_max_hp() < query_hp()) set_hp(query_max_hp());
     if (this_object()->is_character()) {
@@ -140,7 +141,7 @@ object query_target_hostile () {
 
 /* ----- parser applies ----- */
 
-mixed direct_attack_liv () {
+mixed direct_attack_liv (mixed args...) {
     object ob = previous_object();
     return environment() == environment(ob) && ob != this_object() && !query_hostile(ob);
 }
