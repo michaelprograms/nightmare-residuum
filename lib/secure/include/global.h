@@ -2,6 +2,7 @@
 #define __GLOBAL_H__
 
 // std
+#define STD_ABILITY     "/std/ability.c"
 #define STD_ACCOUNT     "/std/account.c"
 #define STD_ARMOR       "/std/armor.c"
 #define STD_CHARACTER   "/std/character.c"
