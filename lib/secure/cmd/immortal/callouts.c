@@ -1,8 +1,9 @@
 void command (string input, mapping flags) {
     mixed *callouts;
     string *border, *items = ({ });
+    int n;
 
-    if (sizeof(callouts = call_out_info())) {
+    if (n = sizeof(callouts = call_out_info())) {
         foreach (mixed *callout in callouts) {
             callout[1] = replace_string(callout[1], "\n", "\\n");
             items += ({ callout... });
@@ -10,7 +11,7 @@ void command (string input, mapping flags) {
     }
 
     border = format_border(([
-        "title": "SOCKETS",
+        "title": "CALLOUTS",
         "subtitle": mud_name(),
         "body": ([
             "header": ({ "Object", "Function", "Delay", }),
@@ -18,7 +19,7 @@ void command (string input, mapping flags) {
             "columns": 3,
         ]),
         "footer": ([
-            "items": ({ sizeof(items) + " callouts" }),
+            "items": ({ n + " callout" + (n > 1 ? "s" : "") }),
             "columns": 1,
             "align": "center",
         ]),
