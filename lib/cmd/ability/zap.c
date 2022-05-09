@@ -1,21 +1,24 @@
+#include <verb.h>
+
 inherit STD_ABILITY;
 
-void command (string input) {
-    object tc = this_character(), target = tc->query_target_hostile();
-    int damage;
+void create () {
+    ::create();
+    set_requirements(REQUIREMENT_BUSY | REQUIREMENT_DISABLE);
+    set_skill_type("psionic");
+    set_base_power(10);
+}
 
-    // @TODO find target from input
+mixed can_zap () {
+    return "Zap whom?";
+}
+void do_zap (mixed args...) {
+    // @TODO find current attacker and handle
+    write("Zap! args: " + identify(args) + "\n");
+}
 
-    if (!target) {
-        message("action", "You have no current hostile target.\n", tc);
-        return;
-    }
-
-    damage = calculate_damage(tc, target, "psionic");
-    message("action", "You zap " + target->query_cap_name() + "!\n", tc);
-    message("action", tc->query_cap_name() + " zaps you!\n", target);
-    message("action", tc->query_cap_name() + " zaps " + target->query_cap_name() + "!\n", environment(tc), ({ tc, target }));
-    target->handle_damage(damage, tc);
-    // @TODO train skills
-    // @TODO use mp
+void handle_hit_msg (object source, object target) {
+    message("action", "You zap " + target->query_cap_name() + "!\n", source);
+    message("action", source->query_cap_name() + " zaps you!\n", target);
+    message("action", source->query_cap_name() + " zaps " + target->query_cap_name() + "!\n", environment(source), ({ source, target }));
 }

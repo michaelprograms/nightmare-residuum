@@ -1,21 +1,24 @@
+#include <verb.h>
+
 inherit STD_ABILITY;
 
-void command (string input) {
-    object tc = this_character(), target = tc->query_target_hostile();
-    int damage;
+void create () {
+    ::create();
+    set_requirements(REQUIREMENT_BUSY | REQUIREMENT_DISABLE);
+    set_skill_type("melee");
+    set_base_power(10);
+}
 
-    // @TODO find target from input
+mixed can_bonk () {
+    return "Bonk whom?";
+}
+void do_bonk (mixed args...) {
+    // @TODO find current attacker and handle
+    write("Bonk! args: " + identify(args) + "\n");
+}
 
-    if (!target) {
-        message("action", "You have no current hostile target.\n", tc);
-        return;
-    }
-
-    damage = calculate_damage(tc, target, "melee");
-    message("action", "You bonk " + target->query_cap_name() + "!\n", tc);
-    message("action", tc->query_cap_name() + " bonks you!\n", target);
-    message("action", tc->query_cap_name() + " bonks " + target->query_cap_name() + "!\n", environment(tc), ({ tc, target }));
-    target->handle_damage(damage, tc);
-    // @TODO train skills
-    // @TODO use sp
+void handle_hit_msg (object source, object target) {
+    message("action", "You bonk " + target->query_cap_name() + "!\n", source);
+    message("action", source->query_cap_name() + " bonks you!\n", target);
+    message("action", source->query_cap_name() + " bonks " + target->query_cap_name() + "!\n", environment(source), ({ source, target }));
 }
