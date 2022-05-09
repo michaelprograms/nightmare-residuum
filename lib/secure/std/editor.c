@@ -30,7 +30,7 @@ void editor_start (string file, function endFn) {
     // this_user()->set_flag("editing", 1); // @TODO
 }
 
-private int clean_up() {
+private int clean_up (int inherited) {
     if (query_ed_mode() == -1) {
         destruct();
     } else {
