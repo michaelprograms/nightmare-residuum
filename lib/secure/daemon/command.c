@@ -89,12 +89,15 @@ void scan (string *paths, string type) {
             if (type == "ability") {
                 if (!arrayp(__Abilities[cmd])) __Abilities[cmd] = ({ });
                 __Abilities[cmd] += ({ path });
+                // load all verb rules
+                load_object(path + "/" + file);
             } else if (type == "command") {
                 if (!arrayp(__Commands[cmd])) __Commands[cmd] = ({ });
                 __Commands[cmd] += ({ path });
             } else if (type == "verb") {
                 if (!arrayp(__Verbs[cmd])) __Verbs[cmd] = ({ });
                 __Verbs[cmd] += ({ path });
+                // load all verb rules
                 load_object(path + "/" + file);
             }
         }

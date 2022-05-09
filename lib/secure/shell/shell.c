@@ -95,8 +95,6 @@ void execute_command (string command) {
     if (cmdPath = D_COMMAND->query_command(action)) {
         mixed *parse = parse_command_flags(input);
         call_other(cmdPath + "/" + action, "command", parse[0], parse[1]);
-    } else if (cmdPath =D_COMMAND->query_ability(action)) {
-        call_other(cmdPath + "/" + action, "command", input);
     } else if (__Owner->query_character() && !__Owner->query_character()->do_command(command)) {
         write("Do what?\n");
     }

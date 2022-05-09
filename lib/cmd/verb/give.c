@@ -2,7 +2,7 @@ inherit STD_VERB;
 
 void create () {
     verb::create();
-    add_rules( ({ "", "OBS to LIV", "WRD WRD to LIV" }) );
+    add_rules(({ "", "OBS to LIV", "WRD WRD to LIV" }));
 }
 
 mixed can_give () {

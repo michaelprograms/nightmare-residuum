@@ -2,7 +2,7 @@ inherit STD_VERB;
 
 void create () {
     verb::create();
-    add_rules( ({ "", "OBS", "WRD WRD", }) );
+    add_rules(({ "", "OBS", "WRD WRD", }));
 }
 
 mixed can_drop () {
