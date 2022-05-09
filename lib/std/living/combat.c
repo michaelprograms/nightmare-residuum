@@ -3,7 +3,7 @@
 nosave private object *__Hostiles;
 
 void create () {
-    __Hostiles = ({});
+    __Hostiles = ({ });
 }
 
 protected void handle_combat () {
@@ -15,8 +15,8 @@ protected void handle_combat () {
     if (this_object()->query_disable()) return;
 
     weapons = query_wielded_weapons() + query_wieldable_limbs();
-    min = sizeof(weapons) + query_stat("agility") / 100;
-    max = sizeof(weapons) + query_stat("agility") / 50;
+    min = sizeof(weapons[0..2]) + query_stat("agility") / 100;
+    max = sizeof(weapons[0..2]) + query_stat("agility") / 50;
     hits = min + secure_random(max - min + 1);
 
     for (int h = 0; h < hits; h ++) {
