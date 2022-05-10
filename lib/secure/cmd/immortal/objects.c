@@ -40,14 +40,14 @@ void command (string input, mapping flags) {
     }
 
     border = format_border(([
-        "title": "SOCKETS",
+        "title": "OBJECTS",
         "subtitle": mud_name(),
         "body": ([
             "items": list,
             "columns": 1,
         ]),
         "footer": ([
-            "items": ({ sizeof(list) + " objects" }),
+            "items": ({ sizeof(list) + " object" + (sizeof(list) > 1 ? "s" : "") }),
             "columns": 1,
             "align": "center",
         ]),
