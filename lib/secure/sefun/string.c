@@ -14,7 +14,7 @@ string identify (mixed a) {
     mapping RealMap;
 
     if (undefinedp(a)) {
-        error("Bad argument 1 to string->identify");
+        return "UNDEFINED";
     }
     if (intp(a) || floatp(a)) {
         return "" + a;

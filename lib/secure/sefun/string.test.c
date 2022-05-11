@@ -48,14 +48,14 @@ void test_identify () {
 
     expect_function("identify", testOb);
 
-    expect("identify handles bad argument 1", (: ({
-        assert((: testOb->identify() :), "catch", "*Bad argument 1 to string->identify\n"),
-        assert((: testOb->identify($($(undefInt))) :), "catch", "*Bad argument 1 to string->identify\n"),
-        assert((: testOb->identify($($(undefFloat))) :), "catch", "*Bad argument 1 to string->identify\n"),
-        assert((: testOb->identify($($(undefOb))) :), "catch", "*Bad argument 1 to string->identify\n"),
-        assert((: testOb->identify($($(undefStr))) :), "catch", "*Bad argument 1 to string->identify\n"),
-        assert((: testOb->identify($($(undefMap))) :), "catch", "*Bad argument 1 to string->identify\n"),
-        assert((: testOb->identify($($(undefFn))) :), "catch", "*Bad argument 1 to string->identify\n"),
+    expect("identify handles undefined", (: ({
+        assert(testOb->identify(), "==", "UNDEFINED"),
+        assert(testOb->identify($(undefInt)), "==", "UNDEFINED"),
+        assert(testOb->identify($(undefFloat)), "==", "UNDEFINED"),
+        assert(testOb->identify($(undefOb)), "==", "UNDEFINED"),
+        assert(testOb->identify($(undefStr)), "==", "UNDEFINED"),
+        assert(testOb->identify($(undefMap)), "==", "UNDEFINED"),
+        assert(testOb->identify($(undefFn)), "==", "UNDEFINED"),
     }) :));
 
     expect("identify handles int", (: ({
