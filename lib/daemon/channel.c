@@ -34,7 +34,6 @@ void send (string channel, string msg) {
     if (!channel || member_array(channel, __Channels + __SystemChannels) == -1) return;
 
     if (!msg) {
-        int status = 0;
         this_character()->toggle_channel_blocked(channel);
         if (this_character()->query_channel_blocked(channel)) {
             message("channel",  "Channel " + format_channel_name(channel) + " is now blocked.\n", this_character());
