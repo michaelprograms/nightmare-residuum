@@ -148,6 +148,7 @@ string format_integer (int num) {
 
 
 // create a unicode border around action output
+// https://en.wikipedia.org/wiki/Box-drawing_character#Box_Drawing
 //
 // mapping data = ([
 // /*
