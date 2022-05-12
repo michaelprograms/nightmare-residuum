@@ -9,14 +9,6 @@ void create () {
     set_base_power(10);
 }
 
-mixed can_zap () {
-    return "Zap whom?";
-}
-void do_zap (mixed args...) {
-    // @TODO find current attacker and handle
-    write("Zap! args: " + identify(args) + "\n");
-}
-
 void handle_hit_msg (object source, object target) {
     message("action", "You zap " + target->query_cap_name() + "!\n", source);
     message("action", source->query_cap_name() + " zaps you!\n", target);

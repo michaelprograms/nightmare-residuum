@@ -9,14 +9,6 @@ void create () {
     set_base_power(10);
 }
 
-mixed can_bonk () {
-    return "Bonk whom?";
-}
-void do_bonk (mixed args...) {
-    // @TODO find current attacker and handle
-    write("Bonk! args: " + identify(args) + "\n");
-}
-
 void handle_hit_msg (object source, object target) {
     message("action", "You bonk " + target->query_cap_name() + "!\n", source);
     message("action", source->query_cap_name() + " bonks you!\n", target);

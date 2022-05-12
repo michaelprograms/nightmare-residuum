@@ -55,12 +55,14 @@ int calculate_damage (object source, object target) {
 /* ----- applies ----- */
 
 int direct_verb_liv (mixed args...) {
-    // write(__Ability+" direct_verb_liv: " + identify(args)+"\n");
     return 1;
 }
 
+
 mixed can_verb_liv (mixed args...) {
-    // write(__Ability+" can_verb_liv: " + identify(args)+"\n");
+    return can_verb_rule(args);
+}
+mixed can_verb (mixed args...) {
     return can_verb_rule(args);
 }
 
@@ -69,13 +71,10 @@ void do_verb_liv (mixed args...) {
     object target;
     int damage, cost;
 
-    // write(__Ability+" do_verb_liv args: " + identify(args) + "\n");
-
     // verify target
     if (arrayp(args)) {
         target = args[1];
     } else {
-        message("action", "Unexpected args from " + __Ability + ": " + identify(args) + ".\n", source);
         return;
     }
 
@@ -118,4 +117,12 @@ void do_verb_liv (mixed args...) {
     // train relevant skills
     source->train_skill(__SkillType + " attack", 1.0);
     target->train_skill(__SkillType + " defense", 1.0);
+}
+
+// Handle no input
+void do_verb_rule (mixed args...) {
+    object target;
+    if (target = previous_object()->query_target_hostile()) {
+        do_verb_liv(args[0], target, args[2], target->query_name());
+    }
 }
