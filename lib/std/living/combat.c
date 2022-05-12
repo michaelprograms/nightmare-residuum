@@ -25,7 +25,6 @@ protected void handle_combat () {
     add_sp(-(secure_random(hits) + 1));
 
     if (!target->query_hostile(this_object())) target->add_hostile(this_object());
-    target->check_lifesigns(this_object());
 }
 
 private void handle_combat_hit (object target, mixed weapon) {
@@ -105,6 +104,7 @@ varargs int handle_damage (int damage, object source) {
     if (this_object()->is_character()) {
         message("system", sprintf("hp: %d    sp: %d    mp: %d\n", query_hp(), query_sp(), query_mp()), this_object());
     }
+    check_lifesigns(source);
     return damage;
 }
 
