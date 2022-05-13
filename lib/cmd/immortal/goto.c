@@ -2,12 +2,12 @@ void command (string input, mapping flags) {
     object ob;
 
     if (!input) {
-        write("Goto where?\n");
+        message("action", "Goto where or who?\n", this_character());
         return;
     }
 
     if (ob = find_character(input)) {
-        write("Going to "+input+"...\n");
+        message("action", "Going to "+input+"...\n", this_character());
         this_character()->handle_go(environment(ob), "teleport", "away");
         this_character()->describe_environment();
         return;
@@ -19,10 +19,10 @@ void command (string input, mapping flags) {
             input = this_user()->query_shell()->query_variable("cwd") + "/" + input;
         }
         if (file_size(input) == -1) {
-            write("goto: " + input + " not found.\n");
+            message("action", "goto: " + input + " not found.\n", this_character());
             return;
         }
-        write("Going...\n");
+        message("action", "Going...\n", this_character());
         this_character()->handle_go(input, "teleport", "away");
         this_character()->describe_environment();
     }
