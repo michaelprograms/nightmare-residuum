@@ -6,7 +6,7 @@ void command (string input, mapping flags) {
         input = this_user()->query_shell()->query_variable("cwd") + "/" + input;
     }
     input = sanitize_path(input);
-    write("Path is: "+input+"\n");
+
     if (file_size(input) == -2) {
         this_user()->query_shell()->set_variable("cwd", input);
         write(input + ":\n");
