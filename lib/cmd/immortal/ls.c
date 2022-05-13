@@ -72,7 +72,7 @@ void command (string input, mapping flags) {
         files = filter(files, (: $1[0][0] != '.' :));
     }
 
-    message("action", path + ":\n", this_character());
+    message("action", path + ":\n" + (!sizeof(files) ? "Directory is empty.\n\n" : ""), this_character());
     if (flags["l"]) {
         output_long(dir, files);
     } else {
