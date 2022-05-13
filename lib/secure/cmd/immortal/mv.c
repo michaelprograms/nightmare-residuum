@@ -1,4 +1,4 @@
-void command (string input) {
+void command (string input, mapping flags) {
     string file1, file2, cwd;
 
     if (!input || sscanf(input, "%s %s", file1, file2) != 2) {

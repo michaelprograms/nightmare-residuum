@@ -1,4 +1,4 @@
-void command (string input) {
+void command (string input, mapping flags) {
     string cwd, dir;
     if (!input) {
         write("Syntax: mkdir [directory]\n");

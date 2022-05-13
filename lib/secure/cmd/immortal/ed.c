@@ -3,7 +3,7 @@ nomask private void unlock (string file) {
     map_delete(__Locks, file);
 }
 
-void command (string input) {
+void command (string input, mapping flags) {
     string cwd, file;
     int size;
 

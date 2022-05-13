@@ -1,4 +1,4 @@
-void command (string input) {
+void command (string input, mapping flags) {
     string cwd, file;
     if (!input) {
         write("Syntax: rm [file]\n");
