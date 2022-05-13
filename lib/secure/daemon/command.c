@@ -69,7 +69,10 @@ string query_ability (string ability) {
     return __Abilities[ability] ? __Abilities[ability][0] : 0;
 }
 string query_command (string command) {
-    return __Commands[command] ? __Commands[command][0] : 0;
+    if (__Commands[command]) {
+        if (!previous_object()->query_character()->query_immortal() && regexp(__Commands[command][0], "/immortal")) return 0;
+        return __Commands[command][0];
+    } else return 0;
 }
 string query_verb (string verb) {
     if (__Verbs[verb] && __Verbs[verb][0]) {
@@ -117,6 +120,5 @@ void scan_all () {
     }), "command");
     scan(({
         "/cmd/verb",
-        "/secure/cmd/verb",
     }), "verb");
 }
