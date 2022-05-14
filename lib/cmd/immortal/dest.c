@@ -1,4 +1,4 @@
-void command (string input. mapping flags) {
+void command (string input, mapping flags) {
     object ob;
     string name;
 
