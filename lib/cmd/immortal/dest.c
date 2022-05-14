@@ -3,7 +3,7 @@ void command (string input, mapping flags) {
     string name;
 
     if (!input) {
-        write("Syntax: dest [ob]\n");
+        message("action", "Syntax: dest [ob]\n", this_character());
         return;
     }
 
@@ -13,11 +13,12 @@ void command (string input, mapping flags) {
         name = ob->is_living() ? ob->query_cap_name() : ob->query_name();
         if (ob->handle_remove()) {
             message("action", "You dest " + name + ".\n", this_character());
-            message("action", this_character()->query_cap_name() + " dests " + name + ".\n", environment(this_character()), this_character());
+            message("action", this_character()->query_cap_name() + " dests you.\n", ob);
+            message("action", this_character()->query_cap_name() + " dests " + name + ".\n", environment(this_character()), ({ this_character(), ob }));
         } else {
-            write("dest: cannot dest " + ob->query_name() + ".\n");
+            message("action", "dest: cannot dest " + ob->query_name() + ".\n", this_character());
         }
     } else {
-        write("dest: cannot find " + input + ".\n");
+        message("action", "dest: cannot find " + input + ".\n", this_character());
     }
 }
