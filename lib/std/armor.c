@@ -1,4 +1,5 @@
 inherit STD_ITEM;
+inherit M_BONUS;
 
 nosave string __Type, *__Limbs;
 nosave object __Worn;

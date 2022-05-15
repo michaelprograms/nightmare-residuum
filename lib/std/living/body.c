@@ -116,6 +116,7 @@ varargs mixed handle_wear (object ob) {
         __Worn[limb] += ({ ob });
     }
     ob->set_worn(this_object());
+    ob->add_bonuses();
     return 1;
 }
 varargs mixed handle_unwear (object ob) {
@@ -129,6 +130,7 @@ varargs mixed handle_unwear (object ob) {
             __Worn[limb] -= ({ ob });
         }
     }
+    ob->remove_bonuses();
     ob->set_worn(0);
     return 1;
 }

@@ -11,11 +11,10 @@ void command (string input, mapping flags) {
     if (!ob) ob = present(input, environment(this_character()));
     if (ob) {
         name = ob->is_living() ? ob->query_cap_name() : ob->query_name();
-        if (ob->handle_remove()) {
-            message("action", "You dest " + name + ".\n", this_character());
-            message("action", this_character()->query_cap_name() + " dests you.\n", ob);
-            message("action", this_character()->query_cap_name() + " dests " + name + ".\n", environment(this_character()), ({ this_character(), ob }));
-        } else {
+        message("action", "You dest " + name + ".\n", this_character());
+        message("action", this_character()->query_cap_name() + " dests you.\n", ob);
+        message("action", this_character()->query_cap_name() + " dests " + name + ".\n", environment(this_character()), ({ this_character(), ob }));
+        if (!ob->handle_remove()) {
             message("action", "dest: cannot dest " + ob->query_name() + ".\n", this_character());
         }
     } else {
