@@ -9,26 +9,29 @@ private string query_account_setting (string setting) {
 }
 
 varargs string format_page (string *items, int columns, int pad) {
-    int width, i, j, n;
+    int width, w, i, j, n, r;
     string *rows = ({});
 
     if (!arrayp(items) || !sizeof(items)) error("Bad argument 1 to format->format_page");
 
     if (!columns) columns = 2;
-    width = to_int(query_account_setting("width"));
-    width = (width - pad*2) / columns;
+    width = to_int(query_account_setting("width")) - pad * 2;
+    w = width / columns;
     n = sizeof(items);
+    r = width - (w * columns);
 
     for (i = 0; i < n; i += columns) {
         string row = "";
         for (j = 0; j < columns; j ++) {
-            if (i + j >= n) {
-                // pad remainder of line
-                row += sprintf("%' '"+sprintf("%d", (columns-j)*width)+"s", " ");
+            string tmp;
+            if (i + j >= n) { // ran out of columns to fill row
+                row += sprintf("%' '"+sprintf("%d", w*(columns-j))+"s", " ");
                 break;
             }
-            row += sprintf("%-"+sprintf("%d", width)+"s", ""+items[i + j]); // @TODO for longer strings
+            if (strlen(tmp = items[i + j]) > w) tmp = items[i + j][0..w-1];
+            row += sprintf("%-"+sprintf("%d", w)+"s", ""+tmp);
         }
+        if (r) row += sprintf("%' '"+sprintf("%d", r)+"s", "");
         rows += ({ row });
     }
     return implode(rows, "\n");
@@ -312,7 +315,7 @@ string *format_border (mapping data) {
         }
 
         if (fFooter) {
-            string *list = ({}), format;
+
             // Footer top line
             line = b["v"] + b["tl"];
             line += sprintf("%'"+b["h"]+"'"+sprintf("%d", width - 4)+"s", "");
@@ -325,8 +328,8 @@ string *format_border (mapping data) {
                     lines += ({ line });
                 }
             } else {
-                format = sizeof(data["footer"]["items"]) > 0 ? format_page(data["footer"]["items"], data["footer"]["columns"], 4) : "";
-                foreach (string l in explode(format, "\n")) {
+                string tmp = sizeof(data["footer"]["items"]) > 0 ? format_page(data["footer"]["items"], data["footer"]["columns"], 4) : "";
+                foreach (string l in explode(tmp, "\n")) {
                     line = b["v"] + b["v"] + "  " + (ansi ? "%^RESET%^" + l + "%^CYAN%^" : l) + "  " + b["v"] + b["v"];
                     lines += ({ line });
                 }

@@ -49,6 +49,18 @@ void test_format_page () {
         assert(strlen(explode(testOb->format_page(({ "a", "b", "c" }), 2, -1), "\n")[0]), "==", 62),
     }) :));
 
+    __MockAccount->set_setting("width", 80);
+    expect("format_page handled remainder of width/columns", (: ({
+        assert(strlen(testOb->format_page(({ "a", "b", "c", "d", "e", }), 5, 4)), "==", 72), // remainder = 2
+        assert(strlen(testOb->format_page(({ "a", "b", "c" }), 3, 0)), "==", 80), // remainder = 2
+        assert(strlen(testOb->format_page(({ "1", "2", "3", "4", "5", "6", "7" }), 7, 0)), "==", 80), // remainder = 3
+    }) :));
+
+    expect("format_page handled trimming longer strings", (: ({
+        assert(strlen(testOb->format_page(({ "111111111111111111111111111111", "222222222222222222222222222222", "333333333333333333333333333333", "444444444444444444444444444444", }), 4, 0)), "==", 80), // 30 * 4 = 120
+        assert(strlen(testOb->format_page(({ "111111111111111111111111111111", "2", "3", "4", }), 4, 0)), "==", 80), // 30 + 25 * 3 = 85
+    }) :));
+
     expect("format_page handled invalid argument 1", (: ({
         assert((: testOb->format_page() :), "catch", "*Bad argument 1 to format->format_page\n"),
         assert((: testOb->format_page(0) :), "catch", "*Bad argument 1 to format->format_page\n"),
