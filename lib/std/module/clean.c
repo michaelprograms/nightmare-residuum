@@ -26,7 +26,7 @@ int handle_remove () {
     return internal_remove();
 }
 
-int clean_up (int inherited) {
+int clean_up (mixed *args...) {
     if (origin() == "driver" || environment() || __NoClean) {
         return clean_never();
     }
