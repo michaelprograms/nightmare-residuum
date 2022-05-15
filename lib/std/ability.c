@@ -2,20 +2,31 @@
 
 inherit STD_VERB;
 
-private string __Ability;
+private string __AbilityName;
 private string __SkillType;
 private int __BasePower;
 
 void create () {
     ::create();
-    __Ability = split_path(file_name())[1];
-    if (__Ability != "ability") {
+    __AbilityName = split_path(base_name())[1];
+    if (__AbilityName != "ability") {
         add_rules(({ "", "LIV", }));
     }
 }
 
+string query_name () {
+    return __AbilityName;
+}
+
+string query_skill_type () {
+    return __SkillType;
+}
 void set_skill_type (string type) {
     __SkillType = type;
+}
+
+int query_base_power () {
+    return __BasePower;
 }
 void set_base_power (int p) {
     __BasePower = p;
@@ -58,7 +69,6 @@ int direct_verb_liv (mixed args...) {
     return 1;
 }
 
-
 mixed can_verb_liv (mixed args...) {
     return can_verb_rule(args);
 }
@@ -82,12 +92,12 @@ void do_verb_liv (mixed args...) {
     cost = __BasePower * 2 + (random(__BasePower) + 1);
     if (__SkillType == "psionic") {
         if (source->query_mp() < cost) {
-            message("action", "You are too drained to " + __Ability + ".\n", source);
+            message("action", "You are too drained to " + __AbilityName + ".\n", source);
             return;
         }
     } else {
         if (source->query_sp() < cost) {
-            message("action", "You are too tired to " + __Ability + ".\n", source);
+            message("action", "You are too tired to " + __AbilityName + ".\n", source);
             return;
         }
     }
