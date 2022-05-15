@@ -26,18 +26,18 @@ mapping set_bonuses (mapping bonuses) {
     return __Bonuses;
 }
 
-void add_bonuses () {
+void add_bonuses (object target) {
     foreach (string key, int value in __Bonuses) {
         if (member_array(key, ({ "strength", "perception", "endurance", "charisma", "intelligence", "agility", "luck", })) > -1) {
-            this_object()->add_stat_bonus(key, value);
+            target->add_stat_bonus(key, value);
         }
     }
 }
 
-void remove_bonuses () {
+void remove_bonuses (object target) {
     foreach (string key, int value in __Bonuses) {
         if (member_array(key, ({ "strength", "perception", "endurance", "charisma", "intelligence", "agility", "luck", })) > -1) {
-            this_object()->add_stat_bonus(key, -value);
+            target->add_stat_bonus(key, -value);
         }
     }
 }
