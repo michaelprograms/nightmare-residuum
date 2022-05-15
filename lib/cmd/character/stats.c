@@ -8,15 +8,23 @@ void command (string input, mapping flags) {
     }
 
     foreach (string stat in ({ "strength", "perception", "endurance", "charisma", "intelligence", "agility", "luck", })) {
-        items += ({ sprintf("%-15s %3d %12s xp", stat, target->query_stat(stat), format_integer(D_EXPERIENCE->query_stat_cost(stat, target->query_stat(stat)))) });
+        int statBase = target->query_stat_base(stat);
+        int statBonus = target->query_stat_bonus(stat);
+        items += ({
+            stat,
+            statBase,
+            statBonus,
+            format_integer(D_EXPERIENCE->query_stat_cost(stat, statBase)) + " xp"
+        });
     }
 
     border = format_border(([
         "title": "STATS",
         "subtitle": target->query_cap_name(),
         "body": ([
+            "header": ({ "Stat", "Base", "Bonus", "Cost", }),
             "items": items,
-            "columns": 1,
+            "columns": 4,
         ]),
         "footer": ([
             "items": ({

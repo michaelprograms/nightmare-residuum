@@ -66,7 +66,10 @@ varargs void train_skill (string skill, float multiplier);
 
 /* --- stats --- */
 int query_stat (string stat);
+int query_stat_base (string stat);
+int query_stat_bonus (string stat);
 void set_stat (string stat, int n);
+void add_stat_bonus (string stat, int n);
 
 /* --- status --- */
 void set_disable (int value);
