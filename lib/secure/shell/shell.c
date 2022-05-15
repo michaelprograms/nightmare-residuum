@@ -11,6 +11,10 @@ inherit "/secure/shell/variable.c";
 nosave private object __Owner;
 nosave private mapping __ShellCommands = ([]);
 
+object query_character () {
+    return __Owner && __Owner->query_character();
+}
+
 void create () {
     if (!clonep()) {
         return;
