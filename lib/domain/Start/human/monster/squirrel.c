@@ -8,6 +8,6 @@ void create () {
     set_name("nosey squirrel");
     set_short("nosey squirrel");
     set_long("A squirrel watching your every move.");
-    set_level(1);
+    set_level(4);
     set_species("squirrel");
 }

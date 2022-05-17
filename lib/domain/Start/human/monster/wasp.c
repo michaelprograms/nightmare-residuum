@@ -8,6 +8,6 @@ void create () {
     set_name("aggressive wasp");
     set_short("aggressive wasp");
     set_long("A wasp aggressively zipping about.");
-    set_level(2);
+    set_level(3);
     set_species("wasp");
 }

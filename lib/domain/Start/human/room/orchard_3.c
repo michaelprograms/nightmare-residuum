@@ -9,7 +9,7 @@ void create () {
     set_exits(([
         "west": HUMAN_ROOM + "orchard_2.c",
         "east": HUMAN_ROOM + "orchard_4.c",
-        "north": HUMAN_ROOM + "orchard_6.c",
+        "northeast": HUMAN_ROOM + "orchard_8.c",
     ]));
     set_looks(([
 

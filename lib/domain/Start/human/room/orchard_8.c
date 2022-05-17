@@ -5,11 +5,9 @@ inherit STD_ROOM;
 void create () {
     ::create();
     set_short("an orchard");
-    set_long("Lines of evenly spaced trees form an orchard. Grassy pathways with dirt patches separate the rows. A framework of hexagons glimmer overhead.");
+    set_long("Lines of evenly spaced trees form an orchard. Grassy pathways with dirt patches separate the rows. A framework of hexagons glimmer overhead. A concrete wall supporting the hexagon dome stands at the edge of town.");
     set_exits(([
-        "east": HUMAN_ROOM + "orchard_7.c",
-        "south": HUMAN_ROOM + "orchard_1.c",
-        "north": HUMAN_ROOM + "orchard_9.c",
+        "southwest": HUMAN_ROOM + "orchard_3.c",
     ]));
     set_looks(([
 
