@@ -8,6 +8,6 @@ void create () {
     set_name("bumbling bee");
     set_short("bumbling bee");
     set_long("A bee bumbling around carelessly.");
-    set_level(2);
+    set_level(3);
     set_species("bee");
 }
