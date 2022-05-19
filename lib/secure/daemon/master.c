@@ -202,14 +202,12 @@ void error_handler (mapping e, int caught) {
         return;
     }
 
-    // @TODO D_LOG->log log_file
     ret = "--- " + ctime(time()) + "\n" + standard_trace(e) + "\n";
     if (file_size("/log/"+file) > 20000) { // 20 kb
         rename("/log/"+file, "/log/"+file+"-"+time());
     }
     write_file("/log/"+file, ret);
-    // @TODO
-    // CHAT_D->do_chat("runtime", ret , 2 , 0);
+    // @TODO CHAT_D->do_chat("runtime", ret , 2 , 0);
     if (this_user(1)) {
         tell_object(this_user(1), sprintf("%sTrace written to /log/%s\n", e["error"], (caught ? "catch" : "runtime")));
     }
