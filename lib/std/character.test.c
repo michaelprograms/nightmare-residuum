@@ -67,7 +67,7 @@ void test_name () {
         assert(testOb->query_cap_name(), "==", "Testcharacter"),
         assert(testOb->query_short(), "==", "Testcharacter the character"),
         assert(testOb->query_long(), "==", "Testcharacter the character."),
-        assert(testOb->query_save_path(), "==", "/save/character/t/testcharacter.o"),
+        assert(testOb->query_save_path(), "==", "/save/character/t/testcharacter/character.o"),
     }) :));
 }
 

@@ -58,7 +58,7 @@ void set_name (string name) {
     living::set_name(name);
     set_short((: query_character_short :));
     set_long((: query_character_long :));
-    set_save_path(D_CHARACTER->query_save_path(query_key_name()));
+    set_save_path(D_CHARACTER->query_save_path(query_key_name(), "character"));
 }
 
 // -----------------------------------------------------------------------------

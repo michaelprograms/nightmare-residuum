@@ -27,8 +27,7 @@ void create () {
     }
 
     if (__Owner && __Owner->query_character()) {
-        string keyName = __Owner->query_character()->query_key_name();
-        set_save_path(sprintf("/save/shell"+"/%c/%s.o", keyName[0], keyName));
+        set_save_path(D_CHARACTER->query_save_path(__Owner->query_character()->query_key_name(), "shell"));
         restore_data();
     }
 

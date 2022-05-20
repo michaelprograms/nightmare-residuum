@@ -89,7 +89,7 @@ int query_allowed (object caller, string fn, string file, string mode) {
         string tmp = base_name(caller);
         // debug_message("! D_ACCESS->query_allowed unguarded == caller: "+identify(caller)+" "+tmp);
         // access check passes due to caller requesting valid save path
-        if (!strsrch(tmp, "/std/character") && D_CHARACTER->query_save_path(caller->query_key_name()) == file) {
+        if (!strsrch(tmp, "/std/character") && D_CHARACTER->query_valid_save_path(caller->query_key_name(), file)) {
             return 1;
         } else if (!strsrch(tmp, "/std/account") && D_ACCOUNT->query_save_path(caller->query_key_name()) == file) {
             return 1;
