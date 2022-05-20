@@ -9,44 +9,53 @@ void command (string input, mapping flags) {
         ]),
     ]);
     string *border;
-    object char;
     int nImm = 0, nChar = 0;
-    string *headerList = ({}), *bodyList = ({}), *footerList = ({});
+    object *immortalList = ({ }), *charList = ({ });
+    string *headerList = ({}), *bodyList = ({}), *footerList = ({ });
 
     foreach (object user in users()) {
-        string line;
-
+        object char;
         if (char = user->query_character()) {
-            string characterName = char->query_cap_name();
-            if (this_character()->query_immortal()) {
-                characterName += " (" + user->query_account()->query_name() + ")";
-            }
-            if (this_user() != user) {
-                characterName += " " + time_from_seconds(query_idle(user));
-            }
-            line = sprintf("%-50s", characterName) + sprintf("%-12s", capitalize(char->query_species())) + " " + sprintf("%3d", char->query_level());
             if (char->query_immortal()) {
                 nImm ++;
-                headerList += ({ line });
+                immortalList += ({ char });
             } else {
                 nChar ++;
-                bodyList += ({ line });
-            }
-        } else {
-            if (this_character()->query_immortal()) {
-                nChar ++;
-                bodyList += ({ user->query_account()->query_name()+" - "+identify(user) });
+                charList += ({ char });
             }
         }
     }
 
     if (nImm > 0) {
+        immortalList = sort_array(immortalList, (: strcmp($1->query_name(), $2->query_name()) :));
+        foreach (object char in immortalList) {
+            string characterName = char->query_cap_name();
+            if (this_character()->query_immortal()) {
+                characterName += " (" + char->query_user()->query_account()->query_name() + ")";
+            }
+            if (this_user() != char->query_user()) {
+                characterName += " " + time_from_seconds(query_idle(char->query_user()));
+            }
+            headerList += ({ sprintf("%-50s", characterName) + sprintf("%-12s", capitalize(char->query_species())) + " " + sprintf("%3d", char->query_level()) });
+        }
         data["header"] = ([
             "items": headerList,
             "columns": 1,
         ]);
         footerList += ({ nImm + " immortal" + (nImm > 1 ? "s" : "") });
     }
+
+    charList = sort_array(charList, (: strcmp($1->query_name(), $2->query_name()) :));
+        foreach (object char in charList) {
+            string characterName = char->query_cap_name();
+            if (this_character()->query_immortal()) {
+                characterName += " (" + char->query_user()->query_account()->query_name() + ")";
+            }
+            if (this_user() != char->query_user()) {
+                characterName += " " + time_from_seconds(query_idle(char->query_user()));
+            }
+            bodyList += ({ sprintf("%-50s", characterName) + sprintf("%-12s", capitalize(char->query_species())) + " " + sprintf("%3d", char->query_level()) });
+        }
     data["body"] = ([
         "items": sizeof(bodyList) ? bodyList : ({ "No player characters connected" }),
         "columns": 1,
