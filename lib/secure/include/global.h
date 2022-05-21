@@ -52,6 +52,7 @@
 // secure daemons
 #define D_ACCESS        "/secure/daemon/access.c"
 #define D_ACCOUNT       "/secure/daemon/account.c"
+#define D_BANK          "/secure/daemon/bank.c"
 #define D_CHARACTER     "/secure/daemon/character.c"
 #define D_COMMAND       "/secure/daemon/command.c"
 #define D_IPC           "/secure/daemon/ipc.c"
