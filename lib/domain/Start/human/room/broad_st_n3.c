@@ -5,7 +5,7 @@ inherit STD_ROOM;
 void create () {
     ::create();
     set_short("a village street");
-    set_long("A small street traveling north and south through brick dwellings covered in dark ivy. Several birch trees branch over the street and dwellings. An ochard can be seen down an alley branching to the east. A framework of hexagons glimmer overhead.");
+    set_long("A small street traveling north and south through brick dwellings covered in dark ivy. Several birch trees branch over the street and dwellings. An orchard can be seen down an alley heading towards the east. A framework of hexagons glimmer overhead.");
     set_exits(([
         "east": HUMAN_ROOM + "orchard_alley.c",
         "north": HUMAN_ROOM + "broad_st_n4.c",
