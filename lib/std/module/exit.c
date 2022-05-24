@@ -15,14 +15,21 @@ string *query_exit_destinations () {
 }
 string query_exit (string dir) {
     dir = format_exit_verbose (dir);
-    return __Exits[dir] && __Exits[dir]["room"];
+    if (__Exits[dir]) {
+        return __Exits[dir]["room"];
+    } else if (__Exits["out " + dir]) {
+        return __Exits["out " + dir]["room"];
+    } else if (__Exits["enter " + dir]) {
+        return __Exits["enter " + dir]["room"];
+    }
+    return 0;
 }
 string query_default_enter () {
-    string *enters = filter_array(keys(__Exits), (: strsrch($1, "enter") > -1 :));
+    string *enters = filter(keys(__Exits), (: strsrch($1, "enter") > -1 :));
     return sizeof(enters) == 1 ? enters[0] : 0;
 }
 string query_default_out () {
-    string *outs = filter_array(keys(__Exits), (: strsrch($1, "out") > -1 :));
+    string *outs = filter(keys(__Exits), (: strsrch($1, "out") > -1 :));
     return sizeof(outs) == 1 ? outs[0] : 0;
 }
 
@@ -57,22 +64,29 @@ void remove_exit (string dir) {
 // -----------------------------------------------------------------------------
 
 mixed handle_go (object ob, string method, string dir) {
+    mapping exit;
+
     // if(query_verb() == "go" && interactive(ob)) {
     //     // @TODO check standng/sitting?
     // }
 
     dir = format_exit_verbose(dir);
 
-    if (!__Exits[dir] || environment(ob) != this_object()) {
+    if (!(exit = __Exits[dir])) {
+        if (__Exits["enter " + dir] && !__Exits["out " + dir]) exit = __Exits["enter " + dir];
+        else if (__Exits["out " + dir] && !__Exits["enter " + dir]) exit = __Exits["out " + dir];
+    }
+
+    if (!exit || environment(ob) != this_object()) {
         return 0;
-    } else if (__Exits[dir]["before"] && !(evaluate(__Exits[dir]["before"], ob, dir))) {
+    } else if (exit["before"] && !(evaluate(exit["before"], ob, dir))) {
         return 0;
-    } else if (__Exits[dir]["room"]) {
-        if ((regexp(__Exits[dir]["room"], "#[0-9]+") && find_object(__Exits[dir]["room"])) || (file_size(__Exits[dir]["room"]) > 0)) {
-            ob->handle_go(__Exits[dir]["room"], method, dir);
+    } else if (exit["room"]) {
+        if ((regexp(exit["room"], "#[0-9]+") && find_object(exit["room"])) || (file_size(exit["room"]) > 0)) {
+            ob->handle_go(exit["room"], method, dir);
             ob->describe_environment();
-            if (__Exits[dir]["after"]) {
-                evaluate(__Exits[dir]["after"], ob, dir);
+            if (exit["after"]) {
+                evaluate(exit["after"], ob, dir);
             }
             return 1;
         } else {
