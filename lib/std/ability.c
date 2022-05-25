@@ -85,6 +85,7 @@ void do_verb_liv (mixed args...) {
     if (arrayp(args)) {
         target = args[1];
     } else {
+        message("action", "You have no hostile targets present.\n", source);
         return;
     }
 
@@ -131,8 +132,11 @@ void do_verb_liv (mixed args...) {
 
 // Handle no input
 void do_verb_rule (mixed args...) {
+    object source = previous_object();
     object target;
     if (target = previous_object()->query_target_hostile()) {
         do_verb_liv(args[0], target, args[2], target->query_name());
+    } else {
+        message("action", "You have no hostile targets present.\n", source);
     }
 }
