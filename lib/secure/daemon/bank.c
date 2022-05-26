@@ -12,13 +12,25 @@ private mapping __Money = ([
 
 /* ----- ----- */
 
-private void load_balance (string name) {
+private void clear_balance () {
     __Money = ([ ]);
+}
+private void load_balance (string name) {
+    clear_balance();
     set_save_path(D_CHARACTER->query_save_path(name, "bank"));
     restore_data();
 }
 
 /* ----- ----- */
+
+string *query_banks (string name) {
+    string *ids;
+    load_balance(name);
+    ids = keys(__Money);
+    clear_balance();
+
+    return ids;
+}
 
 mapping query_balance (string name, string bankID) {
     mapping balance;
@@ -29,7 +41,7 @@ mapping query_balance (string name, string bankID) {
     load_balance(name);
     if (undefinedp(__Money[bankID])) __Money[bankID] = ([ ]);
     balance = __Money[bankID];
-    __Money = ([ ]);
+    clear_balance();
 
     return balance;
 }
@@ -42,5 +54,5 @@ void update_balance (string name, string bankID, mapping balance) {
     load_balance(name);
     __Money[bankID] = balance;
     save_data();
-    __Money = ([ ]);
+    clear_balance();
 }

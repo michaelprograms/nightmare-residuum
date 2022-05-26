@@ -12,13 +12,19 @@ void after_each_test () {
 void test_balance () {
     expect_function("query_balance", testOb);
     expect_function("update_balance", testOb);
+    expect_function("query_banks", testOb);
 
     expect("balance handles querying and updating", (: ({
+        // test query_balance and update_balance
         assert(testOb->query_balance("testcharacter", "somewhere"), "==", ([ ])),
         testOb->update_balance("testcharacter", "somewhere", ([ "copper": 123, ])),
         assert(testOb->query_balance("testcharacter", "somewhere"), "==", ([ "copper": 123, ])),
         testOb->update_balance("testcharacter", "somewhere", ([ "copper": 54321, ])),
         assert(testOb->query_balance("testcharacter", "somewhere"), "==", ([ "copper": 54321, ])),
+        // test query_banks
+        assert(testOb->query_banks("testcharacter"), "==", ({ "somewhere", })),
+        testOb->update_balance("testcharacter", "elsewhere", ([ "copper": 54321, ])),
+        assert(testOb->query_banks("testcharacter"), "==", ({ "somewhere", "elsewhere", })),
         assert(unguarded((: rm("/save/character/t/testcharacter/bank.o") :)), "==", 1),
     }) :));
 }
