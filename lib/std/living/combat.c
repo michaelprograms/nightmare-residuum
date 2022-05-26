@@ -20,6 +20,7 @@ protected void handle_combat () {
     hits = min + secure_random(max - min + 1);
 
     for (int h = 0; h < hits; h ++) {
+        if (!target) break;
         handle_combat_hit(target, weapons[random(sizeof(weapons))]);
     }
     add_sp(-(secure_random(hits) + 1));
@@ -84,7 +85,7 @@ private void handle_combat_hit (object target, mixed weapon) {
         if (damage > 0) target->handle_damage(damage, this_object());
 
         train_skill(type + " attack");
-        target->train_skill(type + " defense");
+        if (target) target->train_skill(type + " defense");
     }
 }
 
