@@ -71,7 +71,7 @@ string conjunction (string *list) {
 }
 
 // named possessive of an object
-string possessive_noun (mixed value) {
+varargs string possessive_noun (mixed value) {
     if (!value) {
         return "Its";
     }
@@ -90,7 +90,7 @@ string possessive_noun (mixed value) {
 }
 
 // subjective pronoun of an object
-string subjective (mixed value) {
+varargs string subjective (mixed value) {
     switch (objectp(value) ? value->query_gender() : value) {
     case "male": return "he";
     case "female": return "she";
@@ -100,7 +100,7 @@ string subjective (mixed value) {
 }
 
 // objective pronoun of an object
-string objective (mixed value) {
+varargs string objective (mixed value) {
     switch (objectp(value) ? value->query_gender() : value) {
     case "male": return "him";
     case "female": return "her";
@@ -110,7 +110,7 @@ string objective (mixed value) {
 }
 
 // possessive pronoun of an object
-string possessive (mixed value) {
+varargs string possessive (mixed value) {
     switch (objectp(value) ? value->query_gender() : value) {
     case "male": return "his";
     case "female": return "her";
@@ -120,6 +120,6 @@ string possessive (mixed value) {
 }
 
 // reflexive pronoun of an object
-string reflexive (mixed value) {
+varargs string reflexive (mixed value) {
     return objective(value) + "self";
 }
