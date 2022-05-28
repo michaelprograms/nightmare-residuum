@@ -292,7 +292,7 @@ mixed direct_verb_rule (mixed args...) {
     if (rule == "LVS" && sizeof(args) > 2) {
         object po = previous_object();
         object who = args[2];
-        if (po == who || environment(po) != environment(who)) return 0;
+        if (po == who || environment(po) != environment(who) || !who->is_living()) return 0;
     }
 
     return !undefinedp(query_emote(verb)[rule]);

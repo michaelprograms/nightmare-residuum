@@ -67,7 +67,3 @@ int handle_release (object ob) {
     }
     return ::handle_release(ob);
 }
-
-int direct_verb_liv (mixed args...) {
-    return 0;
-}
