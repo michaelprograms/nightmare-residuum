@@ -15,10 +15,15 @@ string cardinal (int n) {
 }
 
 nosave private mapping __AbnormalOverride = ([
-    "were": "was",
-    "don't": "doesn't",
     "aren't": "isn't",
+    "don't": "doesn't",
+    "were": "was",
     "die": "dies",
+    "boots": "boots",
+    "bracers": "bracers",
+    "gloves": "gloves",
+    "leggings": "leggings",
+    "robes": "robes",
 ]);
 string pluralize (mixed single) {
     string str;
