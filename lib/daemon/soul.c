@@ -1,17 +1,16 @@
 inherit M_SAVE;
 
 private mapping __Emotes = ([ ]);
-nosave private mapping __EmotesGenerated = ([ ]);
-private string *__Adverbs = ({ });
+nosave private mapping __EmotesDefault = ([ ]);
 
-void generate_emotes () {
-    string *list = ({ "smile", "frown", "cheer", "scream", "fingerguns", });
+private void generate_defaults () {
+    string *list = ({ "smile", "frown", "nod", "cheer", "scream", "fingerguns", "laugh", "grin", "scowl", "chuckle", });
 
     foreach (string emote in list) {
-        __EmotesGenerated[emote] = ([
-            "":"$N $v" + emote + ".",
-            "LIV":"$N $v" + emote + " at $t.",
-            "LVS":"$N $v" + emote + " at $O.",
+        __EmotesDefault[emote] = ([
+            "": "$N $v" + emote + ".",
+            "LIV": "$N $v" + emote + " at $t.",
+            "LVS": "$N $v" + emote + " at $O.",
         ]);
     }
 }
@@ -21,9 +20,9 @@ void create () {
     set_save_path("/save/daemon/soul.o");
     restore_data();
 
-    generate_emotes();
+    generate_defaults();
 
-    foreach (string verb, mapping value in __EmotesGenerated + __Emotes) {
+    foreach (string verb, mapping value in __EmotesDefault + __Emotes) {
         foreach (string rule, mixed ignore in value) {
             catch (parse_add_rule(verb, rule));
         }
@@ -31,17 +30,13 @@ void create () {
 }
 
 mapping query_emote (string verb) {
-    return __Emotes[verb] || __EmotesGenerated[verb];
+    return __Emotes[verb] || __EmotesDefault[verb];
 }
-
 string *query_emotes () {
-    return keys(__Emotes) + keys(__EmotesGenerated);
-}
-string *query_adverbs () {
-    return __Adverbs;
+    return keys(__Emotes) + keys(__EmotesDefault);
 }
 
-// The fluffos parser accepts six tokens:
+// The fluffos rule parser accepts six tokens:
 //     OBJ - matches a single object
 //     OBS - matches one or more objects
 //     LIV - matches a single, living object
@@ -60,7 +55,7 @@ int add_emote (string verb, mixed rule, string *parts) {
         __Emotes[verb][rule] = parts[0];
     }
     save_data();
-    return 1;
+    return !!query_emote(verb);
 }
 
 int remove_emote (string verb, string rule) {
@@ -192,11 +187,7 @@ varargs string compose_message (object forwhom, string msg, object *who, mixed *
     return res;
 }
 
-int query_soul_exists (string verb) {
-    return !!query_emote(verb);
-}
-
-varargs mixed *get_soul (string verb, string rule, mixed *args) {
+varargs private mixed *get_soul (string verb, string rule, mixed *args) {
     mapping rules;
     mixed soul;
     mixed *result;
@@ -257,7 +248,7 @@ varargs mixed *get_soul (string verb, string rule, mixed *args) {
     return result;
 }
 
-void display_soul (object *who, string *msgs, mixed others) {
+private void display_soul (object *who, string *msgs, mixed others) {
     mapping done = ([ ]);
 
     for (int i = 0; i < sizeof(who); i ++) {
@@ -272,12 +263,12 @@ void display_soul (object *who, string *msgs, mixed others) {
     }
 }
 
+/* ----- parser applies ----- */
+
 int livings_are_remote () {
     return 1;
 }
-mixed can_verb_wrd (string verb, string wrd) {
-    return member_array(wrd, __Adverbs) != -1 || member_array('*', wrd) != -1;
-}
+
 mixed can_verb_rule (mixed args...) {
     string verb, rule;
     mapping emote;
