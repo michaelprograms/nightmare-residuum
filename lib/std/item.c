@@ -23,13 +23,13 @@ mixed direct_look_at_obj (mixed args...) {
 mixed direct_look_obj (mixed args...) {
     return direct_look_at_obj(args);
 }
-mixed direct_drop_obj (object ob, string str) {
+mixed direct_drop_obj (mixed args...) {
     return (environment() == previous_object());
 }
-varargs mixed direct_give_obj_to_liv (object ob, mixed liv) {
+mixed direct_give_obj_to_liv (mixed args...) {
     return (environment() == previous_object());
 }
-mixed direct_get_obj (object ob, string str) {
+mixed direct_get_obj (mixed args...) {
     object env = environment();
     if (env != environment(previous_object())) {
         if (env == previous_object()) {
