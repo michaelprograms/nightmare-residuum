@@ -265,24 +265,27 @@ private void display_soul (object *who, string *msgs, mixed others) {
 
 /* ----- parser applies ----- */
 
-int livings_are_remote () {
-    return 1;
-}
+// @TODO channel emotes or emoteto
+// int livings_are_remote () {
+//     return 0;
+// }
 
 mixed can_verb_rule (mixed args...) {
     string verb, rule;
     mapping emote;
+
     if (sizeof(args) < 2) return;
     verb = args[0];
     rule = args[1];
-    if (!(emote = query_emote(verb))) return;
+
+    if (!(emote = query_emote(verb))) return 0;
     return !undefinedp(emote[rule]);
 }
 
 mixed direct_verb_rule (mixed args...) {
     string verb, rule;
 
-    if (sizeof(args) < 2) return;
+    if (sizeof(args) < 2) return 0;
     verb = args[0];
     rule = args[1];
 

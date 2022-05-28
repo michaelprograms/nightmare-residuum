@@ -38,3 +38,30 @@ void test_add_and_remove () {
 
     // @TODO test remove_emote on non-existant emotes/rules
 }
+
+void test_apply_can_verb_rule () {
+    expect_function("can_verb_rule", testOb);
+
+    expect("can_verb_rule is true for valid emotes", (: ({
+        assert(testOb->can_verb_rule("smile", ""), "==", 1),
+        assert(testOb->can_verb_rule("smile", "LIV"), "==", 1),
+        assert(testOb->can_verb_rule("smile", "LVS"), "==", 1),
+        assert(testOb->can_verb_rule("frown", ""), "==", 1),
+        assert(testOb->can_verb_rule("frown", "LIV"), "==", 1),
+        assert(testOb->can_verb_rule("frown", "LVS"), "==", 1),
+    }) :));
+
+    expect("can_verb_rule is false for unknown emotes", (: ({
+        // valid emote but invalid rule
+        assert(testOb->can_verb_rule("smile", "invalid"), "==", 0),
+        // invalid emote but valid rule
+        assert(testOb->can_verb_rule("invalid", ""), "==", 0),
+        // invalid emote and invalid rule
+        assert(testOb->can_verb_rule("unknown", "invalid"), "==", 0),
+    }) :));
+
+    expect("can_verb_rule is false for invalid arguments", (: ({
+        assert(testOb->can_verb_rule(), "==", 0),
+        assert(testOb->can_verb_rule("not enough data"), "==", 0),
+    }) :));
+}
