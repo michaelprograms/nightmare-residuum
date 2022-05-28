@@ -66,7 +66,18 @@ void test_pluralize () {
 
     expect("pluralize handles strings", (: ({
         assert(testOb->pluralize("elf"), "==", "elves"),
+        assert(testOb->pluralize("dwarf"), "==", "dwarves"),
+
         assert(testOb->pluralize("staff"), "==", "staves"),
+        assert(testOb->pluralize("scoff"), "==", "scoffs"),
+        assert(testOb->pluralize("bluff"), "==", "bluffs"),
+        assert(testOb->pluralize("quaff"), "==", "quaffs"),
+        assert(testOb->pluralize("chaff"), "==", "chaffs"),
+        assert(testOb->pluralize("graff"), "==", "graffs"),
+
+        assert(testOb->pluralize("gun"), "==", "guns"),
+        assert(testOb->pluralize("guns"), "==", "guns"),
+
         assert(testOb->pluralize("a red house"), "==", "red houses"),
         assert(testOb->pluralize("a sack of rice"), "==", "sacks of rice"),
         assert(testOb->pluralize("plumbus"), "==", "plumbi"),
@@ -83,6 +94,21 @@ void test_pluralize () {
         assert(testOb->pluralize($(ob)), "==", "staves"),
     }) :));
     destruct(ob);
+
+    expect("pluralize handles some abnormal overridden strings", (: ({
+        assert(testOb->pluralize("die"), "==", "dies"),
+        assert(testOb->pluralize("were"), "==", "was"),
+    }) :));
+
+    expect("pluralize handles invalid argument 1", (: ({
+        assert((: testOb->pluralize(0) :), "catch", "*Bad argument 1 to grammar->pluralize\n"),
+        assert((: testOb->pluralize(0.0) :), "catch", "*Bad argument 1 to grammar->pluralize\n"),
+        assert((: testOb->pluralize(({})) :), "catch", "*Bad argument 1 to grammar->pluralize\n"),
+        assert((: testOb->pluralize(({ 1, 2, 3 })) :), "catch", "*Bad argument 1 to grammar->pluralize\n"),
+        assert((: testOb->pluralize(({ "", "", "" })) :), "catch", "*Bad argument 1 to grammar->pluralize\n"),
+        assert((: testOb->pluralize(([])) :), "catch", "*Bad argument 1 to grammar->pluralize\n"),
+        assert((: testOb->pluralize((: 1 :)) :), "catch", "*Bad argument 1 to grammar->pluralize\n"),
+    }) :));
 }
 
 void test_consolidate () {

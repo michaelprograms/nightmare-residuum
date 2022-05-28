@@ -14,27 +14,23 @@ string cardinal (int n) {
     return sign + query_num(abs(n));
 }
 
+nosave private mapping __AbnormalOverride = ([
+    "were": "was",
+    "don't": "doesn't",
+    "aren't": "isn't",
+    "die": "dies",
+]);
 string pluralize (mixed single) {
     string str;
     if (objectp(single)) str = single->query_name();
     else str = single;
-    if (undefinedp(str) || !stringp(str)) error("Bad argument 1 to grammar->pluralize");
+    if (!stringp(str)) error("Bad argument 1 to grammar->pluralize");
 
-    // @TODO ABNORMAL
-    switch (str) {
-    case "were": return "was";
-    case "don't": return "doesn't";
-    case "aren't": return "isn't";
-    case "possum": return "possums";
-    case "staff": return "staves";
-    case "die": return "dies";
-    case "laf": return "lafs";
-    case "barf": return "barfs";
-    case "snarf": return "snarfs";
-    case "hum": return "hums";
-    }
-    if (str[<5..<1] == "penis") return str + "es";
-    if (str[<2..<1] == "ff") return str + "s";
+    if (__AbnormalOverride[str]) return __AbnormalOverride[str];
+
+    if (str[<3..<1] == "uns") return str;
+    if (str[<5..<1] == "staff") return str[0..<3] + "ves";
+    else if (str[<2..<1] == "ff") return str + "s";
     return efun::pluralize(str);
 }
 
