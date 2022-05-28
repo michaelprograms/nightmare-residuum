@@ -4,11 +4,12 @@ private mapping __Emotes = ([ ]);
 nosave private mapping __EmotesDefault = ([ ]);
 
 private void generate_defaults () {
-    string *list = ({ "smile", "frown", "nod", "cheer", "scream", "fingerguns", "laugh", "grin", "scowl", "chuckle", });
+    string *list = ({ "smile", "frown", "nod", "cheer", "scream", "fingerguns", "laugh", "grin", "scowl", "chuckle", "point", });
 
     foreach (string emote in list) {
         __EmotesDefault[emote] = ([
             "": "$N $v" + emote + ".",
+            "OBJ": "$N $v" + emote + " at $o.",
             "LIV": "$N $v" + emote + " at $t.",
             "LVS": "$N $v" + emote + " at $O.",
         ]);
@@ -89,7 +90,7 @@ varargs string compose_message (object forwhom, string msg, object *who, mixed *
     string str;
     string bit;
     mapping has = ([ ]);
-    object *obs;
+    mixed obs;
 
     fmt = reg_assoc(msg, ({ "\\$[OoTtNnRrVvPp][a-z0-9]*" }), ({ 1 }));
     fmt = fmt[0];
@@ -115,6 +116,7 @@ varargs string compose_message (object forwhom, string msg, object *who, mixed *
         case 'O':
         case 'o':
             obs = args[num];
+            if (objectp(obs)) obs = ({ obs });
             bit = conjunction(map(obs, (: $1 ? ($1->is_living() ? ($1 == $(forwhom) ? "you" : $1->query_cap_name()) : $1->query_name()) : 0 :)));
             break;
         case 'T':
@@ -293,15 +295,12 @@ mixed direct_verb_rule (mixed args...) {
         object po = previous_object();
         object who = args[2];
         if (po == who || environment(po) != environment(who) || !who->is_living()) return 0;
+    } else if (rule == "OBJ" && sizeof(args) > 2) {
+        object po = previous_object();
+        object who = args[2];
+        if (po == who || environment(po) != environment(who) || who->is_living()) return 0;
     }
 
-    return !undefinedp(query_emote(verb)[rule]);
-}
-mixed indirect_verb_rule (mixed args...) {
-    string verb, rule;
-    if (sizeof(args) < 2) return;
-    verb = args[0];
-    rule = args[1];
     return !undefinedp(query_emote(verb)[rule]);
 }
 
@@ -314,10 +313,7 @@ void do_verb_rule (mixed args...) {
     rule = args[1];
 
     soul = get_soul(verb, rule, args[2..]);
-
-    if (!soul) {
-        return;
-    }
+    if (!soul) return;
 
     display_soul(soul[0], soul[1], environment(this_character())->query_living_contents() - ({ this_character() }));
 }
