@@ -28,15 +28,17 @@ void test_add_and_remove () {
         testOb->set_save_path(0),
         assert(testOb->query_save_path(), "==", 0),
 
+        // add dummy emote
         assert(!!testOb->query_emote("testemote"), "==", 0),
-        assert(testOb->add_emote("testemote", "", ({"$N $vtestemote."})), "==", 1),
+        assert(testOb->add_emote("testemote", "", "$N $vtestemote."), "==", 1),
         assert(testOb->query_emote("testemote"), "==", ([ "": "$N $vtestemote.", ])),
 
+        // remove emotte
         assert(testOb->remove_emote("testemote", ""), "==", 1),
         assert(testOb->query_emote("testemote"), "==", 0),
+        // can't remove again
+        assert(testOb->remove_emote("testemote", ""), "==", 0),
     }) :));
-
-    // @TODO test remove_emote on non-existant emotes/rules
 }
 
 void test_apply_can_verb_rule () {
