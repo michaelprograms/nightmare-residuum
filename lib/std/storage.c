@@ -32,7 +32,7 @@ mixed indirect_get_obj_from_obj (mixed args...) {
     return 1;
 }
 mixed indirect_put_obj_in_obj (mixed args...) {
-    if (!args || !args[0]) return 0;
+    if (!sizeof(args) || !args[0] || !objectp(args[0])) return 0;
     if (environment(args[0]) != previous_object()) {
         return "You can't put what you don't have.";
     }
