@@ -189,7 +189,6 @@ varargs private mapping prepare_emote (string verb, string rule, mixed *args) {
 
     who = ({ this_character() });
     if (strsrch(rule, "LIV") != -1) {
-        int i = 0;
         foreach (string token in explode(rule, " ")) {
             if (token == "LIV") {
                 who += ({ args[0] });
@@ -235,11 +234,6 @@ private void display_emote (object *who, string *msgs, mixed others) {
 }
 
 /* ----- parser applies ----- */
-
-// @TODO channel emotes or emoteto
-// int livings_are_remote () {
-//     return 0;
-// }
 
 mixed can_verb_rule (mixed args...) {
     string verb, rule;
