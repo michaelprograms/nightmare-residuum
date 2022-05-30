@@ -33,7 +33,7 @@ void test_add_and_remove () {
         assert(testOb->add_emote("testemote", "", "$N $vtestemote."), "==", 1),
         assert(testOb->query_emote("testemote"), "==", ([ "": "$N $vtestemote.", ])),
 
-        // remove emotte
+        // remove emote
         assert(testOb->remove_emote("testemote", ""), "==", 1),
         assert(testOb->query_emote("testemote"), "==", 0),
         // can't remove again
