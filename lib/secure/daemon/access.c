@@ -1,8 +1,6 @@
 #include <access.h>
 #include <driver/function.h>
 
-// inherit
-
 private nosave mapping __Group, __Read, __Write;
 private nosave object __Unguarded;
 
