@@ -48,5 +48,5 @@ void test_setup_body () {
         assert(testOb->setup_body($(ob)), "==", $(limbs)),
     }) :));
 
-
+    destruct(ob);
 }

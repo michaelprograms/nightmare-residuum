@@ -67,4 +67,6 @@ void test_query_allowed () {
     //     assert((: testOb->query_allowed(testOb, "file_size") :), "catch", "*Bad argument 3 to access->query_allowed\n"),
     //     assert((: testOb->query_allowed(testOb, "file_size", "/tmp/path") :), "catch", "*Bad argument 4 to access->query_allowed\n"),
     // }) :));
+
+    destruct(basicOb);
 }

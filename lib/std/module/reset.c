@@ -29,8 +29,12 @@ void reset () {
             if (counts[key] && (count = counts[key]) >= val) continue;
             while (count < val) {
                 object ob = clone_object(key);
-                ob->handle_move(this_object());
-                ob->reset();
+                // prevent objects from leaking if can't move
+                if (!ob->handle_move(this_object())) {
+                    destruct(ob);
+                } else {
+                    ob->reset();
+                }
                 count ++;
             }
         } else if (functionp(val)) {

@@ -24,7 +24,7 @@ void test_resets () {
         assert(testOb->query_reset(), "==", ([ ])),
 
         // set_reset will call reset
-        testOb->set_reset(([ "/std/item.c": 1])),
+        testOb->set_reset(([ "/std/item.c": 1 ])),
         assert(testOb->query_resets(), "==", 1),
         assert(testOb->query_reset(), "==", ([ "/std/item.c": 1 ])),
         testOb->reset(),
