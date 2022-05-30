@@ -48,6 +48,7 @@ private void load_species () {
 }
 
 /* -----  ----- */
+
 mapping setup_body (object ob) {
     mapping body = ([]);
     mapping limbs;
