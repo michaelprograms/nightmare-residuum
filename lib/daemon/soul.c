@@ -79,7 +79,7 @@ int remove_emote (string verb, string rule) {
 // R/r: Reflexive   your/him/her/them/it + self
 // V/v: pluralize word
 // P/p: Possessive
-varargs string parse_emote (object forwhom, string msg, object *who, mixed *args) {
+varargs string parse_emote (object target, string msg, object *who, mixed *args) {
     mixed *fmt, obs;
     string emote = "", tmp, names;
     mapping has = ([ ]);
@@ -110,31 +110,28 @@ varargs string parse_emote (object forwhom, string msg, object *who, mixed *args
         }
 
         switch (c) {
-        case 'O':
-        case 'o':
+        case 'O': case 'o': // O/o: Object list
             obs = args[num];
             if (objectp(obs)) obs = ({ obs });
-            names = conjunction(map(obs, (: $1 ? ($1->is_living() ? ($1 == $(forwhom) ? "you" : $1->query_cap_name()) : $1->query_name()) : 0 :)));
+            names = conjunction(map(obs, (: $1 ? ($1->is_living() ? ($1 == $(target) ? "you" : $1->query_cap_name()) : $1->query_name()) : 0 :)));
             break;
-        case 'T':
-        case 't':
+        case 'T': case 't': // T/t: Objective Name?
             if (tmp == "") tmp = "o"; // default to objective
-        case 'N':
-        case 'n':
-            if (tmp == "") tmp = "s"; // default is subjective
+        case 'N': case 'n': // N/n: You/Name
+            if (tmp == "") tmp = "s"; // default to subjective
             if (tmp != "p") {
                 if (tmp != "d") {
                     // Reflexification
                     if (subj < sizeof(who) && who[subj] == who[num] && has[who[subj]]) {
                         if (tmp == "o") { // Objective: You verb yourself. Name verbs himself.
-                            names = forwhom == who[subj] ? "yourself" : reflexive(who[subj]);
+                            names = target == who[subj] ? "yourself" : reflexive(who[subj]);
                         } else if (tmp == "s") { // Subjective: You verb you adjective. Name verbs he adjective.
-                            names = forwhom == who[subj] ? "you" : subjective(who[subj]);
+                            names = target == who[subj] ? "you" : subjective(who[subj]);
                         }
                         break;
                     }
                     // Other pronouns
-                    if (who[num] == forwhom) {
+                    if (who[num] == target) {
                         names = "you";
                         has[who[num]] ++;
                         break;
@@ -151,24 +148,33 @@ varargs string parse_emote (object forwhom, string msg, object *who, mixed *args
             has[who[num]]++;
             names = who[num]->query_cap_name();
             break;
-        case 'R':
-        case 'r':
-            // @TODO
+        case 'R': case 'r': // R/r: Reflexive   your/him/her/them/it + self
+            if (target == who[num])
+            tmp = "yourself";
+        else
+            tmp = who[num]->query_reflexive();
             break;
-        case 'V':
-        case 'v':
-            if (num >= sizeof(who) || who[num] != forwhom) {
+        case 'V': case 'v': // V/v: pluralize word
+            if (num >= sizeof(who) || who[num] != target) {
                 names = pluralize(tmp);
             } else {
                 names = tmp;
             }
             break;
-        case 'P':
-        case 'p':
-            // @ TODO
+        case 'P': case 'p': // P/p: Possessive
+            if (target == who[num]) {
+                tmp = "your";
+                break;
+            }
+            if (has[who[num]]) {
+                tmp = who[num]->query_possessive();
+                break;
+            }
+            tmp = possessive_noun(who[num]);
+            has[who[num]]++;
             break;
         }
-        if (!names) names = "";
+        // when flag is uppercase we want to capitalize ('A'=65 < 'a'=97)
         if (c < 'a') names = capitalize(names);
         emote += (names ? names : "") + fmt[i+1];
     }
