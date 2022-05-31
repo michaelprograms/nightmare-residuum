@@ -1,5 +1,6 @@
 inherit STD_ITEM;
 inherit M_BONUS;
+inherit M_AUTOLOAD;
 
 nosave string __Type, *__Limbs;
 nosave object __Worn;

@@ -22,6 +22,7 @@
 #define ITEM_CORPSE     "/std/item/corpse.c"
 
 // std modules
+#define M_AUTOLOAD      "/std/module/autoload.c"
 #define M_BONUS         "/std/module/bonus.c"
 #define M_CONTAINER     "/std/module/container.c"
 #define M_CURRENCY      "/std/module/currency.c"

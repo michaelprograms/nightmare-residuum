@@ -1,10 +1,13 @@
-#include "living/living.h";
 
 inherit STD_LIVING;
+
+inherit "/std/character/autoload.c";
 inherit "/std/character/channel.c";
 
 inherit M_PARENT;
 inherit M_SAVE;
+
+#include "living/living.h";
 
 private int __LastAction;
 private int __Created = time();
@@ -18,11 +21,22 @@ int query_immortal ();
 
 int is_character () { return 1; }
 
+void save_character () {
+    update_autoload();
+    save_data();
+    reset_autoload();
+}
+void restore_character () {
+    restore_data();
+    restore_autoload();
+}
+
 // -----------------------------------------------------------------------------
 
 void create () {
     living::create();
     parent::create();
+    autoload::create();
 }
 
 void heart_beat () {
@@ -33,7 +47,7 @@ void heart_beat () {
         if (__User && __User->query_account()) {
             __User->query_account()->update_character_data(this_object());
         }
-        save_data();
+        save_character();
     }
 }
 
@@ -106,10 +120,10 @@ int query_connection_time () {
 void setup_character () {
     __LastAction = time();
     if (!D_CHARACTER->query_exists(query_key_name())) {
-        save_data();
+        save_character();
         update_vitals(1);
     } else {
-        restore_data();
+        restore_character();
         update_vitals(0);
     }
     living::update_limbs();
@@ -136,7 +150,7 @@ void exit_world () {
         this_object()->handle_unwield(weapon);
     }
 
-    save_data();
+    save_character();
     handle_remove();
 }
 

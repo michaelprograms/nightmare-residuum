@@ -9,4 +9,5 @@ void create () {
     set_type("shirt");
     set_limbs(({ "torso", "left arm", "right arm" }));
     set_ac(1);
+    set_autoload(1);
 }
