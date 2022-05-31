@@ -5,8 +5,8 @@ void set_autoload (int level) {
     __LevelReq = level;
 }
 
-
 mixed *query_autoload_data () {
+    // override
     return ({ });
 }
 
