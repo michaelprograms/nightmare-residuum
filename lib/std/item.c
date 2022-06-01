@@ -1,5 +1,6 @@
 inherit STD_OBJECT;
 inherit M_CLEAN;
+inherit M_AUTOLOAD;
 
 nosave private mixed __NoGet;
 
