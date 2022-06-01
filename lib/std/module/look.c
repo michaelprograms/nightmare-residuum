@@ -8,18 +8,18 @@ string *query_looks () {
     return sort_array(keys(__Looks), 1);
 }
 varargs void set_look (string look, mixed desc) {
-    if (!stringp(look)) error("Bad argument 1 to look->set_look");
-    if (!stringp(desc) && !functionp(desc)) error("Bad argument 2 to look->set_look");
+    if (!stringp(look)) raise_error("Bad argument 1 to look->set_look");
+    if (!stringp(desc) && !closurep(desc)) raise_error("Bad argument 2 to look->set_look");
 
-    if (!mapp(__Looks)) __Looks = ([]);
+    if (!mappingp(__Looks)) __Looks = ([]);
     __Looks[look] = desc;
 }
 void set_looks (mapping looks) {
-    if (!mapp(looks)) error("Bad argument 1 to look->set_looks");
+    if (!mappingp(looks)) raise_error("Bad argument 1 to look->set_looks");
 
     __Looks = ([]);
     foreach (mixed look, mixed desc in looks) {
-        if (arrayp(look)) {
+        if (pointerp(look)) {
             foreach (string real_look in look) {
                 set_look(real_look, desc);
             }
@@ -29,17 +29,17 @@ void set_looks (mapping looks) {
     }
 }
 void remove_look (string look) {
-    if (!stringp(look)) error("Bad argument 1 to look->remove_look");
+    if (!stringp(look)) raise_error("Bad argument 1 to look->remove_look");
     map_delete(__Looks, look);
 }
 
 mixed handle_look (string look) {
     mixed desc;
 
-    if (!stringp(look)) error("Bad argument 1 to look->handle_look");
+    if (!stringp(look)) raise_error("Bad argument 1 to look->handle_look");
     desc = query_look(look);
-    if (functionp(desc)) {
-        desc = evaluate(desc, this_character());
+    if (closurep(desc)) {
+        desc = funcall(desc, this_character());
     }
     if (!desc) return 0;
     return desc;

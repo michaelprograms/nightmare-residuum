@@ -21,8 +21,8 @@ void create () {
     }
 
     __Owner = previous_object() || previous_object(1);
-    if (__Owner != this_user() && !regexp(file_name(__Owner), "\\.test")) {
-        error("illegal shell object created: " + file_name(__Owner));
+    if (__Owner != this_user() && !sizeof(regexp(program_name(__Owner), "\\.test"))) {
+        raise_error("illegal shell object created: " + program_name(__Owner));
         destruct();
     }
 
@@ -38,7 +38,7 @@ void create () {
 
 void handle_remove () {
     if (origin() != ORIGIN_LOCAL && __Owner && __Owner != previous_object()) {
-        error("illegal attempt to remove shell object?");
+        raise_error("illegal attempt to remove shell object?");
     }
 
     save_data();
@@ -63,7 +63,7 @@ mixed *parse_command_flags (string rawInput) {
 
         for (int i = 0; i < l; i ++) {
             if (regexp(args[i], "^-")) {
-                if ((x = strlen(args[i])) > 1) {
+                if ((x = sizeof(args[i])) > 1) {
                     if ((y = strsrch(args[i], "=")) > -1) {
                         flags[args[i][1..y-1]] = args[i][y+1..];
                     } else {
@@ -88,7 +88,7 @@ void execute_command (string command) {
 
     split = explode(command, " ") - ({ "" });
     action = split[0];
-    input = sizeof(split) > 1 ? command[(strlen(action)+1)..] : 0;
+    input = sizeof(split) > 1 ? command[(sizeof(action)+1)..] : 0;
 
     if (D_CHANNEL->query_valid_channel(action)) {
         return D_CHANNEL->send(action, input);
@@ -134,7 +134,7 @@ protected mixed query_prompt () {
     int i;
 
     while ((i = strsrch(prompt, "$")) != -1) {
-        if (i + 2 > strlen(prompt) - 1) break;
+        if (i + 2 > sizeof(prompt) - 1) break;
         switch (prompt[i+1..i+2]) {
             case "hp":
                 prompt = replace_string(prompt, "$hp", ""+tc->query_hp());
@@ -165,8 +165,8 @@ protected mixed query_prompt () {
 }
 
 void shell_start () {
-    if ((__Owner != this_user() || __Owner != previous_object()) && !regexp(file_name(__Owner), "\\.test$")) {
-        error("illegal attempt to take over shell?");
+    if ((__Owner != this_user() || __Owner != previous_object()) && !regexp(program_name(__Owner), "\\.test$")) {
+        raise_error("illegal attempt to take over shell?");
     }
 
     this_user()->input_push((: shell_input :), (: query_prompt :));

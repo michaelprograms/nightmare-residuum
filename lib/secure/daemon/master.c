@@ -1,4 +1,6 @@
-#include <driver/parser_error.h>
+#include "/secure/include/driver/parser_error.h"
+#include "/secure/include/global.h"
+#include "/secure/sefun/sefun.h"
 
 #define CFG_PRELOAD "/secure/etc/preload.cfg"
 
@@ -10,7 +12,7 @@ object connect (int port) {
     string err;
 
     if (err = catch(ob = clone_object(OBJ_USER))) {
-        if (!this_user()) {
+        if (!this_player()) {
             debug_message(err);
         } else {
             write("Something unexpected happened.\n");
@@ -33,7 +35,7 @@ string privs_file (string filename) {
 varargs string *epilog (int load_empty) {
     string *preload = ({ });
     if (!load_empty && file_size(CFG_PRELOAD) > 0) {
-        preload = filter_array(explode(read_file(CFG_PRELOAD), "\n") - ({ "" }), (: $1[0] != '#' :));
+        preload = filter(explode(read_file(CFG_PRELOAD), "\n") - ({ "" }), (: $1[0] != '#' :));
     }
     return preload;
 }
@@ -41,7 +43,7 @@ varargs string *epilog (int load_empty) {
 // This apply is called for each driver command line option passed via -f.
 void flag (string flag) {
     if (flag == "test") {
-        call_out(function() { D_TEST->run(1); }, 0);
+        call_out((: D_TEST->run(1) :), 0);
     } else {
         debug_message("master()->flag: received unknown flag.");
     }
@@ -58,7 +60,7 @@ mapping get_mud_stats () {
         /* --- Required --- */
         "NAME"              : mud_name(),
         "PLAYERS"           : ""+(sizeof(users())),
-        "UPTIME"            : ""+(time() - uptime()),
+        // "UPTIME"            : ""+(time() - uptime()),
 
         /* --- Generic --- */
         "CODEBASE"          : mudlib_version(),
@@ -158,13 +160,13 @@ string *get_include_path (string file) {
 
 // This apply is called when shutting down the driver.
 void crash (string crash_message, object command_giver, object current_object) {
-    debug_message(ctime() + " crashed because " + crash_message + " " + identify(call_stack()) + " " + identify(previous_object(-1)));
+    debug_message(ctime() + " crashed because " + crash_message + " " + identify(command_stack()) + " " + identify(caller_stack()));
     message("system", "Everything is suddenly nothing as irreality takes control.\n", users());
     users()->quit_account();
 }
 
 private string trace_line (object obj, string prog, string file, int line) {
-    string objfn = obj ? file_name(obj) : "<none>";
+    string objfn = obj ? program_name(obj)[0..<3] : "<none>";
     string ret = objfn;
     int num;
     sscanf(objfn, "%s#%d", objfn, num);
@@ -195,7 +197,7 @@ void error_handler (mapping e, int caught) {
     string ret, file = caught ? "catch" : "runtime";
 
     if (caught && sizeof(e["trace"]) > 1 && e["trace"][1]["program"] == D_TEST) {
-        object test = filter_array(e["trace"], (: $1["file"] == M_TEST :))[0]["object"];
+        object test = filter(e["trace"], (: $1["file"] == "/secure/module/test" :))[0]["object"];
         if (test && !test->query_expect_catch()) {
             write("--- CAUGHT DURING TEST:\n" + standard_trace(e) + "\n---\n");
         }
@@ -208,22 +210,23 @@ void error_handler (mapping e, int caught) {
     }
     write_file("/log/"+file, ret);
     // @TODO CHAT_D->do_chat("runtime", ret , 2 , 0);
-    if (this_user(1)) {
-        tell_object(this_user(1), sprintf("%sTrace written to /log/%s\n", e["error"], (caught ? "catch" : "runtime")));
+    if (this_player()) {
+        tell_object(this_player(), sprintf("%sTrace written to /log/%s\n", e["error"], (caught ? "catch" : "runtime")));
     }
     return 0;
 }
 
 private string *read_file_disabled_warnings (string file) {
     string *lines = file_size(file) > 0 ? explode(read_file(file), "\n") : ({});
-    lines = filter_array(lines, (: regexp($1,"// disable warning:") :));
-    return map_array(lines, (: $1[strsrch($1, ": ")+2..<1] :));
+    lines = filter(lines, (: sizeof(regexp(({ $1 }),"// disable warning:")) :));
+    return map(lines, (: $1[strstr($1, ": ")+2..<1] :));
 }
 
 // This apply is called when an error occurs during compilation of a file.
 void log_error (string file, string msg) {
     string dest, lcMsg, nom, tmp;
 
+    debug_message("log_error: "+file+" "+msg+"\n");
     if (file[0] != '/') {
         file = "/" + file;
     }
@@ -238,28 +241,28 @@ void log_error (string file, string msg) {
         dest = "log";
     }
 
-    if (regexp(msg, "Warning: ")) {
-        if (sizeof(previous_object(-1)) > 1 && base_name(previous_object(-1)[<1]) == D_TEST[0..<3] && previous_object()->query_expect_catch()) {
+    if (sizeof(regexp(({ msg }), "Warning: "))) {
+        if (sizeof(caller_stack()) > 1 && object_name(caller_stack()[<1]) == D_TEST[0..<3] && previous_object()->query_expect_catch()) {
             return;
         }
         lcMsg = lower_case(msg);
         foreach (string warning in read_file_disabled_warnings(file)) {
-            if (regexp(lcMsg, lower_case(warning))) {
+            if (sizeof(regexp(({ lcMsg }), lower_case(warning)))) {
                 return;
             }
         }
-        msg = replace_string(msg, "Warning: ", "\e[33mWarning\e[0m: ", 1);
+        msg = regreplace(msg, "Warning: ", "\e[33mWarning\e[0m: ", 1);
     } else {
         if (file_size("/log/" + dest) > 20000) { // 20 kb
             rename("/log/" + dest, "/log/" + dest + "-" + time());
         }
         write_file("/log/" + dest, ctime() + " " + msg);
-        msg = replace_string(msg, ": ", ": \e[31;1mError\e[0m: ", 1);
+        msg = regreplace(msg, ": ", ": \e[31;1mError\e[0m: ", 1);
     }
-    if (msg && this_character() && this_character()->query_immortal()) {
-        message("wrap", msg, this_user());
-    } else if (sizeof(previous_object(-1)) > 1 && previous_object(-1)[<1]) {
-        if (base_name(previous_object(-1)[<1]) == D_TEST[0..<3]) {
+    if (msg && SEFUN->this_character() && SEFUN->this_character()->query_immortal()) {
+        message("wrap", msg, this_player());
+    } else if (sizeof(caller_stack()) > 1 && caller_stack()[<1]) {
+        if (object_name(caller_stack()[<1]) == D_TEST[0..<3]) {
             write(msg + "\n");
         }
     }
@@ -270,16 +273,15 @@ void log_error (string file, string msg) {
 // get_save_file_name
 /*
     This  master apply is called by ed() when a player disconnects while in
-    the editor and editing a file.  This function should return  an  alter‐
-    nate file name for the file to be saved, to avoid overwriting the orig‐
-    inal.
+    the editor and editing a file.  This function should return  an  alternate
+    file name for the file to be saved, to avoid overwriting the original.
 
     string get_save_file_name(string filename?);
 */
 
 // This apply is called by the ed efun to resolve path names.
 string make_path_absolute (string rel_path) {
-    return sanitize_path(rel_path);
+    return SEFUN->sanitize_path(rel_path);
 }
 
 // retrieve_ed_setup
@@ -294,8 +296,8 @@ string make_path_absolute (string rel_path) {
 
 // save_ed_setup
 /*
-    This  master  apply is called by the ed() efun to save a user's ed set‐
-    up/configuration settings (contained in an int).  This function  should
+    This  master  apply is called by the ed() efun to save a user's ed setup/
+    configuration settings (contained in an int).  This function  should
     return an int for success (1 or TRUE)/failure (0 or FALSE).
 
     int save_ed_setup(object user, int config);
@@ -325,7 +327,7 @@ varargs int valid_override (string file, string efun_name, string main_file) {
         case "clone_object":
             return file == "/std/module/test";
     }
-    return regexp(file, "/secure/sefun");
+    return sizeof(regexp(({ file }), "/secure/sefun"));
 }
 
 
@@ -338,8 +340,8 @@ varargs int valid_override (string file, string efun_name, string main_file) {
 // This apply is called prior to every socket efun.
 int valid_socket (object caller, string fn, mixed *info) {
     int valid = 0;
-    if (regexp(file_name(caller), "/secure/daemon/ipc") > 0) valid = 1;
-    else if (regexp(file_name(caller), "/cmd/immortal/cat") > 0) valid = 1;
+    if (sizeof(regexp(({ program_name(caller)[0..<3] }), "/secure/daemon/ipc"))) valid = 1;
+    else if (sizeof(regexp(({ program_name(caller)[0..<3] }), "/cmd/immortal/cat"))) valid = 1;
     // @TODO D_ACCESS->query_allowed(caller, fn, 0, "socket")
     return valid;
 }
@@ -355,28 +357,28 @@ int valid_socket (object caller, string fn, mixed *info) {
         save_object, sqlite3_connect, trace_start, write_bytes, write_file,
 */
 // This apply is called for each of the read efuns
-int valid_read (string file, mixed caller, string fn) {
+int valid_read (string file, mixed uid, string fn, mixed caller) {
     int valid = 0;
-    file = sanitize_path(file);
+    file = SEFUN->sanitize_path(file);
 
-    if (!(valid = regexp(file_name(caller), "/secure/daemon/[master|access]"))) {
+    if (!(valid = sizeof(regexp(({ program_name(caller) }), "/secure/[master|daemon/master|daemon/access]")))) {
         valid = D_ACCESS->query_allowed(caller, fn, file, "read");
     }
-    if (!valid && !regexp(file_name(previous_object()), "\\.test$")) {
-        debug_message(ctime()+" "+file_name(caller)+" denied read ("+fn+") to "+file);
+    if (!valid && !sizeof(regexp(({ program_name(previous_object()) }), "\\.test$"))) {
+        debug_message(ctime()+" "+program_name(caller)+" denied read ("+fn+") to "+file);
     }
     return valid;
 }
 // This apply is called for each of the write efuns
-int valid_write (string file, mixed caller, string fn) {
+int valid_write (string file, mixed uid, string fn, mixed caller) {
     int valid = 0;
-    file = sanitize_path(file);
+    file = SEFUN->sanitize_path(file);
 
-    if (!(valid = regexp(file_name(caller), "/secure/daemon/[master|access]"))) {
+    if (!(valid = sizeof(regexp(({ program_name(caller) }), "/secure/[master|daemon/master|daemon/access]")))) {
         valid = D_ACCESS->query_allowed(caller, fn, file, "write");
     }
-    if (!valid && !regexp(file_name(previous_object()), "\\.test$")) {
-        debug_message(ctime()+" "+file_name(caller)+" denied write ("+fn+") to "+file);
+    if (!valid && !sizeof(regexp(({ program_name(previous_object()) }), "\\.test$"))) {
+        debug_message(ctime()+" "+program_name(caller)+" denied write ("+fn+") to "+file);
     }
     return valid;
 }
@@ -428,7 +430,7 @@ string parser_error_message (int type, object ob, mixed arg, int plural) {
     switch (type) {
     case 0:
         if (arg && objectp(arg)) wat = arg;
-        if (!wat && arg && arrayp(arg) && sizeof(arg)) {
+        if (!wat && arg && pointerp(arg) && sizeof(arg)) {
             foreach (mixed element in arg) {
                 if (objectp(element)) wat = element;
             }
@@ -494,9 +496,9 @@ string parser_error_message (int type, object ob, mixed arg, int plural) {
         return arg;
 
     case ERR_THERE_IS_NO:
-        if (plural || (arg && stringp(arg)) && environment(this_character())) {
+        if (plural || (arg && stringp(arg)) && environment(SEFUN->this_character())) {
             // ???
-            if (tmpob = present(arg, environment(this_character()))) {
+            if (tmpob = present(arg, environment(SEFUN->this_character()))) {
                 return "It seems you must be more specific.";
             } else if (arg && stringp(arg)) wut = remove_article(arg);
         } else wut = "such thing";
@@ -512,5 +514,5 @@ string parser_error_message (int type, object ob, mixed arg, int plural) {
 
 // This function is called whenever characters enter or exit the world.
 void handle_parse_refresh () {
-    parse_refresh();
+    // parse_refresh();
 }

@@ -1,3 +1,5 @@
+#include "/secure/include/ldmud/functionlist.h"
+
 #define ANSI(p) "\e["+(p)+"m"
 #define RESET (this_user() ? "%^RESET%^" : ANSI(0))
 #define BOLD (this_user() ? "%^BOLD%^" : ANSI(1))
@@ -43,6 +45,7 @@ string *test_ignore () {
         "init",
         "reset",
         "heart_beat",
+        "__INIT", // @LDMUD
     });
 }
 
@@ -50,15 +53,15 @@ string *test_ignore () {
 
 private string *testObjectFns = ({ }), *testObjectUntestedFns = ({ });
 
-public int execute_test (function done) {
+public void execute_test (closure done) {
     string *testFns, *otherTestFns;
     int timeBefore, timeAfter;
     int failingExpectsBefore, passingExpectsBefore;
 
     if (sizeof(testFns = test_order()) == 0) {
-        testFns = functions(this_object(), 2) - test_ignore();
-    } else if (sizeof(testFns) != sizeof(functions(this_object(), 2))) {
-        otherTestFns = functions(this_object(), 2) - test_ignore() - testFns;
+        testFns = functionlist(this_object(), RETURN_FUNCTION_NAME | NAME_INHERITED | NAME_HIDDEN) - test_ignore();
+    } else if (sizeof(testFns) != sizeof(functionlist(this_object(), RETURN_FUNCTION_NAME | NAME_INHERITED | NAME_HIDDEN))) {
+        otherTestFns = functionlist(this_object(), RETURN_FUNCTION_NAME | NAME_INHERITED | NAME_HIDDEN) - test_ignore() - testFns;
         testFns += otherTestFns;
     }
 
@@ -66,7 +69,7 @@ public int execute_test (function done) {
     passingExpects = 0;
     totalFailLog = "";
 
-    write("\nEvaluating " + CYAN + UNDERLINE + base_name() + RESET + "\n");
+    write("\nEvaluating " + CYAN + UNDERLINE + object_name(this_object()) + RESET + "\n");
 
     before_all_tests();
     foreach (string testFn in testFns) {
@@ -77,7 +80,7 @@ public int execute_test (function done) {
 
         currentTestLog = "";
         currentFailLog = "";
-        timeBefore = perf_counter_ns();
+        timeBefore = utime()[0] + utime()[1];
 
         before_each_test();
         failingExpectsBefore = failingExpects;
@@ -87,7 +90,7 @@ public int execute_test (function done) {
             currentTestLog += "\n    " + ORANGE + "-" + RESET + " Warning: no expects found.";
         }
         after_each_test();
-        timeAfter = perf_counter_ns();
+        timeAfter = utime()[0] + utime()[1];
 
         currentTestLog = "  " + UNDERLINE + BOLD + testFn + RESET + " (" + ORANGE + sprintf("%.2f", (timeAfter-timeBefore)/1000000.0) + RESET + " ms):" + currentTestLog;
         if (this_user()) {
@@ -95,8 +98,8 @@ public int execute_test (function done) {
         } else {
             debug_message(currentTestLog);
         }
-        if (strlen(currentFailLog) > 0) {
-            totalFailLog += (sizeof(totalFailLog) > 0 ? "\n" : "") + CYAN + UNDERLINE + base_name() + RESET + ": " + UNDERLINE + BOLD + testFn + RESET + " (" + ORANGE + sprintf("%.2f", (timeAfter-timeBefore)/1000000.0) + RESET + " ms):" + currentFailLog;
+        if (sizeof(currentFailLog) > 0) {
+            totalFailLog += (sizeof(totalFailLog) > 0 ? "\n" : "") + CYAN + UNDERLINE + object_name(this_object()) + RESET + ": " + UNDERLINE + BOLD + testFn + RESET + " (" + ORANGE + sprintf("%.2f", (timeAfter-timeBefore)/1000000.0) + RESET + " ms):" + currentFailLog;
         }
     }
 
@@ -115,7 +118,7 @@ public int execute_test (function done) {
         }
     }
 
-    evaluate(done, ([
+    funcall(done, ([
         "numTests": sizeof(testFns),
         "passingExpects": passingExpects,
         "failingExpects": failingExpects,
@@ -126,7 +129,7 @@ public int execute_test (function done) {
         "failLog": totalFailLog,
     ]));
 
-    if (environment()) destruct();
+    if (environment(this_object())) destruct(this_object());
 }
 
 // -----------------------------------------------------------------------------
@@ -134,9 +137,9 @@ public int execute_test (function done) {
 protected object clone_object (string name) {
     string *fns;
     object ob = efun::clone_object(name);
-    fns = filter_array(functions(ob, 2), (: function_exists($1, $2) :), ob) - test_ignore();
+    fns = filter(functionlist(ob, RETURN_FUNCTION_NAME | NAME_INHERITED | NAME_HIDDEN), (: function_exists($1, ob) :)) - test_ignore();
     foreach (string fn in fns) {
-        if (member_array(fn, testObjectFns) == -1) {
+        if (member(fn, testObjectFns) == -1) {
             testObjectFns += ({ fn });
             testObjectUntestedFns += ({ fn });
         }
@@ -157,17 +160,17 @@ private string format_string_difference (string actual, string expect) {
         expect = identify(expect);
     }
 
-    actual = replace_string(replace_string(actual, "\n", "\\n"), "\e", "\\e");
-    expect = replace_string(replace_string(expect, "\n", "\\n"), "\e", "\\e");
-    al = strlen(actual);
-    el = strlen(expect);
+    actual = regreplace(regreplace(actual, "\n", "\\n", 1), "\e", "\\e",1 );
+    expect = regreplace(regreplace(expect, "\n", "\\n",1 ), "\e", "\\e",1 );
+    al = sizeof(actual);
+    el = sizeof(expect);
     n = string_compare_same_until(actual, expect);
     result = "'" + (n > 0 ? GREEN + actual[0..(n-1)] : "") + ORANGE + actual[n..] + RED + expect[n..] + RESET + "'";
     return result;
 }
 
 private string format_regex_difference (string actual, string regex) {
-    string *results = pcre_extract(actual, "(" + regex + ")");
+    string *results = regexp(({ actual }), "(" + regex + ")");
 
     if (sizeof(results) > 0) {
         return regex + " matched: " + GREEN + results[0] + RESET;
@@ -182,11 +185,11 @@ varargs private string format_array_differences (mixed *actual, mixed *expect) {
     l = sizeof(actual) < sizeof(expect) ? sizeof(expect) : sizeof(actual);
     for (int i = 0; i < l; i ++) {
         if (i < sizeof(actual)) {
-            if (arrayp(actual[i])) a = implode(map(actual[i], (: identify($1) :)), ",");
+            if (pointerp(actual[i])) a = implode(map(actual[i], (: identify($1) :)), ",");
             else a = actual[i];
         } else a = "";
         if (i < sizeof(expect)) {
-            if (arrayp(expect[i])) e = implode(map(expect[i], (: identify($1) :)), ",");
+            if (pointerp(expect[i])) e = implode(map(expect[i], (: identify($1) :)), ",");
             else e = expect[i];
         } else e = "";
 
@@ -207,7 +210,7 @@ varargs private string format_array_differences (mixed *actual, mixed *expect) {
 private void validate_expect (mixed value1, mixed value2, string message) {
     // message can start with the function being tested to count as tested
     foreach (string fn in testObjectUntestedFns) {
-        if (regexp(message, fn + "[ :(]") > 0) {
+        if (sizeof(regexp(({ message }), fn + "[ :(]"))) {
             testObjectUntestedFns -= ({ fn });
         }
     }
@@ -232,7 +235,7 @@ private void validate_expect (mixed value1, mixed value2, string message) {
         if (sizeof(value1) || sizeof(value2)) {
             currentTestLog += " ->";
         }
-        if (arrayp(value1) && arrayp(value2)) {
+        if (pointerp(value1) && pointerp(value2)) {
             currentTestLog += format_array_differences(value1, value2);
         } else {
             currentTestLog += " " + format_string_difference(value1, value2);
@@ -250,15 +253,15 @@ void expect_function (string fn, object testOb) {
 }
 // Used by test.test.c to verify failing expects
 protected void expect_next_failure () {
-    if (base_name() == replace_string(M_TEST, ".c", ".test") && failingExpects == 0) {
+    if (program_name(this_object())[0..<3] == regreplace(M_TEST, ".c", ".test", 1) && failingExpects == 0) {
         failingExpects --;
     }
 }
 
-void expect (string message, function fn) {
+void expect (string message, closure fn) {
 
-    if (!stringp(message)) error("Bad argument 1 to test->expect");
-    if (!functionp(fn)) error("Bad argument 2 to test->expect");
+    if (!stringp(message)) raise_error("Bad argument 1 to test->expect");
+    if (!closurep(fn)) raise_error("Bad argument 2 to test->expect");
 
     currentTestMsg = message;
     currentTestPassed = 1;
@@ -266,7 +269,7 @@ void expect (string message, function fn) {
     rightResults = ({ });
 
     passingAsserts = 0;
-    catch(evaluate(fn));
+    catch(funcall(fn));
     if (!passingAsserts) currentTestPassed = 0;
 
     validate_expect(leftResults, rightResults, currentTestMsg);
@@ -278,21 +281,21 @@ void expect (string message, function fn) {
 void assert (mixed left, string condition, mixed right) {
     mixed leftErr, rightErr, leftResult, rightResult;
 
-    if (!stringp(currentTestMsg)) error("test->assert outside of test->expect");
-    if (!stringp(condition)) error("Bad argument 2 to test->assert");
+    if (!stringp(currentTestMsg)) raise_error("test->assert outside of test->expect");
+    if (!stringp(condition)) raise_error("Bad argument 2 to test->assert");
 
     if (condition == "catch") expectCatch = 1;
 
-    if (functionp(left)) {
-        if (leftErr = catch (leftResult = evaluate(left))) {
+    if (closurep(left)) {
+        if (leftErr = catch (leftResult = funcall(left))) {
             leftResult = leftErr;
             currentTestPassed = currentTestPassed && condition == "catch";
         }
     } else {
         leftResult = left;
     }
-    if (functionp(right)) {
-        if (rightErr = catch (rightResult = evaluate(right))) {
+    if (closurep(right)) {
+        if (rightErr = catch (rightResult = funcall(right))) {
             rightResult = rightErr;
             currentTestPassed = currentTestPassed && condition == "catch";
         }
@@ -301,10 +304,10 @@ void assert (mixed left, string condition, mixed right) {
     }
     if (condition == "catch") expectCatch = 0;
 
-    if (arrayp(leftResult) || mapp(leftResult) || (condition == "regex" && objectp(leftResult))) {
+    if (pointerp(leftResult) || mappingp(leftResult) || (condition == "regex" && objectp(leftResult))) {
         leftResult = identify(leftResult);
     }
-    if (arrayp(rightResult) || mapp(rightResult)) {
+    if (pointerp(rightResult) || mappingp(rightResult)) {
         rightResult = identify(rightResult);
     }
 
@@ -327,8 +330,9 @@ void assert (mixed left, string condition, mixed right) {
         } else if (condition == "<=") {
             currentTestPassed = leftResult <= rightResult;
         } else if (condition == "regex") {
-            currentTestPassed = regexp(leftResult, rightResult) > 0;
+            currentTestPassed = !!sizeof(regexp(({ leftResult}) , rightResult));
         } else if (condition == "catch") {
+            if (stringp(leftErr) && leftErr[<1] != '\n' && rightResult[<1] == '\n') rightResult = rightResult[0..<2]; // @LDMUD
             currentTestPassed = !!leftErr && leftErr == rightResult;
         } else {
             currentTestPassed = 0;

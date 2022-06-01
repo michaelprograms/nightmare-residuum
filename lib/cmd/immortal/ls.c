@@ -3,7 +3,7 @@ private void output_long (string dir, mixed *files) {
 
     acc = D_ACCESS->query_allowed(previous_object(), "read_file", dir, "read") ? "r" : "-";
     acc += D_ACCESS->query_allowed(previous_object(), "write_file", dir, "write") ? "w" : "-";
-    acc += member_array(dir[0..<2], D_COMMAND->query_paths()) > -1 ? "x" : "-";
+    acc += member(dir[0..<2], D_COMMAND->query_paths()) > -1 ? "x" : "-";
 
     foreach (string file in files) {
         loaded = file[1] != -2 && find_object(dir + file[0]) ? "*" : "";
@@ -26,7 +26,7 @@ private void output_brief (string dir, mixed *files) {
 
     width = this_user()->query_account()->query_setting("width") - 2;
     foreach (string file in list) {
-        if ((w = strlen(file)) > widest) widest = w;
+        if ((w = sizeof(file)) > widest) widest = w;
     }
     if (widest > width / 3 - 3) widest = width / 3 - 3;
     cols = width / (widest + 3);

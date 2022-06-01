@@ -119,7 +119,7 @@ void test_no_get () {
             GetCounter ++;
             return "Function says no.";
         }),
-        assert(!!functionp(testOb->query_no_get()), "==", 1),
+        assert(!!closurep(testOb->query_no_get()), "==", 1),
         assert(testOb->direct_get_obj(), "==", "Function says no."),
         assert(environment(testOb), "==", find_object("/domain/Nowhere/room/void.c")),
     }) :));

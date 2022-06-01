@@ -8,12 +8,12 @@ private string *__XAliases = ({});
 nomask string *query_alias_names () {
     return keys(__Aliases);
 }
-nomask class ShellAlias query_alias (string alias) {
+nomask struct ShellAlias query_alias (string alias) {
     return __Aliases[alias];
 }
 
 varargs void add_alias (string name, string template, string *defaults, int xverb) {
-    class ShellAlias new_alias;
+    struct ShellAlias new_alias;
     int i;
     string *tmp;
 
@@ -26,7 +26,7 @@ varargs void add_alias (string name, string template, string *defaults, int xver
         template += " $*";
     }
 
-    new_alias = new(class ShellAlias);
+    new_alias = (<ShellAlias>);
     new_alias->template = template;
     new_alias->defaults = defaults;
     tmp = explode(template[strsrch(template, "$")..], "$");
@@ -36,7 +36,7 @@ varargs void add_alias (string name, string template, string *defaults, int xver
         return d;
     }));
 
-    if (!arrayp(new_alias->defaults)) {
+    if (!pointerp(new_alias->defaults)) {
         new_alias->defaults = ({ });
     }
     i = new_alias->num_args - (sizeof(defaults) - 1);
@@ -59,9 +59,9 @@ mixed expand_alias (string input) {
     string *xverbMatches, expandedInput;
     int numArgs = sizeof(argv) - 1, i, j;
 
-    xverbMatches = filter_array(__XAliases, (: strsrch($2, $1) == 0 :), argv[0]);
+    xverbMatches = filter(__XAliases, (: strsrch($2, $1) == 0 :), argv[0]);
     if (sizeof(xverbMatches) > 1) {
-        error("Alias conflict: can't distinguish between " + implode(xverbMatches, ", "));
+        raise_error("Alias conflict: can't distinguish between " + implode(xverbMatches, ", "));
     } else if (sizeof(xverbMatches) == 1) {
         sscanf(argv[0], xverbMatches[0] + "%s", argv[0]);
         if (argv[0] == "") {

@@ -22,13 +22,13 @@ void set_layout (string layout) {
     // parse the layout map
     for (int y = 0; y < sizeof(lines); y ++) {
         for (int x = 0; x < sizeof(lines[y]); x ++) {
-            if (__MaxX < strlen(lines[y]) - 1) {
-                __MaxX = strlen(lines[y]) - 1;
+            if (__MaxX < sizeof(lines[y]) - 1) {
+                __MaxX = sizeof(lines[y]) - 1;
             }
-            if (undefinedp(__LayoutMap[x])) {
+            if (!__LayoutMap[x]) {
                 __LayoutMap[x] = ([]);
             }
-            if (undefinedp(__LayoutMap[x][y])) {
+            if (!__LayoutMap[x][y]) {
                 __LayoutMap[x][y] = 0;
             }
             if (lines[y][x..x] != " ") {
@@ -42,7 +42,7 @@ void set_layout_file (string filename) {
     string *layout = ({});
 
     if (file_length(filename) < 1) {
-        error("Bad argument 1 to terrain.virtual->set_layout_file");
+        raise_error("Bad argument 1 to terrain.virtual->set_layout_file");
     }
     lines = explode(read_file(filename), "\n");
     foreach (string line in lines) {
@@ -91,7 +91,7 @@ void set_inheritable (string path) {
 void add_potential_exit (string name, object room, string dir, int x, int y) {
     string path;
     if (query_within_layout(x, y)) {
-        path = file_name();
+        path = program_name(this_object());
         path = replace_string(path, "virtual", "virtual/room");
         path = replace_string(path, "terrain", "terrain/" + name);
         room->set_exit(dir, path + "/" + x + "." + y);
@@ -114,7 +114,7 @@ object virtual_create (string arg) {
     }
 
     room = new(__Inheritable);
-    room->set_server(file_name());
+    room->set_server(program_name(this_object()));
 
     // Setup exits
     add_potential_exit(name, room, "northwest", x - 1, y - 1);
@@ -135,7 +135,7 @@ varargs string *query_map (string mode) {
     int thisx, thisy;
     int ax, ay, bx, by;
 
-    if (sscanf(split_path(base_name(previous_object()))[1], "%s.%s", strx, stry) != 2) {
+    if (sscanf(split_path(object_name(previous_object()))[1], "%s.%s", strx, stry) != 2) {
         return 0;
     }
     thisx = to_int(strx);
@@ -143,7 +143,7 @@ varargs string *query_map (string mode) {
 
     lines = ({});
 
-    if (undefinedp(mode) || mode == "room") {
+    if (!mode) || mode == "room" {
         ax = thisx - 2;
         bx = thisx + 2;
         ay = thisy - 2;

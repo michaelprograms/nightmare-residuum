@@ -26,12 +26,12 @@ void test_format_page () {
         assert(testOb->format_page(({ "a", "b", "c" }), 1), "regex", "^a +\nb +\nc +$"),
         assert(testOb->format_page(({ "a", "b", "c" }), 2), "regex", "^a +b +\nc +$"),
         assert(testOb->format_page(({ "a", "b", "c" }), 3), "regex", "^a +b +c +$"),
-        assert(strlen(explode(testOb->format_page(({ "a", }), 2), "\n")[0]), "==", 80),
-        assert(strlen(explode(testOb->format_page(({ "a", }), 2, 1), "\n")[0]), "==", 78),
-        assert(strlen(explode(testOb->format_page(({ "a", }), 2, -1), "\n")[0]), "==", 82),
-        assert(strlen(explode(testOb->format_page(({ "a", "b", "c" }), 2), "\n")[0]), "==", 80),
-        assert(strlen(explode(testOb->format_page(({ "a", "b", "c" }), 2, 1), "\n")[0]), "==", 78),
-        assert(strlen(explode(testOb->format_page(({ "a", "b", "c" }), 2, -1), "\n")[0]), "==", 82),
+        assert(sizeof(explode(testOb->format_page(({ "a", }), 2), "\n")[0]), "==", 80),
+        assert(sizeof(explode(testOb->format_page(({ "a", }), 2, 1), "\n")[0]), "==", 78),
+        assert(sizeof(explode(testOb->format_page(({ "a", }), 2, -1), "\n")[0]), "==", 82),
+        assert(sizeof(explode(testOb->format_page(({ "a", "b", "c" }), 2), "\n")[0]), "==", 80),
+        assert(sizeof(explode(testOb->format_page(({ "a", "b", "c" }), 2, 1), "\n")[0]), "==", 78),
+        assert(sizeof(explode(testOb->format_page(({ "a", "b", "c" }), 2, -1), "\n")[0]), "==", 82),
     }) :));
 
     __MockAccount->set_setting("width", 60);
@@ -41,24 +41,24 @@ void test_format_page () {
         assert(testOb->format_page(({ "a", "b", "c" }), 1), "regex", "^a +\nb +\nc +$"),
         assert(testOb->format_page(({ "a", "b", "c" }), 3), "regex", "^a +b +c +$"),
         assert(testOb->format_page(({ "a", "b", "c" }), 2), "regex", "^a +b +\nc +$"),
-        assert(strlen(explode(testOb->format_page(({ "a", }), 2), "\n")[0]), "==", 60),
-        assert(strlen(explode(testOb->format_page(({ "a", }), 2, 1), "\n")[0]), "==", 58),
-        assert(strlen(explode(testOb->format_page(({ "a", }), 2, -1), "\n")[0]), "==", 62),
-        assert(strlen(explode(testOb->format_page(({ "a", "b", "c" }), 2), "\n")[0]), "==", 60),
-        assert(strlen(explode(testOb->format_page(({ "a", "b", "c" }), 2, 1), "\n")[0]), "==", 58),
-        assert(strlen(explode(testOb->format_page(({ "a", "b", "c" }), 2, -1), "\n")[0]), "==", 62),
+        assert(sizeof(explode(testOb->format_page(({ "a", }), 2), "\n")[0]), "==", 60),
+        assert(sizeof(explode(testOb->format_page(({ "a", }), 2, 1), "\n")[0]), "==", 58),
+        assert(sizeof(explode(testOb->format_page(({ "a", }), 2, -1), "\n")[0]), "==", 62),
+        assert(sizeof(explode(testOb->format_page(({ "a", "b", "c" }), 2), "\n")[0]), "==", 60),
+        assert(sizeof(explode(testOb->format_page(({ "a", "b", "c" }), 2, 1), "\n")[0]), "==", 58),
+        assert(sizeof(explode(testOb->format_page(({ "a", "b", "c" }), 2, -1), "\n")[0]), "==", 62),
     }) :));
 
     __MockAccount->set_setting("width", 80);
     expect("format_page handled remainder of width/columns", (: ({
-        assert(strlen(testOb->format_page(({ "a", "b", "c", "d", "e", }), 5, 4)), "==", 72), // remainder = 2
-        assert(strlen(testOb->format_page(({ "a", "b", "c" }), 3, 0)), "==", 80), // remainder = 2
-        assert(strlen(testOb->format_page(({ "1", "2", "3", "4", "5", "6", "7" }), 7, 0)), "==", 80), // remainder = 3
+        assert(sizeof(testOb->format_page(({ "a", "b", "c", "d", "e", }), 5, 4)), "==", 72), // remainder = 2
+        assert(sizeof(testOb->format_page(({ "a", "b", "c" }), 3, 0)), "==", 80), // remainder = 2
+        assert(sizeof(testOb->format_page(({ "1", "2", "3", "4", "5", "6", "7" }), 7, 0)), "==", 80), // remainder = 3
     }) :));
 
     expect("format_page handled trimming longer strings", (: ({
-        assert(strlen(testOb->format_page(({ "111111111111111111111111111111", "222222222222222222222222222222", "333333333333333333333333333333", "444444444444444444444444444444", }), 4, 0)), "==", 80), // 30 * 4 = 120
-        assert(strlen(testOb->format_page(({ "111111111111111111111111111111", "2", "3", "4", }), 4, 0)), "==", 80), // 30 + 25 * 3 = 85
+        assert(sizeof(testOb->format_page(({ "111111111111111111111111111111", "222222222222222222222222222222", "333333333333333333333333333333", "444444444444444444444444444444", }), 4, 0)), "==", 80), // 30 * 4 = 120
+        assert(sizeof(testOb->format_page(({ "111111111111111111111111111111", "2", "3", "4", }), 4, 0)), "==", 80), // 30 + 25 * 3 = 85
     }) :));
 
     expect("format_page handled invalid argument 1", (: ({

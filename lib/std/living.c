@@ -115,9 +115,9 @@ int handle_go (mixed dest, string verb, string dir) {
     int move;
 
     oldEnv = environment();
-    newEnv = stringp(dest) ? load_object(dest) : objectp(dest) ? dest : error("Bad argument 1 to living->handle_go");
+    newEnv = stringp(dest) ? load_object(dest) : objectp(dest) ? dest : raise_error("Bad argument 1 to living->handle_go");
     verbs = pluralize(verb);
-    article = (!regexp(dir, "^(enter|out|down|up)") ? "the " : "");
+    article = !sizeof(regexp(dir, "^(enter|out|down|up)")) ? "the " : "";
 
     move = handle_move(newEnv);
 

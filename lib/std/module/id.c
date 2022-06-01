@@ -40,7 +40,7 @@ string query_key_name () {
 }
 void set_name (string name) {
     if (!stringp(name) || name == "") {
-        error("Bad argument 1 to id->set_name");
+        raise_error("Bad argument 1 to id->set_name");
     }
     __Name = lower_case(name);
     __CapName = capitalize(name);
@@ -49,7 +49,7 @@ void set_name (string name) {
 }
 void set_key_name (string name) {
     if (!stringp(name) || name == "") {
-        error("Bad argument 1 to id->set_key_name");
+        raise_error("Bad argument 1 to id->set_key_name");
     }
     __KeyName = lower_case(name);
     refresh_id();
@@ -62,11 +62,11 @@ string query_key_id () {
     return __KeyID;
 }
 void set_id (string *id) {
-    if (undefinedp(id) || !arrayp(id) || !sizeof(id)) {
-        error("Bad argument 1 to id->set_id");
+    if (!id || !pointerp(id) || !sizeof(id)) {
+        raise_error("Bad argument 1 to id->set_id");
     }
     foreach (string newID in id) {
-        if (member_array(newID, __ID) == -1) {
+        if (member(newID, __ID) == -1) {
             __ID += ({ newID });
             __Plural += ({ pluralize(newID) });
         }
@@ -74,11 +74,11 @@ void set_id (string *id) {
     refresh_id();
 }
 void remove_id (string *id) {
-    if (undefinedp(id) || !arrayp(id) || !sizeof(id)) {
-        error("Bad argument 1 to id->remove_id");
+    if (!id || !pointerp(id) || !sizeof(id)) {
+        raise_error("Bad argument 1 to id->remove_id");
     }
     __ID -= id;
-    __Plural -= map_array(id, (: pluralize :));
+    __Plural -= map(id, (: pluralize($1) :));
     __KeyID = 0;
     refresh_id();
 }
@@ -90,22 +90,22 @@ string query_key_adjective () {
     return __KeyAdj;
 }
 void set_adjective (string *adj) {
-    if (undefinedp(adj) || !arrayp(adj) || !sizeof(adj)) {
-        error("Bad argument 1 to id->set_adjective");
+    if (!adj || !pointerp(adj) || !sizeof(adj)) {
+        raise_error("Bad argument 1 to id->set_adjective");
     }
-    __Adj = filter_array(__Adj + adj, (: $1 && $1 != "" :));
+    __Adj = filter(__Adj + adj, (: $1 && $1 != "" :));
     refresh_id();
 }
 void add_adjective (string adj) {
     if (!stringp(adj) || adj == "") {
-        error("Bad argument 1 to id->add_adjective");
+        raise_error("Bad argument 1 to id->add_adjective");
     }
     __Adj += ({ adj });
     refresh_id();
 }
 void remove_adjective (string adj) {
     if (!stringp(adj) || adj == "") {
-        error("Bad argument 1 to id->remove_adjective");
+        raise_error("Bad argument 1 to id->remove_adjective");
     }
     __Adj -= ({ adj });
     if (__KeyAdj == adj) {
@@ -119,14 +119,14 @@ string *query_plural () {
 }
 void add_plural (string plural) {
     if (!stringp(plural) || plural == "") {
-        error("Bad argument 1 to id->add_plural");
+        raise_error("Bad argument 1 to id->add_plural");
     }
     __Plural += ({ plural });
     refresh_id();
 }
 void remove_plural (string plural) {
     if (!stringp(plural) || plural == "") {
-        error("Bad argument 1 to id->remove_plural");
+        raise_error("Bad argument 1 to id->remove_plural");
     }
     __Plural -= ({ plural });
     refresh_id();
@@ -147,7 +147,7 @@ private void refresh_id () {
     //     else __Short = __KeyID;
     // } else __Short = "impossible to comprehend";
 
-    if (__KeyName && member_array(__KeyName, __ID) == -1) {
+    if (__KeyName && member(__KeyName, __ID) == -1) {
         set_id(({ __KeyName }));
     }
 

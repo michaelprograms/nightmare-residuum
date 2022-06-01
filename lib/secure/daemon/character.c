@@ -3,18 +3,18 @@
 
 int query_valid_name (string name) {
     int l;
-    if (!name || (l = strlen(name)) < 4 || l > 18) return 0;
-    if (regexp(name, "^[a-zA-Z]+[a-zA-Z\\ \\'\\-]+$")) return 1;
+    if (!name || (l = sizeof(name)) < 4 || l > 18) return 0;
+    if (sizeof(regexp(({ name }), "^[a-zA-Z]+[a-zA-Z\\ \\'\\-]+$"))) return 1;
     return 0;
 }
 
 int query_valid_save_path (string name, string path) {
     string *results = pcre_extract(path, "^" + DIR_SAVE_CHARACTER + "/([a-z])/([a-z]+)/([a-z]+)");
-    return results[0] == name[0..0] && results[1] == name && member_array(results[2], VALID_TYPES) > -1;
+    return results[0] == name[0..0] && results[1] == name && member(results[2], VALID_TYPES) > -1;
 }
 varargs string query_save_path (string name, string type) {
-    if (strlen(name) < 4) error("Bad argument 1 to character->query_save_path");
-    if (undefinedp(type)) error("Bad argument 2 to character->query_save_path");
+    if (sizeof(name) < 4) raise_error("Bad argument 1 to character->query_save_path");
+    if (!stringp(type)) raise_error("Bad argument 2 to character->query_save_path");
     return DIR_SAVE_CHARACTER + "/" + name[0..0] + "/" + name + "/" + type + ".o";
 }
 

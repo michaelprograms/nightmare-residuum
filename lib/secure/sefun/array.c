@@ -1,8 +1,8 @@
 mixed *distinct_array (mixed *arr) {
     int i, maxi = sizeof(arr);
-    mapping tmp = allocate_mapping(maxi);
+    mapping tmp = m_allocate(maxi);
     for (i = 0; i < maxi; i ++) {
         tmp[arr[i]] = 1;
     }
-    return keys(tmp);
+    return m_indices(tmp);
 }

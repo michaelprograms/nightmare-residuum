@@ -26,7 +26,7 @@ void create () {
 /* ----- balance ----- */
 
 void display_balance (string name, mapping balance, object char) {
-    if (undefinedp(balance[__BankDefault])) {
+    if (!balance[__BankDefault]) {
         balance[__BankDefault] = 0;
     }
     message("action", "Account balance for " + name + ":\n", char);
@@ -53,7 +53,7 @@ void do_balance_wrd (mixed args...) {
     string name;
     mapping balance;
 
-    if (!arrayp(args) || !sizeof(args) || !(name = args[0])) return;
+    if (!pointerp(args) || !sizeof(args) || !(name = args[0])) return;
 
     if (!D_CHARACTER->query_exists(name)) {
         message("action", "No character found by the name of " + name + ".\n", this_character());
@@ -74,9 +74,9 @@ void do_deposit_wrd_wrd (mixed args...) {
     object tc = this_character();
     mapping balance;
 
-    if (!arrayp(args) || !sizeof(args) || !(amount = to_int(args[0])) || !(currency = args[1])) return;
+    if (!pointerp(args) || !sizeof(args) || !(amount = to_int(args[0])) || !(currency = args[1])) return;
 
-    if (member_array(currency, tc->query_currencies()) == -1) {
+    if (member(currency, tc->query_currencies()) == -1) {
         message("action", "You have no currency named " + currency + ".\n", tc);
         return;
     }
@@ -105,11 +105,11 @@ void do_withdraw_wrd_wrd (mixed args...) {
     object tc = this_character();
     mapping balance;
 
-    if (!arrayp(args) || !sizeof(args) || !(amount = to_int(args[0])) || !(currency = args[1])) return;
+    if (!pointerp(args) || !sizeof(args) || !(amount = to_int(args[0])) || !(currency = args[1])) return;
 
     balance = D_BANK->query_balance(tc->query_name(), __BankID);
 
-    if (member_array(currency, keys(balance)) == -1) {
+    if (member(currency, keys(balance)) == -1) {
         message("action", "Your account has no currency named " + currency + ".\n", tc);
         return;
     }

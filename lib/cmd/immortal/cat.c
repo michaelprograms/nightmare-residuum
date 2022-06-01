@@ -7,7 +7,7 @@ void write_call_back (int fd) { }
 void close_call_back (int fd) {
     string file, *lines;
 
-    if (undefinedp(fds[fd]) || !objectp(fds[fd])) return;
+    if (!fds[fd]) || !objectp(fds[fd])) return;
 
     file = "/tmp/" + fds[fd]->query_name();
     lines = explode(read_file(file), "\n");
@@ -46,6 +46,6 @@ void command (string input, mapping flags) {
         write("cat: external call failed with error: "+fd+".\n");
         return;
     }
-    if (!mapp(fds)) fds = ([]);
+    if (!mappingp(fds)) fds = ([]);
     fds[fd] = this_character();
 }

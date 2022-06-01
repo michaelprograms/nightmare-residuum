@@ -18,9 +18,9 @@ private nomask void editor_input (mixed s) {
         this_user()->input_pop();
         // this_user()->set_flag("editing", 0);
         if (__EndFn) {
-            evaluate(__EndFn);
+            funcall(__EndFn);
         }
-        return destruct();
+        return destruct(this_object());
     }
 }
 void editor_start (string file, function endFn) {
@@ -32,7 +32,7 @@ void editor_start (string file, function endFn) {
 
 int clean_up (mixed *args...) {
     if (query_ed_mode() == -1) {
-        destruct();
+        destruct(this_object());
     } else {
         return 1;
     }

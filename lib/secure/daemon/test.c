@@ -1,3 +1,5 @@
+#include "/secure/include/ldmud/files.h"
+
 nosave private mapping __Tests = ([
     /* Data format:
     "/std/module/test.test.c": ([
@@ -16,7 +18,7 @@ nosave private int timeBefore;
 // -----------------------------------------------------------------------------
 
 void reset_data ();
-varargs void process_file (string file, function done, int reset);
+varargs void process_file (string file, closure done, int reset);
 private string format_total_line (string name, int current, int total);
 void process ();
 varargs void update_test_data (string path, string ignore);
@@ -45,7 +47,7 @@ void reset_data () {
 
 // -----------------------------------------------------------------------------
 
-void done_test (mapping results) {
+varargs void done_test (mapping results) {
     if (results) {
         __Results["numTests"] += results["numTests"];
         __Results["passingExpects"] += results["passingExpects"];
@@ -54,7 +56,7 @@ void done_test (mapping results) {
         __Results["untestedFns"] += results["untestedFns"];
         __Results["passingAsserts"] += results["passingAsserts"];
         __Results["failingAsserts"] += results["failingAsserts"];
-        if (strlen(results["failLog"]) > 0) {
+        if (sizeof(results["failLog"]) > 0) {
             __Results["failLog"] += ({ results["failLog"] });
         }
     }
@@ -62,7 +64,7 @@ void done_test (mapping results) {
     process();
 }
 
-varargs void process_file (string file, function done, int reset) {
+varargs void process_file (string file, closure done, int reset) {
     object t;
     string tmp;
 
@@ -75,23 +77,28 @@ varargs void process_file (string file, function done, int reset) {
     }
     tmp = catch (load_object(file));
     if (tmp) {
-        message("system", "Error in test: " + tmp + "\n", this_user());
+        write("Error in " + file + ": "+ tmp + "\n");
+        // message("system", "Error in test: " + tmp + "\n", this_player());
         return;
     }
-    if (!inherits(M_TEST, load_object(file))) {
-        evaluate(done);
+    if (member(M_TEST, inherit_list(load_object(file))) == -1) {
+        funcall(done);
         return;
     }
+
     // call out clears the call stack, call other will chain the tests
-    call_out_walltime(function(string test, function done) {
-        object testFile = clone_object(test);
+    // call_out(function() {
+    limited(function() {
+        object testFile = clone_object(file);
         mixed err = catch (testFile->execute_test(done));
         if (err) {
-            write("\n    " + test + " encountered an errored:\n" + err + "\n");
-            evaluate(done);
+            write("\n    " + file + " encountered an errored:\n" + err + "\n");
+            funcall(done);
         }
         if (testFile) destruct(testFile);
-    }, 0, file, done);
+        return;
+    });
+    // }, 0);
 }
 
 private string format_total_line (string name, int current, int total) {
@@ -107,8 +114,8 @@ void display_results (mapping results, int timeStart) {
     int totalFns = results["testedFns"] + results["untestedFns"];
     int time;
 
-    if (!undefinedp(timeStart)) {
-        time = perf_counter_ns() - timeStart;
+    if (timeStart) {
+        time = utime()[0] + utime()[1]- timeStart;
     }
 
     write("\n");
@@ -127,12 +134,12 @@ void display_results (mapping results, int timeStart) {
         write("No tests were found.\n");
     }
 
-    if (!undefinedp(timeStart)) {
-        write("\n" + sprintf("%-20s", results["numTests"]+" tests:") + (this_user()?"%^ORANGE%^":"\e[33m") + sprintf("%7.2f", time/1000000.0) + (this_user()?"%^RESET%^":"\e[0m") + " ms\n\n");
+    if (timeStart) {
+        write("\n" + sprintf("%-20s", results["numTests"]+" tests:") + (this_player()?"%^ORANGE%^":"\e[33m") + sprintf("%7.2f", time/1000000.0) + (this_player()?"%^RESET%^":"\e[0m") + " ms\n\n");
     }
 
     if (sizeof(results["failLog"]) > 0) {
-        write("Failing expects:\n" + (arrayp(results["failLog"]) ? implode(results["failLog"], "\n") : results["failLog"]) + "\n\n");
+        write("Failing expects:\n" + (pointerp(results["failLog"]) ? implode(results["failLog"], "\n") : results["failLog"]) + "\n\n");
         results["failLog"] = ({});
     }
 
@@ -146,7 +153,7 @@ void display_results (mapping results, int timeStart) {
 
 void process () {
     if (currentTest < sizeof(__TestFiles)) {
-        process_file(__TestFiles[currentTest], (: done_test :), 0);
+        process_file(__TestFiles[currentTest], (: done_test() :), 0);
     } else {
         display_results(__Results, timeBefore);
 
@@ -157,35 +164,45 @@ void process () {
 }
 
 varargs void update_test_data (string path, string ignore) {
-    mixed *dir = get_dir(path, -1); // Assumes path has trailing / for dirs
-    string *codeFiles = ({}), tmp;
+    mixed *dir = get_dir(path, GETDIR_ALL); // Assumes path has trailing / for dirs
+    mixed *dir2 = ({ ({ }) }), *d = ({ });
+    mixed *codeFiles = ({ }), tmp;
 
-    foreach (mixed *file in dir) {
-        if (path + file[0] == ignore) continue;
+    foreach (mixed f in dir) {
+        if (sizeof(dir2[<1]) == 5) {
+            dir2 += ({ ({ }) });
+        }
+        dir2[<1] += ({ f });
+    }
+    foreach (mixed *file in dir2) {
+        if (/*path +*/ file[0] == ignore) continue;
         if (file[1] == -2) {
-            update_test_data(path + file[0] + "/", ignore);
-        } else if (regexp(file[0], "\\.test\\.c$")) {
-            __Tests[path+file[0]] = ([ ]);
-        } else if (regexp(file[0], "\\.c$")) {
-            totalFiles ++;
-            codeFiles += ({ file });
+            update_test_data(/*path +*/ file[0] + "/", ignore);
+        } else {
+            if (sizeof(regexp(({ file[0] }), "\\.test\\.c$"))) {
+                __Tests[/*path +*/ file[0]] = ([ ]);
+            } else if (sizeof(regexp(({ file[0] }), "\\.c$"))) {
+                totalFiles ++;
+                codeFiles += ({ file });
+            }
         }
     }
     foreach (mixed *file in codeFiles) {
-        tmp = path + replace_string(file[0], ".c", ".test.c", 1);
+        tmp = /*path +*/ regreplace(file[0], ".c", ".test.c", 1);
         if (__Tests[tmp]) {
-            __Tests[tmp]["code"] = path + file[0];
+            __Tests[tmp]["code"] = /*path +*/ file[0];
         } else {
-            __TestsMissing += ({ path + file[0][0..<2] + "test.c" });
+            __TestsMissing += ({ /*path +*/ file[0][0..<2] + "test.c" });
         }
     }
+
 }
 
 varargs void run (int callShutdown) {
 
     shutdownAfterTests = callShutdown;
 
-    remove_call_out();
+    remove_call_out("process");
     reset_data();
 
     write("Scanning for test files...\n");
@@ -194,18 +211,18 @@ varargs void run (int callShutdown) {
     update_test_data("/std/", "/std/class");
 
     __TestFiles = keys(__Tests);
-    __TestFiles = sort_array(__TestFiles, function(string a, string b) {
-        if (regexp(a, "^\\/std\\/module\\/test")) return -1;
-        else if (regexp(b, "^\\/std\\/module\\/test")) return 1;
-        else if (regexp(a, "^\\/secure\\/daemon\\/master")) return -1;
-        else if (regexp(b, "^\\/secure\\/daemon\\/master")) return 1;
-        else if (regexp(a, "^\\/secure\\/sefun\\/sefun")) return -1;
-        else if (regexp(b, "^\\/secure\\/sefun\\/sefun")) return 1;
-        else if (regexp(a, "^\\/secure\\/sefun\\/")) return -1;
-        else if (regexp(b, "^\\/secure\\/sefun\\/")) return 1;
-        else return strcmp(a, b);
+    __TestFiles = sort_array(__TestFiles, function (string a, string b) {
+        if (sizeof(regexp(({ a }), "^\\/std\\/module\\/test"))) return -1;
+        else if (sizeof(regexp(({ b }), "^\\/std\\/module\\/test"))) return 1;
+        else if (sizeof(regexp(({ a }), "^\\/secure\\/daemon\\/master"))) return -1;
+        else if (sizeof(regexp(({ b }), "^\\/secure\\/daemon\\/master"))) return 1;
+        else if (sizeof(regexp(({ a }), "^\\/secure\\/sefun\\/sefun"))) return -1;
+        else if (sizeof(regexp(({ b }), "^\\/secure\\/sefun\\/sefun"))) return 1;
+        else if (sizeof(regexp(({ a }), "^\\/secure\\/sefun\\/"))) return -1;
+        else if (sizeof(regexp(({ b }), "^\\/secure\\/sefun\\/"))) return 1;
+        else return strstr(a, b);
     });
 
-    timeBefore = perf_counter_ns();
-    call_out_walltime((: process :), 0);
+    timeBefore = utime()[0] + utime()[1];
+    call_out((: process() :), 0);
 }

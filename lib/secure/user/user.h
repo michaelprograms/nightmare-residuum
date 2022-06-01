@@ -2,21 +2,21 @@
 #define __USER_H__
 
 /* --- user --- */
-nomask void logon ();
-nomask void net_dead ();
+// nomask void logon ();
+// nomask void net_dead ();
 void receive_message (string type, string message);
 void terminal_type (string term);
 string query_terminal_type ();
 string query_terminal_color();
-nomask void quit_character (int destructing);
-nomask void quit_account ();
-nomask void reset_connect_timeout ();
-nomask varargs void handle_remove (string message);
+void quit_character (int destructing);
+void quit_account ();
+varargs void reset_connect_timeout (int stop);
+varargs void handle_remove (string message);
 
 /* --- account --- */
 object query_account ();
-protected nomask varargs void account_input (int state, mixed extra, string input);
-private void display_account_menu ();
+protected varargs void account_input (int state, mixed extra, string input);
+protected void display_account_menu ();
 #define STATE_ACCOUNT_ENTER                 0
 #define STATE_ACCOUNT_HANDLE                1
 #define STATE_ACCOUNT_CONFIRM               2
@@ -57,31 +57,31 @@ private void display_account_menu ();
 #define PROMPT_SETTINGS_ENTER               "Enter settings action: "
 
 /* --- character --- */
-private void set_character_name (string name);
-private void set_character_species (string species);
+protected void set_character_name (string name);
+protected void set_character_species (string species);
 string query_character_species ();
 object query_character ();
 void set_immortal (int i);
-nomask private void character_enter (int newbie);
-nomask private void character_override ();
-nomask void handle_character_override ();
-nomask protected void character_exit ();
-nomask protected void character_linkdead ();
+protected void character_enter (int newbie);
+protected void character_override ();
+void handle_character_override ();
+protected void character_exit ();
+protected void character_linkdead ();
 
 /* --- input --- */
-varargs nomask void input_push (function inputFn, mixed prompt, int secure, function callbackFn, int lock);
-varargs nomask void input_single (function inputFn, mixed prompt, int secure, int lock);
-varargs nomask void input_next (function inputFn, mixed prompt, int secure, int lock);
-nomask void input_pop ();
-nomask void input_focus ();
+varargs void input_push (closure inputFn, mixed prompt, int secure, closure callbackFn, int lock);
+varargs void input_single (closure inputFn, mixed prompt, int secure, int lock);
+varargs void input_next (closure inputFn, mixed prompt, int secure, int lock);
+void input_pop ();
+void input_focus ();
 
 /* --- output --- */
 void handle_pager (mixed arg);
 
 /* --- shell --- */
 object query_shell ();
-protected nomask void shell_start ();
-protected nomask void shell_stop ();
+protected void shell_start ();
+protected void shell_stop ();
 
 /*  --- */
 

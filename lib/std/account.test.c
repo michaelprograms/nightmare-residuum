@@ -79,7 +79,7 @@ void test_account_times () {
 
         // read in accounttest.o and modify the __LastOn
         unguarded((: write_file(ACCOUNT_PATH, implode(map(explode(read_file(ACCOUNT_PATH), "\n"), function (string line) {
-            if (regexp(line, "^__LastOn ")) {
+            if (sizeof(regexp(line, "^__LastOn "))) {
                 return "__LastOn " + (now - 100);
             }
             return line;
@@ -99,7 +99,7 @@ void test_account_settings () {
     expect_function("set_setting", testOb);
 
     expect("account settings handles setting and querying", (: ({
-        assert(mapp(testOb->query_settings()), "==", 1),
+        assert(mappingp(testOb->query_settings()), "==", 1),
         assert(sizeof(testOb->query_settings()), "==", 3),
 
         assert(testOb->query_setting("ansi"), "==", "on"),
@@ -140,7 +140,7 @@ void test_account_characters () {
         assert(testOb->query_character("tester")["level"], "==", 0),
 
         // ensure character mapping data is a copy and not by reference
-        assert(mapp(tmpCharacter = testOb->query_character("tester")), "==", 1),
+        assert(mappingp(tmpCharacter = testOb->query_character("tester")), "==", 1),
         assert(tmpCharacter["deleted"] = 1, "==", 1),
         assert(testOb->query_character("tester")["deleted"], "==", 0),
 

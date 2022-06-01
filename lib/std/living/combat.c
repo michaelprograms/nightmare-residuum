@@ -112,28 +112,28 @@ varargs int handle_damage (int damage, object source) {
 /* ----- hostiles ----- */
 
 int add_hostile (object ob) {
-    if (!ob || !ob->is_living() || member_array(ob, __Hostiles) > -1) {
+    if (!ob || !ob->is_living() || member(ob, __Hostiles) > -1) {
         return 0;
     }
     __Hostiles += ({ ob });
     return 1;
 }
 int remove_hostile (object ob) {
-    if (!ob || !ob->is_living() || member_array(ob, __Hostiles) == -1) {
+    if (!ob || !ob->is_living() || member(ob, __Hostiles) == -1) {
         return 0;
     }
     __Hostiles -= ({ ob });
     return 1;
 }
 int query_hostile (object ob) {
-    return member_array(ob, __Hostiles) > -1;
+    return member(ob, __Hostiles) > -1;
 }
 object *query_hostiles () {
-    __Hostiles = filter_array(__Hostiles, (: !undefinedp($1) :));
+    __Hostiles = filter(__Hostiles, (: objectp($1) :));
     return __Hostiles;
 }
 object *query_present_hostiles () {
-    return filter_array(query_hostiles(), (: environment($1) == environment() :));
+    return filter(query_hostiles(), (: environment($1) == environment() :));
 }
 object query_target_hostile () {
     object *hostiles = query_present_hostiles();

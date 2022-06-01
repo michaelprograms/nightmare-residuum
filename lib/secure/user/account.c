@@ -6,7 +6,7 @@ object query_account () { return __Account; }
 
 // -----------------------------------------------------------------------------
 
-private void display_account_menu () {
+protected void display_account_menu () {
     string msg = "", characterMsg = ""; // creatorMsg = "",
 
     if (!__Account->query_playable_characters()) {
@@ -15,7 +15,7 @@ private void display_account_menu () {
         return;
     }
 
-    remove_call_out();
+    reset_connect_timeout(1);
     msg = "\nAccount Actions   : %^CYAN%^[settings] [password] [exit]%^RESET%^\nCharacter Actions : %^CYAN%^[new] [delete]%^RESET%^\n\n";
 
     // @TODO different format for screenreader here?
@@ -30,12 +30,12 @@ private void display_account_menu () {
         characterMsg += tmp;
     }
 
-    if (strlen(characterMsg) > 0) {
+    if (sizeof(characterMsg) > 0) {
         msg += "Character           Species         Location                Last Seen\n" + characterMsg;
     }
 
     write(msg + "\n");
-    input_next((: account_input, STATE_ACCOUNT_MENU, 0 :), PROMPT_ACCOUNT_CHOICE);
+    input_next((: account_input(STATE_ACCOUNT_MENU, 0) :), PROMPT_ACCOUNT_CHOICE);
 }
 
 private string query_unlocked_species () {
@@ -47,11 +47,11 @@ private string query_unlocked_species () {
     }
 }
 
-protected nomask varargs void account_input (int state, mixed extra, string input) {
+protected varargs void account_input (int state, mixed extra, string input) {
     switch (state) {
         case STATE_ACCOUNT_ENTER:
             reset_connect_timeout();
-            input_push((: account_input, STATE_ACCOUNT_HANDLE, 0 :), PROMPT_ACCOUNT_ENTER);
+            input_push((: account_input(STATE_ACCOUNT_HANDLE, 0) :), PROMPT_ACCOUNT_ENTER);
             input_focus();
             break;
 
@@ -62,22 +62,22 @@ protected nomask varargs void account_input (int state, mixed extra, string inpu
             if (!D_ACCOUNT->query_valid_name(input)) {
                 write("\nThe account '"+input+"' is not a valid account name.\n");
                 write(PROMPT_ACCOUNT_FORMAT + "\n");
-                input_next((: account_input, STATE_ACCOUNT_HANDLE, ++extra :), PROMPT_ACCOUNT_ENTER);
+                input_next((: account_input(STATE_ACCOUNT_HANDLE, ++extra) :), PROMPT_ACCOUNT_ENTER);
                 return;
             } else if (D_ACCOUNT->query_exists(input)) {
                 write("\nExisting account '"+input+"'...\n");
-                __Account = new(STD_ACCOUNT);
+                __Account = clone_object(STD_ACCOUNT);
                 __Account->set_name(input);
-                input_next((: account_input, STATE_ACCOUNT_PASSWORD, 0 :), PROMPT_PASSWORD_ENTER, 1);
+                input_next((: account_input(STATE_ACCOUNT_PASSWORD, 0) :), PROMPT_PASSWORD_ENTER, 1);
             } else {
                 reset_connect_timeout();
-                __Account = new(STD_ACCOUNT);
+                __Account = clone_object(STD_ACCOUNT);
                 __Account->set_name(input);
                 write("\nNew account '"+input+"'!\n");
                 write("You should pick a sensible and unique account name.\n");
                 write(PROMPT_ACCOUNT_FORMAT + "\n");
                 write("Accounts can create numerous characters.\n");
-                input_next((: account_input, STATE_ACCOUNT_CONFIRM, extra :), PROMPT_ACCOUNT_CONFIRM);
+                input_next((: account_input(STATE_ACCOUNT_CONFIRM, extra) :), PROMPT_ACCOUNT_CONFIRM);
                 return;
             }
             reset_connect_timeout();
@@ -90,36 +90,36 @@ protected nomask varargs void account_input (int state, mixed extra, string inpu
                     return handle_remove("\nInvalid entry. Connection terminated.\n");
                 }
                 write("\nCanceled new account.\n");
-                input_next((: account_input, STATE_ACCOUNT_HANDLE, ++extra :), PROMPT_ACCOUNT_ENTER);
+                input_next((: account_input(STATE_ACCOUNT_HANDLE, ++extra) :), PROMPT_ACCOUNT_ENTER);
                 return;
             }
             reset_connect_timeout();
             write("Passwords must be at least 8 characters long.\n");
-            input_next((: account_input, STATE_PASSWORD_NEW, 0 :), PROMPT_PASSWORD_CREATE, 1);
+            input_next((: account_input(STATE_PASSWORD_NEW, 0) :), PROMPT_PASSWORD_CREATE, 1);
             break;
 
         case STATE_PASSWORD_NEW:
-            if (strlen(input) < 8) {
+            if (sizeof(input) < 8) {
                 write("\nPassword did not meet requirements.\n\n");
                 return;
             }
             reset_connect_timeout();
-            input_next((: account_input, STATE_PASSWORD_CONFIRM, crypt(input, 0) :), PROMPT_PASSWORD_CONFIRM, 1);
+            input_next((: account_input(STATE_PASSWORD_CONFIRM, crypt(input, 0)) :), PROMPT_PASSWORD_CONFIRM, 1);
             break;
 
         case STATE_PASSWORD_CONFIRM:
             if (crypt(input, extra) != extra) {
                 write("\nPassword entries do not match.\n");
-                input_next((: account_input, STATE_PASSWORD_NEW, 0 :), PROMPT_PASSWORD_CREATE, 1);
+                input_next((: account_input(STATE_PASSWORD_NEW, 0) :), PROMPT_PASSWORD_CREATE, 1);
                 return;
             }
             __Account->set_password(extra);
             write("Password set.\n");
-            input_next((: account_input, STATE_SCREENREADER_HANDLE, 0 :), PROMPT_SCREENREADER_ENTER);
+            input_next((: account_input(STATE_SCREENREADER_HANDLE, 0) :), PROMPT_SCREENREADER_ENTER);
             break;
 
         case STATE_SCREENREADER_HANDLE:
-            if (input && strlen(input) > 0 && lower_case(input)[0..0] == "y") {
+            if (input && sizeof(input) > 0 && lower_case(input)[0..0] == "y") {
                 __Account->set_setting("screenreader", "on");
                 __Account->set_setting("ansi", "off");
             } else {
@@ -130,7 +130,7 @@ protected nomask varargs void account_input (int state, mixed extra, string inpu
             break;
 
         case STATE_ACCOUNT_COMPLETE:
-            D_LOG->log("account/new", sprintf("%s : %s : %s\n", ctime(time()), query_ip_number(), __Account->query_name()));
+            // D_LOG->log("account/new", sprintf("%s : %s : %s\n", ctime(time()), query_ip_number(), __Account->query_name()));
             if (!__Account->query_playable_characters()) {
                 write("\nWelcome, "+__Account->query_name()+"! You will now create a character.\n");
                 account_input(STATE_CHARACTER_ENTER);
@@ -156,7 +156,7 @@ protected nomask varargs void account_input (int state, mixed extra, string inpu
                 if (extra >= 2) {
                     return handle_remove("\nInvalid entry. Connection terminated.\n");
                 }
-                input_next((: account_input, STATE_ACCOUNT_PASSWORD, ++extra :), PROMPT_PASSWORD_ENTER, 1);
+                input_next((: account_input(STATE_ACCOUNT_PASSWORD, ++extra) :), PROMPT_PASSWORD_ENTER, 1);
             }
             break;
         case STATE_ACCOUNT_MENU:
@@ -172,12 +172,12 @@ protected nomask varargs void account_input (int state, mixed extra, string inpu
             } else if (input == "passwd") {
                 reset_connect_timeout();
                 write("Changing password...\n");
-                input_next((: account_input, STATE_PASSWORD_NEW, 0 :), PROMPT_PASSWORD_CREATE, 1);
+                input_next((: account_input(STATE_PASSWORD_NEW, 0) :), PROMPT_PASSWORD_CREATE, 1);
             } else if (input == "new") {
                 account_input(STATE_CHARACTER_ENTER);
             } else if (input == "delete") {
-                input_next((: account_input, STATE_CHARACTER_DELETE, 0 :), PROMPT_CHARACTER_DELETE);
-            } else if (member_array(input, __Account->query_character_names()) > -1) {
+                input_next((: account_input(STATE_CHARACTER_DELETE, 0) :), PROMPT_CHARACTER_DELETE);
+            } else if (member(input, __Account->query_character_names()) > -1) {
                 set_character_name(input);
                 character_enter(0);
             } else {
@@ -189,7 +189,7 @@ protected nomask varargs void account_input (int state, mixed extra, string inpu
         case STATE_CHARACTER_ENTER:
             reset_connect_timeout();
             write(PROMPT_CHARACTER_FORMAT);
-            input_next((: account_input, STATE_CHARACTER_HANDLE, 0 :), PROMPT_CHARACTER_ENTER);
+            input_next((: account_input(STATE_CHARACTER_HANDLE, 0) :), PROMPT_CHARACTER_ENTER);
             break;
 
         case STATE_CHARACTER_HANDLE:
@@ -213,11 +213,11 @@ protected nomask varargs void account_input (int state, mixed extra, string inpu
                     reset_connect_timeout();
                     set_character_name(input);
                     write("\nNew character '" + input + "'!\n");
-                    input_next((: account_input, STATE_CHARACTER_CONFIRM_NAME, ++extra :), PROMPT_CHARACTER_CONFIRM_NAME);
+                    input_next((: account_input(STATE_CHARACTER_CONFIRM_NAME, ++extra) :), PROMPT_CHARACTER_CONFIRM_NAME);
                     return;
                 }
             }
-            input_next((: account_input, STATE_CHARACTER_HANDLE, ++extra :), PROMPT_CHARACTER_ENTER);
+            input_next((: account_input(STATE_CHARACTER_HANDLE, ++extra) :), PROMPT_CHARACTER_ENTER);
             break;
 
         case STATE_CHARACTER_CONFIRM_NAME:
@@ -227,7 +227,7 @@ protected nomask varargs void account_input (int state, mixed extra, string inpu
                     return handle_remove("\nInvalid entry. Connection terminated.\n");
                 }
                 write("\nCanceled new character.\n");
-                input_next((: account_input, STATE_CHARACTER_HANDLE, ++extra :), PROMPT_CHARACTER_ENTER);
+                input_next((: account_input(STATE_CHARACTER_HANDLE, ++extra) :), PROMPT_CHARACTER_ENTER);
                 return;
             }
             reset_connect_timeout();
@@ -238,19 +238,19 @@ protected nomask varargs void account_input (int state, mixed extra, string inpu
             if (!input || input == "" || !(input = lower_case(input))) {
                 return display_account_menu();
             }
-            // @TODO member_array(input, D_ACCESS->query_secure()) { write("Cannot delete"); }
+            // @TODO member(input, D_ACCESS->query_secure()) { write("Cannot delete"); }
             input = sanitize_name(input);
-            if (member_array(input, __Account->query_character_names()) == -1) {
+            if (member(input, __Account->query_character_names()) == -1) {
                 write("Invalid character name.\n\n");
                 display_account_menu();
                 return;
             }
-            input_next((: account_input, STATE_CHARACTER_DELETE_CONFIRM, input :), PROMPT_CHARACTER_DELETE_CONFIRM + "[" + input + "] ");
+            input_next((: account_input(STATE_CHARACTER_DELETE_CONFIRM, input) :), PROMPT_CHARACTER_DELETE_CONFIRM + "[" + input + "] ");
             break;
 
         case STATE_CHARACTER_DELETE_CONFIRM:
             if (input == extra) {
-                input_next((: account_input, STATE_PASSWORD_DELETE_CONFIRM, input :), PROMPT_PASSWORD_DELETE_CONFIRM);
+                input_next((: account_input(STATE_PASSWORD_DELETE_CONFIRM, input) :), PROMPT_PASSWORD_DELETE_CONFIRM);
                 return;
             }
             write("Character name not confirmed. Delete cancelled.\n");
@@ -271,7 +271,7 @@ protected nomask varargs void account_input (int state, mixed extra, string inpu
 
         case STATE_CHARACTER_OVERRIDE:
             reset_connect_timeout();
-            input_next((: account_input, STATE_CHARACTER_OVERRIDE_CONFIRM, input :), PROMPT_CHARACTER_OVERRIDE);
+            input_next((: account_input(STATE_CHARACTER_OVERRIDE_CONFIRM, input) :), PROMPT_CHARACTER_OVERRIDE);
             break;
 
         case STATE_CHARACTER_OVERRIDE_CONFIRM:
@@ -285,26 +285,26 @@ protected nomask varargs void account_input (int state, mixed extra, string inpu
         case STATE_SPECIES_ENTER:
             write("Characters must have a species.\n\n");
             write(query_unlocked_species() + "\n");
-            input_next((: account_input, STATE_SPECIES_HANDLE, 0 :), PROMPT_SPECIES_ENTER);
+            input_next((: account_input(STATE_SPECIES_HANDLE, 0) :), PROMPT_SPECIES_ENTER);
             break;
 
         case STATE_SPECIES_HANDLE:
             if (input != "human") {
                 write("\nThe only one type option available to your account is human.\n");
-                input_next((: account_input, STATE_SPECIES_HANDLE, 0 :), PROMPT_SPECIES_ENTER);
+                input_next((: account_input(STATE_SPECIES_HANDLE, 0) :), PROMPT_SPECIES_ENTER);
                 return;
             }
             write(query_character()->query_cap_name() + " is a " + input + "!\n\n");
             set_character_species(input);
             __Account->add_character(query_character()->query_cap_name(), query_character()->query_key_name(), query_character()->query_species());
-            D_LOG->log("character/new", sprintf("%s : %s : %s\n", ctime(time()), query_ip_number(), input));
+            // D_LOG->log("character/new", sprintf("%s : %s : %s\n", ctime(time()), query_ip_number(), input));
             write("Entering as " + query_character()->query_cap_name() + "...\n");
             character_enter(1);
             break;
 
         case STATE_SETTINGS_ENTER:
             write("Settings Actions  : %^CYAN%^[back] [(setting) (option)]%^RESET%^\n\n");
-            foreach (string setting in sort_array(keys(__Account->query_settings()), 1)) {
+            foreach (string setting in sort_array(m_indices(__Account->query_settings()), (: $1 > $2 :))) {
                 string display;
                 if (intp(__Account->query_setting(setting))) {
                     display = "" + __Account->query_setting(setting);
@@ -314,7 +314,7 @@ protected nomask varargs void account_input (int state, mixed extra, string inpu
                 write("  " + sprintf("%-24s", setting) + "  " + display + "\n");
             }
             write("\n");
-            input_next((: account_input, STATE_SETTINGS_HANDLE, 0 :), PROMPT_SETTINGS_ENTER);
+            input_next((: account_input(STATE_SETTINGS_HANDLE, 0) :), PROMPT_SETTINGS_ENTER);
             break;
 
         case STATE_SETTINGS_HANDLE:
@@ -327,8 +327,8 @@ protected nomask varargs void account_input (int state, mixed extra, string inpu
                     account_input(STATE_ACCOUNT_MENU);
                     return;
                 }
-                input = sizeof(split) > 1 ? input[(strlen(setting)+1)..] : 0;
-                if (member_array(setting, settings) == -1) {
+                input = sizeof(split) > 1 ? input[(sizeof(setting)+1)..] : 0;
+                if (member(setting, settings) == -1) {
                     write("Invalid setting.\n");
                 } else {
                     if (intp(__Account->query_setting(setting))) {
@@ -339,7 +339,7 @@ protected nomask varargs void account_input (int state, mixed extra, string inpu
                         __Account->set_setting(setting, w);
                         write("Setting " + setting + " mode to " + w + ".\n");
                     } else {
-                        if (member_array(input, ({ "on", "off"})) > -1) {
+                        if (member(input, ({ "on", "off"})) > -1) {
                             __Account->set_setting(setting, input);
                             write("Setting " + setting + " mode " + input + ".\n");
                         } else {

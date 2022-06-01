@@ -12,9 +12,9 @@ void test_expire () {
     expect_function("handle_expire", testOb);
 
     expect("expire to remove corpse", (: ({
-        assert(undefinedp(testOb), "==", 0),
+        assert(!!testOb, "==", 0),
         testOb->handle_expire(),
-        assert(undefinedp(testOb), "==", 1),
+        assert(!!testOb, "==", 1),
     }) :));
 }
 
@@ -24,7 +24,7 @@ void test_received () {
     function_exists("handle_received", testOb);
 
     expect("handle_received sets expire timer", (: ({
-        assert(testObFile = file_name(testOb), "regex", "/std/item/corpse#[0-9]+"),
+        assert(testObFile = program_name(testOb), "regex", "/std/item/corpse#[0-9]+"),
 
         // start the expire call_out
         testOb->handle_received(0),

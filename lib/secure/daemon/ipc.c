@@ -37,13 +37,13 @@ private void setup_ipc () {
 
     __Socket = socket_create(SOCKET_STREAM, "read_socket", "close_socket");
     if (__Socket < 0) {
-        error("Bad response socket_create: " + socket_error(__Socket));
+        raise_error("Bad response socket_create: " + socket_raise_error(__Socket));
     }
     if ((socket = socket_bind(__Socket, IPC_PORT)) < 0) {
-        error("Bad response from socket_bind: " + socket_error(socket));
+        raise_error("Bad response from socket_bind: " + socket_raise_error(socket));
     }
     if ((socket = socket_listen(__Socket, "listen_socket")) < 0) {
-        error("Bad response from socket_listen: " + socket_error(socket));
+        raise_error("Bad response from socket_listen: " + socket_raise_error(socket));
     }
 }
 
@@ -58,7 +58,7 @@ private void authenticate_ipc (int socket) {
     string addr = socket_address(socket);
     if (addr != "127.0.0.1") {
         socket_close(socket);
-        error("Bad socket request from " + addr);
+        raise_error("Bad socket request from " + addr);
     }
 }
 
@@ -66,7 +66,7 @@ void send_to_sockets (string message) {
     foreach (int client in __Clients) {
         int socket = socket_write(client, message);
         if (socket < 0) {
-            error("Bad response from socket_write: " + socket_error(socket));
+            raise_error("Bad response from socket_write: " + socket_raise_error(socket));
         }
     }
 }
@@ -76,7 +76,7 @@ void send_to_sockets (string message) {
 private void read_socket (int fd, mixed message, string addr) {
     if (!stringp(message)) {
         socket_close(fd);
-        error("Bad message from read_socket");
+        raise_error("Bad message from read_socket");
     }
 
     authenticate_ipc(fd);
@@ -105,7 +105,7 @@ private void listen_socket (int fd) {
     authenticate_ipc(fd);
 
     if (socket < 0) {
-        error("Bad response to socket_accept: " + socket_error(socket));
+        raise_error("Bad response to socket_accept: " + socket_raise_error(socket));
     }
     __Clients += ({ socket });
 }

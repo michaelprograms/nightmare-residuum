@@ -14,8 +14,8 @@ void test_query_emote () {
 
     expect("default emotes are queryable", (: ({
         assert(sizeof(testOb->query_emotes()), ">", 0),
-        assert(mapp(testOb->query_emote("smile")), "==", 1),
-        assert(mapp(testOb->query_emote("frown")), "==", 1),
+        assert(mappingp(testOb->query_emote("smile")), "==", 1),
+        assert(mappingp(testOb->query_emote("frown")), "==", 1),
     }) :));
 }
 

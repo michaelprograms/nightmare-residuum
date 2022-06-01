@@ -14,7 +14,7 @@ mapping query_species () { return __Species; }
 private void load_bodytypes () {
     string file = read_file(CFG_BODYTYPES), *lines;
 
-    lines = filter_array(explode(file, "\n"), (: $1 && $1 != "" && $1[0] != '#' :));
+    lines = filter(explode(file, "\n"), (: $1 && $1 != "" && $1[0] != '#' :));
 
     foreach (string line in lines) {
         string bodytype, limb, attach, limbtype;
@@ -24,8 +24,8 @@ private void load_bodytypes () {
         if (percent > 100) percent = 100;
         else if (percent < 1) percent = 1;
 
-        if (!mapp(__BodyTypes[bodytype])) __BodyTypes[bodytype] = ([]);
-        if (!mapp(__BodyTypes[bodytype][limb])) __BodyTypes[bodytype][limb] = ([]);
+        if (!mappingp(__BodyTypes[bodytype])) __BodyTypes[bodytype] = ([]);
+        if (!mappingp(__BodyTypes[bodytype][limb])) __BodyTypes[bodytype][limb] = ([]);
         if (attach != "0") __BodyTypes[bodytype][limb]["attach"] = attach;
         if (limbtype != "0") __BodyTypes[bodytype][limb]["limbtype"] = limbtype;
         __BodyTypes[bodytype][limb]["percent"] = percent;
@@ -35,13 +35,13 @@ private void load_bodytypes () {
 private void load_species () {
     string file = read_file(CFG_SPECIES), *lines;
 
-    lines = filter_array(explode(file, "\n"), (: $1 && $1 != "" && $1[0] != '#' :));
+    lines = filter(explode(file, "\n"), (: $1 && $1 != "" && $1[0] != '#' :));
 
     foreach (string line in lines) {
         string species, bodytype;
 
         if (sscanf(line, "%s:%s", species, bodytype) != 2) continue;
-        if (!mapp(__Species[species])) __Species[species] = ([]);
+        if (!mappingp(__Species[species])) __Species[species] = ([]);
 
         __Species[species]["bodytype"] = bodytype;
     }
@@ -54,7 +54,7 @@ mapping setup_body (object ob) {
     mapping limbs;
     string species, bodytype;
 
-    if (!ob || !(species = ob->query_species()) || !mapp(__Species[species])) return 0;
+    if (!ob || !(species = ob->query_species()) || !mappingp(__Species[species])) return 0;
 
     bodytype = __Species[species]["bodytype"];
     limbs = __BodyTypes[bodytype];

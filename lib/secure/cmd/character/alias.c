@@ -1,7 +1,7 @@
 inherit "/std/class/shell_alias.c";
 
 private void print_all_aliases (object shell) {
-    class ShellAlias alias;
+    struct ShellAlias alias;
     string *aliasKeys;
     string *border, *list = ({ });
 

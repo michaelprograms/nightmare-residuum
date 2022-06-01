@@ -63,4 +63,11 @@
 #define MASTER          "/secure/daemon/master"
 #define SEFUN           "/secure/sefun/sefun"
 
+#define MIN_INT -9223372036854775807
+#define MAX_INT 9223372036854775807
+#define MIN_FLOAT 0.0
+#define MAX_FLOAT MAX_INT * 1.0
+#define __LARGEST_PRINTABLE_STRING__ 65535
+#define __PORT__ 7777
+
 #endif /* __GLOBAL_H__ */

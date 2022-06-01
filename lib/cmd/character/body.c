@@ -13,7 +13,7 @@ void command (string input, mapping flags) {
         "arm", "hand", "leg", "foot",
         "paw", "wing", "tail",
     })) {
-        foreach (string l in sort_array(filter_array(limbs, (: regexp($1, $(type)) :)), 1)) {
+        foreach (string l in sort_array(filter(limbs, (: sizeof(regexp(({ $1 }), type)) :)), (: $1 > $2 :))) {
             mapping limb = target->query_limb(l);
             items += ({ sprintf("  %-16s %3s", l, (limb["damage"]*100/limb["maxdamage"])+"%") });
             limbs -= ({ l });

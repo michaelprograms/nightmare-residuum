@@ -47,9 +47,9 @@ void execute_file (string file, string input) {
     mixed ret;
     int timeBefore, timeAfter;
     create_tmp_file(file, input);
-    timeBefore = perf_counter_ns();
+    timeBefore = utime()[0] + utime()[1];
     ret = call_other(file, "eval");
-    timeAfter = perf_counter_ns();
+    timeAfter = utime()[0] + utime()[1];
     if (regexp(input, "return")) {
         write("Result (%^ORANGE%^" + sprintf("%.2f", (timeAfter - timeBefore)/1000000.0) + " ms%^RESET%^) = " + identify(ret)+"\n");
     } else {

@@ -1,13 +1,13 @@
 #include "user.h"
 
-#define QUERY_FIRST_IMMORTAL !!filter_array(get_dir("/realm/"), (:$1 && $1[0..0] != ".":))
+#define QUERY_FIRST_IMMORTAL !!filter(get_dir("/realm/"), (:$1 && $1[0..0] != ".":))
 
 nosave private string __Species;
 nosave private object __Character;
 
 // -----------------------------------------------------------------------------
 
-private void set_character_name (string name) {
+protected void set_character_name (string name) {
     if (!__Character) {
         __Character = clone_object(STD_CHARACTER);
         __Character->set_user(this_object());
@@ -21,7 +21,7 @@ private void set_character_name (string name) {
         __Character = clone_object(STD_CHARACTER);
     }
 }
-private void set_character_species (string species) {
+protected void set_character_species (string species) {
     __Species = species;
     __Character->set_species(species);
 }
@@ -34,13 +34,13 @@ object query_character () {
 
 // -----------------------------------------------------------------------------
 
-nomask private void character_enter (int newbie) {
+protected void character_enter (int newbie) {
     object *chars, char;
 
-    remove_call_out();
+    reset_connect_timeout(1);
 
     // Check for existing character
-    chars = filter_array(children(STD_CHARACTER) - ({ __Character }), (: $1 && $1->query_key_name() == __Character->query_key_name() && $1->query_user() :));
+    chars = filter(clones(STD_CHARACTER) - ({ __Character }), (: $1 && $1->query_key_name() == __Character->query_key_name() && $1->query_user() :));
     if (sizeof(chars) > 0 && (char = chars[0])) {
         if (interactive(char->query_user())) {
             write(char->query_cap_name()+" is connected and interactive.\n");
@@ -79,13 +79,13 @@ nomask private void character_enter (int newbie) {
     }
 }
 
-nomask private void character_override () {
+protected void character_override () {
     object *chars, char;
 
-    remove_call_out();
+    reset_connect_timeout(1);
 
     // Verify existing character still here
-    chars = filter_array(children(STD_CHARACTER) - ({ __Character }), (: $1 && $1->query_key_name() == __Character->query_key_name():));
+    chars = filter(clones(STD_CHARACTER) - ({ __Character }), (: $1 && $1->query_key_name() == __Character->query_key_name():));
     if (sizeof(chars) > 0 && (char = chars[0])) {
         destruct(__Character);
         // Swap character's user
@@ -103,15 +103,15 @@ nomask private void character_override () {
     }
 }
 
-nomask void handle_character_override () {
+void handle_character_override () {
     object po;
-    if (base_name(po = previous_object()) == OBJ_USER && po->query_character() == __Character) {
+    if (object_name(po = previous_object()) == OBJ_USER && po->query_character() == __Character) {
         __Character = 0;
-        handle_remove("\nYour connection has been overriden from " + query_ip_number(po) + ".\n\n");
+        handle_remove("\nYour connection has been overriden from " + /*query_ip_number(po) +*/ ".\n\n");
     }
 }
 
-nomask protected void character_exit () {
+protected void character_exit () {
     if (__Character) {
         __Character->update_last_action();
         query_account()->update_character_data(__Character);
@@ -120,7 +120,7 @@ nomask protected void character_exit () {
     }
 }
 
-nomask protected void character_linkdead () {
+protected void character_linkdead () {
     __Character->update_last_action();
     __Character->enter_freezer();
 }

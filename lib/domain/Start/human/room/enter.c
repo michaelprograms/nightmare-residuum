@@ -63,7 +63,7 @@ mixed can_become_str () {
 void do_become_str (string str) {
     object tc = this_character();
 
-    if (member_array(str, ({ "female", "male", "neither"})) == -1) {
+    if (member(str, ({ "female", "male", "neither"})) == -1) {
         write("Syntax: %^CYAN%^[become female|male|neither]%^RESET%^\n");
         return;
     }

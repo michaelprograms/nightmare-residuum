@@ -55,5 +55,5 @@ mixed direct_wear_obj (mixed args...) {
 }
 mixed direct_unwear_obj (mixed args...) {
     object po = previous_object();
-    return environment() == po && __Worn == po && member_array(this_object(), po->query_all_armor()) > -1;
+    return environment() == po && __Worn == po && member(this_object(), po->query_all_armor()) > -1;
 }

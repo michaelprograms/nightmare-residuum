@@ -56,8 +56,8 @@ string query_key_name () {
 }
 
 nomask void set_password (string str) {
-    if (base_name(previous_object()) != "/secure/user/user") {  // TODO better way to match?
-        error("Illegal attempt to account->set_password");
+    if (object_name(previous_object()) != "/secure/user/user") {  // TODO better way to match?
+        raise_error("Illegal attempt to account->set_password");
     }
     __Password = str;
     save_data();
@@ -124,7 +124,7 @@ void set_setting (string key, mixed value) {
 }
 mixed query_setting (string key) {
     if (!__Settings || !key) return 0;
-    if (member_array(key, keys(__Settings)) == -1) return 0;
+    if (member(key, keys(__Settings)) == -1) return 0;
     return __Settings[key];
 }
 mapping query_settings () {

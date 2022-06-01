@@ -67,9 +67,9 @@ void test_expects_passing () {
     }) :));
 
     expect("assert condition 'catch' passes", (: ({
-        assert((: error("Test catch") :), "catch", "*Test catch\n"),
-        assert((: error("Test catch 2") :), "catch", "*Test catch 2\n"),
-        assert((: error("Different error") :), "catch", "*Different error\n"),
+        assert((: raise_error("Test catch") :), "catch", "*Test catch\n"),
+        assert((: raise_error("Test catch 2") :), "catch", "*Test catch 2\n"),
+        assert((: raise_error("Different error") :), "catch", "*Different error\n"),
     }) :));
 
 }
@@ -144,7 +144,7 @@ void test_lifecycle_events () {
 
     expect("query_expect_catch is enabled during assert 'catch'", (: ({
         assert(query_expect_catch(), "==", 0),
-        assert((: query_expect_catch() && error("Catch") :), "catch", "*Catch\n"),
+        assert((: query_expect_catch() && raise_error("Catch") :), "catch", "*Catch\n"),
         assert(query_expect_catch(), "==", 0),
     }) :));
 }

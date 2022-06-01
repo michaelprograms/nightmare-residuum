@@ -1,10 +1,11 @@
-#include "user.h"
 
 inherit "/secure/user/account.c";
 inherit "/secure/user/character.c";
 inherit "/secure/user/input.c";
 inherit "/secure/user/output.c";
 inherit "/secure/user/shell.c";
+
+#include "user.h"
 
 #define CONNECT_TIMEOUT 60
 
@@ -15,21 +16,30 @@ nosave private string __IPAddr;
 
 /* --- interactive apply --- */
 
-nomask void logon () {
-    debug_message(ctime() + " connect from " + query_ip_number()); // @TODO log_file
-    D_LOG->log("connect", ctime() + " " + query_ip_number());
-
-    calloutBanner = call_out_walltime(function () {
-        if (!calloutBanner) {
-            return;
-        }
-        receive_message("system", D_WELCOME->query_banner() + "\n");
-        account_input();
-        if (this_user() && interactive(this_user())) telnet_ga();
-    }, 0.5); // allow time for terminal_type to be called
+private void calloutbannerwelcome () {
+    // if (!calloutBanner) {
+    //     return;
+    // }
+    receive_message("system", D_WELCOME->query_banner() + "\n");
+    account_input();
+    // if (this_user() && interactive(this_user())) telnet_ga(); // @LDMUD disabled
 }
 
-nomask void net_dead () {
+void logon () {
+    // @LDMUD disabled
+    // debug_message(ctime() + " connect from " + query_ip_number()); // @TODO log_file
+    // D_LOG->log("connect", ctime() + " " + query_ip_number());
+
+    receive_message("system", "Connecting...\n\n");
+    receive_message("system", D_WELCOME->query_banner() + "\n");
+    account_input();
+
+    // calloutbannerwelcome();
+    // calloutBanner = call_out((: calloutbannerwelcome() :), 1); // _walltime
+    // allow time for terminal_type to be called
+}
+
+void net_dead () {
     if (query_account() && query_character()) {
         query_account()->update_character_data(query_character());
         character_linkdead();
@@ -42,35 +52,40 @@ nomask void net_dead () {
     }
 }
 
+// @LDMUD shim
+private void receive (string msg) {
+    tell_object(this_object(), msg);
+}
+
 void receive_message (string type, string message) {
     if (type == "system") {
         receive(wrap(message, 0, 0));
     } else if (type == "wrap" || type == "verb" || type == "action") {
         receive(wrap(message));
     } else if (type == "say") {
-        message = "%^CYAN%^" + replace_string(message, ":", ":%^RESET%^");
+        message = "%^CYAN%^" + regreplace(message, ":", ":%^RESET%^", 1);
         receive(wrap(message));
     } else if (type == "go") {
-        message = replace_string(message, "%^DIR%^", "%^CYAN%^");
-        message = replace_string(message, "%^DEFAULT%^", "%^GREEN%^");
+        message = regreplace(message, "%^DIR%^", "%^CYAN%^", 1);
+        message = regreplace(message, "%^DEFAULT%^", "%^GREEN%^", 1);
         message = "%^GREEN%^BOLD%^" + message + "%^RESET%^";
         receive(wrap(message));
     } else if (type == "room_living_contents") {
-        message = "%^RED%^" + replace_string(message, "%^DEFAULT%^", "%^RED%^") + "%^RESET%^";
+        message = "%^RED%^" + regreplace(message, "%^DEFAULT%^", "%^RED%^", 1) + "%^RESET%^";
         receive(wrap(message));
     } else if (type == "room_item_contents") {
-        message = "%^MAGENTA%^" + replace_string(message, "%^DEFAULT%^", "%^MAGENTA%^") + "%^RESET%^";
+        message = "%^MAGENTA%^" + regreplace(message, "%^DEFAULT%^", "%^MAGENTA%^", 1) + "%^RESET%^";
         receive(wrap(message));
     } else if (type == "room_long" || type == "room_look") {
         receive(wrap(message));
     } else if (type == "room_exits") {
-        message = "%^GREEN%^" + replace_string(replace_string(message, "%^DEFAULT%^", "%^GREEN%^"), ":", ":%^RESET%^") + "%^RESET%^";
+        message = "%^GREEN%^" + regreplace(regreplace(message, "%^DEFAULT%^", "%^GREEN%^", 1), ":", ":%^RESET%^", 1) + "%^RESET%^";
         receive(wrap(message));
     } else if (type == "channel") {
-        message = replace_string(message, "[[", "%^GREEN%^[%^BOLD%^");
-        message = replace_string(message, "]]", "%^BOLD_OFF%^GREEN%^]%^RESET%^");
-        message = replace_string(message, "((", "%^CYAN%^(%^BOLD%^");
-        message = replace_string(message, "))", "%^BOLD_OFF%^CYAN%^)%^RESET%^");
+        message = regreplace(message, "[[", "%^GREEN%^[%^BOLD%^", 1);
+        message = regreplace(message, "]]", "%^BOLD_OFF%^GREEN%^]%^RESET%^", 1);
+        message = regreplace(message, "((", "%^CYAN%^(%^BOLD%^", 1);
+        message = regreplace(message, "))", "%^BOLD_OFF%^CYAN%^)%^RESET%^", 1);
         receive(wrap(message));
     } else if (type == "combat hit") {
         message = "%^RED%^" + message + "%^RESET%^";
@@ -79,7 +94,7 @@ void receive_message (string type, string message) {
         message = "%^GREEN%^" + message + "%^RESET%^";
         receive(wrap(message));
     } else if (type == "no_ansi") {
-        if (strlen(message) > __LARGEST_PRINTABLE_STRING__) {
+        if (sizeof(message) > __LARGEST_PRINTABLE_STRING__) {
             message = message[0..__LARGEST_PRINTABLE_STRING__ - 1];
         }
         receive(message);
@@ -88,38 +103,38 @@ void receive_message (string type, string message) {
     }
 }
 
-void terminal_type (string term) {
-    D_LOG->log_unique("term", term);
+// void terminal_type (string term) {
+//     D_LOG->log_unique("term", term);
 
-    __TerminalType = term;
-    term = lower_case(explode(term, " ")[0]);
+//     __TerminalType = term;
+//     term = lower_case(explode(term, " ")[0]);
 
-    if (member_array(term, ({ "cmud", })) > -1) {
-        set_encoding("ascii");
-    } else if (member_array(term, ({ "zmud", })) > -1) {
-        set_encoding("ascii");
-        __TerminalColor = "16";
-    } else if (member_array(term, ({ "mudslinger", "xterm-256color", })) > -1) {
-        __TerminalColor = "16";
-    }
+//     if (member(term, ({ "cmud", })) > -1) {
+//         set_encoding("ascii");
+//     } else if (member(term, ({ "zmud", })) > -1) {
+//         set_encoding("ascii");
+//         __TerminalColor = "16";
+//     } else if (member(term, ({ "mudslinger", "xterm-256color", })) > -1) {
+//         __TerminalColor = "16";
+//     }
 
-    if (!undefinedp(calloutBanner)) { // force prompt
-        remove_call_out(calloutBanner);
-        calloutBanner = 0;
-        receive_message("system", D_WELCOME->query_banner() + "\n");
-        account_input();
-        if (this_user() && interactive(this_user())) telnet_ga();
-    }
-}
+//     if (calloutBanner) { // force prompt
+//         remove_call_out(calloutBanner);
+//         calloutBanner = 0;
+//         receive_message("system", D_WELCOME->query_banner() + "\n");
+//         account_input();
+//         if (this_user() && interactive(this_user())) telnet_ga();
+//     }
+// }
 
-void receive_environ (string var, string value) {
-    // Web clients send this
-    // if (var == "IPADDRESS") {
-    //     // @TODO use this instead of query_ip_address?
-    // }
-    // var can also be "CLIENT_NAME", "CLIENT_VERSION"
+// void receive_environ (string var, string value) {
+//     // Web clients send this
+//     // if (var == "IPADDRESS") {
+//     //     // @TODO use this instead of query_ip_address?
+//     // }
+//     // var can also be "CLIENT_NAME", "CLIENT_VERSION"
 
-}
+// }
 
 /* --- interactive non-apply */
 
@@ -130,28 +145,34 @@ string query_terminal_color () {
     return __TerminalColor;
 }
 
-nomask varargs void quit_character (int destructing) {
+varargs void quit_character (int destructing) {
     message("system", "Reality "+(random(2)?"explodes into an im":"implodes into an ex")+"plosion of irreality.\n", this_object());
     character_exit();
     shell_stop();
-    flush_messages();
+    // flush_messages();
     if (!destructing) {
         account_input(STATE_ACCOUNT_MENU);
     }
 }
 
-nomask void quit_account () {
+void quit_account () {
     quit_character(1);
     handle_remove();
 }
 
-nomask void reset_connect_timeout () {
-    if (!undefinedp(calloutTimeout)) remove_call_out(calloutTimeout);
-    calloutTimeout = call_out((: handle_remove, "\nTime exceeded. Connection terminated.\n" :), CONNECT_TIMEOUT);
+varargs void reset_connect_timeout (int stop) {
+    if (calloutTimeout) {
+        calloutTimeout = 0;
+        remove_call_out("handle_remove");
+    }
+    if (!stop) {
+        call_out((: handle_remove("\nTime exceeded. Connection terminated.\n") :), CONNECT_TIMEOUT);
+        calloutTimeout = 1;
+    }
 }
 
-nomask varargs void handle_remove (string message) {
-    if (!undefinedp(calloutTimeout)) remove_call_out(calloutTimeout);
+varargs void handle_remove (string message) {
+    if (calloutTimeout) remove_call_out("handle_remove");
     if (message) message("system", message, this_object());
 
     if (query_shell()) {
@@ -164,6 +185,6 @@ nomask varargs void handle_remove (string message) {
         destruct(query_account());
     }
 
-    flush_messages();
-    destruct();
+    // flush_messages();
+    destruct(this_object());
 }

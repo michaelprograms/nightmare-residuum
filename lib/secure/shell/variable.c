@@ -6,13 +6,13 @@ mixed query_variable (string v) {
 }
 varargs mixed set_variable (string v, mixed value, int set_if_undefined) {
     int changed = 0;
-    if (undefinedp(set_if_undefined) || (set_if_undefined && !__Variables[v])) {
+    if (!intp(set_if_undefined) || (set_if_undefined && !__Variables[v])) {
         changed = (__Variables[v] != value);
         __Variables[v] = value;
         if (changed) {
             this_object()->save_data();
             if (__VariableHooks[v]) {
-                evaluate(__VariableHooks[v], value);
+                funcall(__VariableHooks[v], value);
             }
         }
     }

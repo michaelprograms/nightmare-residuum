@@ -59,7 +59,7 @@ int remove_emote (string verb, string rule) {
     if (!__Emotes[verb]) {
         return 0;
     }
-    if (strlen(rule)) {
+    if (sizeof(rule)) {
         if (!__Emotes[verb][rule]) {
             return 0;
         }
@@ -178,7 +178,7 @@ varargs string parse_emote (object target, string msg, object *who, mixed *args)
         if (c < 'a') names = capitalize(names);
         emote += (names ? names : "") + fmt[i+1];
     }
-    if (strlen(emote) > 0 && emote[<1] != '\n') {
+    if (sizeof(emote) > 0 && emote[<1] != '\n') {
         emote += "\n";
     }
     return emote;
@@ -232,7 +232,7 @@ private void display_emote (object *who, string *msgs, mixed others) {
         done[who[i]] ++;
         message("soul", msgs[i], who[i]);
     }
-    if (arrayp(others)) {
+    if (pointerp(others)) {
         message("soul", msgs[<1], others, who);
     } else {
         message("soul", msgs[<1], others);
@@ -250,7 +250,7 @@ mixed can_verb_rule (mixed args...) {
     rule = args[1];
 
     if (!(emote = query_emote(verb))) return 0;
-    return !undefinedp(emote[rule]);
+    return !emote[rule];
 }
 
 mixed direct_verb_rule (mixed args...) {
@@ -270,7 +270,7 @@ mixed direct_verb_rule (mixed args...) {
         if (po == who || environment(po) != environment(who) || who->is_living()) return 0;
     }
 
-    return !undefinedp(query_emote(verb)[rule]);
+    return !query_emote(verb)[rule];
 }
 
 void do_verb_rule (mixed args...) {

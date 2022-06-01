@@ -1,8 +1,6 @@
 #include <access.h>
 #include <driver/function.h>
 
-// inherit
-
 private nosave mapping __Group, __Read, __Write;
 private nosave object __Unguarded;
 
@@ -36,7 +34,7 @@ void create () {
 //     mixed tmp = who;
 //     if (!who) who = previous_object();
 //     if (!stringp(who)) who = who->query_key_name();
-//     if (!who || who == "") who = base_name(tmp);
+//     if (!who || who == "") who = object_name(tmp);
 //     if (member_group(who, "SECURE")) return 1;
 //     else return 0;
 // }
@@ -65,16 +63,30 @@ void create () {
 
 // -----------------------------------------------------------------------------
 
+string *match_path (mapping m, string path) {
+    string match;
+    int n = 0;
+    foreach (string key in m_indices(m)) {
+        if (strstr(key, path) > n) {
+            n = strstr(key, path);
+            match = key;
+        }
+    }
+    return m[match];
+}
+
 // The main function used to check if a caller can perform fn on file in mode.
 int query_allowed (object caller, string fn, string file, string mode) {
     string *pathPrivs, *privs, priv;
     object *stack;
     int i;
 
-    if (!objectp(caller)) error("Bad argument 1 to access->query_allowed");
-    if (!stringp(fn)) error("Bad argument 2 to access->query_allowed");
-    if (!stringp(file)) error("Bad argument 3 to access->query_allowed");
-    if (!stringp(mode)) error("Bad argument 4 to access->query_allowed");
+    return 1;
+
+    if (!objectp(caller)) raise_error("Bad argument 1 to access->query_allowed");
+    if (!stringp(fn)) raise_error("Bad argument 2 to access->query_allowed");
+    if (!stringp(file)) raise_error("Bad argument 3 to access->query_allowed");
+    if (!stringp(mode)) raise_error("Bad argument 4 to access->query_allowed");
 
     // attempt to match the target file path to __Read path permissions
     pathPrivs = match_path(__Read, file);
@@ -86,14 +98,14 @@ int query_allowed (object caller, string fn, string file, string mode) {
 
     // caller utilized unguarded(function)
     if (__Unguarded == caller) {
-        string tmp = base_name(caller);
+        string tmp = object_name(caller);
         // debug_message("! D_ACCESS->query_allowed unguarded == caller: "+identify(caller)+" "+tmp);
         // access check passes due to caller requesting valid save path
-        if (!strsrch(tmp, "/std/character") && D_CHARACTER->query_valid_save_path(caller->query_key_name(), file)) {
+        if (!strstr(tmp, "/std/character") && D_CHARACTER->query_valid_save_path(caller->query_key_name(), file)) {
             return 1;
-        } else if (!strsrch(tmp, "/std/account") && D_ACCOUNT->query_save_path(caller->query_key_name()) == file) {
+        } else if (!strstr(tmp, "/std/account") && D_ACCOUNT->query_save_path(caller->query_key_name()) == file) {
             return 1;
-        } else if (!strsrch(tmp, "/daemon/log") && regexp(file, "^/log/")) {
+        } else if (!strstr(tmp, "/daemon/log") && sizeof(regexp(({ file }), "^/log/"))) {
             return 1;
         } else {
             // set caller as the stack
@@ -101,9 +113,9 @@ int query_allowed (object caller, string fn, string file, string mode) {
         }
     } else {
         // set all previous objects and caller as the stack
-        i = sizeof(stack = previous_object(-1) + ({ caller }));
+        i = sizeof(stack = caller_stack() + ({ caller }));
     }
-    // @TODO ? else if (__Unguarded && base_name(caller) == SEFUN) {}
+    // @TODO ? else if (__Unguarded && object_name(caller) == SEFUN) {}
 
     // debug_message("! D_ACCESS->query_allowed stack is: "+identify(stack));
 
@@ -113,10 +125,10 @@ int query_allowed (object caller, string fn, string file, string mode) {
         if (!stack[i]) continue;
 
         // skip if stack entry is member of the access system
-        if (stack[i] == this_object() || file_name(stack[i]) == MASTER || file_name(stack[i]) == SEFUN) continue;
+        if (stack[i] == this_object() || program_name(stack[i])[0..<3] == MASTER || program_name(stack[i])[0..<3] == SEFUN) continue;
 
         // access check fails due to no privs found for stack entry
-        if (!(priv = query_privs(stack[i]))) return 0;
+        if (!(priv = query_file_privs(program_name(stack[i])))) return 0;
 
         // skip if trying to read with no read privilege
         if (!pathPrivs && mode == "read") continue;
@@ -125,10 +137,10 @@ int query_allowed (object caller, string fn, string file, string mode) {
         privs = explode(priv, ":"); // @TODO when does this receive a : separated list?
 
         // skip stack entry without SECURE priv
-        if (member_array(ACCESS_SECURE, privs) != -1) continue;
+        if (member(ACCESS_SECURE, privs) != -1) continue;
 
         // skip stack entry with privs containing that of target file
-        if (member_array(query_file_privs(file), privs) != -1) continue;
+        if (member(query_file_privs(file), privs) != -1) continue;
 
         // access check fails due to trying to write with no read privilege
         if (!pathPrivs && mode == "write") return 0;
@@ -186,19 +198,21 @@ string query_file_privs (string filename) {
     return result;
 }
 
-mixed unguarded (function f) {
+mixed unguarded (closure f) {
     object previous_unguarded;
     string err;
     mixed value;
 
-    if (!f || !functionp(f) || !regexp(base_name(previous_object(0)), "^\\/secure\\/sefun\\/") || (functionp(f) & FP_OWNER_DESTED)) {
-        error("Illegal unguarded.");
+    debug_message("D_ACCESS->unguarded\n");
+    if (!f || !closurep(f) || sizeof(regexp(({ object_name(previous_object(0)) }), "^\\/secure\\/sefun\\/"))) {
+        // @LDMUD MIGRATION REMOVED: || (closurep(f) & FP_OWNER_DESTED)
+        raise_error("Illegal unguarded.");
         return 0;
     }
     previous_unguarded = __Unguarded;
     __Unguarded = previous_object(1);
-    err = catch (value = evaluate(f));
+    err = catch (value = funcall(f));
     __Unguarded = previous_unguarded;
-    if (err) error(err);
+    if (err) raise_error(err);
     return value;
 }

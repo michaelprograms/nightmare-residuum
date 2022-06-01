@@ -26,7 +26,7 @@ void test_internal_remove () {
     object storage, ob;
 
     expect("internal_remove is protected", (: ({
-        assert(member_array("internal_remove", functions(testOb, 0)) > -1 && !function_exists("internal_remove", testOb), "==", 1),
+        assert(member("internal_remove", functions(testOb, 0)) > -1 && !function_exists("internal_remove", testOb), "==", 1),
     }) :));
 
     storage = new(STD_STORAGE);

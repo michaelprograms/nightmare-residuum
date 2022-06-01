@@ -3,12 +3,12 @@
 inherit M_CLEAN;
 
 nosave private int __Requirements = REQUIREMENT_NONE;
-nosave private string __Verb = split_path(file_name())[1];
+nosave private string __Verb = split_path(program_name(this_object()))[1];
 
 protected varargs void add_rules (mixed *rules, mixed *syns) {
     foreach (string rule in rules) {
         parse_add_rule(__Verb, rule);
-        if (!undefinedp(syns)) {
+        if (syns) {
             foreach (string syn in syns) {
                 parse_add_synonym(syn, __Verb, rule);
             }

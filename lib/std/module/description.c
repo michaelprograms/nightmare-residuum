@@ -5,12 +5,12 @@ nomask void set_long (mixed m) {
     __Long = m;
 }
 string query_long () {
-    return evaluate(__Long);
+    return funcall(__Long);
 }
 
 nomask void set_short (mixed m) {
     __Short = m;
 }
 string query_short () {
-    return evaluate(__Short);
+    return funcall(__Short);
 }

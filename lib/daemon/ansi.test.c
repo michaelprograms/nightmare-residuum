@@ -16,7 +16,7 @@ void test_ansi_terms () {
 
     term = testOb->query_ansi_term();
     expect("query_ansi_term has 34 items", (: ({
-        assert(mapp(term), "==", 1),
+        assert(mappingp(term), "==", 1),
         assert(sizeof(term), "==", 34),
     }) :));
 
@@ -38,7 +38,7 @@ void test_unknown_terms () {
 
     term = testOb->query_unknown_term();
     expect("query_unknown_term has 34 items", (: ({
-        assert(mapp(term), "==", 1),
+        assert(mappingp(term), "==", 1),
         assert(sizeof(term), "==", 34),
     }) :));
 

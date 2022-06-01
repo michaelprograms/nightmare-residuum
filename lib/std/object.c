@@ -21,7 +21,7 @@ int id (string id) {
     named by a given string.  id() should return 1 if the object wishes  to
     be known by the name in the string an Id; it should return 0 otherwise.
     */
-    return member_array(id, query_id()) > -1;
+    return member(id, query_id()) > -1;
 }
 
 // @TODO

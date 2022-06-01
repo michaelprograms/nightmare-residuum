@@ -12,7 +12,7 @@ void command (string input, mapping flags) {
         message("system", "Update which file?\n", this_user());
         return;
     } if (input == "here") {
-        input = file_name(environment(this_character()));
+        input = program_name(environment(this_character()));
         if (file_size(input) == -1 && file_size(input + ".c") > 0) input += ".c";
     } else {
         if (input[0] != '/' && input[0] != '~' && input[0] != '^') {
@@ -66,7 +66,7 @@ void command (string input, mapping flags) {
                 // string test = list[i][0..<2] + "test.c";
                 message("system", "update: " + list[i] + ": Ok\n", this_user());
                 // if (file_size(test) > 0) {
-                //     testStart = perf_counter_ns();
+                //     testStart = utime()[0] + utime()[1];
                 //     D_TEST->process_file(test, (: done :), 1);
                 // }
             } else {
@@ -101,7 +101,7 @@ void command (string input, mapping flags) {
         keep->describe_environment();
         keep = ({});
         if (file_size(test) > 0) {
-            testStart = perf_counter_ns();
+            testStart = utime()[0] + utime()[1];
             D_TEST->process_file(test, (: done :), 1);
         }
     } else {

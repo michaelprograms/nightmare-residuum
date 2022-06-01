@@ -33,7 +33,7 @@ int handle_move (mixed dest) {
         if (!release && !this_object()->query_immortal()) return 0;
     }
     if (!(destOb = query_dest_ob(dest))) {
-        error("Bad argument 1 to move->handle_move");
+        raise_error("Bad argument 1 to move->handle_move");
     }
     if (!destOb || destOb == this_object()) return 0;
     if (!destOb->can_receive(this_object())) return 0;
@@ -41,9 +41,9 @@ int handle_move (mixed dest) {
         environment()->handle_release(this_object());
         handle_released(environment());
     }
-    move_object(destOb);
-    if (!regexp(file_name(destOb), "^/domain/Nowhere/room/(freezer|void)$")) {
-        __EnvPath = file_name(destOb);
+    move_object(this_object(), destOb);
+    if (!sizeof(regexp(({ program_name(destOb) }), "^/domain/Nowhere/room/(freezer|void)$"))) {
+        __EnvPath = program_name(destOb);
     }
     __CurrentEnv = environment();
     environment()->handle_receive(this_object());
@@ -81,8 +81,8 @@ void set_environment_path (mixed dest) {
     object destOb;
 
     if (!(destOb = query_dest_ob(dest))) {
-        error("Bad argument 1 to move->set_environment_path");
+        raise_error("Bad argument 1 to move->set_environment_path");
     }
 
-    __EnvPath = file_name(destOb);
+    __EnvPath = program_name(destOb);
 }

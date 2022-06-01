@@ -88,10 +88,10 @@ void test_pluralize () {
 
     ob = new(STD_OBJECT);
     expect("pluralize handles objects", (: ({
-        assert($(ob)->set_name("tester"), "==", 0),
-        assert(testOb->pluralize($(ob)), "==", "testers"),
-        assert($(ob)->set_name("staff"), "==", 0),
-        assert(testOb->pluralize($(ob)), "==", "staves"),
+        assert(ob->set_name("tester"), "==", 0),
+        assert(testOb->pluralize(ob), "==", "testers"),
+        assert(ob->set_name("staff"), "==", 0),
+        assert(testOb->pluralize(ob), "==", "staves"),
     }) :));
     destruct(ob);
 
@@ -142,14 +142,14 @@ void test_possessive_noun () {
 
     ob = new(STD_OBJECT);
     expect("possessive_noun handles objects", (: ({
-        assert($(ob)->set_name("Name"), "==", 0),
-        assert(testOb->possessive_noun($(ob)), "==", "Name's"),
-        assert($(ob)->set_name("Hermes"), "==", 0),
-        assert(testOb->possessive_noun($(ob)), "==", "Hermes'"),
-        assert($(ob)->set_name("Shax"), "==", 0),
-        assert(testOb->possessive_noun($(ob)), "==", "Shax'"),
-        assert($(ob)->set_name("Chaz"), "==", 0),
-        assert(testOb->possessive_noun($(ob)), "==", "Chaz'"),
+        assert(ob->set_name("Name"), "==", 0),
+        assert(testOb->possessive_noun(ob), "==", "Name's"),
+        assert(ob->set_name("Hermes"), "==", 0),
+        assert(testOb->possessive_noun(ob), "==", "Hermes'"),
+        assert(ob->set_name("Shax"), "==", 0),
+        assert(testOb->possessive_noun(ob), "==", "Shax'"),
+        assert(ob->set_name("Chaz"), "==", 0),
+        assert(testOb->possessive_noun(ob), "==", "Chaz'"),
     }) :));
     destruct(ob);
 }
@@ -169,14 +169,14 @@ void test_subjective () {
 
     ob = new(STD_LIVING);
     expect("subjective handles objects", (: ({
-        assert($(ob)->set_gender("male"), "==", 0),
-        assert(testOb->subjective($(ob)), "==", "he"),
-        assert($(ob)->set_gender("female"), "==", 0),
-        assert(testOb->subjective($(ob)), "==", "she"),
-        assert($(ob)->set_gender("neither"), "==", 0),
-        assert(testOb->subjective($(ob)), "==", "they"),
-        assert($(ob)->set_gender("nonexistant"), "==", 0),
-        assert(testOb->subjective($(ob)), "==", "it"),
+        assert(ob->set_gender("male"), "==", 0),
+        assert(testOb->subjective(ob), "==", "he"),
+        assert(ob->set_gender("female"), "==", 0),
+        assert(testOb->subjective(ob), "==", "she"),
+        assert(ob->set_gender("neither"), "==", 0),
+        assert(testOb->subjective(ob), "==", "they"),
+        assert(ob->set_gender("nonexistant"), "==", 0),
+        assert(testOb->subjective(ob), "==", "it"),
     }) :));
     destruct(ob);
 }
@@ -196,14 +196,14 @@ void test_objective () {
 
     ob = new(STD_LIVING);
     expect("objective handles objects", (: ({
-        assert($(ob)->set_gender("male"), "==", 0),
-        assert(testOb->objective($(ob)), "==", "him"),
-        assert($(ob)->set_gender("female"), "==", 0),
-        assert(testOb->objective($(ob)), "==", "her"),
-        assert($(ob)->set_gender("neither"), "==", 0),
-        assert(testOb->objective($(ob)), "==", "them"),
-        assert($(ob)->set_gender("nonexistant"), "==", 0),
-        assert(testOb->objective($(ob)), "==", "it"),
+        assert(ob->set_gender("male"), "==", 0),
+        assert(testOb->objective(ob), "==", "him"),
+        assert(ob->set_gender("female"), "==", 0),
+        assert(testOb->objective(ob), "==", "her"),
+        assert(ob->set_gender("neither"), "==", 0),
+        assert(testOb->objective(ob), "==", "them"),
+        assert(ob->set_gender("nonexistant"), "==", 0),
+        assert(testOb->objective(ob), "==", "it"),
     }) :));
     destruct(ob);
 }
@@ -223,14 +223,14 @@ void test_possessive () {
 
     ob = new(STD_LIVING);
     expect("possessive handles objects", (: ({
-        assert($(ob)->set_gender("male"), "==", 0),
-        assert(testOb->possessive($(ob)), "==", "his"),
-        assert($(ob)->set_gender("female"), "==", 0),
-        assert(testOb->possessive($(ob)), "==", "her"),
-        assert($(ob)->set_gender("neither"), "==", 0),
-        assert(testOb->possessive($(ob)), "==", "their"),
-        assert($(ob)->set_gender("nonexistant"), "==", 0),
-        assert(testOb->possessive($(ob)), "==", "its"),
+        assert(ob->set_gender("male"), "==", 0),
+        assert(testOb->possessive(ob), "==", "his"),
+        assert(ob->set_gender("female"), "==", 0),
+        assert(testOb->possessive(ob), "==", "her"),
+        assert(ob->set_gender("neither"), "==", 0),
+        assert(testOb->possessive(ob), "==", "their"),
+        assert(ob->set_gender("nonexistant"), "==", 0),
+        assert(testOb->possessive(ob), "==", "its"),
     }) :));
     destruct(ob);
 }
@@ -250,14 +250,14 @@ void test_reflexive () {
 
     ob = new(STD_LIVING);
     expect("reflexive handles objects", (: ({
-        assert($(ob)->set_gender("male"), "==", 0),
-        assert(testOb->reflexive($(ob)), "==", "himself"),
-        assert($(ob)->set_gender("female"), "==", 0),
-        assert(testOb->reflexive($(ob)), "==", "herself"),
-        assert($(ob)->set_gender("neither"), "==", 0),
-        assert(testOb->reflexive($(ob)), "==", "themself"),
-        assert($(ob)->set_gender("nonexistant"), "==", 0),
-        assert(testOb->reflexive($(ob)), "==", "itself"),
+        assert(ob->set_gender("male"), "==", 0),
+        assert(testOb->reflexive(ob), "==", "himself"),
+        assert(ob->set_gender("female"), "==", 0),
+        assert(testOb->reflexive(ob), "==", "herself"),
+        assert(ob->set_gender("neither"), "==", 0),
+        assert(testOb->reflexive(ob), "==", "themself"),
+        assert(ob->set_gender("nonexistant"), "==", 0),
+        assert(testOb->reflexive(ob), "==", "itself"),
     }) :));
     destruct(ob);
 }

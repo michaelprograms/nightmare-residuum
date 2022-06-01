@@ -8,7 +8,7 @@ private int __BasePower;
 
 void create () {
     ::create();
-    __AbilityName = split_path(base_name())[1];
+    __AbilityName = split_path(object_name(this_object()))[1];
     if (__AbilityName != "ability") {
         add_rules(({ "", "LIV", }));
     }
@@ -82,7 +82,7 @@ void do_verb_liv (mixed args...) {
     int damage, cost;
 
     // verify target
-    if (arrayp(args)) {
+    if (pointerp(args)) {
         target = args[1];
     } else {
         message("action", "You have no hostile targets present.\n", source);

@@ -1,7 +1,7 @@
 private string query_account_setting (string setting) {
-    object po = previous_object(-1)[<1], account;
+    object po = caller_stack()[<1], account;
 
-    if (strsrch(D_TEST, base_name(po)) == 0) po = previous_object(-1)[<2];
+    if (strstr(D_TEST, object_name(po)) == 0) po = caller_stack()[<2];
 
     if (!(account = po->query_account())) return 0;
 
@@ -12,7 +12,7 @@ varargs string format_page (string *items, int columns, int pad) {
     int width, w, i, j, n, r;
     string *rows = ({});
 
-    if (!arrayp(items) || !sizeof(items)) error("Bad argument 1 to format->format_page");
+    if (!pointerp(items) || !sizeof(items)) raise_error("Bad argument 1 to format->format_page");
 
     if (!columns) columns = 2;
     width = to_int(query_account_setting("width")) - pad * 2;
@@ -28,7 +28,7 @@ varargs string format_page (string *items, int columns, int pad) {
                 row += sprintf("%' '"+sprintf("%d", w*(columns-j))+"s", " ");
                 break;
             }
-            if (strlen(tmp = items[i + j]) > w) tmp = items[i + j][0..w-1];
+            if (sizeof(tmp = items[i + j]) > w) tmp = items[i + j][0..w-1];
             row += sprintf("%-"+sprintf("%d", w)+"s", ""+tmp);
         }
         if (r) row += sprintf("%' '"+sprintf("%d", r)+"s", "");
@@ -39,7 +39,7 @@ varargs string format_page (string *items, int columns, int pad) {
 
 string format_exit_brief (string dir) {
     string *result = ({});
-    if (!stringp(dir)) error("Bad argument 1 to format->format_exit_brief");
+    if (!stringp(dir)) raise_error("Bad argument 1 to format->format_exit_brief");
     foreach (string part in explode(dir, " ")) {
         switch (part) {
             case "north": result += ({ "n" }); break;
@@ -60,7 +60,7 @@ string format_exit_brief (string dir) {
 }
 string format_exit_verbose (string dir) {
     string *result = ({});
-    if (!stringp(dir)) error("Bad argument 1 to format->format_exit_verbose");
+    if (!stringp(dir)) raise_error("Bad argument 1 to format->format_exit_verbose");
     foreach (string part in explode(dir, " ")) {
         switch (part) {
             case "n": result += ({ "north" }); break;
@@ -81,7 +81,7 @@ string format_exit_verbose (string dir) {
 }
 string format_exit_reverse (string dir) {
     string *result = ({});
-    if (!stringp(dir)) error("Bad argument 1 to format->format_exit_reverse");
+    if (!stringp(dir)) raise_error("Bad argument 1 to format->format_exit_reverse");
     foreach (string part in explode(dir, " ")) {
         switch (part) {
             case "north": result += ({ "south" }); break;
@@ -104,7 +104,7 @@ string format_exit_reverse (string dir) {
 
 string format_stat_brief (string stat) {
     string result = "";
-    if (!stringp(stat)) error("Bad argument 1 to format->format_stat_brief");
+    if (!stringp(stat)) raise_error("Bad argument 1 to format->format_stat_brief");
     switch (stat) {
         case "strength": case "str": result = "str"; break;
         case "perception": case "per": result = "per"; break;
@@ -118,7 +118,7 @@ string format_stat_brief (string stat) {
 }
 string format_stat_verbose (string stat) {
     string result = "";
-    if (!stringp(stat)) error("Bad argument 1 to format->format_stat_verbose");
+    if (!stringp(stat)) raise_error("Bad argument 1 to format->format_stat_verbose");
     switch (stat) {
         case "str": case "strength": result = "strength"; break;
         case "per": case "perception": result = "perception"; break;
@@ -135,7 +135,7 @@ string format_integer (int num) {
     string *digits, result = "";
     int neg, s;
 
-    if (!intp(num)) error("Bad argument 1 to format->format_integer");
+    if (!intp(num)) raise_error("Bad argument 1 to format->format_integer");
 
     neg = (num < 0);
     num = abs(num);
@@ -176,21 +176,7 @@ string format_integer (int num) {
 // */
 // ]);
 private nosave mapping __Border = ([
-    "utf-8": ([
-        // lines
-        "h": "─",
-        "v": "│",
-        // corners
-        "tl": "┌",
-        "tr": "┐",
-        "br": "┘",
-        "bl": "└",
-        // joints
-        "t": "┬",
-        "b": "┴",
-        "l": "├",
-        "r": "┤",
-    ]),
+    // @LDMUD had to remove UTF-8 borders
     "US-ASCII": ([
         // lines
         "h": "-",
@@ -211,14 +197,14 @@ private nosave mapping __Border = ([
 string *format_border (mapping data) {
     string *lines = ({ }), line;
 
-    int fTitle = !undefinedp(data["title"]);
-    int fSubtitle = !undefinedp(data["subtitle"]);
-    int fHeader = !undefinedp(data["header"]);
-    int fBody = !undefinedp(data["body"]);
-    int fFooter = !undefinedp(data["footer"]);
+    int fTitle = !!(data["title"]);
+    int fSubtitle = !!(data["subtitle"]);
+    int fHeader = !!(data["header"]);
+    int fBody = !!(data["body"]);
+    int fFooter = !!(data["footer"]);
 
     if (query_account_setting("screenreader") != "on") {
-        mapping b = __Border[query_encoding()];
+        mapping b = __Border["US-ASCII"]; // @LDMUD no query_encoding /*__Border[query_encoding()] ||*/
         int width, ansi, n;
 
         ansi = query_account_setting("ansi") == "on";
@@ -227,16 +213,16 @@ string *format_border (mapping data) {
 
         if (fTitle) {
             // Title Line 1
-            line = (ansi?"%^RESET%^CYAN%^":"") + "   " + b["tl"] + sprintf("%'"+b["h"]+"'"+sprintf("%d", 2 + strlen(data["title"]) + (fSubtitle ? 2 + strlen(data["subtitle"]) : 0))+"s", "") + b["tr"];
+            line = (ansi?"%^RESET%^CYAN%^":"") + "   " + b["tl"] + sprintf("%'"+b["h"]+"'"+sprintf("%d", 2 + sizeof(data["title"]) + (fSubtitle ? 2 + sizeof(data["subtitle"]) : 0))+"s", "") + b["tr"];
             lines += ({ line });
 
             // Title Line 2
             line = b["tl"] + (fHeader ? b["t"] : b["h"]) + b["h"];
             line += b["r"] + " " + (ansi?"%^WHITE%^BOLD%^":"") + data["title"];
-            n += 5 + strlen(data["title"]);
+            n += 5 + sizeof(data["title"]);
             if (fSubtitle) {
                 line += ":" + (ansi?"%^BOLD_OFF%^":"") + " " + data["subtitle"];
-                n += 2 + strlen(data["subtitle"]);
+                n += 2 + sizeof(data["subtitle"]);
             } else {
                 line += (ansi?"%^BOLD_OFF%^":"");
             }
@@ -248,7 +234,7 @@ string *format_border (mapping data) {
 
             // Title Line 3
             line = b["v"] + (fHeader ? b["v"] : " ") + " ";
-            line += b["bl"] + sprintf("%'"+b["h"]+"'"+sprintf("%d", 2 + strlen(data["title"]) + (data["subtitle"] ? 2 + strlen(data["subtitle"]) : 0))+"s", "") + b["br"];
+            line += b["bl"] + sprintf("%'"+b["h"]+"'"+sprintf("%d", 2 + sizeof(data["title"]) + (data["subtitle"] ? 2 + sizeof(data["subtitle"]) : 0))+"s", "") + b["br"];
             line += sprintf("%' '"+sprintf("%d", width-1-n)+"s", "");
             line += (fHeader ? b["v"] : " ") + b["v"];
             lines += ({ line });
@@ -278,10 +264,10 @@ string *format_border (mapping data) {
             lines += ({ line });
         }
 
-        if (fBody && mapp(data["body"])) {
+        if (fBody && mappingp(data["body"])) {
             data["body"] = ({ data["body"] });
         }
-        if (fBody && arrayp(data["body"])) {
+        if (fBody && pointerp(data["body"])) {
             string format;
             // Body top line
             line = b["v"] + sprintf("%' '"+sprintf("%d", width - 2)+"s", "") + b["v"];
@@ -289,9 +275,9 @@ string *format_border (mapping data) {
             foreach (mapping child in data["body"]) {
                 // Body child header
                 if (stringp(child["header"])) {
-                    line = b["v"] + "   " + (ansi?"%^WHITE%^BOLD%^":"") + child["header"] + (ansi?"%^BOLD_OFF%^CYAN%^":"") + sprintf("%' '"+sprintf("%d", width - 8 - strlen(child["header"]))+"s", "") + "   " + b["v"];
+                    line = b["v"] + "   " + (ansi?"%^WHITE%^BOLD%^":"") + child["header"] + (ansi?"%^BOLD_OFF%^CYAN%^":"") + sprintf("%' '"+sprintf("%d", width - 8 - sizeof(child["header"]))+"s", "") + "   " + b["v"];
                     lines += ({ line });
-                } else if (arrayp(child["header"])) {
+                } else if (pointerp(child["header"])) {
                     string l = format_page(child["header"], child["columns"], 4);
                     lines += ({ b["v"] + "   " + (ansi?"%^WHITE%^BOLD%^":"") + l + (ansi?"%^BOLD_OFF%^CYAN%^":"") + "   " + b["v"] });
                 }

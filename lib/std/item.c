@@ -9,8 +9,8 @@ mixed query_no_get () {
     return __NoGet;
 }
 void set_no_get (mixed condition) {
-    if (!stringp(condition) && !intp(condition) && !functionp(condition)) {
-        error("Bad argument 1 to item->set_no_get");
+    if (!stringp(condition) && !intp(condition) && !closurep(condition)) {
+        raise_error("Bad argument 1 to item->set_no_get");
     }
     __NoGet = condition;
 }
@@ -18,19 +18,19 @@ void set_no_get (mixed condition) {
 /* ----- parser applies ----- */
 
 mixed direct_look_at_obj (mixed args...) {
-    return environment() && (environment() == environment(previous_object()) || environment() == previous_object());
+    return environment(this_object()) && (environment(this_object()) == environment(previous_object()) || environment(this_object()) == previous_object());
 }
 mixed direct_look_obj (mixed args...) {
     return direct_look_at_obj(args);
 }
 mixed direct_drop_obj (mixed args...) {
-    return (environment() == previous_object());
+    return (environment(this_object()) == previous_object());
 }
 mixed direct_give_obj_to_liv (mixed args...) {
-    return (environment() == previous_object());
+    return (environment(this_object()) == previous_object());
 }
 mixed direct_get_obj (mixed args...) {
-    object env = environment();
+    object env = environment(this_object());
     if (env != environment(previous_object())) {
         if (env == previous_object()) {
             return 0;
@@ -39,8 +39,8 @@ mixed direct_get_obj (mixed args...) {
         }
     }
     if (__NoGet) {
-        if (functionp(__NoGet)) {
-            return evaluate(__NoGet, previous_object());
+        if (closurep(__NoGet)) {
+            return funcall(__NoGet, previous_object());
         } else if (stringp(__NoGet)) {
             return __NoGet;
         } else if (intp(__NoGet)) {
@@ -51,8 +51,8 @@ mixed direct_get_obj (mixed args...) {
 }
 mixed direct_get_obj_from_obj (mixed args...) {
     object env;
-    if (environment()) {
-        env = environment(environment());
+    if (environment(this_object())) {
+        env = environment(environment(this_object()));
     }
     if (env != environment(previous_object())) {
         if (env == previous_object()) {

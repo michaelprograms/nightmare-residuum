@@ -12,7 +12,7 @@ string query_long () {
         shorts = sort_array(map_array(list, (: consolidate(sizeof($1), $1[0]->query_short()) :)), 1);
         shorts[0] = capitalize(shorts[0]);
         conjunctions = conjunction(shorts);
-        return long + "\n\n" + conjunctions + " " + (regexp(conjunctions, " and ") ? "are" : "is") + " inside.";
+        return long + "\n\n" + conjunctions + " " + (sizeof(regexp(conjunctions, " and ")) ? "are" : "is") + " inside.";
     } else {
         return long;
     }

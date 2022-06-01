@@ -57,6 +57,6 @@ void add_stat_bonus (string stat, int n) {
             "luck": 0,
         ]);
     }
-    if (member_array(stat, keys(__StatsBonus)) == -1) return;
+    if (member(stat, keys(__StatsBonus)) == -1) return;
     __StatsBonus[stat] += n;
 }

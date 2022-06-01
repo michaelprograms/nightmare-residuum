@@ -31,9 +31,9 @@ void set_wielded (object wielder) {
 
 mixed direct_wield_obj (mixed args...) {
     object po = previous_object();
-    return environment() == po && !__Wielder && member_array(this_object(), po->query_wielded_weapons()) == -1;
+    return environment() == po && !__Wielder && member(this_object(), po->query_wielded_weapons()) == -1;
 }
 mixed direct_unwield_obj (mixed args...) {
     object po = previous_object();
-    return environment() == po && __Wielder == po && member_array(this_object(), po->query_wielded_weapons()) > -1;
+    return environment() == po && __Wielder == po && member(this_object(), po->query_wielded_weapons()) > -1;
 }

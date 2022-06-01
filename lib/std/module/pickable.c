@@ -12,9 +12,9 @@ void reset_pickable () {
 }
 
 void set_pickable (string item, int max, string message) {
-    if (!stringp(item)) error("Bad argument 1 to pickable->set_pickable");
-    if (!intp(max)) error("Bad argument 2 to pickable->set_pickable");
-    if (!stringp(message)) error("Bad argument 3 to pickable->set_pickable");
+    if (!stringp(item)) raise_error("Bad argument 1 to pickable->set_pickable");
+    if (!intp(max)) raise_error("Bad argument 2 to pickable->set_pickable");
+    if (!stringp(message)) raise_error("Bad argument 3 to pickable->set_pickable");
 
     __Item = item;
     __MaxPicks = __Picks = max;

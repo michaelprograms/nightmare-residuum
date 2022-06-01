@@ -164,7 +164,7 @@ private void describe_environment_living_contents () {
 
     if (!env || !env->is_room()) return;
 
-    list = filter_array(env->query_living_contents(), (: $1 != this_object() :));
+    list = filter(env->query_living_contents(), (: $1 != this_object() :));
     list = sort_array(list, function (object a, object b) {
         if (a->is_character()) {
             if (b->is_character()) return strcmp(a->query_cap_name(), b->query_cap_name());
@@ -182,7 +182,7 @@ private void describe_environment_living_contents () {
         // message("room_living_contents", implode(shorts, "\n") + "\n\n", this_object());
         shorts = map_array(shorts, (: "%^BOLD%^" + $1 + "%^BOLD_OFF%^DEFAULT%^" :));
         conjunctions = conjunction(shorts);
-        message("room_living_contents", conjunctions + " " + (regexp(conjunctions, " and ") ? "are" : "is") + " here.\n\n", this_object());
+        message("room_living_contents", conjunctions + " " + (sizeof(regexp(conjunctions, " and ")) ? "are" : "is") + " here.\n\n", this_object());
     }
 }
 
@@ -199,7 +199,7 @@ private void describe_environment_item_contents () {
         shorts[0] = capitalize(shorts[0]);
         shorts = map_array(shorts, (: "%^BOLD%^" + $1 + "%^BOLD_OFF%^DEFAULT%^" :));
         conjunctions = conjunction(shorts);
-        message("room_item_contents", conjunctions + " " + (regexp(conjunctions, " and ") ? "are" : "is") + " here.\n", this_object());
+        message("room_item_contents", conjunctions + " " + (sizeof(regexp(conjunctions, " and ")) ? "are" : "is") + " here.\n", this_object());
     }
 }
 
@@ -230,7 +230,7 @@ void describe_environment () {
     }
 
     if (query_immortal()) {
-        message("room_file", file_name(env)+"\n", this_object());
+        message("room_file", program_name(env)+"\n", this_object());
     }
 
     message("room_short", env->query_short()+"\n", this_object());

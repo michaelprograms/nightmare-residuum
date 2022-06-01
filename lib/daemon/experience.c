@@ -1,8 +1,8 @@
 int query_stat_cost (string stat, int level) {
     // float adj = 0 + 0; // @TODO class + species modifiers
 
-    if (!stringp(stat)) error("Bad argument 1 to experience->query_stat_cost");
-    if (!intp(level)) error("Bad argument 2 to experience->query_stat_cost");
+    if (!stringp(stat)) raise_error("Bad argument 1 to experience->query_stat_cost");
+    if (!intp(level)) raise_error("Bad argument 2 to experience->query_stat_cost");
 
     if (level < 1) {
         return 1;
@@ -14,7 +14,7 @@ int query_stat_cost (string stat, int level) {
 int query_skill_cost (int level) {
     // @TODO skill tiers
 
-    if (!intp(level)) error("Bad argument 1 to experience->query_skill_cost");
+    if (!intp(level)) raise_error("Bad argument 1 to experience->query_skill_cost");
 
     if (level < 1) {
         return 1;
@@ -36,7 +36,7 @@ int query_value (mixed m) {
     } else if (intp(m)) {
         lvl = m * 1.0;
     } else {
-        error("Bad argument 1 to experience->query_value");
+        raise_error("Bad argument 1 to experience->query_value");
     }
 
     if (lvl < 1.0) {

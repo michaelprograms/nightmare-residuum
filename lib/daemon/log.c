@@ -7,10 +7,10 @@ int log_unique (string filename, string entry) {
     }
 
     filename = replace_string(filename+"", " ", "_");
-    if (!regexp(filename, "^/log/unique/")) {
+    if (!sizeof(regexp(({ filename }), "^/log/unique/"))) {
         filename = "/log/unique/" + filename;
     }
-    if (regexp(entry, "\n$")) {
+    if !sizeof(regexp(({ entry, }) "\n$"))) {
         entry = entry[0..<2];
     }
     if (!assure_dir(filename + ".log")) {
@@ -18,7 +18,7 @@ int log_unique (string filename, string entry) {
     }
 
     lines = explode(read_file(filename) || "", "\n");
-    if (member_array(entry, lines) == -1) {
+    if (member(entry, lines) == -1) {
         return write_file(filename, entry + "\n");
     }
     return 0;
@@ -30,10 +30,10 @@ int log (string filename, string entry) {
     }
 
     filename = replace_string(filename+"", " ", "_");
-    if (!regexp(filename, "^/log/")) {
+    if (!sizeof(regexp(({ filename }), "^/log/"))) {
         filename = "/log/" + filename;
     }
-    if (!regexp(entry, "\n$")) {
+    if (!sizeof(regexp(({ entry }), "\n$"))) {
         entry += "\n";
     }
     if (!assure_dir(filename + ".log")) {

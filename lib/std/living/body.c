@@ -28,7 +28,7 @@ string query_species () {
 void set_species (string species) {
     // @TODO security
 
-    if (!stringp(species)) error("Bad argument 1 to body->set_species");
+    if (!stringp(species)) raise_error("Bad argument 1 to body->set_species");
 
     __Species = species;
     update_limbs();
@@ -69,7 +69,7 @@ string query_random_limb () {
 int query_limb_armor (string limb) {
     int ac = 0;
 
-    if (!mapp(__Worn)) __Worn = ([ ]);
+    if (!mappingp(__Worn)) __Worn = ([ ]);
 
     foreach (object ob in __Worn[limb] || ({})) {
         ac += ob->query_ac();
@@ -80,11 +80,11 @@ int query_limb_armor (string limb) {
 object *query_all_armor () {
     object *worn = ({ });
 
-    if (!mapp(__Worn)) __Worn = ([ ]);
+    if (!mappingp(__Worn)) __Worn = ([ ]);
 
     foreach (string limb in keys(__Worn)) {
         foreach (object ob in __Worn[limb]) {
-            if (member_array(ob, worn) == -1) {
+            if (member(ob, worn) == -1) {
                 worn += ({ ob });
             }
         }
@@ -92,10 +92,10 @@ object *query_all_armor () {
     return worn;
 }
 int query_can_wear_armor (object ob) {
-    if (!mapp(__Worn)) __Worn = ([ ]);
+    if (!mappingp(__Worn)) __Worn = ([ ]);
 
     foreach (string limb in ob->query_limbs()) {
-        if (!arrayp(__Worn[limb])) continue;
+        if (!pointerp(__Worn[limb])) continue;
         foreach (object worn in __Worn[limb]) {
             if (ob->query_type() == worn->query_type()) {
                 return 0;
@@ -106,26 +106,26 @@ int query_can_wear_armor (object ob) {
 }
 
 varargs mixed handle_wear (object ob) {
-    if (!mapp(__Worn)) __Worn = ([ ]);
+    if (!mappingp(__Worn)) __Worn = ([ ]);
 
     if (ob->query_worn()) return "You are already wearing " + ob->query_name() + ".";
     if (!query_can_wear_armor(ob)) return "You are already wearing " + ob->query_type() + ".";
 
     foreach (string limb in ob->query_limbs()) {
-        if (!arrayp(__Worn[limb])) __Worn[limb] = ({ });
+        if (!pointerp(__Worn[limb])) __Worn[limb] = ({ });
         __Worn[limb] += ({ ob });
     }
     ob->set_worn(this_object());
     return 1;
 }
 varargs mixed handle_unwear (object ob) {
-    if (!mapp(__Worn)) __Worn = ([]);
+    if (!mappingp(__Worn)) __Worn = ([]);
 
     if (!ob->query_worn()) return "You are not wearing " + ob->query_name() + ".";
 
     foreach (string limb in ob->query_limbs()) {
-        if (!arrayp(__Worn[limb])) __Worn[limb] = ({ });
-        if (member_array(ob, __Worn[limb]) > -1) {
+        if (!pointerp(__Worn[limb])) __Worn[limb] = ({ });
+        if (member(ob, __Worn[limb]) > -1) {
             __Worn[limb] -= ({ ob });
         }
     }
@@ -164,7 +164,7 @@ string *query_wielded_limbs (object ob) {
 }
 
 varargs mixed handle_wield (object ob, string limb) {
-    if (!mapp(__Wielded)) __Wielded = ([ ]);
+    if (!mappingp(__Wielded)) __Wielded = ([ ]);
 
     if (ob->query_wielded()) return "You are already wielding " + ob->query_name() + ".";
     if (!limb) {
@@ -178,7 +178,7 @@ varargs mixed handle_wield (object ob, string limb) {
     return 1;
 }
 varargs mixed handle_unwield (object ob, string limb) {
-    if (!mapp(__Wielded)) __Wielded = ([ ]);
+    if (!mappingp(__Wielded)) __Wielded = ([ ]);
 
     if (!ob->query_wielded()) return "You are not wielding " + ob->query_name() + ".";
     if (!limb) {

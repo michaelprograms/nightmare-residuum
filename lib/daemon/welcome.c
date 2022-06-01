@@ -35,9 +35,9 @@ string *get_color_ratio (int *color1, int *color2, int steps) {
             c[1] = c[1] * intensity / total;
             c[2] = c[2] * intensity / total;
         }
-        c[0] = to_sRGB(c[0]);
-        c[1] = to_sRGB(c[1]);
-        c[2] = to_sRGB(c[2]);
+        c[0] = 1.0 * to_sRGB(c[0]);
+        c[1] = 1.0 * to_sRGB(c[1]);
+        c[2] = 1.0 * to_sRGB(c[2]);
         // write("ratio is "+ratio+" intensity: "+intensity+" "+identify(c)+"\n");
         color += ({ to_int(c[0])+";"+to_int(c[1])+";"+to_int(c[2]) });
     }
@@ -66,12 +66,12 @@ string query_banner () {
 
     lines = explode(read_file("/etc/welcome"), "\n");
     tmp = " " + mud_name() + " ";
-    pad = 40-strlen(tmp)/2;
+    pad = 40-sizeof(tmp)/2;
     lines[<2] = lines[<2][0..pad-1] + tmp + lines[<2][80-pad..79];
 
     tmp = " Driver: " + driver_version() + "   Mudlib: " + mudlib_version() + " ";
-    pad = 40-strlen(tmp)/2;
-    lines[<1] = lines[<1][0..pad-1] + tmp + lines[<1][80-pad+strlen(tmp)%2..79];
+    pad = 40-sizeof(tmp)/2;
+    lines[<1] = lines[<1][0..pad-1] + tmp + lines[<1][80-pad+sizeof(tmp)%2..79];
 
     if (previous_object() && previous_object()->query_terminal_color() == "256") {
         int r = 255;
@@ -84,7 +84,7 @@ string query_banner () {
         n = random(r);
         r = r - n;
         c1[2] = n;
-        c1 = shuffle(c1);
+        // c1 = shuffle(c1);
 
         colors += get_color_ratio(c1, c2, 34);
         for(int i = sizeof(colors)-1; i > -1; i --) {
@@ -97,7 +97,7 @@ string query_banner () {
 
     for (int i = 0; i < sizeof(lines); i ++) {
         for (int j = 0; j < sizeof(lines[i]); j ++) {
-            if (i == sizeof(lines) - 1 && j >= pad && j <= strlen(lines[i])-pad) {
+            if (i == sizeof(lines) - 1 && j >= pad && j <= sizeof(lines[i])-pad) {
                 text += lines[i][j..j]; // preserve dots in driver/mudlib versions
             } else if (lines[i][j..j] == ".") {
                 if (clump > 0) {

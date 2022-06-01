@@ -69,20 +69,20 @@ void test_exits_before_after () {
     ob = new(STD_NPC);
 
     expect("exits handles before and after functions", (: ({
-        r1->set_exit("east", file_name(r2), function (object ob, string dir) {
+        r1->set_exit("east", program_name(r2), function (object ob, string dir) {
             checkBefore ++;
             return 1;
         }, function (object ob, string dir) {
             checkAfter ++;
         }),
-        r2->set_exit("west", file_name(r1)),
+        r2->set_exit("west", program_name(r1)),
 
         assert(ob->handle_move(r1), "==", 1),
         assert(r1->handle_go(ob, "walk", "east"), "==", 1),
         assert(checkBefore, "==", 1),
         assert(checkAfter, "==", 1),
 
-        r1->set_exit("east", file_name(r2), function (object ob, string dir) {
+        r1->set_exit("east", program_name(r2), function (object ob, string dir) {
             return 0;
         }),
 
@@ -102,13 +102,13 @@ void test_handle_go () {
     r2 = new(STD_ROOM);
     ob = new(STD_NPC);
 
-    r1->set_exit("east", file_name(r2));
-    r2->set_exit("west", file_name(r1));
+    r1->set_exit("east", program_name(r2));
+    r2->set_exit("west", program_name(r1));
     r2->set_exit("east", "/invalid/path.c");
 
     expect("handle_go moved object", (: ({
-        assert(regexp(r1->query_exit("east"), "/std/room#[0-9]+"), "==", 1),
-        assert(regexp(r2->query_exit("west"), "/std/room#[0-9]+"), "==", 1),
+        assert(sizeof(regexp(r1->query_exit("east")), "/std/room#[0-9]+"), "==", 1),
+        assert(sizeof(regexp(r2->query_exit("west")), "/std/room#[0-9]+"), "==", 1),
         assert(sizeof(r1->query_living_contents()), "==", 0),
         assert(sizeof(r2->query_living_contents()), "==", 0),
         assert(ob->handle_move(r1), "==", 1),
@@ -116,7 +116,7 @@ void test_handle_go () {
         assert(sizeof(r2->query_living_contents()), "==", 0),
 
         assert(r1->handle_go(ob, "walk", "east"), "==", 1),
-        assert(file_name(environment(ob)), "==", file_name(r2)),
+        assert(program_name(environment(ob)), "==", program_name(r2)),
     }) :));
 
     expect("handle_go doesn't move objects it shouldn't", (: ({
@@ -146,23 +146,23 @@ void test_query_defaults () {
         assert(r1->query_default_enter(), "==", 0),
         assert(r2->query_default_out(), "==", 0),
 
-        r1->set_exits(([ "enter": file_name(r2) ])),
-        r2->set_exits(([ "out": file_name(r1) ])),
+        r1->set_exits(([ "enter": program_name(r2) ])),
+        r2->set_exits(([ "out": program_name(r1) ])),
         assert(r1->query_default_enter(), "==", "enter"),
         assert(r2->query_default_out(), "==", "out"),
 
-        r1->set_exits(([ "enter east": file_name(r2) ])),
-        r2->set_exits(([ "out west": file_name(r1) ])),
+        r1->set_exits(([ "enter east": program_name(r2) ])),
+        r2->set_exits(([ "out west": program_name(r1) ])),
         assert(r1->query_default_enter(), "==", "enter east"),
         assert(r2->query_default_out(), "==", "out west"),
 
         r1->set_exits(([
-            "enter east": file_name(r2),
-            "enter west": file_name(r2),
+            "enter east": program_name(r2),
+            "enter west": program_name(r2),
         ])),
         r2->set_exits(([
-            "out west": file_name(r1),
-            "out east": file_name(r1),
+            "out west": program_name(r1),
+            "out east": program_name(r1),
         ])),
         assert(r1->query_default_enter(), "==", 0),
         assert(r2->query_default_out(), "==", 0),

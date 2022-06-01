@@ -5,6 +5,8 @@
 #define SHARP_ADVERBS ({ 0, 0, "sharply", 0, 0, 0, "horribly", "to pieces", "letting blood", 0, 0, "utterly", })
 
 string possessive (mixed value);
+string pluralize (mixed single);
+varargs void message(string type, string message, mixed target, mixed exclude);
 
 void display_combat_message (object source, object target, string limb, mixed weapon, string type, int damage) {
     string sourceMsg, targetMsg, envMsg;
@@ -36,10 +38,10 @@ void display_combat_message (object source, object target, string limb, mixed we
             case 2: i = 1; break;
             case 1: default: i = 0; break;
         }
-        if (member_array(type, ({ "blunt", "melee", "psionic", })) > -1) {
+        if (member(type, ({ "blunt", "melee", "psionic", })) > -1) {
             verb = BLUNT_VERBS[i];
             adverb = BLUNT_ADVERBS[i];
-        } else if (member_array(type, ({ "blade", "knife", "projectile", "ranged", })) > -1) {
+        } else if (member(type, ({ "blade", "knife", "projectile", "ranged", })) > -1) {
             verb = SHARP_VERBS[i];
             adverb = SHARP_ADVERBS[i];
         }

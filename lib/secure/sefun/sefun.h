@@ -6,9 +6,12 @@ int driver_port ();
 string driver_version ();
 string mudlib_version ();
 string mud_name ();
+varargs void message(string type, string message, mixed target, mixed exclude);
+string *keys (mapping m);
+object this_user ();
 
 /* --- access --- */
-mixed unguarded (function f);
+mixed unguarded (closure f);
 
 /* --- array --- */
 mixed *distinct_array (mixed *arr);
@@ -42,10 +45,10 @@ varargs string possessive (mixed value);
 varargs string reflexive (mixed value);
 
 /* --- override --- */
-nomask varargs int input_to ();
-nomask object this_player (int flag);
+varargs int input_to ();
+// varargs nomask object this_player (int flag);
 object *users ();
-nomask void write (string msg);
+void write (string msg);
 
 /* --- path --- */
 string user_path (string name);

@@ -4,7 +4,7 @@ string query_save_path () {
     return __SavePath;
 }
 void set_save_path (string path) {
-    if (stringp(path) && regexp(path, "^\\/save\\/")) {
+    if (stringp(path) && sizeof(regexp(({ path }), "^\\/save\\/"))) {
         __SavePath = path;
     } else {
         __SavePath = 0;

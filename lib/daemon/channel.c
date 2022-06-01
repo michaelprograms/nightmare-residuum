@@ -9,7 +9,7 @@ string *query_system_channels () {
 }
 
 int query_valid_channel (string channel) {
-    return member_array(channel, __Channels) > -1 || member_array(channel, __SystemChannels) > -1;
+    return member(channel, __Channels) > -1 || member(channel, __SystemChannels) > -1;
 }
 
 void create () {
@@ -22,16 +22,16 @@ void create () {
 }
 
 private string format_channel_name (string channel) {
-    return (member_array(channel, query_channels()) > -1 ? "[[" : "((") + channel + (member_array(channel, query_channels()) > -1 ? "]]" : "))" );
+    return (member(channel, query_channels()) > -1 ? "[[" : "((") + channel + (member(channel, query_channels()) > -1 ? "]]" : "))" );
 }
 
 private void handle_send (string name, string channel, string msg) {
-    string *listeners = filter_array(characters(), (: !$1->query_channel_blocked($(channel)) :));
+    string *listeners = filter(characters(), (: !$1->query_channel_blocked($(channel)) :));
     message("channel", (name ? name + " " : "") + format_channel_name(channel) + " " + msg  + "\n", listeners);
 }
 
 void send (string channel, string msg) {
-    if (!channel || member_array(channel, __Channels + __SystemChannels) == -1) return;
+    if (!channel || member(channel, __Channels + __SystemChannels) == -1) return;
 
     if (!msg) {
         this_character()->toggle_channel_blocked(channel);
@@ -41,7 +41,7 @@ void send (string channel, string msg) {
             message("channel",  "Channel " + format_channel_name(channel) + " is no longer blocked.\n", this_character());
         }
         return;
-    } else if (msg && member_array(channel, __SystemChannels) > -1) {
+    } else if (msg && member(channel, __SystemChannels) > -1) {
         message("channel",  "Channel " + format_channel_name(channel) + " is read only.\n", this_character());
         return;
     }
@@ -53,6 +53,6 @@ void send (string channel, string msg) {
 }
 
 void send_system (string channel, string msg) {
-    if (member_array(channel, __SystemChannels) == -1) return;
+    if (member(channel, __SystemChannels) == -1) return;
     handle_send(0, channel, msg);
 }

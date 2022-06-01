@@ -13,17 +13,17 @@ void test_species_bodytypes () {
     expect_function("query_species", testOb);
 
     expect("bodytypes exist", (: ({
-        assert(mapp(testOb->query_bodytypes()), "==", 1),
+        assert(mappingp(testOb->query_bodytypes()), "==", 1),
         assert(sizeof(testOb->query_bodytypes()), ">", 0),
         // verify common bodytype
-        assert(mapp(testOb->query_bodytypes()["quadruped"]), "==", 1),
+        assert(mappingp(testOb->query_bodytypes()["quadruped"]), "==", 1),
     }) :));
 
     expect("species exist", (: ({
-        assert(mapp(testOb->query_species()), "==", 1),
+        assert(mappingp(testOb->query_species()), "==", 1),
         assert(sizeof(testOb->query_species()), ">", 0),
         // verify common species
-        assert(mapp(testOb->query_species()["human"]), "==", 1),
+        assert(mappingp(testOb->query_species()["human"]), "==", 1),
     }) :));
 }
 

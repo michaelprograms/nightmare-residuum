@@ -10,27 +10,27 @@ string format_object (string path, string *children, int indent) {
 }
 
 void command (string input, mapping flags) {
-    object *obs = filter_array(objects(), (:$1 && regexp(file_name($1), "#"):));
+    object *obs = filter(objects(), (:$1 && regexp(program_name($1), "#"):));
     mapping structure = ([ ]);
     string *border, *list = ({ });
 
     foreach (object ob in obs) {
         object parent;
         if (parent = ob->query_parent()) {
-            if (!arrayp(structure[file_name(parent)])) {
-                structure[file_name(parent)] = ({});
+            if (!pointerp(structure[program_name(parent)])) {
+                structure[program_name(parent)] = ({});
             }
-            structure[file_name(parent)] += ({ file_name(ob) });
+            structure[program_name(parent)] += ({ program_name(ob) });
         } else {
             object env;
             if (env = environment(ob)) {
-                if (!arrayp(structure[file_name(env)])) {
-                    structure[file_name(env)] = ({});
+                if (!pointerp(structure[program_name(env)])) {
+                    structure[program_name(env)] = ({});
                 }
-                structure[file_name(env)] += ({ file_name(ob) });
+                structure[program_name(env)] += ({ program_name(ob) });
             } else {
-                if (!arrayp(structure[file_name(ob)])) {
-                    structure[file_name(ob)] = ({});
+                if (!pointerp(structure[program_name(ob)])) {
+                    structure[program_name(ob)] = ({});
                 }
             }
         }

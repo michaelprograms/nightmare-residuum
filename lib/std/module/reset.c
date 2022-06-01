@@ -18,7 +18,7 @@ void reset () {
     string name;
 
     foreach (object ob in all_inventory()) {
-        name = base_name(ob) + ".c";
+        name = object_name(ob) + ".c";
         if (!__Reset[name]) continue;
         if (!counts[name]) counts[name] = 0;
         counts[name] += 1;
@@ -37,8 +37,8 @@ void reset () {
                 }
                 count ++;
             }
-        } else if (functionp(val)) {
-            if (evaluate(val)) {
+        } else if (closurep(val)) {
+            if (funcall(val)) {
                 object ob = clone_object(key);
                 ob->handle_move(this_object());
                 ob->reset();

@@ -1,4 +1,4 @@
-#include <time.h>
+#include "/secure/include/time.h"
 
 varargs string time_ago (int timestamp, int granularity) {
     int Years, Months, Weeks, Days, Hours, Minutes;
@@ -6,7 +6,7 @@ varargs string time_ago (int timestamp, int granularity) {
     int matches;
     string msg = "";
 
-    if (undefinedp(granularity)) {
+    if (!granularity) {
         granularity = 2;
     }
 
@@ -25,22 +25,22 @@ varargs string time_ago (int timestamp, int granularity) {
     }
     if (granularity > 0 && matches >= granularity) return msg + " ago";
     if (Months > 0) {
-        msg += (strlen(msg)>0?" ":"") + Months + " month" + (Months > 1 ? "s" : "");
+        msg += (sizeof(msg)>0?" ":"") + Months + " month" + (Months > 1 ? "s" : "");
         matches ++;
     }
     if (granularity > 0 && matches >= granularity) return msg + " ago";
     if (Weeks > 0) {
-        msg += (strlen(msg)>0?" ":"") + Weeks + " week" + (Weeks > 1 ? "s" : "");
+        msg += (sizeof(msg)>0?" ":"") + Weeks + " week" + (Weeks > 1 ? "s" : "");
         matches ++;
     }
     if (granularity > 0 && matches >= granularity) return msg + " ago";
     if (Days > 0) {
-        msg +=  (strlen(msg)>0?" ":"") + Days + " day" + (Days > 1 ? "s" : "");
+        msg +=  (sizeof(msg)>0?" ":"") + Days + " day" + (Days > 1 ? "s" : "");
         matches ++;
     }
     if (granularity > 0 && matches >= granularity) return msg + " ago";
 
-    if (strlen(msg) > 0) return msg + " ago";
+    if (sizeof(msg) > 0) return msg + " ago";
 
     Hours = diff / HOUR_IN_SECS;
     diff = diff - (Hours * HOUR_IN_SECS);

@@ -42,7 +42,7 @@ void test_looks () {
         assert(testOb->query_looks(), "==", ({ "new", "newFunc" })),
 
         assert(testOb->query_look("new"), "==", "New."),
-        assert(!!functionp(testOb->query_look("newFunc")), "==", 1),
+        assert(!!closurep(testOb->query_look("newFunc")), "==", 1),
 
         testOb->set_looks(([
             ({ "rocks", "stones" }): "Rocks and stones.",

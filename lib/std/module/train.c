@@ -20,7 +20,7 @@ void do_train_str (string str) {
     string stat = format_stat_verbose(str);
     int cost;
 
-    if (!stat || member_array(stat, STATS) == -1) {
+    if (!stat || member(stat, STATS) == -1) {
         return do_train();
     }
 
