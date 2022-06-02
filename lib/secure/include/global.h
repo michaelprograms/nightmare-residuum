@@ -4,9 +4,7 @@
 // std
 #define STD_ABILITY     "/std/ability.c"
 #define STD_ACCOUNT     "/std/account.c"
-#define STD_ARMOR       "/std/armor.c"
 #define STD_CHARACTER   "/std/character.c"
-#define STD_FOOD        "/std/food.c"
 #define STD_ITEM        "/std/item.c"
 #define STD_LIVING      "/std/living.c"
 #define STD_MONSTER     "/std/monster.c"
@@ -15,11 +13,13 @@
 #define STD_ROOM        "/std/room.c"
 #define STD_STORAGE     "/std/storage.c"
 #define STD_VERB        "/std/verb.c"
-#define STD_WEAPON      "/std/weapon.c"
 
 // std item
+#define STD_ARMOR       "/std/item/armor.c"
 #define ITEM_COINS      "/std/item/coins.c"
 #define ITEM_CORPSE     "/std/item/corpse.c"
+#define STD_FOOD        "/std/item/food.c"
+#define STD_WEAPON      "/std/item/weapon.c"
 
 // std modules
 #define M_AUTOLOAD      "/std/module/autoload.c"
