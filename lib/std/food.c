@@ -9,7 +9,7 @@ void set_strength (int s) {
 }
 int query_strength () { return __Strength; }
 
-mixed direct_eat_obj (object ob, string str) {
+mixed direct_eat_obj (mixed args...) {
     return (environment() == previous_object());
 }
 
