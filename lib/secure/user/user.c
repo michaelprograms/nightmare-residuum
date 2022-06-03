@@ -19,14 +19,17 @@ nomask void logon () {
     debug_message(ctime() + " connect from " + query_ip_number()); // @TODO log_file
     D_LOG->log("connect", ctime() + " " + query_ip_number());
 
+    receive_message("system", "Connecting...\n");
     calloutBanner = call_out_walltime(function () {
         if (!calloutBanner) {
             return;
         }
         receive_message("system", D_WELCOME->query_banner() + "\n");
         account_input();
-        if (this_user() && interactive(this_user())) telnet_ga();
-    }, 0.5); // allow time for terminal_type to be called
+        if (this_user() && interactive(this_user())) {
+            telnet_ga(); // telnet go ahead for prompt to not line return
+        }
+    }, 0.5); // allow time for terminal_type apply to be called
 }
 
 nomask void net_dead () {
