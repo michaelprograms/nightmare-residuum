@@ -25,12 +25,17 @@ sudo apt remove libgcc-11-dev gcc-11
 ./build.sh
 ```
 
-### Run the driver
+### Run the mudlib
 ```
 ./run.sh
 ```
 
-### Run the test suite
+### Run the mudlib test suite
 ```
 ./run-tests.sh
+```
+
+### Update the driver docs
+```
+./docs.sh
 ```
