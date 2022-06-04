@@ -359,11 +359,11 @@ int valid_read (string file, mixed caller, string fn) {
     int valid = 0;
     file = sanitize_path(file);
 
-    if (!(valid = regexp(file_name(caller), "/secure/daemon/[master|access]"))) {
+    if (!(valid = regexp(base_name(caller), "/secure/daemon/[master|access]"))) {
         valid = D_ACCESS->query_allowed(caller, fn, file, "read");
     }
-    if (!valid && !regexp(file_name(previous_object()), "\\.test$")) {
-        debug_message(ctime()+" "+file_name(caller)+" denied read ("+fn+") to "+file);
+    if (!valid && !regexp(base_name(previous_object()), "\\.test$")) {
+        debug_message(ctime()+" "+base_name(caller)+" denied read ("+fn+") to "+file);
     }
     return valid;
 }
@@ -372,11 +372,11 @@ int valid_write (string file, mixed caller, string fn) {
     int valid = 0;
     file = sanitize_path(file);
 
-    if (!(valid = regexp(file_name(caller), "/secure/daemon/[master|access]"))) {
+    if (!(valid = regexp(base_name(caller), "/secure/daemon/[master|access]"))) {
         valid = D_ACCESS->query_allowed(caller, fn, file, "write");
     }
-    if (!valid && !regexp(file_name(previous_object()), "\\.test$")) {
-        debug_message(ctime()+" "+file_name(caller)+" denied write ("+fn+") to "+file);
+    if (!valid && !regexp(base_name(previous_object()), "\\.test$")) {
+        debug_message(ctime()+" "+base_name(caller)+" denied write ("+fn+") to "+file);
     }
     return valid;
 }
@@ -424,7 +424,7 @@ string parser_error_message (int type, object ob, mixed arg, int plural) {
     if (ob) err = ob->query_short();
     else err = "";
 
-    debug_message("parser_error_message: "+type+" "+identify(ob || "no ob")+" "+arg+" "+plural);
+    debug_message("parser_error_message: "+type+" "+identify(ob)+" "+arg+" "+plural);
     switch (type) {
     case 0:
         if (arg && objectp(arg)) wat = arg;
