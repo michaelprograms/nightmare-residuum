@@ -74,9 +74,9 @@ private void finish_test () {
     after_all_tests();
     write("  " + passingExpects + " Pass " + (failingExpects ? failingExpects + " Fail" : "") + "\n");
     if (sizeof(testObjectUntestedFns) > 0) {
-        write("  " + UNDERLINE + BOLD + "Untested Functions" + RESET + "\n");
+        write(UNDERLINE + BOLD + "  Untested Functions" + RESET + "\n");
         foreach (string fn in testObjectUntestedFns) {
-            write("    " + RED + "?" + RESET + " " + fn + "\n");
+            write(RED + "    ?" + RESET + " " + fn + "\n");
         }
     }
 
@@ -161,7 +161,8 @@ private void process_test () {
     currentTestFn = testFunctions[currentTestNum];
 
     if (!function_exists(currentTestFn, this_object())) {
-        write("    " + RED + "x" + RESET + " Function " + currentTestFn + " not found.\n");
+        write(RED + "    x" + RESET + " Function " + currentTestFn + " not found.\n");
+        currentFailLog += RED + "    x" + RESET + " Function " + currentTestFn + " not found.\n";
         done_test();
     } else {
 
