@@ -125,7 +125,7 @@ public int execute_test (function done) {
 
 private void done_test () {
     if (failingExpects == failingExpectsBefore && passingExpects == passingExpectsBefore) {
-        currentTestLog += "\n    " + ORANGE + "-" + RESET + " Warning: no expects found.";
+        currentTestLog += "\n" + ORANGE + "    -" + RESET + " Warning: no expects found.";
     }
     after_each_test();
     timeAfter = perf_counter_ns();
@@ -274,16 +274,16 @@ private void validate_expect (mixed value1, mixed value2, string message) {
         message = stringp(message) ? message : "An expect has failed.";
         if (failingExpects == -1) { // expected this error
             passingExpects ++;
-            currentTestLog += "\n    " + GREEN + "+" + RESET + " " + RED + "x" + RESET + " " + message;
+            currentTestLog += "\n" + GREEN + "    +" + RESET + " " + RED + "x" + RESET + " " + message;
         } else {
-            currentTestLog += "\n    " + RED + "x" + RESET + " " + message;
-            currentFailLog += "\n    " + RED + "x" + RESET + " " + message;
+            currentTestLog += "\n" + RED + "    x" + RESET + " " + message;
+            currentFailLog += "\n" + RED + "    x" + RESET + " " + message;
         }
         failingExpects ++;
     } else {
         passingExpects ++;
         message = stringp(message) ? message : "An expect passed.";
-        currentTestLog += "\n    " + GREEN + "+" + RESET + " " + message;
+        currentTestLog += "\n" + GREEN + "    +" + RESET + " " + message;
     }
 
     if (!currentTestPassed) { // @TODO || displayExpects) {
