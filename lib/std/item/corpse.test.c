@@ -27,7 +27,7 @@ void test_received () {
         assert(testObFile = file_name(testOb), "regex", "/std/item/corpse#[0-9]+"),
 
         // start the expire call_out
-        testOb->handle_received(0),
+        testOb->handle_received(this_object()),
 
         // grab callout tied to the test corpse
         calloutInfo = filter(call_out_info(), (: $1 && $1[0] == testOb :)),

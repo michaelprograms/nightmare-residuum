@@ -17,10 +17,14 @@ private object query_dest_ob (mixed dest) {
 }
 
 void handle_received (object env) {
-    env->handle_receive(this_object());
+    if (env) {
+        env->handle_receive(this_object());
+    }
 }
 void handle_released (object env) {
-    env->handle_release(this_object());
+    if (env) {
+        env->handle_release(this_object());
+    }
 }
 
 int handle_move (mixed dest) {
