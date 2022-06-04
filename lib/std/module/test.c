@@ -89,6 +89,24 @@ private int query_async_test_function (string fn) {
     return sizeof(fns) == 1 && fns[0][1] == 1 && fns[0][3] == "function";
 }
 
+private string *query_test_functions () {
+    string *fns;
+
+    fns = test_order();
+
+    if (!sizeof(fns)) {
+        fns = functions(this_object(), 2) - test_ignore();
+    } else if (sizeof(fns) != sizeof(functions(this_object(), 2))) {
+        // grab any tests that were not included in test_order and test_ignore
+        string *otherTestFns = functions(this_object(), 2) - test_ignore() - fns;
+        fns += otherTestFns;
+    }
+
+    fns = filter(fns, (: regexp($1, "test_") :));
+
+    return fns;
+}
+
 /* -----  ----- */
 
 private void finish_test () {
@@ -101,7 +119,7 @@ private void finish_test () {
     after_all_tests();
     write("  " + passingExpects + " Pass " + (failingExpects ? failingExpects + " Fail" : "") + "\n");
     if (sizeof(testObjectUntestedFns) > 0) {
-        write("  Testing " + BOLD + UNDERLINE + "Untested Functions" + RESET + "\n");
+        write("\n  Found " + BOLD + UNDERLINE + "Untested Functions" + RESET + "\n");
         foreach (string fn in testObjectUntestedFns) {
             write(RED + "    ?" + RESET + " " + fn + "\n");
         }
@@ -131,13 +149,7 @@ public int execute_test (function done) {
     totalFailLog = "";
 
 
-    if (sizeof(testFunctions = test_order()) == 0) {
-        testFunctions = functions(this_object(), 2) - test_ignore();
-    } else if (sizeof(testFunctions) != sizeof(functions(this_object(), 2))) {
-        // grab any tests that were not included in test_order and test_ignore
-        string *otherTestFns = functions(this_object(), 2) - test_ignore() - testFunctions;
-        testFunctions += otherTestFns;
-    }
+    testFunctions = query_test_functions();
 
     write("\nEvaluating " + CYAN + UNDERLINE + base_name() + RESET + "\n");
 
@@ -186,10 +198,9 @@ private void process_test () {
 
     // test function doesn't exist
     if (!function_exists(currentTestFn, this_object())) {
-        write(RED + "    x" + RESET + " Function " + currentTestFn + " not found.\n");
-        currentFailLog += RED + "    x" + RESET + " Function " + currentTestFn + " not found.\n";
+        currentFailLog = "\n" + RED + "    x" + RESET + " Function " + currentTestFn + " not found.";
         done_current_test();
-    } else {
+    } else if (regexp(currentTestFn, "test_")) {
         currentTestLog = "";
         currentFailLog = "";
 
@@ -204,6 +215,9 @@ private void process_test () {
             call_other(this_object(), currentTestFn);
             done_current_test();
         }
+    } else {
+        currentFailLog = "\n" + RED + "    x" + RESET + " Function " + currentTestFn + " not a test.";
+        done_current_test();
     }
 }
 
