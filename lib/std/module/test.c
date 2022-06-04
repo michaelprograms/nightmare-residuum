@@ -9,27 +9,23 @@
 
 nosave protected mixed UNDEFINED = (([])[0]); // equivalent of UNDEFINED
 
-// -----------------------------------------------------------------------------
+/* -----  ----- */
 
-nosave private int currentTestPassed = 0;
+private void process_test ();
+
+/* -----  ----- */
+
+nosave private int currentTestNum = 0, currentTestPassed = 0;
 nosave private int failingExpects = 0, passingExpects = 0;
 nosave private int failingAsserts = 0, passingAsserts = 0;
 nosave private int expectCatch = 0;
-nosave private string currentTestMsg, currentTestLog, currentFailLog, totalFailLog;
+nosave private string currentTestFn, currentTestMsg, currentTestLog, currentFailLog, totalFailLog;
 nosave private mixed *leftResults, *rightResults;
-nosave private string *testFunctions;
-int currentTestNum = 0;
-string currentTestFn;
-int timeBefore, timeAfter;
-int failingExpectsBefore, passingExpectsBefore;
+nosave private string *testFunctions, *testObjectFns = ({ }), *testObjectUntestedFns = ({ });
+int timeBefore, timeAfter, failingExpectsBefore, passingExpectsBefore;
 private function doneTestFn;
-private string *testObjectFns = ({ }), *testObjectUntestedFns = ({ });
 
-int query_expect_catch () {
-    return expectCatch;
-}
-
-// -----------------------------------------------------------------------------
+/* ----- overrideable functions ----- */
 
 void before_all_tests () { }
 void before_each_test () { }
@@ -53,9 +49,38 @@ string *test_ignore () {
     });
 }
 
-// -----------------------------------------------------------------------------
+/* ----- test functions ----- */
 
-private void process_test ();
+// Used by test.test.c to verify failing expects
+protected void expect_next_failure () {
+    if (base_name() == replace_string(M_TEST, ".c", ".test") && failingExpects == 0) {
+        failingExpects --;
+    }
+}
+// Used by test.test.c to verify catches
+int query_expect_catch () {
+    return expectCatch;
+}
+
+/* ----- helper functions ----- */
+
+protected object clone_object (string path) {
+    string *fns;
+    object ob;
+
+    if (file_size(path) < 1) {
+        error("Invalid path passed to test->clone_object");
+    }
+    ob = efun::clone_object(path);
+    fns = filter_array(functions(ob, 2), (: function_exists($1, $2) :), ob) - test_ignore();
+    foreach (string fn in fns) {
+        if (member_array(fn, testObjectFns) == -1) {
+            testObjectFns += ({ fn });
+            testObjectUntestedFns += ({ fn });
+        }
+    }
+    return ob;
+}
 
 private int query_async_test_function (string fn) {
     mixed *fns;
@@ -63,6 +88,8 @@ private int query_async_test_function (string fn) {
     fns = filter(functions(this_object(), 3), (: $1[0] == $(fn) :));
     return sizeof(fns) == 1 && fns[0][1] == 1 && fns[0][3] == "function";
 }
+
+/* -----  ----- */
 
 private void finish_test () {
     // Attempt to populate testObjectUntestedFns if no tests have run
@@ -123,12 +150,12 @@ public int execute_test (function done) {
     }
 }
 
-private void done_test () {
+private void done_current_test () {
+    timeAfter = perf_counter_ns();
     if (failingExpects == failingExpectsBefore && passingExpects == passingExpectsBefore) {
         currentTestLog += "\n" + ORANGE + "    -" + RESET + " Warning: no expects found.";
     }
     after_each_test();
-    timeAfter = perf_counter_ns();
 
     currentTestLog = "  Testing " + BOLD + UNDERLINE + currentTestFn + RESET + " (" + ORANGE + sprintf("%.2f", (timeAfter-timeBefore)/1000000.0) + RESET + " ms):" + currentTestLog;
     if (this_user()) {
@@ -149,85 +176,55 @@ private void done_test () {
 }
 
 private void process_test () {
+    // no tests remaining
     if (currentTestNum >= sizeof(testFunctions)) {
-        currentTestLog = "";
-        currentFailLog = "";
-        timeBefore = perf_counter_ns();
-        failingExpectsBefore = failingExpects;
-        passingExpectsBefore = passingExpects;
-        done_test();
+        done_current_test();
         return;
     }
+
     currentTestFn = testFunctions[currentTestNum];
 
+    // test function doesn't exist
     if (!function_exists(currentTestFn, this_object())) {
         write(RED + "    x" + RESET + " Function " + currentTestFn + " not found.\n");
         currentFailLog += RED + "    x" + RESET + " Function " + currentTestFn + " not found.\n";
-        done_test();
+        done_current_test();
     } else {
-
         currentTestLog = "";
         currentFailLog = "";
-        timeBefore = perf_counter_ns();
 
         before_each_test();
         failingExpectsBefore = failingExpects;
         passingExpectsBefore = passingExpects;
 
+        timeBefore = perf_counter_ns();
         if (query_async_test_function(currentTestFn)) {
-            call_other(this_object(), currentTestFn, (: done_test() :));
+            call_other(this_object(), currentTestFn, (: done_current_test :));
         } else {
             call_other(this_object(), currentTestFn);
-            done_test();
+            done_current_test();
         }
     }
 }
 
-// -----------------------------------------------------------------------------
-
-protected object clone_object (string path) {
-    string *fns;
-    object ob;
-
-    if (file_size(path) < 1) {
-        error("Invalid path passed to test->clone_object");
-    }
-    ob = efun::clone_object(path);
-    fns = filter_array(functions(ob, 2), (: function_exists($1, $2) :), ob) - test_ignore();
-    foreach (string fn in fns) {
-        if (member_array(fn, testObjectFns) == -1) {
-            testObjectFns += ({ fn });
-            testObjectUntestedFns += ({ fn });
-        }
-    }
-    return ob;
-}
-
-// -----------------------------------------------------------------------------
+/* ----- display diff helper functions ----- */
 
 private string format_string_difference (string actual, string expect) {
-    int n, al, el;
+    int n;
     string result;
 
-    if (!stringp(actual)) {
-        actual = identify(actual);
-    }
-    if (!stringp(expect)) {
-        expect = identify(expect);
-    }
+    if (!stringp(actual)) actual = identify(actual);
+    if (!stringp(expect)) expect = identify(expect);
 
     actual = replace_string(replace_string(actual, "\n", "\\n"), "\e", "\\e");
     expect = replace_string(replace_string(expect, "\n", "\\n"), "\e", "\\e");
-    al = strlen(actual);
-    el = strlen(expect);
     n = string_compare_same_until(actual, expect);
-    result = "'" + (n > 0 ? GREEN + actual[0..(n-1)] : "") + ORANGE + actual[n..] + RED + expect[n..] + RESET + "'";
+    result = "'" + (n ? GREEN + actual[0..n-1] : "") + ORANGE + actual[n..] + RED + expect[n..] + RESET + "'";
     return result;
 }
 
 private string format_regex_difference (string actual, string regex) {
     string *results = pcre_extract(actual, "(" + regex + ")");
-
     if (sizeof(results) > 0) {
         return regex + " matched: " + GREEN + results[0] + RESET;
     } else {
@@ -236,9 +233,9 @@ private string format_regex_difference (string actual, string regex) {
 }
 
 varargs private string format_array_differences (mixed *actual, mixed *expect) {
-    int l;
     string result = "", a, e;
-    l = sizeof(actual) < sizeof(expect) ? sizeof(expect) : sizeof(actual);
+    int l = max(({ sizeof(actual), sizeof(expect) }));
+
     for (int i = 0; i < l; i ++) {
         if (i < sizeof(actual)) {
             if (arrayp(actual[i])) a = implode(map(actual[i], (: identify($1) :)), ",");
@@ -307,15 +304,8 @@ void expect_function (string fn, object testOb) {
         validate_expect ("false", "true", fn + " does not exist");
     }
 }
-// Used by test.test.c to verify failing expects
-protected void expect_next_failure () {
-    if (base_name() == replace_string(M_TEST, ".c", ".test") && failingExpects == 0) {
-        failingExpects --;
-    }
-}
 
 void expect (string message, function fn) {
-
     if (!stringp(message)) error("Bad argument 1 to test->expect");
     if (!functionp(fn)) error("Bad argument 2 to test->expect");
 
@@ -325,7 +315,7 @@ void expect (string message, function fn) {
     rightResults = ({ });
 
     passingAsserts = 0;
-    catch(evaluate(fn));
+    catch (evaluate(fn));
     if (!passingAsserts) currentTestPassed = 0;
 
     validate_expect(leftResults, rightResults, currentTestMsg);
@@ -380,7 +370,7 @@ void assert (mixed left, string condition, mixed right) {
         } else if (condition == ">") {
             currentTestPassed = leftResult > rightResult;
         } else if (condition == ">=") {
-            currentTestPassed = leftResult <= rightResult;
+            currentTestPassed = leftResult >= rightResult;
         } else if (condition == "<") {
             currentTestPassed = leftResult < rightResult;
         } else if (condition == "<=") {
