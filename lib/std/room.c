@@ -31,7 +31,8 @@ int clean_up (mixed *args...) {
 int handle_receive (object ob) {
     if (ob) {
         if (ob->is_living()) {
-            foreach (object o in query_living_contents() + query_item_contents() - ({ ob })) {
+            object *obs = query_living_contents() + query_item_contents() - ({ ob });
+            foreach (object o in obs) {
                 // call out to delay fn til after move
                 call_out_walltime(function (object ob, object o) {
                     if (objectp(ob) && objectp(o)) {
@@ -40,7 +41,8 @@ int handle_receive (object ob) {
                 }, 0, ob, o);
             }
         } else if (ob->is_item()) {
-            foreach (object o in query_living_contents() + query_item_contents() - ({ ob })) {
+            object *obs = query_living_contents() + query_item_contents() - ({ ob });
+            foreach (object o in obs) {
                 // call out to delay fn til after move
                 call_out_walltime(function (object ob, object o) {
                     if (objectp(ob) && objectp(o)) {
@@ -56,11 +58,13 @@ int handle_receive (object ob) {
 int handle_release (object ob) {
     if (ob) {
         if (ob->is_living()) {
-            foreach (object o in query_living_contents() + query_item_contents() - ({ ob })) {
+            object *obs = query_living_contents() + query_item_contents() - ({ ob });
+            foreach (object o in obs) {
                 o->handle_release_living_in_env(ob);
             }
         } else if (ob->is_item()) {
-            foreach (object o in query_living_contents() + query_item_contents() - ({ ob })) {
+            object *obs = query_living_contents() + query_item_contents() - ({ ob });
+            foreach (object o in obs) {
                 o->handle_release_item_in_env(ob);
             }
         }
