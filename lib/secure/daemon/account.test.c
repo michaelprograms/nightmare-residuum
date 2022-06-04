@@ -3,7 +3,7 @@ inherit M_TEST;
 private nosave object testOb;
 void before_each_test () {
     if (objectp(testOb)) destruct(testOb);
-    testOb = clone_object("/secure/daemon/account");
+    testOb = clone_object("/secure/daemon/account.c");
 }
 void after_each_test () {
     if (objectp(testOb)) destruct(testOb);
