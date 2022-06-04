@@ -1,13 +1,13 @@
-nosave private int __Picks, __MaxPicks;
+nosave private int __Picks = 0, __MaxPicks = 0;
 nosave private string __Item, __Message;
 
 // called by STD_ITEM->reset
 void reset_pickable () {
-    if (!environment()) return;
-
     if (__Picks < __MaxPicks) {
         __Picks ++;
-        message("action", __Message + "\n", environment());
+        if (environment()) {
+            message("action", __Message + "\n", environment());
+        }
     }
 }
 
@@ -35,6 +35,10 @@ int handle_pick () {
     }
 }
 
-mixed direct_pick_obj (object ob, string str) {
-    return environment() == environment(ob);
+mixed direct_pick_obj (mixed args...) {
+    object ob;
+    if (sizeof(args)) {
+        ob = args[0];
+        return environment() == environment(ob);
+    } else return 0;
 }
