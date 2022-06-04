@@ -2,8 +2,12 @@ private mixed *__Autoload;
 
 /* -----  ----- */
 
-void reset_autoload () {
+protected void reset_autoload () {
     __Autoload = ({ });
+}
+
+mixed *query_autoload_items () {
+    return __Autoload;
 }
 
 void update_autoload () {
@@ -51,8 +55,4 @@ void restore_autoload () {
 
 void create () {
     reset_autoload();
-}
-
-void remove () {
-
 }
