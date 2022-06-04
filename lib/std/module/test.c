@@ -184,9 +184,14 @@ private void process_test () {
 
 // -----------------------------------------------------------------------------
 
-protected object clone_object (string name) {
+protected object clone_object (string path) {
     string *fns;
-    object ob = efun::clone_object(name);
+    object ob;
+
+    if (file_size(path) < 1) {
+        error("Invalid path passed to test->clone_object");
+    }
+    ob = efun::clone_object(path);
     fns = filter_array(functions(ob, 2), (: function_exists($1, $2) :), ob) - test_ignore();
     foreach (string fn in fns) {
         if (member_array(fn, testObjectFns) == -1) {

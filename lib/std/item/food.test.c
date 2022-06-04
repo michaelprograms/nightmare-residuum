@@ -4,7 +4,7 @@ inherit "/std/living/vitals";
 
 private nosave object testOb;
 void before_each_test () {
-    if (!testOb) testOb = clone_object("/std/food.c");
+    if (!testOb) testOb = clone_object("/std/item/food.c");
 }
 void after_each_test () {
     if (objectp(testOb)) destruct(testOb);

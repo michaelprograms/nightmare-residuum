@@ -3,7 +3,7 @@ inherit STD_STORAGE;
 
 private nosave object testOb;
 void before_each_test () {
-    if (!testOb) testOb = clone_object("/std/armor.c");
+    if (!testOb) testOb = clone_object("/std/item/armor.c");
 }
 void after_each_test () {
     if (objectp(testOb)) destruct(testOb);
