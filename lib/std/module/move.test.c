@@ -10,10 +10,6 @@ void after_all_tests () {
     if (objectp(testOb)) destruct(testOb);
 }
 
-string *test_ignore () {
-    return ::test_ignore() + ({ "can_receive", "can_release", "handle_receive", "handle_release", });
-}
-
 nosave private int canReceiveCount = 0, canReleaseCount = 0;
 nosave private int handleReceiveCount = 0, handleReleaseCount = 0;
 nosave private int noReceive = 0, noRelease = 0;
@@ -40,6 +36,8 @@ void test_move () {
     object ob = new(M_CONTAINER), ob2 = new(M_CONTAINER);
 
     expect_function("handle_move", testOb);
+    expect_function("handle_received", testOb);
+    expect_function("handle_released", testOb);
 
     expect("handle_move relocates objects", (: ({
         assert(sizeof(all_inventory($(ob))), "==", 0),
@@ -55,15 +53,16 @@ void test_move () {
         assert(canReceiveCount, "==", 0),
         assert(handleReceiveCount, "==", 0),
         assert(testOb->handle_move(this_object()), "==", 1),
+        // handle_received called handle_receive
         assert(canReceiveCount, "==", 1),
         assert(handleReceiveCount, "==", 1),
 
         assert(canReleaseCount, "==", 0),
         assert(handleReleaseCount, "==", 0),
         assert(testOb->handle_move($(ob)), "==", 1), // move to test container
+        // handle_released called handle_release
         assert(canReleaseCount, "==", 1),
         assert(handleReleaseCount, "==", 1),
-
 
         // reset counts
         canReceiveCount = 0,
