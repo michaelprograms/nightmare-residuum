@@ -64,33 +64,6 @@ private int query_async_test_function (string fn) {
     return sizeof(fns) == 1 && fns[0][1] == 1 && fns[0][3] == "function";
 }
 
-
-
-public int execute_test (function done) {
-
-    doneTestFn = done;
-
-    // reset test metrics
-    failingExpects = 0;
-    passingExpects = 0;
-    totalFailLog = "";
-
-
-    if (sizeof(testFunctions = test_order()) == 0) {
-        testFunctions = functions(this_object(), 2) - test_ignore();
-    } else if (sizeof(testFunctions) != sizeof(functions(this_object(), 2))) {
-        // grab any tests that were not included in test_order and test_ignore
-        string *otherTestFns = functions(this_object(), 2) - test_ignore() - testFunctions;
-        testFunctions += otherTestFns;
-    }
-
-    write("\nEvaluating " + CYAN + UNDERLINE + base_name() + RESET + "\n");
-
-    before_all_tests();
-
-    process_test();
-}
-
 private void finish_test () {
     // Attempt to populate testObjectUntestedFns if no tests have run
     if (!sizeof(testFunctions) || (passingExpects + failingExpects == 0)) {
@@ -121,6 +94,35 @@ private void finish_test () {
     if (environment()) destruct();
 }
 
+public int execute_test (function done) {
+
+    doneTestFn = done;
+
+    // reset test metrics
+    failingExpects = 0;
+    passingExpects = 0;
+    totalFailLog = "";
+
+
+    if (sizeof(testFunctions = test_order()) == 0) {
+        testFunctions = functions(this_object(), 2) - test_ignore();
+    } else if (sizeof(testFunctions) != sizeof(functions(this_object(), 2))) {
+        // grab any tests that were not included in test_order and test_ignore
+        string *otherTestFns = functions(this_object(), 2) - test_ignore() - testFunctions;
+        testFunctions += otherTestFns;
+    }
+
+    write("\nEvaluating " + CYAN + UNDERLINE + base_name() + RESET + "\n");
+
+    before_all_tests();
+
+    if (currentTestNum < sizeof(testFunctions)) {
+        process_test();
+    } else {
+        finish_test();
+    }
+}
+
 private void done_test () {
     if (failingExpects == failingExpectsBefore && passingExpects == passingExpectsBefore) {
         currentTestLog += "\n    " + ORANGE + "-" + RESET + " Warning: no expects found.";
@@ -147,6 +149,15 @@ private void done_test () {
 }
 
 private void process_test () {
+    if (currentTestNum >= sizeof(testFunctions)) {
+        currentTestLog = "";
+        currentFailLog = "";
+        timeBefore = perf_counter_ns();
+        failingExpectsBefore = failingExpects;
+        passingExpectsBefore = passingExpects;
+        done_test();
+        return;
+    }
     currentTestFn = testFunctions[currentTestNum];
 
     if (!function_exists(currentTestFn, this_object())) {
