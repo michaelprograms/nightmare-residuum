@@ -90,7 +90,9 @@ varargs void process_file (string file, function done, int reset) {
             write("\n    " + test + " encountered an errored:\n" + err + "\n");
             evaluate(done);
         }
-        if (testFile) destruct(testFile);
+        if (testFile) { // async tests require time
+            call_out_walltime((: destruct($(testFile)) :), 5);
+        }
     }, 0, file, done);
 }
 

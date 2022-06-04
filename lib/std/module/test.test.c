@@ -132,6 +132,15 @@ void test_expects_failing () {
     }) :));
 }
 
+void test_async_test (function done) {
+    call_out_walltime(function (function done) {
+        expect("async function completes", (: ({
+            assert(1, "==", 1),
+        }) :));
+        evaluate(done);
+    }, 0.01, done);
+}
+
 void test_lifecycle_events () {
     expect("lifecycle events execute in order", (: ({
         assert(nBeforeAll, "==", 1), // before_all_tests

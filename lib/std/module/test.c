@@ -17,6 +17,13 @@ nosave private int failingAsserts = 0, passingAsserts = 0;
 nosave private int expectCatch = 0;
 nosave private string currentTestMsg, currentTestLog, currentFailLog, totalFailLog;
 nosave private mixed *leftResults, *rightResults;
+nosave private string *testFunctions;
+int currentTestNum = 0;
+string currentTestFn;
+int timeBefore, timeAfter;
+int failingExpectsBefore, passingExpectsBefore;
+private function doneTestFn;
+private string *testObjectFns = ({ }), *testObjectUntestedFns = ({ });
 
 int query_expect_catch () {
     return expectCatch;
@@ -48,60 +55,45 @@ string *test_ignore () {
 
 // -----------------------------------------------------------------------------
 
-private string *testObjectFns = ({ }), *testObjectUntestedFns = ({ });
+private void process_test ();
+
+private int query_async_test_function (string fn) {
+    mixed *fns;
+
+    fns = filter(functions(this_object(), 3), (: $1[0] == $(fn) :));
+    return sizeof(fns) == 1 && fns[0][1] == 1 && fns[0][3] == "function";
+}
+
+
 
 public int execute_test (function done) {
-    string *testFns, *otherTestFns;
-    int timeBefore, timeAfter;
-    int failingExpectsBefore, passingExpectsBefore;
 
-    if (sizeof(testFns = test_order()) == 0) {
-        testFns = functions(this_object(), 2) - test_ignore();
-    } else if (sizeof(testFns) != sizeof(functions(this_object(), 2))) {
-        otherTestFns = functions(this_object(), 2) - test_ignore() - testFns;
-        testFns += otherTestFns;
-    }
+    doneTestFn = done;
 
+    // reset test metrics
     failingExpects = 0;
     passingExpects = 0;
     totalFailLog = "";
 
+
+    if (sizeof(testFunctions = test_order()) == 0) {
+        testFunctions = functions(this_object(), 2) - test_ignore();
+    } else if (sizeof(testFunctions) != sizeof(functions(this_object(), 2))) {
+        // grab any tests that were not included in test_order and test_ignore
+        string *otherTestFns = functions(this_object(), 2) - test_ignore() - testFunctions;
+        testFunctions += otherTestFns;
+    }
+
     write("\nEvaluating " + CYAN + UNDERLINE + base_name() + RESET + "\n");
 
     before_all_tests();
-    foreach (string testFn in testFns) {
-        if (!function_exists(testFn, this_object())) {
-            write("    " + RED + "x" + RESET + " Function "+testFn+" not found.\n");
-            continue;
-        }
 
-        currentTestLog = "";
-        currentFailLog = "";
-        timeBefore = perf_counter_ns();
+    process_test();
+}
 
-        before_each_test();
-        failingExpectsBefore = failingExpects;
-        passingExpectsBefore = passingExpects;
-        call_other(this_object(), testFn);
-        if (failingExpects == failingExpectsBefore && passingExpects == passingExpectsBefore) {
-            currentTestLog += "\n    " + ORANGE + "-" + RESET + " Warning: no expects found.";
-        }
-        after_each_test();
-        timeAfter = perf_counter_ns();
-
-        currentTestLog = "  " + UNDERLINE + BOLD + testFn + RESET + " (" + ORANGE + sprintf("%.2f", (timeAfter-timeBefore)/1000000.0) + RESET + " ms):" + currentTestLog;
-        if (this_user()) {
-            message("system", currentTestLog + "\n", this_user());
-        } else {
-            debug_message(currentTestLog);
-        }
-        if (strlen(currentFailLog) > 0) {
-            totalFailLog += (sizeof(totalFailLog) > 0 ? "\n" : "") + CYAN + UNDERLINE + base_name() + RESET + ": " + UNDERLINE + BOLD + testFn + RESET + " (" + ORANGE + sprintf("%.2f", (timeAfter-timeBefore)/1000000.0) + RESET + " ms):" + currentFailLog;
-        }
-    }
-
+private void finish_test () {
     // Attempt to populate testObjectUntestedFns if no tests have run
-    if (!sizeof(testFns) || (passingExpects + failingExpects == 0)) {
+    if (!sizeof(testFunctions) || (passingExpects + failingExpects == 0)) {
         before_each_test();
         after_each_test();
     }
@@ -115,8 +107,8 @@ public int execute_test (function done) {
         }
     }
 
-    evaluate(done, ([
-        "numTests": sizeof(testFns),
+    evaluate(doneTestFn, ([
+        "numTests": sizeof(testFunctions),
         "passingExpects": passingExpects,
         "failingExpects": failingExpects,
         "testedFns": sizeof(testObjectFns - testObjectUntestedFns),
@@ -127,6 +119,56 @@ public int execute_test (function done) {
     ]));
 
     if (environment()) destruct();
+}
+
+private void done_test () {
+    if (failingExpects == failingExpectsBefore && passingExpects == passingExpectsBefore) {
+        currentTestLog += "\n    " + ORANGE + "-" + RESET + " Warning: no expects found.";
+    }
+    after_each_test();
+    timeAfter = perf_counter_ns();
+
+    currentTestLog = "  " + UNDERLINE + BOLD + currentTestFn + RESET + " (" + ORANGE + sprintf("%.2f", (timeAfter-timeBefore)/1000000.0) + RESET + " ms):" + currentTestLog;
+    if (this_user()) {
+        message("system", currentTestLog + "\n", this_user());
+    } else {
+        debug_message(currentTestLog);
+    }
+    if (strlen(currentFailLog) > 0) {
+        totalFailLog += (sizeof(totalFailLog) > 0 ? "\n" : "") + CYAN + UNDERLINE + base_name() + RESET + ": " + UNDERLINE + BOLD + currentTestFn + RESET + " (" + ORANGE + sprintf("%.2f", (timeAfter-timeBefore)/1000000.0) + RESET + " ms):" + currentFailLog;
+    }
+
+    currentTestNum ++;
+    if (currentTestNum < sizeof(testFunctions)) {
+        process_test();
+    } else {
+        finish_test();
+    }
+}
+
+private void process_test () {
+    currentTestFn = testFunctions[currentTestNum];
+
+    if (!function_exists(currentTestFn, this_object())) {
+        write("    " + RED + "x" + RESET + " Function " + currentTestFn + " not found.\n");
+        done_test();
+    } else {
+
+        currentTestLog = "";
+        currentFailLog = "";
+        timeBefore = perf_counter_ns();
+
+        before_each_test();
+        failingExpectsBefore = failingExpects;
+        passingExpectsBefore = passingExpects;
+
+        if (query_async_test_function(currentTestFn)) {
+            call_other(this_object(), currentTestFn, (: done_test() :));
+        } else {
+            call_other(this_object(), currentTestFn);
+            done_test();
+        }
+    }
 }
 
 // -----------------------------------------------------------------------------
