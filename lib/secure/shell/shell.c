@@ -38,7 +38,7 @@ void create () {
 
 void handle_remove () {
     if (origin() != ORIGIN_LOCAL && __Owner && __Owner != previous_object()) {
-        error("illegal attempt to remove shell object?");
+        error("Invalid origin in call to shell->handle_remove");
     }
 
     save_data();

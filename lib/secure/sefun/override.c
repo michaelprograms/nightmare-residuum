@@ -19,7 +19,7 @@ nomask void write (string msg) {
         this_user()->receive_message("system", msg);
     } else {
         if (msg[<1] == '\n') msg = msg[0..<2];
-        debug_message(msg); // "]"
+        debug_message(msg);
     }
 }
 

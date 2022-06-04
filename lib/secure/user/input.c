@@ -38,6 +38,7 @@ private nomask void dispatch_input (mixed str) {
 
 private nomask string process_input (string str) {
     dispatch_input(str);
+    return 0;
 }
 
 private nomask void stack_push (function inputFn, mixed prompt, int secure, function callbackFn, int lock, int type) {
