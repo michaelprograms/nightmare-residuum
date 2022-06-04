@@ -74,7 +74,7 @@ private void finish_test () {
     after_all_tests();
     write("  " + passingExpects + " Pass " + (failingExpects ? failingExpects + " Fail" : "") + "\n");
     if (sizeof(testObjectUntestedFns) > 0) {
-        write(BOLD + "  " + UNDERLINE + "Untested Functions" + RESET + "\n");
+        write("  Testing " + BOLD + UNDERLINE + "Untested Functions" + RESET + "\n");
         foreach (string fn in testObjectUntestedFns) {
             write(RED + "    ?" + RESET + " " + fn + "\n");
         }
@@ -130,7 +130,7 @@ private void done_test () {
     after_each_test();
     timeAfter = perf_counter_ns();
 
-    currentTestLog = BOLD + "  " + UNDERLINE + currentTestFn + RESET + " (" + ORANGE + sprintf("%.2f", (timeAfter-timeBefore)/1000000.0) + RESET + " ms):" + currentTestLog;
+    currentTestLog = "  Testing " + BOLD + UNDERLINE + currentTestFn + RESET + " (" + ORANGE + sprintf("%.2f", (timeAfter-timeBefore)/1000000.0) + RESET + " ms):" + currentTestLog;
     if (this_user()) {
         message("system", currentTestLog + "\n", this_user());
     } else {
@@ -275,7 +275,7 @@ private void validate_expect (mixed value1, mixed value2, string message) {
         message = stringp(message) ? message : "An expect has failed.";
         if (failingExpects == -1) { // expected this error
             passingExpects ++;
-            currentTestLog += "\n" + GREEN + "    +" + RESET + " " + RED + "x" + RESET + " " + message;
+            currentTestLog += "\n" + GREEN + "    +" + RESET + RED + " x" + RESET + " " + message;
         } else {
             currentTestLog += "\n" + RED + "    x" + RESET + " " + message;
             currentFailLog += "\n" + RED + "    x" + RESET + " " + message;
