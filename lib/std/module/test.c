@@ -91,7 +91,7 @@ private void finish_test () {
         "failLog": totalFailLog,
     ]));
 
-    if (environment()) destruct();
+    destruct();
 }
 
 public int execute_test (function done) {
