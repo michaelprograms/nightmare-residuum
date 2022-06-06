@@ -6,10 +6,12 @@ void before_each_test () {
     testOb = clone_object("/std/npc/vendor.c");
 }
 void after_each_test () {
+    // vendor handle_remove to destruct vendor inventory
+    if (objectp(testOb)) testOb->handle_remove();
     if (objectp(testOb)) destruct(testOb);
 }
 
-void test_npc () {
+void test_vendor () {
     expect_function("is_vendor", testOb);
 
     expect("is_vendor behaves", (: ({
@@ -18,4 +20,30 @@ void test_npc () {
         assert(testOb->is_npc(), "==", 1),
         assert(testOb->is_monster(), "==", UNDEFINED),
     }) :));
+}
+
+void test_vendor_inventory () {
+    object vi, ob;
+
+    expect_function("handle_remove", testOb);
+    expect_function("query_vendor_inventory", testOb);
+
+    // grab reference to vendor inventory
+    vi = testOb->query_vendor_inventory();
+    // setup a test item
+    ob = new(STD_ITEM);
+    expect("vendor inventory is created and cleaned", (: ({
+        // vendor inventory exists
+        assert(objectp($(vi)), "==", 1),
+        // move test item to vendor inventory
+        assert($(ob)->handle_move($(vi)), "==", 1),
+        // remove vendor
+        assert(testOb->handle_remove(), "==", 1),
+        // verify vendor inventory is destructed
+        assert(objectp($(vi)), "==", 0),
+        // verify item is destructed
+        assert(objectp($(ob)), "==", 0),
+    }) :));
+
+    if (ob) destruct(ob);
 }
