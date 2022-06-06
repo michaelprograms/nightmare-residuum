@@ -13,8 +13,8 @@ void create () {
         name = element_of(HUMAN_NAMES[1]);
         set_gender("female");
     }
-    set_id(({ name, "clone" }));
     capName = capitalize(name);
+    set_id(({ name, "clone", "shopkeeper", "vendor", }));
     set_name(capName);
     set_short(capName + " the shopkeeper");
     set_long("A cloned human by the name of " + capName + ", working as the clothing vendor.");
