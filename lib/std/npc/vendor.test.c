@@ -1,4 +1,5 @@
 inherit M_TEST;
+inherit M_MOVE;
 
 private nosave object testOb;
 void before_each_test () {
@@ -64,5 +65,19 @@ void test_max_items () {
         // verify changing max items
         testOb->set_max_items(123),
         assert($(vi)->query_max_items(), "==", 123),
+    }) :));
+}
+
+void test_apply_list_obj () {
+    expect_function("direct_list_obj", testOb);
+
+    expect("direct_list_obj returns true when same environment", (: ({
+        // true with same environment (no env)
+        assert(testOb->direct_list_obj(testOb), "==", 1),
+        // false with different environments (one env)
+        assert(this_object()->handle_move("/domain/Nowhere/room/void.c"), "==", 1),
+        assert(testOb->direct_list_obj(testOb), "==", 0),
+        // false with no object sent
+        assert(testOb->direct_list_obj(), "==", 0),
     }) :));
 }

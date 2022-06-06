@@ -30,9 +30,10 @@ int handle_remove () {
 mixed direct_list_obj (mixed args...) {
     object po = previous_object();
     object ob;
-    if (!sizeof(args)) return 0;
-    ob = args[0];
-    return this_object() == ob && environment(ob) == environment(po);
+    if (sizeof(args)) {
+        ob = args[0];
+        return environment(ob) == environment(po);
+    } else return 0;
 }
 
 // mixed direct_buy_str_from_liv (string str) { }
