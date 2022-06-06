@@ -11,7 +11,7 @@
 #define STD_NPC         "/std/npc.c"
 #define STD_OBJECT      "/std/object.c"
 #define STD_ROOM        "/std/room.c"
-#define STD_STORAGE     "/std/storage.c"
+#define STD_STORAGE     "/std/item/storage.c"
 #define STD_VERB        "/std/verb.c"
 
 // std item inheritables

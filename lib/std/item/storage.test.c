@@ -5,7 +5,7 @@ inherit M_CONTAINER;
 private nosave object testOb;
 void before_each_test () {
     if (objectp(testOb)) destruct(testOb);
-    testOb = clone_object("/std/storage.c");
+    testOb = clone_object("/std/item/storage.c");
 }
 void after_each_test () {
     if (objectp(testOb)) destruct(testOb);
