@@ -14,14 +14,6 @@ void set_max_items (int n) {
 
 void create () {
     ::create();
-
-    set_name("Vendor");
-    set_short("vendor");
-    set_long("A vendor.");
-    set_level(1);
-    set_species("human");
-    set_gender(element_of(({ "male", "female" })));
-
     if (clonep()) {
         // create vendor inventor
         __VendorInventory = clone_object("/std/vendor_inventory.c");
@@ -33,6 +25,14 @@ int handle_remove () {
         __VendorInventory->handle_remove();
     }
     return ::handle_remove();
+}
+
+mixed direct_list_obj (mixed args...) {
+    object po = previous_object();
+    object ob;
+    if (!sizeof(args)) return 0;
+    ob = args[0];
+    return this_object() == ob && environment(ob) == environment(po);
 }
 
 // mixed direct_buy_str_from_liv (string str) { }
