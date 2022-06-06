@@ -2,6 +2,7 @@
 #define __HUMAN_H__
 
 #define HUMAN_BASE      "/domain/Start/human/"
+#define HUMAN_ARMOR     HUMAN_BASE + "armor/"
 #define HUMAN_ITEM      HUMAN_BASE + "item/"
 #define HUMAN_MONSTER   HUMAN_BASE + "monster/"
 #define HUMAN_NPC       HUMAN_BASE + "npc/"
