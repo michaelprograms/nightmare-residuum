@@ -47,3 +47,22 @@ void test_vendor_inventory () {
 
     if (ob) destruct(ob);
 }
+
+void test_max_items () {
+    object vi;
+
+    expect_function("set_max_items", testOb);
+
+    // grab reference to vendor inventory
+    vi = testOb->query_vendor_inventory();
+    expect("vendor inventory max items behaves", (: ({
+        // verify default max items
+        assert($(vi)->query_max_items(), "==", 0),
+        // verify changing max items
+        testOb->set_max_items(10),
+        assert($(vi)->query_max_items(), "==", 10),
+        // verify changing max items
+        testOb->set_max_items(123),
+        assert($(vi)->query_max_items(), "==", 123),
+    }) :));
+}

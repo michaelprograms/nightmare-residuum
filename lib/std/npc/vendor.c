@@ -6,13 +6,19 @@ int is_vendor () { return 1; }
 
 object query_vendor_inventory () { return __VendorInventory; }
 
+void set_max_items (int n) {
+    if (__VendorInventory) {
+        return __VendorInventory->set_max_items(n);
+    }
+}
+
 void create () {
     ::create();
 
     set_name("Vendor");
     set_short("vendor");
     set_long("A vendor.");
-    set_level(10);
+    set_level(1);
     set_species("human");
     set_gender(element_of(({ "male", "female" })));
 
