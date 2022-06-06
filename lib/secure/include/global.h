@@ -14,12 +14,15 @@
 #define STD_STORAGE     "/std/storage.c"
 #define STD_VERB        "/std/verb.c"
 
-// std item
+// std item inheritables
 #define STD_ARMOR       "/std/item/armor.c"
 #define ITEM_COINS      "/std/item/coins.c"
 #define ITEM_CORPSE     "/std/item/corpse.c"
 #define STD_FOOD        "/std/item/food.c"
 #define STD_WEAPON      "/std/item/weapon.c"
+
+// std npc inheritables
+#define STD_VENDOR      "/std/npc/vendor.c"
 
 // std modules
 #define M_AUTOLOAD      "/std/module/autoload.c"
