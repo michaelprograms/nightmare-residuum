@@ -78,7 +78,6 @@ void test_handle_receive_and_release (function done) {
     expect("handle_receive sets up room contents", (: ({
         // move this test, item, and living to the test room object
         assert(this_object()->handle_move(testOb), "==", 1),
-        // assert(all_inventory(testOb), "==", ({ })),
         assert(__Ob->handle_move(testOb), "==", 1),
         assert(__Living->handle_move(testOb), "==", 1),
     }) :));
