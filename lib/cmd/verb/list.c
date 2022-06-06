@@ -23,7 +23,7 @@ void do_list_obj (mixed args...) {
         return;
     }
 
-    message("action", vendor->query_short() + " has the following items:\n", po);
+    message("action", vendor->query_cap_name() + " has the following items:\n", po);
     foreach (object ob in vi->query_item_contents()) {
         message("action", "  " + ob->query_short() + "\n", po);
     }
