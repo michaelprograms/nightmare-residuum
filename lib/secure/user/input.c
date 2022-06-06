@@ -37,6 +37,9 @@ private nomask void dispatch_input (mixed str) {
 }
 
 private nomask string process_input (string str) {
+    if (!this_object()->query_terminal_type()) {
+        this_object()->handle_remove();
+    }
     dispatch_input(str);
     return 0;
 }
