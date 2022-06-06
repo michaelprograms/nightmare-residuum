@@ -20,8 +20,8 @@ int inventory_accessible () {
 }
 
 object *query_living_contents () {
-    return filter_array(all_inventory(), (: $1->is_living() :));
+    return filter(all_inventory(), (: $1->is_living() :));
 }
 object *query_item_contents () {
-    return filter_array(all_inventory(), (: !$1->is_living() :));
+    return filter(all_inventory(), (: $1->is_item() :));
 }

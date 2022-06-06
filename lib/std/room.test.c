@@ -8,9 +8,8 @@ void before_each_test () {
 void after_each_test () {
     if (objectp(testOb)) destruct(testOb);
 }
-string *test_ignore () {
-    return ::test_ignore() + ({ "handle_receive_living_in_env", "handle_receive_item_in_env", "handle_release_living_in_env", "handle_release_item_in_env", });
-}
+
+int is_item () { return 1; } // need to fake being an item for room contents
 
 void test_is_room () {
     expect_function("is_room", testOb);

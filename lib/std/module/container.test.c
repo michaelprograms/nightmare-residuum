@@ -37,3 +37,29 @@ void test_inventory () {
         assert(testOb->inventory_accessible(), "==", 1),
     }) :));
 }
+
+void test_query_contents () {
+    object living, item;
+
+    expect_function("query_living_contents", testOb);
+    expect_function("query_item_contents", testOb);
+
+    // create test items
+    living = new(STD_LIVING);
+    item = new(STD_ITEM);
+
+    expect("query filtered contents behave", (: ({
+        // verify empty
+        assert(sizeof(testOb->query_living_contents()), "==", 0),
+        assert(sizeof(testOb->query_item_contents()), "==", 0),
+        // move test items
+        assert($(living)->handle_move(testOb), "==", 1),
+        assert($(item)->handle_move(testOb), "==", 1),
+        // verify contents
+        assert(sizeof(testOb->query_living_contents()), "==", 1),
+        assert(sizeof(testOb->query_item_contents()), "==", 1),
+    }) :));
+
+    if (living) destruct(living);
+    if (item) destruct(item);
+}
