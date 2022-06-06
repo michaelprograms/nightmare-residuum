@@ -91,7 +91,9 @@ varargs void process_file (string file, function done, int reset) {
             evaluate(done);
         }
         if (objectp(testFile)) { // async tests require time
-            call_out_walltime((: destruct($(testFile)) :), 5);
+            call_out_walltime(function (object ob) {
+                if (ob) destruct(ob);
+            }, 5, testFile);
         }
     }, 0, file, done);
 }
