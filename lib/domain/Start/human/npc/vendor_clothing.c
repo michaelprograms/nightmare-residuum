@@ -3,12 +3,22 @@
 inherit STD_VENDOR;
 
 void create () {
+    string name, capName;
     ::create();
 
-    set_name("Shopkeeper");
-    set_short("shopkeeper");
-    set_long("A shopkeeper.");
-    set_level(1);
+    if (random(2)) {
+        name = element_of(HUMAN_NAMES[0]);
+        set_gender("male");
+    } else {
+        name = element_of(HUMAN_NAMES[1]);
+        set_gender("female");
+    }
+    set_id(({ name, "clone" }));
+    capName = capitalize(name);
+    set_name(capName);
+    set_short(capName + " the shopkeeper");
+    set_long("A cloned human by the name of " + capName + ", working as the clothing vendor.");
+    set_level(10);
     set_species("human");
     set_gender(element_of(({ "male", "female" })));
 
