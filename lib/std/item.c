@@ -3,8 +3,23 @@ inherit M_CLEAN;
 inherit M_AUTOLOAD;
 
 nosave private mixed __NoGet;
+nosave private int __Value;
+
+/* -----  ----- */
 
 int is_item () { return 1; }
+
+/* ----- value ----- */
+
+int query_value () {
+    return __Value;
+}
+void set_value (int v) {
+    if (!intp(v) || v < 0) error("Bad argument 1 to item->set_value");
+    __Value = v;
+}
+
+/* ----- no get ----- */
 
 mixed query_no_get () {
     return __NoGet;

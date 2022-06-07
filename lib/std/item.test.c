@@ -20,6 +20,29 @@ void test_is_item () {
     }) :));
 }
 
+void test_value () {
+    expect_function("query_value", testOb);
+    expect_function("set_value", testOb);
+
+    expect("value is queryable and settable", (: ({
+        assert(testOb->query_value(), "==", 0),
+        testOb->set_value(123),
+        assert(testOb->query_value(), "==", 123),
+        testOb->set_value(54321),
+        assert(testOb->query_value(), "==", 54321),
+    }) :));
+
+    expect("value handles bad argument 1", (: ({
+        assert((: testOb->set_value(-1) :), "catch", "*Bad argument 1 to item->set_value\n"),
+        assert((: testOb->set_value(this_object()) :), "catch", "*Bad argument 1 to item->set_value\n"),
+        assert((: testOb->set_value(1.0) :), "catch", "*Bad argument 1 to item->set_value\n"),
+        assert((: testOb->set_value("") :), "catch", "*Bad argument 1 to item->set_value\n"),
+        assert((: testOb->set_value(({})) :), "catch", "*Bad argument 1 to item->set_value\n"),
+        assert((: testOb->set_value(([])) :), "catch", "*Bad argument 1 to item->set_value\n"),
+        assert((: testOb->set_value((: 1 :)) :), "catch", "*Bad argument 1 to item->set_value\n"),
+    }) :));
+}
+
 void test_verb_look_applies () {
     object r = new(STD_ROOM);
 
