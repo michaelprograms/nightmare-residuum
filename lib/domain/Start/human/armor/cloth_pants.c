@@ -9,4 +9,5 @@ void create () {
     set_type("pants");
     set_limbs(({ "left leg", "right leg" }));
     set_ac(1);
+    set_value(30);
 }

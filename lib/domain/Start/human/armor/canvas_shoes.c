@@ -9,4 +9,5 @@ void create () {
     set_type("boots");
     set_limbs(({ "left foot", "right foot" }));
     set_ac(1);
+    set_value(25);
 }

@@ -25,7 +25,7 @@ void do_list_obj (mixed args...) {
 
     message("action", vendor->query_cap_name() + " has the following items:\n", po);
     foreach (object ob in vi->query_item_contents()) {
-        message("action", "  " + ob->query_short() + "\n", po);
+        message("action", sprintf("  %-30s%s", ob->query_short(), ob->query_value() + " copper") + "\n", po);
     }
 }
 

@@ -9,4 +9,5 @@ void create () {
     set_type("hat");
     set_limbs(({ "head" }));
     set_ac(1);
+    set_value(15);
 }

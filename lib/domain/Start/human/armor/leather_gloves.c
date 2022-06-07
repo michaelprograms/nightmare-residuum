@@ -9,4 +9,5 @@ void create () {
     set_type("gloves");
     set_limbs(({ "left hand", "right hand" }));
     set_ac(1);
+    set_value(20);
 }
