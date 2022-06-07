@@ -30,5 +30,8 @@ int clean_up (mixed *args...) {
     if (origin() == "driver" || environment() || __NoClean) {
         return clean_never();
     }
+    if (this_object()->query_parent()) {
+        return clean_later();
+    }
     return handle_remove();
 }
