@@ -33,4 +33,5 @@ void create () {
             HUMAN_ARMOR + "straw_hat.c": 1,
         ]));
     }
+    set_vendor_currency("copper");
 }
