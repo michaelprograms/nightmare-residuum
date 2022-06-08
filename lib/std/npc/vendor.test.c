@@ -68,6 +68,30 @@ void test_max_items () {
     }) :));
 }
 
+void test_vendor_currency () {
+    expect_function("query_vendor_currency", testOb);
+    expect_function("set_vendor_currency", testOb);
+
+    expect("vendor currency is settable and queryable", (: ({
+        assert(testOb->query_vendor_currency(), "==", 0),
+
+        testOb->set_vendor_currency("copper"),
+        assert(testOb->query_vendor_currency(), "==", "copper"),
+
+        testOb->set_vendor_currency("silver"),
+        assert(testOb->query_vendor_currency(), "==", "silver"),
+    }) :));
+
+    expect("set_vendor_currency handles invalid argument 1", (: ({
+        assert((: testOb->set_vendor_currency(this_object()) :), "catch", "*Bad argument 1 to vendor->set_vendor_currency\n"),
+        assert((: testOb->set_vendor_currency(1) :), "catch", "*Bad argument 1 to vendor->set_vendor_currency\n"),
+        assert((: testOb->set_vendor_currency(1.0) :), "catch", "*Bad argument 1 to vendor->set_vendor_currency\n"),
+        assert((: testOb->set_vendor_currency(({})) :), "catch", "*Bad argument 1 to vendor->set_vendor_currency\n"),
+        assert((: testOb->set_vendor_currency(([])) :), "catch", "*Bad argument 1 to vendor->set_vendor_currency\n"),
+        assert((: testOb->set_vendor_currency((: 1 :)) :), "catch", "*Bad argument 1 to vendor->set_vendor_currency\n"),
+    }) :));
+}
+
 void test_apply_list_obj () {
     expect_function("direct_list_obj", testOb);
 

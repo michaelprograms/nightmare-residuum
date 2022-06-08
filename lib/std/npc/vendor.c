@@ -1,6 +1,7 @@
 inherit STD_NPC;
 
 nosave private object __VendorInventory;
+nosave private string __VendorCurrency;
 
 int is_vendor () { return 1; }
 
@@ -12,12 +13,12 @@ void set_max_items (int n) {
     }
 }
 
-void create () {
-    ::create();
-    if (clonep()) {
-        // create vendor inventor
-        __VendorInventory = clone_object("/std/vendor_inventory.c");
-    }
+string query_vendor_currency () {
+    return __VendorCurrency;
+}
+void set_vendor_currency (string c) {
+    if (!stringp(c)) error("Bad argument 1 to vendor->set_vendor_currency");
+    __VendorCurrency = c;
 }
 
 int handle_remove () {
@@ -26,6 +27,18 @@ int handle_remove () {
     }
     return ::handle_remove();
 }
+
+/* ----- ----- */
+
+void create () {
+    ::create();
+    if (clonep()) {
+        // create vendor inventor
+        __VendorInventory = clone_object("/std/vendor_inventory.c");
+    }
+}
+
+/* ----- parser applies ----- */
 
 mixed direct_list_obj (mixed args...) {
     object po = previous_object();
