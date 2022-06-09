@@ -7,4 +7,5 @@ void create () {
     set_short("a wooden spear");
     set_long("A flimsy wooden spear.");
     set_type("projectile");
+    set_value(60);
 }

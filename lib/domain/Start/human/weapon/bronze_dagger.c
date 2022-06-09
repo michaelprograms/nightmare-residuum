@@ -7,4 +7,5 @@ void create () {
     set_short("a bronze dagger");
     set_long("A flimsy bronze dagger.");
     set_type("knife");
+    set_value(50);
 }

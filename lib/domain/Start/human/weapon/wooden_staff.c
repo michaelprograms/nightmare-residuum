@@ -7,4 +7,5 @@ void create () {
     set_short("a wooden staff");
     set_long("A flimsy wooden staff.");
     set_type("blunt");
+    set_value(40);
 }
