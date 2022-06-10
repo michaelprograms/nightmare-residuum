@@ -54,7 +54,7 @@ int handle_move (mixed dest) {
 
 string query_environment_path () {
     if (!__EnvPath) {
-        return "/domain/Nowhere/room/void";
+        return "/domain/Nowhere/room/void.c";
     } else {
         return __EnvPath;
     }
