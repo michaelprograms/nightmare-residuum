@@ -99,6 +99,8 @@ nomask void input_focus () {
 }
 
 private nomask int create_handler () {
+    if (!this_object()) return 0;
+
     this_object()->shell_start();
 
     if (!sizeof(stack)) {
