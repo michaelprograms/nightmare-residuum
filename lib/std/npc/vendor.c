@@ -2,6 +2,7 @@ inherit STD_NPC;
 
 nosave private object __VendorInventory;
 nosave private string __VendorCurrency;
+nosave private string __VendorType;
 
 int is_vendor () { return 1; }
 
@@ -19,6 +20,14 @@ string query_vendor_currency () {
 void set_vendor_currency (string c) {
     if (!stringp(c)) error("Bad argument 1 to vendor->set_vendor_currency");
     __VendorCurrency = c;
+}
+
+string query_vendor_type () {
+    return __VendorType;
+}
+void set_vendor_type (string t) {
+    if (!stringp(t)) error("Bad argument 1 to vendor->set_vendor_type");
+    __VendorType = t;
 }
 
 int handle_remove () {

@@ -92,6 +92,33 @@ void test_vendor_currency () {
     }) :));
 }
 
+void test_vendor_type () {
+    expect_function("query_vendor_type", testOb);
+    expect_function("set_vendor_type", testOb);
+
+    expect("vendor type is settable and queryable", (: ({
+        assert(testOb->query_vendor_type(), "==", 0),
+
+        testOb->set_vendor_type(STD_WEAPON),
+        assert(testOb->query_vendor_type(), "==", STD_WEAPON),
+
+        testOb->set_vendor_type(STD_ARMOR),
+        assert(testOb->query_vendor_type(), "==", STD_ARMOR),
+
+        testOb->set_vendor_type(STD_ITEM),
+        assert(testOb->query_vendor_type(), "==", STD_ITEM),
+    }) :));
+
+    expect("set_vendor_type handles invalid argument 1", (: ({
+        assert((: testOb->set_vendor_type(this_object()) :), "catch", "*Bad argument 1 to vendor->set_vendor_type\n"),
+        assert((: testOb->set_vendor_type(1) :), "catch", "*Bad argument 1 to vendor->set_vendor_type\n"),
+        assert((: testOb->set_vendor_type(1.0) :), "catch", "*Bad argument 1 to vendor->set_vendor_type\n"),
+        assert((: testOb->set_vendor_type(({})) :), "catch", "*Bad argument 1 to vendor->set_vendor_type\n"),
+        assert((: testOb->set_vendor_type(([])) :), "catch", "*Bad argument 1 to vendor->set_vendor_type\n"),
+        assert((: testOb->set_vendor_type((: 1 :)) :), "catch", "*Bad argument 1 to vendor->set_vendor_type\n"),
+    }) :));
+}
+
 void test_apply_list_obj () {
     expect_function("direct_list_obj", testOb);
 
