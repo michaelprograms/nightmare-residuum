@@ -129,7 +129,10 @@ void setup_character () {
 
 varargs void enter_world (int override) {
     if (!override) {
-        handle_move(query_environment_path());
+        string err = catch (handle_move(query_environment_path()));
+        if (err) {
+            handle_move("/domain/Nowhere/room/void.c");
+        }
         D_CHANNEL->send_system("connection", query_cap_name() + " enters " + mud_name() + ".");
         master()->handle_parse_refresh();
         message("system", query_cap_name() + " suddenly appears into existence.\n", environment(), this_object());
@@ -141,7 +144,6 @@ varargs void enter_world (int override) {
 void exit_world () {
     message("system", query_cap_name() + " suddenly fades from existence.\n", environment(), this_object());
     D_CHANNEL->send_system("connection", query_cap_name() + " exits " + mud_name() + ".");
-    master()->handle_parse_refresh();
 
     // remove equipment
     foreach (object weapon in this_object()->query_wielded_weapons()) {
@@ -150,6 +152,7 @@ void exit_world () {
 
     save_character();
     handle_remove();
+    master()->handle_parse_refresh();
 }
 
 void enter_freezer () {
@@ -242,11 +245,11 @@ void describe_environment () {
     }
 
     if (query_immortal()) {
-        message("room_file", file_name(env)+"\n", this_object());
+        message("room_file", file_name(env) + "\n", this_object());
     }
 
-    message("room_short", env->query_short()+"\n", this_object());
-    message("room_long", env->query_long()+"\n\n", this_object());
+    message("room_short", env->query_short() + "\n", this_object());
+    message("room_long", env->query_long() + "\n\n", this_object());
     describe_environment_exits();
     describe_environment_living_contents();
     describe_environment_item_contents();
