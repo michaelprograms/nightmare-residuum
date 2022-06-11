@@ -73,15 +73,5 @@ mixed can_list (mixed args...) {
     return 1;
 }
 void do_list (mixed args...) {
-    object po = previous_object();
-    object *vendors;
-
-    if (environment(po)) {
-        vendors = filter(environment(po)->query_living_contents(), (: $1->is_vendor() :));
-        if (sizeof(vendors) == 1) {
-            vendors[0]->handle_list(0, po);
-        } else {
-            message("action", "List from which vendor?\n", po);
-        }
-    }
+    do_list_str(0);
 }

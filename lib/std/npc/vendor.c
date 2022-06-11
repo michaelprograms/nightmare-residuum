@@ -50,7 +50,7 @@ void handle_list (string str, object po) {
 
     if (!sizeof(items)) {
         if (str) {
-            do_command("say I don't have any '" + str + "' items.");
+            do_command("say I don't have any '" + str + "' for sale.");
         } else {
             do_command("say I don't have any items for sale right now, " + po->query_cap_name() + ".");
         }
@@ -58,7 +58,7 @@ void handle_list (string str, object po) {
     }
 
     if (str) {
-        do_command("say I have the following '" + str + "' items.");
+        do_command("say I have the following '" + str + "' items, " + po->query_cap_name() + ".");
     } else {
         do_command("say I have the following items, " + po->query_cap_name() + ".");
     }
@@ -75,7 +75,7 @@ void handle_buy (string str, object po) {
     int value;
 
     if (!(item = present(str, __VendorInventory))) {
-        do_command("say I don't have " + str + " for sale.");
+        do_command("say I don't have any '" + str + "' for sale.");
         return;
     }
 
