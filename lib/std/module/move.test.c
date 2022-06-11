@@ -77,9 +77,9 @@ void test_move () {
         assert(testOb->handle_move(this_object()), "==", 0),
         assert(canReceiveCount, "==", 1), // can_receive was called
         assert(handleReceiveCount, "==", 0), // handle_receive was not called
+        noReceive = 0,
 
         // test can_release
-        noReceive = 0,
         assert(testOb->handle_move(this_object()), "==", 1),
         noRelease = 1,
         assert(canReleaseCount, "==", 0),
@@ -87,6 +87,7 @@ void test_move () {
         assert(testOb->handle_move($(ob)), "==", 0), // attempt to move to test container
         assert(canReleaseCount, "==", 1), // can_release was called
         assert(handleReleaseCount, "==", 0), // handle_release was not called
+        noRelease = 0,
     }) :));
 
     destruct(ob);
@@ -99,11 +100,23 @@ void test_environment () {
     expect_function("set_environment_path", testOb);
 
     expect("handles setting and querying environment path and short", (: ({
-        assert(testOb->query_environment_path(), "==", "/domain/Nowhere/room/void"), // defaults to void
+        assert(testOb->query_environment_path(), "==", "/domain/Nowhere/room/void.c"), // defaults to void
         assert(testOb->query_environment_short(), "==", "no where"),
-        assert(testOb->set_environment_path("/domain/Nowhere/room/freezer"), "==", 0),
-        assert(testOb->query_environment_path(), "==", "/domain/Nowhere/room/freezer"),
+
+        // set to freezer (this can't happen normally)
+        testOb->set_environment_path("/domain/Nowhere/room/freezer.c"),
+        assert(testOb->query_environment_path(), "==", "/domain/Nowhere/room/freezer.c"),
         assert(testOb->query_environment_short(), "==", "a freezer"),
+
+        // move to this_object
+        assert(testOb->handle_move(this_object()), "==", 1),
+        assert(testOb->query_environment_path(), "==", base_name() + ".c"),
+
+        // moves to void & freezer but env path is still this_object
+        assert(testOb->handle_move("/domain/Nowhere/room/void.c"), "==", 1),
+        assert(testOb->query_environment_path(), "==", base_name() + ".c"),
+        assert(testOb->handle_move("/domain/Nowhere/room/freezer.c"), "==", 1),
+        assert(testOb->query_environment_path(), "==", base_name() + ".c"),
     }) :));
 
     expect("set_environment_path handles invalid argument 1", (: ({

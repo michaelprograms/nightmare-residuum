@@ -44,8 +44,8 @@ int handle_move (mixed dest) {
         handle_released(__LastEnv);
     }
     move_object(destOb);
-    if (!regexp(file_name(destOb), "^/domain/Nowhere/room/(freezer|void)$")) {
-        __EnvPath = file_name(destOb);
+    if (!regexp(base_name(destOb), "^/domain/Nowhere/room/(freezer|void)$")) {
+        __EnvPath = base_name(destOb) + ".c";
     }
     __CurrentEnv = environment();
     handle_received(__CurrentEnv);
@@ -63,27 +63,18 @@ string query_environment_short () {
     if (__CurrentEnv) {
         return __CurrentEnv->query_short();
     } else if (__EnvPath) {
-        object r;
-        string short;
-
-        if (!(r = find_object(__EnvPath))) {
-            if (catch(r = load_object(__EnvPath)) ) { // @TODO will this memory leak?
-                return 0;
-            }
-        }
-
-        short = r->query_short();
-        return short;
+        object destOb;
+        if (!(destOb = query_dest_ob(__EnvPath))) {
+            return "no where";
+        } else return destOb->query_short() || "no where";
     } else {
         return "no where";
     }
 }
 void set_environment_path (mixed dest) {
     object destOb;
-
     if (!(destOb = query_dest_ob(dest))) {
         error("Bad argument 1 to move->set_environment_path");
     }
-
-    __EnvPath = file_name(destOb);
+    __EnvPath = base_name(destOb) + ".c";
 }
