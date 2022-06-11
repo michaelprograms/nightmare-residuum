@@ -31,6 +31,6 @@ void create () {
             HUMAN_WEAPON + "wooden_staff.c": 1,
         ]));
     }
-    set_vendor_type(STD_WEAPON);
+    set_vendor_types(({ STD_WEAPON }));
     set_vendor_currency("copper");
 }

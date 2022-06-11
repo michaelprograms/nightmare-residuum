@@ -93,29 +93,32 @@ void test_vendor_currency () {
 }
 
 void test_vendor_type () {
-    expect_function("query_vendor_type", testOb);
-    expect_function("set_vendor_type", testOb);
+    expect_function("query_vendor_types", testOb);
+    expect_function("set_vendor_types", testOb);
 
     expect("vendor type is settable and queryable", (: ({
-        assert(testOb->query_vendor_type(), "==", 0),
+        assert(testOb->query_vendor_types(), "==", 0),
 
-        testOb->set_vendor_type(STD_WEAPON),
-        assert(testOb->query_vendor_type(), "==", STD_WEAPON),
+        testOb->set_vendor_types(({ STD_WEAPON })),
+        assert(testOb->query_vendor_types(), "==", ({ STD_WEAPON })),
 
-        testOb->set_vendor_type(STD_ARMOR),
-        assert(testOb->query_vendor_type(), "==", STD_ARMOR),
+        testOb->set_vendor_types(({ STD_ARMOR })),
+        assert(testOb->query_vendor_types(), "==", ({ STD_ARMOR })),
 
-        testOb->set_vendor_type(STD_ITEM),
-        assert(testOb->query_vendor_type(), "==", STD_ITEM),
+        testOb->set_vendor_types(({ STD_ITEM })),
+        assert(testOb->query_vendor_types(), "==", ({ STD_ITEM })),
+
+        testOb->set_vendor_types(({ STD_ARMOR, STD_WEAPON })),
+        assert(testOb->query_vendor_types(), "==", ({ STD_ARMOR, STD_WEAPON })),
     }) :));
 
-    expect("set_vendor_type handles invalid argument 1", (: ({
-        assert((: testOb->set_vendor_type(this_object()) :), "catch", "*Bad argument 1 to vendor->set_vendor_type\n"),
-        assert((: testOb->set_vendor_type(1) :), "catch", "*Bad argument 1 to vendor->set_vendor_type\n"),
-        assert((: testOb->set_vendor_type(1.0) :), "catch", "*Bad argument 1 to vendor->set_vendor_type\n"),
-        assert((: testOb->set_vendor_type(({})) :), "catch", "*Bad argument 1 to vendor->set_vendor_type\n"),
-        assert((: testOb->set_vendor_type(([])) :), "catch", "*Bad argument 1 to vendor->set_vendor_type\n"),
-        assert((: testOb->set_vendor_type((: 1 :)) :), "catch", "*Bad argument 1 to vendor->set_vendor_type\n"),
+    expect("set_vendor_types handles invalid argument 1", (: ({
+        assert((: testOb->set_vendor_types(this_object()) :), "catch", "*Bad argument 1 to vendor->set_vendor_types\n"),
+        assert((: testOb->set_vendor_types(1) :), "catch", "*Bad argument 1 to vendor->set_vendor_types\n"),
+        assert((: testOb->set_vendor_types(1.0) :), "catch", "*Bad argument 1 to vendor->set_vendor_types\n"),
+        assert((: testOb->set_vendor_types(({})) :), "catch", "*Bad argument 1 to vendor->set_vendor_types\n"),
+        assert((: testOb->set_vendor_types(([])) :), "catch", "*Bad argument 1 to vendor->set_vendor_types\n"),
+        assert((: testOb->set_vendor_types((: 1 :)) :), "catch", "*Bad argument 1 to vendor->set_vendor_types\n"),
     }) :));
 }
 
