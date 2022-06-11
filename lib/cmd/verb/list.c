@@ -4,32 +4,72 @@ inherit STD_VERB;
 
 void create () {
     verb::create();
-    add_rules(({ "", "OBJ", })); // @TODO STR, OBJ STR
+    add_rules(({ "", "STR from OBJ", "from OBJ", "STR", }));
     set_requirements(REQUIREMENT_BUSY | REQUIREMENT_DISABLE);
 }
 
-mixed can_list_obj (mixed args...) {
+/* ----- STR from OBJ ----- */
+
+mixed can_list_str_from_obj (mixed args...) {
     return 1;
 }
-void do_list_obj (mixed args...) {
+void do_list_str_from_obj (mixed args...) {
     object po = previous_object();
-    object vendor, vi;
+    string str;
+    object vendor;
 
-    if (sizeof(args)) {
-        vendor = args[0];
-        vi = vendor->query_vendor_inventory();
+    if (sizeof(args) > 1) {
+        str = args[0];
+        vendor = args[1];
+        vendor->handle_list(str, po);
     } else {
         message("action", "List from which vendor?\n", po);
         return;
     }
+}
 
-    message("action", vendor->query_cap_name() + " has the following items:\n", po);
-    foreach (object ob in vi->query_item_contents()) {
-        message("action", sprintf("  %-30s%s %s", ob->query_short(), format_integer(ob->query_value()), vendor->query_vendor_currency()) + "\n", po);
+/* ----- from OBJ ----- */
+
+mixed can_list_from_obj (mixed args...) {
+    return 1;
+}
+void do_list_from_obj (mixed args...) {
+    object po = previous_object();
+    object vendor;
+
+    if (sizeof(args)) {
+        vendor = args[0];
+        vendor->handle_list(0, po);
+    } else {
+        message("action", "List from which vendor?\n", po);
+        return;
     }
 }
 
-mixed can_list () {
+/* ----- STR ----- */
+
+mixed can_list_str (mixed args...) {
+    return 1;
+}
+void do_list_str (mixed args...) {
+    object po = previous_object();
+    object *vendors;
+    string str;
+
+    if (sizeof(args) && environment(po)) {
+        str = args[0];
+        vendors = filter(environment(po)->query_living_contents(), (: $1->is_vendor() :));
+        if (sizeof(vendors) == 1) {
+            vendors[0]->handle_list(str, po);
+        } else {
+            message("action", "List from which vendor?\n", po);
+        }
+    }
+}
+
+/* ----- no input ----- */
+
+mixed can_list (mixed args...) {
     return 1;
 }
 void do_list (mixed args...) {
@@ -39,7 +79,7 @@ void do_list (mixed args...) {
     if (environment(po)) {
         vendors = filter(environment(po)->query_living_contents(), (: $1->is_vendor() :));
         if (sizeof(vendors) == 1) {
-            do_list_obj(vendors[0]);
+            vendors[0]->handle_list(0, po);
         } else {
             message("action", "List from which vendor?\n", po);
         }

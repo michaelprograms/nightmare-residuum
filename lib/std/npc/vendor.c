@@ -37,6 +37,37 @@ int handle_remove () {
     return ::handle_remove();
 }
 
+/* ----- list ----- */
+
+void handle_list (string str, object po) {
+    object *items = ({ });
+
+    if (str) {
+        items = filter(__VendorInventory->query_item_contents(), (: $1 && (strsrch($1->query_name(), $(str)) > -1 || $1->query_type() == $(str)) :));
+    } else {
+        items = __VendorInventory->query_item_contents();
+    }
+
+    if (!sizeof(items)) {
+        if (str) {
+            do_command("say I don't have any '" + str + "' items.");
+        } else {
+            do_command("say I don't have any items for sale right now, " + po->query_cap_name() + ".");
+        }
+        return;
+    }
+
+    if (str) {
+        do_command("say I have the following '" + str + "' items.");
+    } else {
+        do_command("say I have the following items, " + po->query_cap_name() + ".");
+    }
+    foreach (object ob in items) {
+        message("action", sprintf("  %-30s%s %s", ob->query_short(), format_integer(ob->query_value()), query_vendor_currency()) + "\n", po);
+    }
+
+}
+
 /* ----- buy ----- */
 
 void handle_buy (string str, object po) {
@@ -85,6 +116,14 @@ mixed direct_list_from_obj (mixed args...) {
     object ob;
     if (sizeof(args)) {
         ob = args[0];
+        return environment(ob) == environment(po);
+    } else return 0;
+}
+mixed direct_list_str_from_obj (mixed args...) {
+    object po = previous_object();
+    object ob;
+    if (sizeof(args) > 1) {
+        ob = args[1];
         return environment(ob) == environment(po);
     } else return 0;
 }
