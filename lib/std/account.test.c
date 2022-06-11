@@ -13,8 +13,6 @@ void after_each_test () {
     }
 }
 
-string *test_ignore () { return ::test_ignore() + ({ "query_key_name", "query_species", "query_level", "query_last_action", "query_environment_short", }); }
-
 nosave private string __KeyName = "accounttest";
 string query_key_name () { return __KeyName; }
 string query_species () { return "human"; }

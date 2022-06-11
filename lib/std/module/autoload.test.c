@@ -7,9 +7,6 @@ void before_each_test () {
 void after_each_test () {
     if (objectp(testOb)) destruct(testOb);
 }
-string *test_ignore () {
-    return ::test_ignore() + ({ "query_level", });
-}
 
 nosave private int __MockLevel;
 int query_level () { return __MockLevel; }

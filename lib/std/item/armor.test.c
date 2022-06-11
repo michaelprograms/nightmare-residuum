@@ -11,9 +11,6 @@ void after_each_test () {
 string *test_order () {
     return ({ "test_is_armor", "test_type", "test_limbs", "test_worn", "test_ac", "test_item_verb_wear_applies", });
 }
-string *test_ignore () {
-    return ::test_ignore() + ({ "query_can_wear_armor", "query_all_armor" });
-}
 
 int query_can_wear_armor (object ob) {
     return 1;

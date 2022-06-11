@@ -8,9 +8,6 @@ void before_each_test () {
 void after_each_test () {
     if (objectp(testOb)) destruct(testOb);
 }
-string *test_ignore () {
-    return ::test_ignore() + ({ "query_level", "is_living" });
-}
 string *test_order () {
     return ({ "test_experience", "test_add_victory", "test_add_defeat", "test_handle_victory", });
 }

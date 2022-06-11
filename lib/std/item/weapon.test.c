@@ -11,9 +11,6 @@ void after_each_test () {
 string *test_order () {
     return ({ "test_is_weapon", "test_type", "test_wielded", "test_item_verb_wield_applies", });
 }
-string *test_ignore () {
-    return ::test_ignore() + ({ "query_wieldable_limbs", "query_wielded_weapons" });
-}
 
 nosave private string *__WieldableLimbs;
 string *query_wieldable_limbs () {

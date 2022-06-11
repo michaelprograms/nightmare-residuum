@@ -11,8 +11,6 @@ void after_each_test () {
     if (objectp(testOb)) destruct(testOb);
 }
 
-string *test_ignore () { return ::test_ignore() + ({ "query_character", "query_shell" }); }
-
 // -----------------------------------------------------------------------------
 
 object __MockCharacter;

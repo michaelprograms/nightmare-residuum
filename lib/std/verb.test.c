@@ -10,8 +10,6 @@ void after_each_test () {
     if (objectp(testOb)) destruct(testOb);
 }
 
-string *test_ignore () { return ::test_ignore() + ({ "query_character", }); }
-
 object __MockCharacter;
 object query_character () {
     return __MockCharacter;

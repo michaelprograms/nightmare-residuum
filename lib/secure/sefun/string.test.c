@@ -8,8 +8,6 @@ void after_each_test () {
     if (objectp(testOb)) destruct(testOb);
 }
 
-string *test_ignore () { return ::test_ignore() + ({ "query_account" }); }
-
 nosave private object __MockAccount;
 object query_account () {
     return __MockAccount;
