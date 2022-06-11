@@ -91,7 +91,7 @@ void handle_buy (string str, object po) {
     message("action", "You buy " + item->query_short() + " for " + value + " " + __VendorCurrency + ".\n", po);
     message("action", po->query_cap_name() + " buys " + item->query_short() + ".\n", environment(po), po);
 
-    po->add_currency(__VendorCurrency, -item->query_value());
+    po->add_currency(__VendorCurrency, -value);
     if (!item->handle_move(po)) {
         message("action", "You cannot hold " + item->query_short() + " and it falls from your grasp.\n", po);
         message("action", po->query_cap_name() + " cannot hold " + item->query_short() + " and it falls from " + possessive(po) + " grasp.\n", environment(po), po);
@@ -116,7 +116,7 @@ void handle_sell (object item, object po) {
         do_command("say My shop is full, I can't buy any more items.");
         return;
     }
-    po->add_currency(__VendorCurrency, item->query_value());
+    po->add_currency(__VendorCurrency, value);
     message("action", "You sell " + item->query_short() + " for " + value + " " + __VendorCurrency + ".\n", po);
     message("action", po->query_cap_name() + " sells " + item->query_short() + ".\n", environment(po), po);
 }
@@ -149,7 +149,6 @@ mixed direct_list_str_from_obj (mixed args...) {
         return environment(ob) == environment(po);
     } else return 0;
 }
-
 mixed direct_buy_str_from_obj (mixed args...) {
     object po = previous_object();
     object ob;

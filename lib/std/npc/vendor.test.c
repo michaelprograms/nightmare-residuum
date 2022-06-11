@@ -126,12 +126,25 @@ void test_apply_list_verb () {
     object room;
 
     expect_function("direct_list_from_obj", testOb);
+    expect_function("direct_list_str_from_obj", testOb);
 
     room = new(STD_ROOM);
 
     this_object()->handle_move("/domain/Nowhere/room/void.c");
 
     expect("direct_list_from_obj returns true when same environment", (: ({
+        // true with same environment
+        assert(testOb->handle_move("/domain/Nowhere/room/void.c"), "==", 1),
+        assert(this_object()->query_environment_path(), "==", "/domain/Nowhere/room/void.c"),
+        assert(testOb->direct_list_from_obj(testOb), "==", 1),
+        // false with no object sent
+        assert(testOb->direct_list_from_obj(), "==", 0),
+        // false with different environments
+        assert(testOb->handle_move($(room)), "==", 1),
+        assert(testOb->direct_list_from_obj(testOb), "==", 0),
+    }) :));
+
+    expect("direct_list_str_from_obj returns true when same environment", (: ({
         // true with same environment
         assert(testOb->handle_move("/domain/Nowhere/room/void.c"), "==", 1),
         assert(this_object()->query_environment_path(), "==", "/domain/Nowhere/room/void.c"),
