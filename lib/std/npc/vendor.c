@@ -99,6 +99,28 @@ void handle_buy (string str, object po) {
     }
 }
 
+/* ----- sell ----- */
+
+void handle_sell (object item, object po) {
+    int value;
+
+    if (!item) {
+        do_command("say You don't have an item to sell.");
+        return;
+    }
+
+    // @TODO bargaining adjustment
+    value = item->query_value();
+
+    if (!item->handle_move(__VendorInventory)) {
+        do_command("say My shop is full, I can't buy any more items.");
+        return;
+    }
+    po->add_currency(__VendorCurrency, item->query_value());
+    message("action", "You sell " + item->query_short() + " for " + value + " " + __VendorCurrency + ".\n", po);
+    message("action", po->query_cap_name() + " sells " + item->query_short() + ".\n", environment(po), po);
+}
+
 /* ----- object applies ----- */
 
 void create () {

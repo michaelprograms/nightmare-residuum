@@ -167,6 +167,9 @@ void test_verb_put_obj_in_obj_applies () {
     expect_function("direct_put_obj_in_obj", testOb);
 
     expect("item handles verb apply direct_put_obj_in_obj", (: ({
+        // fails without input
+        assert(testOb->direct_put_obj_in_obj(), "==", 0),
+
         // fails without env
         assert(environment(testOb), "==", 0),
         assert(testOb->direct_put_obj_in_obj(testOb), "==", "You can't put what you don't have."),
@@ -175,5 +178,23 @@ void test_verb_put_obj_in_obj_applies () {
         assert(environment(), "==", find_object("/domain/Nowhere/room/void.c")),
         assert(testOb->handle_move(this_object()), "==", 1),
         assert(testOb->direct_put_obj_in_obj(testOb), "==", 1),
+    }) :));
+}
+
+void test_verb_sell_obj_applies () {
+    expect_function("direct_sell_obj", testOb);
+
+    expect("item handles verb apply direct_sell_obj", (: ({
+        // fails without input
+        assert(testOb->direct_sell_obj(), "==", 0),
+
+        // fails without env
+        assert(environment(testOb), "==", 0),
+        assert(testOb->direct_sell_obj(testOb), "==", "You can't sell what you don't have."),
+
+        // passes with env
+        assert(environment(), "==", find_object("/domain/Nowhere/room/void.c")),
+        assert(testOb->handle_move(this_object()), "==", 1),
+        assert(testOb->direct_sell_obj(testOb), "==", 1),
     }) :));
 }
