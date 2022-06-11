@@ -10,7 +10,7 @@ void create () {
     set_short("a small store");
     set_long("The inside of a brick building that consists of a small room. There are two small glass windows on the south facing wall with a door to the side. There are several shelves of items. Behind a counter are several small shelves of items.");
     set_exits(([
-        "out north": HUMAN_ROOM + "market_st_e1.c",
+        "out south": HUMAN_ROOM + "market_st_e1.c",
     ]));
     set_looks(([
         "shelves": "Shelves containing some items for sale.",
