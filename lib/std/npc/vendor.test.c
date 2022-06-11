@@ -122,16 +122,50 @@ void test_vendor_type () {
     }) :));
 }
 
-void test_apply_list_obj () {
-    expect_function("direct_list_obj", testOb);
+void test_apply_list_verb () {
+    object room;
 
-    expect("direct_list_obj returns true when same environment", (: ({
-        // true with same environment (no env)
-        assert(testOb->direct_list_obj(testOb), "==", 1),
-        // false with different environments (one env)
-        assert(this_object()->handle_move("/domain/Nowhere/room/void.c"), "==", 1),
-        assert(testOb->direct_list_obj(testOb), "==", 0),
+    expect_function("direct_list_from_obj", testOb);
+
+    room = new(STD_ROOM);
+
+    this_object()->handle_move("/domain/Nowhere/room/void.c");
+
+    expect("direct_list_from_obj returns true when same environment", (: ({
+        // true with same environment
+        assert(testOb->handle_move("/domain/Nowhere/room/void.c"), "==", 1),
+        assert(this_object()->query_environment_path(), "==", "/domain/Nowhere/room/void.c"),
+        assert(testOb->direct_list_from_obj(testOb), "==", 1),
         // false with no object sent
-        assert(testOb->direct_list_obj(), "==", 0),
+        assert(testOb->direct_list_from_obj(), "==", 0),
+        // false with different environments
+        assert(testOb->handle_move($(room)), "==", 1),
+        assert(testOb->direct_list_from_obj(testOb), "==", 0),
     }) :));
+
+    room->handle_remove();
+}
+
+void test_apply_buy_verb () {
+    object room;
+
+    expect_function("direct_buy_str_from_obj", testOb);
+
+    room = new(STD_ROOM);
+
+    this_object()->handle_move("/domain/Nowhere/room/void.c");
+    expect("direct_buy_str_from_obj returns true when same environment", (: ({
+        // true with same environment
+        assert(testOb->handle_move("/domain/Nowhere/room/void.c"), "==", 1),
+        assert(this_object()->query_environment_path(), "==", "/domain/Nowhere/room/void.c"),
+        assert(testOb->direct_buy_str_from_obj("", testOb), "==", 1),
+        // false with no object sent
+        assert(testOb->direct_buy_str_from_obj(""), "==", 0),
+        assert(testOb->direct_buy_str_from_obj(), "==", 0),
+        // false with different environments
+        assert(testOb->handle_move($(room)), "==", 1),
+        assert(testOb->direct_buy_str_from_obj("", testOb), "==", 0),
+    }) :));
+
+    room->handle_remove();
 }

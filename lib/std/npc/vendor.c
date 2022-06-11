@@ -80,7 +80,7 @@ void create () {
 
 /* ----- parser applies ----- */
 
-mixed direct_list_obj (mixed args...) {
+mixed direct_list_from_obj (mixed args...) {
     object po = previous_object();
     object ob;
     if (sizeof(args)) {
