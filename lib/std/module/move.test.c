@@ -50,8 +50,12 @@ void test_move () {
     }) :));
 
     expect("handle_move calls release and receive hooks", (: ({
-        assert(canReceiveCount, "==", 0),
-        assert(handleReceiveCount, "==", 0),
+        // reset counts
+        canReceiveCount = 0,
+        handleReceiveCount = 0,
+        canReleaseCount = 0,
+        handleReleaseCount = 0,
+
         assert(testOb->handle_move(this_object()), "==", 1),
         // handle_received called handle_receive
         assert(canReceiveCount, "==", 1),
