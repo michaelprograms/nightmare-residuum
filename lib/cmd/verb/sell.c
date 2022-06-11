@@ -40,7 +40,7 @@ void do_sell_obj (mixed args...) {
     if (environment(po) && sizeof(args)) {
         vendors = filter(environment(po)->query_living_contents(), (: $1->is_vendor() :));
         if (sizeof(vendors) == 1) {
-            do_sell_obj_to_obj(args[0], vendors[0]); // , args[0], vendors[0]->query_name());
+            do_sell_obj_to_obj(args[0], vendors[0]);
         } else {
             message("action", "Sell what to which vendor?\n", po);
         }
