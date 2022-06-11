@@ -19,6 +19,9 @@ int inventory_accessible () {
     return 1;
 }
 
+object *query_contents () {
+    return all_inventory();
+}
 object *query_living_contents () {
     return filter(all_inventory(), (: $1->is_living() :));
 }

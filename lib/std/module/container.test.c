@@ -43,6 +43,7 @@ void test_query_contents () {
 
     expect_function("query_living_contents", testOb);
     expect_function("query_item_contents", testOb);
+    expect_function("query_contents", testOb);
 
     // create test items
     living = new(STD_LIVING);
@@ -52,12 +53,14 @@ void test_query_contents () {
         // verify empty
         assert(sizeof(testOb->query_living_contents()), "==", 0),
         assert(sizeof(testOb->query_item_contents()), "==", 0),
+        assert(sizeof(testOb->query_contents()), "==", 0),
         // move test items
         assert($(living)->handle_move(testOb), "==", 1),
         assert($(item)->handle_move(testOb), "==", 1),
         // verify contents
         assert(sizeof(testOb->query_living_contents()), "==", 1),
         assert(sizeof(testOb->query_item_contents()), "==", 1),
+        assert(sizeof(testOb->query_contents()), "==", 2),
     }) :));
 
     if (living) destruct(living);
