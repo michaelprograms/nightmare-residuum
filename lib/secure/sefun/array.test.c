@@ -14,8 +14,10 @@ void test_distinct_array () {
     expect("distinct_array handles inputs", (: ({
         assert(testOb->distinct_array(({ 1, 2, 2, 3, 2, 1, 3, 2, 1 })), "==", ({ 3, 2, 1 })),
         assert(testOb->distinct_array(({ 1, 4, 4, 3, 4, 1, 3, 2, 1 })), "==", ({ 4, 3, 2, 1 })),
-        assert(testOb->distinct_array(({})), "==", ({})),
-        assert(testOb->distinct_array(0), "==", ({})),
-        assert(testOb->distinct_array(), "==", ({})),
+    }) :));
+    expect("distinct_array handles bad argument 1", (: ({
+        assert((: testOb->distinct_array(({})) :), "catch", "*Bad argument 1 to array->distinct_array\n"),
+        assert((: testOb->distinct_array(0) :), "catch", "*Bad argument 1 to array->distinct_array\n"),
+        assert((: testOb->distinct_array() :), "catch", "*Bad argument 1 to array->distinct_array\n"),
     }) :));
 }
