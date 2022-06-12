@@ -19,8 +19,8 @@ int query_immortal ();
 
 int is_character () { return 1; }
 
-void save_character () {
-    update_autoload();
+varargs void save_character (int exit) {
+    update_autoload(exit);
     save_data();
     reset_autoload();
 }
@@ -145,7 +145,7 @@ void exit_world () {
     message("system", query_cap_name() + " suddenly fades from existence.\n", environment(), this_object());
     D_CHANNEL->send_system("connection", query_cap_name() + " exits " + mud_name() + ".");
 
-    save_character();
+    save_character(1);
     handle_remove();
     master()->handle_parse_refresh();
 }

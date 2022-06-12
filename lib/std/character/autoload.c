@@ -10,7 +10,7 @@ mixed *query_autoload_items () {
     return __Autoload;
 }
 
-void update_autoload () {
+varargs void update_autoload (int exit) {
     object *inv = all_inventory(this_object());
     int i, l = sizeof(inv);
     mixed *data;
@@ -19,7 +19,9 @@ void update_autoload () {
     for (i = 0; i < l; i ++) {
         if (data = inv[i]->query_autoload(this_object())) {
             __Autoload += ({ data });
-            inv[i]->handle_remove();
+            if (exit) {
+                inv[i]->handle_remove();
+            }
         }
     }
 }
