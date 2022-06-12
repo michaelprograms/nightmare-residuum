@@ -18,12 +18,21 @@ void test_autoload () {
     expect_function("restore_autoload", testOb);
 
     expect("set_autoload should set requirements", (: ({
-        __MockLevel = 0,
-        assert(arrayp(testOb->query_autoload(this_object())), "==", 1),
-        testOb->set_autoload(1),
+        // items don't autoload by default
         assert(arrayp(testOb->query_autoload(this_object())), "==", 0),
+        // set autoload to level 1 and our level to 0
+        // set our level to 1
+        testOb->set_autoload(1),
+        __MockLevel = 0,
+        // item doesn't autoload still
+        assert(arrayp(testOb->query_autoload(this_object())), "==", 0),
+        // set our level to 1
         __MockLevel = 1,
         assert(arrayp(testOb->query_autoload(this_object())), "==", 1),
+        // set autoload to level 10 and our level to 5
+        testOb->set_autoload(10),
+        __MockLevel = 5,
+        assert(arrayp(testOb->query_autoload(this_object())), "==", 0),
     }) :));
 
     expect("query_autoload_data should return an array", (: ({

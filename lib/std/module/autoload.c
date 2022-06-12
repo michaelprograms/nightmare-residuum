@@ -11,7 +11,7 @@ mixed *query_autoload_data () {
 }
 
 mixed *query_autoload (object character) {
-    if (character && character->query_level() >= __LevelReq) {
+    if (character && character->query_level() >= __LevelReq && __LevelReq > 0) {
         return ({ base_name(this_object()), query_autoload_data()... });
     } else {
         return 0;
