@@ -24,14 +24,20 @@ nosave private mapping __AbnormalOverride = ([
     "gloves": "gloves",
     "leggings": "leggings",
     "robes": "robes",
+    "shoes": "shoes",
 ]);
 string pluralize (mixed single) {
-    string str;
+    string str, last;
+
     if (objectp(single)) str = single->query_name();
     else str = single;
     if (!stringp(str)) error("Bad argument 1 to grammar->pluralize");
 
     if (__AbnormalOverride[str]) return __AbnormalOverride[str];
+    last = explode(str, " ")[<1];
+    if (__AbnormalOverride[last]) {
+        return str[0..<(sizeof(last)+1)] + __AbnormalOverride[last];
+    }
 
     if (str[<3..<1] == "uns") return str;
     if (str[<5..<1] == "staff") return str[0..<3] + "ves";

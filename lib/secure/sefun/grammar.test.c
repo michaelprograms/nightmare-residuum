@@ -96,11 +96,17 @@ void test_pluralize () {
     destruct(ob);
 
     expect("pluralize handles some abnormal overridden strings", (: ({
+        // handle entire string is abnormal override
         assert(testOb->pluralize("die"), "==", "dies"),
         assert(testOb->pluralize("were"), "==", "was"),
         assert(testOb->pluralize("boots"), "==", "boots"),
         assert(testOb->pluralize("robes"), "==", "robes"),
         assert(testOb->pluralize("gloves"), "==", "gloves"),
+        assert(testOb->pluralize("shoes"), "==", "shoes"),
+
+        // handle only last word is override string
+        assert(testOb->pluralize("blue robes"), "==", "blue robes"),
+        assert(testOb->pluralize("canvas shoes"), "==", "canvas shoes"),
     }) :));
 
     expect("pluralize handles invalid argument 1", (: ({
