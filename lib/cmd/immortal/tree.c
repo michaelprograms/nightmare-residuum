@@ -48,7 +48,7 @@ void command (string input, mapping flags) {
 }
 
 varargs string *tree (string file, int indent, string fn, mapping b, int index, int maxIndex) {
-    string *result = ({ }), tmp = "", *inherits;
+    string *result = ({ }), tmp = "", *inherits, err;
     object ob;
     int l, searchFlag = 0;
 
@@ -58,8 +58,8 @@ varargs string *tree (string file, int indent, string fn, mapping b, int index, 
 
     ob = find_object(file);
     if (!ob) {
-        tmp = catch (ob = load_object(file));
-        if (tmp) return ({ "tree: unable to load " + file + ": " + tmp });
+        err = catch (ob = load_object(file));
+        if (err) return ({ "tree: unable to load " + file + ": " + err });
     }
     if (!ob) result += ({ "tree: " + file + " not found." });
 
