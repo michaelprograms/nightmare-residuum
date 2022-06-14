@@ -396,8 +396,6 @@ void assert (mixed left, string condition, mixed right) {
         } else {
             currentTestPassed = 0;
         }
-    } else {
-        return;
     }
 
     if (currentTestPassed || failingExpects == -1) {
