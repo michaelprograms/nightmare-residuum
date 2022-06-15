@@ -43,6 +43,7 @@ nomask void net_dead () {
     if (query_shell()) {
         destruct(query_shell());
     }
+    destruct();
 }
 
 void receive_message (string type, string message) {
