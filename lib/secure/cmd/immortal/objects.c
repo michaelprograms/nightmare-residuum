@@ -20,14 +20,14 @@ void command (string input, mapping flags) {
             if (!arrayp(structure[file_name(parent)])) {
                 structure[file_name(parent)] = ({});
             }
-            structure[file_name(parent)] += ({ file_name(ob) });
+            structure[file_name(parent)] += ({ (ob->query_key_name() ? ob->query_key_name()+" " : "") + file_name(ob) });
         } else {
             object env;
             if (env = environment(ob)) {
                 if (!arrayp(structure[file_name(env)])) {
                     structure[file_name(env)] = ({});
                 }
-                structure[file_name(env)] += ({ file_name(ob) });
+                structure[file_name(env)] += ({ (ob->query_key_name() ? ob->query_key_name()+" " : "") + file_name(ob) });
             } else {
                 if (!arrayp(structure[file_name(ob)])) {
                     structure[file_name(ob)] = ({});
