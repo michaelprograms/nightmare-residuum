@@ -11,6 +11,10 @@ void create () {
     object::create();
     reset::create();
     reset();
+
+    if (this_object()) {
+        D_ASTRONOMY->handle_room_create (this_object());
+    }
 }
 
 void reset () {

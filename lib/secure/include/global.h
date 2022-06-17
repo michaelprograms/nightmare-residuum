@@ -4,6 +4,7 @@
 // std
 #define STD_ABILITY     "/std/ability.c"
 #define STD_ACCOUNT     "/std/account.c"
+#define STD_ASTRONOMY   "/std/astronomy.c"
 #define STD_CHARACTER   "/std/character.c"
 #define STD_ITEM        "/std/item.c"
 #define STD_LIVING      "/std/living.c"
@@ -46,6 +47,7 @@
 
 // daemons
 #define D_ANSI          "/daemon/ansi.c"
+#define D_ASTRONOMY     "/daemon/astronomy.c"
 #define D_CHANNEL       "/daemon/channel.c"
 #define D_EXPERIENCE    "/daemon/experience.c"
 #define D_LOG           "/daemon/log.c"
