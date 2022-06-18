@@ -128,11 +128,11 @@ void test_almanac () {
     expect("handles dawn and dusk throughout year", (: ({
         assert(testOb->query_calculate_almanac(__Time+(DAY*0)), "==", ([ "dawn": ({ 4, 0 }), "day": ({ 5, 0 }), "dusk": ({ 16, 0 }), "night": ({ 17, 0 }), "equinox": "spring" ])),
         assert(testOb->query_calculate_almanac(__Time+(DAY*25)), "==", ([ "dawn": ({ 4, 30 }), "day": ({ 5, 30 }), "dusk": ({ 15, 30 }), "night": ({ 16, 30 }) ])),
-        assert(testOb->query_calculate_almanac(__Time+(DAY*50)), "==", ([ "dawn": ({ 5, 0 }), "day": ({ 6, 0 }), "dusk": ({ 15, 0 }), "night": ({ 16, 0 }) ])),
+        assert(testOb->query_calculate_almanac(__Time+(DAY*50)), "==", ([ "dawn": ({ 5, 0 }), "day": ({ 6, 0 }), "dusk": ({ 15, 0 }), "night": ({ 16, 0 }), "solstice": "summer" ])),
         assert(testOb->query_calculate_almanac(__Time+(DAY*75)), "==", ([ "dawn": ({ 5, 30 }), "day": ({ 6, 30 }), "dusk": ({ 14, 30 }), "night": ({ 15, 30 }) ])),
-        assert(testOb->query_calculate_almanac(__Time+(DAY*100)), "==", ([ "dawn": ({ 6, 0 }), "day": ({ 7, 0 }), "dusk": ({ 14, 0 }), "night": ({ 15, 0 }), "equinox": "winter" ])),
+        assert(testOb->query_calculate_almanac(__Time+(DAY*100)), "==", ([ "dawn": ({ 6, 0 }), "day": ({ 7, 0 }), "dusk": ({ 14, 0 }), "night": ({ 15, 0 }), "equinox": "fall" ])),
         assert(testOb->query_calculate_almanac(__Time+(DAY*125)), "==", ([ "dawn": ({ 5, 30 }), "day": ({ 6, 30 }), "dusk": ({ 14, 30 }), "night": ({ 15, 30 }) ])),
-        assert(testOb->query_calculate_almanac(__Time+(DAY*150)), "==", ([ "dawn": ({ 5, 0 }), "day": ({ 6, 0 }), "dusk": ({ 15, 0 }), "night": ({ 16, 0 }) ])),
+        assert(testOb->query_calculate_almanac(__Time+(DAY*150)), "==", ([ "dawn": ({ 5, 0 }), "day": ({ 6, 0 }), "dusk": ({ 15, 0 }), "night": ({ 16, 0 }), "solstice": "winter" ])),
         assert(testOb->query_calculate_almanac(__Time+(DAY*175)), "==", ([ "dawn": ({ 4, 30 }), "day": ({ 5, 30 }), "dusk": ({ 15, 30 }), "night": ({ 16, 30 }) ])),
         assert(testOb->query_calculate_almanac(__Time+(DAY*200)), "==", ([ "dawn": ({ 4, 0 }), "day": ({ 5, 0 }), "dusk": ({ 16, 0 }), "night": ({ 17, 0 }), "equinox": "spring" ])),
     }) :));

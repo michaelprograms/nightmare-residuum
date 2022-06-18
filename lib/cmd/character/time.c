@@ -1,15 +1,32 @@
 void command (string input, mapping flags) {
     string *border;
+    string localtime, localdate;
+
+    localtime = D_ASTRONOMY->query_localtime(environment(this_character()));
+    localdate = D_ASTRONOMY->query_localdate(environment(this_character()));
 
     border = format_border(([
         "title": "TIME",
-        "body": ([
+        "header": ([
             "items": ({
-                sprintf("%-18s", "Servertime:") + " " + ctime(time()),
-                sprintf("%-18s", "Uptime:") + " " + time_from_seconds(uptime())
+                "Servertime",
+                "Uptime",
+                ctime(time()),
+                time_from_seconds(uptime()),
             }),
-            "columns": 1,
+            "columns": 2,
+            "align": "center",
         ]),
+        "body": ({
+            ([
+                "items": ({
+                    sprintf("%-12s %s", "Localtime:", localtime),
+                    sprintf("%-12s %s", "Localdate:", localdate),
+                }),
+                "columns": 2,
+                "align": "center",
+            ]),
+        }),
     ]));
     foreach (string line in border) {
         message("system", line + "\n", this_character());

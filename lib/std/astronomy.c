@@ -42,8 +42,23 @@ int query_year (int t) { return NOW(t) / YEAR; }
 
 /* -----  ----- */
 
+nosave private mapping __Almanac;
+nosave private string __DayPhase;
+nosave private int __NextPhase;
+
+mapping query_almanac () { return __Almanac; }
+
+int query_next_phase () { return __NextPhase; }
+void set_next_phase (int t) { __NextPhase = t; }
+
+string query_day_phase () { return __DayPhase; }
+string set_day_phase (string phase) {
+    __DayPhase = phase;
+    return __DayPhase;
+}
+
 int query_day_of_year (int t) {
-    // returns 0..199 (0..9 * 20 == 0..180) + (0..3 * 5  == 0..15) + (0..4)
+    // [0..199] == (0..9 * 20 == 0..180) + (0..3 * 5  == 0..15) + (0..4)
     return (query_month(t) * 20) + query_week(t) * 5 + query_day(t);
 }
 
@@ -80,8 +95,10 @@ mapping query_calculate_almanac (int t) {
     mapping almanac = ([ ]);
     int days = query_day_of_year(t);
 
-    if (days == query_longest_day()) almanac["equinox"] = "winter";
+    if (days == query_longest_day()) almanac["equinox"] = "fall";
     else if (days == query_shortest_day()) almanac["equinox"] = "spring";
+    else if (days == query_longest_day() / 2) almanac["solstice"] = "summer";
+    else if (days == query_longest_day() / 2 * 3) almanac["solstice"] = "winter";
 
     days = (days >= LONGEST_DAY ? (-1 * days + TOTAL_DAYS) : days);
 
@@ -102,6 +119,14 @@ varargs string query_time_of_day (int t) {
     minute = sprintf("%2'0's", "" + query_minute(t))[0..1];
     return hour + ":" + minute;
 }
+varargs string query_datetime_of_year (int t) {
+    string day, month, year;
+    if (undefinedp(t)) t = time();
+    day = "" + (query_week(t)*(WEEK/DAY) + query_day(t));
+    month = "" + (query_month(t) + 1);
+    year = "" + query_year(t);
+    return day + " of Month" + month + " " + query_year(t);
+}
 
 // string query_full_time (int t) {
 //     string year = "" + query_year(t);
@@ -116,63 +141,15 @@ varargs string query_time_of_day (int t) {
 //     return hour + ":" + minute + ":" + second + " of day " + day + ", of week " + week + ", month " + month + " year " + year;
 // }
 
-nosave private mapping __Almanac;
-nosave private string __DayPhase;
-nosave private int __NextPhase;
-
-void handle_time (int t) {
-    int now, next, total;
-    string nextPhase;
-
-    if (__NextPhase) {
-        if (t >= __NextPhase) {
-            string path = split_path(base_name())[0];
-
-            object *characters = filter(characters(), (: regexp($1->query_environment_path(), "^"+$(path)) :));
-            if (__DayPhase == "night") {
-                __DayPhase = "dawn";
-                message("astronomy", "%^ORANGE%^The sun appears over the horizon of our reality.%^RESET%^\n", characters);
-            } else if (__DayPhase == "dawn") {
-                __DayPhase = "day";
-                message("astronomy", "%^YELLOW%^The sun now shines completely on a new day.%^RESET%^\n", characters);
-            } else if (__DayPhase == "day") {
-                __DayPhase = "dusk";
-                message("astronomy", "%^BOLD%^CYAN%^The sun begins to fall away into twilight.%^RESET%^\n", characters);
-            } else if (__DayPhase == "dusk") {
-                __DayPhase = "night";
-                message("astronomy", "%^BOLD%^BLUE%^Night darkens the whole of our reality.%^RESET%^\n", characters);
-            }
-        } else {
-            message("debug", "next astronomy change in " + (__NextPhase - t)+"\n", find_character("diavolo"));
-            return;
-        }
-    }
-
-    if (__DayPhase == "night") nextPhase = "dawn";
-    if (__DayPhase == "dawn") nextPhase = "day";
-    if (__DayPhase == "day") nextPhase = "dusk";
-    if (__DayPhase == "dusk") nextPhase = "night";
-
-    now = query_hour(t) * 60 + query_minute(t);
-    next = __Almanac[nextPhase][0] * 60 + __Almanac[nextPhase][1];
-
-    if (next > now) {
-        total = (next - now) * 20;
-    } else {
-        total = (next + (1200 - now)) * 20;
-    }
-    __NextPhase = t + total;
+void update_almanac (int t) {
+    __Almanac = query_calculate_almanac(t);
 }
 
-mapping query_almanac () {
-    return __Almanac;
-}
-void update_almanac () {
+void update_day_phase () {
     int t = time(), h = query_hour(t), m = query_minute(t);
     int dawnH, dawnM, dayH, dayM;
     int duskH, duskM, nightH, nightM;
 
-    __Almanac = query_calculate_almanac(t);
     dawnH = __Almanac["dawn"][0];
     dawnM = __Almanac["dawn"][1];
     dayH = __Almanac["day"][0];
@@ -182,24 +159,21 @@ void update_almanac () {
     nightH = __Almanac["night"][0];
     nightM = __Almanac["night"][1];
 
-    if ((h <= dawnH && m < dawnM) || (h >= nightH && m >= nightM)) {
+    if ((h < dawnH) || (h == dawnH && m < dawnM) || (h >= nightH && m >= nightM)) {
         __DayPhase = "night";
-    } else if (h <= dayH && m < dayM) {
+    } else if ((h < dayH) || (h == dayH && m < dayM)) {
         __DayPhase = "dawn";
-    } else if (h <= duskH && m < duskM) {
+    } else if ((h < duskH) || (h == duskH && m < duskM)) {
         __DayPhase = "day";
-    } else if (h <= nightH && m < nightM) {
+    } else if ((h < nightH) || (h == nightH && m < nightM)) {
         __DayPhase = "dusk";
     }
 }
 
-string query_day_phase() {
-    return __DayPhase;
-}
-
 void create () {
     if (clonep()) {
-        update_almanac();
-        set_no_clean(clean_never());
+        update_almanac(time());
+        update_day_phase();
+        set_no_clean(1);
     }
 }
