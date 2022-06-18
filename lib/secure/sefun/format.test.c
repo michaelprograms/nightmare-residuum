@@ -59,6 +59,20 @@ void test_format_page () {
         assert(strlen(testOb->format_page(({ "111111111111111111111111111111", "2", "3", "4", }), 4, 0)), "==", 80), // 30 + 25 * 3 = 85
     }) :));
 
+    __MockAccount->set_setting("width", 20);
+    expect("format_page left aligns strings", (: ({
+        assert(testOb->format_page(({ "1", "2", "3", "4" }), 4, 0), "==", "1    2    3    4    "),
+        assert(testOb->format_page(({ "1", "2", "3", "4" }), 4, 0, 0), "==", "1    2    3    4    "),
+        assert(testOb->format_page(({ "1" }), 1, 0, 0), "==", "1                   "),
+        assert(testOb->format_page(({ "1", "2" }), 1, 0, 0), "==", "1                   \n2                   "),
+    }) :));
+    expect("format_page center aligns strings", (: ({
+        assert(testOb->format_page(({ "1", "2", "3", "4" }), 4, 0, 1), "==", "  1    2    3    4  "),
+        assert(testOb->format_page(({ "1", "2", "3", "4" }), 4, 0, 1), "==", "  1    2    3    4  "),
+        assert(testOb->format_page(({ "1" }), 1, 0, 1), "==", "          1         "),
+        assert(testOb->format_page(({ "1", "2" }), 1, 0, 1), "==", "          1         \n          2         "),
+    }) :));
+
     expect("format_page handled invalid argument 1", (: ({
         assert((: testOb->format_page() :), "catch", "*Bad argument 1 to format->format_page\n"),
         assert((: testOb->format_page(0) :), "catch", "*Bad argument 1 to format->format_page\n"),

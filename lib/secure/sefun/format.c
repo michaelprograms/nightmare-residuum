@@ -8,7 +8,7 @@ private string query_account_setting (string setting) {
     return account->query_setting(setting);
 }
 
-varargs string format_page (string *items, int columns, int pad) {
+varargs string format_page (string *items, int columns, int pad, int center) {
     int width, w, i, j, n, r;
     string *rows = ({});
 
@@ -16,20 +16,25 @@ varargs string format_page (string *items, int columns, int pad) {
 
     if (!columns) columns = 2;
     width = to_int(query_account_setting("width")) - pad * 2;
-    w = width / columns;
-    n = sizeof(items);
-    r = width - (w * columns);
+    w = width / columns; // width of column
+    n = sizeof(items); // number of columns
+    r = width - (w * columns); // remainder
 
     for (i = 0; i < n; i += columns) {
         string row = "";
         for (j = 0; j < columns; j ++) {
             string tmp;
-            if (i + j >= n) { // ran out of columns to fill row
+            if (i + j >= n) { // ran out of columns to fill final row
                 row += sprintf("%' '"+sprintf("%d", w*(columns-j))+"s", " ");
                 break;
             }
-            if (strlen(tmp = items[i + j]) > w) tmp = items[i + j][0..w-1];
-            row += sprintf("%-"+sprintf("%d", w)+"s", ""+tmp);
+            // trim text if longer than column
+            if (strlen(tmp = items[i + j]) > w) {
+                row += items[i + j][0..w-1];
+            } else {
+                if (center) row += sprintf("%|"+sprintf("%d", w)+"s", ""+tmp);
+                else row += sprintf("%-"+sprintf("%d", w)+"s", ""+tmp);
+            }
         }
         if (r) row += sprintf("%' '"+sprintf("%d", r)+"s", "");
         rows += ({ row });
@@ -282,11 +287,11 @@ string *format_border (mapping data) {
             data["body"] = ({ data["body"] });
         }
         if (fBody && arrayp(data["body"])) {
-            string format;
             // Body top line
             line = b["v"] + sprintf("%' '"+sprintf("%d", width - 2)+"s", "") + b["v"];
             lines += ({ line });
             foreach (mapping child in data["body"]) {
+                string format;
                 // Body child header
                 if (stringp(child["header"])) {
                     line = b["v"] + "   " + (ansi?"%^WHITE%^BOLD%^":"") + child["header"] + (ansi?"%^BOLD_OFF%^CYAN%^":"") + sprintf("%' '"+sprintf("%d", width - 8 - strlen(child["header"]))+"s", "") + "   " + b["v"];
