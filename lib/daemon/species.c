@@ -74,7 +74,7 @@ mapping setup_body (object ob) {
 /* -----  ----- */
 
 void create () {
-    set_no_clean(clean_later());
+    set_no_clean(1);
     load_bodytypes();
     load_species();
 }
