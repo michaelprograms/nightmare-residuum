@@ -1,24 +1,22 @@
 inherit M_CLEAN;
 
-/*
-    Shortest Day = 1 (and 200)
-    Longest Day = 100 (and 101)
-    Max Days = 200
-
-    1..100 = 100 days
-    101..200 = 100 days
-*/
-
 #define THE_BEGINNING   720561600
 #define NOW(t)          (t - THE_BEGINNING)
 
-private int SECOND  =  1;
-private int MINUTE  = 20 * SECOND;  // 20
-private int HOUR    = 60 * MINUTE;  // 1200
-private int DAY     = 20 * HOUR;    // 24000
-private int WEEK    =  5 * DAY;     // 120000
-private int MONTH   =  4 * WEEK;    // 480000
-private int YEAR    = 10 * MONTH;   // 4800000
+private int SECONDS_PER_MINUTE = 20;
+private int MINUTES_PER_HOUR = 60;
+private int HOURS_PER_DAY = 20;
+private int DAYS_PER_WEEK = 5;
+private int WEEKS_PER_MONTH = 4;
+private int MONTHS_PER_YEAR = 10;
+
+private int SECOND  = 1;                            // defaults:
+private int MINUTE  = SECONDS_PER_MINUTE * SECOND;  // 20
+private int HOUR    = MINUTES_PER_HOUR * MINUTE;    // 1200
+private int DAY     = HOURS_PER_DAY * HOUR;         // 24000
+private int WEEK    = DAYS_PER_WEEK * DAY;          // 120000
+private int MONTH   = WEEKS_PER_MONTH * WEEK;       // 480000
+private int YEAR    = MONTHS_PER_YEAR * MONTH;      // 4800000
 
 private int SHORTEST_DAY = 0;
 private int LONGEST_DAY = to_int(ceil(YEAR / DAY / 2)); // 100
@@ -38,8 +36,38 @@ int query_week (int t) { return NOW(t) % MONTH / WEEK; }
 int query_month (int t) { return NOW(t) % YEAR / MONTH; }
 int query_year (int t) { return NOW(t) / YEAR; }
 
-// @TODO set_ functions
-
+private void update_times () {
+    MINUTE  = SECONDS_PER_MINUTE * SECOND;
+    HOUR    = MINUTES_PER_HOUR * MINUTE;
+    DAY     = HOURS_PER_DAY * HOUR;
+    WEEK    = DAYS_PER_WEEK * DAY;
+    MONTH   = WEEKS_PER_MONTH * WEEK;
+    YEAR    = MONTHS_PER_YEAR * MONTH;
+}
+void set_seconds_per_minute (int n) {
+    SECONDS_PER_MINUTE = n;
+    update_times();
+}
+void set_minutes_per_hour (int n) {
+    MINUTES_PER_HOUR = n;
+    update_times();
+}
+void set_hours_per_day (int n) {
+    HOURS_PER_DAY = n;
+    update_times();
+}
+void set_days_per_week (int n) {
+    DAYS_PER_WEEK = n;
+    update_times();
+}
+void set_weeks_per_month (int n) {
+    WEEKS_PER_MONTH = n;
+    update_times();
+}
+void set_months_per_year (int n) {
+    MONTHS_PER_YEAR = n;
+    update_times();
+}
 /* -----  ----- */
 
 nosave private mapping __Almanac;

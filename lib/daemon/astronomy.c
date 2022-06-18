@@ -101,7 +101,6 @@ void process (int t, string key, object ob) {
                 message("astronomy", "%^BOLD%^BLUE%^Night darkens the whole of our reality.%^RESET%^\n", characters);
             }
         } else {
-            message("debug", "next astronomy change in " + (nextPhase - t)+"\n", find_character("diavolo"));
             return;
         }
     }
@@ -134,7 +133,11 @@ void create () {
 
     // load any existing environments
     if (sizeof(characters = characters())) {
+        int t = time();
         map(characters, (: handle_room_create(environment($1)) :));
+        foreach (string key,object ob in __Astronomy) {
+            process(t, key, ob);
+        }
     }
 }
 
