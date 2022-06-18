@@ -8,10 +8,15 @@ string strip_colour (string str) {
     return str;
 }
 
-string identify (mixed a) {
+string identify (mixed args...) {
+    mixed a;
     int i, s;
     string ret;
     mapping RealMap;
+
+    if (sizeof(args)) {
+        a = args[0];
+    }
 
     if (undefinedp(a)) {
         return "UNDEFINED";

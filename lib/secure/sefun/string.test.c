@@ -104,14 +104,12 @@ void test_identify () {
 
     expect("identify handles class", (: ({
         assert(testOb->identify(tc), "==", "CLASS( 6 elements  0,  0,  0,  0,  0,  0 )"),
-        assert(function() {
-            tc->str = "test string";
-            tc->strArr = ({ "test string 1", "test string 2", });
-            tc->i = 123;
-            tc->f = 1.0;
-            tc->m = ([ "test": 123, ]);
-            tc->o = this_object();
-        }, "==", 0),
+        tc->str = "test string",
+        tc->strArr = ({ "test string 1", "test string 2", }),
+        tc->i = 123,
+        tc->f = 1.0,
+        tc->m = ([ "test": 123, ]),
+        tc->o = this_object(),
         assert(testOb->identify(tc), "==", "CLASS( 6 elements  \"test string\",  ({ /* sizeof() == 2 */    \"test string 1\",    \"test string 2\"  }),  123,  1.000000,  ([ /* sizeof() == 1 */    \"test\" : 123,  ]),  " + file_name() + " )"),
     }) :));
 
@@ -140,7 +138,7 @@ void test_wrap () {
         assert(testOb->wrap("%^BOLD_OFF%^test", 80), "==", "\e[22mtest"),
         assert(testOb->wrap("%^RED%^test%^RESET%^", 80), "==", "\e[31mtest\e[0;37;40m"),
 
-        assert(__MockAccount->set_setting("ansi", "off"), "==", 0),
+        __MockAccount->set_setting("ansi", "off"),
         assert(__MockAccount->query_setting("ansi"), "==", "off"),
 
         assert(testOb->wrap("test", 80), "==", "test"),
@@ -152,9 +150,8 @@ void test_wrap () {
         assert(testOb->wrap("test", -10), "==", "test"),
         assert(testOb->wrap("%^BOLD_OFF%^test", 80), "==", "test"),
         assert(testOb->wrap("%^RED%^test%^RESET%^", 80), "==", "test"),
-        assert(destruct(__MockAccount), "==", 0),
     }) :));
-
+    destruct(__MockAccount);
 }
 
 void test_string_compare_same_until () {
