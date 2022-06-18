@@ -7,11 +7,37 @@ string remove_article (string str) {
     return str;
 }
 
+// a number denoting quantity (one, two, three, etc)
 string cardinal (int n) {
     string sign;
     if (undefinedp(n) || !intp(n)) error("Bad argument 1 to grammar->cardinal");
     sign = (n < 0 ? "negative " : "");
     return sign + query_num(abs(n));
+}
+
+// returns a number indicating position or order (1st, 2nd, 3rd, tenth, etc)
+string ordinal (int n) {
+    int x;
+    if (undefinedp(n) || !intp(n)) error("Bad argument 1 to grammar->ordinal");
+    if (n < 0) error("Bad argument 1 to grammar->ordinal");
+    if (n < 10) {
+        if (n == 9) return "ninth";
+        if (n == 8) return "eighth";
+        if (n == 7) return "seventh";
+        if (n == 6) return "sixth";
+        if (n == 5) return "fifth";
+        if (n == 4) return "fourth";
+        if (n == 3) return "third";
+        if (n == 2) return "second";
+        if (n == 1) return "first";
+        if (n == 0) return "zeroth";
+    } else {
+        x = (n < 14 && n > 10) ? 4 : n % 10;
+        if (x == 1) return n + "st";
+        else if (x == 2) return n + "nd";
+        else if (x == 3) return n + "rd";
+        else return n + "th";
+    }
 }
 
 nosave private mapping __AbnormalOverride = ([
@@ -78,7 +104,7 @@ string conjunction (string *list) {
 }
 
 // named possessive of an object
-varargs string possessive_noun (mixed value) {
+string possessive_noun (mixed value) {
     if (!value) {
         return "Its";
     }
@@ -88,7 +114,7 @@ varargs string possessive_noun (mixed value) {
             value = "It";
         }
     } else if (!stringp(value)) {
-        error("Bad argument 1 to possessive_noun().\n");
+        error("Bad argument 1 to grammar->possessive_noun\n");
     }
     switch (value[<1]) {
     case 'x': case 'z': case 's': return sprintf("%s'", value);
@@ -97,7 +123,7 @@ varargs string possessive_noun (mixed value) {
 }
 
 // subjective pronoun of an object
-varargs string subjective (mixed value) {
+string subjective (mixed value) {
     switch (objectp(value) ? value->query_gender() : value) {
     case "male": return "he";
     case "female": return "she";
@@ -107,7 +133,7 @@ varargs string subjective (mixed value) {
 }
 
 // objective pronoun of an object
-varargs string objective (mixed value) {
+string objective (mixed value) {
     switch (objectp(value) ? value->query_gender() : value) {
     case "male": return "him";
     case "female": return "her";
@@ -117,7 +143,7 @@ varargs string objective (mixed value) {
 }
 
 // possessive pronoun of an object
-varargs string possessive (mixed value) {
+string possessive (mixed value) {
     switch (objectp(value) ? value->query_gender() : value) {
     case "male": return "his";
     case "female": return "her";
@@ -127,6 +153,6 @@ varargs string possessive (mixed value) {
 }
 
 // reflexive pronoun of an object
-varargs string reflexive (mixed value) {
+string reflexive (mixed value) {
     return objective(value) + "self";
 }

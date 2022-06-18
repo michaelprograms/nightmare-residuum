@@ -57,6 +57,58 @@ void test_cardinal () {
         assert(testOb->cardinal(100000), "==", "many"),
         assert(testOb->cardinal(-100000), "==", "negative many"),
     }) :));
+
+    expect("cardinal handles invalid argument 1", (: ({
+        assert((: testOb->cardinal("") :), "catch", "*Bad argument 1 to grammar->cardinal\n"),
+        assert((: testOb->cardinal(0.0) :), "catch", "*Bad argument 1 to grammar->cardinal\n"),
+        assert((: testOb->cardinal(({})) :), "catch", "*Bad argument 1 to grammar->cardinal\n"),
+        assert((: testOb->cardinal(({ 1, 2, 3 })) :), "catch", "*Bad argument 1 to grammar->cardinal\n"),
+        assert((: testOb->cardinal(({ "", "", "" })) :), "catch", "*Bad argument 1 to grammar->cardinal\n"),
+        assert((: testOb->cardinal(([])) :), "catch", "*Bad argument 1 to grammar->cardinal\n"),
+        assert((: testOb->cardinal((: 1 :)) :), "catch", "*Bad argument 1 to grammar->cardinal\n"),
+    }) :));
+}
+
+void test_ordinal () {
+    expect_function("ordinal", testOb);
+
+    expect("ordinal handles words for 0..9 range", (: ({
+        assert(testOb->ordinal(0), "==", "zeroth"),
+        assert(testOb->ordinal(1), "==", "first"),
+        assert(testOb->ordinal(2), "==", "second"),
+        assert(testOb->ordinal(3), "==", "third"),
+        assert(testOb->ordinal(4), "==", "fourth"),
+        assert(testOb->ordinal(5), "==", "fifth"),
+        assert(testOb->ordinal(6), "==", "sixth"),
+        assert(testOb->ordinal(7), "==", "seventh"),
+        assert(testOb->ordinal(8), "==", "eighth"),
+        assert(testOb->ordinal(9), "==", "ninth"),
+    }) :));
+
+    expect("ordinal handles numbers outside 11..14 range", (: ({
+        assert(testOb->ordinal(11), "==", "11th"),
+        assert(testOb->ordinal(12), "==", "12th"),
+        assert(testOb->ordinal(13), "==", "13th"),
+        assert(testOb->ordinal(14), "==", "14th"),
+    }) :));
+
+    expect("ordinal handles numbers outside 0..14 range", (: ({
+        assert(testOb->ordinal(15), "==", "15th"),
+        assert(testOb->ordinal(22), "==", "22nd"),
+        assert(testOb->ordinal(23), "==", "23rd"),
+        assert(testOb->ordinal(24), "==", "24th"),
+    }) :));
+
+    expect("ordinal handles invalid argument 1", (: ({
+        assert((: testOb->ordinal(-1) :), "catch", "*Bad argument 1 to grammar->ordinal\n"),
+        assert((: testOb->ordinal("") :), "catch", "*Bad argument 1 to grammar->ordinal\n"),
+        assert((: testOb->ordinal(0.0) :), "catch", "*Bad argument 1 to grammar->ordinal\n"),
+        assert((: testOb->ordinal(({})) :), "catch", "*Bad argument 1 to grammar->ordinal\n"),
+        assert((: testOb->ordinal(({ 1, 2, 3 })) :), "catch", "*Bad argument 1 to grammar->ordinal\n"),
+        assert((: testOb->ordinal(({ "", "", "" })) :), "catch", "*Bad argument 1 to grammar->ordinal\n"),
+        assert((: testOb->ordinal(([])) :), "catch", "*Bad argument 1 to grammar->ordinal\n"),
+        assert((: testOb->ordinal((: 1 :)) :), "catch", "*Bad argument 1 to grammar->ordinal\n"),
+    }) :));
 }
 
 void test_pluralize () {
@@ -139,7 +191,7 @@ void test_possessive_noun () {
     expect_function("possessive_noun", testOb);
 
     expect("possessive_noun handles names", (: ({
-        assert(testOb->possessive_noun(), "==", "Its"),
+        assert(testOb->possessive_noun(0), "==", "Its"),
         assert(testOb->possessive_noun("Name"), "==", "Name's"),
         assert(testOb->possessive_noun("Hermes"), "==", "Hermes'"),
         assert(testOb->possessive_noun("Shax"), "==", "Shax'"),
@@ -158,6 +210,15 @@ void test_possessive_noun () {
         assert(testOb->possessive_noun($(ob)), "==", "Chaz'"),
     }) :));
     destruct(ob);
+
+    expect("possessive_noun handles invalid argument 1", (: ({
+        assert((: testOb->possessive_noun(-1) :), "catch", "*Bad argument 1 to grammar->possessive_noun\n"),
+        assert((: testOb->possessive_noun(({})) :), "catch", "*Bad argument 1 to grammar->possessive_noun\n"),
+        assert((: testOb->possessive_noun(({ 1, 2, 3 })) :), "catch", "*Bad argument 1 to grammar->possessive_noun\n"),
+        assert((: testOb->possessive_noun(({ "", "", "" })) :), "catch", "*Bad argument 1 to grammar->possessive_noun\n"),
+        assert((: testOb->possessive_noun(([])) :), "catch", "*Bad argument 1 to grammar->possessive_noun\n"),
+        assert((: testOb->possessive_noun((: 1 :)) :), "catch", "*Bad argument 1 to grammar->possessive_noun\n"),
+    }) :));
 }
 
 void test_subjective () {
@@ -166,7 +227,7 @@ void test_subjective () {
     expect_function("subjective", testOb);
 
     expect("subjective handles names", (: ({
-        assert(testOb->subjective(), "==", "it"),
+        assert(testOb->subjective(0), "==", "it"),
         assert(testOb->subjective("male"), "==", "he"),
         assert(testOb->subjective("female"), "==", "she"),
         assert(testOb->subjective("neither"), "==", "they"),
@@ -193,7 +254,7 @@ void test_objective () {
     expect_function("objective", testOb);
 
     expect("objective handles names", (: ({
-        assert(testOb->objective(), "==", "it"),
+        assert(testOb->objective(0), "==", "it"),
         assert(testOb->objective("male"), "==", "him"),
         assert(testOb->objective("female"), "==", "her"),
         assert(testOb->objective("neither"), "==", "them"),
@@ -220,7 +281,7 @@ void test_possessive () {
     expect_function("possessive", testOb);
 
     expect("possessive handles names", (: ({
-        assert(testOb->possessive(), "==", "its"),
+        assert(testOb->possessive(0), "==", "its"),
         assert(testOb->possessive("male"), "==", "his"),
         assert(testOb->possessive("female"), "==", "her"),
         assert(testOb->possessive("neither"), "==", "their"),
@@ -247,7 +308,7 @@ void test_reflexive () {
     expect_function("reflexive", testOb);
 
     expect("reflexive handles names", (: ({
-        assert(testOb->reflexive(), "==", "itself"),
+        assert(testOb->reflexive(0), "==", "itself"),
         assert(testOb->reflexive("male"), "==", "himself"),
         assert(testOb->reflexive("female"), "==", "herself"),
         assert(testOb->reflexive("neither"), "==", "themself"),
