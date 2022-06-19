@@ -35,7 +35,9 @@ void do_look_at_str (string str) {
         message("verb", po->query_cap_name() + " looks over the " + str + ".\n", environment(po), po);
     }
 }
-void do_look_str (string str) {
+void do_look_str (mixed args...) {
+    string str;
+    if (sizeof(args)) str = args[0];
     do_look_at_str(str);
 }
 
