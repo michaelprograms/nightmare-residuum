@@ -17,7 +17,6 @@ void test_parse_command_flags () {
     expect("parse_command_flags parses valid flags", (: ({
         // check no flags
         assert((: testOb->parse_command_flags("something") :), "==", ({ "something", ([ ]) })),
-        assert((: testOb->parse_command_flags() :), "==", ({ UNDEFINED, ([ ]) })),
         assert((: testOb->parse_command_flags(0) :), "==", ({ 0, ([ ]) })),
 
         // check flags at front
