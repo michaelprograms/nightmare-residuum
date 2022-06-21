@@ -1,4 +1,4 @@
-void command (string input) {
+void command (string input, mapping flags) {
     string *map;
     write("Map!\n");
     if (map = environment(this_character())->query_map("all")) {

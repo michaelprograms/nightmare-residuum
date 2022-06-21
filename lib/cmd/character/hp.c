@@ -1,4 +1,4 @@
-void command (string input) {
+void command (string input, mapping flags) {
     object tc = this_character();
     string hp = tc->query_hp() + "/" + tc->query_max_hp() + " hp";
     string sp = tc->query_sp() + "/" + tc->query_max_sp() + " sp";
