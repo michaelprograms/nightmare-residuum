@@ -1,10 +1,10 @@
 inherit M_TEST;
 
 private nosave object testOb;
-void before_all_tests () {
+void before_each_test () {
     testOb = clone_object("/secure/daemon/master.c");
 }
-void after_all_tests () {
+void after_each_test () {
     if (objectp(testOb)) destruct(testOb);
 }
 
