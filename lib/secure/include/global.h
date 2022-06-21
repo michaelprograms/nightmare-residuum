@@ -4,7 +4,6 @@
 // std
 #define STD_ABILITY     "/std/ability.c"
 #define STD_ACCOUNT     "/std/account.c"
-#define STD_ASTRONOMY   "/std/astronomy.c"
 #define STD_CHARACTER   "/std/character.c"
 #define STD_ITEM        "/std/item.c"
 #define STD_LIVING      "/std/living.c"
