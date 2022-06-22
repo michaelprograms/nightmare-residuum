@@ -26,12 +26,21 @@ void before_each_test () {
     __Almanac["MONTH"]   = __Almanac["WEEKS_PER_MONTH"] * __Almanac["WEEK"];        // 480000
     __Almanac["YEAR"]    = __Almanac["MONTHS_PER_YEAR"] * __Almanac["MONTH"];       // 4800000
 
-    __Almanac["SHORTEST_DAY"] = 0;
-    __Almanac["LONGEST_DAY"] = to_int(ceil(__Almanac["YEAR"] / __Almanac["DAY"] / 2)); // 100
     __Almanac["TOTAL_DAYS"] = __Almanac["YEAR"] / __Almanac["DAY"];
+    __Almanac["SHORTEST_DAY"] = 0;
+    __Almanac["LONGEST_DAY"] = to_int(ceil(__Almanac["TOTAL_DAYS"] / 2)); // 100
+
+    __Almanac["MOONS"] = ([
+        "laros": ([ "orbit": __Almanac["TOTAL_DAYS"]/10.0, "color": "red" ]),
+        "spyefel": ([ "orbit": __Almanac["TOTAL_DAYS"]/2.0, "color": "green" ]),
+        "slayar": ([ "orbit": __Almanac["TOTAL_DAYS"], "color": "blue" ]),
+    ]);
 }
 void after_each_test () {
     if (objectp(testOb)) destruct(testOb);
+}
+void after_all_tests () {
+    D_ASTRONOMY->create(); // have to force restart heartbeat
 }
 
 void test_now () {

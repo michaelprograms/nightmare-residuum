@@ -94,7 +94,7 @@ string query_localdate (mixed dest) {
     if (!(a = query_astronomy_from_room(dest))) return 0;
 
     t = time();
-    day = "" + (query_week(t, a)*(a["WEEK"]/a["DAY"]) + query_day(t, a) + 1);
+    day = "" + (query_week(t, a)*(a["WEEK"]/a["DAY"]) + query_day(t, a));
     month = "" + (query_month(t, a) + 1);
     year = "" + query_year(t, a);
 
@@ -220,16 +220,13 @@ void handle_room_create (object room) {
 }
 
 private void process (int t, string key, mapping a) {
-    int now, next, total;
+    int now, next, total, nextPhase;
     string dayPhase, newPhase;
-    int *phase, nextPhase;
-
-    // message("wrap", "%^CYAN%^STD_ASTRONOMY->process%^RESET%^%^: "+t+", "+key+", "+identify(a)+"\n", find_character("diavolo"));
 
     dayPhase = a["DAY_PHASE"];
     nextPhase = a["NEXT_PHASE"];
 
-    if (nextPhase) {
+    if (nextPhase > 0) {
         if (t >= nextPhase) {
             object *characters = filter(characters(), (: regexp($1->query_environment_path(), "^"+$(key)) :));
             if (dayPhase == "night") {
@@ -251,7 +248,6 @@ private void process (int t, string key, mapping a) {
         }
     }
 
-    now = query_hour(t, a) * 100 + query_minute(t, a);
 
     if (dayPhase == "night") {
         newPhase = "dawn";
@@ -260,16 +256,14 @@ private void process (int t, string key, mapping a) {
     else if (dayPhase == "day") newPhase = "dusk";
     else if (dayPhase == "dusk") newPhase = "night";
 
-    // message("wrap", "%^CYAN%^STD_ASTRONOMY->process B%^RESET%^%^: newPhase="+newPhase+" a="+identify(a)+"\n", find_character("diavolo"));
-    phase = a["ALMANAC"][newPhase];
-    next = phase[0] * 100 + phase[1];
 
-    // message("debug", "%^ORANGE%^STD_ASTRONOMY->process%^RESET%^%^: now="+now+", next="+next+"\n", find_character("diavolo"));
+    // converting to real time
+    now = query_hour(t, a) * 60 + query_minute(t, a);
+    next = a["ALMANAC"][newPhase][0] * 60 + a["ALMANAC"][newPhase][1];
+    total = (next > now ? next - now : next + (1200 - now)) * 20;
 
-    total = (next > now ? next - now : next + (2000 - now)) * 20;
-    nextPhase = t + total - (t%a["SECONDS_PER_MINUTE"]);
+    nextPhase = t + total - (t % a["SECONDS_PER_MINUTE"]);
     a["NEXT_PHASE"] = nextPhase;
-    // message("debug", "    %^CYAN%^STD_ASTRONOMY->process B%^RESET%^%^: "+t+", "+dayPhase+" "+nextPhase+", "+next+", "+now+", "+total+"\n", find_character("diavolo"));
 }
 
 /* ----- life cycle ----- */
@@ -287,15 +281,17 @@ void scan () {
     }
 }
 
-void create () {
-    set_no_clean(1);
-    set_heart_beat(10);
-    if (!clonep()) scan();
-}
-
 void heart_beat () {
     int t = time();
     foreach (string key,mapping a in __Astronomy) {
         process(t, key, a);
+    }
+}
+
+void create () {
+    if (!clonep()) {
+        scan();
+        set_heart_beat(1);
+        set_no_clean(1);
     }
 }
