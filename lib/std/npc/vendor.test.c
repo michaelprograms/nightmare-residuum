@@ -33,6 +33,7 @@ void test_vendor_inventory () {
     vi = testOb->query_vendor_inventory();
     // setup a test item
     ob = new(STD_ITEM);
+
     expect("vendor inventory is created and cleaned", (: ({
         // vendor inventory exists
         assert(objectp($(vi)), "==", 1),
@@ -56,6 +57,7 @@ void test_max_items () {
 
     // grab reference to vendor inventory
     vi = testOb->query_vendor_inventory();
+
     expect("vendor inventory max items behaves", (: ({
         // verify default max items
         assert($(vi)->query_max_items(), "==", 0),
@@ -156,6 +158,7 @@ void test_apply_list_verb () {
         assert(testOb->direct_list_from_obj(testOb), "==", 0),
     }) :));
 
+    testOb->handle_remove();
     room->handle_remove();
 }
 
@@ -180,5 +183,6 @@ void test_apply_buy_verb () {
         assert(testOb->direct_buy_str_from_obj("", testOb), "==", 0),
     }) :));
 
+    testOb->handle_remove();
     room->handle_remove();
 }
