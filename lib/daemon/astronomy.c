@@ -94,7 +94,7 @@ string query_localdate (mixed dest) {
     if (!(a = query_astronomy_from_room(dest))) return 0;
 
     t = time();
-    day = "" + (query_week(t, a)*(a["WEEK"]/a["DAY"]) + query_day(t, a));
+    day = "" + (query_week(t, a)*(a["WEEK"]/a["DAY"]) + query_day(t, a) + 1);
     month = "" + (query_month(t, a) + 1);
     year = "" + query_year(t, a);
 
