@@ -24,7 +24,7 @@ void do_train_str (string str) {
         return do_train();
     }
 
-    cost = D_EXPERIENCE->query_stat_cost(stat, tc->query_stat(stat));
+    cost = D_EXPERIENCE->query_stat_cost(stat, tc->query_stat_base(stat), tc->query_class(), tc->query_species());
     if (tc->query_experience() < cost) {
         message("action", "You are not yet ready to train your " + stat + " any further.\n", tc);
         return;

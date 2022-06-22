@@ -38,13 +38,36 @@ private void load_species () {
     lines = filter_array(explode(file, "\n"), (: $1 && $1 != "" && $1[0] != '#' :));
 
     foreach (string line in lines) {
-        string species, bodytype;
+        string species = 0, bodytype = 0, stats = 0;
 
-        if (sscanf(line, "%s:%s", species, bodytype) != 2) continue;
-        if (!mapp(__Species[species])) __Species[species] = ([]);
+        if (
+            sscanf(line, "%s:%s:%s", species, bodytype, stats) != 3 &&
+            sscanf(line, "%s:%s", species, bodytype) != 2
+        ) continue;
+
+        if (!mapp(__Species[species])) __Species[species] = ([ ]);
 
         __Species[species]["bodytype"] = bodytype;
+        if (stats) {
+            string *s = explode(stats, ",");
+
+            if (sizeof(s) != 7) continue;
+
+            __Species[species]["strength"] = to_int(s[0]);
+            __Species[species]["perception"] = to_int(s[1]);
+            __Species[species]["endurance"] = to_int(s[2]);
+            __Species[species]["charisma"] = to_int(s[3]);
+            __Species[species]["intelligence"] = to_int(s[4]);
+            __Species[species]["agility"] = to_int(s[5]);
+            __Species[species]["luck"] = to_int(s[6]);
+        }
     }
+}
+
+/* -----  ----- */
+
+int query_adjust_stat (string s, string stat) {
+    return __Species[s] && __Species[s][stat] ? __Species[s][stat] : 0;
 }
 
 /* -----  ----- */

@@ -17,14 +17,16 @@ void test_query_stat_cost () {
     expect_function("query_stat_cost", testOb);
 
     expect("query_stat_cost returns ascending values", (: ({
-        assert(testOb->query_stat_cost("luck", 0), "==", 1),
-        assert(testOb->query_stat_cost("luck", -1), "==", 1),
-        assert(testOb->query_stat_cost("luck", -50), "==", 1),
-        assert(testOb->query_stat_cost("luck", 1), ">", 1),
-        assert(testOb->query_stat_cost("luck", 2), ">", testOb->query_stat_cost("luck", 1)),
-        assert(testOb->query_stat_cost("luck", 100), ">", testOb->query_stat_cost("luck", 2)),
-        assert(testOb->query_stat_cost("luck", 1000), ">", testOb->query_stat_cost("luck", 100)),
+        assert(testOb->query_stat_cost("luck", 0, 0, 0), "==", 1),
+        assert(testOb->query_stat_cost("luck", -1, 0, 0), "==", 1),
+        assert(testOb->query_stat_cost("luck", -50, 0, 0), "==", 1),
+        assert(testOb->query_stat_cost("luck", 1, 0, 0), ">", 1),
+        assert(testOb->query_stat_cost("luck", 2, 0, 0), ">", testOb->query_stat_cost("luck", 1)),
+        assert(testOb->query_stat_cost("luck", 100, 0, 0), ">", testOb->query_stat_cost("luck", 2)),
+        assert(testOb->query_stat_cost("luck", 1000, 0, 0), ">", testOb->query_stat_cost("luck", 100)),
     }) :));
+
+    // @TODO class and species adjustments
 
     expect("query_stat_cost handles invalid argument 1", (: ({
         assert((: testOb->query_stat_cost(this_object()) :), "catch", "*Bad argument 1 to experience->query_stat_cost\n"),

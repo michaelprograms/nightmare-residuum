@@ -1,18 +1,32 @@
-int query_stat_cost (string stat, int level) {
-    // float adj = 0 + 0; // @TODO class + species modifiers
+#define STAT_X1     1.0
+#define STAT_Y1     3.0
+#define STAT_X2     1.25
+#define STAT_Y2     3.25
+#define STAT_ADJ(n) (n * 0.01)
+#define STAT_BASE   1000
+
+varargs int query_stat_cost (string stat, int level, string c, string s) {
+    int bonus = 0;
+    float x2, y2;
 
     if (!stringp(stat)) error("Bad argument 1 to experience->query_stat_cost");
     if (!intp(level)) error("Bad argument 2 to experience->query_stat_cost");
 
-    if (level < 1) {
-        return 1;
-    }
+    if (level < 1) return 1;
 
-    return 1000 + to_int(1.0 * pow(level, 3.0) + 1.25 * pow(level, 3.25));
+    if (stringp(c)) bonus += D_CLASS->query_adjust_stat(c, stat);
+    if (stringp(s)) bonus += D_SPECIES->query_adjust_stat(s, stat);
+
+    // (Level * Base) + X1 * (Level ^ (Y1-(Bonus*Adj)) + X2 * (Level ^ (Y2-(Bonus*Adj)))
+    return to_int(
+        level * STAT_BASE +
+        STAT_X1 * pow(1.0 * level, STAT_Y1 - STAT_ADJ(bonus)) +
+        STAT_X2 * pow(1.0 * level, STAT_Y2 - STAT_ADJ(bonus))
+    );
 }
 
 int query_skill_cost (int level) {
-    // @TODO skill tiers
+    // @TODO class skill tiers
 
     if (!intp(level)) error("Bad argument 1 to experience->query_skill_cost");
 

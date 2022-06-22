@@ -14,7 +14,7 @@ void command (string input, mapping flags) {
             stat,
             statBase,
             statBonus,
-            format_integer(D_EXPERIENCE->query_stat_cost(stat, statBase)) + " xp"
+            format_integer(D_EXPERIENCE->query_stat_cost(stat, statBase, target->query_class(), target->query_species())) + " xp"
         });
     }
 
