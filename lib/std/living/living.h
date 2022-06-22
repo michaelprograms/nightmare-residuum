@@ -1,14 +1,14 @@
 #ifndef __LIVING_H__
 #define __LIVING_H__
 
-/*  --- living --- */
+/*  ----- living ----- */
 int handle_move (mixed dest);
 int handle_go (mixed dest, string method, string dir);
 varargs int do_command (string str, int debug);
 int is_living ();
 private void handle_passive_heal ();
 
-/* --- biography --- */
+/* ----- biography ----- */
 int query_experience ();
 int query_total_experience ();
 void add_experience (int exp);
@@ -20,7 +20,7 @@ int query_defeat ();
 void handle_victory (object source);
 void handle_defeat (int keep);
 
-/* --- body --- */
+/* ----- body ----- */
 string query_gender ();
 void set_gender (string str);
 string query_species ();
@@ -43,7 +43,13 @@ string *query_wielded_limbs (object ob);
 varargs mixed handle_wield (object weapon, string limb);
 varargs mixed handle_unwield (object weapon, string limb);
 
-/* --- combat --- */
+/* ----- class ----- */
+void set_class (string c);
+string query_class ();
+void set_sub_class (string c);
+string query_sub_class();
+
+/* ----- combat ----- */
 protected void handle_combat ();
 private void handle_combat_hit (object target, mixed weapon);
 varargs void check_lifesigns (object source);
@@ -55,7 +61,7 @@ object *query_hostiles ();
 object *query_present_hostiles ();
 object query_target_hostile ();
 
-/* --- skills --- */
+/* ----- skills ----- */
 private mapping query_default_skills ();
 private int query_skill_next_points (string skill);
 string *query_all_skills ();
@@ -64,20 +70,20 @@ int query_skill (string skill);
 void set_skill (string skill, int level);
 varargs void train_skill (string skill, float multiplier);
 
-/* --- stats --- */
+/* ----- stats ----- */
 int query_stat (string stat);
 int query_stat_base (string stat);
 int query_stat_bonus (string stat);
 void set_stat (string stat, int n);
 void add_stat_bonus (string stat, int n);
 
-/* --- status --- */
+/* ----- status ----- */
 void set_disable (int value);
 int query_disable ();
 void set_busy (int value);
 int query_busy ();
 
-/* --- vitals --- */
+/* ----- vitals ----- */
 int query_hp ();
 int query_sp ();
 int query_mp ();
@@ -92,6 +98,6 @@ void set_sp (int n);
 void set_mp (int n);
 void update_vitals (int heal);
 
-/*  --- */
+/*  -----  ----- */
 
 #endif /* __LIVING_H__ */

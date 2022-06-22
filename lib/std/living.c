@@ -6,6 +6,7 @@ inherit M_CONTAINER;
 
 inherit "/std/living/biography.c";
 inherit "/std/living/body.c";
+inherit "/std/living/class.c";
 inherit "/std/living/combat.c";
 inherit "/std/living/skills.c";
 inherit "/std/living/stats.c";
