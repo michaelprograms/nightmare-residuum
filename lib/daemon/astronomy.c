@@ -100,6 +100,34 @@ string query_localdate (mixed dest) {
 
     return day + " of Month" + month + " " + year;
 }
+string query_localsky (mixed dest, string str) {
+    mapping a;
+    string desc;
+
+    if (!(a = query_astronomy_from_room(dest))) return 0;
+
+    if (str == "sky") {
+        if (a["DAY_PHASE"] == "dawn") {
+            desc = "%^ORANGE%^It is lit with the colors of a brand new day.%^RESET%^";
+        } else if (a["DAY_PHASE"] == "day") {
+            desc = "%^YELLOW%^The sun lights up the daytime sky.%^RESET%^";
+        } else if (a["DAY_PHASE"] == "dusk") {
+            desc = "%^BOLD%^CYAN%^The sun is fading over the western horizon.%^RESET%^";
+        } else if (a["DAY_PHASE"] == "night") {
+            desc = "%^BOLD%^BLUE%^The sky is darkened with night.%^RESET%^";
+        }
+    } else  if (str == "sun") {
+        if (a["DAY_PHASE"] == "dawn") {
+            desc = "%^ORANGE%^The sun is hanging low in the dawning eastern sky.%^RESET%^";
+        } else if (a["DAY_PHASE"] == "day") {
+            desc = "%^YELLOW%^The sun is shining brightly in the daytime sky.%^RESET%^";
+        } else if (a["DAY_PHASE"] == "dusk") {
+            desc = "%^BOLD%^CYAN%^The sun is falling into the twilight sky.%^RESET%^";
+        }
+    }
+
+    return desc;
+}
 
 int query_day_of_year (int t, mapping a) {
     int dpw, dpm;
@@ -219,7 +247,6 @@ private void process (int t, string key, mapping a) {
             }
             a["DAY_PHASE"] = dayPhase;
         } else {
-            message("debug", "next astronomy change in " + (nextPhase - t)+", currently "+dayPhase+"\n", find_character("diavolo"));
             return;
         }
     }
@@ -241,19 +268,11 @@ private void process (int t, string key, mapping a) {
 
     total = (next > now ? next - now : next + (2000 - now)) * 20;
     nextPhase = t + total - (t%a["SECONDS_PER_MINUTE"]);
-    message("debug", "%^GREEN%^STD_ASTRONOMY->process%^RESET%^%^: "+t+", "+dayPhase+" "+nextPhase+" ("+ctime(nextPhase)+"
-    , ("+(phase[0]*100+phase[1])+")["+identify(phase)+"], total="+total+"\n", find_character("diavolo"));
     a["NEXT_PHASE"] = nextPhase;
     // message("debug", "    %^CYAN%^STD_ASTRONOMY->process B%^RESET%^%^: "+t+", "+dayPhase+" "+nextPhase+", "+next+", "+now+", "+total+"\n", find_character("diavolo"));
 }
 
 /* ----- life cycle ----- */
-
-void create () {
-
-    set_no_clean(1);
-    set_heart_beat(10);
-}
 
 void scan () {
     object *characters = characters();
@@ -266,6 +285,12 @@ void scan () {
             process(t, key, a);
         }
     }
+}
+
+void create () {
+    set_no_clean(1);
+    set_heart_beat(10);
+    if (!clonep()) scan();
 }
 
 void heart_beat () {

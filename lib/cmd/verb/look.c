@@ -24,21 +24,32 @@ mixed can_look_at_str (string str, string verb) {
 mixed can_look_str (string str, string verb) {
     return can_look_at_str(str, verb);
 }
-void do_look_at_str (string str) {
-    object po = previous_object();
-    string desc = environment(po)->handle_look(str);
+void do_look_at_str (mixed args...) {
+    object po = previous_object(), env = environment(po);
+    string str, desc;
+
+    if (sizeof(args)) str = args[0];
+    else return;
+
+    if (!env->query_property("indoors") && member_array(str, ({"sky", "sun"})) > -1) {
+        desc = D_ASTRONOMY->query_localsky(env, str);
+    } else {
+        desc = env->handle_look(str);
+    }
 
     if (!desc) {
         message("verb", "You do not see that here.\n", po);
     } else {
         message("verb", desc + "\n", po);
-        message("verb", po->query_cap_name() + " looks over the " + str + ".\n", environment(po), po);
+        message("verb", po->query_cap_name() + " looks over the " + str + ".\n", env, po);
     }
 }
 void do_look_str (mixed args...) {
     string str;
+
     if (sizeof(args)) str = args[0];
-    do_look_at_str(str);
+
+    do_look_at_str(str, str);
 }
 
 /* ----- rule: "OBJ" and "at OBJ" ----- */
