@@ -1,9 +1,10 @@
 void command (string input, mapping flags) {
-    string *border;
-    string localtime, localdate;
+    string *border, localtime, localdate;
+    mapping a;
 
-    localtime = D_ASTRONOMY->query_localtime(environment(this_character()));
-    localdate = D_ASTRONOMY->query_localdate(environment(this_character()));
+    a = D_ASTRONOMY->query_astronomy_from_room(environment(this_character()));
+    localtime = D_ASTRONOMY->query_localtime(a);
+    localdate = D_ASTRONOMY->query_localdate(a);
 
     border = format_border(([
         "title": "TIME",

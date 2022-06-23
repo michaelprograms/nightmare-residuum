@@ -2,7 +2,7 @@ void command (string input, mapping flags) {
     string *border;
     mapping *items = ({ });
 
-    foreach(string key,mapping a in D_ASTRONOMY->query_astronomy()) {
+    foreach (string key,mapping a in D_ASTRONOMY->query_astronomy()) {
         items += ({
             ([
                 "header": key,
@@ -25,8 +25,8 @@ void command (string input, mapping flags) {
                     "PHASE",
                     "",
                     "",
-                    D_ASTRONOMY->query_localdate(key),
-                    "Time: " + D_ASTRONOMY->query_localtime(key),
+                    D_ASTRONOMY->query_localdate(a),
+                    "Time: " + D_ASTRONOMY->query_localtime(a),
                     "Day phase: " + a["DAY_PHASE"],
                     "Next phase: " + (a["NEXT_PHASE"] - time()) + " secs",
                     "",

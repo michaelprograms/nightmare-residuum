@@ -53,35 +53,30 @@ int query_year (int t, mapping a) { return NOW(t) / a["YEAR"]; }
 
 /* -----  ----- */
 
-string query_localtime (mixed dest) {
-    mapping a;
-    int t;
+varargs string query_localtime (mapping a, int t) {
+    if (!a) return 0;
 
-    if (!(a = query_astronomy_from_room(dest))) return 0;
-
-    t = time();
+    if (undefinedp(t)) t = time();
 
     return query_hour(t, a) + ":" + format_minute(query_minute(t, a));
 }
-string query_localdate (mixed dest) {
-    mapping a;
-    int t;
+varargs string query_localdate (mapping a, int t) {
     string day, month, year;
 
-    if (!(a = query_astronomy_from_room(dest))) return 0;
+    if (!a) return 0;
 
-    t = time();
-    day = "" + (query_week(t, a)*(a["WEEK"]/a["DAY"]) + query_day(t, a));
+    if (undefinedp(t)) t = time();
+
+    day = "" + (query_week(t, a)*(a["WEEK"]/a["DAY"]) + query_day(t, a) + 1) ;
     month = "" + (query_month(t, a) + 1);
     year = "" + query_year(t, a);
 
     return day + " of Month" + month + " " + year;
 }
-string query_localsky (mixed dest, string str) {
-    mapping a;
+string query_localsky (mapping a, string str) {
     string desc;
 
-    if (!(a = query_astronomy_from_room(dest))) return 0;
+    if (!a) return 0;
 
     if (str == "sky") {
         if (a["DAY_PHASE"] == "dawn") {
@@ -251,14 +246,12 @@ private void process (int t, string key, mapping a) {
         }
     }
 
-
     if (dayPhase == "night") {
         newPhase = "dawn";
         update_almanac(t, a);
     } else if (dayPhase == "dawn") newPhase = "day";
     else if (dayPhase == "day") newPhase = "dusk";
     else if (dayPhase == "dusk") newPhase = "night";
-
 
     // converting to real time
     now = query_hour(t, a) * 60 + query_minute(t, a);

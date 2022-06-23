@@ -32,7 +32,7 @@ void do_look_at_str (mixed args...) {
     else return;
 
     if (!env->query_property("indoors") && member_array(str, ({"sky", "sun"})) > -1) {
-        desc = D_ASTRONOMY->query_localsky(env, str);
+        desc = D_ASTRONOMY->query_localsky(D_ASTRONOMY->query_astronomy_from_room(env), str);
     } else {
         desc = env->handle_look(str);
     }

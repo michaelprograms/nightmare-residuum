@@ -11,6 +11,7 @@ private nosave object testOb;
 void before_each_test () {
     testOb = clone_object("/daemon/astronomy.c");
     __Time = 720561600; // The Beginning: Sat Oct 31 15:00:00 1992
+
     __Almanac["SECONDS_PER_MINUTE"] = 20;
     __Almanac["MINUTES_PER_HOUR"] = 60;
     __Almanac["HOURS_PER_DAY"] = 20;
@@ -18,13 +19,12 @@ void before_each_test () {
     __Almanac["WEEKS_PER_MONTH"] = 4;
     __Almanac["MONTHS_PER_YEAR"] = 10;
 
-    __Almanac["SECOND"]  = 1;                                                       // defaults:
-    __Almanac["MINUTE"]  = __Almanac["SECONDS_PER_MINUTE"] * __Almanac["SECOND"];   // 20
-    __Almanac["HOUR"]    = __Almanac["MINUTES_PER_HOUR"] * __Almanac["MINUTE"];     // 1200
-    __Almanac["DAY"]     = __Almanac["HOURS_PER_DAY"] * __Almanac["HOUR"];          // 24000
-    __Almanac["WEEK"]    = __Almanac["DAYS_PER_WEEK"] * __Almanac["DAY"];           // 120000
-    __Almanac["MONTH"]   = __Almanac["WEEKS_PER_MONTH"] * __Almanac["WEEK"];        // 480000
-    __Almanac["YEAR"]    = __Almanac["MONTHS_PER_YEAR"] * __Almanac["MONTH"];       // 4800000
+    __Almanac["MINUTE"]  = __Almanac["SECONDS_PER_MINUTE"] * 1;                 // 20
+    __Almanac["HOUR"]    = __Almanac["MINUTES_PER_HOUR"] * __Almanac["MINUTE"]; // 1200
+    __Almanac["DAY"]     = __Almanac["HOURS_PER_DAY"] * __Almanac["HOUR"];      // 24000
+    __Almanac["WEEK"]    = __Almanac["DAYS_PER_WEEK"] * __Almanac["DAY"];       // 120000
+    __Almanac["MONTH"]   = __Almanac["WEEKS_PER_MONTH"] * __Almanac["WEEK"];    // 480000
+    __Almanac["YEAR"]    = __Almanac["MONTHS_PER_YEAR"] * __Almanac["MONTH"];   // 4800000
 
     __Almanac["TOTAL_DAYS"] = __Almanac["YEAR"] / __Almanac["DAY"];
     __Almanac["SHORTEST_DAY"] = 0;
@@ -101,6 +101,50 @@ void test_time_intervals () {
         __Time += ((((MINUTE * 60) * 20) * 5) * 4) * 9,
         assert(testOb->query_month(__Time, __Almanac), "==", 0),
         assert(testOb->query_year(__Time, __Almanac), "==", 1),
+    }) :));
+}
+
+void test_localtime () {
+    expect_function("query_localtime", testOb);
+
+    expect("handles localtime of an almanac", (: ({
+        assert(testOb->query_now(__Time), "==", 0),
+        assert(testOb->query_localtime(__Almanac, __Time), "==", "0:00"),
+        __Time += MINUTE,
+        assert(testOb->query_localtime(__Almanac, __Time), "==", "0:01"),
+        __Time += MINUTE,
+        assert(testOb->query_localtime(__Almanac, __Time), "==", "0:02"),
+        __Time += MINUTE,
+        assert(testOb->query_localtime(__Almanac, __Time), "==", "0:03"),
+        __Time += MINUTE * 7,
+        assert(testOb->query_localtime(__Almanac, __Time), "==", "0:10"),
+        __Time += MINUTE * 50,
+        assert(testOb->query_localtime(__Almanac, __Time), "==", "1:00"),
+        __Time += (MINUTE * 60),
+        assert(testOb->query_localtime(__Almanac, __Time), "==", "2:00"),
+        __Time += (MINUTE * 60) * 7,
+        assert(testOb->query_localtime(__Almanac, __Time), "==", "9:00"),
+        __Time += (MINUTE * 60),
+        assert(testOb->query_localtime(__Almanac, __Time), "==", "10:00"),
+        __Time += (MINUTE * 60) * 9,
+        assert(testOb->query_localtime(__Almanac, __Time), "==", "19:00"),
+        __Time += (MINUTE * 59),
+        assert(testOb->query_localtime(__Almanac, __Time), "==", "19:59"),
+        __Time += (MINUTE * 1),
+        assert(testOb->query_localtime(__Almanac, __Time), "==", "0:00"),
+    }) :));
+}
+
+void test_localdate () {
+    expect_function("query_localdate", testOb);
+
+    expect("handles localdate of an almanac", (: ({
+        assert(testOb->query_localdate(__Almanac, __Time+(DAY*0), __Almanac), "==", "1 of Month1 0"),
+        assert(testOb->query_localdate(__Almanac, __Time+(DAY*19), __Almanac), "==", "20 of Month1 0"),
+        assert(testOb->query_localdate(__Almanac, __Time+(DAY*20), __Almanac), "==", "1 of Month2 0"),
+        assert(testOb->query_localdate(__Almanac, __Time+(DAY*100), __Almanac), "==", "1 of Month6 0"),
+        assert(testOb->query_localdate(__Almanac, __Time+(DAY*200), __Almanac), "==", "1 of Month1 1"),
+        assert(testOb->query_localdate(__Almanac, __Time+(DAY*12345), __Almanac), "==", "6 of Month8 61"),
     }) :));
 }
 
