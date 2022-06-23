@@ -2,6 +2,8 @@
 #define THE_BEGINNING   720561600
 #define NOW(t)          (t - THE_BEGINNING)
 
+#define PHASES ({ "new", "waxing crescent", "waxing half", "waxing gibbous", "full", "waning gibbous", "waning half", "waning crescent" })
+
 inherit M_CLEAN;
 
 mapping __Astronomy = ([
@@ -27,11 +29,13 @@ mapping __Astronomy = ([
 */
 ]);
 
+mapping query_astronomy_from_room (mixed dest);
+
 mapping query_astronomy () { return __Astronomy; } // for debug
 
 /* -----  ----- */
 
-private string format_minute (int m) {
+string format_minute (int m) {
     return sprintf("%2'0's", "" + m)[0..1];
 }
 
@@ -48,33 +52,6 @@ int query_month (int t, mapping a) { return NOW(t) % a["YEAR"] / a["MONTH"]; }
 int query_year (int t, mapping a) { return NOW(t) / a["YEAR"]; }
 
 /* -----  ----- */
-
-mapping query_astronomy_from_room (mixed dest) {
-    string path, dirPath;
-    string *dirs;
-
-    if (objectp(dest) && dest->is_room()) {
-        path = base_name(dest);
-    } else if (stringp(dest)) {
-        path = dest;
-    } else {
-        return 0;
-    }
-    if (!regexp(path, "^/domain/")) return 0;
-    dirs = explode(path, "/")[1..<3];
-
-    dirPath = "/domain";
-    // @TODO need to do this the reverse direction
-    foreach (string dir in dirs) {
-        dirPath += "/" + dir;
-
-        // astronomy loaded
-        if (__Astronomy[dirPath]) {
-            return __Astronomy[dirPath];
-        }
-    }
-    return 0;
-}
 
 string query_localtime (mixed dest) {
     mapping a;
@@ -114,7 +91,14 @@ string query_localsky (mixed dest, string str) {
         } else if (a["DAY_PHASE"] == "dusk") {
             desc = "%^BOLD%^CYAN%^The sun is fading over the western horizon.%^RESET%^";
         } else if (a["DAY_PHASE"] == "night") {
+            string moons = "";
             desc = "%^BOLD%^BLUE%^The sky is darkened with night.%^RESET%^";
+            foreach (string key,mapping moon in a["MOONS"]) {
+                if (moon["phase"] > 0) {
+                    moons += "\n" + "There is a %^" + upper_case(moon["color"]) + "%^" + PHASES[moon["phase"]]+" "+moon["color"]+" moon%^RESET%^ in the sky.%^RESET%^";
+                }
+            }
+            desc += moons;
         }
     } else  if (str == "sun") {
         if (a["DAY_PHASE"] == "dawn") {
@@ -191,23 +175,29 @@ void update_dayphase (int t, mapping a) {
 
 /* -----  ----- */
 
-void handle_room_create (object room) {
+mapping query_astronomy_from_room (mixed dest) {
     string roomPath, dirPath, aPath;
     string *dirs;
+    int l;
 
-    if (!objectp(room) || !room->is_room()) {
-        return;
+    if (objectp(dest) && dest->is_room()) {
+        roomPath = base_name(dest);
+    } else if (stringp(dest)) {
+        if (__Astronomy[dest]) return __Astronomy[dest];
+        roomPath = dest;
+    } else {
+        return 0;
     }
-    roomPath = base_name(room);
-    if (!regexp(roomPath, "^/domain/")) return;
-    dirs = explode(roomPath, "/")[1..<3];
+    if (!regexp(roomPath, "^/domain/")) return 0;
 
-    dirPath = "/domain";
-    foreach (string dir in dirs) {
-        dirPath += "/" + dir;
+    dirs = explode(roomPath, "/")[1..<3];
+    l = sizeof(dirs);
+
+    while (l --) {
+        dirPath = "/domain/" + implode(dirs[0..l], "/");
 
         // astronomy already loaded
-        if (__Astronomy[dirPath]) break;
+        if (__Astronomy[dirPath]) return __Astronomy[dirPath];
 
         // check if astronomy exists
         if (file_size(aPath = dirPath + "/astronomy.c") > 0) {
@@ -217,14 +207,27 @@ void handle_room_create (object room) {
             break;
         }
     }
+    return 0;
+}
+
+void handle_room_create (object room) {
+    query_astronomy_from_room(room);
 }
 
 private void process (int t, string key, mapping a) {
     int now, next, total, nextPhase;
     string dayPhase, newPhase;
+    int days;
 
     dayPhase = a["DAY_PHASE"];
     nextPhase = a["NEXT_PHASE"];
+
+    days = query_day_of_year(t, a);
+    foreach (string k,mapping moon in a["MOONS"]) {
+        if (!moon["phase"]) {
+            moon["phase"] = to_int(days % moon["orbit"] / (1.0 * moon["orbit"] / sizeof(PHASES)));
+        }
+    }
 
     if (nextPhase > 0) {
         if (t >= nextPhase) {
