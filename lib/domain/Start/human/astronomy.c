@@ -19,9 +19,29 @@ mapping query_astronomy () {
     a["SHORTEST_DAY"] = 0;
     a["LONGEST_DAY"] = to_int(ceil(a["TOTAL_DAYS"] / 2)); // 100
 
+    a["DAY_NAMES"] = ({
+        "Shadowday",
+        "Lockday",
+        "Flameday",
+        "Darkday",
+        "Vaigday"
+    });
+    a["MONTH_NAMES"] = ({
+        "Roki",
+        "Praxi",
+        "Altki",
+        "Ketralki",
+        "Aenterki",
+        "Kepki",
+        "Kortki",
+        "Kantki",
+        "Sartki",
+        "Denki"
+    });
+
     a["MOONS"] = ([
-        "laros": ([ "orbit": a["TOTAL_DAYS"]/10.0, "color": "red" ]),
-        "spyefel": ([ "orbit": a["TOTAL_DAYS"]/2.0, "color": "green" ]),
+        "laros": ([ "orbit": a["TOTAL_DAYS"]/10, "color": "red" ]),
+        "spyefel": ([ "orbit": a["TOTAL_DAYS"]/2, "color": "green" ]),
         "slayar": ([ "orbit": a["TOTAL_DAYS"], "color": "blue" ]),
     ]);
 

@@ -30,9 +30,29 @@ void before_each_test () {
     __Almanac["SHORTEST_DAY"] = 0;
     __Almanac["LONGEST_DAY"] = to_int(ceil(__Almanac["TOTAL_DAYS"] / 2)); // 100
 
+    __Almanac["DAY_NAMES"] = ({
+        "Shadowday",
+        "Lockday",
+        "Flameday",
+        "Darkday",
+        "Vaigday"
+    });
+    __Almanac["MONTH_NAMES"] = ({
+        "Roki",
+        "Praxi",
+        "Altki",
+        "Ketralki",
+        "Aenterki",
+        "Kepki",
+        "Kortki",
+        "Kantki",
+        "Sartki",
+        "Denki"
+    });
+
     __Almanac["MOONS"] = ([
-        "laros": ([ "orbit": __Almanac["TOTAL_DAYS"]/10.0, "color": "red" ]),
-        "spyefel": ([ "orbit": __Almanac["TOTAL_DAYS"]/2.0, "color": "green" ]),
+        "laros": ([ "orbit": __Almanac["TOTAL_DAYS"]/10, "color": "red" ]),
+        "spyefel": ([ "orbit": __Almanac["TOTAL_DAYS"]/2, "color": "green" ]),
         "slayar": ([ "orbit": __Almanac["TOTAL_DAYS"], "color": "blue" ]),
     ]);
 }
@@ -139,12 +159,12 @@ void test_localdate () {
     expect_function("query_localdate", testOb);
 
     expect("handles localdate of an almanac", (: ({
-        assert(testOb->query_localdate(__Almanac, __Time+(DAY*0), __Almanac), "==", "1 of Month1 0"),
-        assert(testOb->query_localdate(__Almanac, __Time+(DAY*19), __Almanac), "==", "20 of Month1 0"),
-        assert(testOb->query_localdate(__Almanac, __Time+(DAY*20), __Almanac), "==", "1 of Month2 0"),
-        assert(testOb->query_localdate(__Almanac, __Time+(DAY*100), __Almanac), "==", "1 of Month6 0"),
-        assert(testOb->query_localdate(__Almanac, __Time+(DAY*200), __Almanac), "==", "1 of Month1 1"),
-        assert(testOb->query_localdate(__Almanac, __Time+(DAY*12345), __Almanac), "==", "6 of Month8 61"),
+        assert(testOb->query_localdate(__Almanac, __Time+(DAY*0)), "==", "1 of Roki 1"),
+        assert(testOb->query_localdate(__Almanac, __Time+(DAY*19)), "==", "20 of Roki 1"),
+        assert(testOb->query_localdate(__Almanac, __Time+(DAY*20)), "==", "1 of Praxi 1"),
+        assert(testOb->query_localdate(__Almanac, __Time+(DAY*100)), "==", "1 of Kepki 1"),
+        assert(testOb->query_localdate(__Almanac, __Time+(DAY*200)), "==", "1 of Roki 2"),
+        assert(testOb->query_localdate(__Almanac, __Time+(DAY*12345)), "==", "6 of Kantki 62"),
     }) :));
 }
 

@@ -51,6 +51,9 @@ int query_week (int t, mapping a) { return NOW(t) % a["MONTH"] / a["WEEK"]; }
 int query_month (int t, mapping a) { return NOW(t) % a["YEAR"] / a["MONTH"]; }
 int query_year (int t, mapping a) { return NOW(t) / a["YEAR"]; }
 
+string query_day_name (int t, mapping a) { return a["DAY_NAMES"][query_day(t, a)]; }
+string query_month_name (int t, mapping a) { return a["MONTH_NAMES"][query_month(t, a)]; }
+
 /* -----  ----- */
 
 varargs string query_localtime (mapping a, int t) {
@@ -67,11 +70,11 @@ varargs string query_localdate (mapping a, int t) {
 
     if (undefinedp(t)) t = time();
 
-    day = "" + (query_week(t, a)*(a["WEEK"]/a["DAY"]) + query_day(t, a) + 1) ;
-    month = "" + (query_month(t, a) + 1);
-    year = "" + query_year(t, a);
+    day = "" + (query_week(t, a)*(a["WEEK"]/a["DAY"]) + query_day(t, a) + 1);
+    month = "" + a["MONTH_NAMES"][query_month(t, a)];
+    year = "" + (query_year(t, a) + 1);
 
-    return day + " of Month" + month + " " + year;
+    return day + " of " + month + " " + year;
 }
 string query_localsky (mapping a, string str) {
     string desc;
