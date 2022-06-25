@@ -279,10 +279,11 @@ string *format_border (mapping data) {
             // Header header
             if (stringp(data["header"]["header"])) {
                 line = b["v"] + b["v"] + "  " + (ansi?"%^WHITE%^BOLD%^":"") + data["header"]["header"] + (ansi?"%^BOLD_OFF%^CYAN%^":"") + sprintf("%' '"+sprintf("%d", width - 8 - strlen(data["header"]["header"]))+"s", "") + "  " + b["v"] + b["v"];
+                lines += ({ line });
             } else if (arrayp(data["header"]["header"])) {
                 line = b["v"] + b["v"] + "  " + (ansi?"%^WHITE%^BOLD%^":"") + format_page(data["header"]["header"], data["header"]["columns"], 4, center) + (ansi?"%^BOLD_OFF%^CYAN%^":"") + "  " + b["v"] + b["v"];
+                lines += ({ line });
             }
-            lines += ({ line });
             // Header lines
             format = sizeof(data["header"]["items"]) > 0 ? format_page(data["header"]["items"], data["header"]["columns"], 4, center) : "";
             foreach (string l in explode(format, "\n")) {
