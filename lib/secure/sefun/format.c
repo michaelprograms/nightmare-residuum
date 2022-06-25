@@ -28,12 +28,22 @@ varargs string format_page (string *items, int columns, int pad, int center) {
                 row += sprintf("%' '"+sprintf("%d", w*(columns-j))+"s", " ");
                 break;
             }
-            // trim text if longer than column
-            if (strlen(tmp = items[i + j]) > w) {
-                row += items[i + j][0..w-1];
+            // check text length without ANSI color
+            if (sizeof(tmp = SEFUN->strip_colour(items[i + j])) > w) {
+                // use stripped text when its longer than w
+                row += tmp[0..w-1];
             } else {
-                if (center) row += sprintf("%|"+sprintf("%d", w)+"s", ""+tmp);
-                else row += sprintf("%-"+sprintf("%d", w)+"s", ""+tmp);
+                // account for any color codes in the text
+                int diff = sizeof(items[i+j]) - sizeof(tmp);
+
+                if (center) {
+                    row += sprintf("%|"+sprintf("%d", w+diff)+"s", ""+items[i + j]);
+                } else {
+                    row += sprintf("%-"+sprintf("%d", w+diff)+"s", ""+items[i + j]);
+                }
+
+                // when color codes present and we're not displaying a RESET, add one
+                if (diff > 0 && items[i + j][<9..] != "%^RESET%^") row += "%^RESET%^";
             }
         }
         if (r) row += sprintf("%' '"+sprintf("%d", r)+"s", "");

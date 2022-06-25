@@ -73,6 +73,19 @@ void test_format_page () {
         assert(testOb->format_page(({ "1", "2" }), 1, 0, 1), "==", "          1         \n          2         "),
     }) :));
 
+    expect("format_page displays ANSI strings with proper string length", (: ({
+        // Items display properly left aligned
+        assert(testOb->format_page(({ "%^RED%^Red text%^RESET%^", "%^BLUE%^Blue text%^RESET%^", }), 2), "==", "%^RED%^Red text%^RESET%^  %^BLUE%^Blue text%^RESET%^ "),
+        // First item has a RESET appended
+        assert(testOb->format_page(({ "%^RED%^No reset", "%^BLUE%^Blue text%^RESET%^", }), 2), "==", "%^RED%^No reset  %^RESET%^%^BLUE%^Blue text%^RESET%^ "),
+        // First item is stripped of color due to exceeding column width
+        assert(testOb->format_page(({ "%^RED%^Trimmed Red text%^RESET%^", "%^BLUE%^Blue text%^RESET%^", }), 2), "==", "Trimmed Re%^BLUE%^Blue text%^RESET%^ "),
+
+        // Items display properly centered
+        assert(testOb->format_page(({ "%^RED%^Red text%^RESET%^", "%^BLUE%^Blue text%^RESET%^", }), 2, 0, 1), "==", " %^RED%^Red text%^RESET%^  %^BLUE%^Blue text%^RESET%^"),
+        assert(testOb->format_page(({ "%^RED%^Red%^RESET%^", "%^BLUE%^Blue%^RESET%^", }), 2, 0, 1), "==", "    %^RED%^Red%^RESET%^      %^BLUE%^Blue%^RESET%^   "),
+    }) :));
+
     expect("format_page handled invalid argument 1", (: ({
         assert((: testOb->format_page() :), "catch", "*Bad argument 1 to format->format_page\n"),
         assert((: testOb->format_page(0) :), "catch", "*Bad argument 1 to format->format_page\n"),
