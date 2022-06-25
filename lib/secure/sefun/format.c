@@ -318,29 +318,22 @@ string *format_border (mapping data) {
         }
 
         if (fFooter) {
+            string format;
+            int center = (data["footer"]["align"] == "center");
             // Footer top line
-            line = b["v"] + b["tl"];
-            line += sprintf("%'"+b["h"]+"'"+sprintf("%d", width - 4)+"s", "");
-            line += b["tr"] + b["v"];
+            line = b["v"] + b["tl"] + sprintf("%'"+b["h"]+"'"+sprintf("%d", width - 4)+"s", "") + b["tr"] + b["v"];
             lines += ({ line });
             // Footer Lines
-            if (data["footer"]["align"] == "center" && data["footer"]["columns"] == 1) {
-                foreach (string item in data["footer"]["items"]) {
-                    line = b["v"] + b["v"] + "  " + (ansi?"%^RESET%^":"") + sprintf("%|"+sprintf("%d", width - 8)+"s", item) + (ansi?"%^CYAN%^":"") + "  " + b["v"] + b["v"];
-                    lines += ({ line });
-                }
-            } else {
-                string tmp = sizeof(data["footer"]["items"]) > 0 ? format_page(data["footer"]["items"], data["footer"]["columns"], 4) : "";
-                foreach (string l in explode(tmp, "\n")) {
-                    line = b["v"] + b["v"] + "  " + (ansi ? "%^RESET%^" + l + "%^CYAN%^" : l) + "  " + b["v"] + b["v"];
-                    lines += ({ line });
-                }
+            format = sizeof(data["footer"]["items"]) > 0 ? format_page(data["footer"]["items"], data["footer"]["columns"], 4, center) : "";
+            foreach (string l in explode(format, "\n")) {
+                line = b["v"] + b["v"] + "  " + (ansi ? "%^RESET%^" + l + "%^CYAN%^" : l) + "  " + b["v"] + b["v"];
+                lines += ({ line });
             }
-            // Bottom line
+            // Border Bottom line
             line = b["bl"] + b["b"] + sprintf("%'"+b["h"]+"'"+sprintf("%d", width - 4)+"s", "") + b["b"] + b["br"] + (ansi?"%^RESET%^":"");
             lines += ({ line });
         } else {
-            // Bottom line
+            // Border Bottom line
             line = b["bl"] + sprintf("%'"+b["h"]+"'"+sprintf("%d", width - 2)+"s", "") + b["br"] + (ansi?"%^RESET%^":"");
             lines += ({ line });
         }
