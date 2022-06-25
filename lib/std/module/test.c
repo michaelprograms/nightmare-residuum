@@ -2,10 +2,14 @@
 #define RESET (this_user() ? "%^RESET%^" : ANSI(0))
 #define BOLD (this_user() ? "%^BOLD%^" : ANSI(1))
 #define UNDERLINE (this_user() ? "%^UNDERLINE%^" : ANSI(4))
+#define BLACK (this_user() ? "%^BLACK%^" : ANSI(30))
 #define RED (this_user() ? "%^RED%^" : ANSI(31))
 #define GREEN (this_user() ? "%^GREEN%^" : ANSI(32))
 #define ORANGE (this_user() ? "%^ORANGE%^" : ANSI(33))
 #define CYAN (this_user() ? "%^CYAN%^" : ANSI(36))
+#define B_RED (this_user() ? "%^B_RED%^" : ANSI(41))
+#define B_GREEN (this_user() ? "%^B_GREEN%^" : ANSI(42))
+#define B_ORANGE (this_user() ? "%^B_ORANGE%^BLACK%^" : ANSI(43))
 
 nosave protected mixed UNDEFINED = (([])[0]); // equivalent of UNDEFINED
 
@@ -230,10 +234,10 @@ private string format_string_difference (string actual, string expect) {
     if (!stringp(actual)) actual = identify(actual);
     if (!stringp(expect)) expect = identify(expect);
 
-    actual = replace_string(replace_string(actual, "\n", "\\n"), "\e", "\\e");
-    expect = replace_string(replace_string(expect, "\n", "\\n"), "\e", "\\e");
+    actual = replace_string(replace_string(replace_string(actual, "\n", "\\n"), "\e", "\\e"), "%^", "%%^%^^");
+    expect = replace_string(replace_string(replace_string(expect, "\n", "\\n"), "\e", "\\e"), "%^", "%%^%^^");
     n = string_compare_same_until(actual, expect);
-    result = "'" + (n ? GREEN + actual[0..n-1] : "") + ORANGE + actual[n..] + RED + expect[n..] + RESET + "'";
+    result = "'" + BLACK + (n ? B_GREEN + actual[0..n-1] : "") + B_ORANGE + actual[n..] + B_RED + expect[n..] + RESET + "'";
     return result;
 }
 
