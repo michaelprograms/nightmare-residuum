@@ -276,7 +276,14 @@ string *format_border (mapping data) {
         if (fHeader) {
             string format;
             int center = (data["header"]["align"] == "center");
-            // Header Lines
+            // Header header
+            if (stringp(data["header"]["header"])) {
+                line = b["v"] + b["v"] + "  " + (ansi?"%^WHITE%^BOLD%^":"") + data["header"]["header"] + (ansi?"%^BOLD_OFF%^CYAN%^":"") + sprintf("%' '"+sprintf("%d", width - 8 - strlen(data["header"]["header"]))+"s", "") + "  " + b["v"] + b["v"];
+            } else if (arrayp(data["header"]["header"])) {
+                line = b["v"] + b["v"] + "  " + (ansi?"%^WHITE%^BOLD%^":"") + format_page(data["header"]["header"], data["header"]["columns"], 4, center) + (ansi?"%^BOLD_OFF%^CYAN%^":"") + "  " + b["v"] + b["v"];
+            }
+            lines += ({ line });
+            // Header lines
             format = sizeof(data["header"]["items"]) > 0 ? format_page(data["header"]["items"], data["header"]["columns"], 4, center) : "";
             foreach (string l in explode(format, "\n")) {
                 line = b["v"] + b["v"] + "  " + (ansi ? "%^RESET%^" + l + "%^CYAN%^" : l) + "  " + b["v"] + b["v"];
@@ -300,11 +307,10 @@ string *format_border (mapping data) {
                 // Body child header
                 if (stringp(child["header"])) {
                     line = b["v"] + "   " + (ansi?"%^WHITE%^BOLD%^":"") + child["header"] + (ansi?"%^BOLD_OFF%^CYAN%^":"") + sprintf("%' '"+sprintf("%d", width - 8 - strlen(child["header"]))+"s", "") + "   " + b["v"];
-                    lines += ({ line });
                 } else if (arrayp(child["header"])) {
-                    string l = format_page(child["header"], child["columns"], 4);
-                    lines += ({ b["v"] + "   " + (ansi?"%^WHITE%^BOLD%^":"") + l + (ansi?"%^BOLD_OFF%^CYAN%^":"") + "   " + b["v"] });
+                    line = b["v"] + "   " + (ansi?"%^WHITE%^BOLD%^":"") + format_page(child["header"], child["columns"], 4, center) + (ansi?"%^BOLD_OFF%^CYAN%^":"") + "   " + b["v"];
                 }
+                lines += ({ line });
                 // Body child lines
                 format = sizeof(child["items"]) > 0 ? format_page(child["items"], child["columns"], 4, center) : "";
                 foreach (string l in explode(format, "\n")) {
@@ -323,7 +329,15 @@ string *format_border (mapping data) {
             // Footer top line
             line = b["v"] + b["tl"] + sprintf("%'"+b["h"]+"'"+sprintf("%d", width - 4)+"s", "") + b["tr"] + b["v"];
             lines += ({ line });
-            // Footer Lines
+            // Header header
+            if (stringp(data["footer"]["header"])) {
+                line = b["v"] + b["v"] + "  " + (ansi?"%^WHITE%^BOLD%^":"") + data["footer"]["header"] + (ansi?"%^BOLD_OFF%^CYAN%^":"") + sprintf("%' '"+sprintf("%d", width - 8 - strlen(data["footer"]["header"]))+"s", "") + "  " + b["v"] + b["v"];
+                lines += ({ line });
+            } else if (arrayp(data["footer"]["header"])) {
+                line = b["v"] + b["v"] + "  " + (ansi?"%^WHITE%^BOLD%^":"") + format_page(data["footer"]["header"], data["footer"]["columns"], 4, center) + (ansi?"%^BOLD_OFF%^CYAN%^":"") + "  " + b["v"] + b["v"];
+                lines += ({ line });
+            }
+            // Footer lines
             format = sizeof(data["footer"]["items"]) > 0 ? format_page(data["footer"]["items"], data["footer"]["columns"], 4, center) : "";
             foreach (string l in explode(format, "\n")) {
                 line = b["v"] + b["v"] + "  " + (ansi ? "%^RESET%^" + l + "%^CYAN%^" : l) + "  " + b["v"] + b["v"];
