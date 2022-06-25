@@ -8,26 +8,32 @@ void command (string input, mapping flags) {
 
     border = format_border(([
         "title": "TIME",
-        "header": ([
+        "body": ({
+            a ? ([
+                "header": ({ "Local Time", "Local Date", }),
+                "items": ({
+                    localtime,
+                    localdate,
+                }),
+                "columns": 2,
+                "align": "center",
+            ]) : ([
+                "items": ({
+                    "No local astronomy found",
+                }),
+                "columns": 1,
+                "align": "center",
+            ]),
+        }),
+        "footer": ([
+            "header": ({ "Servertime", "Uptime" }),
             "items": ({
-                "Servertime",
-                "Uptime",
                 ctime(time()),
                 time_from_seconds(uptime()),
             }),
             "columns": 2,
             "align": "center",
         ]),
-        "body": ({
-            ([
-                "items": ({
-                    sprintf("%-12s %s", "Localtime:", localtime),
-                    sprintf("%-12s %s", "Localdate:", localdate),
-                }),
-                "columns": 2,
-                "align": "center",
-            ]),
-        }),
     ]));
     foreach (string line in border) {
         message("system", line + "\n", this_character());
