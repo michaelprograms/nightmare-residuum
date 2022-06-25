@@ -3,7 +3,7 @@
 
 /*  ----- living ----- */
 int handle_move (mixed dest);
-int handle_go (mixed dest, string method, string dir);
+varargs int handle_go (mixed dest, string verb, string dir, string reverse);
 varargs int do_command (string str, int debug);
 int is_living ();
 private void handle_passive_heal ();

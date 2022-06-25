@@ -31,10 +31,10 @@ varargs void do_go_str (string dir) {
     string exit;
 
     if (dir == "enter") {
-        if (exit = env->query_default_enter()) dir = exit;
+        if (exit = env->query_default_enter()) dir = "enter " + exit;
         else return;
     } else if (dir == "out") {
-        if (exit = env->query_default_out()) dir = exit;
+        if (exit = env->query_default_out()) dir = "out " + exit;
         else return;
     }
     env->handle_go(previous_object(), "walk", dir);

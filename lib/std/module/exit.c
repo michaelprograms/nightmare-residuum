@@ -73,8 +73,13 @@ mixed handle_go (object ob, string method, string dir) {
     dir = format_exit_verbose(dir);
 
     if (!(exit = __Exits[dir])) {
-        if (__Exits["enter " + dir] && !__Exits["out " + dir]) exit = __Exits["enter " + dir];
-        else if (__Exits["out " + dir] && !__Exits["enter " + dir]) exit = __Exits["out " + dir];
+        if (__Exits["enter " + dir] && !__Exits["out " + dir]) {
+            dir = "enter " + dir;
+            exit = __Exits[dir];
+        } else if (__Exits["out " + dir] && !__Exits["enter " + dir]) {
+            dir = "out " + dir;
+            exit = __Exits[dir];
+        }
     }
 
     if (!exit || environment(ob) != this_object()) {

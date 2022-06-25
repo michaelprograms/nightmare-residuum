@@ -110,7 +110,7 @@ varargs int do_command (string str, int debug) {
     return 0;
 }
 
-int handle_go (mixed dest, string verb, string dir) {
+varargs int handle_go (mixed dest, string verb, string dir, string reverse) {
     string verbs, article;
     object oldEnv, newEnv;
     int move;
@@ -123,7 +123,7 @@ int handle_go (mixed dest, string verb, string dir) {
     move = handle_move(newEnv);
 
     message("go", "You " + verb + " %^DIR%^" + dir + "%^DEFAULT%^.\n", this_object());
-    message("go", query_cap_name() + " " + verbs + " %^DIR%^in%^DEFAULT%^ from " + article + "%^DIR%^" + format_exit_reverse(dir) + "%^DEFAULT%^.\n", newEnv->query_living_contents(), this_object());
+    message("go", query_cap_name() + " " + verbs + " %^DIR%^in%^DEFAULT%^ from " + article + "%^DIR%^" + (reverse ? reverse : format_exit_reverse(dir)) + "%^DEFAULT%^.\n", newEnv->query_living_contents(), this_object());
     message("go", query_cap_name() + " " + verbs + " %^DIR%^" + dir + "%^DEFAULT%^.\n", oldEnv->query_living_contents(), this_object());
 
     return move;
