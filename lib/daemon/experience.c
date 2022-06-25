@@ -7,7 +7,6 @@
 
 varargs int query_stat_cost (string stat, int level, string c, string s) {
     int bonus = 0;
-    float x2, y2;
 
     if (!stringp(stat)) error("Bad argument 1 to experience->query_stat_cost");
     if (!intp(level)) error("Bad argument 2 to experience->query_stat_cost");
