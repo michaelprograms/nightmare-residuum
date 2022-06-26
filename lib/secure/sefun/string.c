@@ -1,7 +1,8 @@
 // This sefun is called by efun::terminal_colours
 string strip_colour (string str) {
+    if (!str) return str;
     // parse blank ANSI color tags
-    str = terminal_colour(str, D_ANSI->query_unknown_term());
+    str = terminal_colour(""+str, D_ANSI->query_unknown_term());
     // strip default ANSI reset color tag added by fluffos
     str = replace_string(str, "\e[49;49m", "");
     str = replace_string(str, "\e[0;10m", "");
