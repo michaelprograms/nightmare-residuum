@@ -19,6 +19,7 @@ varargs string format_page (string *items, int columns, int pad, int center) {
     w = width / columns; // width of column
     n = sizeof(items); // number of columns
     r = width - (w * columns); // remainder
+    items = map(items, (: "" + $1 :));
 
     for (i = 0; i < n; i += columns) {
         string row = "";
