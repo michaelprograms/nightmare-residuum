@@ -7,7 +7,7 @@ void command (string input, mapping flags) {
 
     if (a) {
         currentMonth = D_ASTRONOMY->query_month(t, a);
-        currentDay = D_ASTRONOMY->query_day(t, a);
+        currentDay = D_ASTRONOMY->query_week(t, a) * a["DAYS_PER_WEEK"] + D_ASTRONOMY->query_day(t, a);
 
         for (int i = 0; i < sizeof(a["MONTH_NAMES"]); i += 4) {
             string *rowHeader = ({ }), *rowItems = ({ });
