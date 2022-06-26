@@ -23,3 +23,7 @@ void create () {
     parent::create();
     reset::create();
 }
+
+int clean_up (mixed *args...) {
+    return clean::clean_up(args);
+}

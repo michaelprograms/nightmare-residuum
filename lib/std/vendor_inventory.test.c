@@ -9,6 +9,9 @@ void before_each_test () {
 void after_each_test () {
     if (objectp(testOb)) destruct(testOb);
 }
+string *test_ignore () {
+    return ::test_ignore() + ({ "clean_up" });
+}
 
 void test_receive () {
     object living, item;
