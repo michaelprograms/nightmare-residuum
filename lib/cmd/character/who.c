@@ -10,15 +10,15 @@ void command (string input, mapping flags) {
     ]);
     string *border;
     int nImm = 0, nChar = 0;
-    object *immortalList = ({ }), *charList = ({ });
-    string *headerList = ({}), *bodyList = ({}), *footerList = ({ });
+    object *immList = ({ }), *charList = ({ });
+    string *headerItems = ({ }), *bodyItems = ({ }), *footerItems = ({ });
 
     foreach (object user in users()) {
         object char;
         if (char = user->query_character()) {
             if (char->query_immortal()) {
                 nImm ++;
-                immortalList += ({ char });
+                immList += ({ char });
             } else {
                 nChar ++;
                 charList += ({ char });
@@ -26,43 +26,40 @@ void command (string input, mapping flags) {
         }
     }
 
-    if (nImm > 0) {
-        immortalList = sort_array(immortalList, (: strcmp($1->query_name(), $2->query_name()) :));
-        foreach (object char in immortalList) {
-            string characterName = char->query_cap_name();
-            if (this_character()->query_immortal()) {
-                characterName += " (" + char->query_user()->query_account()->query_name() + ")";
-            }
-            if (this_user() != char->query_user()) {
-                characterName += " " + time_from_seconds(query_idle(char->query_user()));
-            }
-            headerList += ({ sprintf("%-50s", characterName) + sprintf("%-12s", capitalize(char->query_species())) + " " + sprintf("%3d", char->query_level()) });
-        }
+    if (sizeof(immList) > 0) {
+        immList = sort_array(immList, (: strcmp($1->query_name(), $2->query_name()) :));
+        headerItems += ({
+            conjunction(map(immList, (: "%^MAGENTA%^BOLD%^"+$1->query_cap_name()+"%^RESET%^" :)))
+        });
         data["header"] = ([
-            "items": headerList,
+            "header": ({ "Immortals" }),
+            "items": headerItems,
             "columns": 1,
+            "align": "center",
         ]);
-        footerList += ({ nImm + " immortal" + (nImm > 1 ? "s" : "") });
+        footerItems += ({ nImm + " immortal" + (nImm > 1 ? "s" : "") });
     }
 
     charList = sort_array(charList, (: strcmp($1->query_name(), $2->query_name()) :));
         foreach (object char in charList) {
-            string characterName = char->query_cap_name();
-            if (this_character()->query_immortal()) {
-                characterName += " (" + char->query_user()->query_account()->query_name() + ")";
-            }
-            if (this_user() != char->query_user()) {
-                characterName += " " + time_from_seconds(query_idle(char->query_user()));
-            }
-            bodyList += ({ sprintf("%-50s", characterName) + sprintf("%-12s", capitalize(char->query_species())) + " " + sprintf("%3d", char->query_level()) });
+            bodyItems += ({
+                char->query_level(),
+                char->query_cap_name(),
+                capitalize(char->query_species()),
+                capitalize(char->query_class()),
+            });
         }
-    data["body"] = ([
-        "items": sizeof(bodyList) ? bodyList : ({ "No player characters connected" }),
+    data["body"] = sizeof(bodyItems) ? ([
+        "items": bodyItems,
+        "columns": 4,
+        "align": "left",
+    ]) : ([
+        "items": ({ "No player characters connected" }),
         "columns": 1,
-        "align": sizeof(bodyList) ? "left" : "center",
+        "align": "center",
     ]);
-    footerList += ({ nChar + " character" + (nChar != 1 ? "s" : "") });
-    data["footer"]["items"] = ({ implode(footerList, ", ") });
+    footerItems += ({ nChar + " character" + (nChar != 1 ? "s" : "") });
+    data["footer"]["items"] = ({ implode(footerItems, ", ") });
 
     border = format_border(data);
     foreach (string line in border) {
