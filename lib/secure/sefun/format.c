@@ -309,10 +309,11 @@ string *format_border (mapping data) {
                 // Body child header
                 if (stringp(child["header"])) {
                     line = b["v"] + "   " + (ansi?"%^WHITE%^BOLD%^":"") + child["header"] + (ansi?"%^BOLD_OFF%^CYAN%^":"") + sprintf("%' '"+sprintf("%d", width - 8 - strlen(child["header"]))+"s", "") + "   " + b["v"];
+                    lines += ({ line });
                 } else if (arrayp(child["header"])) {
                     line = b["v"] + "   " + (ansi?"%^WHITE%^BOLD%^":"") + format_page(child["header"], child["columns"], 4, center) + (ansi?"%^BOLD_OFF%^CYAN%^":"") + "   " + b["v"];
+                    lines += ({ line });
                 }
-                lines += ({ line });
                 // Body child lines
                 format = sizeof(child["items"]) > 0 ? format_page(child["items"], child["columns"], 4, center) : "";
                 foreach (string l in explode(format, "\n")) {
