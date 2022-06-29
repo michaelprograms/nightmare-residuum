@@ -3,12 +3,12 @@ inherit M_STORY;
 
 string *query_story_lines (object character) {
     return ({
-        (: do_command("say We are certain you have many questions for us, first of which is that we are Archaeologists, a synthetic species whose legacy is unimportant to explain further at the moment.") :),
-        (: do_command("say The most important answer is that you are untethered from a life that was pre-programmed for you.") :),
-        (: do_command("say Us Archaeologists are unable to proceed deeper into this facility, but we have watched over it for many countless rotations now.") :),
-        (: do_command("say Newborns of your species, this human mankind, are born here due to the workings of an automated system still in operation some eons later.") :),
-        (: do_command("say Most of the newborns complete their knowledge implanation phase without failure, but occasionally someone such as yourself comes along.") :),
-        (: do_command("say The damaged fabric of reality from conflicts long ago have resulted in a disruption to your creation, empowering you in ways the others are not.") :),
+        (: do_command("say Do not be alarmed. We are certain you have many questions for us.") :),
+        (: do_command("say The first of which is that we are Archaeologists, synthetic beings created by antecedants.") :),
+        (: do_command("say This facility uses a cloning process to repopulate your species and provide pre-programmed education to assist you.") :),
+        (: do_command("say Newborns of your species undergo implantation and knowledge assimilation without error.") :),
+        (: do_command("say However, because of intereference from chaotic elements of conflicts long ago, the process is sometimes incomplete, as in your case.") :),
+        (: do_command("say Because you are not limited by the intended programming, you are enabled to pursue greater capacities than others of your kind.") :),
     });
 }
 void story_action_final (object character) {
@@ -27,7 +27,7 @@ void create () {
 
 void handle_receive_living_in_env (object living) {
     if (!living->is_character()) return;
-    do_command("say Hello there, young human. I am R-0111010.");
+    do_command("say Greetings and salutations, young human. I am R-0111010.");
     story_start(living);
 }
 
