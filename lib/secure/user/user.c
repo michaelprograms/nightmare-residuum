@@ -49,7 +49,7 @@ nomask void net_dead () {
 void receive_message (string type, string message) {
     if (type == "system") {
         receive(wrap(message, 0, 0));
-    } else if (type == "wrap" || type == "verb" || type == "action") {
+    } else if (member_array(type, ({ "action", "story", "verb", "wrap", })) > -1) {
         receive(wrap(message));
     } else if (type == "say") {
         message = "%^CYAN%^" + replace_string(message, ":", ":%^RESET%^");
