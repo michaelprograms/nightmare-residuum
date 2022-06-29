@@ -13,7 +13,6 @@ void create () {
         "street": "A narrow street that passes through a village.",
     ]));
     set_exits(([
-        "enter west": HUMAN_ROOM + "stone_structure.c",
         "southeast": HUMAN_ROOM + "broad_st_n2.c",
     ]));
     set_reset(([

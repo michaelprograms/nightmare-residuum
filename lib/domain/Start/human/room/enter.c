@@ -42,7 +42,7 @@ void create () {
     ::create();
     set_short("a tank");
     set_long((: prepare_long :));
-    set_delay(4);
+    set_story_delay(4);
     parse_init();
     parse_add_rule("become", "");
     parse_add_rule("become", "STR");
