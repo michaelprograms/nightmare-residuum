@@ -4,8 +4,13 @@ inherit STD_ROOM;
 inherit M_STORY;
 
 void story_action_final (object character) {
-    set_exit("out north", HUMAN_ROOM + "square.c", 0, function (object ob, string dir) {
-        this_object()->remove_exit(dir);
+    set_exit("out north", HUMAN_ROOM + "square.c", function (object ob, string dir) {
+        ob->handle_go(HUMAN_ROOM + "square", "walk", "out north", "obelisk");
+        ob->describe_environment();
+    }, function (object ob, string dir) {
+        if (sizeof(this_object()->query_living_contents()) == 0) {
+            this_object()->remove_exit(dir);
+        }
         message("action", "The doors close behind you.\n", ob);
         message("action", "The doors on the obelisk close behind " + ob->query_cap_name() + ".\n", environment(ob), ob);
     });
