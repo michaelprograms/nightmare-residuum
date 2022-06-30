@@ -3,15 +3,6 @@
 inherit STD_ROOM;
 inherit M_STORY;
 
-string *query_story_lines (object character) {
-    return ({
-        "You feel a downwards pull as the small room starts moving with upwards momentum.",
-        "The pull begins to fade while air whistles past in a rush.",
-        "The room shakes a little but continues gliding upwards.",
-        "The upwards motion begins to slow and the whistling stalls out.",
-        "Silently, the doors open to the north, revealing an enclosed area with a passage leading north.",
-    });
-}
 void story_action_final (object character) {
     set_exit("out north", HUMAN_ROOM + "square.c", 0, function (object ob, string dir) {
         this_object()->remove_exit(dir);
@@ -24,6 +15,13 @@ void create () {
     ::create();
     set_short("a small room");
     set_long("An enclosed room with smooth blank walls.");
+    set_story_lines(({
+        "You feel a downwards pull as the small room starts moving with upwards momentum.",
+        "The pull begins to fade while air whistles past in a rush.",
+        "The room shakes a little but continues gliding upwards.",
+        "The upwards motion begins to slow and the whistling stalls out.",
+        "Silently, the doors open to the north, revealing an enclosed area with a passage leading north.",
+    }));
 }
 
 int handle_receive (object ob) {

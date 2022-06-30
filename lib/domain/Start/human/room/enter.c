@@ -3,23 +3,12 @@
 inherit STD_ROOM;
 inherit M_STORY;
 
-nosave private object *specimens = ({ });
-
-string *query_story_lines (object target) {
-    return ({
-        "You are naught...nowhere...nobody...nothing...\n",
-        "A shock of creation sparks existence into being.\n",
-        "The pumping of blood pounds in your ears momentarily.\n",
-        "Gasping breaths turn to rhythmic aspirations.\n",
-        "All of your skin goosebumps at the sensation of flowing air.\n",
-        "Your eyes finally shrug off the weight of unconsciousness.\n",
-    });
-}
+nosave private object *people = ({ });
 
 void story_action_final (object target) {
     message("story", "A repetitive beeping tone synced to a blinking red light attracts your attention.\n", target);
     message("story", "You %^CYAN%^[look]%^RESET%^ over your surroundings.\n\n", target);
-    specimens = specimens - ({ 0 }) + ({ target });
+    people = people - ({ 0 }) + ({ target });
     target->describe_environment();
 }
 
@@ -35,7 +24,7 @@ string prepare_long () {
     object tc;
     string long = "The embrace of warm air in the confinement of a tank.";
 
-    if ((tc = this_character()) && member_array(tc, specimens) > -1) {
+    if ((tc = this_character()) && member_array(tc, people) > -1) {
         string err = "%^RED%^BOLD%^ERR-"+(1001+random(9000))+"-"+(10001+random(90000))+"%^RESET%^";
         long += "\n\nA diagnostic display is projected onto the glass. There is a blinking red section displayed with an error code.\n\n";
         long += "%^BOLD%^Specimen Status%^RESET%^\n";
@@ -58,6 +47,14 @@ void create () {
     set_short("a tank");
     set_long((: prepare_long :));
     set_story_delay(4);
+    set_story_lines(({
+        "You are naught...nowhere...nobody...nothing...\n",
+        "A shock of creation sparks existence into being.\n",
+        "The pumping of blood pounds in your ears momentarily.\n",
+        "Gasping breaths turn to rhythmic aspirations.\n",
+        "All of your skin goosebumps at the sensation of flowing air.\n",
+        "Your eyes finally shrug off the weight of unconsciousness.\n",
+    }));
     parse_init();
     parse_add_rule("retry", "");
     parse_add_rule("become", "");
@@ -137,5 +134,5 @@ void do_done () {
     message("say", "A robotic voice chimes: Warning, knowledge assimilation process was not completed, specimen may ... " + err + "! please retry...\n", environment(previous_object()));
     this_character()->handle_go(HUMAN_ROOM + "tank_hallway" + (1 + random(3)), "eject", "tank");
     this_character()->describe_environment();
-    specimens = specimens - ({ 0 }) - ({ this_character() });
+    people = people - ({ 0 }) - ({ this_character() });
 }
