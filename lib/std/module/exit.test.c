@@ -1,4 +1,5 @@
 inherit M_TEST;
+inherit M_MOVE;
 
 private nosave object testOb;
 void before_each_test () {
@@ -171,6 +172,42 @@ void test_query_defaults () {
         r2->remove_exit("out west"),
         assert(r1->query_default_enter(), "==", "enter west"),
         assert(r2->query_default_out(), "==", "out east"),
+    }) :));
+
+    if (r1) destruct(r1);
+    if (r2) destruct(r2);
+}
+
+// catch reverse override for test_exit_reverse_override
+nosave private string __Reverse;
+varargs int handle_go (mixed dest, string verb, string dir, string reverse) {
+    __Reverse = reverse;
+}
+
+void test_exit_reverse_override () {
+    r1 = new(STD_ROOM);
+    r2 = new(STD_ROOM);
+
+    __Reverse = 0;
+    expect("set exit uses reverse override", (: ({
+        // setup room test ob
+        r1->set_exit("east", file_name(r2), 0, 0, "reverse"),
+        r1->set_exit("west", file_name(r2), 0, 0, "override"),
+        // move test to room test ob
+        assert(this_object()->handle_move(r1), "==", 1),
+
+        // verify no reverse overrides seen yet
+        assert(__Reverse, "==", 0),
+
+        // try first override
+        assert(r1->handle_go(this_object(), "method", "east"), "==", 1),
+        assert(__Reverse, "==", "reverse"),
+
+        // try second override
+        assert(r1->handle_go(this_object(), "method", "west"), "==", 1),
+        assert(__Reverse, "==", "override"),
+
+        assert(this_object()->handle_move("/domain/Nowhere/room/void.c"), "==", 1),
     }) :));
 
     if (r1) destruct(r1);

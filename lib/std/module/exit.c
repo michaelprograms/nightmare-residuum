@@ -33,7 +33,7 @@ string query_default_out () {
     return sizeof(outs) == 1 ? outs[0] : 0;
 }
 
-varargs void set_exit (string dir, string dest, function before, function after) {
+varargs void set_exit (string dir, string dest, function before, function after, string reverse) {
     if (!stringp(dir)) error("Bad argument 1 to exit->set_exit");
     if (!stringp(dest)) error("Bad argument 2 to exit->set_exit");
 
@@ -41,6 +41,7 @@ varargs void set_exit (string dir, string dest, function before, function after)
     __Exits[dir]["room"] = dest;
     if (functionp(before)) __Exits[dir]["before"] = before;
     if (functionp(after)) __Exits[dir]["after"] = after;
+    if (stringp(reverse)) __Exits[dir]["reverse"] = reverse;
 }
 void set_exits (mapping exits) {
     __Exits = ([]);
@@ -88,7 +89,7 @@ mixed handle_go (object ob, string method, string dir) {
         return 0;
     } else if (exit["room"]) {
         if ((regexp(exit["room"], "#[0-9]+") && find_object(exit["room"])) || (file_size(exit["room"]) > 0)) {
-            ob->handle_go(exit["room"], method, dir);
+            ob->handle_go(exit["room"], method, dir, exit["reverse"]);
             ob->describe_environment();
             if (exit["after"]) {
                 evaluate(exit["after"], ob, dir);

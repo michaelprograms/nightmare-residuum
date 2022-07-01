@@ -18,6 +18,7 @@ void create () {
     set_short("a small room");
     set_long("An enclosed room with smooth blank walls.");
     set_story_lines( ({
+        "The doors close behind you.",
         "You feel a downwards pull as the small room starts moving with upwards momentum.",
         "The pull begins to fade while air whistles past in a rush.",
         "The room shakes a little but continues gliding upwards.",
@@ -30,7 +31,6 @@ int handle_receive (object ob) {
     int result = ::handle_receive(ob);
     if (result && ob->is_character()) {
         story_start(ob);
-        message("action", "\nThe doors close behind you.\n\n", ob);
     }
     return result;
 }
