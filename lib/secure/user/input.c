@@ -128,7 +128,7 @@ private nomask class Input get_top_handler (int require_handler) {
         some_popped = 1;
     }
 
-    if (!require_handler || create_handler()) return 0;
+    if (!require_handler || create_handler() || !sizeof(stack)) return 0;
     return stack[<1];
 }
 
