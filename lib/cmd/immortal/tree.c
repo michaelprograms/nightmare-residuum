@@ -41,13 +41,13 @@ void command (string input, mapping flags) {
     } else {
         message("system", "Tree of " + file + "\n\n", this_user());
     }
-    foreach (string line in tree(file, 0, fn, b)) {
+    foreach (string line in tree(file, 0, fn, b, 0, 0, ([ ]))) {
         message("system", line + "\n", this_user());
     }
     message("system", "\n", this_user());
 }
 
-varargs string *tree (string file, int indent, string fn, mapping b, int index, int maxIndex) {
+varargs string *tree (string file, int indent, string fn, mapping b, int index, int maxIndex, mapping prefix) {
     string *result = ({ }), tmp = "", *inherits, err;
     object ob;
     int l, searchFlag = 0;
@@ -66,9 +66,14 @@ varargs string *tree (string file, int indent, string fn, mapping b, int index, 
     l = sizeof(inherits = inherit_list(ob));
     searchFlag = (stringp(fn) && function_exists(fn, ob) + ".c" == file);
 
+    if (index > 0 && index == maxIndex) {
+        prefix[indent-1] = " ";
+    }
+
     if (indent > 0) {
         for (int i = 0; i < indent-1; i ++ ) {
-            tmp += b["v"] + "  ";
+            if (prefix[i]) tmp += prefix[i] + "  ";
+            else tmp += b["v"] + "  ";
         }
         tmp += (index == maxIndex ? b["bl"] : b["l"]) + b["h"] + " ";
     }
@@ -81,7 +86,7 @@ varargs string *tree (string file, int indent, string fn, mapping b, int index, 
 
     indent ++;
     for (int i = 0; i < l; i ++) {
-        result += tree(inherits[i], indent, fn, b, i+1, l);
+        result += tree(inherits[i], indent, fn, b, i+1, l, prefix);
     }
 
     return result;
