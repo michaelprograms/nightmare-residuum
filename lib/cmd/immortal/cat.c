@@ -1,28 +1,5 @@
-#include <driver/runtime_config.h>
-
-mapping fds;
-
-void read_call_back (int fd, mixed mess) { }
-void write_call_back (int fd) { }
-void close_call_back (int fd) {
-    string file, *lines;
-
-    if (undefinedp(fds[fd]) || !objectp(fds[fd])) return;
-
-    file = "/tmp/" + fds[fd]->query_name();
-    lines = explode(read_file(file), "\n");
-    foreach (string line in lines) {
-        message("action", line + "\n", fds[fd]);
-    }
-
-    rm(file);
-    map_delete(fds, fd);
-}
-
 void command (string input, mapping flags) {
-    string cwd, file;
-    string *params;
-    int fd;
+    string cwd, file, *lines;
 
     if (!input) {
         write("Syntax: cat [file]\n");
@@ -39,13 +16,8 @@ void command (string input, mapping flags) {
             return;
     }
 
-    params = ({ "-l","pike","-O","style=native,linenos=1","-f","terminal256","-o",get_config(__MUD_LIB_DIR__)+"/tmp/"+this_character()->query_name(),get_config(__MUD_LIB_DIR__)+file });
-    write("params: "+implode(params, " ")+"\n");
-    fd = external_start(1, params, (:read_call_back:), (:write_call_back:), (:close_call_back:));
-    if (fd < 0) {
-        write("cat: external call failed with error: "+fd+".\n");
-        return;
+    lines = explode(read_file(file), "\n");
+    foreach (string line in lines) {
+        write(line + "\n");
     }
-    if (!mapp(fds)) fds = ([]);
-    fds[fd] = this_character();
 }
