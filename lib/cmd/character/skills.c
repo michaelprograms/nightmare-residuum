@@ -1,7 +1,7 @@
 void command (string input, mapping flags) {
     object tc = this_character(), target = tc;
     string *skills;
-    string *border, subtitle, *body = ({ });
+    string *border, *body = ({ });
 
     if (input && tc->query_immortal()) {
         if (find_character(input)) target = find_character(input);
