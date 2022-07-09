@@ -20,10 +20,11 @@ void command (string input, mapping flags) {
         "body": ([
             "items": ({
                 sprintf("%12s", "Species") + ": " + capitalize(target->query_gender()) + " " + capitalize(target->query_species()),
+                sprintf("%12s", "Class") + ": " + capitalize(target->query_class()),
                 sprintf("%12s", "Level") + ": " + target->query_level(),
+                sprintf("%12s", "Experience") + ": " + format_integer(target->query_experience()),
                 sprintf("%12s", "Victories") + ": " + target->query_victory(),
                 sprintf("%12s", "Defeats") + ": " + target->query_defeat(),
-                sprintf("%12s", "Experience") + ": " + format_integer(target->query_experience()),
             }),
             "columns": 2,
         ]),
