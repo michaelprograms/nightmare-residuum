@@ -44,3 +44,32 @@ void test_multiple_bonuses () {
         assert(testOb->query_bonuses(), "==", ([ "strength": 2, "luck": 3, ])),
     }) :));
 }
+
+nosave private mapping __BonusesApplied = ([ ]);
+
+// Listen for receive/release events from the room
+void add_stat_bonus (string stat, int n) {
+    __BonusesApplied[stat] = n;
+}
+
+void test_apply_and_remove_bonuses () {
+    expect_function("apply_bonus", testOb);
+    expect_function("remove_bonus", testOb);
+
+    expect("bonuses are applied and removed ", (: ({
+        // set bonuses
+        assert(testOb->set_bonuses(([ "strength": 123, "charisma": 123, ])), "==", ([ "strength": 123, "charisma": 123, ])),
+        assert(testOb->query_bonuses(), "==", ([ "strength": 123, "charisma": 123, ])),
+
+        // apply bonuses
+        testOb->apply_bonus(this_object()),
+        // verify bonuses were applied
+        assert(__BonusesApplied, "==", ([ "strength": 123, "charisma": 123, ])),
+
+        // apply bonuses
+        testOb->remove_bonus(this_object()),
+        // verify bonuses were reversed
+        assert(__BonusesApplied, "==", ([ "strength": -123, "charisma": -123, ])),
+
+    }) :));
+}

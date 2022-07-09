@@ -36,10 +36,10 @@ object query_worn () {
 }
 void set_worn (object wearer) {
     if (!wearer) {
-        if (__Worn) remove_bonuses(__Worn);
+        if (__Worn) remove_bonus(__Worn);
     }
     __Worn = wearer;
-    if (__Worn) add_bonuses(__Worn);
+    if (__Worn) apply_bonus(__Worn);
 }
 
 int query_ac () {

@@ -2,6 +2,8 @@
 
 nosave private mapping __Bonuses = ([ ]);
 
+/* ----- querying ----- */
+
 mixed query_bonus (string key) {
     if (!stringp(key) || key == "") error("Bad argument 1 to bonus->query_bonus");
     if (!mapp(__Bonuses)) __Bonuses = ([ ]);
@@ -11,6 +13,9 @@ mapping query_bonuses () {
     if (!mapp(__Bonuses)) __Bonuses = ([ ]);
     return __Bonuses;
 }
+
+/* ----- setting ----- */
+
 mixed set_bonus (string key, mixed value) {
     if (!stringp(key) || key == "") error("Bad argument 1 to bonus->set_bonus");
     if (!intp(value)) error("Bad argument 2 to bonus->set_bonus");
@@ -26,15 +31,16 @@ mapping set_bonuses (mapping bonuses) {
     return __Bonuses;
 }
 
-void add_bonuses (object target) {
+/* ----- applying ----- */
+
+void apply_bonus (object target) {
     foreach (string key, int value in __Bonuses) {
         if (member_array(key, ({ "strength", "perception", "endurance", "charisma", "intelligence", "agility", "luck", })) > -1) {
             target->add_stat_bonus(key, value);
         }
     }
 }
-
-void remove_bonuses (object target) {
+void remove_bonus (object target) {
     foreach (string key, int value in __Bonuses) {
         if (member_array(key, ({ "strength", "perception", "endurance", "charisma", "intelligence", "agility", "luck", })) > -1) {
             target->add_stat_bonus(key, -value);
