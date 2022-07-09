@@ -1,7 +1,15 @@
 #!/bin/bash
 
-driverDocs=driver/docs          # update to driver path
-libDocs=lib/doc                 # update to mudlib path
+# !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+# update to fluffos driver docs directory path
+driverDocs=driver/docs
+# update to mudlib docs directory path
+libDocs=lib/doc
+
+# !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+
 
 types=("apply" "efun" "lpc")    # exclude concepts, driver, stdlib, and zh-CN
 
