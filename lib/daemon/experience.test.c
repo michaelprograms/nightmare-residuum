@@ -50,22 +50,32 @@ void test_query_skill_cost () {
     expect_function("query_skill_cost", testOb);
 
     expect("query_skill_cost returns ascending values", (: ({
-        assert(testOb->query_skill_cost(0), "==", 1),
-        assert(testOb->query_skill_cost(-1), "==", 1),
-        assert(testOb->query_skill_cost(-50), "==", 1),
-        assert(testOb->query_skill_cost(1), ">", 1),
-        assert(testOb->query_skill_cost(2), ">", testOb->query_skill_cost(1)),
-        assert(testOb->query_skill_cost(100), ">", testOb->query_skill_cost(2)),
-        assert(testOb->query_skill_cost(1000), ">", testOb->query_skill_cost(100)),
+        assert(testOb->query_skill_cost("blade attack", 0, 0, 0), "==", 1),
+        assert(testOb->query_skill_cost("blade attack", -1, 0, 0), "==", 1),
+        assert(testOb->query_skill_cost("blade attack", -50, 0, 0), "==", 1),
+        assert(testOb->query_skill_cost("blade attack", 1, 0, 0), ">", 1),
+        assert(testOb->query_skill_cost("blade attack", 2, 0, 0), ">", testOb->query_skill_cost("blade attack", 1)),
+        assert(testOb->query_skill_cost("blade attack", 100, 0, 0), ">", testOb->query_skill_cost("blade attack", 2)),
+        assert(testOb->query_skill_cost("blade attack", 1000, 0, 0), ">", testOb->query_skill_cost("blade attack", 100)),
     }) :));
+
+    // @TODO class and species adjustments
 
     expect("query_skill_cost handles invalid argument 1", (: ({
         assert((: testOb->query_skill_cost(this_object()) :), "catch", "*Bad argument 1 to experience->query_skill_cost\n"),
-        assert((: testOb->query_skill_cost("") :), "catch", "*Bad argument 1 to experience->query_skill_cost\n"),
+        assert((: testOb->query_skill_cost(1) :), "catch", "*Bad argument 1 to experience->query_skill_cost\n"),
         assert((: testOb->query_skill_cost(1.0) :), "catch", "*Bad argument 1 to experience->query_skill_cost\n"),
         assert((: testOb->query_skill_cost(({})) :), "catch", "*Bad argument 1 to experience->query_skill_cost\n"),
         assert((: testOb->query_skill_cost(([])) :), "catch", "*Bad argument 1 to experience->query_skill_cost\n"),
         assert((: testOb->query_skill_cost((: 1 :)) :), "catch", "*Bad argument 1 to experience->query_skill_cost\n"),
+    }) :));
+    expect("query_skill_cost handles invalid argument 2", (: ({
+        assert((: testOb->query_skill_cost("strength", this_object()) :), "catch", "*Bad argument 2 to experience->query_skill_cost\n"),
+        assert((: testOb->query_skill_cost("strength", 1.0) :), "catch", "*Bad argument 2 to experience->query_skill_cost\n"),
+        assert((: testOb->query_skill_cost("strength", "") :), "catch", "*Bad argument 2 to experience->query_skill_cost\n"),
+        assert((: testOb->query_skill_cost("strength", ({})) :), "catch", "*Bad argument 2 to experience->query_skill_cost\n"),
+        assert((: testOb->query_skill_cost("strength", ([])) :), "catch", "*Bad argument 2 to experience->query_skill_cost\n"),
+        assert((: testOb->query_skill_cost("strength", (: 1 :)) :), "catch", "*Bad argument 2 to experience->query_skill_cost\n"),
     }) :));
 }
 

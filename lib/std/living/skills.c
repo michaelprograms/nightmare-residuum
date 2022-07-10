@@ -24,7 +24,7 @@ private mapping query_default_skills () {
 private int query_skill_next_points (string skill) {
     if (!__Skills) __Skills = query_default_skills();
     if (!__Skills[skill]) return 0;
-    return D_EXPERIENCE->query_skill_cost(__Skills[skill]["level"]); // @TODO skill tiers
+    return D_EXPERIENCE->query_skill_cost(skill, __Skills[skill]["level"], this_object()->query_class(), this_object()->query_species());
 }
 
 string *query_all_skills () {
