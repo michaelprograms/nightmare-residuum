@@ -62,3 +62,19 @@ void test_query_adjust_stats () {
         assert(testOb->query_adjust_stat("nonexistant", "nonexistant"), "==", 0),
     }) :));
 }
+
+void test_query_adjust_skills () {
+    expect_function("query_adjust_skill", testOb);
+
+    expect("skill adjustments are queryable", (: ({
+        assert(testOb->query_adjust_skill("warrior", "blade attack"), "==", 3),
+        assert(testOb->query_adjust_skill("templar", "blade attack"), "==", 3),
+        assert(testOb->query_adjust_skill("scoundrel", "blade attack"), "==", 2),
+        assert(testOb->query_adjust_skill("ranger", "blade attack"), "==", 1),
+        assert(testOb->query_adjust_skill("mentalist", "blade attack"), "==", 0),
+        assert(testOb->query_adjust_skill("paladin", "blade attack"), "==", 1),
+
+        assert(testOb->query_adjust_skill("nonexistant", "blade attack"), "==", 0),
+        assert(testOb->query_adjust_skill("nonexistant", "nonexistant"), "==", 0),
+    }) :));
+}
