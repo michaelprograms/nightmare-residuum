@@ -20,6 +20,8 @@ void test_query_adjust_vitals () {
         assert(testOb->query_adjust_hp("ranger"), "==", 0),
         assert(testOb->query_adjust_hp("mentalist"), "==", 0),
         assert(testOb->query_adjust_hp("paladin"), "==", 2),
+
+        assert(testOb->query_adjust_hp("nonexistant"), "==", 0),
     }) :));
 
     expect("sp adjustments are queryable", (: ({
@@ -29,6 +31,8 @@ void test_query_adjust_vitals () {
         assert(testOb->query_adjust_sp("ranger"), "==", 2),
         assert(testOb->query_adjust_sp("mentalist"), "==", 1),
         assert(testOb->query_adjust_sp("paladin"), "==", 0),
+
+        assert(testOb->query_adjust_sp("nonexistant"), "==", 0),
     }) :));
 
     expect("mp adjustments are queryable", (: ({
@@ -38,5 +42,23 @@ void test_query_adjust_vitals () {
         assert(testOb->query_adjust_mp("ranger"), "==", 2),
         assert(testOb->query_adjust_mp("mentalist"), "==", 3),
         assert(testOb->query_adjust_mp("paladin"), "==", 2),
+
+        assert(testOb->query_adjust_mp("nonexistant"), "==", 0),
+    }) :));
+}
+
+void test_query_adjust_stats () {
+    expect_function("query_adjust_stat", testOb);
+
+    expect("stat adjustments are queryable", (: ({
+        assert(testOb->query_adjust_stat("warrior", "strength"), "==", 3),
+        assert(testOb->query_adjust_stat("templar", "strength"), "==", 2),
+        assert(testOb->query_adjust_stat("scoundrel", "strength"), "==", 1),
+        assert(testOb->query_adjust_stat("ranger", "strength"), "==", 1),
+        assert(testOb->query_adjust_stat("mentalist", "strength"), "==", 0),
+        assert(testOb->query_adjust_stat("paladin", "strength"), "==", 2),
+
+        assert(testOb->query_adjust_stat("nonexistant", "strength"), "==", 0),
+        assert(testOb->query_adjust_stat("nonexistant", "nonexistant"), "==", 0),
     }) :));
 }
