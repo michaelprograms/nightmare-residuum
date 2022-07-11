@@ -69,3 +69,27 @@ void test_species () {
         assert(testOb->query_species(), "==", "robot"), // species was not changed
     }) :));
 }
+
+void test_limbs () {
+    expect_function("query_limbs", testOb);
+    expect_function("query_limb", testOb);
+    expect_function("query_random_limb", testOb);
+
+    expect("species limbs are queryable", (: ({
+        assert(testOb->query_limbs(), "==", ({ })),
+
+        testOb->set_species("human"),
+        assert(sort_array(testOb->query_limbs(), 1), "==", ({ "head", "left arm", "left foot", "left hand", "left leg", "right arm", "right foot", "right hand", "right leg", "torso" })),
+
+        assert(testOb->query_limb("torso"), "==", ([ "damage": 0, "maxdamage": 1, "pct": 100, "type": "FATAL", ])),
+
+        // @TODO check maxdamage with level/stats
+    }) :));
+
+    expect("species random limb behaves", (: ({
+        // check random limb is valid
+        assert(member_array(testOb->query_random_limb(), ({ "head", "left arm", "left foot", "left hand", "left leg", "right arm", "right foot", "right hand", "right leg", "torso" })) > -1, "==", 1),
+        // run a second check
+        assert(member_array(testOb->query_random_limb(), ({ "head", "left arm", "left foot", "left hand", "left leg", "right arm", "right foot", "right hand", "right leg", "torso" })) > -1, "==", 1),
+    }) :));
+}
