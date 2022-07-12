@@ -7,7 +7,6 @@ void create () {
     set_short("an orchard");
     set_long("Lines of evenly spaced trees form an orchard. Grassy pathways with dirt patches separate the rows. A framework of hexagons glimmer overhead.");
     set_exits(([
-        "west": HUMAN_ROOM + "orchard_entrance.c",
         "east": HUMAN_ROOM + "orchard_2.c",
         "north": HUMAN_ROOM + "orchard_5.c",
         "northeast": HUMAN_ROOM + "orchard_6.c",
