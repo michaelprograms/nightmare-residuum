@@ -8,7 +8,9 @@ void create () {
     set_long("A grassy area with several lazy walkways passing through. Some sections of the area grow freely in a meadow filled with wild grasses and flowers. A framework of hexagons glimmer far overhead.");
     set_exits(([
         "west": HUMAN_ROOM + "walnut_st_e2.c",
+        "east": HUMAN_ROOM + "walnut_st_e4.c",
         "north": HUMAN_ROOM + "spruce_st_s2.c",
+        "south": HUMAN_ROOM + "spruce_st_s4.c",
     ]));
     set_looks(([
 
