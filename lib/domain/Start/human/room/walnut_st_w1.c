@@ -9,6 +9,7 @@ void create () {
     set_exits(([
         "east": HUMAN_ROOM + "broad_st_s3.c",
         "west": HUMAN_ROOM + "walnut_st_w2.c",
+        "enter north": HUMAN_ROOM + "intro_warrior.c",
     ]));
     set_looks(([
         "street": "A village street labeled W Walnut St.",
