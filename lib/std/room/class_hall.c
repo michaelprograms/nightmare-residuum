@@ -19,5 +19,6 @@ int can_receive (object ob) {
 }
 
 void create () {
-    ::create();
+    room::create();
+    train::create();
 }
