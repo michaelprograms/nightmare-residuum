@@ -8,7 +8,7 @@ void command (string input, mapping flags) {
     object ob;
     object *keep = ({ });
 
-    if (!input) {
+    if (!input || input == "") {
         message("system", "Update which file?\n", this_user());
         return;
     } if (input == "here") {
