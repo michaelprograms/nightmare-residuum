@@ -12,13 +12,17 @@ mixed can_train () {
 void do_train () {
     message("action", "Syntax: %^CYAN%^[train (stat)]%^RESET%^\n", this_character());
 }
-mixed can_train_str () {
+mixed can_train_str (mixed args...) {
     return environment(this_character()) == this_object();
 }
-void do_train_str (string str) {
+void do_train_str (mixed args...) {
     object tc = this_character();
-    string stat = format_stat_verbose(str);
+    string stat;
     int cost;
+
+    if (args && sizeof(args) > 0) {
+        stat = format_stat_verbose(args[0]);
+    }
 
     if (!stat || member_array(stat, STATS) == -1) {
         return do_train();
