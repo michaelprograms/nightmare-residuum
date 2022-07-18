@@ -16,3 +16,36 @@ int handle_pre_exit (object ob, string dir) {
     }
     return 1;
 }
+
+void create () {
+    ::create();
+
+    parse_init();
+    parse_add_rule("become", "STR");
+}
+
+mixed can_become_str (mixed args...) {
+    return environment(previous_object()) == this_object();
+}
+void do_become_str (mixed args...) {
+    object po = previous_object();
+    string str;
+
+    if (sizeof(args) > 0) {
+        str = args[0];
+    } else {
+        return;
+    }
+
+    if (str != query_class()) {
+        message("action", "You can only become a " + query_class() + " here.\n", po);
+        return;
+    }
+    if (po->query_class() != "adventurer") {
+        message("action", "You already have a class.\n", po);
+        return;
+    }
+
+    message("action", "You become a " + str + ".\n", po);
+    po->set_class(str);
+}
