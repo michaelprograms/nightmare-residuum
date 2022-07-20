@@ -7,14 +7,14 @@ void create () {
     set_properties(([
         "no attack": 1,
     ]));
-    set_short("a village pub");
-    set_long("The inside of a brick building that consists of a sparsely furnished room. There is an open door to the south facing the street next to a singular wide window. Some chairs are scattered around some weight training equipment.");
+    set_short("a warrior's hall");
+    set_long("The second floor of a brick building that consists of the personal training area of the warriors. Training equipment can be seen scattered around the sides of the room. A staircase leads back down to the first floor.");
     set_exits(([
         "down": HUMAN_ROOM + "intro_warrior.c",
     ]));
     set_looks(([
-        ({ "chairs", "equipment" }): "Chairs in this sparsely furnished room that are scattered around a few weight training stations.",
-        ({ "door", "window" }): "The front of the building consists of a door that swings open to the street and a wide window.",
+        "equipment": "Things used to make a warrior strong.",
+        "stairs": "The staircase lead back down to the first floor of the building.",
     ]));
     set_class("warrior");
 }

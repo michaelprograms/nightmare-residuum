@@ -12,7 +12,6 @@ void create () {
     set_exits(([
         "out south": HUMAN_ROOM + "walnut_st_w1.c",
     ]));
-    // @TODO abstract this
     set_exit("up", HUMAN_ROOM + "hall_warrior.c", (: handle_pre_exit :), 0);
     set_looks(([
         ({ "chairs", "equipment" }): "Chairs in this sparsely furnished room that are scattered around a few weight training stations.",
@@ -20,6 +19,4 @@ void create () {
     ]));
 
     set_class("warrior");
-
-    // @TODO become warrior
 }
