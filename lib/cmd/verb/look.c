@@ -62,7 +62,7 @@ mixed can_look_obj (string str, string verb) {
 }
 varargs mixed do_look_at_obj (object ob, mixed arg) {
     object po = previous_object();
-    string long = ob->query_long();
+    string long = replace_string(ob->query_long(), "%^DEFAULT%^", "%^RESET%^");
 
     if (sizeof(long) && long[<1] != '\n') long += "\n";
 
@@ -95,6 +95,7 @@ mixed do_look_at_liv (object ob, mixed arg...) {
 
     if (str = ob->query_long()) {
         if (sizeof(str) && str[<1] != '\n') str += "\n";
+        str = replace_string(str, "%^DEFAULT%^", "%^RESET%^");
         message("verb", str + "\n", po);
     }
     if (po->query_immortal()) {
