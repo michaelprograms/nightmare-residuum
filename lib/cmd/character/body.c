@@ -15,13 +15,13 @@ void command (string input, mapping flags) {
     })) {
         foreach (string l in sort_array(filter_array(limbs, (: regexp($1, $(type)) :)), 1)) {
             mapping limb = target->query_limb(l);
-            items += ({ sprintf("  %-16s %3s", l, (limb["damage"]*100/limb["maxdamage"])+"%") });
+            items += ({ sprintf("  %-24s %3s", l, (limb["damage"]*100/limb["maxdamage"])+"%") });
             limbs -= ({ l });
         }
     }
     foreach (string l in limbs) {
         mapping limb = target->query_limb(l);
-        items += ({ sprintf("  %-16s %3s", l, (limb["damage"]*100/limb["maxdamage"])+"%") });
+        items += ({ sprintf("  %-24s %3s", l, (limb["damage"]*100/limb["maxdamage"])+"%") });
     }
 
     border = format_border(([
