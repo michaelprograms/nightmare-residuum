@@ -44,19 +44,12 @@ void handle_victory (object source) {
 }
 void handle_defeat (int keep) {
     object env = environment(), corpse;
-    string *currencies;
 
     add_defeat();
 
     if (env) {
         corpse = new(ITEM_CORPSE);
-        if (sizeof(currencies = this_object()->query_currencies())) {
-            object coins = new(ITEM_COINS);
-            foreach (string currency in currencies) {
-                coins->add_currency(currency, this_object()->query_currency(currency));
-            }
-            coins->handle_move(corpse);
-        }
+        corpse->setup_body(this_object());
         corpse->handle_move(env);
         if (this_object()->query_cap_name()) {
             message("system", this_object()->query_cap_name() + " drops %^RED%^dead%^RESET%^.\n", env, this_object());

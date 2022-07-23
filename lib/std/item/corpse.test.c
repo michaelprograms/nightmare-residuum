@@ -48,3 +48,39 @@ void test_corpse () {
         assert(testOb->is_npc(), "==", UNDEFINED),
     }) :));
 }
+
+void test_body () {
+    object liv = new(STD_LIVING);
+    expect_function("setup_body", testOb);
+
+    liv->set_name("tester");
+    liv->set_id(({ "tester" }));
+    liv->set_short("a tester");
+
+    expect("body is setup to match", (: ({
+        testOb->setup_body($(liv)),
+        // verify we set corpse information
+        assert(testOb->query_name(), "==", "corpse of tester"),
+        assert(testOb->query_id(), "==", ({ "corpse", "corpseoftester", "corpse of tester" })),
+        assert(testOb->query_short(), "==", "the corpse of a tester"),
+    }) :));
+
+    liv->set_short("a %^BOLD%^tester%^DEFAULT%^");
+    expect("body handles short with DEFAULT", (: ({
+        testOb->setup_body($(liv)),
+        // verify we keep %^DEFAULT%^ instead of replacing to %^RESET%^
+        assert(testOb->query_short(), "==", "the corpse of a %^BOLD%^tester%^DEFAULT%^"),
+    }) :));
+
+    liv->add_currency("copper", 12345);
+    expect("body transfers currency", (: ({
+        assert(present("coins", testOb), "==", 0),
+        assert($(liv)->query_currency("copper"), "==", 12345),
+        testOb->setup_body($(liv)),
+        // verify coins moved to corpse
+        assert(present("coins", testOb)->query_currency("copper"), "==", 12345),
+        assert($(liv)->query_currency("copper"), "==", 0),
+    }) :));
+
+    destruct(liv);
+}
