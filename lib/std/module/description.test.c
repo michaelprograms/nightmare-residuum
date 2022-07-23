@@ -43,4 +43,10 @@ void test_short () {
         testOb->set_short(0),
         assert(testOb->query_short(), "==", 0),
     }) :));
+
+    expect("short handles DEFAULT ANSI replacement", (: ({
+        testOb->set_short("%^BLUE%^Blue text%^DEFAULT%^"),
+        assert(testOb->query_short(), "==", "%^BLUE%^Blue text%^RESET%^"),
+        assert(testOb->query_short("%^RED%^"), "==", "%^BLUE%^Blue text%^RED%^"),
+    }) :));
 }

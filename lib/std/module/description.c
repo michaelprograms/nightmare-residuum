@@ -11,6 +11,14 @@ string query_long () {
 nomask void set_short (mixed m) {
     __Short = m;
 }
-string query_short () {
-    return evaluate(__Short);
+varargs string query_short (string defaultANSI) {
+    string s = evaluate(__Short);
+
+    // handle %^DEFAULT%^ in shorts
+    if (strlen(s) && regexp(s, "DEFAULT")) {
+        if (undefinedp(defaultANSI)) defaultANSI = "%^RESET%^";
+        s = replace_string(s, "%^DEFAULT%^", defaultANSI);
+    }
+
+    return s;
 }
