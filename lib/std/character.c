@@ -184,12 +184,11 @@ private void describe_environment_living_contents () {
             else return 1;
         } else return strcmp(a->query_cap_name(), b->query_cap_name());
     });
-    list = unique_array(list, (: $1->query_short() :));
+    list = unique_array(list, (: $1->query_short("%^RED%^BOLD%^") :));
     if (sizeof(list)) {
-        shorts = map_array(list, (: consolidate(sizeof($1), $1[0]->query_short()) :));
+        shorts = map_array(list, (: consolidate(sizeof($1), $1[0]->query_short("%^RED%^BOLD%^")) :));
         shorts = map_array(shorts, (: $1 :));
         shorts[0] = capitalize(shorts[0]);
-        // message("room_living_contents", implode(shorts, "\n") + "\n\n", this_object());
         shorts = map_array(shorts, (: "%^BOLD%^" + $1 + "%^BOLD_OFF%^DEFAULT%^" :));
         conjunctions = conjunction(shorts);
         message("room_living_contents", conjunctions + " " + (regexp(conjunctions, " and ") ? "are" : "is") + " here.\n\n", this_object());
