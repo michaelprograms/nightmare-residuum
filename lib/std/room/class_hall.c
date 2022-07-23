@@ -1,4 +1,5 @@
 inherit STD_ROOM;
+inherit M_ADVANCE;
 inherit M_TRAIN;
 
 nosave private string __Class;
@@ -19,6 +20,7 @@ int can_receive (object ob) {
 }
 
 void create () {
+    advance::create();
     room::create();
     train::create();
 }
