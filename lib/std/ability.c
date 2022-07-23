@@ -127,7 +127,9 @@ void do_verb_liv (mixed args...) {
 
     // train relevant skills
     source->train_skill(__SkillType + " attack", 1.0);
-    target->train_skill(__SkillType + " defense", 1.0);
+    if (target) {
+        target->train_skill(__SkillType + " defense", 1.0);
+    }
 }
 
 // Handle no input
