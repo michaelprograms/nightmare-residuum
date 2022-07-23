@@ -12,6 +12,13 @@
 #define SKILL_ADJ(n) (n * 0.01)
 #define SKILL_BASE   100
 
+#define LEVEL_X1     2.0
+#define LEVEL_Y1     3.0
+#define LEVEL_X2     2.0
+#define LEVEL_Y2     3.5
+#define LEVEL_BASE   100
+
+
 varargs int query_stat_cost (string stat, int level, string c, string s) {
     int bonus = 0;
 
@@ -50,10 +57,18 @@ varargs int query_skill_cost (string skill, int level, string c, string s) {
     );
 }
 
-// int query_level_cost (int level) {
+int query_level_cost (int level) {
+    if (!intp(level)) error("Bad argument 1 to experience->query_level_cost");
 
-//     return 0;
-// }
+    if (level < 1) return 1;
+
+    // (Level * Base) + X1 * (Level ^ Y1 + X2 * (Level ^ Y2)
+    return to_int(
+        level * LEVEL_BASE +
+        LEVEL_X1 * pow(1.0 * level, LEVEL_Y1) +
+        LEVEL_X2 * pow(1.0 * level, LEVEL_Y2)
+    );
+}
 
 int query_value (mixed m) {
     float lvl, exp;
