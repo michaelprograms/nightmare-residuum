@@ -11,7 +11,7 @@ void create() {
     plasma = "%^RESET" + plasma + "%^DEFAULT%^";
     set_id(({ "snail", "plasma snail" }));
     set_name("plasma snail");
-    set_short(plasma + " snail");
+    set_short("a " + plasma + " snail");
     set_long("A snail swirling with a colorful array of " + plasma + ".");
     set_level(3);
     set_species("snail");
