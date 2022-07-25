@@ -1,6 +1,6 @@
 inherit STD_MONSTER;
 
-#define PLASMA_COLORS ({"%^BLUE%^BOLD%^", "%^BLUE%^", "%^BLUE%^BOLD%^", "%^CYAN%^BOLD%^", "%^CYAN%^", "%^GREEN%^BOLD%^", })
+#define PLASMA_COLORS ({"%^BLUE%^BOLD%^", "%^BLUE%^BOLD%^", "%^BLUE%^BOLD%^", "%^CYAN%^BOLD%^", "%^GREEN%^BOLD%^", })
 
 void create() {
     string plasma = "";
