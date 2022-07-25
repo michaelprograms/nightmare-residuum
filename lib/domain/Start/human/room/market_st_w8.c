@@ -15,4 +15,7 @@ void create () {
         "hatch": "There are two hatches here, one to the west and one to the east, allowing entry into and out of the dome.",
         "light": "The light is redirected with reflective surfaces to provide natural light in here.",
     ]));
+    set_reset(([
+        HUMAN_MONSTER + "plasma_snail.c": 2,
+    ]));
 }
