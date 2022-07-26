@@ -229,7 +229,7 @@ private void process (int t, string key, mapping a) {
 
     if (nextPhase > 0) {
         if (t >= nextPhase) {
-            object *characters = filter(characters(), (: regexp($1->query_environment_path(), "^"+$(key)) :));
+            object *characters = filter(characters(), (: regexp($1->query_environment_path(), "^"+$(key)) && !environment($1)->query_property("indoors") :));
             if (dayPhase == "night") {
                 dayPhase = "dawn";
                 message("astronomy", "%^ORANGE%^The sun appears over the horizon of our reality.%^RESET%^\n", characters);
