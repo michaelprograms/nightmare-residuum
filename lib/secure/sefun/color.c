@@ -1,7 +1,7 @@
 int hex_to_int(string b16) {
     int b10;
 
-    if (!stringp(b16) || strlen(b16) < 2) error("Bad argument 1 to color->hex_to_int");
+    if (!stringp(b16) || !strlen(b16)) error("Bad argument 1 to color->hex_to_int");
     sscanf(b16, "%x", b10);
     if (undefinedp(b10)) error("Bad argument 1 to color->hex_to_int");
 
