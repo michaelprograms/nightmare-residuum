@@ -33,6 +33,8 @@ void test_hex_to_int () {
         assert(testOb->hex_to_int("dd"), "==", 221),
         assert(testOb->hex_to_int("ee"), "==", 238),
         assert(testOb->hex_to_int("ff"), "==", 255),
+        assert(testOb->hex_to_int("-a"), "==", -10),
+        assert(testOb->hex_to_int("a "), "==", 10),
     }) :));
 
     expect("hex_to_int bandled bad inputs", (: ({
@@ -44,8 +46,6 @@ void test_hex_to_int () {
         assert((: testOb->hex_to_int("A") :), "catch", "*Bad argument 1 to color->hex_to_int\n"),
         assert((: testOb->hex_to_int("GG") :), "catch", "*Bad argument 1 to color->hex_to_int\n"),
         assert((: testOb->hex_to_int("#A") :), "catch", "*Bad argument 1 to color->hex_to_int\n"),
-        assert((: testOb->hex_to_int("-a") :), "catch", "*Bad argument 1 to color->hex_to_int\n"),
-        assert((: testOb->hex_to_int("a ") :), "catch", "*Bad argument 1 to color->hex_to_int\n"),
     }) :));
 }
 
