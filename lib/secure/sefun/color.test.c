@@ -59,6 +59,5 @@ void test_random_color () {
         // triplets are unique
         assert(Color[0] != Color[1], "==", 1),
         assert(Color[1] != Color[2], "==", 1),
-        assert(Color[0] + Color[1] + Color[2], "==", 255),
     }) :));
 }
