@@ -48,3 +48,17 @@ void test_hex_to_int () {
         assert((: testOb->hex_to_int("a ") :), "catch", "*Bad argument 1 to color->hex_to_int\n"),
     }) :));
 }
+
+private int *Color;
+void test_random_color () {
+    expect_function("query_random_color", testOb);
+
+    Color = testOb->query_random_color();
+    expect("query_random_color returns random triplets", (: ({
+        assert(sizeof(Color), "==", 3),
+        // triplets are unique
+        assert(Color[0] != Color[1], "==", 1),
+        assert(Color[1] != Color[2], "==", 1),
+        assert(Color[0] + Color[1] + Color[2], "==", 255),
+    }) :));
+}

@@ -14,6 +14,7 @@ int to_sRGB (float n) {
 float lerp (float color1, float color2, float ratio) {
     return color1 * (1 - ratio) + color2 * ratio;
 }
+
 string *get_color_ratio (int *color1, int *color2, int steps) {
     string *color = ({ });
     float r1 = from_sRGB(color1[0]), g1 = from_sRGB(color1[1]), b1 = from_sRGB(color1[2]);
@@ -46,16 +47,6 @@ string *get_color_ratio (int *color1, int *color2, int steps) {
 }
 
 string query_banner () {
-    int *c1 = ({
-        random(255),
-        random(255),
-        random(255),
-    });
-    int *c2 = ({
-        191,
-        191,
-        191,
-    });
     string *lines;
     string text = "\e[0;37;40m"; // start with ANSI reset
     string *colors = allocate(6); // left padding
@@ -74,18 +65,8 @@ string query_banner () {
     lines[<1] = lines[<1][0..pad-1] + tmp + lines[<1][80-pad+strlen(tmp)%2..79];
 
     if (previous_object() && previous_object()->query_terminal_color() == "256") {
-        int r = 255;
-        int n = 64 + random(192);
-        r = r - n;
-        c1[0] = n;
-        n = random(r);
-        r = r - n;
-        c1[1] = n;
-        n = random(r);
-        r = r - n;
-        c1[2] = n;
-        c1 = shuffle(c1);
-
+        int *c1 = query_random_color();
+        int *c2 = ({ 191, 191, 191, });
         colors += get_color_ratio(c1, c2, 34);
         for(int i = sizeof(colors)-1; i > -1; i --) {
             colors[i] = "\e[38;2;"+colors[i]+"m";

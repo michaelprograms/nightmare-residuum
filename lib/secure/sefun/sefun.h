@@ -15,6 +15,7 @@ mixed *distinct_array (mixed *arr);
 
 /* --- color --- */
 int hex_to_int (string base16);
+int *query_random_color ();
 
 /* --- combat --- */
 void display_combat_message (object source, object target, string limb, mixed weapon, string type, int damage);
