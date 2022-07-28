@@ -1,5 +1,5 @@
 // Convert a string hex number to an int
-int hex_to_int(string b16) {
+int hex_to_int (string b16) {
     int b10;
 
     if (!stringp(b16) || !strlen(b16)) error("Bad argument 1 to color->hex_to_int");
