@@ -48,3 +48,12 @@ float color_from_sRGB (int n) {
 
     return to_float(sprintf("%0.2f", y));
 }
+
+// Linear Interpolation a color between two colors at a ratio
+float color_lerp (float color1, float color2, float ratio) {
+    if (!floatp(color1)) error("Bad argument 1 to color->color_lerp");
+    if (!floatp(color2)) error("Bad argument 2 to color->color_lerp");
+    if (undefinedp(ratio) || !floatp(ratio) || ratio < 0.0 || ratio > 1.0)  error("Bad argument 3 to color->color_lerp");
+
+    return color1 * (1 - ratio) + color2 * ratio;
+}

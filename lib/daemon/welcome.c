@@ -1,34 +1,19 @@
-float from_sRGB (int n) {
-    float x = n / 255.0,  y;
-    if (x <= 0.04045) y = x / 12.92;
-    else y = pow(((x + 0.055) / 1.055), 2.4);
-    return y;
-}
-float to_sRGB_f (float n) {
-    if (n <= 0.0031308) return 12.92 * n;
-    else return (1.055 * pow(n, 1/2.4)) - 0.055;
-}
-int to_sRGB (float n) {
-    return to_int(255.9999 * to_sRGB_f(n));
-}
-float lerp (float color1, float color2, float ratio) {
-    return color1 * (1 - ratio) + color2 * ratio;
-}
-
 string *get_color_ratio (int *color1, int *color2, int steps) {
     string *color = ({ });
-    float r1 = from_sRGB(color1[0]), g1 = from_sRGB(color1[1]), b1 = from_sRGB(color1[2]);
-    float r2 = from_sRGB(color2[0]), g2 = from_sRGB(color2[1]), b2 = from_sRGB(color2[2]);
+    float r1 = color_from_sRGB(color1[0]), g1 = color_from_sRGB(color1[1]), b1 = color_from_sRGB(color1[2]);
+    float r2 = color_from_sRGB(color2[0]), g2 = color_from_sRGB(color2[1]), b2 = color_from_sRGB(color2[2]);
     float bright1 = pow(r1+g1+b1, 0.43), bright2 = pow(r2+g2+b2, 0.43);
     float intensity;
 
     for (int i = 0; i < steps; i ++) {
-        float *c, ratio = i*1.0/(steps-1), total;
-        intensity = lerp(bright1, bright2, ratio);
+        float *c, ratio, total;
+
+        ratio = i * 1.0/(steps-1);
+        intensity = color_lerp(bright1, bright2, ratio);
         c = ({
-            lerp(r1, r2, ratio),
-            lerp(g1, g2, ratio),
-            lerp(b1, b2, ratio),
+            color_lerp(r1, r2, ratio),
+            color_lerp(g1, g2, ratio),
+            color_lerp(b1, b2, ratio),
         });
         total = c[0] + c[1] + c[2];
         if (total != 0) {
@@ -36,11 +21,10 @@ string *get_color_ratio (int *color1, int *color2, int steps) {
             c[1] = c[1] * intensity / total;
             c[2] = c[2] * intensity / total;
         }
-        c[0] = to_sRGB(c[0]);
-        c[1] = to_sRGB(c[1]);
-        c[2] = to_sRGB(c[2]);
-        // write("ratio is "+ratio+" intensity: "+intensity+" "+identify(c)+"\n");
-        color += ({ to_int(c[0])+";"+to_int(c[1])+";"+to_int(c[2]) });
+        c[0] = color_to_sRGB(c[0]);
+        c[1] = color_to_sRGB(c[1]);
+        c[2] = color_to_sRGB(c[2]);
+        color += ({ implode(map(c, (: ""+to_int($1) :)), ";") });
     }
 
     return color;
@@ -68,7 +52,7 @@ string query_banner () {
         int *c1 = query_random_color();
         int *c2 = ({ 191, 191, 191, });
         colors += get_color_ratio(c1, c2, 34);
-        for(int i = sizeof(colors)-1; i > -1; i --) {
+        for (int i = sizeof(colors)-1; i > -1; i --) {
             colors[i] = "\e[38;2;"+colors[i]+"m";
             colors += ({ colors[i] });
         }
