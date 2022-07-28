@@ -36,6 +36,8 @@ void test_hex_to_int () {
         assert(testOb->hex_to_int("-a"), "==", -10),
         assert(testOb->hex_to_int("a"), "==", 10),
         assert(testOb->hex_to_int("A"), "==", 10),
+        assert(testOb->hex_to_int("-A"), "==", -10),
+        assert(testOb->hex_to_int("FFF"), "==", 4095),
     }) :));
 
     expect("hex_to_int bandled bad inputs", (: ({
@@ -59,5 +61,42 @@ void test_random_color () {
         // triplets are unique
         assert(Color[0] != Color[1], "==", 1),
         assert(Color[1] != Color[2], "==", 1),
+    }) :));
+}
+
+void test_sRGB () {
+    expect_function("color_to_sRGB", testOb);
+    expect_function("color_from_sRGB", testOb);
+
+    expect("converting to sRGB behaves", (: ({
+        assert(testOb->color_to_sRGB(0.0), "==", 0),
+        assert(testOb->color_to_sRGB(0.25), "==", 137),
+        assert(testOb->color_to_sRGB(0.5), "==", 188),
+        assert(testOb->color_to_sRGB(0.75), "==", 225),
+        assert(testOb->color_to_sRGB(1.0), "==", 255),
+    }) :));
+    expect("color_to_sRGB handles bad argument 1", (: ({
+        assert((: testOb->color_to_sRGB() :), "catch", "*Bad argument 1 to color->color_to_sRGB\n"),
+        assert((: testOb->color_to_sRGB("") :), "catch", "*Bad argument 1 to color->color_to_sRGB\n"),
+        assert((: testOb->color_to_sRGB(1) :), "catch", "*Bad argument 1 to color->color_to_sRGB\n"),
+        assert((: testOb->color_to_sRGB(({ })) :), "catch", "*Bad argument 1 to color->color_to_sRGB\n"),
+        assert((: testOb->color_to_sRGB(([ ])) :), "catch", "*Bad argument 1 to color->color_to_sRGB\n"),
+        assert((: testOb->color_to_sRGB((: 1 :)) :), "catch", "*Bad argument 1 to color->color_to_sRGB\n"),
+    }) :));
+
+    expect("converting from sRGB behaves", (: ({
+        assert(testOb->color_from_sRGB(0), "==", 0.0),
+        assert(testOb->color_from_sRGB(137), "==", 0.25),
+        assert(testOb->color_from_sRGB(188), "==", 0.5),
+        assert(testOb->color_from_sRGB(225), "==", 0.75),
+        assert(testOb->color_from_sRGB(255), "==", 1.0),
+    }) :));
+    expect("color_from_sRGB handles bad argument 1", (: ({
+        assert((: testOb->color_from_sRGB() :), "catch", "*Bad argument 1 to color->color_from_sRGB\n"),
+        assert((: testOb->color_from_sRGB("") :), "catch", "*Bad argument 1 to color->color_from_sRGB\n"),
+        assert((: testOb->color_from_sRGB(1.0) :), "catch", "*Bad argument 1 to color->color_from_sRGB\n"),
+        assert((: testOb->color_from_sRGB(({ })) :), "catch", "*Bad argument 1 to color->color_from_sRGB\n"),
+        assert((: testOb->color_from_sRGB(([ ])) :), "catch", "*Bad argument 1 to color->color_from_sRGB\n"),
+        assert((: testOb->color_from_sRGB((: 1 :)) :), "catch", "*Bad argument 1 to color->color_from_sRGB\n"),
     }) :));
 }
