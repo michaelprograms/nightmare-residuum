@@ -6,14 +6,16 @@ inherit M_EXIT;
 inherit M_LOOK;
 inherit M_PROPERTY;
 inherit M_RESET;
+inherit M_SENSES;
 
 void create () {
     object::create();
     reset::create();
+    senses::create();
     reset();
 
     if (this_object()) {
-        D_ASTRONOMY->handle_room_create (this_object());
+        D_ASTRONOMY->handle_room_create(this_object());
     }
 }
 

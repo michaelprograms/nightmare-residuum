@@ -38,6 +38,7 @@
 #define M_PICKABLE      "/std/module/pickable.c"
 #define M_PROPERTY      "/std/module/property.c"
 #define M_RESET         "/std/module/reset.c"
+#define M_SENSES         "/std/module/senses.c"
 #define M_STORY         "/std/module/story.c"
 #define M_TEST          "/std/module/test.c"
 #define M_TRAIN         "/std/module/train.c"
