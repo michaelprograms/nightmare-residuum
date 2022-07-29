@@ -59,6 +59,12 @@ void receive_message (string type, string message) {
         message = replace_string(message, "%^DEFAULT%^", "%^GREEN%^");
         message = "%^GREEN%^BOLD%^" + message + "%^RESET%^";
         receive(wrap(message));
+    } else if (type == "room_listen") {
+        message = "%^CYAN%^" + message + "%^RESET%^";
+        receive(wrap(message));
+    } else if (type == "room_smell") {
+        message = "%^ORANGE%^" + message + "%^RESET%^";
+        receive(wrap(message));
     } else if (type == "room_living_contents") {
         message = "%^RED%^" + replace_string(message, "%^DEFAULT%^", "%^RED%^") + "%^RESET%^";
         receive(wrap(message));

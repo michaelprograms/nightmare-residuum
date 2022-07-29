@@ -167,12 +167,44 @@ void exit_freezer () {
 
 /* ----- describe environments ---- */
 
+private void describe_environment_senses () {
+    mixed tmp;
+    string result;
+
+    if (tmp = environment()->query_listen("default")) {
+        if (functionp(tmp)) {
+            result = evaluate(tmp);
+        } else if (stringp(tmp)) {
+            result = tmp;
+        }
+        message("room_listen", result + "\n", this_object());
+    }
+    if (tmp = environment()->query_smell("default")) {
+        if (functionp(tmp)) {
+            result = evaluate(tmp);
+        } else if (stringp(tmp)) {
+            result = tmp;
+        }
+        message("room_smell", result + "\n", this_object());
+    }
+}
+
+private void describe_environment_exits () {
+    string *exits;
+    int numExits;
+
+    if (!(numExits = sizeof(exits = environment()->query_exit_dirs()))) {
+        message("room_exits", "There are no exits.\n\n", this_object());
+    } else {
+        exits = map_array(exits, (: "%^CYAN%^BOLD%^" + $1 + "%^BOLD_OFF%^DEFAULT%^" :));
+        message("room_exits", "\nThere " + (numExits > 1 ? "are" : "is") + " " + cardinal(numExits) + " exit" + (numExits > 1 ? "s" : "") + ": " + conjunction(exits) + ".\n\n", this_object());
+    }
+}
+
 private void describe_environment_living_contents () {
     object env = environment();
     mixed *list;
     string *shorts, conjunctions;
-
-    if (!env || !env->is_room()) return;
 
     list = filter_array(env->query_living_contents(), (: $1 != this_object() :));
     list = sort_array(list, function (object a, object b) {
@@ -200,8 +232,6 @@ private void describe_environment_item_contents () {
     mixed *list;
     string *shorts, conjunctions;
 
-    if (!env || !env->is_room()) return;
-
     list = unique_array(env->query_item_contents(), (: $1->query_short() :));
     if (sizeof(list)) {
         shorts = sort_array(map_array(list, (: consolidate(sizeof($1), $1[0]->query_short()) :)), 1);
@@ -209,19 +239,6 @@ private void describe_environment_item_contents () {
         shorts = map_array(shorts, (: "%^BOLD%^" + $1 + "%^BOLD_OFF%^DEFAULT%^" :));
         conjunctions = conjunction(shorts);
         message("room_item_contents", conjunctions + " " + (regexp(conjunctions, " and ") ? "are" : "is") + " here.\n", this_object());
-    }
-}
-
-private void describe_environment_exits () {
-    object env = environment();
-    string *exits;
-    int numExits;
-
-    if (!(numExits = sizeof(exits = env->query_exit_dirs()))) {
-        message("room_exits", "There are no exits.\n\n", this_object());
-    } else {
-        exits = map_array(exits, (: "%^CYAN%^BOLD%^" + $1 + "%^BOLD_OFF%^DEFAULT%^" :));
-        message("room_exits", "There " + (numExits > 1 ? "are" : "is") + " " + cardinal(numExits) + " exit" + (numExits > 1 ? "s" : "") + ": " + conjunction(exits) + ".\n\n", this_object());
     }
 }
 
@@ -243,7 +260,9 @@ void describe_environment () {
     }
 
     message("room_short", env->query_short() + "\n", this_object());
-    message("room_long", env->query_long() + "\n\n", this_object());
+    message("room_long", env->query_long() + "\n", this_object());
+
+    describe_environment_senses();
     describe_environment_exits();
     describe_environment_living_contents();
     describe_environment_item_contents();
