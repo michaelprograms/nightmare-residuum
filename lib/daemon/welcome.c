@@ -1,35 +1,3 @@
-string *get_color_ratio (int *color1, int *color2, int steps) {
-    string *color = ({ });
-    float r1 = color_from_sRGB(color1[0]), g1 = color_from_sRGB(color1[1]), b1 = color_from_sRGB(color1[2]);
-    float r2 = color_from_sRGB(color2[0]), g2 = color_from_sRGB(color2[1]), b2 = color_from_sRGB(color2[2]);
-    float bright1 = pow(r1+g1+b1, 0.43), bright2 = pow(r2+g2+b2, 0.43);
-    float intensity;
-
-    for (int i = 0; i < steps; i ++) {
-        float *c, ratio, total;
-
-        ratio = i * 1.0/(steps-1);
-        intensity = color_lerp(bright1, bright2, ratio);
-        c = ({
-            color_lerp(r1, r2, ratio),
-            color_lerp(g1, g2, ratio),
-            color_lerp(b1, b2, ratio),
-        });
-        total = c[0] + c[1] + c[2];
-        if (total != 0) {
-            c[0] = c[0] * intensity / total;
-            c[1] = c[1] * intensity / total;
-            c[2] = c[2] * intensity / total;
-        }
-        c[0] = color_to_sRGB(c[0]);
-        c[1] = color_to_sRGB(c[1]);
-        c[2] = color_to_sRGB(c[2]);
-        color += ({ implode(map(c, (: ""+to_int($1) :)), ";") });
-    }
-
-    return color;
-}
-
 string query_banner () {
     string *lines;
     string text = "\e[0;37;40m"; // start with ANSI reset
@@ -51,7 +19,7 @@ string query_banner () {
     if (previous_object() && previous_object()->query_terminal_color() == "256") {
         int *c1 = query_random_color();
         int *c2 = ({ 191, 191, 191, });
-        colors += get_color_ratio(c1, c2, 34);
+        colors += color_gradient(c1, c2, 34);
         for (int i = sizeof(colors)-1; i > -1; i --) {
             colors[i] = "\e[38;2;"+colors[i]+"m";
             colors += ({ colors[i] });
