@@ -174,18 +174,20 @@ string format_integer (int num) {
 //     "title": "TITLE",
 //     "subtitle": "Subtitle",
 //     "header": ([
-//         "items": ({}),
+//         "header": "string" || ({ /* array of strings */ })
+//         "items": ({ }),
 //         "columns": 2,
 //         "align": "left|center",
 //     ]),
 //     "body": ([
-//         "header": "string" || ({ /* array of items */ }),
-//         "items": ({}),
+//         "header": "string" || ({ /* array of strings */ }),
+//         "items": ({ /* array of strings */ }),
 //         "columns": 2,
 //         "align": "left|center",
 //     ]) || ({ /* array of mappings */ }),
 //     "footer": ([
-//         "items": ({}),
+//         "header": "string" || ({ /* array of strings */ }),
+//         "items": ({ /* array of strings */ }),
 //         "columns": 2,
 //         "align": "left|center",
 //     ]),
@@ -223,7 +225,6 @@ private nosave mapping __Border = ([
         "r": "|",
     ]),
 ]);
-
 string *format_border (mapping data) {
     string *lines = ({ }), line;
 
