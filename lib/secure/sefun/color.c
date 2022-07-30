@@ -99,14 +99,25 @@ string *color_gradient (int *color1, int *color2, int steps) {
             color[1] = color[1] * intensity / total;
             color[2] = color[2] * intensity / total;
         }
-        // c[0] = color_to_sRGB(c[0]);
-        // c[1] = color_to_sRGB(c[1]);
-        // c[2] = color_to_sRGB(c[2]);
         color = map(color, (: color_to_sRGB :));
         gradient += ({ implode(map(color, (: ""+to_int($1) :)), ";") });
-        // gradient += ({ implode(map(c, (: ""+to_int($1) :)), ";") });
-        // gradient += ({ implode(map(color, (: ""+to_int(color_to_sRGB($1)) :)), ";") });
     }
 
     return gradient;
+}
+
+string apply_gradient (string text, string *gradient) {
+    string *line, result = "";
+    int i, l;
+
+    line = explode(text, "");
+
+    if (sizeof(text) > sizeof(gradient)) error("Bad arguments to color->apply_gradient: " + text + " ("+sizeof(text)+") invalid size of "+identify(gradient));
+
+    for (i = 0, l = sizeof(line); i < l; i ++) {
+        result += "\e[38;2;"+gradient[i]+"m" + line[i];
+    }
+    result += "\e[0;37;40m";
+
+    return result;
 }

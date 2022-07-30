@@ -20,6 +20,7 @@ int color_to_sRGB (float n);
 float color_from_sRGB (int n);
 float color_lerp (float color1, float color2, float ratio);
 string *color_gradient (int *color1, int *color2, int steps);
+string apply_gradient (string text, string *gradient);
 
 /* --- combat --- */
 void display_combat_message (object source, object target, string limb, mixed weapon, string type, int damage);
