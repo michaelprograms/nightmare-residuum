@@ -167,11 +167,15 @@ void exit_freezer () {
 
 /* ----- describe environments ---- */
 
-private void describe_environment_senses () {
+varargs void describe_environment_senses (string sense, string focus) {
     mixed tmp;
     string result;
 
-    if (tmp = environment()->query_listen("default")) {
+    if (!focus) {
+        focus = "default";
+    }
+
+    if ((!sense || sense == "listen") && (tmp = environment()->query_listen(focus))) {
         if (functionp(tmp)) {
             result = evaluate(tmp);
         } else if (stringp(tmp)) {
@@ -179,7 +183,7 @@ private void describe_environment_senses () {
         }
         message("room_listen", result + "\n", this_object());
     }
-    if (tmp = environment()->query_smell("default")) {
+    if ((!sense || sense == "smell") && (tmp = environment()->query_smell(focus))) {
         if (functionp(tmp)) {
             result = evaluate(tmp);
         } else if (stringp(tmp)) {
