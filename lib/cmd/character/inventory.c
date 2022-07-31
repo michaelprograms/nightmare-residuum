@@ -16,6 +16,8 @@ void command (string input, mapping flags) {
         foreach (string short in shorts) {
             items += ({ short });
         }
+    } else {
+        items = ({ "You have no items." });
     }
 
     foreach (string currency in this_character()->query_currencies()) {
@@ -26,9 +28,9 @@ void command (string input, mapping flags) {
     }
     if (sizeof(coins)) {
         footer = ([
-            "header": "Currency",
+            "header": "Currenc" + (sizeof(coins) > 1 ? "ies" : "y"),
             "items": ({
-                "Currenc" + (sizeof(coins) > 1 ? "ies" : "y") + ": " + conjunction(coins),
+                 conjunction(coins),
             }),
             "columns": 1,
             "align": "center",
@@ -39,8 +41,10 @@ void command (string input, mapping flags) {
         "title": "INVENTORY",
         "subtitle": target->query_cap_name(),
         "body": ([
+            "header": "Carried Items",
             "items": items,
             "columns": 1,
+            "align": "left",
         ]),
         "footer": footer,
     ]));
