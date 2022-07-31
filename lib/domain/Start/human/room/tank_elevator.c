@@ -17,7 +17,7 @@ void create () {
     ::create();
     set_short("a small room");
     set_long("An enclosed room with smooth blank walls.");
-    set_story_lines( ({
+    set_story_lines(({
         "The doors close behind you.",
         "You feel a downwards pull as the small room starts moving with upwards momentum.",
         "The pull begins to fade while air whistles past in a rush.",
