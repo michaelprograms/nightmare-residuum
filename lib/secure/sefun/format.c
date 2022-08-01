@@ -460,9 +460,15 @@ string *format_border (mapping data) {
                 lines += ({ item });
             }
         }
-        if (fBody) {
-            foreach (string item in data["body"]["items"]) {
-                lines += ({ item });
+        if (fBody && mapp(data["body"])) {
+            data["body"] = ({ data["body"] });
+        }
+        if (fBody && arrayp(data["body"])) {
+            foreach (mapping child in data["body"]) {
+                lines += ({ child["header"] });
+                foreach (string item in child["items"]) {
+                    lines += ({ item });
+                }
             }
         }
         if (fFooter) {
