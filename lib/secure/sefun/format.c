@@ -456,12 +456,12 @@ string *format_border (mapping data) {
         }
     } else { // screenreader
         if (fTitle) {
-            line = data["title"] + (fSubtitle ? ": " + data["subtitle"] : "");
+            line = data["title"] + (fSubtitle ? ": " + data["subtitle"] : "") + " ::";
             lines += ({ line });
         }
         if (fHeader) {
             foreach (string item in data["header"]["items"]) {
-                lines += ({ item });
+                lines += ({ item + " ::" });
             }
         }
         if (fBody && mapp(data["body"])) {
@@ -469,15 +469,17 @@ string *format_border (mapping data) {
         }
         if (fBody && arrayp(data["body"])) {
             foreach (mapping child in data["body"]) {
-                lines += ({ child["header"] });
+                if (child["header"]) {
+                    lines += ({ child["header"] + " ::" });
+                }
                 foreach (string item in child["items"]) {
-                    lines += ({ item });
+                    lines += ({ item + " ::" });
                 }
             }
         }
         if (fFooter) {
             foreach (string item in data["footer"]["items"]) {
-                lines += ({ item });
+                lines += ({ item + " ::" });
             }
         }
     }
