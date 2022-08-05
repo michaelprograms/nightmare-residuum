@@ -393,6 +393,10 @@ string *format_border (mapping data) {
                     right = SEFUN->apply_gradient(b["v"], ({ colorsBody2[i] }));
                     linesBody[i] = left + linesBody[i] + right;
                 }
+            } else {
+                for (int i = sizeof(linesBody)-1; i >= 0; i --) {
+                    linesBody[i] = b["v"] + linesBody[i] + b["v"];
+                }
             }
 
             lines += linesBody;
