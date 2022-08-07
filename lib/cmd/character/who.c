@@ -41,14 +41,15 @@ void command (string input, mapping flags) {
     }
 
     charList = sort_array(charList, (: strcmp($1->query_name(), $2->query_name()) :));
-        foreach (object char in charList) {
-            bodyItems += ({
-                char->query_level(),
-                char->query_cap_name(),
-                capitalize(char->query_species()),
-                capitalize(char->query_class()),
-            });
-        }
+    foreach (object char in charList) {
+        bodyItems += ({
+            char->query_level(),
+            char->query_cap_name(),
+            capitalize(char->query_species()),
+            capitalize(char->query_class()),
+        });
+    }
+
     data["body"] = sizeof(bodyItems) ? ([
         "items": bodyItems,
         "columns": 4,
