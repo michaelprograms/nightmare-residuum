@@ -9,14 +9,13 @@ void command (string input, mapping flags) {
 
     foreach (object char in characters) {
         bodyItems += ({
-            char->query_cap_name(),
-            file_name(environment(char)),
+            sprintf("%-20s%s", char->query_cap_name(), file_name(environment(char)))
         });
     }
 
     data["body"] = sizeof(bodyItems) ? ([
         "items": bodyItems,
-        "columns": 3,
+        "columns": 1,
         "align": "left",
     ]) : ([
         "items": ({ "No player characters connected" }),
