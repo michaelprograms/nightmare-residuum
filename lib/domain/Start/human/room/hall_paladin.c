@@ -1,6 +1,6 @@
 #include "human.h"
 
-inherit "/std/room/class_hall.c";
+inherit ROOM_CLASS_HALL;
 
 void create () {
     ::create();
