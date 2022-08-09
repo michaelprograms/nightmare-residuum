@@ -8,7 +8,7 @@ void create () {
         "no attack": 1,
     ]));
     set_short("a templar's hall");
-    set_long("The inside of a brick building that consists of a that is deeper than wide. There is a set of open doors to the north facing the street. Along the walls are stained glass windows consisting of templars in various combat poses while the ceiling is vaulted high above with exposed wooden beams. Several pews are positioned in rows facing a central altar at the far end of the room. A staircase leads down to the catacombs.");
+    set_long("The inside of a brick building that consists of a room that is deeper than wide. There is a set of open doors to the north facing the street. Along the walls are stained glass windows consisting of templars in various combat poses while the ceiling is vaulted high above with exposed wooden beams. Several pews are positioned in rows facing a central altar at the far end of the room. A staircase leads down to the catacombs.");
     set_listen("default", "Chanting of hymns can be heard softly.");
     set_smell("default", "A light floral scent tries to mask the stuffy air.");
     set_exits(([
