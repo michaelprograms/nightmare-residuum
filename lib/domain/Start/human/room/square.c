@@ -9,6 +9,8 @@ void create () {
     ]));
     set_short("a village crossroads");
     set_long("Amongst a village center where two central streets form a crossroads. A plaza of stone pavers blends the intersection into a public square. Brick dwellings covered in dark ivy form a cozy enclosure around the outer circumference of the plaza. Birch trees branch over the perimeter between the dwellings and the plaza. A framework of hexagons glimmer overhead.");
+    set_listen("default", "Humans going about their day as birds chirp from the trees.");
+    set_smell("default", "The sweet smell of fresh baked goods fill the air.");
     set_looks(([
         ({ "center", "plaza", "square" }): "The central meeting point of the village, where most of the locals pass by during their day.",
         "dwellings": "Squat brick buildings of two floors in height. Modest windows with wooden shutters adorn their front.",
