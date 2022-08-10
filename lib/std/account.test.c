@@ -98,7 +98,7 @@ void test_account_settings () {
 
     expect("account settings handles setting and querying", (: ({
         assert(mapp(testOb->query_settings()), "==", 1),
-        assert(sizeof(testOb->query_settings()), "==", 3),
+        assert(sizeof(testOb->query_settings()), "==", 4),
 
         assert(testOb->query_setting("ansi"), "==", "on"),
         testOb->set_setting("ansi", "off"),
@@ -107,6 +107,10 @@ void test_account_settings () {
         assert(testOb->query_setting("width"), "==", 80),
         testOb->set_setting("width", 60),
         assert(testOb->query_setting("width"), "==", 60),
+
+        assert(testOb->query_setting("lines"), "==", 40),
+        testOb->set_setting("lines", 50),
+        assert(testOb->query_setting("lines"), "==", 50),
     }) :));
 }
 

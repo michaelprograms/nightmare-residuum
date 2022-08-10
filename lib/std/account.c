@@ -21,6 +21,7 @@ private mapping __Characters = ([
 private mapping __Settings = ([
     // default settings
     "width": 80,
+    "lines": 40,
     "ansi": "on",
     "screenreader": "off",
 ]);
