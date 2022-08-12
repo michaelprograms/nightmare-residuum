@@ -10,6 +10,7 @@ void create () {
     set_short("a warrior's hall");
     set_long("The inside of a wide brick building that consists of a sparsely furnished room. There is an open door to the south facing the street next to a singular wide window. Some chairs are scattered around some weight training equipment. A staircase leads up to the second floor.");
     set_listen("default", "Several warriors talk boisterously while lifting weights.");
+    set_smell("default", "The smell of sweat.");
     set_exits(([
         "out south": HUMAN_ROOM + "walnut_st_w1.c",
     ]));

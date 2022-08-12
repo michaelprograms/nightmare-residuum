@@ -5,7 +5,9 @@ inherit STD_ROOM;
 void create () {
     ::create();
     set_short("a village street");
-    set_long("A small street traveling north to south through brick dwellings covered in dark ivy. Several birch trees branch over the street and dwellings. A framework of hexagons glimmer overhead.");
+    set_long("A small street traveling north to south through brick dwellings covered in dark ivy. Several birch trees branch over the street and dwellings. A building with a series of tall and wide windows with an open doorway is on the west side of the street. A framework of hexagons glimmer overhead.");
+    set_listen("default", "This street is particularly quiet.");
+    set_smell("default", "Nothing particularly noticable.");
     set_exits(([
         "south": HUMAN_ROOM + "market_st_w3.c",
         "north": HUMAN_ROOM + "pine_st_n2.c",
@@ -13,5 +15,6 @@ void create () {
     ]));
     set_looks(([
         "street": "A village street labeled N Pine St.",
+        "building": "The building looks to be a mentalist hall.",
     ]));
 }

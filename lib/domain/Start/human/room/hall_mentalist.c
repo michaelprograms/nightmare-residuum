@@ -9,6 +9,8 @@ void create () {
     ]));
     set_short("a mentalist's hall");
     set_long("The second floor of a brick building that consists of the personal training area of the mentalists. Meditation mats can be seen scattered around the open floor. A staircase leads back down to the first floor.");
+    set_listen("default", "It is extremely quiet and calm.");
+    set_smell("default", "A pleasantly neutral odor persists in the building.");
     set_exits(([
         "down": HUMAN_ROOM + "intro_mentalist.c",
     ]));

@@ -9,8 +9,8 @@ void create () {
     ]));
     set_short("a templar's hall");
     set_long("The basement floor of a brick building that consists of the catacombs of the templar. The walls are filled with chambers upon which the dried remains of templars rest. The ground is a mixture of gravel and dirt. A staircase leads back up to the first floor.");
-    set_smell("default", "Stale, perfumed air hangs humidly in the air.");
     set_listen("default", "The gravel and dirt mixture crunches lightly underfoot.");
+    set_smell("default", "Stale perfume hangs in the humid air.");
     set_exits(([
         "up": HUMAN_ROOM + "intro_templar.c",
     ]));

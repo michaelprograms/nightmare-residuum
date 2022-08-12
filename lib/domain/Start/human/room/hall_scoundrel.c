@@ -9,6 +9,8 @@ void create () {
     ]));
     set_short("a scoundrel's hall");
     set_long("The basement floor of a warehouse building which happens to be the darkened hideout of the scoundrels. Brick columns form archways to support the warehouse above with dim glowing lights attached to a few. The floor is a dirty compacted stone of the natural terrain. A staircase leads back up to the first floor.");
+    set_listen("default", "Quiet is occasionally broken by a drip into a puddle.");
+    set_smell("default", "A damp earthy smell overpowers the musty dust.");
     set_exits(([
         "up": HUMAN_ROOM + "intro_scoundrel.c",
     ]));
