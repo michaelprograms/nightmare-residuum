@@ -16,24 +16,26 @@ void test_name () {
     }) :));
 }
 
-void test_skill_type () {
-    expect_function("query_skill_type", testOb);
-    expect_function("set_skill_type", testOb);
+void test_skill_powers () {
+    expect_function("query_skill_powers", testOb);
+    expect_function("set_skill_powers", testOb);
 
-    expect("handles skill type", (: ({
-        assert(testOb->query_skill_type(), "==", 0),
-        testOb->set_skill_type("melee"),
-        assert(testOb->query_skill_type(), "==", "melee"),
+    expect("handles skill powers", (: ({
+        assert(testOb->query_skill_powers(), "==", ([ ])),
+
+        testOb->set_skill_powers(([ "melee": 5, ])),
+        assert(testOb->query_skill_powers(), "==", ([ "melee": 5, ])),
+
+        testOb->set_skill_powers(([ "ranged": 5, "psionic": 5, ])),
+        assert(testOb->query_skill_powers(), "==", ([ "ranged": 5, "psionic": 5, ])),
     }) :));
-}
 
-void test_base_power () {
-    expect_function("query_base_power", testOb);
-    expect_function("set_base_power", testOb);
-
-    expect("handles skill type", (: ({
-        assert(testOb->query_base_power(), "==", 0),
-        testOb->set_base_power(123),
-        assert(testOb->query_base_power(), "==", 123),
+    expect("set_skill_powers handles invalid argument 1", (: ({
+        assert((: testOb->set_skill_powers(this_object()) :), "catch", "*Bad argument 1 to ability->set_skill_powers\n"),
+        assert((: testOb->set_skill_powers(1) :), "catch", "*Bad argument 1 to ability->set_skill_powers\n"),
+        assert((: testOb->set_skill_powers(1.0) :), "catch", "*Bad argument 1 to ability->set_skill_powers\n"),
+        assert((: testOb->set_skill_powers("") :), "catch", "*Bad argument 1 to ability->set_skill_powers\n"),
+        assert((: testOb->set_skill_powers(({})) :), "catch", "*Bad argument 1 to ability->set_skill_powers\n"),
+        assert((: testOb->set_skill_powers((: 1 :)) :), "catch", "*Bad argument 1 to ability->set_skill_powers\n"),
     }) :));
 }
