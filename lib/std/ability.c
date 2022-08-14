@@ -124,7 +124,7 @@ int calculate_damage (object source, object target) {
             break;
         }
 
-        damage += random(source->query_skill(key + " attack") * 20 / 100 + 1);
+        damage += random(source->query_skill(key + " attack") * 25 / 100 + 1);
         damage -= random(target->query_skill(key + " defense") * 20 / 100 + 1);
     }
 
