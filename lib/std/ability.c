@@ -2,21 +2,68 @@
 
 inherit STD_VERB;
 
-private string __AbilityName;
+private string __Name;
+private mapping __Reqs;
 private mapping __SkillPowers;
 
 void create () {
     ::create();
-    __AbilityName = split_path(base_name())[1];
+    __Name = split_path(base_name())[1];
+    __Reqs = ([ ]);
     __SkillPowers = ([ ]);
-    if (__AbilityName != "ability") {
+    if (__Name != "ability") {
         add_rules(({ "", "LIV", }));
     }
 }
 
+/* ----- ability name ----- */
+
 string query_name () {
-    return __AbilityName;
+    return __Name;
 }
+
+/* ----- ability requirements ----- */
+
+void set_ability_requirements (mapping reqs) {
+    /* Data format:
+    "class|species": ([
+        "level" : 5,
+        "skills" : ([ "melee attack": 25, ]),
+        "stats" : ([ "strength": 10, ]),
+    ]),
+    */
+    __Reqs = copy(reqs);
+}
+int verify_ability_requirements (object source) {
+    if (!source || !source->is_living()) return 0;
+
+    if (source->query_immortal()) return 1;
+    // if (source->is_monster() || source->is_npc()) return 1;
+
+    // no requirements exist
+    if (!sizeof(__Reqs)) return 1;
+
+    foreach (string key,mapping value in __Reqs) {
+        if (source->query_class() != key && source->query_species() != key) continue;
+        if (intp(value["level"])) {
+            if (source->query_level() < value["level"]) return 0;
+        }
+        if (mapp(value["skills"])) {
+            foreach (string skill,int num in value["skills"]) {
+                if (source->query_skill(skill) < num) return 0;
+            }
+        }
+        if (mapp(value["stats"])) {
+            foreach (string stat,int num in value["stats"]) {
+                if (source->query_stats(stat) < num) return 0;
+            }
+        }
+        return 1;
+    }
+    return 0;
+}
+
+/* ----- skill powers ----- */
 
 mapping query_skill_powers () {
     return __SkillPowers;
@@ -45,7 +92,7 @@ mapping query_cost () {
             vitalType = "sp";
             break;
         }
-        cost[vitalType] += value * 2 + (random(value) + 1);
+        cost[vitalType] += value/2 + (random(value/2) + 1);
     }
 
     return cost;
@@ -97,20 +144,29 @@ private void handle_ability_use (object source, object target) {
     mapping cost;
     int damage;
 
+    if (!verify_ability_requirements(source)) {
+        message("action", "You cannot do that.\n", source);
+        return 0;
+    }
+
+    if (!target && !(target = source->query_target_hostile())) {
+        message("action", "You have no hostile targets present.\n", source);
+        return;
+    }
+
     // determine cost
     cost = query_cost();
-
 
     // verify vitals can pay cost
     if (cost["sp"] > 0) {
         if (source->query_sp() < cost["sp"]) {
-            message("action", "You are too drained to " + __AbilityName + ".\n", source);
+            message("action", "You are too drained to " + __Name + ".\n", source);
             return;
         }
     }
     if (cost["mp"]) {
         if (source->query_mp() < cost["mp"]) {
-            message("action", "You are too tired to " + __AbilityName + ".\n", source);
+            message("action", "You are too tired to " + __Name + ".\n", source);
             return;
         }
     }
@@ -121,13 +177,13 @@ private void handle_ability_use (object source, object target) {
     // check source vitals
     if (cost["sp"] > 0) {
         if (source->query_sp() < cost["sp"]) {
-            message("action", "You are too drained to " + __AbilityName + ".\n", source);
+            message("action", "You are too drained to " + __Name + ".\n", source);
             return;
         }
     }
     if (cost["mp"]) {
         if (source->query_mp() < cost["mp"]) {
-            message("action", "You are too tired to " + __AbilityName + ".\n", source);
+            message("action", "You are too tired to " + __Name + ".\n", source);
             return;
         }
     }
@@ -178,27 +234,19 @@ mixed can_verb (mixed args...) {
     return can_verb_rule(args);
 }
 
+// Handle input
 void do_verb_liv (mixed args...) {
-    object source = previous_object(), target;
+    object target;
 
     // verify target
     if (arrayp(args)) {
         target = args[1];
-    } else {
-        message("action", "You have no hostile targets present.\n", source);
-        return;
     }
 
-    handle_ability_use(source, target);
+    handle_ability_use(previous_object(), target);
 }
 
 // Handle no input
 void do_verb_rule (mixed args...) {
-    object source = previous_object();
-    object target;
-    if (target = previous_object()->query_target_hostile()) {
-        do_verb_liv(args[0], target, args[2], target->query_name());
-    } else {
-        message("action", "You have no hostile targets present.\n", source);
-    }
+    handle_ability_use(previous_object(), 0);
 }

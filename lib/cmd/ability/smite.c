@@ -5,8 +5,16 @@ inherit STD_ABILITY;
 void create () {
     ::create();
     set_requirements(REQUIREMENT_BUSY | REQUIREMENT_DISABLE);
+    set_ability_requirements(([
+        "paladin": ([
+            "skills": ([
+                "melee attack": 2,
+                "psionic attack": 2,
+            ]),
+        ])
+    ]));
     set_skill_powers(([
-        "melee": 10,
+        "melee": 15,
         "psionic": 5,
     ]));
 }
