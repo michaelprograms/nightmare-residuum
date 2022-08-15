@@ -163,18 +163,29 @@ string *query_wielded_limbs (object ob) {
     return limbs;
 }
 
-varargs mixed handle_wield (object ob, string limb) {
+varargs mixed handle_wield (object ob) {
+    string *limbs = query_wieldable_limbs(), *hands;
+
     if (!mapp(__Wielded)) __Wielded = ([ ]);
 
     if (ob->query_wielded()) return "You are already wielding " + ob->query_name() + ".";
-    if (!limb) {
-        string *limbs = query_wieldable_limbs();
-        if (sizeof(limbs)) limb = limbs[0];
-    }
-    if (!limb) return "You are out of limbs to wield " + ob->query_name() + ".";
 
+    if (ob->query_hands() == 1) {
+        if (sizeof(limbs)) {
+            hands = limbs[0..0];
+        }
+    } else if (ob->query_hands() == 2) {
+        if (sizeof(limbs) > 1) {
+            hands = limbs[0..1];
+        }
+    }
+    if (sizeof(hands) < ob->query_hands()) return "You are out of limbs to wield " + ob->query_name() + ".";
+
+    foreach (string limb in hands) {
+        __Wielded[limb] = ob;
+    }
     ob->set_wielded(this_object());
-    __Wielded[limb] = ob;
+
     return 1;
 }
 varargs mixed handle_unwield (object ob, string limb) {
