@@ -8,12 +8,12 @@ void create () {
     set_ability_requirements(([
         "templar": ([
             "skills": ([
-                "melee attack": 5,
+                "melee attack": 1,
             ]),
         ])
     ]));
     set_skill_powers(([
-        "melee attack": 20,
+        "melee": 20,
     ]));
 }
 

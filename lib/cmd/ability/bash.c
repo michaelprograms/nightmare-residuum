@@ -8,12 +8,12 @@ void create () {
     set_ability_requirements(([
         "warrior": ([
             "skills": ([
-                "blunt attack": 5,
+                "blunt attack": 1,
             ]),
         ])
     ]));
     set_skill_powers(([
-        "blunt attack": 20,
+        "blunt": 20,
     ]));
 }
 

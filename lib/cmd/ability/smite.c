@@ -8,8 +8,8 @@ void create () {
     set_ability_requirements(([
         "paladin": ([
             "skills": ([
-                "melee attack": 2,
-                "psionic attack": 2,
+                "melee attack": 1,
+                "psionic attack": 1,
             ]),
         ])
     ]));

@@ -8,14 +8,12 @@ void create () {
     set_ability_requirements(([
         "scoundrel": ([
             "skills": ([
-                "melee attack": 2,
-                "knife attack": 2,
+                "knife attack": 1,
             ]),
         ])
     ]));
     set_skill_powers(([
-        "melee attack": 10,
-        "knife attack": 10,
+        "knife": 20,
     ]));
 }
 

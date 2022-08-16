@@ -8,7 +8,7 @@ void create () {
     set_ability_requirements(([
         "ranger": ([
             "skills": ([
-                "ranged attack": 5,
+                "ranged attack": 1,
             ]),
         ])
     ]));

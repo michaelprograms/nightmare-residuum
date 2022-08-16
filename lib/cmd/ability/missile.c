@@ -8,7 +8,7 @@ void create () {
     set_ability_requirements(([
         "mentalist": ([
             "skills": ([
-                "psionic attack": 5,
+                "psionic attack": 1,
             ]),
         ])
     ]));
