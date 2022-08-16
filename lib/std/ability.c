@@ -102,38 +102,45 @@ mapping query_cost () {
 
 int calculate_damage (object source, object target) {
     int damage;
-    string sourceStat;
+    int sourceStat, targetStat;
+    int sourceSkill, targetSkill;
 
     // base damage
-    damage = random(10);
-    damage += (source->query_stat(sourceStat) * 10 / 100);
-    damage += random(source->query_stat(sourceStat) * 10 / 100 + 1);
+    damage = random(10 + source->query_level());
     damage += random(source->query_sp() * 10 / 100 + 1);
     damage += random(source->query_stat("luck") * 5 / 100 + 1);
 
     foreach (string key,int value in __SkillPowers) {
         switch (key) {
-        case "psionic":
-            sourceStat = "intelligence";
-            break;
-        case "ranged":
-            sourceStat = "agility";
-            break;
-        case "melee": default:
-            sourceStat = "strength";
-            break;
+            case "psionic":
+                sourceStat = source->query_stat("intelligence");
+                break;
+            case "ranged":
+                sourceStat = source->query_stat("agility");
+                break;
+            case "melee": default:
+                sourceStat = source->query_stat("strength");
+                break;
         }
+        damage += (sourceStat * 50 / 100) + random(sourceStat * 50 / 100 + 1);
 
-        damage += random(source->query_skill(key + " attack") * 25 / 100 + 1);
-        damage -= random(target->query_skill(key + " defense") * 20 / 100 + 1);
+        sourceSkill = source->query_skill(key + " attack");
+        targetSkill = target->query_skill(key + " defense");
+        damage += (sourceSkill * 20 / 100) + random(sourceSkill * 80 / 100 + 1);
+        damage -= (targetSkill * 20 / 100) + random(targetSkill * 80 / 100 + 1);
     }
 
     // apply target mitigations
-    damage -= (target->query_stat("endurance") * 10 / 100);
-    damage -= random(target->query_stat("endurance") * 10 / 100 + 1);
-    damage -= random(target->query_hp() * 10 / 100 + 1);
+    targetStat = target->query_stat("endurance");
+    damage -= ((targetStat * 10 / 100) + random(targetStat * 10 / 100 + 1));
+    // damage -= random(target->query_hp() * 10 / 100 + 1);
+    damage -= random(5 + target->query_level());
     damage -= random(target->query_stat("luck") * 10 / 100 + 1);
     // damage -= target->query_limb_armor(limb); // @TODO limb
+
+    if (damage < 0) {
+        damage = 0;
+    }
 
     return damage;
 }
