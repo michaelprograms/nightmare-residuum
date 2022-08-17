@@ -36,6 +36,7 @@ string prepare_long () {
         long += "WARNING! "+err+": knowledge assimilation unable to proceed.\nPress %^CYAN%^[retry]%^RESET%^ to restart procedure.\n\n";
         long += "Options:\n";
         long += "  %^CYAN%^[become female|male|neither]%^RESET%^\n";
+        long += "  %^CYAN%^[roll stats]%^RESET%^\n";
         long += "  %^CYAN%^[randomize]%^RESET%^\n\n";
         long += "  %^CYAN%^[done]";
     }
@@ -59,6 +60,8 @@ void create () {
     parse_add_rule("retry", "");
     parse_add_rule("become", "");
     parse_add_rule("become", "STR");
+    parse_add_rule("roll", "");
+    parse_add_rule("roll", "STR");
     parse_add_rule("randomize", "");
     parse_add_rule("done", "");
 }
@@ -84,13 +87,18 @@ mixed can_become () {
 void do_become () {
     write("Syntax: %^CYAN%^[become female|male|neither]%^RESET%^\n");
 }
-mixed can_become_str () {
+mixed can_become_str (mixed args...) {
     return environment(this_character()) == this_object();
 }
-void do_become_str (string str) {
+void do_become_str (mixed args...) {
     object tc = this_character();
+    string str;
 
-    if (member_array(str, ({ "female", "male", "neither"})) == -1) {
+    if (sizeof(args)) {
+        str = args[0];
+    }
+
+    if (member_array(str, ({ "female", "male", "neither" })) == -1) {
         write("Syntax: %^CYAN%^[become female|male|neither]%^RESET%^\n");
         return;
     }
@@ -104,6 +112,38 @@ void do_become_str (string str) {
     write("You tap the " + str + " button on the display.\n");
     write("A shock arcs through your body!\n");
     write("You become " + str + ".\n");
+}
+
+/* ----- parser rule: roll ----- */
+
+// setup_stats
+mixed can_roll () {
+    return environment(this_character()) == this_object();
+}
+void do_roll () {
+    write("Syntax: %^CYAN%^[roll stats]%^RESET%^\n");
+}
+mixed can_roll_str (mixed args...) {
+    return environment(this_character()) == this_object();
+}
+void do_roll_str (mixed args...) {
+    object tc = this_character();
+    string str;
+
+    if (sizeof(args)) {
+        str = args[0];
+    }
+
+    if (str != "stats") {
+        write("Syntax: %^CYAN%^[roll stats]%^RESET%^\n");
+        return;
+    }
+
+    write("You tap the roll stats button on the display.\n");
+    write("A shock arcs through your body!\n");
+
+    D_SPECIES->setup_stats(tc);
+    write("Your body's stats change.\n");
 }
 
 /* ----- parser rule: randomize ----- */
@@ -120,6 +160,9 @@ void do_randomize () {
 
     tc->set_gender(gender = ({ "female", "male", "neither"})[random(3)]);
     write("You become " + gender + ".\n");
+
+    D_SPECIES->setup_stats(tc);
+    write("Your body's stats change.\n");
 }
 
 /* ----- parser rule: done ----- */
