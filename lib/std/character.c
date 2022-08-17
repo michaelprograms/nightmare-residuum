@@ -239,9 +239,9 @@ private void describe_environment_item_contents () {
     mixed *list;
     string *shorts, conjunctions;
 
-    list = unique_array(env->query_item_contents(), (: $1->query_short() :));
+    list = unique_array(env->query_item_contents(), (: $1->query_short("%^MAGENTA%^BOLD%^") :));
     if (sizeof(list)) {
-        shorts = sort_array(map_array(list, (: consolidate(sizeof($1), $1[0]->query_short()) :)), 1);
+        shorts = sort_array(map_array(list, (: consolidate(sizeof($1), $1[0]->query_short("%^MAGENTA%^BOLD%^")) :)), 1);
         shorts[0] = capitalize(shorts[0]);
         shorts = map_array(shorts, (: "%^BOLD%^" + $1 + "%^BOLD_OFF%^DEFAULT%^" :));
         conjunctions = conjunction(shorts);
