@@ -119,8 +119,10 @@ int query_connection_time () {
 void setup_character () {
     __LastAction = time();
     if (!D_CHARACTER->query_exists(query_key_name())) {
-        save_character();
+        set_level(1);
+        D_SPECIES->setup_stats(this_object());
         update_vitals(1);
+        save_character();
     } else {
         restore_character();
         update_vitals(0);

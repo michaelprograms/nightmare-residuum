@@ -69,6 +69,15 @@ private void load_species () {
 int query_adjust_stat (string s, string stat) {
     return __Species[s] && __Species[s][stat] ? __Species[s][stat] : 0;
 }
+void setup_stats (object ob) {
+    int l = ob->query_level(), a;
+    string s = ob->query_species();
+
+    foreach (string stat in ({ "strength", "perception", "endurance", "charisma", "intelligence", "agility", "luck" })) {
+        a = query_adjust_stat(s, stat);
+        ob->set_stat(stat, 10 + random(6 + a*2));
+    }
+}
 
 /* -----  ----- */
 
