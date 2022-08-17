@@ -3,6 +3,7 @@ inherit STD_ITEM;
 nosave private string __Type;
 nosave private object __Wielder;
 nosave private int __Hands = 1;
+nosave private int __WC;
 
 object query_wielded ();
 
@@ -40,6 +41,13 @@ void set_hands (int hands) {
     if (!intp(hands)) error("Bad argument 1 to weapon->set_hands");
     if (hands < 1 || hands > 2) error("Bad argument 1 to weapon->set_hands");
     __Hands = hands;
+}
+
+int query_wc () {
+    return __WC;
+}
+void set_wc (int wc) {
+    __WC = wc;
 }
 
 mixed direct_wield_obj (mixed args...) {

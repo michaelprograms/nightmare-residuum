@@ -85,6 +85,24 @@ void test_hands () {
     }) :));
 }
 
+void test_wc () {
+    expect_function("query_wc", testOb);
+    expect_function("set_wc", testOb);
+
+    expect("weapon handles wc", (: ({
+        assert(testOb->query_wc(), "==", 0),
+
+        testOb->set_wc(1),
+        assert(testOb->query_wc(), "==", 1),
+
+        testOb->set_wc(5),
+        assert(testOb->query_wc(), "==", 5),
+
+        testOb->set_wc(10),
+        assert(testOb->query_wc(), "==", 10),
+    }) :));
+}
+
 void test_wielded () {
     expect_function("query_wielded", testOb);
     expect_function("set_wielded", testOb);
