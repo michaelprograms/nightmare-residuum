@@ -15,6 +15,9 @@ void create () {
     set_skill_powers(([
         "knife": 20,
     ]));
+    set_weapons(([
+        "knife": ({ 1 }),
+    ]));
 }
 
 void handle_hit_msg (object source, object target) {

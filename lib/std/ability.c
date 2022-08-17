@@ -5,6 +5,7 @@ inherit STD_VERB;
 private string __Name;
 private mapping __Reqs;
 private mapping __SkillPowers;
+private mapping __Weapons = ([ ]);
 
 void create () {
     ::create();
@@ -61,6 +62,39 @@ int verify_ability_requirements (object source) {
         return 1;
     }
     return 0;
+}
+
+/* ----- ability weapons ----- */
+
+void set_weapons (mapping weapons) {
+    /*
+    ([
+        "knife": ({ 1 }),
+        "sword": ({ 1, 2 }),
+        "blunt": ({ 2, }),
+    ])
+    */
+    __Weapons = weapons;
+}
+object query_best_weapon (object source) {
+    object weapon;
+    string *types, t;
+    int wc;
+
+    types = keys(__Weapons);
+
+    foreach (object w in source->query_wielded_weapons()) {
+        if (sizeof(types)) {
+            t = w->query_type();
+            if (member_array(t, types) == -1) continue;
+            if (member_array(w->query_hands(), __Weapons[t]) == -1) continue;
+        }
+        if (w->query_wc() <= wc) continue;
+        wc = w->query_wc();
+        weapon = w;
+    }
+
+    return weapon;
 }
 
 /* ----- skill powers ----- */
@@ -150,6 +184,7 @@ int calculate_damage (object source, object target) {
 private void handle_ability_use (object source, object target) {
     mapping cost;
     int damage;
+    object weapon;
 
     if (!verify_ability_requirements(source)) {
         message("action", "You cannot do that.\n", source);
@@ -161,19 +196,24 @@ private void handle_ability_use (object source, object target) {
         return;
     }
 
+    if (!(weapon = query_best_weapon(source))) {
+        message("action", "You are not wielding the correct type of weapon.\n", source);
+        return;
+    }
+
     // determine cost
     cost = query_cost();
 
     // verify vitals can pay cost
     if (cost["sp"] > 0) {
         if (source->query_sp() < cost["sp"]) {
-            message("action", "You are too drained to " + __Name + ".\n", source);
+            message("action", "You are too tired to " + __Name + ".\n", source);
             return;
         }
     }
     if (cost["mp"]) {
         if (source->query_mp() < cost["mp"]) {
-            message("action", "You are too tired to " + __Name + ".\n", source);
+            message("action", "You are too drained to " + __Name + ".\n", source);
             return;
         }
     }
@@ -215,7 +255,13 @@ private void handle_ability_use (object source, object target) {
     // determine damage
     damage = calculate_damage(source, target);
     target->handle_damage(damage, source);
-    if (source->query_immortal()) message("action", "%^ORANGE%^Damage:%^RESET%^ " + damage + "\n", source);
+    if (source->query_immortal() || source->query_property("debug")) {
+        message("action", "%^ORANGE%^Damage:%^RESET%^ " + damage + "\n", source);
+    }
+
+    if (target && (target->query_immortal() || target->query_property("debug"))) {
+        message("action", "%^ORANGE%^Damage:%^RESET%^ " + damage + "\n", target);
+    }
 
     // @TODO send damage messages
 
