@@ -22,3 +22,7 @@ void handle_hit_msg (object source, object target) {
     message("action", source->query_cap_name() + " missiles you!\n", target);
     message("action", source->query_cap_name() + " missiles " + target->query_cap_name() + "!\n", environment(source), ({ source, target }));
 }
+
+void help (object char) {
+    message("help", "Missile your opponent with your psychic powers.\n", char);
+}

@@ -21,7 +21,6 @@ void create () {
     scan_all();
 }
 
-// @TODO used by help
 varargs string *query_abilities (string str) {
     string *abilities, *tmp;
     int i;

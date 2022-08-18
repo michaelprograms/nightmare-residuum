@@ -16,3 +16,7 @@ void handle_hit_msg (object source, object target) {
     message("action", source->query_cap_name() + " zaps you!\n", target);
     message("action", source->query_cap_name() + " zaps " + target->query_cap_name() + "!\n", environment(source), ({ source, target }));
 }
+
+void help (object char) {
+    message("help", "Zap your opponent with your mind.\n", char);
+}

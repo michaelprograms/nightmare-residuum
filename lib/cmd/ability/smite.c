@@ -24,3 +24,7 @@ void handle_hit_msg (object source, object target) {
     message("action", source->query_cap_name() + " smites you!\n", target);
     message("action", source->query_cap_name() + " smites " + target->query_cap_name() + "!\n", environment(source), ({ source, target }));
 }
+
+void help (object char) {
+    message("help", "Smite your opponent.\n", char);
+}

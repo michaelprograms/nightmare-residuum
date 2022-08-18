@@ -25,3 +25,7 @@ void handle_hit_msg (object source, object target) {
     message("action", source->query_cap_name() + " stabs you!\n", target);
     message("action", source->query_cap_name() + " stabs " + target->query_cap_name() + "!\n", environment(source), ({ source, target }));
 }
+
+void help (object char) {
+    message("help", "Stab your opponent with a knife.\n", char);
+}
