@@ -234,6 +234,10 @@ string *format_border (mapping data) {
     int fBody = !undefinedp(data["body"]);
     int fFooter = !undefinedp(data["footer"]);
 
+    if (fSubtitle) {
+        data["subtitle"] = SEFUN->strip_colour(data["subtitle"]);
+    }
+
     if (query_account_setting("screenreader") != "on") {
         mapping b = __Border[query_encoding()];
         int width, ansi, n;
