@@ -53,6 +53,25 @@ varargs string format_page (string *items, int columns, int pad, int center) {
     return implode(rows, "\n");
 }
 
+string format_syntax (string text) {
+    string s = text;
+
+    if (!stringp(text)) error("Bad argument 1 to format->format_syntax");
+
+    if (!regexp(s, "^<")) s = "<" + s;
+    if (!regexp(s, ">$")) s = s + ">";
+    if (query_account_setting("ansi") == "on") {
+        s = replace_string(s, "<", "%^CYAN%^<");
+        s = replace_string(s, "[", "%^BOLD%^[%^BOLD_OFF%^");
+        s = replace_string(s, "]", "%^BOLD%^]%^BOLD_OFF%^");
+        s = replace_string(s, "(", "%^RESET%^(%^CYAN%^");
+        s = replace_string(s, "|", "%^RESET%^|%^CYAN%^");
+        s = replace_string(s, ")", "%^RESET%^)%^CYAN%^");
+        s = replace_string(s, ">", ">%^RESET%^");
+    }
+    return s;
+}
+
 string format_exit_brief (string dir) {
     string *result = ({});
     if (!stringp(dir)) error("Bad argument 1 to format->format_exit_brief");

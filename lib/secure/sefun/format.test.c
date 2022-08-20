@@ -98,6 +98,33 @@ void test_format_page () {
     destruct(__MockAccount);
 }
 
+void test_format_syntax () {
+    expect_function("format_syntax", testOb);
+
+    __MockAccount = new(STD_ACCOUNT);
+    __MockAccount->set_setting("ansi", "off");
+    expect("format_syntax handles syntaxes with ANSI off", (: ({
+        assert(testOb->format_syntax("syntax"), "==", "<syntax>"),
+        assert(testOb->format_syntax("verb [target] ([limb]) (with [thing])"), "==", "<verb [target] ([limb]) (with [thing])>"),
+    }) :));
+
+    __MockAccount->set_setting("ansi", "on");
+    expect("format_syntax handles syntaxes with ANSI on", (: ({
+        assert(testOb->format_syntax("syntax"), "==", "%^CYAN%^<syntax>%^RESET%^"),
+        assert(strip_colour(testOb->format_syntax("syntax target")), "==", "<syntax target>"),
+    }) :));
+    destruct(__MockAccount);
+
+    expect("format_syntax handles invalid argument 1", (: ({
+        assert((: testOb->format_syntax(0) :), "catch", "*Bad argument 1 to format->format_syntax\n"),
+        assert((: testOb->format_syntax(0.0) :), "catch", "*Bad argument 1 to format->format_syntax\n"),
+        assert((: testOb->format_syntax(({})) :), "catch", "*Bad argument 1 to format->format_syntax\n"),
+        assert((: testOb->format_syntax(([])) :), "catch", "*Bad argument 1 to format->format_syntax\n"),
+        assert((: testOb->format_syntax((: 1 :)) :), "catch", "*Bad argument 1 to format->format_syntax\n"),
+        assert((: testOb->format_syntax(this_object()) :), "catch", "*Bad argument 1 to format->format_syntax\n"),
+    }) :));
+}
+
 void test_format_exit_brief () {
     expect_function("format_exit_brief", testOb);
 

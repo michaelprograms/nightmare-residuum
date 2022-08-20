@@ -26,13 +26,14 @@ string apply_gradient (string text, string *gradient);
 void display_combat_message (object source, object target, string limb, mixed weapon, string type, int damage);
 
 /* --- format --- */
+varargs string format_page (string *items, int columns, int pad);
+string format_syntax (string text);
 string format_exit_brief (string dir);
 string format_exit_verbose (string dir);
+string format_exit_reverse (string dir);
 string format_stat_brief (string stat);
 string format_stat_verbose (string stat);
-string format_exit_reverse (string dir);
 string format_integer (int num);
-varargs string format_page (string *items, int columns, int pad);
 string *format_border (mapping data);
 
 /* --- grammar --- */
