@@ -4,10 +4,19 @@ inherit STD_ROOM;
 inherit M_STORY;
 
 nosave private object *people = ({ });
+nosave private mapping syntax = ([
+    "become": format_syntax("become female|male|neither"),
+    "roll": format_syntax("roll stats"),
+    "randomize": format_syntax("randomize"),
+    "done": format_syntax("done"),
+    "look": format_syntax("look"),
+    "retry": format_syntax("retry"),
+]);
+
 
 void story_action_final (object target) {
     message("story", "A repetitive beeping tone synced to a blinking red light attracts your attention.\n", target);
-    message("story", "You %^CYAN%^[look]%^RESET%^ over your surroundings.\n\n", target);
+    message("story", "You " + syntax["look"] + " over your surroundings.\n\n", target);
     people = people - ({ 0 }) + ({ target });
     target->describe_environment();
 }
@@ -33,12 +42,12 @@ string prepare_long () {
         long += sprintf("%-16s", "Gender:") + " " + tc->query_gender() + "\n";
         long += sprintf("%-16s", "Health:") + " Healthy\n";
         long += sprintf("%-16s", "Knowledge:") + " " + err + "\n\n";
-        long += "WARNING! "+err+": knowledge assimilation unable to proceed.\nPress %^CYAN%^[retry]%^RESET%^ to restart procedure.\n\n";
+        long += "WARNING! "+err+": knowledge assimilation unable to proceed.\nPress " + syntax["retry"] + " to restart procedure.\n\n";
         long += "Options:\n";
-        long += "  %^CYAN%^[become female|male|neither]%^RESET%^\n";
-        long += "  %^CYAN%^[roll stats]%^RESET%^\n";
-        long += "  %^CYAN%^[randomize]%^RESET%^\n\n";
-        long += "  %^CYAN%^[done]";
+        long += "  " + syntax["become"] + "\n";
+        long += "  " + syntax["roll"] + "\n";
+        long += "  " + syntax["randomize"] + "\n\n";
+        long += "  " + syntax["done"] + "";
     }
     return long;
 }
@@ -85,7 +94,7 @@ mixed can_become () {
     return environment(this_character()) == this_object();
 }
 void do_become () {
-    write("Syntax: %^CYAN%^[become female|male|neither]%^RESET%^\n");
+    write("Syntax: " + syntax["become"] + "\n");
 }
 mixed can_become_str (mixed args...) {
     return environment(this_character()) == this_object();
@@ -99,8 +108,7 @@ void do_become_str (mixed args...) {
     }
 
     if (member_array(str, ({ "female", "male", "neither" })) == -1) {
-        write("Syntax: %^CYAN%^[become female|male|neither]%^RESET%^\n");
-        return;
+        return do_become();
     }
 
     if (str == tc->query_gender()) {
@@ -121,7 +129,7 @@ mixed can_roll () {
     return environment(this_character()) == this_object();
 }
 void do_roll () {
-    write("Syntax: %^CYAN%^[roll stats]%^RESET%^\n");
+    write("Syntax: " + syntax["roll"] + "\n");
 }
 mixed can_roll_str (mixed args...) {
     return environment(this_character()) == this_object();
@@ -135,8 +143,7 @@ void do_roll_str (mixed args...) {
     }
 
     if (str != "stats") {
-        write("Syntax: %^CYAN%^[roll stats]%^RESET%^\n");
-        return;
+        return do_roll();
     }
 
     write("You tap the roll stats button on the display.\n");

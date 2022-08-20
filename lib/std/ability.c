@@ -290,7 +290,7 @@ string help (object char) {
     string result = "", *tmp;
 
     result += "Ability: " + __Name + "\n\n";
-    result += "Syntax: [" + __Name + " (target)]\n";
+    result += "Syntax: " + format_syntax(__Name + " ([target])") + "\n";
     if (sizeof(__Reqs)) {
         result += "Requirements:\n";
         foreach (string key,mapping value in __Reqs) {

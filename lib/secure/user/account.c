@@ -16,12 +16,12 @@ private void display_account_menu () {
     }
 
     remove_call_out();
-    msg = "\nAccount Actions   : %^CYAN%^[settings] [password] [exit]%^RESET%^\nCharacter Actions : %^CYAN%^[new] [delete]%^RESET%^\n\n";
+    msg = "\nAccount Actions   : " + format_syntax("settings") + " " + format_syntax("password") + " " + format_syntax("exit") + "%^RESET%^\nCharacter Actions : " + format_syntax("new") + " " + format_syntax("delete") + "\n\n";
 
     // @TODO different format for screenreader here?
     foreach (string name in __Account->query_character_names()) {
         mapping character = __Account->query_character(name);
-        string tmp = "%^CYAN%^" + sprintf("%-20s", "["+character["name"]+"]") + "%^RESET%^";
+        string tmp = format_syntax(sprintf("%-20s", character["name"]));
         tmp += sprintf("%-16s", capitalize(character["type"]+""));
         tmp += sprintf("%-24s", character["last_location"]);
         // @TODO change for connected / disconnected
@@ -303,7 +303,7 @@ protected nomask varargs void account_input (int state, mixed extra, string inpu
             break;
 
         case STATE_SETTINGS_ENTER:
-            write("Settings Actions  : %^CYAN%^[back] [(setting) (option)]%^RESET%^\n\n");
+            write("Settings Actions  : " + format_syntax("back") + " " + format_syntax("[setting] [option]") + "\n\n");
             foreach (string setting in sort_array(keys(__Account->query_settings()), 1)) {
                 string display;
                 if (intp(__Account->query_setting(setting))) {

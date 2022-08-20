@@ -10,7 +10,7 @@ mixed can_train () {
     return environment(this_character()) == this_object();
 }
 void do_train () {
-    message("action", "Syntax: %^CYAN%^[train (stat)]%^RESET%^\n", this_character());
+    message("action", "Syntax: " + format_syntax("train [stat]") + "\n", this_character());
 }
 mixed can_train_str (mixed args...) {
     return environment(this_character()) == this_object();
