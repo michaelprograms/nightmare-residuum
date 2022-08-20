@@ -35,7 +35,7 @@ void set_ability_requirements (mapping reqs) {
         "stats" : ([ "strength": 10, ]),
     ]),
     */
-    __Reqs = copy(reqs);
+    __Reqs = reqs;
 }
 int verify_ability_requirements (object source) {
     if (!source || !source->is_living()) return 0;
@@ -287,10 +287,32 @@ void set_help_text (string str) {
     __HelpText = str;
 }
 string help (object char) {
-    string result = "";
+    string result = "", *tmp;
 
     result += "Ability: " + __Name + "\n\n";
     result += "Syntax: [" + __Name + " (target)]\n";
+    if (sizeof(__Reqs)) {
+        result += "Requirements:\n";
+        foreach (string key,mapping value in __Reqs) {
+            result += "  " + key  + ": ";
+            tmp = ({ });
+            if (!undefinedp(value["level"]) && intp(value["level"])) {
+                tmp += ({ "Level " + value["level"] });
+            }
+            if (mapp(value["stats"])) {
+                foreach (string stat,int num in value["stats"]) {
+                    tmp += ({ num + " " + stat });
+                }
+            }
+            if (mapp(value["skills"])) {
+                foreach (string skill,int num in value["skills"]) {
+                    tmp += ({ num + " " + skill });
+                }
+            }
+            result += implode(tmp, ", ") + "\n";
+        }
+
+    }
     if (sizeof(__Weapons)) {
         result += "Weapons:\n";
         foreach (string key,int *value in __Weapons) {
