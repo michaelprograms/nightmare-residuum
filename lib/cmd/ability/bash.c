@@ -4,7 +4,6 @@ inherit STD_ABILITY;
 
 void create () {
     ::create();
-    set_requirements(REQUIREMENT_BUSY | REQUIREMENT_DISABLE);
     set_ability_requirements(([
         "warrior": ([
             "skills": ([

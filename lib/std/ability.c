@@ -16,6 +16,7 @@ void create () {
     if (__Name != "ability") {
         add_rules(({ "", "LIV", }));
     }
+    set_requirements(REQUIREMENT_BUSY | REQUIREMENT_DISABLE);
 }
 
 /* ----- ability name ----- */

@@ -4,7 +4,6 @@ inherit STD_ABILITY;
 
 void create () {
     ::create();
-    set_requirements(REQUIREMENT_BUSY | REQUIREMENT_DISABLE);
     set_ability_requirements(([
         "templar": ([
             "skills": ([
@@ -16,7 +15,7 @@ void create () {
         "melee": 20,
     ]));
     set_weapons(([
-        "melee": ({ 1, }),
+        "melee": ({ 1 }),
     ]));
     set_help_text("Pummel your opponent with your fist.");
 }
