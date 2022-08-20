@@ -6,6 +6,7 @@ private string __Name;
 private mapping __Reqs;
 private mapping __SkillPowers;
 private mapping __Weapons = ([ ]);
+private string __HelpText;
 
 void create () {
     ::create();
@@ -196,7 +197,12 @@ private void handle_ability_use (object source, object target) {
         return;
     }
 
-    if (!(weapon = query_best_weapon(source))) {
+    if (__Weapons["melee"]) {
+        if (sizeof(source->query_wieldable_limbs()) < __Weapons["melee"][0]) {
+            message("action", "You do not have any free hands.\n", source);
+            return;
+        }
+    } else if (!(weapon = query_best_weapon(source))) {
         message("action", "You are not wielding the correct type of weapon.\n", source);
         return;
     }
@@ -272,6 +278,30 @@ private void handle_ability_use (object source, object target) {
             target->train_skill(key + " defense", 1.0 + value / 100.0);
         }
     }
+}
+
+/* ----- help ----- */
+
+void set_help_text (string str) {
+    __HelpText = str;
+}
+string help (object char) {
+    string result = "";
+
+    result += "Ability: " + __Name + "\n\n";
+    result += "Syntax: [" + __Name + " (target)]\n";
+    if (sizeof(__Weapons)) {
+        result += "Weapons:\n";
+        foreach (string key,int *value in __Weapons) {
+            result += "  " + key + ": ";
+            result += implode(map(value, (: cardinal($1)+" handed" :)), ", ") + "\n";
+        }
+    }
+
+    if (__HelpText) {
+        result += "\n" + __HelpText + "\n";
+    }
+    return result;
 }
 
 /* ----- applies ----- */

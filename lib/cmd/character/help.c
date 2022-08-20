@@ -1,6 +1,8 @@
 void command (string input, mapping flags) {
     string path;
     object file;
+    string *border;
+    string result, *items;
 
     if (!input) {
         message("action", "Syntax: help [command]\n", this_character());
@@ -11,10 +13,23 @@ void command (string input, mapping flags) {
         path += "/" + input + ".c";
         file = find_object(path) || load_object(path);
         if (function_exists("help", file)) {
-            call_other(path, "help", this_character());
-            return;
+            result = call_other(path, "help", this_character());
         }
     }
 
-    message("action", "No help page found for that topic.\n", this_character());
+    if (sizeof(result)) {
+        items = explode(result, "\n");
+    }
+    border = format_border(([
+        "title": "HELP",
+        "subtitle": lower_case(input),
+        "body": ([
+            "items": sizeof(items) ? items : ({ "No help page found for that topic." }),
+            "columns": 1,
+            "align": sizeof(items) ? "left" : "center",
+        ]),
+    ]));
+    foreach (string line in border) {
+        message("help", line + "\n", this_character());
+    }
 }
