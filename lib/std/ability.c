@@ -288,13 +288,12 @@ void set_help_text (string str) {
 }
 string help (object char) {
     string result = "", *tmp;
+    int n;
 
-    result += "Ability: " + __Name + "\n\n";
-    result += "Syntax: " + format_syntax(__Name + " ([target])") + "\n";
     if (sizeof(__Reqs)) {
-        result += "Requirements:\n";
+        result += "\n%^CYAN%^BOLD%^Requirements%^RESET%^\n";
         foreach (string key,mapping value in __Reqs) {
-            result += "  " + key  + ": ";
+            result += sprintf("%-12s", capitalize(key) + ":")  + "  ";
             tmp = ({ });
             if (!undefinedp(value["level"]) && intp(value["level"])) {
                 tmp += ({ "Level " + value["level"] });
@@ -313,13 +312,15 @@ string help (object char) {
         }
 
     }
-    if (sizeof(__Weapons)) {
-        result += "Weapons:\n";
+    if (n = sizeof(__Weapons)) {
+        result += "\n%^CYAN%^BOLD%^Weapons%^RESET%^\n";
         foreach (string key,int *value in __Weapons) {
-            result += "  " + key + ": ";
-            result += implode(map(value, (: cardinal($1)+" handed" :)), ", ") + "\n";
+            // result += sprintf("%-12s", key + ":") + "  ";
+            result += implode(map(value, (: cardinal($1)+" handed "+$(key) :)), ", ") + "\n";
         }
     }
+
+    result += "\n%^CYAN%^BOLD%^" + sprintf("%-12s", "Syntax") + "%^RESET%^\n" + format_syntax(__Name + " ([target])") + "\n";
 
     if (__HelpText) {
         result += "\n" + __HelpText + "\n";
