@@ -19,8 +19,6 @@ void create () {
     set_requirements(REQUIREMENT_BUSY | REQUIREMENT_DISABLE);
 }
 
-/* ----- ability name ----- */
-
 string query_name () {
     return __Name;
 }
@@ -30,9 +28,9 @@ string query_name () {
 void set_ability_requirements (mapping reqs) {
     /* Data format:
     "class|species": ([
-        "level" : 5,
-        "skills" : ([ "melee attack": 25, ]),
-        "stats" : ([ "strength": 10, ]),
+        "level" : 1,
+        "skills" : ([ "melee attack": 1, ]),
+        "stats" : ([ "strength": 1, ]),
     ]),
     */
     __Reqs = reqs;
@@ -109,6 +107,13 @@ void set_skill_powers (mapping powers) {
 
     __SkillPowers = powers;
 }
+int query_total_skill_power () {
+    int total = 0;
+    foreach (string key,int value in __SkillPowers) {
+        total += value;
+    }
+    return total;
+}
 
 /* ----- cost ----- */
 
@@ -183,6 +188,69 @@ int calculate_damage (object source, object target) {
 
 /* -----  ----- */
 
+
+nosave private int __DifficultyFactor;
+
+void set_difficulty_factor (int factor) {
+    __DifficultyFactor = factor;
+}
+int query_difficulty_factor () {
+    if (!__DifficultyFactor) {
+        __DifficultyFactor = 100;
+    }
+    return __DifficultyFactor;
+}
+
+int is_ability_successful (object source, object target) {
+    int sourceN = 0, targetN = 0;
+    int chance = 100;
+    int powerTotal = query_total_skill_power();
+
+    // @TODO if (target->query_paralyzed()) return 100;
+
+    foreach (string key,int value in __SkillPowers) {
+        if (key == "psionic") {
+            sourceN += source->query_stat("intelligence") * value / powerTotal;
+            targetN += target->query_stat("perception") * value / powerTotal;
+        } else if (key == "ranged") {
+            sourceN += source->query_stat("agility") * value / powerTotal;
+            targetN += target->query_stat("luck") * value / powerTotal;
+        } else { // melee and all else
+            sourceN += source->query_stat("strength") * value / powerTotal;
+            targetN += target->query_stat("endurance") * value / powerTotal;
+        }
+    }
+
+    targetN = targetN * query_difficulty_factor() / 100;
+
+    // success range is 10% to 100%
+    if (sourceN < targetN) {
+        chance = sourceN * 100 / targetN;
+        chance = max(({ 10, min(({ 100, chance })) }));
+    }
+    return (1+random(100)) <= chance;
+}
+
+void ability_message_attempt (object source, object target) {
+    message("action", "You attempt to " + query_name() + " " + target->query_cap_name() + "!\n", source);
+    message("action", source->query_cap_name() + " attempts to " + query_name() + " you!\n", target);
+    message("action", source->query_cap_name() + " attempts to " + query_name() + " " + target->query_cap_name() + "!\n", environment(source), ({ source, target }));
+}
+
+void ability_message_fail (object source, object target) {
+    message("action", "You miss your " + query_name() + " attempt on " + target->query_cap_name() + "!\n", source);
+    message("action", source->query_cap_name() + " misses " + possessive(source) + " " + query_name() + " attempt on you!\n", target);
+    message("action", source->query_cap_name() + " misses " + possessive(source) + " " + query_name() + " attempt on " + target->query_cap_name() + "!\n", environment(source), ({ source, target }));
+}
+
+void ability_message_success (object source, object target) {
+    message("action", "You " + query_name() + " " + target->query_cap_name() + "!\n", source);
+    message("action", source->query_cap_name() + " " + pluralize(query_name()) + " you!\n", target);
+    message("action", source->query_cap_name() + " " + pluralize(query_name()) + " " + target->query_cap_name() + "!\n", environment(source), ({ source, target }));
+}
+
+
+
 private void handle_ability_use (object source, object target) {
     mapping cost;
     int damage;
@@ -225,9 +293,6 @@ private void handle_ability_use (object source, object target) {
         }
     }
 
-    // send messages
-    this_object()->handle_hit_msg(source, target);
-
     // check source vitals
     if (cost["sp"] > 0) {
         if (source->query_sp() < cost["sp"]) {
@@ -241,7 +306,6 @@ private void handle_ability_use (object source, object target) {
             return;
         }
     }
-
     // update source vitals
     if (cost["sp"] > 0) {
         source->add_sp(-cost["sp"]);
@@ -249,15 +313,21 @@ private void handle_ability_use (object source, object target) {
     if (cost["mp"]) {
         source->add_mp(-cost["mp"]);
     }
-
-    // update source status
+    // update statuses
     source->set_busy(2);
+    source->add_hostile(target);
+    target->add_hostile(source);
     // @TODO re-enable this when determing busy vs disable
     // source->set_disable(2);
 
-    // set hostile status
-    source->add_hostile(target);
-    target->add_hostile(source);
+    // send attempt and success or fail messages
+    this_object()->ability_message_attempt(source, target);
+    if (is_ability_successful(source, target)) {
+        this_object()->ability_message_success(source, target);
+    } else {
+        this_object()->ability_message_fail(source, target);
+        return;
+    }
 
     // determine damage
     damage = calculate_damage(source, target);

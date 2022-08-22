@@ -17,8 +17,4 @@ void create () {
     set_help_text("Loose a ranged attack at your opponent.");
 }
 
-void handle_hit_msg (object source, object target) {
-    message("action", "You loose an arrow at " + target->query_cap_name() + "!\n", source);
-    message("action", source->query_cap_name() + " looses an arrow at you!\n", target);
-    message("action", source->query_cap_name() + " looses an arrow at " + target->query_cap_name() + "!\n", environment(source), ({ source, target }));
-}
+// @TODO custom attempt, fail and success messages for loose

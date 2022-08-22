@@ -16,9 +16,3 @@ void create () {
     ]));
     set_help_text("Missile your opponent with your psychic powers.");
 }
-
-void handle_hit_msg (object source, object target) {
-    message("action", "You missile " + target->query_cap_name() + "!\n", source);
-    message("action", source->query_cap_name() + " missiles you!\n", target);
-    message("action", source->query_cap_name() + " missiles " + target->query_cap_name() + "!\n", environment(source), ({ source, target }));
-}
