@@ -39,3 +39,30 @@ void test_skill_powers () {
         assert((: testOb->set_skill_powers((: 1 :)) :), "catch", "*Bad argument 1 to ability->set_skill_powers\n"),
     }) :));
 }
+
+void test_difficulty_factor () {
+    expect_function("query_difficulty_factor", testOb);
+    expect_function("set_difficulty_factor", testOb);
+
+    expect("handles skill powers", (: ({
+        // defaults to 100
+        assert(testOb->query_difficulty_factor(), "==", 100),
+
+        // check lowering difficulty factor
+        testOb->set_difficulty_factor(90),
+        assert(testOb->query_difficulty_factor(), "==", 90),
+
+        // check raising difficulty factor
+        testOb->set_difficulty_factor(110),
+        assert(testOb->query_difficulty_factor(), "==", 110),
+    }) :));
+
+    expect("set_difficulty_factor handles invalid argument 1", (: ({
+        assert((: testOb->set_difficulty_factor(this_object()) :), "catch", "*Bad argument 1 to ability->set_difficulty_factor\n"),
+        assert((: testOb->set_difficulty_factor(1.0) :), "catch", "*Bad argument 1 to ability->set_difficulty_factor\n"),
+        assert((: testOb->set_difficulty_factor("") :), "catch", "*Bad argument 1 to ability->set_difficulty_factor\n"),
+        assert((: testOb->set_difficulty_factor(({})) :), "catch", "*Bad argument 1 to ability->set_difficulty_factor\n"),
+        assert((: testOb->set_difficulty_factor(([])) :), "catch", "*Bad argument 1 to ability->set_difficulty_factor\n"),
+        assert((: testOb->set_difficulty_factor((: 1 :)) :), "catch", "*Bad argument 1 to ability->set_difficulty_factor\n"),
+    }) :));
+}

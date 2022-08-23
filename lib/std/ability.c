@@ -186,12 +186,13 @@ int calculate_damage (object source, object target) {
     return damage;
 }
 
-/* -----  ----- */
+/* ----- difficulty factor ----- */
 
 
 nosave private int __DifficultyFactor;
 
 void set_difficulty_factor (int factor) {
+    if (undefinedp(factor) || !intp(factor)) error("Bad argument 1 to ability->set_difficulty_factor");
     __DifficultyFactor = factor;
 }
 int query_difficulty_factor () {
@@ -200,6 +201,8 @@ int query_difficulty_factor () {
     }
     return __DifficultyFactor;
 }
+
+/* ----- ability success ----- */
 
 int is_ability_successful (object source, object target) {
     int sourceN = 0, targetN = 0;
