@@ -356,7 +356,12 @@ private void handle_ability_use (object source, object target) {
 
 /* ----- help ----- */
 
+string query_help_text () {
+    return __HelpText;
+}
 void set_help_text (string str) {
+    if (undefinedp(str) || !stringp(str)) error("Bad argument 1 to ability->set_help_text");
+
     __HelpText = str;
 }
 string help (object char) {
