@@ -13,4 +13,7 @@ void create () {
     set_looks(([
         "street": "A village street labeled W Market St.",
     ]));
+    set_reset(([
+        HUMAN_MONSTER + "plasma_snail.c": 1,
+    ]));
 }
