@@ -24,14 +24,15 @@ int query_requirements () {
 }
 
 mixed check_busy () {
-    if (this_character()->query_busy() > 0) {
+
+    if (previous_object()->query_busy() > 0) {
         return "You are too busy to do that right now.";
     } else {
         return 1;
     }
 }
 mixed check_disable () {;
-    if (this_character()->query_disable() > 0) {
+    if (previous_object()->query_disable() > 0) {
         return "You are not able to do that right now.";
     } else {
         return 1;
