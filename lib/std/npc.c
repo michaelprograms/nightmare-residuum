@@ -1,5 +1,8 @@
 inherit STD_LIVING;
 
+nosave private string *__AbilityList;
+nosave private int __AbilityChance;
+
 int is_npc () { return 1; }
 
 void create () {
@@ -35,4 +38,29 @@ void set_level (int l) {
     set_skill("ranged defense", l * 2);
 
     update_vitals(1);
+}
+
+string *query_ability_list () {
+    return __AbilityList;
+}
+void set_ability_list (string *abilities) {
+    __AbilityList = abilities;
+}
+int query_ability_chance () {
+    return __AbilityChance;
+}
+void set_ability_chance (int chance) {
+    __AbilityChance = chance;
+}
+
+void heart_beat () {
+    living::heart_beat();
+
+    if (time() % 2 || !(query_target_hostile())) return;
+    if (this_object()->query_disable()) return;
+
+    if (this_object()->query_ability_chance() > 1+random(100) && sizeof(query_ability_list())) {
+        string ability = element_of(query_ability_list());
+        this_object()->do_command(ability);
+    }
 }
