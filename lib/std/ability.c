@@ -252,8 +252,6 @@ void ability_message_success (object source, object target) {
     message("action", source->query_cap_name() + " " + pluralize(query_name()) + " " + target->query_cap_name() + "!\n", environment(source), ({ source, target }));
 }
 
-
-
 private void handle_ability_use (object source, object target) {
     mapping cost;
     int damage;
@@ -274,7 +272,7 @@ private void handle_ability_use (object source, object target) {
             message("action", "You do not have any free hands.\n", source);
             return;
         }
-    } else if (!(weapon = query_best_weapon(source))) {
+    } else if (sizeof(__Weapons) && !(weapon = query_best_weapon(source))) {
         message("action", "You are not wielding the correct type of weapon.\n", source);
         return;
     }
