@@ -23,6 +23,13 @@ protected void handle_combat () {
     max = sizeof(weapons[0..2]) + query_stat("agility") / 50;
     hits = min + secure_random(max - min + 1);
 
+    if (!hits) {
+        message("combat miss", this_object()->query_cap_name() + " " + element_of(({
+            "flops about helplessly",
+            "tries to look menacing",
+            "uselessly flops around",
+        })) + ".\n", environment(), this_object());
+    }
     for (int h = 0; h < hits; h ++) {
         if (!target) break;
         handle_combat_hit(target, weapons[random(sizeof(weapons))]);
