@@ -21,7 +21,7 @@ void command (string input, mapping flags) {
         value = implode(split[1..], " ");
 
         switch (key) {
-            case "width":
+            case "width": case "lines":
                 value = to_int(value);
                 break;
         }
