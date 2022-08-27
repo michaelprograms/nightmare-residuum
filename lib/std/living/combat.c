@@ -14,6 +14,10 @@ protected void handle_combat () {
     if (time() % 2 || !(target = query_target_hostile())) return;
     if (this_object()->query_disable()) return;
 
+    if ((this_object()->is_npc() || this_object()->is_monster()) && this_object()->query_ability_chance()) {
+        this_object()->handle_ability_attack();
+    }
+
     weapons = query_wielded_weapons() + query_wieldable_limbs();
     min = sizeof(weapons[0..2]) + query_stat("agility") / 100;
     max = sizeof(weapons[0..2]) + query_stat("agility") / 50;

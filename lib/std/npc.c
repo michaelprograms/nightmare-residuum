@@ -53,12 +53,7 @@ void set_ability_chance (int chance) {
     __AbilityChance = chance;
 }
 
-void heart_beat () {
-    living::heart_beat();
-
-    if (time() % 2 || !(query_target_hostile())) return;
-    if (this_object()->query_disable()) return;
-
+void handle_ability_attack () {
     if (this_object()->query_ability_chance() > 1+random(100) && sizeof(query_ability_list())) {
         string ability = element_of(query_ability_list());
         this_object()->do_command(ability);
