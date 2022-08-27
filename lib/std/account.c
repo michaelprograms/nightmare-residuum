@@ -18,13 +18,7 @@ private mapping __Characters = ([
         ]),
     */
 ]);
-private mapping __Settings = ([
-    // default settings
-    "width": 80,
-    "lines": 40,
-    "ansi": "on",
-    "screenreader": "off",
-]);
+private mapping __Settings = ([ ]);
 private int __EdSetup;  // @TODO
 
 
@@ -33,8 +27,25 @@ nosave private string *__CharacterNames = ({});
 
 // -----------------------------------------------------------------------------
 
+void ensure_default_settings () {
+    // verify default settings exist
+    if (undefinedp(__Settings["width"])) {
+        __Settings["width"] = 80;
+    }
+    if (undefinedp(__Settings["lines"])) {
+        __Settings["lines"] = 40;
+    }
+    if (undefinedp(__Settings["ansi"])) {
+        __Settings["ansi"] = "on";
+    }
+    if (undefinedp(__Settings["screenreader"])) {
+        __Settings["screenreader"] = "off";
+    }
+}
+
 void create () {
     parent::create();
+    ensure_default_settings();
 }
 
 int is_account () { return 1; }
@@ -48,7 +59,10 @@ void set_name (string name) { // @TODO setup_account?
     if (D_ACCOUNT->query_exists(__Name)) {
         restore_data();
     }
+
+    ensure_default_settings();
 }
+
 string query_name () {
     return __Name;
 }
