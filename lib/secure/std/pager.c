@@ -1,7 +1,7 @@
 nosave private object __User;
 nosave private string *__Lines;
 nosave private int __LineNum, __LinesCount;
-nosave private int __ChunkSize = 25;
+nosave private int __ChunkSize = 40;
 
 nomask private void done () {
     __User->input_pop();
@@ -58,9 +58,12 @@ private void handle_page (mixed arg) {
 }
 
 void start (string *lines, object user) {
-
+    object account;
     // @TODO check param
 
+    if (user && (account = user->query_account())) {
+        __ChunkSize = to_int(account->query_setting("lines"));
+    }
     __Lines = lines;
     __LinesCount = sizeof(__Lines);
     __User = user;
