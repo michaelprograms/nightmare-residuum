@@ -6,6 +6,7 @@ private int __Level = 0;
 mapping __Limbs = ([ ]);
 private nosave mapping __Wielded = ([ ]);
 private nosave mapping __Worn = ([ ]);
+nosave private int __NextHeal;
 
 /* ----- gender and species ----- */
 
@@ -285,4 +286,45 @@ varargs mixed handle_unwield (object ob, string limb) {
     return 1;
 }
 
+/* ----- healing ----- */
+
+void heal (int n) {
+    if (n < 0) {
+        return;
+    }
+
+    add_hp(n);
+    add_sp(n);
+    add_mp(n);
+
+    n = n / 2;
+    foreach (string limb in query_limbs()) {
+        if (__Limbs[limb]["damage"] > 0) {
+            __Limbs[limb]["damage"] -= n;
+            if (__Limbs[limb]["damage"] < 0) {
+                __Limbs[limb]["damage"] = 0;
+            }
+        }
+    }
+}
+
+private void handle_passive_heal () {
+    int amt;
+
+    if (!__NextHeal) {
+        __NextHeal = time() + 10;
+        return;
+    } else if (__NextHeal > time()) {
+        return;
+    }
+
+    __NextHeal = time() + 10;
+    amt = to_int(ceil((query_level() / 5.0) + (query_stat("endurance") / 10.0) + (query_stat("luck") / 20.0)));
+    heal(amt);
+}
+
+/* ----- object applies ----- */
+
+void heart_beat () {
+    handle_passive_heal();
 }

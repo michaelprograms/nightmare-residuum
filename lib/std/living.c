@@ -15,8 +15,6 @@ inherit "/std/living/vitals.c";
 
 inherit M_CURRENCY;
 
-nosave private int __NextHeal;
-
 int is_living () { return 1; }
 
 void create () {
@@ -28,22 +26,9 @@ void heart_beat () {
     if (!clonep()) return;
 
     status::heart_beat();
+    body::heart_beat();
 
-    handle_passive_heal();
     handle_combat();
-}
-
-private void handle_passive_heal () {
-    if (!__NextHeal) {
-        __NextHeal = time() + 10;
-        return;
-    } else if (__NextHeal <= time()) {
-        int amt = to_int(ceil((query_level() / 5.0) + (query_stat("endurance") / 10.0)));
-        add_hp(amt);
-        add_sp(amt);
-        add_mp(amt);
-        __NextHeal = time() + 10;
-    }
 }
 
 varargs int do_command (string str, int debug) {
