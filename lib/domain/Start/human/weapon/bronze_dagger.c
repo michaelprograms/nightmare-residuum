@@ -9,4 +9,5 @@ void create () {
     set_type("knife");
     set_value(50);
     set_wc(2);
+    set_autoload(2);
 }
