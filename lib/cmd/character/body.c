@@ -1,6 +1,7 @@
 void command (string input, mapping flags) {
     object tc = this_character(), target = tc;
     string *border, *items = ({ }), *limbs;
+    mapping footer;
 
     if (input && tc->query_immortal()) {
         if (find_character(input)) target = find_character(input);
@@ -15,13 +16,33 @@ void command (string input, mapping flags) {
     })) {
         foreach (string l in sort_array(filter_array(limbs, (: regexp($1, $(type)) :)), 1)) {
             mapping limb = target->query_limb(l);
-            items += ({ sprintf("  %-24s %3s", l, (limb["damage"]*100/limb["maxdamage"])+"%") });
+            items += ({
+                l,
+                limb["damage"]+"/"+limb["maxdamage"] + " " + (limb["damage"]*100/limb["maxdamage"])+"%",
+                limb["type"] ? limb["type"] : "",
+                limb["attach"] ? limb["attach"] : "",
+            });
             limbs -= ({ l });
         }
     }
     foreach (string l in limbs) {
         mapping limb = target->query_limb(l);
-        items += ({ sprintf("  %-24s %3s", l, (limb["damage"]*100/limb["maxdamage"])+"%") });
+        items += ({
+            l,
+            limb["damage"]+"/"+limb["maxdamage"] + " " + (limb["damage"]*100/limb["maxdamage"])+"%",
+            limb["type"] ? limb["type"] : "",
+            limb["attach"] ? limb["attach"] : "",
+        });
+    }
+
+    if (sizeof(target->query_severed_limbs())) {
+        footer = ([
+            "items": ({
+                "You are missing your " + conjunction(target->query_severed_limbs()) + ".",
+            }),
+            "columns": 1,
+            "align": "center",
+        ]);
     }
 
     border = format_border(([
@@ -35,9 +56,11 @@ void command (string input, mapping flags) {
             "align": "center",
         ]),
         "body": ([
+            "header": ({ "Limb", "Damage", "Type", "Attached" }),
             "items": items,
-            "columns": 2,
+            "columns": 4,
         ]),
+        "footer": footer,
     ]));
     foreach (string line in border) {
         message("system", line + "\n", tc);
