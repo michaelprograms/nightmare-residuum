@@ -1,4 +1,5 @@
 inherit STD_STORAGE;
+inherit M_DUSTABLE;
 
 int is_corpse () { return 1; }
 
@@ -10,17 +11,9 @@ void create () {
     set_long("A corpse.");
 }
 
-void handle_expire () {
-    if (environment()) {
-        message("system", "The " + query_name() + " dissolves into dust.\n", environment());
-    }
-    remove_call_out();
-    handle_remove();
-}
-
 void handle_received (object env) {
-    ::handle_received(env);
-    call_out((: handle_expire :), 60 * 5);
+    storage::handle_received(env);
+    dustable::handle_received(env);
 }
 
 void setup_body (object ob) {

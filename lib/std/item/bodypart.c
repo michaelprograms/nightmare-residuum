@@ -1,4 +1,5 @@
 inherit STD_ITEM;
+inherit M_DUSTABLE;
 
 nosave private string __Owner, __Limb;
 
@@ -7,17 +8,8 @@ void create () {
     set_id(({ "bodypart", "body part", "limb", }));
 }
 
-void handle_expire () {
-    if (environment()) {
-        message("system", "The " + query_name() + " dissolves into dust.\n", environment());
-    }
-    remove_call_out();
-    handle_remove();
-}
-
 void handle_received (object env) {
-    ::handle_received(env);
-    call_out((: handle_expire :), 60 * 5);
+    dustable::handle_received(env);
 }
 
 void setup_bodypart (string owner, string limb) {

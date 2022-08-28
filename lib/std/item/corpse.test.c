@@ -8,15 +8,6 @@ void after_each_test () {
     if (objectp(testOb)) destruct(testOb);
 }
 
-void test_expire () {
-    expect_function("handle_expire", testOb);
-
-    expect("expire to remove corpse", (: ({
-        assert(undefinedp(testOb), "==", 0),
-        testOb->handle_expire(),
-        assert(undefinedp(testOb), "==", 1),
-    }) :));
-}
 
 private string testObFile;
 private mixed *calloutInfo;
