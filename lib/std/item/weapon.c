@@ -9,7 +9,7 @@ object query_wielded ();
 
 int is_weapon () { return 1; }
 
-string query_short (string defaultANSI) {
+varargs string query_short (string defaultANSI) {
     string short = ::query_short(defaultANSI);
 
     if (query_wielded()) short += " (wielded)";
