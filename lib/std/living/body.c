@@ -83,6 +83,7 @@ string query_random_limb () {
 }
 
 void handle_limb_sever (string limb) {
+    object limbOb;
 
     // allow fatal limbs to be severed multiple times
     if (__Limbs[limb]["status"] == "severed" && __Limbs[limb]["type"] != "FATAL") {
@@ -97,6 +98,11 @@ void handle_limb_sever (string limb) {
         message("combat action", "Your "+limb+" is severed!\n", this_object());
         message("combat action", possessive_noun(this_object())+" "+limb+" is severed!\n", environment(), this_object());
     }
+
+    // create bodypart
+    limbOb = new("/std/item/bodypart.c");
+    limbOb->setup_bodypart(this_object()->query_cap_name(), limb);
+    limbOb->handle_move(environment());
 
     if (__Limbs[limb]["attach"] && __Limbs[limb]["attach"] != limb) {
         handle_limb_sever(__Limbs[limb]["attach"]);
