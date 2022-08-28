@@ -85,12 +85,15 @@ string query_random_limb () {
 void handle_limb_sever (string limb) {
     object limbOb;
 
-    // allow fatal limbs to be severed multiple times
+    // non-fatal limbs can't be severed multiple times
     if (__Limbs[limb]["status"] == "severed" && __Limbs[limb]["type"] != "FATAL") {
         return;
     }
+
+    // mark limb as severed
     __Limbs[limb]["status"] = "severed";
     __Limbs[limb]["damage"] = -1;
+
     if (__Limbs[limb]["type"] == "FATAL") {
         message("combat action", "Your "+limb+" receives a mortal blow!\n", this_object());
         message("combat action", possessive_noun(this_object())+" "+limb+" receives a mortal blow!\n", environment(), this_object());
