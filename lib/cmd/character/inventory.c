@@ -20,9 +20,9 @@ void command (string input, mapping flags) {
         items = ({ "You have no items." });
     }
 
-    foreach (string currency in this_character()->query_currencies()) {
+    foreach (string currency in target->query_currencies()) {
         int n;
-        if (n = this_character()->query_currency(currency)) {
+        if (n = target->query_currency(currency)) {
             coins += ({ n + " " + currency });
         }
     }
