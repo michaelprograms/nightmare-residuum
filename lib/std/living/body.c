@@ -3,9 +3,9 @@
 private string __Gender = "neither";
 private string __Species = "unknown";
 private int __Level = 0;
-mapping __Limbs = ([]);
-private nosave mapping __Wielded = ([]);
-private nosave mapping __Worn = ([]);
+mapping __Limbs = ([ ]);
+private nosave mapping __Wielded = ([ ]);
+private nosave mapping __Worn = ([ ]);
 
 /* ----- gender and species ----- */
 
@@ -44,15 +44,32 @@ void set_level (int l) {
         l = abs(l);
     }
     __Level = l;
+
+    update_limbs();
 }
 
 /* ----- limbs ----- */
 
 protected void update_limbs () {
-    __Limbs = D_SPECIES->setup_body(this_object());
+    mapping newLimbs = D_SPECIES->setup_body(this_object());
+
+    foreach (string limb,mapping value in newLimbs || ([])) {
+        if (__Limbs[limb]) {
+            value["damage"] = __Limbs[limb]["damage"];
+            value["status"] = __Limbs[limb]["status"];
+        }
+        __Limbs[limb] = value;
+    }
 }
 string *query_limbs () {
-    return keys(__Limbs || ([ ]));
+    string *limbs = keys(__Limbs || ([ ]));
+    limbs = filter_array(limbs, (: __Limbs[$1]["status"] != "severed" :));
+    return limbs;
+}
+string *query_severed_limbs () {
+    string *limbs = keys(__Limbs || ([ ]));
+    limbs = filter_array(limbs, (: __Limbs[$1]["status"] == "severed" :));
+    return limbs;
 }
 mapping query_limb (string limb) {
     if (limb && __Limbs[limb]) return __Limbs[limb];
@@ -62,6 +79,67 @@ string query_random_limb () {
     string *limbs = query_limbs();
     if (sizeof(limbs)) return limbs[random(sizeof(limbs))];
     else return 0;
+}
+
+void handle_limb_sever (string limb) {
+
+    // allow fatal limbs to be severed multiple times
+    if (__Limbs[limb]["status"] == "severed" && __Limbs[limb]["type"] != "FATAL") {
+        return;
+    }
+    __Limbs[limb]["status"] = "severed";
+    __Limbs[limb]["damage"] = -1;
+    if (__Limbs[limb]["type"] == "FATAL") {
+        message("combat action", "Your "+limb+" receives a mortal blow!\n", this_object());
+        message("combat action", possessive_noun(this_object())+" "+limb+" receives a mortal blow!\n", environment(), this_object());
+    } else {
+        message("combat action", "Your "+limb+" is severed!\n", this_object());
+        message("combat action", possessive_noun(this_object())+" "+limb+" is severed!\n", environment(), this_object());
+    }
+
+    if (__Limbs[limb]["attach"] && __Limbs[limb]["attach"] != limb) {
+        handle_limb_sever(__Limbs[limb]["attach"]);
+    }
+}
+
+void handle_limb_restore (string limb) {
+    if (__Limbs[limb]["status"] != "severed") {
+        return;
+    }
+    map_delete(__Limbs[limb], "status");
+    __Limbs[limb]["damage"] = 0;
+}
+
+/* ----- damage ----- */
+
+varargs int handle_damage (int damage, string limb, object source) {
+    // @TODO source
+    add_hp(-damage);
+    if (query_max_hp() < query_hp()) set_hp(query_max_hp());
+
+    if (stringp(limb) && limb != "" && this_object()->query_limb(limb)) {
+        int limbDamagePct;
+
+        __Limbs[limb]["damage"] += damage / 2;
+        if (__Limbs[limb]["damage"] < 0) {
+            __Limbs[limb]["damage"] = 0;
+        }
+        limbDamagePct = __Limbs[limb]["damage"]*100/__Limbs[limb]["maxdamage"];
+
+        if (limbDamagePct >= 100) {
+            handle_limb_sever(limb);
+        } else if (limbDamagePct >= 75) {
+            message("combat alert", "Your "+limb+" is badly damaged!", this_object());
+        } else if (limbDamagePct >= 50) {
+            message("combat alert", "Your "+limb+" is injured!", this_object());
+        }
+    }
+
+    if (this_object()->is_character()) {
+        message("system", sprintf("hp: %d    sp: %d    mp: %d\n", query_hp(), query_sp(), query_mp()), this_object());
+    }
+    check_lifesigns(source);
+    return damage;
 }
 
 /* ----- wearing ----- */
@@ -205,4 +283,6 @@ varargs mixed handle_unwield (object ob, string limb) {
     ob->set_wielded(0);
     __Wielded[limb] = 0;
     return 1;
+}
+
 }

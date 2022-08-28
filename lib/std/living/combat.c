@@ -93,7 +93,7 @@ private void handle_combat_hit (object target, mixed weapon) {
         damage -= target->query_limb_armor(limb);
 
         display_combat_message(this_object(), target, limb, weapon, type, damage);
-        if (damage > 0) target->handle_damage(damage, this_object());
+        if (damage > 0) target->handle_damage(damage, limb, this_object());
 
         train_skill(type + " attack");
         if (target) target->train_skill(type + " defense");
@@ -107,17 +107,6 @@ varargs void check_lifesigns (object source) {
         if (source) source->handle_victory(this_object());
         handle_defeat(this_object()->is_character());
     }
-}
-
-varargs int handle_damage (int damage, object source) {
-    // @TODO source
-    add_hp(-damage);
-    if (query_max_hp() < query_hp()) set_hp(query_max_hp());
-    if (this_object()->is_character()) {
-        message("system", sprintf("hp: %d    sp: %d    mp: %d\n", query_hp(), query_sp(), query_mp()), this_object());
-    }
-    check_lifesigns(source);
-    return damage;
 }
 
 /* ----- hostiles ----- */

@@ -256,6 +256,7 @@ private void handle_ability_use (object source, object target) {
     mapping cost;
     int damage;
     object weapon;
+    string limb;
 
     if (!verify_ability_requirements(source)) {
         message("action", "You cannot do that.\n", source);
@@ -330,9 +331,11 @@ private void handle_ability_use (object source, object target) {
         return;
     }
 
+    limb = target->query_random_limb();
+
     // determine damage
     damage = calculate_damage(source, target);
-    target->handle_damage(damage, source);
+    target->handle_damage(damage, limb, source);
     if (source->query_immortal() || source->query_property("debug")) {
         message("action", "%^ORANGE%^Damage:%^RESET%^ " + damage + "\n", source);
     }
