@@ -50,3 +50,15 @@ void test_setup_body () {
 
     destruct(ob);
 }
+
+void test_adjust_stat () {
+    expect_function("query_adjust_stat", testOb);
+
+    expect("species stats are adjustable", (: ({
+        assert(testOb->query_adjust_stat("human", "strength"), "==", 2),
+
+        assert(testOb->query_adjust_stat("unknown species", "strength"), "==", 0),
+
+        assert(testOb->query_adjust_stat("human", "unknown stat"), "==", 0),
+    }) :));
+}
