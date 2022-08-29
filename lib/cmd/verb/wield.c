@@ -17,9 +17,7 @@ void do_wield_obj (object ob, string str) {
     object po = previous_object();
 
     if ((result = po->handle_wield(ob)) == 1) {
-        string limbConj = conjunction(po->query_wielded_limbs(ob));
-        message("verb", "You wield " + ob->query_name() + " in your " + limbConj + ".\n", po);
-        message("verb", po->query_cap_name() + " wields " + ob->query_name() + " in " + possessive(po) + " " + limbConj + ".\n", environment(po), po);
+        return;
     } else if (stringp(result)) {
         message("verb", result + "\n", po);
     } else {

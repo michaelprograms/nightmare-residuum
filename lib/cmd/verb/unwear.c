@@ -17,9 +17,7 @@ void do_unwear_obj (object ob, string str) {
     object po = previous_object();
 
     if ((result = po->handle_unwear(ob)) == 1) {
-        string limbConj = conjunction(ob->query_limbs());
-        message("verb", "You remove " + ob->query_name() + " from your " + limbConj + ".\n", po);
-        message("verb", po->query_cap_name() + " removes " + ob->query_name() + " from " + possessive(po) + " " + limbConj + ".\n", environment(po), po);
+        return;
     } else if (stringp(result)) {
         message("verb", result + "\n", po);
     } else {

@@ -17,9 +17,7 @@ void do_wear_obj (object ob, string str) {
     object po = previous_object();
 
     if ((result = po->handle_wear(ob)) == 1) {
-        string limbConj = conjunction(ob->query_limbs());
-        message("verb", "You wear " + ob->query_name() + " on your " + limbConj + ".\n", po);
-        message("verb", po->query_cap_name() + " wears " + ob->query_name() + " on " + possessive(po) + " " + limbConj + ".\n", environment(po), po);
+        return;
     } else if (stringp(result)) {
         message("verb", result + "\n", po);
     } else {

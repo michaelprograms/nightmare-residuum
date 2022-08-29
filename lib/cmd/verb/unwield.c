@@ -15,11 +15,9 @@ mixed can_unwield () {
 void do_unwield_obj (object ob, string str) {
     mixed result;
     object po = previous_object();
-    string limbConj = conjunction(po->query_wielded_limbs(ob));
 
     if ((result = po->handle_unwield(ob)) == 1) {
-        message("verb", "You unwield " + ob->query_name() + " from your " + limbConj + ".\n", po);
-        message("verb", po->query_cap_name() + " unwields " + ob->query_name() + " from " + possessive(po) + " " + limbConj + ".\n", environment(po), po);
+        return;
     } else if (stringp(result)) {
         message("verb", result + "\n", po);
     } else {

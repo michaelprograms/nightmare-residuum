@@ -90,10 +90,6 @@ void handle_limb_sever (string limb) {
         return;
     }
 
-    // mark limb as severed
-    __Limbs[limb]["status"] = "severed";
-    __Limbs[limb]["damage"] = -1;
-
     if (__Limbs[limb]["type"] == "FATAL") {
         message("combat action", "Your "+limb+" receives a mortal blow!\n", this_object());
         message("combat action", possessive_noun(this_object())+" "+limb+" receives a mortal blow!\n", environment(), this_object());
@@ -101,6 +97,24 @@ void handle_limb_sever (string limb) {
         message("combat action", "Your "+limb+" is severed!\n", this_object());
         message("combat action", possessive_noun(this_object())+" "+limb+" is severed!\n", environment(), this_object());
     }
+
+    // remove wielded weapon
+    if (__Wielded[limb]) {
+        handle_unwield(__Wielded[limb], limb);
+    }
+    // remove worn armour
+    if (__Worn[limb]) {
+        foreach (object ob in __Worn[limb]) {
+            handle_unwear(ob);
+        }
+    }
+
+    // deal half limb damage as HP damage
+    this_object()->handle_damage(max(({ __Limbs[limb]["damage"], __Limbs[limb]["maxdamage"] }))/2, 0);
+
+    // mark limb as severed
+    __Limbs[limb]["status"] = "severed";
+    __Limbs[limb]["damage"] = -1;
 
     // create bodypart
     limbOb = new("/std/item/bodypart.c");
@@ -123,7 +137,6 @@ void handle_limb_restore (string limb) {
 /* ----- damage ----- */
 
 varargs int handle_damage (int damage, string limb, object source) {
-    // @TODO source
     add_hp(-damage);
     if (query_max_hp() < query_hp()) set_hp(query_max_hp());
 
@@ -137,11 +150,11 @@ varargs int handle_damage (int damage, string limb, object source) {
         limbDamagePct = __Limbs[limb]["damage"]*100/__Limbs[limb]["maxdamage"];
 
         if (limbDamagePct >= 100) {
-            handle_limb_sever(limb);
+            call_out((: handle_limb_sever($(limb)) :), 0);
         } else if (limbDamagePct >= 75) {
-            message("combat alert", "Your "+limb+" is badly damaged!", this_object());
+            message("combat alert", "Your "+limb+" is badly damaged!\n", this_object());
         } else if (limbDamagePct >= 50) {
-            message("combat alert", "Your "+limb+" is injured!", this_object());
+            message("combat alert", "Your "+limb+" is injured!\n", this_object());
         }
     }
 
@@ -194,6 +207,8 @@ int query_can_wear_armor (object ob) {
 }
 
 varargs mixed handle_wear (object ob) {
+    string limbConj;
+
     if (!mapp(__Worn)) __Worn = ([ ]);
 
     if (ob->query_worn()) return "You are already wearing " + ob->query_name() + ".";
@@ -204,9 +219,15 @@ varargs mixed handle_wear (object ob) {
         __Worn[limb] += ({ ob });
     }
     ob->set_worn(this_object());
+
+    limbConj = conjunction(ob->query_limbs());
+    message("verb", "You wear " + ob->query_name() + " on your " + limbConj + ".\n", this_object());
+    message("verb", this_object()->query_cap_name() + " wears " + ob->query_name() + " on " + possessive(this_object()) + " " + limbConj + ".\n", environment(), this_object());
+
     return 1;
 }
 varargs mixed handle_unwear (object ob) {
+    string limbConj;
     if (!mapp(__Worn)) __Worn = ([]);
 
     if (!ob->query_worn()) return "You are not wearing " + ob->query_name() + ".";
@@ -218,6 +239,11 @@ varargs mixed handle_unwear (object ob) {
         }
     }
     ob->set_worn(0);
+
+    limbConj = conjunction(ob->query_limbs());
+    message("verb", "You remove " + ob->query_name() + " from your " + limbConj + ".\n", this_object());
+    message("verb", this_object()->query_cap_name() + " removes " + ob->query_name() + " from " + possessive(this_object()) + " " + limbConj + ".\n", environment(), this_object());
+
     return 1;
 }
 
@@ -252,7 +278,7 @@ string *query_wielded_limbs (object ob) {
 }
 
 varargs mixed handle_wield (object ob) {
-    string *limbs = query_wieldable_limbs(), *hands;
+    string *limbs = query_wieldable_limbs(), *hands, limbConj;
 
     if (!mapp(__Wielded)) __Wielded = ([ ]);
 
@@ -274,24 +300,32 @@ varargs mixed handle_wield (object ob) {
     }
     ob->set_wielded(this_object());
 
+    limbConj = conjunction(this_object()->query_wielded_limbs(ob));
+    message("verb", "You wield " + ob->query_name() + " in your " + limbConj + ".\n", this_object());
+    message("verb", this_object()->query_cap_name() + " wields " + ob->query_name() + " in " + possessive(this_object()) + " " + limbConj + ".\n", environment(), this_object());
+
     return 1;
 }
-varargs mixed handle_unwield (object ob, string limb) {
+varargs mixed handle_unwield (object ob) {
+    string *limbs, limbConj;
+
     if (!mapp(__Wielded)) __Wielded = ([ ]);
 
     if (!ob->query_wielded()) return "You are not wielding " + ob->query_name() + ".";
-    if (!limb) {
-        foreach (string l in query_limbs()) {
-            if (__Limbs[l]["type"] == "WIELD" && __Wielded[l] == ob) {
-                limb = l;
-                break;
-            }
-        }
-    }
-    if (!limb) return "You are not wielding anything in your " + limb + ".";
+
+    limbs = this_object()->query_wielded_limbs(ob);
+    limbConj = conjunction(limbs);
+
+    if (!sizeof(limbs)) return 0;
 
     ob->set_wielded(0);
-    __Wielded[limb] = 0;
+    foreach (string limb in limbs) {
+        __Wielded[limb] = 0;
+    }
+
+    message("verb", "You unwield " + ob->query_name() + " from your " + limbConj + ".\n", this_object());
+    message("verb", this_object()->query_cap_name() + " unwields " + ob->query_name() + " from " + possessive(this_object()) + " " + limbConj + ".\n", environment(), this_object());
+
     return 1;
 }
 
