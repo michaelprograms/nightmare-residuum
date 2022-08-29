@@ -59,3 +59,22 @@ void handle_ability_attack () {
         this_object()->do_command(ability);
     }
 }
+
+nosave private mapping __Inventory = ([ ]);
+void set_inventory (mapping inventory) {
+    if (!mapp(inventory)) error("Bad argument 1 to npc->set_inventory");
+
+    __Inventory = inventory;
+}
+mapping query_inventory () {
+    return __Inventory;
+}
+
+void handle_received (object env) {
+    ::handle_received(env);
+
+    foreach (string item,string command in __Inventory) {
+        new(item)->handle_move(this_object());
+        do_command(command);
+    }
+}
