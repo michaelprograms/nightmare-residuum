@@ -21,7 +21,7 @@ private void process_test ();
 
 nosave private int currentTestNum = 0, currentTestPassed = 0;
 nosave private int failingExpects = 0, passingExpects = 0;
-nosave private int failingAsserts = 0, passingAsserts = 0;
+nosave private int failingAsserts = 0, passingAsserts = 0, totalPassingAsserts = 0;
 nosave private int expectCatch = 0;
 nosave private string currentTestFn, currentTestMsg, currentTestLog, currentFailLog, totalFailLog;
 nosave private mixed *leftResults, *rightResults;
@@ -135,7 +135,7 @@ private void finish_test () {
         "failingExpects": failingExpects,
         "testedFns": sizeof(testObjectFns - testObjectUntestedFns),
         "untestedFns": sizeof(testObjectUntestedFns),
-        "passingAsserts": passingAsserts,
+        "passingAsserts": totalPassingAsserts,
         "failingAsserts": failingAsserts,
         "failLog": totalFailLog,
     ]));
@@ -151,7 +151,6 @@ public int execute_test (function done) {
     failingExpects = 0;
     passingExpects = 0;
     totalFailLog = "";
-
 
     testFunctions = query_test_functions();
 
@@ -332,6 +331,7 @@ void expect (string message, function fn) {
     leftResults = ({ });
     rightResults = ({ });
 
+    totalPassingAsserts += passingAsserts;
     passingAsserts = 0;
     catch (evaluate(fn));
     if (!passingAsserts) currentTestPassed = 0;

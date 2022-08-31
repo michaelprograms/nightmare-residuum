@@ -100,7 +100,7 @@ varargs void process_file (string file, function done, int reset) {
 
 private string format_total_line (string name, int current, int total) {
     string tmp = sprintf("%-20s", name + ":");
-    tmp += sprintf("%3d", current) + " / " + sprintf("%-3d", total);
+    tmp += sprintf("%4d", current) + " / " + sprintf("%-4d", total);
     tmp += "  (" + sprintf("%6.2f", current * 100.0 / total) + "%)";
     return tmp;
 }
