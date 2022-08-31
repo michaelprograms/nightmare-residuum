@@ -370,9 +370,9 @@ string help (object char) {
     int n;
 
     if (sizeof(__Reqs)) {
-        result += "\n%^CYAN%^BOLD%^Requirements%^RESET%^\n";
         foreach (string key,mapping value in __Reqs) {
-            result += sprintf("%-12s", capitalize(key) + ":")  + "  ";
+            result += "\n%^CYAN%^BOLD%^" + capitalize(key) + " Requirements%^RESET%^\n";
+
             tmp = ({ });
             if (!undefinedp(value["level"]) && intp(value["level"])) {
                 tmp += ({ "Level " + value["level"] });
