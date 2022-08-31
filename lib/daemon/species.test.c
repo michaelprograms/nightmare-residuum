@@ -62,3 +62,32 @@ void test_adjust_stat () {
         assert(testOb->query_adjust_stat("human", "unknown stat"), "==", 0),
     }) :));
 }
+
+void test_setup_stats () {
+    object ob;
+
+    expect_function("setup_stats", testOb);
+
+    //
+    ob = new(STD_LIVING);
+    ob->set_species("human");
+    expect("stats are setup", (: ({
+        assert($(ob)->query_stat("strength"), "==", 0),
+        assert($(ob)->query_stat("perception"), "==", 0),
+        assert($(ob)->query_stat("endurance"), "==", 0),
+        assert($(ob)->query_stat("charisma"), "==", 0),
+        assert($(ob)->query_stat("intelligence"), "==", 0),
+        assert($(ob)->query_stat("agility"), "==", 0),
+        assert($(ob)->query_stat("luck"), "==", 0),
+
+        testOb->setup_stats($(ob)),
+
+        assert($(ob)->query_stat("strength"), ">=", 10),
+        assert($(ob)->query_stat("perception"), ">=", 10),
+        assert($(ob)->query_stat("endurance"), ">=", 10),
+        assert($(ob)->query_stat("charisma"), ">=", 10),
+        assert($(ob)->query_stat("intelligence"), ">=", 10),
+        assert($(ob)->query_stat("agility"), ">=", 10),
+        assert($(ob)->query_stat("luck"), ">=", 10),
+    }) :));
+}
