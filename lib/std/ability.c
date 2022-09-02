@@ -2,11 +2,10 @@
 
 inherit STD_VERB;
 
-private string __Name;
-private mapping __Reqs;
-private mapping __SkillPowers;
-private mapping __Weapons = ([ ]);
-private string __HelpText;
+nosave private string __Name;
+nosave private mapping __Reqs;
+nosave private mapping __SkillPowers;
+nosave private mapping __Weapons = ([ ]);
 
 void create () {
     ::create();
@@ -357,16 +356,8 @@ private void handle_ability_use (object source, object target) {
 
 /* ----- help ----- */
 
-string query_help_text () {
-    return __HelpText;
-}
-void set_help_text (string str) {
-    if (undefinedp(str) || !stringp(str)) error("Bad argument 1 to ability->set_help_text");
-
-    __HelpText = str;
-}
 string help (object char) {
-    string result = "", *tmp;
+    string result = "", *tmp, helpText;
     int n;
 
     if (sizeof(__Reqs)) {
@@ -401,8 +392,8 @@ string help (object char) {
 
     result += "\n%^CYAN%^BOLD%^" + sprintf("%-12s", "Syntax") + "%^RESET%^\n" + format_syntax(__Name + " ([target])") + "\n";
 
-    if (__HelpText) {
-        result += "\n" + __HelpText + "\n";
+    if (helpText = query_help_text()) {
+        result += "\n" + helpText + "\n";
     }
     return result;
 }

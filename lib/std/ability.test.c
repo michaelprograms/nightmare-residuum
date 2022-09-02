@@ -66,27 +66,3 @@ void test_difficulty_factor () {
         assert((: testOb->set_difficulty_factor((: 1 :)) :), "catch", "*Bad argument 1 to ability->set_difficulty_factor\n"),
     }) :));
 }
-
-void test_help_text () {
-    expect_function("query_help_text", testOb);
-    expect_function("set_help_text", testOb);
-
-    expect("handles help text", (: ({
-        assert(testOb->query_help_text(), "==", UNDEFINED),
-
-        testOb->set_help_text("Help text."),
-        assert(testOb->query_help_text(), "==", "Help text."),
-
-        testOb->set_help_text("Different help text."),
-        assert(testOb->query_help_text(), "==", "Different help text."),
-    }) :));
-
-    expect("set_help_text handles invalid argument 1", (: ({
-        assert((: testOb->set_help_text(this_object()) :), "catch", "*Bad argument 1 to ability->set_help_text\n"),
-        assert((: testOb->set_help_text(1.0) :), "catch", "*Bad argument 1 to ability->set_help_text\n"),
-        assert((: testOb->set_help_text(1) :), "catch", "*Bad argument 1 to ability->set_help_text\n"),
-        assert((: testOb->set_help_text(({})) :), "catch", "*Bad argument 1 to ability->set_help_text\n"),
-        assert((: testOb->set_help_text(([])) :), "catch", "*Bad argument 1 to ability->set_help_text\n"),
-        assert((: testOb->set_help_text((: 1 :)) :), "catch", "*Bad argument 1 to ability->set_help_text\n"),
-    }) :));
-}

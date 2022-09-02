@@ -4,6 +4,7 @@ inherit M_CLEAN;
 
 nosave private int __Requirements = REQUIREMENT_NONE;
 nosave private string __Verb = split_path(file_name())[1];
+nosave private string __HelpText;
 
 protected varargs void add_rules (mixed *rules, mixed *syns) {
     foreach (string rule in rules) {
@@ -39,14 +40,27 @@ mixed check_disable () {;
     }
 }
 
+/* ----- help ----- */
+
+string query_help_text () {
+    return __HelpText;
+}
+void set_help_text (string str) {
+    if (undefinedp(str) || !stringp(str)) error("Bad argument 1 to verb->set_help_text");
+
+    __HelpText = str;
+}
+
+/* ----- applies ----- */
+
+void create () {
+    set_no_clean(1);
+    parse_init();
+}
+
 mixed can_verb_rule (mixed args...) {
     mixed tmp;
     if ((__Requirements & REQUIREMENT_BUSY) && (tmp = check_busy()) != 1) return tmp;
     if ((__Requirements & REQUIREMENT_DISABLE) && (tmp = check_disable()) != 1) return tmp;
     return 1;
-}
-
-void create () {
-    set_no_clean(1);
-    parse_init();
 }
