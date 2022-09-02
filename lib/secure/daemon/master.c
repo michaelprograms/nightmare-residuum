@@ -119,7 +119,9 @@ object compile_object (string path) {
     object ob;
     string area, room, vpath;
 
-    if (!path) return 0;
+    if (!stringp(path) || !sizeof(path) || file_size(path) < 0) {
+        error("Bad argument 1 to master->compile_object");
+    }
     if (path[0..0] != "/") path = "/" + path;
 
     if (sscanf(path, "/domain/%s/virtual/room/%s/", area, room)) {

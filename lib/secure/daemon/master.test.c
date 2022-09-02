@@ -61,6 +61,19 @@ void test_build_applies () {
     expect_function("compile_object", testOb);
     // @TODO test compile_object here
 
+    expect("compile_object should catch bad argument 1", (: ({
+        // bad arguments
+        assert((: testOb->compile_object() :), "catch", "*Bad argument 1 to master->compile_object\n"),
+        assert((: testOb->compile_object("") :), "catch", "*Bad argument 1 to master->compile_object\n"),
+        assert((: testOb->compile_object(1) :), "catch", "*Bad argument 1 to master->compile_object\n"),
+        assert((: testOb->compile_object(({ })) :), "catch", "*Bad argument 1 to master->compile_object\n"),
+        assert((: testOb->compile_object(([ ])) :), "catch", "*Bad argument 1 to master->compile_object\n"),
+        assert((: testOb->compile_object((: 1 :)) :), "catch", "*Bad argument 1 to master->compile_object\n"),
+
+        // bad paths
+        assert((: testOb->compile_object("/bad/path") :), "catch", "*Bad argument 1 to master->compile_object\n"),
+    }) :));
+
     expect_function("object_name", testOb);
 
     expect_function("get_include_path", testOb);
