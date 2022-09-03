@@ -12,15 +12,13 @@ void create () {
 }
 
 void set_level (int l) {
-    ::set_level(l);
-
     set_stat("strength", l * 4);
     set_stat("perception", l * 5);
     set_stat("endurance", l * 5);
     set_stat("charisma", l * 3);
     set_stat("intelligence", l * 4);
     set_stat("agility", l * 5);
-    set_stat("luck", to_int(l * 2.5) + secure_random(l + 1));
+    set_stat("luck", to_int(l * 2.5) + random(l + 1));
 
     set_skill("blade attack", l * 3);
     set_skill("blade defense", l * 2);
@@ -37,7 +35,7 @@ void set_level (int l) {
     set_skill("ranged attack", l * 3);
     set_skill("ranged defense", l * 2);
 
-    update_vitals(1);
+    ::set_level(l);
 }
 
 string *query_ability_list () {
