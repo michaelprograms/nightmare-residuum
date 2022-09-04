@@ -98,6 +98,7 @@ mapping setup_body (object ob) {
         body[limb]["pct"] = limbs[limb]["percent"];
         body[limb]["maxdamage"] = 1 + ob->query_max_hp() * body[limb]["pct"] / 100;
         body[limb]["damage"] = 0;
+        body[limb]["status"] = 0;
     }
 
     return body;
