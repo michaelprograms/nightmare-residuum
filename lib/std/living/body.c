@@ -2,7 +2,7 @@
 
 private string __Gender = "neither";
 private string __Species = "unknown";
-private int __Level = 0;
+private int __Level = 1;
 mapping __Limbs = ([ ]);
 private nosave mapping __Wielded = ([ ]);
 private nosave mapping __Worn = ([ ]);
