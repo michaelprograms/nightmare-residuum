@@ -10,9 +10,9 @@ void command (string input, mapping flags) {
         else if(present(input, environment(tc))) target = present(input, environment(tc));
     }
 
-    inv = unique_array(all_inventory(target), (: $1->query_short() :));
+    inv = unique_array(all_inventory(target), (: $1->query_short("%^RESET%^") :));
     if (sizeof(inv)) {
-        string *shorts = map(sort_array(map(inv, (: capitalize(consolidate(sizeof($1), $1[0]->query_short())) :)), 1), (: $1 :));
+        string *shorts = map(sort_array(map(inv, (: capitalize(consolidate(sizeof($1), $1[0]->query_short("%^RESET%^"))) :)), 1), (: $1 :));
         foreach (string short in shorts) {
             items += ({ short });
         }
