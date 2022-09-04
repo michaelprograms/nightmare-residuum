@@ -90,8 +90,9 @@ nomask private void character_override () {
         destruct(__Character);
         // Swap character's user
         __Character = char;
-        char->query_user()->handle_character_override();
+        __Character->query_user()->handle_character_override();
         __Character->set_user(this_object());
+        __Character->set_parent(this_object());
         write("\n\nOverriding connection of " + __Character->query_cap_name() + "...\n\n");
         shell_start();
         __Character->enter_world(1);
