@@ -24,7 +24,7 @@ void test_set_level () {
     expect_function("set_level", testOb);
 
     expect("set_level adjusts stats and skills", (: ({
-        assert(testOb->query_level(), "==", 0),
+        assert(testOb->query_level(), "==", 1),
         assert(testOb->query_stat("strength"), "==", 0),
         assert(testOb->query_stat("endurance"), "==", 0),
         assert(testOb->query_skill("melee attack"), "==", 0),
