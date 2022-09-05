@@ -32,6 +32,7 @@ void set_species (string species) {
     if (!stringp(species)) error("Bad argument 1 to body->set_species");
 
     __Species = species;
+    this_object()->update_vitals(1);
     update_limbs();
 }
 
@@ -46,12 +47,14 @@ void set_level (int l) {
     }
     __Level = l;
 
-    update_limbs();
+    this_object()->update_vitals(1);
+    update_limbs(); // limbs require vitals
 }
 
 /* ----- limbs ----- */
 
 protected void update_limbs () {
+    // @TODO this should probably be called on level/stat change
     mapping newLimbs = D_SPECIES->setup_body(this_object());
 
     foreach (string limb,mapping value in newLimbs || ([])) {

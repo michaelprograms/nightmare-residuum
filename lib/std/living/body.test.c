@@ -81,7 +81,7 @@ void test_limbs () {
         testOb->set_species("human"),
         assert(sort_array(testOb->query_limbs(), 1), "==", ({ "head", "left arm", "left foot", "left hand", "left leg", "right arm", "right foot", "right hand", "right leg", "torso" })),
 
-        assert(testOb->query_limb("torso"), "==", ([ "damage": 0, "maxdamage": 1, "pct": 100, "type": "FATAL", ])),
+        assert(testOb->query_limb("torso"), "==", ([ "damage": 0, "maxdamage": 1, "pct": 100, "status": 0, "type": "FATAL", ])),
 
         // @TODO check maxdamage with level/stats
     }) :));
@@ -92,4 +92,27 @@ void test_limbs () {
         // run a second check
         assert(member_array(testOb->query_random_limb(), ({ "head", "left arm", "left foot", "left hand", "left leg", "right arm", "right foot", "right hand", "right leg", "torso" })) > -1, "==", 1),
     }) :));
+}
+
+void test_limbs_and_level () {
+
+    destruct(testOb);
+    testOb = new("/std/living.c");
+    expect("setting species first has maxdamage", (: ({
+        testOb->set_stat("endurance", 20),
+        testOb->set_species("human"),
+        testOb->set_level(10),
+        assert(testOb->query_limb("torso"), "==", ([ "damage": 0, "maxdamage": 311, "pct": 100, "status": 0, "type": "FATAL" ])),
+    }) :));
+
+    destruct(testOb);
+    testOb = new("/std/living.c");
+    expect("setting level first has maxdamage", (: ({
+        testOb->set_stat("endurance", 20),
+        testOb->set_level(10),
+        testOb->set_species("human"),
+        assert(testOb->query_limb("torso"), "==", ([ "damage": 0, "maxdamage": 311, "pct": 100, "status": 0, "type": "FATAL" ])),
+    }) :));
+
+    destruct(testOb);
 }
