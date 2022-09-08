@@ -18,5 +18,6 @@ void create () {
     ]));
     set_reset(([
         HUMAN_MONSTER + "plasma_snail.c": 2,
+        HUMAN_NPC + "guard_clone.c": 1,
     ]));
 }
