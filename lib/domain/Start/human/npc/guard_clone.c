@@ -22,6 +22,9 @@ void create () {
     set_species("human");
     set_gender(element_of(({ "male", "female" })));
 
+    set_ability_list(({ "bonk" }));
+    set_ability_chance(50);
+
     // @TODO add gear
     // if (clonep()) {
 
