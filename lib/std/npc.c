@@ -12,28 +12,30 @@ void create () {
 }
 
 void set_level (int l) {
-    set_stat("strength", l * 4);
-    set_stat("perception", l * 5);
-    set_stat("endurance", l * 5);
-    set_stat("charisma", l * 3);
-    set_stat("intelligence", l * 4);
-    set_stat("agility", l * 5);
-    set_stat("luck", to_int(l * 2.5) + random(l + 1));
+    int n = l + 1;
 
-    set_skill("blade attack", (l+1) * 4);
-    set_skill("blade defense", (l+1) * 3);
-    set_skill("blunt attack", (l+1) * 4);
-    set_skill("blunt defense", (l+1) * 3);
-    set_skill("knife attack", (l+1) * 4);
-    set_skill("knife defense", (l+1) * 3);
-    set_skill("melee attack", (l+1) * 4);
-    set_skill("melee defense", (l+1) * 3);
-    set_skill("psionic attack", (l+1) * 4);
-    set_skill("psionic defense", (l+1) * 3);
-    set_skill("projectile attack", (l+1) * 4);
-    set_skill("projectile defense", (l+1) * 3);
-    set_skill("ranged attack", (l+1) * 4);
-    set_skill("ranged defense", (l+1) * 3);
+    set_stat("strength", n * 4);
+    set_stat("perception", n * 5);
+    set_stat("endurance", n * 5);
+    set_stat("charisma", n * 3);
+    set_stat("intelligence", n * 4);
+    set_stat("agility", n * 5);
+    set_stat("luck", to_int(n * 2.5) + random(n + 1));
+
+    set_skill("blade attack", n * 4);
+    set_skill("blade defense", n * 3);
+    set_skill("blunt attack", n * 4);
+    set_skill("blunt defense", n * 3);
+    set_skill("knife attack", n * 4);
+    set_skill("knife defense", n * 3);
+    set_skill("melee attack", n * 4);
+    set_skill("melee defense", n * 3);
+    set_skill("psionic attack", n * 4);
+    set_skill("psionic defense", n * 3);
+    set_skill("projectile attack", n * 4);
+    set_skill("projectile defense", n * 3);
+    set_skill("ranged attack", n * 4);
+    set_skill("ranged defense", n * 3);
 
     ::set_level(l);
 }
