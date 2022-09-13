@@ -13,7 +13,10 @@ mixed can_drop_obj (object ob, string str) {
     return 1;
 }
 void do_drop_obj (object ob, string str) {
-    write("You drop " + ob->query_name() + ".\n");
+    object po = previous_object(), env = environment(po);
+
+    message("verb", "You drop " + ob->query_name() + ".\n", po);
+    message("verb", po->query_cap_name() + " drops some " + ob->query_name() + ".\n", env, po);
     ob->handle_move(environment(this_character()));
 }
 void do_drop_obs (mixed *info, string str) {
@@ -27,11 +30,12 @@ void do_drop_obs (mixed *info, string str) {
 }
 
 mixed can_drop_wrd_wrd (mixed args...) {
+    object po = previous_object();
     int amount = to_int(args[0]), n;
     string currency = args[1];
 
     if (amount < 1) return 0;
-    if ((n = this_character()->query_currency(currency)) < 1) {
+    if ((n = po->query_currency(currency)) < 1) {
         return "You do not have any " + currency + " to drop.";
     }
     if (n < amount) {
@@ -40,19 +44,19 @@ mixed can_drop_wrd_wrd (mixed args...) {
     return 1;
 }
 mixed do_drop_wrd_wrd (mixed args...) {
+    object po = previous_object(), env = environment(po);
     int amount = to_int(args[0]);
     string currency = args[1];
-    object env = environment(this_character());
     object coins;
 
     coins = new("/std/item/coins.c");
-    if (!coins->handle_move(env) || !this_character()->add_currency(currency, -amount)) {
-        message("verb", "You are unable to drop that.\n", this_character());
+    if (!coins->handle_move(env) || !po->add_currency(currency, -amount)) {
+        message("verb", "You are unable to drop that.\n", po);
         coins->handle_remove();
         return 1;
     }
     coins->add_currency(currency, amount);
-    message("verb", "You drop " + amount + " " + currency + ".\n", this_character());
-    message("verb", this_character()->query_cap_name() + " drops some " + currency + ".\n", env, this_character());
+    message("verb", "You drop " + amount + " " + currency + ".\n", po);
+    message("verb", po->query_cap_name() + " drops some " + currency + ".\n", env, po);
     return 1;
 }
