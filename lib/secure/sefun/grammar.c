@@ -74,13 +74,28 @@ string pluralize (mixed single) {
 string consolidate (int n, string str) {
     string *words;
     string tmp, result;
+    string *tag;
 
-    if (n == 1 || !sizeof(str) ) return str;
+    if (n == 1 || !sizeof(str)) {
+        return str;
+    }
+
+    // store and remove tag
+    tag = pcre_extract(str, "(\\(.+\\))$");
+    if (sizeof(tag)) {
+        str = replace_string(str, tag[0], "");
+    }
 
     words = explode(str, " ");
     tmp = lower_case(words[0]); // @TODO strip_colours?
     if (member_array(tmp, ({"a","an","the","one"})) > -1) words = words[1..];
+
     result = sprintf("%s %s", cardinal(n), pluralize(implode(words, " ")));
+
+    // restore tag
+    if (sizeof(tag)) {
+        result += " " + tag[0];
+    }
 
     return result;
 }

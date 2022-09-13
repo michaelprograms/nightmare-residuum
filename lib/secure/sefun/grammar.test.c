@@ -175,13 +175,18 @@ void test_pluralize () {
 void test_consolidate () {
     expect_function("consolidate", testOb);
 
-    expect("consolidate handles words", (: ({
+    expect("consolidate handles basic words", (: ({
         assert(testOb->consolidate(5, "elf"), "==", "five elves"),
         assert(testOb->consolidate(0, "giraffe"), "==", "zero giraffes"),
         assert(testOb->consolidate(25, "cat"), "==", "twenty-five cats"),
         assert(testOb->consolidate(54321, "dog"), "==", "fifty-four thousand, three hundred and twenty-one dogs"),
         assert(testOb->consolidate(-54321, "care"), "==", "negative fifty-four thousand, three hundred and twenty-one cares"),
         assert(testOb->consolidate(2, "Paul"), "==", "two Pauls"),
+    }) :));
+    expect("consolidate handles parenthesis tags after words", (: ({
+        assert(testOb->consolidate(2, "a bronze dagger (wielded)"), "==", "two bronze daggers (wielded)"),
+        assert(testOb->consolidate(2, "a bronze ring (worn)"), "==", "two bronze rings (worn)"),
+        assert(testOb->consolidate(3, "a monster (injured)"), "==", "three monsters (injured)"),
     }) :));
 }
 
