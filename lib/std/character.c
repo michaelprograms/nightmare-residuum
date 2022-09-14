@@ -223,9 +223,27 @@ private void describe_environment_living_contents () {
             else return 1;
         } else return strcmp(a->query_cap_name(), b->query_cap_name());
     });
-    list = unique_array(list, (: $1->query_short("%^RED%^BOLD%^") :));
+    list = unique_array(list, function (object ob) {
+        string tag = "";
+        switch (ob->query_hp() * 100 / (ob->query_max_hp() + 1)) {
+            case 72..95: tag = " (bruised)"; break;
+            case 48..71: tag = " (injured)"; break;
+            case 24..47: tag = " (bleeding)"; break;
+            case 0..23: tag = " (dying)"; break;
+        }
+        return ob->query_short("%^RED%^BOLD%^") + tag;
+    });
     if (sizeof(list)) {
-        shorts = map_array(list, (: consolidate(sizeof($1), $1[0]->query_short("%^RED%^BOLD%^")) :));
+        shorts = map_array(list, function (object *obs) {
+            string tag = "";
+            switch (obs[0]->query_hp() * 100 / (obs[0]->query_max_hp() + 1)) {
+                case 72..95: tag = " (bruised)"; break;
+                case 48..71: tag = " (injured)"; break;
+                case 24..47: tag = " (bleeding)"; break;
+                case 0..23: tag = " (dying)"; break;
+            }
+            return consolidate(sizeof(obs), obs[0]->query_short("%^RED%^BOLD%^") + tag);
+        });
         shorts = map_array(shorts, (: $1 :));
         shorts[0] = capitalize(shorts[0]);
         shorts = map_array(shorts, (: "%^BOLD%^" + $1 + "%^BOLD_OFF%^DEFAULT%^" :));
