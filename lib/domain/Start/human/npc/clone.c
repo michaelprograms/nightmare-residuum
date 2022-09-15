@@ -20,5 +20,9 @@ void create () {
     set_level(10);
     set_species("human");
 
+    set_inventory(([
+        HUMAN_ARMOR "hemp_pants.c": "wear pants",
+        HUMAN_ARMOR "hemp_shirt.c": "wear shirt",
+    ]));
     add_currency("copper", 1 + random(10));
 }
