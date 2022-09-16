@@ -177,7 +177,7 @@ string format_integer (int num) {
     digits = explode(""+to_int(num), "");
     s = sizeof(digits) - 1;
 
-    for(int i = s; i >= 0; i --) {
+    for (int i = s; i >= 0; i --) {
         result = digits[i] + (i != s && (s-i)%3 == 0 ? "," : "") + result;
     }
 
