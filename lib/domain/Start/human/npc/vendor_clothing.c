@@ -31,6 +31,8 @@ void create () {
             HUMAN_ARMOR + "leather_coat.c": 1,
             HUMAN_ARMOR + "leather_gloves.c": 1,
             HUMAN_ARMOR + "straw_hat.c": 1,
+            HUMAN_ARMOR + "hemp_pants.c": 1,
+            HUMAN_ARMOR + "hemp_shirt.c": 1,
         ]));
     }
     set_vendor_types(({ STD_ARMOR }));
