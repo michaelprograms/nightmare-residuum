@@ -25,8 +25,8 @@ void create () {
     set_ability_list(({ "zap", "bonk", }));
     set_ability_chance(50);
 
-    // @TODO add gear
-    // if (clonep()) {
-
-    // }
+    set_inventory(([
+        HUMAN_ARMOR "silk_pants.c": "wear pants",
+        HUMAN_ARMOR "silk_shirt.c": "wear shirt",
+    ]));
 }
