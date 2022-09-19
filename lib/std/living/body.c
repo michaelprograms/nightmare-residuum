@@ -140,6 +140,8 @@ void handle_limb_restore (string limb) {
 /* ----- damage ----- */
 
 varargs int handle_damage (int damage, string limb, object source) {
+    int beforeHp = query_hp();
+
     add_hp(-damage);
     if (query_max_hp() < query_hp()) set_hp(query_max_hp());
 
@@ -162,7 +164,7 @@ varargs int handle_damage (int damage, string limb, object source) {
     }
 
     if (this_object()->is_character()) {
-        message("system", sprintf("hp: %d    sp: %d    mp: %d\n", query_hp(), query_sp(), query_mp()), this_object());
+        message("system", sprintf("hp: %d (%d) sp: %d    mp: %d\n", query_hp(), query_hp() - beforeHp, query_sp(), query_mp()), this_object());
     }
     check_lifesigns(source);
     return damage;
