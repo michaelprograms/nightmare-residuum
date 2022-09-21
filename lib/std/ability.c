@@ -141,28 +141,32 @@ mapping query_cost () {
 /* ----- damage ----- */
 
 int calculate_damage (object source, object target) {
-    int damage;
+    int damage, vitalDamage;
     int sourceStat, targetStat;
     int sourceSkill, targetSkill;
 
     // base damage
     damage = random(10 + source->query_level());
-    damage += random(source->query_sp() * 10 / 100 + 1);
     damage += random(source->query_stat("luck") * 5 / 100 + 1);
 
     foreach (string key,int value in __SkillPowers) {
         switch (key) {
             case "psionic":
                 sourceStat = source->query_stat("intelligence");
+                vitalDamage = random(source->query_mp() * 5 / 100 + 1);
                 break;
             case "ranged":
                 sourceStat = source->query_stat("agility");
+                vitalDamage = random(source->query_sp() * 5 / 100 + 1);
                 break;
             case "melee": default:
                 sourceStat = source->query_stat("strength");
+                vitalDamage = random(source->query_hp() * 5 / 100 + 1);
                 break;
         }
         damage += (sourceStat * 50 / 100) + random(sourceStat * 50 / 100 + 1);
+
+        damage += vitalDamage;
 
         sourceSkill = source->query_skill(key + " attack");
         targetSkill = target->query_skill(key + " defense");
