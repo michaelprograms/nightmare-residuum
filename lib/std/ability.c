@@ -26,7 +26,7 @@ string query_name () {
 
 void set_ability_requirements (mapping reqs) {
     /* Data format:
-    "class|species": ([
+    "anyone|class|species": ([
         "level" : 1,
         "skills" : ([ "melee attack": 1, ]),
         "stats" : ([ "strength": 1, ]),
@@ -44,7 +44,7 @@ int verify_ability_requirements (object source) {
     if (!sizeof(__Reqs)) return 1;
 
     foreach (string key,mapping value in __Reqs) {
-        if (source->query_class() != key && source->query_species() != key) continue;
+        if (source->query_class() != key && source->query_species() != key && key != "anyone") continue;
         if (intp(value["level"])) {
             if (source->query_level() < value["level"]) return 0;
         }

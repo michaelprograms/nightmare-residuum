@@ -18,11 +18,11 @@ void create () {
     set_name(capName);
     set_short(capName + " the Apprentice of the Snail");
     set_long("A cloned human by the name of " + capName + ", working as an apprentice for the Snail Nation.");
-    set_level(10);
+    set_level(5);
     set_species("human");
     set_gender(element_of(({ "male", "female" })));
 
-    set_ability_list(({ "zap", "bonk", }));
+    set_ability_list(({ "zap", "bludgeon", }));
     set_ability_chance(50);
 
     set_inventory(([
