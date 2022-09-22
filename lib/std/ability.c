@@ -140,33 +140,31 @@ mapping query_cost () {
 
 /* ----- damage ----- */
 
-int calculate_damage (object source, object target) {
-    int damage, vitalDamage;
+int calculate_damage (object source, object target, string limb) {
+    int damage;
     int sourceStat, targetStat;
     int sourceSkill, targetSkill;
 
     // base damage
-    damage = random(10 + source->query_level());
+    damage = random(5 + source->query_level());
     damage += random(source->query_stat("luck") * 5 / 100 + 1);
 
     foreach (string key,int value in __SkillPowers) {
         switch (key) {
             case "psionic":
                 sourceStat = source->query_stat("intelligence");
-                vitalDamage = random(source->query_mp() * 5 / 100 + 1);
+                damage += random(source->query_mp() * 5 / 100 + 1);
                 break;
             case "ranged":
                 sourceStat = source->query_stat("agility");
-                vitalDamage = random(source->query_sp() * 5 / 100 + 1);
+                damage += random(source->query_sp() * 5 / 100 + 1);
                 break;
             case "melee": default:
                 sourceStat = source->query_stat("strength");
-                vitalDamage = random(source->query_hp() * 5 / 100 + 1);
+                damage += random(source->query_sp() * 5 / 100 + 1);
                 break;
         }
         damage += (sourceStat * 50 / 100) + random(sourceStat * 50 / 100 + 1);
-
-        damage += vitalDamage;
 
         sourceSkill = source->query_skill(key + " attack");
         targetSkill = target->query_skill(key + " defense");
@@ -177,10 +175,9 @@ int calculate_damage (object source, object target) {
     // apply target mitigations
     targetStat = target->query_stat("endurance");
     damage -= ((targetStat * 10 / 100) + random(targetStat * 10 / 100 + 1));
-    // damage -= random(target->query_hp() * 10 / 100 + 1);
-    damage -= random(5 + target->query_level());
+    damage -= random(10 + target->query_level());
     damage -= random(target->query_stat("luck") * 10 / 100 + 1);
-    // damage -= target->query_limb_armor(limb); // @TODO limb
+    damage -= target->query_limb_armor(limb);
 
     if (damage < 0) {
         damage = 0;
@@ -337,7 +334,7 @@ private void handle_ability_use (object source, object target) {
     limb = target->query_random_limb();
 
     // determine damage
-    damage = calculate_damage(source, target);
+    damage = calculate_damage(source, target, limb);
     target->handle_damage(damage, limb, source);
     if (source->query_immortal() || source->query_property("debug")) {
         message("action", "%^ORANGE%^Damage:%^RESET%^ " + damage + "\n", source);
