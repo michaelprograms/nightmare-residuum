@@ -1,6 +1,6 @@
 void command (string input, mapping flags) {
     object tc = this_character(), target = tc;
-    string *border, *items = ({ }), *limbs;
+    string *border, *items = ({ }), *limbs, *severedLimbs;
     mapping footer;
 
     if (input && tc->query_immortal()) {
@@ -9,6 +9,7 @@ void command (string input, mapping flags) {
     }
 
     limbs = target->query_limbs();
+    severedLimbs = target->query_severed_limbs();
     foreach (string type in ({
         "head", "torso", "thorax", "abdomen",
         "arm", "hand", "leg", "foot",
@@ -20,7 +21,7 @@ void command (string input, mapping flags) {
                 l,
                 limb["damage"]+"/"+limb["maxdamage"] + " " + (limb["damage"]*100/limb["maxdamage"])+"%",
                 limb["type"] ? limb["type"] : "",
-                limb["attach"] ? limb["attach"] : "",
+                limb["attach"] && member_array(limb["attach"], severedLimbs) == -1 ? limb["attach"] : "",
             });
             limbs -= ({ l });
         }
@@ -35,10 +36,10 @@ void command (string input, mapping flags) {
         });
     }
 
-    if (sizeof(target->query_severed_limbs())) {
+    if (sizeof(severedLimbs)) {
         footer = ([
             "items": ({
-                "You are missing your " + conjunction(target->query_severed_limbs()) + ".",
+                "You are missing your " + conjunction(severedLimbs) + ".",
             }),
             "columns": 1,
             "align": "center",
