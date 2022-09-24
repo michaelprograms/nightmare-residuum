@@ -234,22 +234,34 @@ int is_ability_successful (object source, object target) {
     return (1+random(100)) <= chance;
 }
 
-void ability_message_attempt (object source, object target) {
+void ability_message_attempt (object source, object target, string limb) {
     message("action", "You attempt to " + query_name() + " " + target->query_cap_name() + "!\n", source);
     message("action", source->query_cap_name() + " attempts to " + query_name() + " you!\n", target);
     message("action", source->query_cap_name() + " attempts to " + query_name() + " " + target->query_cap_name() + "!\n", environment(source), ({ source, target }));
 }
 
-void ability_message_fail (object source, object target) {
+void ability_message_fail (object source, object target, string limb) {
     message("action", "You miss your " + query_name() + " attempt on " + target->query_cap_name() + "!\n", source);
     message("action", source->query_cap_name() + " misses " + possessive(source) + " " + query_name() + " attempt on you!\n", target);
     message("action", source->query_cap_name() + " misses " + possessive(source) + " " + query_name() + " attempt on " + target->query_cap_name() + "!\n", environment(source), ({ source, target }));
 }
 
-void ability_message_success (object source, object target) {
-    message("action", "You " + query_name() + " " + target->query_cap_name() + "!\n", source);
-    message("action", source->query_cap_name() + " " + pluralize(query_name()) + " you!\n", target);
-    message("action", source->query_cap_name() + " " + pluralize(query_name()) + " " + target->query_cap_name() + "!\n", environment(source), ({ source, target }));
+void ability_message_success (object source, object target, string limb) {
+    string myMsg, yourMsg, envMsg;
+
+    if (limb) {
+        myMsg = "You " + query_name() + " " + possessive_noun(target->query_cap_name()) + " " + limb + "!\n";
+        yourMsg = source->query_cap_name() + " " + pluralize(query_name()) + " your " + limb + "!\n";
+        envMsg = source->query_cap_name() + " " + pluralize(query_name()) + " " + possessive_noun(target->query_cap_name()) + " " + limb + "!\n";
+    } else {
+        myMsg = "You " + query_name() + " " + target->query_cap_name() + "!\n";
+        yourMsg = source->query_cap_name() + " " + pluralize(query_name()) + " you!\n";
+        envMsg = source->query_cap_name() + " " + pluralize(query_name()) + " " + target->query_cap_name() + "!\n";
+    }
+
+    message("action", myMsg, source);
+    message("action", yourMsg, target);
+    message("action", envMsg, environment(source), ({ source, target }));
 }
 
 private void handle_ability_use (object source, object target) {
@@ -322,16 +334,16 @@ private void handle_ability_use (object source, object target) {
     // @TODO re-enable this when determing busy vs disable
     // source->set_disable(2);
 
+    limb = target->query_random_limb();
+
     // send attempt and success or fail messages
-    this_object()->ability_message_attempt(source, target);
+    this_object()->ability_message_attempt(source, target, limb);
     if (is_ability_successful(source, target)) {
-        this_object()->ability_message_success(source, target);
+        this_object()->ability_message_success(source, target, limb);
     } else {
-        this_object()->ability_message_fail(source, target);
+        this_object()->ability_message_fail(source, target, limb);
         return;
     }
-
-    limb = target->query_random_limb();
 
     // determine damage
     damage = calculate_damage(source, target, limb);
