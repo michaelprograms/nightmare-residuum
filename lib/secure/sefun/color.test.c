@@ -59,8 +59,9 @@ void test_random_color () {
     expect("query_random_color returns random triplets", (: ({
         assert(sizeof(Color), "==", 3),
         // triplets are unique
-        assert(Color[0] != Color[1], "==", 1),
-        assert(Color[1] != Color[2], "==", 1),
+        assert(Color[0], "!=", UNDEFINED),
+        assert(Color[1], "!=", UNDEFINED),
+        assert(Color[2], "!=", UNDEFINED),
     }) :));
 }
 
