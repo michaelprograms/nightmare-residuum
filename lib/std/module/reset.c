@@ -34,7 +34,6 @@ void reset () {
                     destruct(ob);
                 } else {
                     ob->reset();
-                    ob->setup_inventory();
                 }
                 count ++;
             }
@@ -43,7 +42,6 @@ void reset () {
                 object ob = clone_object(key);
                 ob->handle_move(this_object());
                 ob->reset();
-                ob->setup_inventory();
             }
         }
     }

@@ -70,9 +70,14 @@ mapping query_inventory () {
     return __Inventory;
 }
 
-void setup_inventory () {
-    foreach (string item,string command in __Inventory) {
-        new(item)->handle_move(this_object());
-        do_command(command);
+void handle_received (object env) {
+    ::handle_received(env);
+
+    if (sizeof(__Inventory)) {
+        foreach (string item,string command in __Inventory) {
+            new(item)->handle_move(this_object());
+            do_command(command);
+        }
+        __Inventory = ([ ]);
     }
 }
