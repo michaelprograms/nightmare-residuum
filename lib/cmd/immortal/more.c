@@ -2,8 +2,10 @@ void command (string input, mapping flags) {
     string cwd, file, *lines;
 
     if (!input) {
-        write("Syntax: more [file]\n");
+        message("action", "Syntax: more [file]\n", this_character());
         return;
+    } else if (input == "here") {
+        input = file_name(environment(this_character())) + ".c";
     }
     cwd = this_user()->query_shell()->query_variable("cwd");
     file = absolute_path(input, cwd);
