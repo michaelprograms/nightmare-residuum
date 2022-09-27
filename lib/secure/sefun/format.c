@@ -1,11 +1,47 @@
-private string query_account_setting (string setting) {
-    object po = previous_object(-1)[<1], account;
-
+private object query_previous_object () {
+    object po = previous_object(-1)[<1];
     if (strsrch(D_TEST, base_name(po)) == 0) po = previous_object(-1)[<2];
+    return po;
+}
 
-    if (!(account = po->query_account())) return 0;
+private string query_account_setting (string setting) {
+    object account;
+
+    if (!(account = query_previous_object()->query_account())) return 0;
 
     return account->query_setting(setting);
+}
+
+private mixed *query_character_border_colors () {
+    object po = query_previous_object()->query_character();
+    int *arr1, *arr2 = ({ 192, 192, 192 });
+
+    switch (po->query_class()) {
+        case "warrior":
+            arr1 = ({ 220, 20, 60 });   // Crimson
+            break;
+        case "templar":
+            arr1 = ({ 255, 215, 0 });   // Gold
+            break;
+        case "scoundrel":
+            arr1 = ({ 255, 99, 71 });  // Tomato
+            break;
+        case "ranger":
+            arr1 = ({ 34, 139, 34 });   // Forest Green
+            break;
+        case "mentalist":
+            arr1 = ({ 65, 105, 225 });  // Royal Blue
+            break;
+        case "paladin":
+            arr1 = ({ 148, 0, 211 });   // Dark Violet
+            break;
+        default:
+            arr1 = ({ 191, 63, 191 });
+            arr2 = ({ 63, 191, 191 });
+            break;
+    }
+
+    return ({ arr1, arr2 });
 }
 
 varargs string format_page (string *items, int columns, int pad, int center) {
@@ -261,16 +297,15 @@ string *format_border (mapping data) {
         mapping b = __Border[query_encoding()];
         int width, ansi, n;
         string *colors, *colors2, *colorsBody, *colorsBody2;
-        int *c1, *c2;
+        mixed *borderColors;
 
         ansi = query_account_setting("ansi") == "on";
         width = to_int(query_account_setting("width"));
         n = 0;
 
         if (ansi) {
-            c1 = ({ 191, 63, 191 }); // pink
-            c2 = ({ 63, 191, 191 }); // cyan
-            colors = SEFUN->color_gradient(c1, c2, width);
+            borderColors = query_character_border_colors();
+            colors = SEFUN->color_gradient(borderColors[0], borderColors[1], width);
             colors2 = ({ });
             for (int i = sizeof(colors)-1; i >= 0; i --) {
                 colors2 += ({ colors[i] });
@@ -405,7 +440,7 @@ string *format_border (mapping data) {
             }
             if (ansi) {
                 string left, right;
-                colorsBody = SEFUN->color_gradient(c1, c2, sizeof(linesBody) + 2);
+                colorsBody = SEFUN->color_gradient(borderColors[0], borderColors[1], sizeof(linesBody) + 2);
                 colorsBody = colorsBody[1..<2];
                 colorsBody2 = ({ });
                 for (int i = sizeof(colorsBody)-1; i >= 0; i --) {
