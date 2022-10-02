@@ -20,5 +20,6 @@ void create () {
     ]));
     set_reset(([
         HUMAN_ITEM + "sign_pub.c": 1,
+        HUMAN_NPC + "tavern_drunk.c": 1,
     ]));
 }
