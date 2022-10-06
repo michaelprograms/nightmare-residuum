@@ -11,8 +11,8 @@ void create () {
     set_long("A teenager training to fight with wooden swords.");
     set_level(5);
     set_species("human");
-    set_ability_list(({ "stab" }));
-    set_ability_chance(25);;
+    set_ability_list(({ "stab", "bonk", }));
+    set_ability_chance(25);
 
     set_inventory(([
         HUMAN_WEAPON "wooden_sword.c": "wield sword",
@@ -22,6 +22,7 @@ void create () {
 
 void handle_receive_living_in_env (object living) {
     if (!living->is_character()) return;
+    if (random(2)) return;
     switch(random(4)) {
     case 0:
         do_command("say Get a load of this wimp!");
