@@ -8,12 +8,13 @@ nosave private string __BankDefault = "copper";
 void create () {
     ::create();
     set_short("a village bank");
-    set_long("The inside of a brick building that consists of a large open room. There is a large glass window to the north facing the street with a door to the side. There is a vault towards the south of the building.");
+    set_long("The inside of a brick building that consists of a large open room. There is a large glass window to the north facing the street with a door to the side. There is a vault towards the south of the building. A counter with a sign lists the available services.");
     set_exits(([
         "out north": HUMAN_ROOM "market_st_w1.c",
     ]));
     set_looks(([
         "vault": "A closed and secured vault door with no way to see through.",
+        "sign": "The bank offers the following services here: "+format_syntax("balance")+", "+format_syntax("deposit [number] [currency]")+", and "+format_syntax("withdraw [number] [currency]")+".",
     ]));
 
     parse_init();
