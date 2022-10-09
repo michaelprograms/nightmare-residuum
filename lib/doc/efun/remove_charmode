@@ -1,7 +1,7 @@
 
 ### NAME
 
-    remove_charmode
+    remove_charmode() - switches interactive object into linemode
 
 ### SYNOPSIS
 
