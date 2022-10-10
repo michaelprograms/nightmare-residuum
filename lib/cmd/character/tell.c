@@ -13,5 +13,5 @@ void command (string input, mapping flags) {
 
     message("tell", "You tell " + target->query_cap_name() + ": " + msg + "\n", tc);
     message("tell", tc->query_cap_name() + " tells you: " + msg + "\n", target);
-    target->set_property("reply", tc->query_name());)
+    target->set_property("reply", tc->query_name());
 }
