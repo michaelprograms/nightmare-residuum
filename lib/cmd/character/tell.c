@@ -1,17 +1,21 @@
 void command (string input, mapping flags) {
     object tc = this_character(), target;
-    string name, msg;
+    string name, msg, myMsg, yourMsg;
 
     input = strip_colour(input);
-    if (sscanf(input, "%s %s", name, msg) != 2 ||
-      (name == "" || !name) ||
-      (!(target = find_character(name)) || tc == target) ||
-      (msg == "" || !msg)) {
+    sscanf(input, "%s %s", name, msg);
+    if (!sizeof(name) || !sizeof(msg) || !(target = find_character(name))) {
         message("action", "Syntax: <tell [character] [message]>\n", tc);
         return;
     }
 
-    message("tell", "You tell " + target->query_cap_name() + ": " + msg + "\n", tc);
-    message("tell", tc->query_cap_name() + " tells you: " + msg + "\n", target);
-    target->set_property("reply", tc->query_name());
+    myMsg = "You tell " + target->query_cap_name() + ": " + msg;
+    yourMsg = tc->query_cap_name() + " tells you: " + msg;
+
+    message("tell", myMsg + "\n", tc);
+    message("tell", yourMsg + "\n", target);
+
+    tc->add_tell_history(myMsg);
+    target->add_tell_history(yourMsg);
+    target->set_tell_reply(tc->query_name());
 }

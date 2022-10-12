@@ -1,10 +1,11 @@
 
 inherit STD_LIVING;
-inherit "/std/character/autoload.c";
-inherit "/std/character/channel.c";
 inherit M_PARENT;
 inherit M_PROPERTY;
 inherit M_SAVE;
+inherit "/std/character/autoload.c";
+inherit "/std/character/channel.c";
+inherit "/std/character/history.c";
 
 #include "living/living.h";
 

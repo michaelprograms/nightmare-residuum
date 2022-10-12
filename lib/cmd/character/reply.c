@@ -1,16 +1,25 @@
 void command (string input, mapping flags) {
     object tc = this_character(), target;
-    string name, msg;
+    string name, msg, myMsg, yourMsg;
 
     msg = strip_colour(input);
-    name = tc->query_property("reply");
-    if ((name == "" || !name) ||
-    (!(target = find_character(name)) || tc == target) ||
-    (msg == "" || !msg)) {
-        message("action", "You do not have someone to reply to.\n", tc);
+    if (!sizeof(msg)) {
+        message("action", "Syntax: <reply [message]>\n", tc);
+        return;
+    }
+    name = tc->query_tell_reply();
+    if (!sizeof(name) || !(target = find_character(name)) || tc == target) {
+        message("action", "You have no one to reply to.\n", tc);
         return;
     }
 
-    message("tell", "You reply to " + target->query_cap_name() + ": " + msg + "\n", tc);
-    message("tell", tc->query_cap_name() + " replies to you: " + msg + "\n", target);
+    myMsg = "You reply to " + target->query_cap_name() + ": " + msg;
+    yourMsg = tc->query_cap_name() + " replies: " + msg;
+
+    message("tell", myMsg + "\n", tc);
+    message("tell", yourMsg + "\n", target);
+
+    tc->add_tell_history(myMsg);
+    target->add_tell_history(yourMsg);
+    target->set_tell_reply(tc->query_name());
 }
