@@ -69,7 +69,7 @@ varargs string format_page (string *items, int columns, int pad, int center) {
             if (sizeof(tmp = SEFUN->strip_colour(items[i + j])) > w) {
                 // use stripped text when its longer than w
                 if (columns == 1) {
-                    string *wrapped = explode(wrap(""+items[i + j], w, 0), "\n");
+                    string *wrapped = explode(SEFUN->wrap(""+items[i + j], w, 0), "\n");
                     foreach (string line in wrapped) {
                         if (center) {
                             row += sprintf("%|"+sprintf("%d", w)+"s", ""+line) + "\n";
