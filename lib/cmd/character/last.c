@@ -1,29 +1,38 @@
 void command (string input, mapping flags) {
     object tc = this_character();
     string *msgs;
+    string *border, *body = ({ }), subtitle;
 
     if (input == "tells" || input == "tell") {
+        subtitle = "tells";
         if (!sizeof(msgs = tc->query_tell_history())) {
-            message("action", "No one has told you anything.\n", tc);
-            return;
+            body += ({ "No one has told you anything." });
+        } else {
+            body += msgs;
         }
-        message("action", "Last " + sizeof(msgs) + " tell" + (sizeof(msgs) > 1 ? "s" : "") + ":\n", tc);
-        foreach (string msg in msgs) {
-            message("tell", msg + "\n", tc);
-        }
-        return;
     } else if (input == "says" || input == "say") {
+        subtitle = "says";
+
         if (!sizeof(msgs = tc->query_say_history())) {
-            message("action", "No one has said anything.\n", tc);
-            return;
+            body += ({ "No one has said you anything." });
+        } else {
+            body += msgs;
         }
-        message("action", "Last " + sizeof(msgs) + " say" + (sizeof(msgs) > 1 ? "s" : "") + ":\n", tc);
-        foreach (string msg in msgs) {
-            message("say", msg + "\n", tc);
-        }
-        return;
     } else {
         message("action", "Syntax: <last says|tells>\n", tc);
         return;
+    }
+
+    write("body is: "+identify(body)+"\n");
+    border = format_border(([
+        "title": "LAST",
+        "subtitle": subtitle,
+        "body": ([
+            "items": body,
+            "align": "left",
+        ]),
+    ]));
+    foreach (string line in border) {
+        message("system", line + "\n", tc);
     }
 }
