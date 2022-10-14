@@ -87,7 +87,7 @@ varargs string wrap (string str, int width, int indent) {
     str = replace_string(str, "\e[49;49m", "");
     str = replace_string(str, "\e[0;10m", "");
     if (strlen(str) > __LARGEST_PRINTABLE_STRING__) {
-        str = str[0..__LARGEST_PRINTABLE_STRING__ - 1];
+        str = str[0..__LARGEST_PRINTABLE_STRING__-1];
     }
     return str;
 }

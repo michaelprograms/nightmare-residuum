@@ -14,6 +14,8 @@ object query_account () {
 }
 
 void test_format_page () {
+    string row;
+
     expect_function("format_page", testOb);
 
     __MockAccount = new(STD_ACCOUNT);
@@ -54,9 +56,15 @@ void test_format_page () {
         assert(strlen(testOb->format_page(({ "1", "2", "3", "4", "5", "6", "7" }), 7, 0)), "==", 80), // remainder = 3
     }) :));
 
-    expect("format_page handled trimming longer strings", (: ({
+    expect("format_page trimmed longer strings when more than 1 column", (: ({
         assert(strlen(testOb->format_page(({ "111111111111111111111111111111", "222222222222222222222222222222", "333333333333333333333333333333", "444444444444444444444444444444", }), 4, 0)), "==", 80), // 30 * 4 = 120
         assert(strlen(testOb->format_page(({ "111111111111111111111111111111", "2", "3", "4", }), 4, 0)), "==", 80), // 30 + 25 * 3 = 85
+    }) :));
+
+    row = testOb->format_page(({"123456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789"}), 1, 0);
+    expect("format_page wrapped longer strings when 1 column", (: ({
+        assert($(row), "==", "123456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789 \n123456789 123456789                                                             \n"),
+        assert(strlen($(row)), "==", 162), // 80 + 1 + 80 + 1
     }) :));
 
     __MockAccount->set_setting("width", 20);

@@ -68,7 +68,18 @@ varargs string format_page (string *items, int columns, int pad, int center) {
             // check text length without ANSI color
             if (sizeof(tmp = SEFUN->strip_colour(items[i + j])) > w) {
                 // use stripped text when its longer than w
-                row += tmp[0..w-1];
+                if (columns == 1) {
+                    string *wrapped = explode(wrap(""+items[i + j], w, 0), "\n");
+                    foreach (string line in wrapped) {
+                        if (center) {
+                            row += sprintf("%|"+sprintf("%d", w)+"s", ""+line) + "\n";
+                        } else {
+                            row += sprintf("%-"+sprintf("%d", w)+"s", ""+line) + "\n";
+                        }
+                    }
+                } else {
+                    row += tmp[0..w-1];
+                }
             } else {
                 // account for any color codes in the text
                 int diff = sizeof(items[i+j]) - sizeof(tmp);
