@@ -398,7 +398,6 @@ string help (object char) {
     if (n = sizeof(__Weapons)) {
         result += "\n%^CYAN%^BOLD%^Weapons%^RESET%^\n";
         foreach (string key,int *value in __Weapons) {
-            // result += sprintf("%-12s", key + ":") + "  ";
             result += implode(map(value, (: cardinal($1)+" handed "+$(key) :)), ", ") + "\n";
         }
     }
@@ -406,7 +405,7 @@ string help (object char) {
     result += "\n%^CYAN%^BOLD%^" + sprintf("%-12s", "Syntax") + "%^RESET%^\n" + format_syntax(__Name + " ([target])") + "\n";
 
     if (helpText = query_help_text()) {
-        result += "\n" + helpText + "\n";
+        result += "\n%^CYAN%^BOLD%^Description%^RESET%^\n" + helpText + "\n";
     }
     return result;
 }
