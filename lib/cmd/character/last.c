@@ -30,6 +30,7 @@ void command (string input, mapping flags) {
         "body": ([
             "items": body,
             "align": "left",
+            "columns": 1,
         ]),
     ]));
     foreach (string line in border) {
