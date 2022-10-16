@@ -5,7 +5,7 @@ void command (string input, mapping flags) {
 
     if (input && tc->query_immortal()) {
         if (find_character(input)) target = find_character(input);
-        else if(present(input, environment(tc))) target = present(input, environment(tc));
+        else if (present(input, environment(tc))) target = present(input, environment(tc));
     }
 
     skills = sort_array(tc->query_all_skills(), 1);
