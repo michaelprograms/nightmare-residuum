@@ -4,20 +4,19 @@ void command (string input, mapping flags) {
     string *border, *body = ({ }), subtitle;
 
     if (input == "tells" || input == "tell") {
-        subtitle = "tells";
         if (!sizeof(msgs = tc->query_tell_history())) {
             body += ({ "No one has told you anything." });
         } else {
             body += msgs;
         }
+        subtitle = sizeof(msgs) + " tell" + (sizeof(msgs) != 1 ? "s" : "");
     } else if (input == "says" || input == "say") {
-        subtitle = "says";
-
         if (!sizeof(msgs = tc->query_say_history())) {
-            body += ({ "No one has said you anything." });
+            body += ({ "No one has said anything to you." });
         } else {
             body += msgs;
         }
+        subtitle = sizeof(msgs) + " say" + (sizeof(msgs) != 1 ? "s" : "");
     } else {
         message("action", "Syntax: <last says|tells>\n", tc);
         return;
