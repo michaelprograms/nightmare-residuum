@@ -23,7 +23,6 @@ void command (string input, mapping flags) {
         return;
     }
 
-    write("body is: "+identify(body)+"\n");
     border = format_border(([
         "title": "LAST",
         "subtitle": subtitle,
