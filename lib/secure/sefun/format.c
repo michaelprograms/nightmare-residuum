@@ -294,11 +294,11 @@ private nosave mapping __Border = ([
 string *format_border (mapping data) {
     string *lines = ({ }), line, *linesBody = ({ });
 
-    int fTitle = !undefinedp(data["title"]);
-    int fSubtitle = !undefinedp(data["subtitle"]);
-    int fHeader = !undefinedp(data["header"]);
-    int fBody = !undefinedp(data["body"]);
-    int fFooter = !undefinedp(data["footer"]);
+    int fTitle = !undefinedp(data["title"]) && data["title"];
+    int fSubtitle = !undefinedp(data["subtitle"]) && data["subtitle"];
+    int fHeader = !undefinedp(data["header"]) && data["header"];
+    int fBody = !undefinedp(data["body"]) && data["body"];
+    int fFooter = !undefinedp(data["footer"]) && data["footer"];
 
     if (fSubtitle) {
         data["subtitle"] = SEFUN->strip_colour(data["subtitle"]);
