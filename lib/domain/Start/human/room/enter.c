@@ -15,8 +15,8 @@ nosave private mapping syntax = ([
 
 
 void story_action_final (object target) {
-    message("story", "A repetitive beeping tone synced to a blinking red light attracts your attention.\n", target);
-    message("story", "You " + syntax["look"] + " over your surroundings.\n\n", target);
+    message("wrap", "A repetitive beeping tone synced to a blinking red light attracts your attention.\n", target);
+    message("wrap", "You " + syntax["look"] + " over your surroundings.\n\n", target);
     people = people - ({ 0 }) + ({ target });
     target->describe_environment();
 }

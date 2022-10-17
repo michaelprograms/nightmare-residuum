@@ -259,7 +259,7 @@ void log_error (string file, string msg) {
         msg = replace_string(msg, ": ", ": \e[31;1mError\e[0m: ", 1);
     }
     if (msg && this_character() && this_character()->query_immortal()) {
-        message("wrap", msg, this_user());
+        message("error", msg, this_user());
     } else if (sizeof(previous_object(-1)) > 1 && previous_object(-1)[<1]) {
         if (base_name(previous_object(-1)[<1]) == D_TEST[0..<3]) {
             write(msg + "\n");
