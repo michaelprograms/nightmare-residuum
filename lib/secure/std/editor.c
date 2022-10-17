@@ -13,7 +13,7 @@ private nomask void editor_input (mixed s) {
     if (s == -1) {
         return destruct();
     }
-    message("no_ansi", ed_cmd(s), this_user());
+    message("system", ed_cmd(s), this_user());
     if (query_ed_mode() == -1) {
         this_user()->input_pop();
         // this_user()->set_flag("editing", 0);
