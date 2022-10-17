@@ -28,7 +28,7 @@ void story_action (object target, mixed line, mixed *lines) {
     if (!target || (environment(target) != this_object() && environment(target) != environment(this_object()))) return;
 
     if (stringp(line)) {
-        message("story", line + "\n", target);
+        message("wrap", line + "\n", target);
     } else if (functionp(line)) {
         evaluate(line, target);
     }

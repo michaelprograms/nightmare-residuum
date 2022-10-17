@@ -94,11 +94,11 @@ void handle_limb_sever (string limb) {
     }
 
     if (__Limbs[limb]["type"] == "FATAL") {
-        message("combat action", "Your "+limb+" receives a mortal blow!\n", this_object());
-        message("combat action", possessive_noun(this_object())+" "+limb+" receives a mortal blow!\n", environment(), this_object());
+        message("combat alert", "Your "+limb+" receives a mortal blow!\n", this_object());
+        message("combat alert", possessive_noun(this_object())+" "+limb+" receives a mortal blow!\n", environment(), this_object());
     } else {
-        message("combat action", "Your "+limb+" is severed!\n", this_object());
-        message("combat action", possessive_noun(this_object())+" "+limb+" is severed!\n", environment(), this_object());
+        message("combat alert", "Your "+limb+" is severed!\n", this_object());
+        message("combat alert", possessive_noun(this_object())+" "+limb+" is severed!\n", environment(), this_object());
     }
 
     // remove wielded weapon
