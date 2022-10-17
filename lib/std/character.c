@@ -180,23 +180,23 @@ void describe_environment_long () {
         message("room", env->query_short() + "\n", this_object());
         message("room", env->query_long() + "\n", this_object());
     } else {
-        string *long, result = "";
+        string *long, result = "", line;
         int l;
-        long = ({ env->query_short() });
-        long += explode(wrap(env->query_long(), width-18, 0), "\n");
+        string separator = ([ "utf-8": "│", "US-ASCII": "|" ])[query_encoding()];
+        long = ({ env->query_short() }) + explode(wrap(env->query_long(), width-19, 0), "\n");
         l = max(({ sizeof(map), sizeof(long) }));
         for (int i = 0; i < l; i ++) {
             if (i < sizeof(map)) {
-                result += map[i] + " | ";
+                line = map[i] + " %^ORANGE%^" + separator + "%^RESET%^ ";
             } else {
-                result += "                | ";
+                line = "                %^ORANGE%^" + separator + "%^RESET%^ ";
             }
             if (i < sizeof(long)) {
-                result += long[i];
+                line += long[i];
             }
-            result += "\n";
+            result += line + "\n";
         }
-        message("room", result + "\n", this_object());
+        message("system", result + "\n", this_object());
     }
 }
 
@@ -299,13 +299,11 @@ private void describe_environment_item_contents () {
 
 void describe_environment () {
     object env;
-    string *map;
 
     if (!(env = environment()) || !env->is_room()) {
         message("system", "You do not have an environment.\n", this_object());
         return;
     }
-
 
     if (query_immortal()) {
         message("room", file_name(env) + "\n", this_object());
