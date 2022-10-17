@@ -77,3 +77,101 @@ int handle_release (object ob) {
     }
     return ::handle_release(ob);
 }
+
+/* ----- map ----- */
+
+mapping query_room_exits_picture() {
+    mapping exits = query_exits();
+    mapping picture = ([]);
+    picture["nw"] = exits["northwest"] ? "\\" : " ";
+    picture["n"]  = exits["north"]     ? "|"  : " ";
+    picture["u"]  = exits["up"]        ? "+"  : " ";
+    picture["ne"] = exits["northeast"] ? "/"  : " ";
+    picture["w"]  = exits["west"]      ? "-"  : " ";
+    picture["e"]  = exits["east"]      ? "-"  : " ";
+    picture["sw"] = exits["southwest"] ? "/"  : " ";
+    picture["d"]  = exits["down"]      ? "-"  : " ";
+    picture["s"]  = exits["south"]     ? "|"  : " ";
+    picture["se"] = exits["southeast"] ? "\\" : " ";
+    return picture;
+}
+string *query_room_exit_map() {
+    mapping blank = ([
+        "nw": " ",
+        "n":  " ",
+        "ne": " ",
+        "w":  " ",
+        "u":  " ",
+        "d":  " ",
+        "e":  " ",
+        "sw": " ",
+        "s":  " ",
+        "se": " ",
+    ]);
+    mapping roomOb = ([
+        "nw": 0,
+        "n":  0,
+        "ne": 0,
+        "w":  0,
+        "u":  0,
+        "d":  0,
+        "e":  0,
+        "sw": 0,
+        "s":  0,
+        "se": 0,
+    ]);
+    mapping exits = query_exits();
+    mapping pics = ([
+        "nw": exits["northwest"] && (roomOb["nw"] = find_object(exits["northwest"]["room"],1)) ? roomOb["nw"]->query_room_exits_picture() : blank,
+        "n":  exits["north"]     && (roomOb["n"]  = find_object(exits["north"]["room"],1)) ? roomOb["n"]->query_room_exits_picture() : blank,
+        "ne": exits["northeast"] && (roomOb["ne"] = find_object(exits["northeast"]["room"],1)) ? roomOb["ne"]->query_room_exits_picture() : blank,
+        "w":  exits["west"]      && (roomOb["w"]  = find_object(exits["west"]["room"],1)) ? roomOb["w"]->query_room_exits_picture() : blank,
+        "x":  query_room_exits_picture(),
+        "e":  exits["east"]      && (roomOb["e"]  = find_object(exits["east"]["room"],1)) ? roomOb["e"]->query_room_exits_picture() : blank,
+        "sw": exits["southwest"] && (roomOb["sw"] = find_object(exits["southwest"]["room"],1)) ? roomOb["sw"]->query_room_exits_picture() : blank,
+        "s":  exits["south"]     && (roomOb["s"]  = find_object(exits["south"]["room"],1)) ? roomOb["s"]->query_room_exits_picture() : blank,
+        "se": exits["southeast"] && (roomOb["se"] = find_object(exits["southeast"]["room"],1)) ? roomOb["se"]->query_room_exits_picture() : blank,
+    ]);
+    return ({
+        pics["nw"]["nw"] + " " + pics["nw"]["n"] + pics["nw"]["u"] + pics["nw"]["ne"] +
+        pics["n"]["nw"]  + " " + pics["n"]["n"]  + pics["n"]["u"]  + pics["n"]["ne"]  +
+        pics["ne"]["nw"] + " " + pics["ne"]["n"] + pics["ne"]["u"] + pics["ne"]["ne"],
+
+        pics["nw"]["w"] + (roomOb["nw"] ? "[ ]" : "   ") + pics["nw"]["e"] +
+        pics["n"]["w"]  + (roomOb["n"]  ? "[ ]" : "   ") + pics["n"]["e"]  +
+        pics["ne"]["w"] + (roomOb["ne"] ? "[ ]" : "   ") + pics["ne"]["e"],
+
+        pics["nw"]["sw"] + pics["nw"]["d"] + pics["nw"]["s"] + " " + pics["nw"]["se"] +
+        pics["n"]["sw"]  + pics["n"]["d"]  + pics["n"]["s"]  + " " + pics["n"]["se"]  +
+        pics["ne"]["sw"] + pics["ne"]["d"] + pics["ne"]["s"] + " " + pics["ne"]["se"],
+
+        // -----
+
+        pics["w"]["nw"] + " " + pics["w"]["n"] + pics["w"]["u"] + pics["w"]["ne"] +
+        pics["x"]["nw"] + " " + pics["x"]["n"] + pics["x"]["u"] + pics["x"]["ne"] +
+        pics["e"]["nw"] + " " + pics["e"]["n"] + pics["e"]["u"] + pics["e"]["ne"],
+
+        pics["w"]["w"] + (roomOb["w"] ? "[ ]" : "   ") + pics["w"]["e"] +
+        pics["x"]["w"] + "[X]" + pics["x"]["e"] +
+        pics["e"]["w"] + (roomOb["e"] ? "[ ]" : "   ") + pics["e"]["e"],
+
+        pics["w"]["sw"] + pics["w"]["d"] + pics["w"]["s"] + " " + pics["w"]["se"] +
+        pics["x"]["sw"] + pics["x"]["d"] + pics["x"]["s"] + " " + pics["x"]["se"] +
+        pics["e"]["sw"] + pics["e"]["d"] + pics["e"]["s"] + " " + pics["e"]["se"],
+
+        // -----
+
+        pics["sw"]["nw"] + " " + pics["sw"]["n"] + pics["sw"]["u"] + pics["sw"]["ne"] +
+        pics["s"]["nw"]  + " " + pics["s"]["n"]  + pics["s"]["u"]  + pics["s"]["ne"]  +
+        pics["se"]["nw"] + " " + pics["se"]["n"] + pics["se"]["u"] + pics["se"]["ne"],
+
+        pics["sw"]["w"] + (roomOb["sw"] ? "[ ]" : "   ") + pics["sw"]["e"] +
+        pics["s"]["w"]  + (roomOb["s"]  ? "[ ]" : "   ") + pics["s"]["e"]  +
+        pics["se"]["w"] + (roomOb["se"] ? "[ ]" : "   ") + pics["se"]["e"],
+
+        pics["sw"]["sw"] + pics["sw"]["d"] + pics["sw"]["s"] + " " + pics["sw"]["se"] +
+        pics["s"]["sw"]  + pics["s"]["d"]  + pics["s"]["s"]  + " "  + pics["s"]["se"]  +
+        pics["se"]["sw"] + pics["se"]["d"] + pics["se"]["s"] + " " + pics["se"]["se"],
+
+    });
+}

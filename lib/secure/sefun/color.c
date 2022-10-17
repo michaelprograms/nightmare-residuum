@@ -121,3 +121,40 @@ string apply_gradient (string text, string *gradient) {
 
     return result;
 }
+
+string format_message_color (string type, string message) {
+    // unused types: "action", "verb", "wrap", "room"
+    if (type == "say") {
+        message = "%^CYAN%^" + replace_string(message, ":", ":%^RESET%^");
+    } else if (type == "tell") {
+        message = "%^RED%^BOLD%^" + replace_string(message, ":", ":%^RESET%^");
+    } else if (type == "go") {
+        message = replace_string(message, "%^DIR%^", "%^CYAN%^");
+        message = replace_string(message, "%^DEFAULT%^", "%^GREEN%^");
+        message = "%^GREEN%^BOLD%^" + message + "%^RESET%^";
+    } else if (type == "room listen") {
+        message = "%^CYAN%^" + message + "%^RESET%^";
+    } else if (type == "room smell") {
+        message = "%^ORANGE%^" + message + "%^RESET%^";
+    } else if (type == "room living contents") {
+        message = "%^RED%^" + replace_string(message, "%^DEFAULT%^", "%^RED%^") + "%^RESET%^";
+    } else if (type == "room item contents") {
+        message = "%^MAGENTA%^" + replace_string(message, "%^DEFAULT%^", "%^MAGENTA%^") + "%^RESET%^";
+    } else if (type == "room exits") {
+        message = replace_string(message, "%^DEFAULT%^", "%^GREEN%^");
+        message = replace_string(message, ":", ":%^RESET%^");
+        message = "%^GREEN%^" + message + "%^RESET%^";
+    } else if (type == "channel") {
+        message = replace_string(message, "[[", "%^GREEN%^[%^BOLD%^");
+        message = replace_string(message, "]]", "%^BOLD_OFF%^GREEN%^]%^RESET%^");
+        message = replace_string(message, "((", "%^CYAN%^(%^BOLD%^");
+        message = replace_string(message, "))", "%^BOLD_OFF%^CYAN%^)%^RESET%^");
+    } else if (type == "combat hit") {
+        message = "%^RED%^" + message + "%^RESET%^";
+    } else if (type == "combat miss") {
+        message = "%^GREEN%^" + message + "%^RESET%^";
+    } else if (type == "combat alert") {
+        message = "%^YELLOW%^" + message + "%^RESET%^";
+    }
+    return message;
+}

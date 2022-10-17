@@ -171,6 +171,35 @@ void exit_freezer () {
 
 /* ----- describe environments ---- */
 
+void describe_environment_long () {
+    object env = environment();
+    string *map = env->query_room_exit_map();
+    int width = __User->query_account()->query_setting("width");
+
+    if (!sizeof(map)) {
+        message("room", env->query_short() + "\n", this_object());
+        message("room", env->query_long() + "\n", this_object());
+    } else {
+        string *long, result = "";
+        int l;
+        long = ({ env->query_short() });
+        long += explode(wrap(env->query_long(), width-18, 0), "\n");
+        l = max(({ sizeof(map), sizeof(long) }));
+        for (int i = 0; i < l; i ++) {
+            if (i < sizeof(map)) {
+                result += map[i] + " | ";
+            } else {
+                result += "                | ";
+            }
+            if (i < sizeof(long)) {
+                result += long[i];
+            }
+            result += "\n";
+        }
+        message("room", result + "\n", this_object());
+    }
+}
+
 varargs void describe_environment_senses (string sense, string focus) {
     mixed tmp;
     string result;
@@ -277,17 +306,12 @@ void describe_environment () {
         return;
     }
 
-    if (map = env->query_map()) {
-        message("room_map", implode(map, "\n") + "\n", this_object());
-    }
 
     if (query_immortal()) {
         message("room", file_name(env) + "\n", this_object());
     }
 
-    message("room_short", env->query_short() + "\n", this_object());
-    message("room_long", env->query_long() + "\n", this_object());
-
+    describe_environment_long();
     describe_environment_senses();
     describe_environment_exits();
     describe_environment_living_contents();
