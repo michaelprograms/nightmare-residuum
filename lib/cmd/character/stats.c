@@ -11,9 +11,9 @@ void command (string input, mapping flags) {
         int statBase = target->query_stat_base(stat);
         int statBonus = target->query_stat_bonus(stat);
         items += ({
-            stat,
-            statBase,
-            statBonus,
+            capitalize(stat),
+            sprintf("%4s", ""+statBase),
+            sprintf("%4s", ""+statBonus),
             format_integer(D_EXPERIENCE->query_stat_cost(stat, statBase, target->query_class(), target->query_species())) + " xp"
         });
     }
