@@ -3,7 +3,7 @@ void command (string input, mapping flags) {
     mapping a;
 
     a = D_ASTRONOMY->query_astronomy_from_room(environment(this_character()));
-    localtime = D_ASTRONOMY->query_localtime(a);
+    localtime = D_ASTRONOMY->query_localtime(a) + " of " + a["HOURS_PER_DAY"] + ":00";
     localdate = D_ASTRONOMY->query_localdate(a);
 
     border = format_border(([
