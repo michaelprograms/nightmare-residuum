@@ -173,23 +173,31 @@ void exit_freezer () {
 
 void describe_environment_long () {
     object env = environment();
-    string *map = env->query_room_exit_map();
+    string *map = ({ });
     int width = __User->query_account()->query_setting("width");
 
+    if (__User->query_account()->query_setting("screenreader") == "off") {
+        map = env->query_room_exit_map();
+    }
     if (!sizeof(map)) {
         message("room", env->query_short() + "\n", this_object());
         message("room", env->query_long() + "\n", this_object());
     } else {
         string *long, result = "", line;
         int l;
-        string separator = ([ "utf-8": "│", "US-ASCII": "|" ])[query_encoding()];
-        long = ({ env->query_short() }) + explode(wrap(env->query_long(), width-19, 0), "\n");
+        mapping b = query_border_charset();
+        long = ({ env->query_short() }) + explode(wrap(env->query_long(), width-18, 0), "\n");
+        for(int i = 0; i < sizeof(map); i ++) {
+            map[i] += " %^GREEN%^" + b["v"] + "%^RESET%^ ";
+        }
+        map = ({ "%^GREEN%^"+sprintf("%16'"+sprintf("%s", b["h"])+"'s%s", "", b["tr"])+"%^RESET%^ " }) + map;
+        map += ({ "%^GREEN%^"+sprintf("%16'"+sprintf("%s", b["h"])+"'s%s", "", b["br"])+"%^RESET%^ " });
         l = max(({ sizeof(map), sizeof(long) }));
         for (int i = 0; i < l; i ++) {
             if (i < sizeof(map)) {
-                line = map[i] + " %^ORANGE%^" + separator + "%^RESET%^ ";
+                line = map[i];
             } else {
-                line = "                %^ORANGE%^" + separator + "%^RESET%^ ";
+                line = "                %^GREEN%^" + b["v"] + "%^RESET%^ ";
             }
             if (i < sizeof(long)) {
                 line += long[i];
@@ -306,7 +314,7 @@ void describe_environment () {
     }
 
     if (query_immortal()) {
-        message("room", file_name(env) + "\n", this_object());
+        message("room", "%^UNDERLINE%^" + file_name(env) + "%^RESET%^\n", this_object());
     }
 
     describe_environment_long();

@@ -80,45 +80,32 @@ int handle_release (object ob) {
 
 /* ----- map ----- */
 
-mapping query_room_exits_picture() {
+mapping query_room_exits_picture () {
     mapping exits = query_exits();
+    mapping b = query_border_charset();
     mapping picture = ([]);
-    picture["nw"] = exits["northwest"] ? "\\" : " ";
-    picture["n"]  = exits["north"]     ? "|"  : " ";
+    picture["nw"] = exits["northwest"] ? b["dd"] : " ";
+    picture["n"]  = exits["north"]     ? b["v"]  : " ";
     picture["u"]  = exits["up"]        ? "+"  : " ";
-    picture["ne"] = exits["northeast"] ? "/"  : " ";
-    picture["w"]  = exits["west"]      ? "-"  : " ";
-    picture["e"]  = exits["east"]      ? "-"  : " ";
-    picture["sw"] = exits["southwest"] ? "/"  : " ";
+    picture["ne"] = exits["northeast"] ? b["du"]  : " ";
+    picture["w"]  = exits["west"]      ? b["h"]  : " ";
+    picture["e"]  = exits["east"]      ? b["h"]  : " ";
+    picture["sw"] = exits["southwest"] ? b["du"]  : " ";
     picture["d"]  = exits["down"]      ? "-"  : " ";
-    picture["s"]  = exits["south"]     ? "|"  : " ";
-    picture["se"] = exits["southeast"] ? "\\" : " ";
+    picture["s"]  = exits["south"]     ? b["v"]  : " ";
+    picture["se"] = exits["southeast"] ? b["dd"] : " ";
     return picture;
 }
 string *query_room_exit_map() {
     mapping blank = ([
-        "nw": " ",
-        "n":  " ",
-        "ne": " ",
-        "w":  " ",
-        "u":  " ",
-        "d":  " ",
-        "e":  " ",
-        "sw": " ",
-        "s":  " ",
-        "se": " ",
+        "nw": " ", "n":  " ", "ne": " ",
+        "w":  " ", "u":  " ", "d":  " ", "e":  " ",
+        "sw": " ", "s":  " ", "se": " ",
     ]);
     mapping roomOb = ([
-        "nw": 0,
-        "n":  0,
-        "ne": 0,
-        "w":  0,
-        "u":  0,
-        "d":  0,
-        "e":  0,
-        "sw": 0,
-        "s":  0,
-        "se": 0,
+        "nw": 0, "n":  0, "ne": 0,
+        "w":  0, "u":  0, "d":  0, "e":  0,
+        "sw": 0, "s":  0, "se": 0,
     ]);
     mapping exits = query_exits();
     mapping pics = ([
@@ -132,6 +119,22 @@ string *query_room_exit_map() {
         "s":  exits["south"]     && (roomOb["s"]  = find_object(exits["south"]["room"],1)) ? roomOb["s"]->query_room_exits_picture() : blank,
         "se": exits["southeast"] && (roomOb["se"] = find_object(exits["southeast"]["room"],1)) ? roomOb["se"]->query_room_exits_picture() : blank,
     ]);
+    // w-n
+    // w-s
+    // n-w
+    // n-e
+    // e-n
+    // e-s
+    // s-w
+    // s-e
+    // ne-w
+    // ne-s
+    // se-w
+    // se-n
+    // sw-n
+    // sw-e
+    // nw-s
+    // nw-e
     return ({
         pics["nw"]["nw"] + " " + pics["nw"]["n"] + pics["nw"]["u"] + pics["nw"]["ne"] +
         pics["n"]["nw"]  + " " + pics["n"]["n"]  + pics["n"]["u"]  + pics["n"]["ne"]  +
