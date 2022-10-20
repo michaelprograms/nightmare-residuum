@@ -7,14 +7,14 @@ void command (string input, mapping flags) {
         if (!sizeof(msgs = tc->query_tell_history())) {
             body += ({ "No one has told you anything." });
         } else {
-            body += msgs;
+            body += map(msgs, (: format_message_color("tell", $1) :));
         }
         subtitle = sizeof(msgs) + " tell" + (sizeof(msgs) != 1 ? "s" : "");
     } else if (input == "says" || input == "say") {
         if (!sizeof(msgs = tc->query_say_history())) {
             body += ({ "No one has said anything to you." });
         } else {
-            body += msgs;
+            body += map(msgs, (: format_message_color("say", $1) :));
         }
         subtitle = sizeof(msgs) + " say" + (sizeof(msgs) != 1 ? "s" : "");
     } else {
