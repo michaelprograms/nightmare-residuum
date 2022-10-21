@@ -47,6 +47,7 @@ nomask void net_dead () {
 }
 
 void receive_message (string type, string message) {
+    D_LOG->log_unique("message_types", type);
     if (type == "system") {
         if (strlen(message) > __LARGEST_PRINTABLE_STRING__) {
             message = message[0..__LARGEST_PRINTABLE_STRING__-1];
