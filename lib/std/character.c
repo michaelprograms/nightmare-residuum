@@ -186,12 +186,12 @@ void describe_environment_long () {
         string *long, result = "", line;
         int l;
         mapping b = query_border_charset();
-        long = ({ env->query_short() }) + explode(wrap(env->query_long(), width-18, 0), "\n");
+        long = ({ env->query_short() }) + explode(wrap(env->query_long(), width-17, 0), "\n");
         for(int i = 0; i < sizeof(map); i ++) {
-            map[i] += " %^GREEN%^" + b["v"] + "%^RESET%^ ";
+            map[i] += "%^GREEN%^" + b["v"] + "%^RESET%^ ";
         }
-        map = ({ "%^GREEN%^"+sprintf("%16'"+sprintf("%s", b["h"])+"'s%s", "", b["tr"])+"%^RESET%^ " }) + map;
-        map += ({ "%^GREEN%^"+sprintf("%16'"+sprintf("%s", b["h"])+"'s%s", "", b["br"])+"%^RESET%^ " });
+        map = ({ "%^GREEN%^"+sprintf("%15'"+sprintf("%s", b["h"])+"'s%s", "", b["tr"])+"%^RESET%^ " }) + map;
+        map += ({ "%^GREEN%^"+sprintf("%15'"+sprintf("%s", b["h"])+"'s%s", "", b["br"])+"%^RESET%^ " });
         l = max(({ sizeof(map), sizeof(long) }));
         for (int i = 0; i < l; i ++) {
             if (i < sizeof(map)) {
