@@ -16,21 +16,25 @@ void command (string input, mapping flags) {
 
     foreach (object ob in obs) {
         object parent;
+        string key;
         if (parent = ob->query_parent()) {
-            if (!arrayp(structure[file_name(parent)])) {
-                structure[file_name(parent)] = ({});
+            key = (parent->query_cap_name() ? parent->query_cap_name()+" " : "") + file_name(parent);
+            if (!arrayp(structure[key])) {
+                structure[key] = ({ });
             }
-            structure[file_name(parent)] += ({ (ob->query_key_name() ? ob->query_key_name()+" " : "") + file_name(ob) });
+            structure[key] += ({ (ob->query_cap_name() ? ob->query_cap_name()+" " : "") + file_name(ob) });
         } else {
             object env;
             if (env = environment(ob)) {
-                if (!arrayp(structure[file_name(env)])) {
-                    structure[file_name(env)] = ({});
+                key = (env->query_cap_name() ? env->query_cap_name()+" " : "") + file_name(env);
+                if (!arrayp(structure[key])) {
+                    structure[key] = ({ });
                 }
-                structure[file_name(env)] += ({ (ob->query_key_name() ? ob->query_key_name()+" " : "") + file_name(ob) });
+                structure[key] += ({ (ob->query_cap_name() ? ob->query_cap_name()+" " : "") + file_name(ob) });
             } else {
-                if (!arrayp(structure[file_name(ob)])) {
-                    structure[file_name(ob)] = ({});
+                key = (ob->query_cap_name() ? ob->query_cap_name()+" " : "") + file_name(ob);
+                if (!arrayp(structure[key])) {
+                    structure[key] = ({ });
                 }
             }
         }
@@ -52,7 +56,5 @@ void command (string input, mapping flags) {
             "align": "center",
         ]),
     ]));
-    foreach (string line in border) {
-        message("system", line + "\n", this_character());
-    }
+    this_user()->handle_pager(border);
 }
