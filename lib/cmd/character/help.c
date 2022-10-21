@@ -30,6 +30,6 @@ void command (string input, mapping flags) {
         ]),
     ]));
     foreach (string line in border) {
-        message("help", line + "\n", this_character());
+        message("system", line + "\n", this_character());
     }
 }
