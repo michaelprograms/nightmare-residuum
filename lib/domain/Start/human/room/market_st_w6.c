@@ -10,6 +10,7 @@ void create () {
         "west": HUMAN_ROOM + "market_st_w7.c",
         "north": HUMAN_ROOM + "first_st_n1.c",
         "east": HUMAN_ROOM + "market_st_w5.c",
+        "south": HUMAN_ROOM + "first_st_s1.c",
     ]));
     set_looks(([
         "street": "A village street labeled W Market St.",
