@@ -12,7 +12,7 @@ void create () {
     set_listen("default", "It is extremely quiet and calm.");
     set_smell("default", "A pleasantly neutral odor persists in the building.");
     set_exits(([
-        "out east": HUMAN_ROOM + "pine_st_n1.c",
+        "out east": HUMAN_ROOM + "second_st_n1.c",
     ]));
     set_exit("up", HUMAN_ROOM + "hall_mentalist.c", (: handle_pre_exit :), 0);
     set_looks(([

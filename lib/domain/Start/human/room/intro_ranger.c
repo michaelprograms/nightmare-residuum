@@ -12,7 +12,7 @@ void create () {
     set_listen("default", "Quiet interspersed with several thuds of arrows hitting targets.");
     set_smell("default", "Old masonry mixed with the refreshing scent of wildflowers.");
     set_exits(([
-        "out east": HUMAN_ROOM + "pine_st_n6.c",
+        "out east": HUMAN_ROOM + "second_st_n6.c",
     ]));
     set_exit("west", HUMAN_ROOM + "hall_ranger.c", (: handle_pre_exit :), 0);
     set_looks(([

@@ -9,11 +9,11 @@ void create () {
     set_listen("default", "Occasionally several faint thuds can be heard from the west.");
     set_smell("default", "A wiff of wildflowers comes from somewhere.");
     set_exits(([
-        "south": HUMAN_ROOM + "pine_st_n5.c",
+        "south": HUMAN_ROOM + "second_st_n5.c",
         "enter west": HUMAN_ROOM + "intro_ranger.c",
     ]));
     set_looks(([
-        "street": "A village street labeled N Pine St.",
+        "street": "A street sign is labeled N. Second St.",
         "building": "The building looks to be a ranger hall.",
     ]));
 }
