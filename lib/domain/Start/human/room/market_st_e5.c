@@ -14,7 +14,7 @@ void create () {
         "enter south": HUMAN_ROOM + "intro_templar.c",
     ]));
     set_looks(([
-        "street": "A village street labeled E Market St.",
+        "street": "A street sign is labeled E. Market St.",
         "building": "The building looks to be a templar hall.",
     ]));
 }

@@ -13,6 +13,6 @@ void create () {
         "south": HUMAN_ROOM + "first_st_s1.c",
     ]));
     set_looks(([
-        "street": "A village street labeled W Market St.",
+        "street": "A street sign is labeled W. Market St.",
     ]));
 }

@@ -8,7 +8,7 @@ void create () {
         "no attack": 1,
     ]));
     set_short("a village plaza");
-    set_long("Amongst a village center where two central streets blend into a plaza of stone pavers. Brick dwellings covered in dark ivy form a cozy enclosure around the outer circumference of the plaza. Birch trees branch over the perimeter between the dwellings and the plaza. A framework of hexagons glimmer overhead.");
+    set_long("Amongst a village center where two bisecting streets blend into a plaza of stone pavers. Brick dwellings covered in dark ivy form a cozy enclosure around the outer circumference of the plaza. Birch trees branch over the perimeter between the dwellings and the open area. A framework of hexagons glimmer overhead.");
     set_listen("default", "Humans going about their day as birds chirp from the trees.");
     set_smell("default", "The sweet smell of fresh baked goods fill the air.");
     set_looks(([
@@ -17,6 +17,7 @@ void create () {
         ({ "birch", "trees" }): "Birch trees of various ages branch over the plaza's perimeter.",
         "hexagons": "Far above, the hexagons form a geodesic dome.",
         "streets": "The streets Broad and Market meet and cross here.",
+        ({ "street", "streets" }): "Street signs located around the plaza in the cardinal directions of north, east, south, and west labeled N. Broad St., E. Market St., S. Broad St., and W. Market St. respectfully",
     ]));
     set_exits(([
         "north": HUMAN_ROOM + "broad_st_n1.c",

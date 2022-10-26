@@ -13,7 +13,7 @@ void create () {
         "enter north": HUMAN_ROOM + "store_general.c",
     ]));
     set_looks(([
-        "street": "A village street labeled E Market St.",
+        "street": "A street sign is labeled E. Market St.",
         "square": "A square plaza with trees, benches, and more.",
     ]));
 }

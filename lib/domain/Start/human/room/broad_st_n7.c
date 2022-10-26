@@ -11,6 +11,6 @@ void create () {
         "enter north": HUMAN_ROOM "broad_st_n8.c",
     ]));
     set_looks(([
-        "street": "A village street labeled N Broad St.",
+        "street": "A street sign is labeled N. Broad St.",
     ]));
 }

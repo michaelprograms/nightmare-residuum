@@ -16,7 +16,7 @@ void create () {
         "enter northeast": HUMAN_ROOM + "store_pub.c",
     ]));
     set_looks(([
-        "street": "A village street labeled S Broad St.",
+        "street": "A street sign is labeled S. Broad St.",
     ]));
     set_reset(([
         HUMAN_ITEM + "sign_pub.c": 1,

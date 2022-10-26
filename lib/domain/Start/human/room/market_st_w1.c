@@ -12,7 +12,7 @@ void create () {
         "enter south": HUMAN_ROOM "bank.c",
     ]));
     set_looks(([
-        "street": "A village street labeled W Market St.",
+        "street": "A street sign is labeled W. Market St.",
         "square": "A square plaza with trees, benches, and more.",
     ]));
 }

@@ -11,7 +11,7 @@ void create () {
         "east": HUMAN_ROOM + "market_st_w6.c",
     ]));
     set_looks(([
-        "street": "A village street labeled W Market St.",
+        "street": "A street sign is labeled W. Market St.",
     ]));
     set_reset(([
         HUMAN_MONSTER + "plasma_snail.c": 1,
