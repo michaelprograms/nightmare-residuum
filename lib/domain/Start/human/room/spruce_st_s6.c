@@ -11,7 +11,7 @@ void create () {
     set_smell("default", "The smell of a warm musty run-down building.");
     set_exits(([
         "north": HUMAN_ROOM + "spruce_st_s5.c",
-        "west": HUMAN_ROOM + "sassafras_st_e2.c",
+        "west": HUMAN_ROOM + "pine_st_e2.c",
         "enter southeast": HUMAN_ROOM + "intro_scoundrel.c",
     ]));
     set_looks(([
