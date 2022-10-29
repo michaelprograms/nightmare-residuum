@@ -2,9 +2,9 @@ string *sort_instance (string *list) {
     return sort_array(list, (: explode($1, "#")[<1] > explode($2, "#")[<1] :));
 }
 string format_object (string path, string *children, int indent) {
-    string line = sprintf("%"+sprintf("%d", indent * 2)+"s", " ") + path;
+    string line = sprintf("%*s", indent*2, " ") + path;
     foreach (string c in sort_instance(children)) {
-        line += "\n" + sprintf("%"+sprintf("%d", (indent + 1) * 4)+"s", " ") + c;
+        line += "\n" + sprintf("%*s", (indent+1)*4, " ") + c;
     }
     return line;
 }
