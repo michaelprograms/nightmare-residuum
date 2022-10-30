@@ -12,7 +12,7 @@ void create () {
     set_listen("default", "Several paladins occasionally break into chant from the pews.");
     set_smell("default", "The fragrance of incense lightly hangs in the air.");
     set_exits(([
-        "out east": HUMAN_ROOM + "spruce_st_n1.c",
+        "out east": HUMAN_ROOM + "fourth_st_n1.c",
     ]));
     set_exit("down", HUMAN_ROOM + "hall_paladin.c", (: handle_pre_exit :), 0);
     set_looks(([

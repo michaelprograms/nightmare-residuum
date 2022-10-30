@@ -10,12 +10,12 @@ void create () {
     set_listen("default", "Several whispers can be heard from some scoundrels hanging around.");
     set_smell("default", "The smell of a warm musty run-down building.");
     set_exits(([
-        "north": HUMAN_ROOM + "spruce_st_s5.c",
+        "north": HUMAN_ROOM + "fourth_st_s5.c",
         "west": HUMAN_ROOM + "pine_st_e2.c",
         "enter southeast": HUMAN_ROOM + "intro_scoundrel.c",
     ]));
     set_looks(([
-        "street": "A village street labeled S Spruce St.",
+        "street": "A street sign is labeled S. Fourth St.",
         "building": "The building looks to be a scoundrel hall.",
     ]));
     set_story_lines(({

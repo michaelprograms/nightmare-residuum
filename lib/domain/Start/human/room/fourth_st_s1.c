@@ -8,9 +8,9 @@ void create () {
     set_long("A small street traveling north to south through brick dwellings covered in dark ivy. Several birch trees branch over the street and dwellings. A framework of hexagons glimmer overhead.");
     set_exits(([
         "north": HUMAN_ROOM + "market_st_e3.c",
-        "south": HUMAN_ROOM + "spruce_st_s2.c",
+        "south": HUMAN_ROOM + "fourth_st_s2.c",
     ]));
     set_looks(([
-        "street": "A village street labeled S Spruce St.",
+        "street": "A street sign is labeled S. Fourth St.",
     ]));
 }

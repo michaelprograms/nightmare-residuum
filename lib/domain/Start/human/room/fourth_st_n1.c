@@ -10,11 +10,11 @@ void create () {
     set_smell("default", "A light incense wafts through the air.");
     set_exits(([
         "south": HUMAN_ROOM + "market_st_e3.c",
-        "north": HUMAN_ROOM + "spruce_st_n2.c",
+        "north": HUMAN_ROOM + "fourth_st_n2.c",
         "enter west": HUMAN_ROOM + "intro_paladin.c",
     ]));
     set_looks(([
-        "street": "A village street labeled N Spruce St.",
+        "street": "A street sign is labeled N. Fourth St.",
         "building": "The building looks to be a paladin hall.",
     ]));
 }

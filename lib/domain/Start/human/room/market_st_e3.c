@@ -9,8 +9,8 @@ void create () {
     set_exits(([
         "east": HUMAN_ROOM + "market_st_e4.c",
         "west": HUMAN_ROOM + "market_st_e2.c",
-        "north": HUMAN_ROOM + "spruce_st_n1.c",
-        "south": HUMAN_ROOM + "spruce_st_s1.c",
+        "north": HUMAN_ROOM + "fourth_st_n1.c",
+        "south": HUMAN_ROOM + "fourth_st_s1.c",
     ]));
     set_looks(([
         "street": "A street sign is labeled E. Market St.",

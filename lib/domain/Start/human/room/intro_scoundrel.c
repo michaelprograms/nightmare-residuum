@@ -12,7 +12,7 @@ void create () {
     set_listen("default", "Several whispers can be heard from some scoundrels hanging around.");
     set_smell("default", "A musty dust slowly floats in the air.");
     set_exits(([
-        "out northwest": HUMAN_ROOM + "spruce_st_s6.c",
+        "out northwest": HUMAN_ROOM + "fourth_st_s6.c",
     ]));
     set_exit("down", HUMAN_ROOM + "hall_scoundrel.c", (: handle_pre_exit :), 0);
     set_looks(([
