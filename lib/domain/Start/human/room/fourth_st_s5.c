@@ -1,7 +1,6 @@
 #include "human.h"
 
 inherit STD_ROOM;
-inherit M_STORY;
 
 void create () {
     ::create();
@@ -14,18 +13,7 @@ void create () {
     set_looks(([
         "street": "A street sign is labeled S. Fourth St.",
     ]));
-    set_story_lines(({
-        "You get the feeling that you are being watched.",
-    }));
     set_reset(([
         HUMAN_NPC + "teen_suspicious.c": 2,
     ]));
-}
-
-int handle_receive (object ob) {
-    int result = ::handle_receive(ob);
-    if (result && ob->is_character()) {
-        story_start(ob);
-    }
-    return result;
 }

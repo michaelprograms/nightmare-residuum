@@ -13,4 +13,7 @@ void create () {
     set_looks(([
         "street": "A street sign is labeled E. Pine St.",
     ]));
+    set_reset(([
+        HUMAN_NPC + "teen_suspicious.c": 2,
+    ]));
 }
