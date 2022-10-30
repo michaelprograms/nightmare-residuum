@@ -21,6 +21,7 @@ void create () {
 }
 
 void handle_receive_living_in_env (object living) {
+    ::handle_receive_living_in_env(living);
     if (!living->is_character()) return;
     if (random(2)) return;
     switch(random(4)) {

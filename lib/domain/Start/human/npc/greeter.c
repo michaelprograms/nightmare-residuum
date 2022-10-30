@@ -24,6 +24,7 @@ void create () {
 }
 
 void handle_receive_living_in_env (object living) {
+    ::handle_receive_living_in_env(living);
     if (!living->is_character()) return;
     do_command("say Greetings and salutations, young human. I am R-0111010.");
     story_start(living);

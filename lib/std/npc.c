@@ -2,14 +2,9 @@ inherit STD_LIVING;
 
 nosave private string *__AbilityList;
 nosave private int __AbilityChance;
+nosave private int __Aggressive;
 
 int is_npc () { return 1; }
-
-void create () {
-    ::create();
-    if (!clonep()) return;
-    set_heart_beat(1);
-}
 
 void set_level (int l) {
     int n = l + 1;
@@ -60,6 +55,13 @@ void handle_ability_attack () {
     }
 }
 
+int query_aggressive () {
+    return __Aggressive;
+}
+void set_aggressive (int n) {
+    __Aggressive = n;
+}
+
 nosave private mapping __Inventory = ([ ]);
 void set_inventory (mapping inventory) {
     if (!mapp(inventory)) error("Bad argument 1 to npc->set_inventory");
@@ -79,5 +81,26 @@ void handle_received (object env) {
             do_command(command);
         }
         __Inventory = ([ ]);
+    }
+}
+
+/* ----- applies ----- */
+
+void create () {
+    ::create();
+    if (!clonep()) return;
+    set_heart_beat(1);
+}
+
+void handle_receive_living_in_env (object living) {
+    if (living->is_character() && __Aggressive > 0 && !query_hostile(living)) {
+        if (living->query_stat("charisma") < __Aggressive) {
+            message("action", "%^RED%^BOLD%^You attack " + living->query_cap_name() + "!%^RESET%^\n", this_object());
+            message("action", "%^RED%^BOLD%^" + this_object()->query_cap_name() + " attacks you!%^RESET%^\n", living);
+            message("action", "%^RED%^BOLD%^" + this_object()->query_cap_name() + " attacks " + living->query_cap_name() + "!%^RESET%^\n", environment(), ({ this_object(), living }));
+
+            living->add_hostile(this_object());
+            add_hostile(living);
+        }
     }
 }

@@ -17,4 +17,5 @@ void create() {
     set_species("snail");
     set_ability_list(({ "zap" }));
     set_ability_chance(50);
+    set_aggressive(20);
 }
