@@ -106,7 +106,7 @@ string query_room_map_format () {
         num += (aggressive+passive > 10 ? "+" : aggressive+passive) + "%^RESET%^";
     } else {
         item = sizeof(query_item_contents());
-        if (item) num = "%^MAGENTA%^" + (item > 10 ? "+" : item) + "%^RESET%^";
+        if (item) num = "%^MAGENTA%^BOLD%^" + (item > 10 ? "+" : item) + "%^RESET%^";
     }
 
     return "[" + num + "]";
