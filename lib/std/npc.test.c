@@ -64,6 +64,9 @@ void test_aggressive (function done) {
         assert(__Character->query_level(), "==", 1),
         assert(__Character->query_stat("charisma"), "==", 1),
 
+        assert(testOb->query_hostile(__Character), "==", 0),
+        assert(__Character->query_hostile(testOb), "==", 0),
+
         assert(testOb->handle_move(__Room), "==", 1),
         assert(__Character->handle_move(__Room),  "==", 1),
     }) :));
