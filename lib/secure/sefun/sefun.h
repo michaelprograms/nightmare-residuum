@@ -14,6 +14,7 @@ mixed unguarded (function f);
 mixed *distinct_array (mixed *arr);
 
 /* --- color --- */
+string wrap_ansi (string str, int width);
 int hex_to_int (string base16);
 int *query_random_color ();
 int color_to_sRGB (float n);

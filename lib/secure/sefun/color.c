@@ -1,3 +1,61 @@
+nosave private string *ansiKeys = keys(D_ANSI->query_ansi_term());
+// wrap text, preserving ANSI colors
+string wrap_ansi (string str, int width) {
+    int timeBefore = perf_counter_ns(), timeAfter;
+
+    string *linesANSI, *linesUnknown;
+    string strANSI, strUnknown;
+    int posANSI, posUnknown;
+    int i = 0, n = 0, jagged;
+    int diff;
+
+    string lastWord;
+
+    strUnknown = terminal_colour(str, D_ANSI->query_unknown_term(), width, 0);
+    strUnknown = replace_string(strUnknown, "\e[49;49m", "");
+    strUnknown = replace_string(strUnknown, "\e[0;10m", "");
+    strANSI = terminal_colour(str, D_ANSI->query_ansi_term(), width, 0);
+    strANSI = replace_string(strANSI, "\e[49;49m", "");
+    strANSI = replace_string(strANSI, "\e[0;10m", "");
+
+    linesANSI = explode(strANSI, "\n");
+    linesUnknown = explode(strUnknown, "\n");
+    n = sizeof(linesANSI);
+    for (i = 0; i < n; i ++) {
+        if (i >= sizeof(linesUnknown) || !sizeof(linesUnknown[i])) {
+            linesANSI[i] = sprintf("%' '*s", width, "");
+            continue;
+        }
+
+        diff = width - sizeof(linesUnknown[i]);
+        if (diff > 0) {
+            if (!jagged) {
+                // when difference in length between ANSI and Unknown,
+                // we want to insert padding before the final ANSI tags.
+                // find last word in Unknown to the end (includes spaces)
+                posUnknown = strsrch(linesUnknown[i], " ", -1);
+                lastWord = linesUnknown[i][posUnknown..];
+                posUnknown = strsrch(linesUnknown[i], lastWord, -1);
+                lastWord = linesUnknown[i][posUnknown..];
+                if (posUnknown <= 0) {
+                    linesANSI[i] += sprintf("%' '*s", diff, "");
+                } else {
+                    posANSI = strsrch(linesANSI[i], lastWord, -1);
+                    if (posANSI == -1) {
+                        linesANSI[i] += sprintf("%' '*s", diff, "");
+                    } else {
+                        linesANSI[i] = linesANSI[i][0..posANSI + sizeof(lastWord)-1] + sprintf("%' '*s", diff, "") + linesANSI[i][posANSI + sizeof(lastWord)..];
+                    }
+                }
+            } else {
+                linesANSI[i] += sprintf("%' '*s", diff, "");
+            }
+            diff = 0;
+        }
+    }
+    return implode(linesANSI, "\n");
+}
+
 // Convert a string hex number to an int
 int hex_to_int (string b16) {
     int b10;

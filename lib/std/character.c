@@ -180,13 +180,13 @@ void describe_environment_long () {
         map = env->query_room_exit_map();
     }
     if (!sizeof(map)) {
-        message("room", env->query_short() + "\n", this_object());
+        message("room", "%^BOLD%^" + env->query_short() + "%^RESET%^\n", this_object());
         message("room", env->query_long() + "\n", this_object());
     } else {
         string *long, result = "", line;
         int l;
         mapping b = query_border_charset();
-        long = ({ env->query_short() }) + explode(wrap(env->query_long(), width-17, 0), "\n");
+        long = ({ "%^BOLD%^" + env->query_short() + "%^RESET%^" }) + explode(wrap_ansi(env->query_long(), width-17), "\n");
         for(int i = 0; i < sizeof(map); i ++) {
             map[i] += "%^GREEN%^" + b["v"] + "%^RESET%^ ";
         }
