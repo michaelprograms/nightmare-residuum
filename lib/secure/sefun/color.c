@@ -1,15 +1,8 @@
-nosave private string *ansiKeys = keys(D_ANSI->query_ansi_term());
 // wrap text, preserving ANSI colors
 string wrap_ansi (string str, int width) {
-    int timeBefore = perf_counter_ns(), timeAfter;
-
     string *linesANSI, *linesUnknown;
-    string strANSI, strUnknown;
-    int posANSI, posUnknown;
-    int i = 0, n = 0, jagged;
-    int diff;
-
-    string lastWord;
+    string strANSI, strUnknown, lastWord;
+    int posANSI, posUnknown, i, n, jagged, diff;
 
     strUnknown = terminal_colour(str, D_ANSI->query_unknown_term(), width, 0);
     strUnknown = replace_string(strUnknown, "\e[49;49m", "");
@@ -18,8 +11,8 @@ string wrap_ansi (string str, int width) {
     strANSI = replace_string(strANSI, "\e[49;49m", "");
     strANSI = replace_string(strANSI, "\e[0;10m", "");
 
-    linesANSI = explode(strANSI, "\n");
     linesUnknown = explode(strUnknown, "\n");
+    linesANSI = explode(strANSI, "\n");
     n = sizeof(linesANSI);
     for (i = 0; i < n; i ++) {
         if (i >= sizeof(linesUnknown) || !sizeof(linesUnknown[i])) {
