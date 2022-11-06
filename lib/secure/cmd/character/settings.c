@@ -29,11 +29,11 @@ void command (string input, mapping flags) {
             "columns": 1,
             "align": "center",
         ]);
-        account->set_setting(key, value);
-        if (account->query_setting(key) == value) {
-            header["items"] = ({ "Setting %^BOLD%^" + key + "%^BOLD_OFF%^ to %^BOLD%^" + value + "%^BOLD_OFF%^" });
-        } else {
+        if (member_array(key, keys(account->query_settings())) == -1) {
             header["items"] = ({ "Invalid setting: " + key });
+        } else {
+            account->set_setting(key, value);
+            header["items"] = ({ "Setting %^BOLD%^" + key + "%^BOLD_OFF%^ to %^BOLD%^" + value + "%^BOLD_OFF%^" });
         }
     }
 
