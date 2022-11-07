@@ -42,7 +42,8 @@ int handle_receive (object ob) {
                 // call out to delay fn til after move
                 call_out_walltime(function (object ob, object o) {
                     if (objectp(ob) && objectp(o)) {
-                        return o->handle_receive_living_in_env(ob);
+                        ob->handle_receive_living_in_env(o);
+                        o->handle_receive_living_in_env(ob);
                     }
                 }, 0, ob, o);
             }
@@ -52,7 +53,8 @@ int handle_receive (object ob) {
                 // call out to delay fn til after move
                 call_out_walltime(function (object ob, object o) {
                     if (objectp(ob) && objectp(o)) {
-                        return o->handle_receive_item_in_env(ob);
+                        ob->handle_receive_item_in_env(o);
+                        o->handle_receive_item_in_env(ob);
                     }
                 }, 0, ob, o);
             }
