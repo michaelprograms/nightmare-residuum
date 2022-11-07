@@ -188,7 +188,7 @@ string *query_room_exit_map() {
         pics["e"]["nw"] + " " + pics["e"]["n"] + pics["e"]["u"] + pics["e"]["ne"],
 
         pics["w"]["w"] + (roomOb["w"] ? roomOb["w"]->query_room_map_format() : "   ") + pics["w"]["e"] +
-        pics["x"]["w"] + "[X]" + pics["x"]["e"] +
+        pics["x"]["w"] + "[%^CYAN%^BOLD%^X%^RESET%^]" + pics["x"]["e"] +
         pics["e"]["w"] + (roomOb["e"] ? roomOb["e"]->query_room_map_format() : "   ") + pics["e"]["e"],
 
         pics["w"]["sw"] + pics["w"]["d"] + pics["w"]["s"] + " " + pics["w"]["se"] +
