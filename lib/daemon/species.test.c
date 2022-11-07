@@ -89,5 +89,7 @@ void test_setup_stats () {
         assert($(ob)->query_stat("intelligence"), ">=", 10),
         assert($(ob)->query_stat("agility"), ">=", 10),
         assert($(ob)->query_stat("luck"), ">=", 10),
+
+        assert($(ob)->handle_remove(), "==", 1),
     }) :));
 }
