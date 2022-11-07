@@ -5,7 +5,7 @@ inherit STD_ABILITY;
 void create () {
     ::create();
     set_ability_requirements(([
-        "mentalist": ([
+        "psionist": ([
             "skills": ([
                 "psionic attack": 1,
             ]),

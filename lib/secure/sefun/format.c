@@ -29,7 +29,7 @@ private mixed *query_character_border_colors () {
         case "ranger":
             arr1 = ({ 34, 139, 34 });   // Forest Green
             break;
-        case "mentalist":
+        case "psionist":
             arr1 = ({ 65, 105, 225 });  // Royal Blue
             break;
         case "paladin":

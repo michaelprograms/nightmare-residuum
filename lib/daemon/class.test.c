@@ -18,7 +18,7 @@ void test_query_adjust_vitals () {
         assert(testOb->query_adjust_hp("templar"), "==", 2),
         assert(testOb->query_adjust_hp("scoundrel"), "==", 1),
         assert(testOb->query_adjust_hp("ranger"), "==", 0),
-        assert(testOb->query_adjust_hp("mentalist"), "==", 0),
+        assert(testOb->query_adjust_hp("psionist"), "==", 0),
         assert(testOb->query_adjust_hp("paladin"), "==", 2),
 
         assert(testOb->query_adjust_hp("nonexistant"), "==", 0),
@@ -29,7 +29,7 @@ void test_query_adjust_vitals () {
         assert(testOb->query_adjust_sp("templar"), "==", 2),
         assert(testOb->query_adjust_sp("scoundrel"), "==", 3),
         assert(testOb->query_adjust_sp("ranger"), "==", 2),
-        assert(testOb->query_adjust_sp("mentalist"), "==", 1),
+        assert(testOb->query_adjust_sp("psionist"), "==", 1),
         assert(testOb->query_adjust_sp("paladin"), "==", 0),
 
         assert(testOb->query_adjust_sp("nonexistant"), "==", 0),
@@ -40,7 +40,7 @@ void test_query_adjust_vitals () {
         assert(testOb->query_adjust_mp("templar"), "==", 0),
         assert(testOb->query_adjust_mp("scoundrel"), "==", 0),
         assert(testOb->query_adjust_mp("ranger"), "==", 2),
-        assert(testOb->query_adjust_mp("mentalist"), "==", 3),
+        assert(testOb->query_adjust_mp("psionist"), "==", 3),
         assert(testOb->query_adjust_mp("paladin"), "==", 2),
 
         assert(testOb->query_adjust_mp("nonexistant"), "==", 0),
@@ -55,7 +55,7 @@ void test_query_adjust_stats () {
         assert(testOb->query_adjust_stat("templar", "strength"), "==", 2),
         assert(testOb->query_adjust_stat("scoundrel", "strength"), "==", 1),
         assert(testOb->query_adjust_stat("ranger", "strength"), "==", 1),
-        assert(testOb->query_adjust_stat("mentalist", "strength"), "==", 0),
+        assert(testOb->query_adjust_stat("psionist", "strength"), "==", 0),
         assert(testOb->query_adjust_stat("paladin", "strength"), "==", 2),
 
         assert(testOb->query_adjust_stat("nonexistant", "strength"), "==", 0),
@@ -71,7 +71,7 @@ void test_query_adjust_skills () {
         assert(testOb->query_adjust_skill("templar", "blade attack"), "==", 3),
         assert(testOb->query_adjust_skill("scoundrel", "blade attack"), "==", 2),
         assert(testOb->query_adjust_skill("ranger", "blade attack"), "==", 1),
-        assert(testOb->query_adjust_skill("mentalist", "blade attack"), "==", 0),
+        assert(testOb->query_adjust_skill("psionist", "blade attack"), "==", 0),
         assert(testOb->query_adjust_skill("paladin", "blade attack"), "==", 1),
 
         assert(testOb->query_adjust_skill("nonexistant", "blade attack"), "==", 0),
