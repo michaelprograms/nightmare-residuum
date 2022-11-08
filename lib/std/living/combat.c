@@ -36,7 +36,9 @@ protected void handle_combat () {
     }
     add_sp(-(secure_random(hits) + 1));
 
-    if (!target->query_hostile(this_object())) target->add_hostile(this_object());
+    if (target && !target->query_hostile(this_object())) {
+        target->add_hostile(this_object());
+    }
 }
 
 private void handle_combat_hit (object target, mixed weapon) {
