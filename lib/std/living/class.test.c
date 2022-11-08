@@ -24,8 +24,8 @@ void test_class () {
         testOb->set_class(0),
         assert(testOb->query_class(), "==", "adventurer"),
 
-        testOb->set_class("mentalist"),
-        assert(testOb->query_class(), "==", "mentalist"),
+        testOb->set_class("psionist"),
+        assert(testOb->query_class(), "==", "psionist"),
     }) :));
 }
 
@@ -37,8 +37,8 @@ void test_subclass () {
         assert(testOb->query_subclass(), "==", "none"),
 
         // set class and subclass
-        testOb->set_class("mentalist"),
-        assert(testOb->query_class(), "==", "mentalist"),
+        testOb->set_class("psionist"),
+        assert(testOb->query_class(), "==", "psionist"),
         assert(testOb->query_subclass(), "==", "none"),
         testOb->set_subclass("sorcerer"),
         assert(testOb->query_subclass(), "==", "sorcerer"),
@@ -50,9 +50,9 @@ void test_subclass () {
 
     expect("subclass clears on class change", (: ({
         // set class and subclass
-        testOb->set_class("mentalist"),
+        testOb->set_class("psionist"),
         testOb->set_subclass("sorcerer"),
-        assert(testOb->query_class(), "==", "mentalist"),
+        assert(testOb->query_class(), "==", "psionist"),
         assert(testOb->query_subclass(), "==", "sorcerer"),
         // class and subclass clears
         testOb->set_class(0),
