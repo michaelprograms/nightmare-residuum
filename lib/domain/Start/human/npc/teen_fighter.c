@@ -11,7 +11,8 @@ void create () {
     set_long("A teenager training to fight with wooden swords.");
     set_level(5);
     set_species("human");
-    set_ability_list(({ "stab", "bonk", }));
+    set_class("warrior");
+    set_ability_list(({ "slash", }));
     set_ability_chance(25);
 
     set_inventory(([

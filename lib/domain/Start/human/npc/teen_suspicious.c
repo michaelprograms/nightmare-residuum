@@ -11,6 +11,7 @@ void create () {
     set_long("A natural born teenager who stares hard back at you, with a fierce attitude set upon " + possessive(this_object()) + " face.");
     set_level(5);
     set_species("human");
+    set_class("scoundrel");
     set_ability_list(({ "stab" }));
     set_ability_chance(25);
 
