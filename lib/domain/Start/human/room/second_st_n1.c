@@ -17,4 +17,7 @@ void create () {
         "street": "A street sign is labeled N. Second St.",
         "building": "The building looks to be a psionist hall.",
     ]));
+    set_reset(([
+        HUMAN_NPC + "teen_meditate.c": 2,
+    ]));
 }
