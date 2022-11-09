@@ -49,7 +49,11 @@ void set_ability_chance (int chance) {
 }
 
 void handle_ability_attack () {
-    if (this_object()->query_ability_chance() > 1+random(100) && sizeof(query_ability_list())) {
+    if (!sizeof(query_ability_list())) {
+        return;
+    }
+
+    if (query_ability_chance() > 1+random(100)) {
         string ability = element_of(query_ability_list());
         this_object()->do_command(ability);
     }
