@@ -247,11 +247,11 @@ private void describe_environment_exits () {
 }
 
 private void describe_environment_living_contents () {
-    object env = environment();
+    object env = environment(), *contents = env->query_living_contents();
     mixed *list;
     string *shorts, conjunctions;
 
-    list = filter_array(env->query_living_contents(), (: $1 != this_object() :));
+    list = filter_array(contents, (: $1 != this_object() :));
     list = sort_array(list, function (object a, object b) {
         if (a->is_character()) {
             if (b->is_character()) return strcmp(a->query_cap_name(), b->query_cap_name());
@@ -286,22 +286,22 @@ private void describe_environment_living_contents () {
         shorts[0] = capitalize(shorts[0]);
         shorts = map_array(shorts, (: "%^BOLD%^" + $1 + "%^BOLD_OFF%^DEFAULT%^" :));
         conjunctions = conjunction(shorts);
-        message("room living contents", conjunctions + " " + (regexp(conjunctions, " and ") ? "are" : "is") + " here.\n\n", this_object());
+        message("room living contents", conjunctions + " " + (sizeof(contents) > 1 ? "are" : "is") + " here.\n\n", this_object());
     }
 }
 
 private void describe_environment_item_contents () {
-    object env = environment();
+    object env = environment(), *contents = env->query_item_contents();
     mixed *list;
     string *shorts, conjunctions;
 
-    list = unique_array(env->query_item_contents(), (: $1->query_short("%^MAGENTA%^BOLD%^") :));
+    list = unique_array(contents, (: $1->query_short("%^MAGENTA%^BOLD%^") :));
     if (sizeof(list)) {
         shorts = sort_array(map_array(list, (: consolidate(sizeof($1), $1[0]->query_short("%^MAGENTA%^BOLD%^")) :)), 1);
         shorts[0] = capitalize(shorts[0]);
         shorts = map_array(shorts, (: "%^BOLD%^" + $1 + "%^BOLD_OFF%^DEFAULT%^" :));
         conjunctions = conjunction(shorts);
-        message("room item contents", conjunctions + " " + (regexp(conjunctions, " and ") ? "are" : "is") + " here.\n", this_object());
+        message("room item contents", conjunctions + " " + (sizeof(contents) > 1 ? "are" : "is") + " here.\n", this_object());
     }
 }
 
