@@ -58,3 +58,7 @@ mixed direct_unwield_obj (mixed args...) {
     object po = previous_object();
     return environment() == po && __Wielder == po && member_array(this_object(), po->query_wielded_weapons()) > -1;
 }
+
+mixed direct_drop_obj (mixed args...) {
+    return (environment() == previous_object()) && !__Wielder;
+}

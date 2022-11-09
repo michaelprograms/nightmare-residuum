@@ -57,3 +57,7 @@ mixed direct_unwear_obj (mixed args...) {
     object po = previous_object();
     return environment() == po && __Worn == po && member_array(this_object(), po->query_all_armor()) > -1;
 }
+
+mixed direct_drop_obj (mixed args...) {
+    return (environment() == previous_object()) && !__Worn;
+}
