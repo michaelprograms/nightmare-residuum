@@ -34,4 +34,10 @@ void setup_body (object ob) {
         }
         coins->handle_move(this_object());
     }
+    foreach (object a in ob->query_all_armor()) {
+        a->handle_move(this_object());
+    }
+    foreach (object w in ob->query_wielded_weapons()) {
+        w->handle_move(this_object());
+    }
 }
