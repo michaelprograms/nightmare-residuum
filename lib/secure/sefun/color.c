@@ -110,6 +110,7 @@ float color_lerp (float color1, float color2, float ratio) {
 }
 
 // Generate a color gradient between 'color1' and 'color2' of length 'steps'
+// based upon https://stackoverflow.com/questions/22607043/color-gradient-algorithm
 string *color_gradient (int *color1, int *color2, int steps) {
     string *gradient = ({ });
     float *c1, *c2, *b;
