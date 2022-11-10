@@ -26,5 +26,6 @@ void create () {
         HUMAN_MONSTER + "squirrel.c": !random(3),
         HUMAN_MONSTER + "termite.c": !random(3),
         HUMAN_MONSTER + "wasp.c": !random(3),
+        HUMAN_MONSTER + "pigeon.c": !random(2),
     ]));
 }
