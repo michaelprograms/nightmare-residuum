@@ -58,7 +58,10 @@ void command (string input, mapping flags) {
         path = sanitize_path(input);
     }
 
-    if (file_size(path) == -2) {
+    if (file_size(path) == -1) {
+        message("action", path + ": directory does not exist.\n", this_character());
+        return;
+    } else if (file_size(path) == -2) {
         if (path[<1] != '/') {
             path += "/";
         }
@@ -72,7 +75,7 @@ void command (string input, mapping flags) {
         files = filter(files, (: $1[0][0] != '.' :));
     }
 
-    message("action", path + ":\n" + (!sizeof(files) ? "Directory is empty.\n\n" : ""), this_character());
+    message("action", path + ":" + (!sizeof(files) ? " directory is empty.\n\n" : "\n"), this_character());
     if (flags["l"]) {
         output_long(dir, files);
     } else {
