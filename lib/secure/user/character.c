@@ -40,9 +40,9 @@ nomask private void character_enter (int newbie) {
     remove_call_out();
 
     // Check for existing character
-    chars = filter_array(children(STD_CHARACTER) - ({ __Character }), (: $1 && $1->query_key_name() == __Character->query_key_name() && $1->query_user() :));
+    chars = filter_array(children(STD_CHARACTER) - ({ __Character }), (: $1 && $1->query_key_name() == __Character->query_key_name() :));
     if (sizeof(chars) > 0 && (char = chars[0])) {
-        if (interactive(char->query_user())) {
+        if (char->query_user() && interactive(char->query_user())) {
             write(char->query_cap_name()+" is connected and interactive.\n");
             account_input(STATE_CHARACTER_OVERRIDE);
             return;
@@ -57,7 +57,6 @@ nomask private void character_enter (int newbie) {
         }
     } else { // fresh login
         __Character->setup_character(); // this calls restore_data/save_data
-
         if (newbie) {
             if (__Character->query_species() == "human") {
                 __Character->set_environment_path("/domain/Start/human/room/enter.c");
