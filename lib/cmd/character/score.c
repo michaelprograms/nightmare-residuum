@@ -68,6 +68,20 @@ void command (string input, mapping flags) {
                 "columns": 7,
                 "align": "center",
             ]),
+            ([
+                "header": ({
+                    "HP",
+                    "SP",
+                    "MP",
+                }),
+                "items": ({
+                    target->query_hp() + " / " + target->query_max_hp(),
+                    target->query_sp() + " / " + target->query_max_sp(),
+                    target->query_mp() + " / " + target->query_max_mp(),
+                }),
+                "columns": 3,
+                "align": "center",
+            ]),
         }),
         "footer": ([
             "items": ({
