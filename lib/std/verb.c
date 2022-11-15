@@ -3,8 +3,13 @@
 inherit M_CLEAN;
 
 nosave private int __Requirements = REQUIREMENT_NONE;
-nosave private string __Verb = split_path(file_name())[1];
+nosave private string __Verb;
 nosave private string __HelpText;
+nosave private string __Syntax;
+
+string query_name () {
+    return __Verb;
+}
 
 protected varargs void add_rules (mixed *rules, mixed *syns) {
     foreach (string rule in rules) {
@@ -40,6 +45,15 @@ mixed check_disable () {;
     }
 }
 
+/* ----- syntax ----- */
+
+void set_syntax (string syntax) {
+    __Syntax = format_syntax(syntax);
+}
+string query_syntax () {
+    return __Syntax;
+}
+
 /* ----- help ----- */
 
 string query_help_text () {
@@ -50,10 +64,21 @@ void set_help_text (string str) {
 
     __HelpText = str;
 }
+string help (object char) {
+    string result;
+
+    result = "\n%^CYAN%^BOLD%^" + sprintf("%-12s", "Syntax") + "%^RESET%^\n" + query_syntax() + "\n";
+
+    if (sizeof(__HelpText) > 0) {
+        result += "\n%^CYAN%^BOLD%^Description%^RESET%^\n" + __HelpText + "\n";
+    }
+    return result;
+}
 
 /* ----- applies ----- */
 
 void create () {
+    __Verb = split_path(base_name())[1];
     set_no_clean(1);
     parse_init();
 }

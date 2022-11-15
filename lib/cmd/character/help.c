@@ -16,6 +16,13 @@ void command (string input, mapping flags) {
             result = call_other(path, "help", this_character());
         }
     }
+    if (path = D_COMMAND->query_verb(input)) {
+        path += "/" + input + ".c";
+        file = find_object(path) || load_object(path);
+        if (function_exists("help", file)) {
+            result = call_other(path, "help", this_character());
+        }
+    }
 
     if (sizeof(result)) {
         items = explode(result, "\n");

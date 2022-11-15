@@ -2,24 +2,19 @@
 
 inherit STD_VERB;
 
-nosave private string __Name;
 nosave private mapping __Reqs;
 nosave private mapping __SkillPowers;
 nosave private mapping __Weapons = ([ ]);
 
 void create () {
     ::create();
-    __Name = split_path(base_name())[1];
     __Reqs = ([ ]);
     __SkillPowers = ([ ]);
-    if (__Name != "ability") {
+    if (query_name() != "ability") {
         add_rules(({ "", "LIV", }));
     }
     set_requirements(REQUIREMENT_BUSY | REQUIREMENT_DISABLE);
-}
-
-string query_name () {
-    return __Name;
+    set_syntax(query_name()+" ([target])");
 }
 
 /* ----- ability requirements ----- */
@@ -296,13 +291,13 @@ private void handle_ability_use (object source, object target) {
     // verify vitals can pay cost
     if (cost["sp"] > 0) {
         if (source->query_sp() < cost["sp"]) {
-            message("action", "You are too tired to " + __Name + ".\n", source);
+            message("action", "You are too tired to " + query_name() + ".\n", source);
             return;
         }
     }
     if (cost["mp"]) {
         if (source->query_mp() < cost["mp"]) {
-            message("action", "You are too drained to " + __Name + ".\n", source);
+            message("action", "You are too drained to " + query_name() + ".\n", source);
             return;
         }
     }
@@ -310,13 +305,13 @@ private void handle_ability_use (object source, object target) {
     // check source vitals
     if (cost["sp"] > 0) {
         if (source->query_sp() < cost["sp"]) {
-            message("action", "You are too drained to " + __Name + ".\n", source);
+            message("action", "You are too drained to " + query_name() + ".\n", source);
             return;
         }
     }
     if (cost["mp"]) {
         if (source->query_mp() < cost["mp"]) {
-            message("action", "You are too tired to " + __Name + ".\n", source);
+            message("action", "You are too tired to " + query_name() + ".\n", source);
             return;
         }
     }
@@ -370,8 +365,10 @@ private void handle_ability_use (object source, object target) {
 /* ----- help ----- */
 
 string help (object char) {
-    string result = "", *tmp, helpText;
+    string result, *tmp;
     int n;
+
+    result = ::help(char);
 
     if (sizeof(__Reqs)) {
         foreach (string key,mapping value in __Reqs) {
@@ -402,11 +399,6 @@ string help (object char) {
         }
     }
 
-    result += "\n%^CYAN%^BOLD%^" + sprintf("%-12s", "Syntax") + "%^RESET%^\n" + format_syntax(__Name + " ([target])") + "\n";
-
-    if (helpText = query_help_text()) {
-        result += "\n%^CYAN%^BOLD%^Description%^RESET%^\n" + helpText + "\n";
-    }
     return result;
 }
 

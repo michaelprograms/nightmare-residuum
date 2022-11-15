@@ -15,6 +15,14 @@ object query_character () {
     return __MockCharacter;
 }
 
+void test_name () {
+    expect_function("query_name", testOb);
+
+    expect("handles verb name", (: ({
+        assert(testOb->query_name(), "==", "verb"),
+    }) :));
+}
+
 void test_requirements () {
     expect_function("set_requirements", testOb);
     expect_function("query_requirements", testOb);

@@ -3,6 +3,8 @@ inherit STD_VERB;
 void create () {
     verb::create();
     add_rules(({ "", "STR" }));
+    set_syntax("go [direction]");
+    set_help_text("Your character will attempt moving to the provided direction.");
 }
 
 mixed can_go () {
