@@ -3,6 +3,8 @@ inherit STD_VERB;
 void create () {
     verb::create();
     add_rules(({ "", "LVS", }), ({ "kill", "battle" }));
+    set_syntax("attack [targets]");
+    set_help_text("Your character will attempt to attack the provided targets.");
 }
 
 mixed can_attack () {

@@ -3,6 +3,8 @@ inherit STD_VERB;
 void create () {
     verb::create();
     add_rules(({ "", "OBS to LIV", "WRD WRD to LIV" }));
+    set_syntax("give [item] to [target]");
+    set_help_text("Your character will attempt to give the provided item to the provided target.");
 }
 
 mixed can_give () {

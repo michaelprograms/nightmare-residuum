@@ -3,6 +3,8 @@ inherit STD_VERB;
 void create () {
     verb::create();
     add_rules(({ "", "STR", }));
+    set_syntax("listen ([sound])");
+    set_help_text("Your character will attempt to listen to the provided sound.");
 }
 
 /* ----- rule: "" ----- */

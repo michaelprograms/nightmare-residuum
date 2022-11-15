@@ -3,6 +3,8 @@ inherit STD_VERB;
 void create () {
     verb::create();
     add_rules(({ "", "STR" }));
+    set_syntax("say [message]");
+    set_help_text("Your character will attempt to speak the provided message.");
 }
 
 int can_say () { return 1; }

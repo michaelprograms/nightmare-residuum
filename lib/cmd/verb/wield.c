@@ -6,6 +6,8 @@ void create () {
     verb::create();
     add_rules(({ "", "OBJ", "OBS", }));
     set_requirements(REQUIREMENT_BUSY | REQUIREMENT_DISABLE);
+    set_syntax("wield [item]");
+    set_help_text("Your character will attempt to wield the provided item.");
 }
 
 mixed can_wield () {

@@ -6,6 +6,8 @@ void create () {
     verb::create();
     add_rules(({ "", "STR from OBJ", "from OBJ", "STR", }));
     set_requirements(REQUIREMENT_BUSY | REQUIREMENT_DISABLE);
+    set_syntax("list ([item]) (from [target])");
+    set_help_text("Your character will attempt to list the provided item from the provided target.");
 }
 
 /* ----- STR from OBJ ----- */

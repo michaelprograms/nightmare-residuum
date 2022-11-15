@@ -3,6 +3,8 @@ inherit STD_VERB;
 void create () {
     verb::create();
     add_rules(({ "", "OBJ" }));
+    set_syntax("pick ([item])");
+    set_help_text("Your character will attempt to pick the provided item.");
 }
 
 int can_pick () { return 1; }

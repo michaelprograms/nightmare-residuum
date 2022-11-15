@@ -3,6 +3,8 @@ inherit STD_VERB;
 void create () {
     verb::create();
     add_rules(({ "", "OBS", "OBJ from OBJ", }));
+    set_syntax("get [item] (from [container])");
+    set_help_text("Your character will attempt to get the provided input.");
 }
 
 /* ----- rule: "" ----- */

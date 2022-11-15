@@ -3,6 +3,8 @@ inherit STD_VERB;
 void create () {
     verb::create();
     add_rules(({ "", "OBS", "WRD WRD", }));
+    set_syntax("drop [item]");
+    set_help_text("Your character will attempt to drop the provided item.");
 }
 
 mixed can_drop () {

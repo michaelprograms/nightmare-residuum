@@ -6,6 +6,8 @@ void create () {
     verb::create();
     add_rules(({ "", "STR from OBJ", "STR", }));
     set_requirements(REQUIREMENT_BUSY | REQUIREMENT_DISABLE);
+    set_syntax("buy [item]");
+    set_help_text("Your character will attempt to buy the provided item.");
 }
 
 /* ----- STR from OBJ ----- */

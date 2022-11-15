@@ -3,6 +3,8 @@ inherit STD_VERB;
 void create () {
     verb::create();
     add_rules(({ "", "OBJ in OBJ", }));
+    set_syntax("put [item] in [container]");
+    set_help_text("Your character will attempt to put the provided item into the provided container.");
 }
 
 /* ----- rule: "" ----- */
