@@ -127,7 +127,7 @@ nosave private mapping __Class = ([
             "ranged defense": 3,
         ]),
     ]),
-    "psionist": ([     // int
+    "psionist": ([      // int
         "vitals": ([
             "hp": 0,
             "sp": 1,
