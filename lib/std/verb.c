@@ -47,8 +47,9 @@ mixed check_disable () {;
 
 /* ----- syntax ----- */
 
-void set_syntax (string syntax) {
-    __Syntax = format_syntax(syntax);
+void set_syntax (string str) {
+    if (!sizeof(str)) error("Bad argument 1 to verb->set_syntax");
+    __Syntax = format_syntax(str);
 }
 string query_syntax () {
     return __Syntax;
@@ -60,7 +61,7 @@ string query_help_text () {
     return __HelpText;
 }
 void set_help_text (string str) {
-    if (undefinedp(str) || !stringp(str)) error("Bad argument 1 to verb->set_help_text");
+    if (!sizeof(str)) error("Bad argument 1 to verb->set_help_text");
 
     __HelpText = str;
 }

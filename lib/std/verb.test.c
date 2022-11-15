@@ -110,3 +110,27 @@ void test_help_text () {
         assert((: testOb->set_help_text((: 1 :)) :), "catch", "*Bad argument 1 to verb->set_help_text\n"),
     }) :));
 }
+
+void test_syntax () {
+    expect_function("query_syntax", testOb);
+    expect_function("set_syntax", testOb);
+
+    expect("handles setting and querying syntax", (: ({
+        assert(testOb->query_syntax(), "==", UNDEFINED),
+
+        testOb->set_syntax(testOb->query_name()),
+        assert(testOb->query_syntax(), "==", "<" + testOb->query_name() + ">"),
+
+        testOb->set_syntax(testOb->query_name() + " [target]"),
+        assert(testOb->query_syntax(), "==", "<" + testOb->query_name() + " [target]>"),
+    }) :));
+
+    expect("set_syntax handles invalid argument 1", (: ({
+        assert((: testOb->set_syntax(this_object()) :), "catch", "*Bad argument 1 to verb->set_syntax\n"),
+        assert((: testOb->set_syntax(1.0) :), "catch", "*Bad argument 1 to verb->set_syntax\n"),
+        assert((: testOb->set_syntax(1) :), "catch", "*Bad argument 1 to verb->set_syntax\n"),
+        assert((: testOb->set_syntax(({})) :), "catch", "*Bad argument 1 to verb->set_syntax\n"),
+        assert((: testOb->set_syntax(([])) :), "catch", "*Bad argument 1 to verb->set_syntax\n"),
+        assert((: testOb->set_syntax((: 1 :)) :), "catch", "*Bad argument 1 to verb->set_syntax\n"),
+    }) :));
+}
