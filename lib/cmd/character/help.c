@@ -9,14 +9,7 @@ void command (string input, mapping flags) {
         return;
     }
 
-    if (path = D_COMMAND->query_ability(input)) {
-        path += "/" + input + ".c";
-        file = find_object(path) || load_object(path);
-        if (function_exists("help", file)) {
-            result = call_other(path, "help", this_character());
-        }
-    }
-    if (path = D_COMMAND->query_verb(input)) {
+    if ((path = D_COMMAND->query_verb(input)) || (path = D_COMMAND->query_ability(input))) {
         path += "/" + input + ".c";
         file = find_object(path) || load_object(path);
         if (function_exists("help", file)) {
