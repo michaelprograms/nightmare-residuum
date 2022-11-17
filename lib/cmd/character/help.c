@@ -1,3 +1,10 @@
+inherit STD_COMMAND;
+
+void create () {
+    set_syntax("help [command]");
+    set_help_text("The help command is used to view more information about a command.");
+}
+
 void command (string input, mapping flags) {
     string path;
     object file;
@@ -9,7 +16,11 @@ void command (string input, mapping flags) {
         return;
     }
 
-    if ((path = D_COMMAND->query_verb(input)) || (path = D_COMMAND->query_ability(input))) {
+    if (
+        (path = D_COMMAND->query_command(input)) ||
+        (path = D_COMMAND->query_verb(input)) ||
+        (path = D_COMMAND->query_ability(input))
+    ) {
         path += "/" + input + ".c";
         file = find_object(path) || load_object(path);
         if (function_exists("help", file)) {

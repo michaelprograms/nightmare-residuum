@@ -2,7 +2,6 @@
 #define __GLOBAL_H__
 
 // std
-#define STD_ABILITY     "/std/ability.c"
 #define STD_ACCOUNT     "/std/account.c"
 #define STD_CHARACTER   "/std/character.c"
 #define STD_ITEM        "/std/item.c"
@@ -12,6 +11,10 @@
 #define STD_OBJECT      "/std/object.c"
 #define STD_ROOM        "/std/room.c"
 #define STD_STORAGE     "/std/item/storage.c"
+
+// std actions
+#define STD_ABILITY     "/std/ability.c"
+#define STD_COMMAND     "/std/command.c"
 #define STD_VERB        "/std/verb.c"
 
 // std item inheritables

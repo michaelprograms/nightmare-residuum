@@ -69,7 +69,7 @@ string query_ability (string ability) {
 }
 string query_command (string command) {
     if (__Commands[command]) {
-        if (!previous_object()->query_character()->query_immortal() && regexp(__Commands[command][0], "/immortal")) return 0;
+        if (!this_user()->query_character()->query_immortal() && regexp(__Commands[command][0], "/immortal")) return 0;
         return __Commands[command][0];
     } else return 0;
 }
