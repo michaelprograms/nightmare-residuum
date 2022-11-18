@@ -1,11 +1,10 @@
 #include <verb.h>
 
+inherit STD_COMMAND;
 inherit M_CLEAN;
 
 nosave private int __Requirements = REQUIREMENT_NONE;
 nosave private string __Verb;
-nosave private string __HelpText;
-nosave private string __Syntax;
 
 string query_name () {
     return __Verb;
@@ -43,37 +42,6 @@ mixed check_disable () {;
     } else {
         return 1;
     }
-}
-
-/* ----- syntax ----- */
-
-void set_syntax (string str) {
-    if (!sizeof(str)) error("Bad argument 1 to verb->set_syntax");
-    __Syntax = format_syntax(str);
-}
-string query_syntax () {
-    return __Syntax;
-}
-
-/* ----- help ----- */
-
-string query_help_text () {
-    return __HelpText;
-}
-void set_help_text (string str) {
-    if (!sizeof(str)) error("Bad argument 1 to verb->set_help_text");
-
-    __HelpText = str;
-}
-string help (object char) {
-    string result;
-
-    result = "\n%^CYAN%^BOLD%^" + sprintf("%-12s", "Syntax") + "%^RESET%^\n" + query_syntax() + "\n";
-
-    if (sizeof(__HelpText) > 0) {
-        result += "\n%^CYAN%^BOLD%^Description%^RESET%^\n" + __HelpText + "\n";
-    }
-    return result;
 }
 
 /* ----- applies ----- */

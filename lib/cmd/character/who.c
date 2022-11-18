@@ -1,3 +1,10 @@
+inherit STD_COMMAND;
+
+void create () {
+    set_syntax("who");
+    set_help_text("The who command is used to view connected characters.");
+}
+
 void command (string input, mapping flags) {
     mapping data = ([
         "title": "WHO",

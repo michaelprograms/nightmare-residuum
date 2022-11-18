@@ -1,3 +1,10 @@
+inherit STD_COMMAND;
+
+void create () {
+    set_syntax("body");
+    set_help_text("The body command is used to view the limbs of your character's body.");
+}
+
 void command (string input, mapping flags) {
     object tc = this_character(), target = tc;
     string *border, *items = ({ }), *limbs, *severedLimbs;

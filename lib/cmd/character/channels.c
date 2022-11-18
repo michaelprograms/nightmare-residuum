@@ -1,3 +1,10 @@
+inherit STD_COMMAND;
+
+void create () {
+    set_syntax("channels");
+    set_help_text("The channels command is used to view which communication channels you have access to and their blocked status.");
+}
+
 void command (string input, mapping flags) {
     object tc = this_character(), target = tc;
     string *border, subtitle, *body = ({}), *list;

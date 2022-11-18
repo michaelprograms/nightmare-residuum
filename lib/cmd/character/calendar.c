@@ -1,3 +1,10 @@
+inherit STD_COMMAND;
+
+void create () {
+    set_syntax("calendar");
+    set_help_text("The calendar command is used to view the date and time for your character's current location.");
+}
+
 void command (string input, mapping flags) {
     string *border, *body = ({ });
     mapping a, footer;

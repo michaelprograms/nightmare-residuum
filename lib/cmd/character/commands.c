@@ -1,3 +1,10 @@
+inherit STD_COMMAND;
+
+void create () {
+    set_syntax("commands");
+    set_help_text("The commands command is used to view the list of possible actions your character can make.");
+}
+
 void command (string input, mapping flags) {
     object tc = this_character();
     mapping actions = ([ ]);
