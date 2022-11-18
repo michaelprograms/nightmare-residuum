@@ -1,3 +1,10 @@
+inherit STD_COMMAND;
+
+void create () {
+    set_syntax("skills");
+    set_help_text("The skills command is used to view the skillsets of your character.");
+}
+
 void command (string input, mapping flags) {
     object tc = this_character(), target = tc;
     string *skills;

@@ -1,3 +1,10 @@
+inherit STD_COMMAND;
+
+void create () {
+    set_syntax("tell");
+    set_help_text("The tell command is used to send a message from your character to another connected player.");
+}
+
 void command (string input, mapping flags) {
     object tc = this_character(), target;
     string name, msg, myMsg, yourMsg;

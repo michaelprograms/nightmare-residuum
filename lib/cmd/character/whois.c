@@ -1,3 +1,10 @@
+inherit STD_COMMAND;
+
+void create () {
+    set_syntax("whois");
+    set_help_text("The whois command is used to view the information about a character, even if they are disconnected.");
+}
+
 void command (string input, mapping flags) {
     object tc = this_character();
     string *border;

@@ -1,3 +1,10 @@
+inherit STD_COMMAND;
+
+void create () {
+    set_syntax("time");
+    set_help_text("The time command is used to view the current, local, server, and up time.");
+}
+
 void command (string input, mapping flags) {
     string *border, localtime, localdate;
     mapping a;
@@ -26,7 +33,7 @@ void command (string input, mapping flags) {
             ]),
         }),
         "footer": ([
-            "header": ({ "Servertime", "Uptime" }),
+            "header": ({ "Server Time", "Up Time" }),
             "items": ({
                 ctime(time()),
                 time_from_seconds(uptime()),

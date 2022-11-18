@@ -1,3 +1,10 @@
+inherit STD_COMMAND;
+
+void create () {
+    set_syntax("last [tell|say|(channel)]");
+    set_help_text("The last command is used to view the history of your character's tells, says, or a channel your character has access to.");
+}
+
 void command (string input, mapping flags) {
     object tc = this_character();
     string *msgs;
