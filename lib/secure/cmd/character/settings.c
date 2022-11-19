@@ -1,3 +1,10 @@
+inherit STD_COMMAND;
+
+void create () {
+    set_syntax("settings ([setting] [value])");
+    set_help_text("The settings command is used to view your account's settings.");
+}
+
 void command (string input, mapping flags) {
     object tc = this_character(), target = tc, account;
     string *border, *list = ({ });
