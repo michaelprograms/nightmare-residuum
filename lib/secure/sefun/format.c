@@ -472,7 +472,7 @@ string *format_border (mapping data) {
             }
             // Body child lines
             format = sizeof(child["items"]) > 0 ? format_page(child["items"], child["columns"], 4, (child["align"] == "center")) : "";
-            foreach (string l in explode(format, "\n")) {
+            foreach (string l in explode(format, "\n") - ({""})) {
                 line = "   " + l + "   ";
                 linesBody += ({ line });
             }
