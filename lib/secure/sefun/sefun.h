@@ -77,9 +77,11 @@ string sanitize_name (string name);
 varargs string time_ago (int timestamp, int granularity);
 
 /* --- user --- */
+object this_user ();
 object this_account ();
 object this_character ();
 object find_character (string name);
 object *characters ();
+string query_account_setting (string setting);
 
 #endif /* SEFUN_H */

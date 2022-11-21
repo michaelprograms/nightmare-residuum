@@ -112,6 +112,7 @@ void test_format_syntax () {
     __MockAccount = new(STD_ACCOUNT);
     __MockAccount->set_setting("ansi", "off");
     expect("format_syntax handles syntaxes with ANSI off", (: ({
+        assert(__MockAccount->query_setting("ansi"), "==", "off"),
         assert(testOb->format_syntax("syntax"), "==", "<syntax>"),
         assert(testOb->format_syntax("verb [target] ([limb]) (with [thing])"), "==", "<verb [target] ([limb]) (with [thing])>"),
     }) :));

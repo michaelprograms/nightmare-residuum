@@ -1,7 +1,14 @@
 string sanitize_name (string name);
 
+object this_user () {
+    object po = previous_object(-1)[<1];
+    if (strsrch(D_TEST, base_name(po)) == 0) po = previous_object(-1)[<2];
+    return po;
+}
+
 object this_account () {
     object a;
+
     if (this_user() && (a = this_user()->query_account())) return a;
     else return 0;
 }
@@ -21,4 +28,12 @@ object find_character (string name) {
 
 object *characters () {
     return map(filter(users() || ({}), (: $1 && interactive($1) && $1->query_character() :)) || ({}), (: $1->query_character() :)) || ({});
+}
+
+string query_account_setting (string setting) {
+    object account;
+
+    if (!(account = this_account())) return 0;
+
+    return account->query_setting(setting);
 }

@@ -1,19 +1,5 @@
-private object query_previous_object () {
-    object po = previous_object(-1)[<1];
-    if (strsrch(D_TEST, base_name(po)) == 0) po = previous_object(-1)[<2];
-    return po;
-}
-
-private string query_account_setting (string setting) {
-    object account;
-
-    if (!(account = query_previous_object()->query_account())) return 0;
-
-    return account->query_setting(setting);
-}
-
 private mixed *query_character_border_colors () {
-    object po = query_previous_object()->query_character();
+    object po = SEFUN->this_character();
     int *arr1, *arr2 = ({ 192, 192, 192 });
 
     switch (po->query_class()) {
@@ -51,7 +37,7 @@ varargs string format_page (string *items, int columns, int pad, int center) {
     if (!arrayp(items) || !sizeof(items)) error("Bad argument 1 to format->format_page");
 
     if (!columns) columns = 2;
-    width = to_int(query_account_setting("width")) - pad * 2;
+    width = to_int(SEFUN->query_account_setting("width")) - pad * 2;
     w = width / columns; // width of column
     n = sizeof(items); // number of columns
     r = width - (w * columns); // remainder
@@ -107,7 +93,7 @@ string format_syntax (string text) {
 
     if (!regexp(s, "^<")) s = "<" + s;
     if (!regexp(s, ">$")) s = s + ">";
-    if (query_account_setting("ansi") == "on") {
+    if (SEFUN->query_account_setting("ansi") == "on") {
         s = replace_string(s, "<", "%^CYAN%^<");
         s = replace_string(s, "[", "%^BOLD%^[%^BOLD_OFF%^");
         s = replace_string(s, "]", "%^BOLD%^]%^BOLD_OFF%^");
@@ -260,7 +246,7 @@ string format_integer (int num) {
 // ]);
 mapping query_border_charset () {
     string type;
-    if (query_account_setting("screenreader") == "on") {
+    if (SEFUN->query_account_setting("screenreader") == "on") {
         type = "screenreader";
     } else {
         type = query_encoding();
@@ -348,11 +334,11 @@ string *format_border (mapping data) {
     }
 
     b = query_border_charset();
-    ansi = query_account_setting("ansi") == "on";
-    width = to_int(query_account_setting("width"));
+    ansi = SEFUN->query_account_setting("ansi") == "on";
+    width = to_int(SEFUN->query_account_setting("width"));
     n = 0;
 
-    if (ansi && query_account_setting("screenreader") != "on") {
+    if (ansi && SEFUN->query_account_setting("screenreader") != "on") {
         borderColors = query_character_border_colors();
         colors = SEFUN->color_gradient(borderColors[0], borderColors[1], width);
         colors2 = ({ });
@@ -480,7 +466,7 @@ string *format_border (mapping data) {
             line = sprintf("%' '*s", width-2, "");
             linesBody += ({ line });
         }
-        if (ansi && query_account_setting("screenreader") != "on") {
+        if (ansi && SEFUN->query_account_setting("screenreader") != "on") {
             colorsBody = SEFUN->color_gradient(borderColors[0], borderColors[1], sizeof(linesBody) + 2);
             colorsBody = colorsBody[1..<2];
             colorsBody2 = ({ });
