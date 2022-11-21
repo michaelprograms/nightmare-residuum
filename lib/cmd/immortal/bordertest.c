@@ -1,8 +1,6 @@
 void command (string input, mapping flags) {
     string *border, *lines = ({ });
 
-    // Title
-
     border = format_border(([
     ]));
     lines += border;
@@ -71,6 +69,19 @@ void command (string input, mapping flags) {
             "items": ({ "Footer Item 1", "Footer Item 2", "Footer Item 3", "Footer Item 4", }),
             "columns": 4,
             "align": "center",
+        ]),
+    ]));
+    lines += border;
+
+    border = format_border(([
+        "body": ([
+            "items": ({
+                "Test test test test test test test test test test test test test test test.",
+                "",
+                "Test.",
+            }),
+            "align": "left",
+            "columns": 1,
         ]),
     ]));
     lines += border;
