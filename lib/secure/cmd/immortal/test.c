@@ -1,3 +1,10 @@
+inherit STD_COMMAND;
+
+void create () {
+    set_syntax("test [file]");
+    set_help_text("The test command is used to run the tests of a file, if they exist.");
+}
+
 nosave private int testStart;
 void done (mapping results) {
     D_TEST->display_results(results, testStart);

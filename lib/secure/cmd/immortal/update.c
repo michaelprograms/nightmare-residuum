@@ -1,3 +1,10 @@
+inherit STD_COMMAND;
+
+void create () {
+    set_syntax("update [file]");
+    set_help_text("The update command is used to destruct and reload a file to the latest copy, and run tests of the file, if they exist.");
+}
+
 nosave private int testStart;
 void done (mapping results) {
     D_TEST->display_results(results, testStart);

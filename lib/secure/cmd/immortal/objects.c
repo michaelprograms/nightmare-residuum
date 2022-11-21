@@ -1,3 +1,10 @@
+inherit STD_COMMAND;
+
+void create () {
+    set_syntax("objects");
+    set_help_text("The objects command is used to view the entire list of objects.");
+}
+
 string *sort_instance (string *list) {
     return sort_array(list, (: explode($1, "#")[<1] > explode($2, "#")[<1] :));
 }

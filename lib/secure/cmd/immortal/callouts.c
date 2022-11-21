@@ -1,3 +1,10 @@
+inherit STD_COMMAND;
+
+void create () {
+    set_syntax("callouts");
+    set_help_text("The callouts command is used to view the entire list of callouts.");
+}
+
 void command (string input, mapping flags) {
     mixed *callouts;
     string *border, *items = ({ });

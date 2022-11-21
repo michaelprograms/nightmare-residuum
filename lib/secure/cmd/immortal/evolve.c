@@ -1,3 +1,10 @@
+inherit STD_COMMAND;
+
+void create () {
+    set_syntax("evolve -c=class -l=level ([target])");
+    set_help_text("The evolve command is used to adjust a target's class or level.");
+}
+
 void display (object tc, object target, string type, string old, string now) {
     if (tc == target) {
         message("action", "You have changed your " + type + " from " + old + " to " + now + ".\n", tc);
