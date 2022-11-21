@@ -16,6 +16,7 @@ mixed *distinct_array (mixed *arr);
 /* --- border --- */
 mapping query_border_charset ();
 string *format_border (mapping data);
+void border (mapping data);
 
 /* --- color --- */
 string strip_colour (string str);
