@@ -228,11 +228,11 @@ string *format_border (mapping data) {
             if (sizeof(data["header"]["header"]) > data["header"]["columns"]) {
                 data["header"]["header"] = data["header"]["header"][0..data["header"]["columns"]-1];
             }
-            line = left + "  " + (ansi?"\e[0;37;40;1m":"") + format_page(data["header"]["header"], data["header"]["columns"], 4, (data["header"]["align"] == "center")) + (ansi?"\e[22m":"") + "  " + right;
+            line = left + "  " + (ansi?"\e[0;37;40;1m":"") + SEFUN->format_page(data["header"]["header"], data["header"]["columns"], 4, (data["header"]["align"] == "center")) + (ansi?"\e[22m":"") + "  " + right;
             lines += ({ line });
         }
         // Header lines
-        format = sizeof(data["header"]["items"]) > 0 ? format_page(data["header"]["items"], data["header"]["columns"], 4, (data["header"]["align"] == "center")) : "";
+        format = sizeof(data["header"]["items"]) > 0 ? SEFUN->format_page(data["header"]["items"], data["header"]["columns"], 4, (data["header"]["align"] == "center")) : "";
         foreach (string l in explode(format, "\n")) {
             line = left + "  " + l + "  " + right;
             lines += ({ line });
@@ -267,11 +267,11 @@ string *format_border (mapping data) {
                 if (sizeof(child["header"]) > child["columns"]) {
                     child["header"] = child["header"][0..child["columns"]-1];
                 }
-                line = "   " + (ansi?"\e[0;37;40;1m":"") + format_page(child["header"], child["columns"], 4, (child["align"] == "center")) + (ansi?"\e[22m":"") + "   ";
+                line = "   " + (ansi?"\e[0;37;40;1m":"") + SEFUN->format_page(child["header"], child["columns"], 4, (child["align"] == "center")) + (ansi?"\e[22m":"") + "   ";
                 linesBody += ({ line });
             }
             // Body child lines
-            format = sizeof(child["items"]) > 0 ? format_page(child["items"], child["columns"], 4, (child["align"] == "center")) : "";
+            format = sizeof(child["items"]) > 0 ? SEFUN->format_page(child["items"], child["columns"], 4, (child["align"] == "center")) : "";
             foreach (string l in explode(format, "\n") - ({""})) {
                 line = "   " + l + "   ";
                 linesBody += ({ line });
@@ -326,11 +326,11 @@ string *format_border (mapping data) {
             if (sizeof(data["footer"]["header"]) > data["footer"]["columns"]) {
                 data["footer"]["header"] = data["footer"]["header"][0..data["footer"]["columns"]-1];
             }
-            line = left + "  " + (ansi?"\e[0;37;40;1m":"") + format_page(data["footer"]["header"], data["footer"]["columns"], 4, (data["footer"]["align"] == "center")) + (ansi?"\e[22m":"") + "  " + right;
+            line = left + "  " + (ansi?"\e[0;37;40;1m":"") + SEFUN->format_page(data["footer"]["header"], data["footer"]["columns"], 4, (data["footer"]["align"] == "center")) + (ansi?"\e[22m":"") + "  " + right;
             lines += ({ line });
         }
         // Footer lines
-        format = sizeof(data["footer"]["items"]) > 0 ? format_page(data["footer"]["items"], data["footer"]["columns"], 4, (data["footer"]["align"] == "center")) : "";
+        format = sizeof(data["footer"]["items"]) > 0 ? SEFUN->format_page(data["footer"]["items"], data["footer"]["columns"], 4, (data["footer"]["align"] == "center")) : "";
         foreach (string l in explode(format, "\n")) {
             line = left + "  " + l + "  " + right;
             lines += ({ line });
@@ -354,5 +354,5 @@ string *format_border (mapping data) {
 }
 
 void border (mapping data) {
-    SEFUN->this_user()->handle_pager(format_border(data));
+    SEFUN->this_user()->handle_pager(format_border(data), 1);
 }
