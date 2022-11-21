@@ -8,6 +8,19 @@ void after_each_test () {
     if (objectp(testOb)) destruct(testOb);
 }
 
+void test_strip_colour () {
+    string text = "%^BOLD%^Text%^RESET%^";
+
+    expect_function("strip_colour", testOb);
+
+    expect("strip_colour removes ANSI resets", (: ({
+        assert(testOb->strip_colour($(text)), "==", "Text"),
+        assert(strlen($(text)), "!=", 4),
+        assert(strlen(testOb->strip_colour($(text))), "==", 4),
+        assert(strlen(testOb->strip_colour("%^RESET%^%^RESET%^RESET%^")), "==", 0),
+    }) :));
+}
+
 void test_hex_to_int () {
     expect_function("hex_to_int", testOb);
 

@@ -16,7 +16,9 @@ mixed *distinct_array (mixed *arr);
 /* --- border --- */
 mapping query_border_charset ();
 string *format_border (mapping data);
+
 /* --- color --- */
+string strip_colour (string str);
 string wrap_ansi (string str, int width);
 int hex_to_int (string base16);
 int *query_random_color ();
@@ -69,7 +71,6 @@ int assure_dir (string path);
 string *wild_card (string path, string relative_to);
 
 /* --- string --- */
-string strip_colour (string str);
 string identify (mixed a);
 varargs string wrap (string str, int width, int indent);
 int string_compare_same_until (string a, string b);

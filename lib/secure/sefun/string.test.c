@@ -23,19 +23,6 @@ class TestClass {
 }
 class TestClass tc = new(class TestClass);
 
-void test_strip_colour () {
-    string text = "%^BOLD%^Text%^RESET%^";
-
-    expect_function("strip_colour", testOb);
-
-    expect("strip_colour removes ANSI resets", (: ({
-        assert(testOb->strip_colour($(text)), "==", "Text"),
-        assert(strlen($(text)), "!=", 4),
-        assert(strlen(testOb->strip_colour($(text))), "==", 4),
-        assert(strlen(testOb->strip_colour("%^RESET%^%^RESET%^RESET%^")), "==", 0),
-    }) :));
-}
-
 void test_identify () {
     int tInt = 123, undefInt;
     float tFloat = 123.0, undefFloat;
