@@ -13,6 +13,9 @@ mixed unguarded (function f);
 /* --- array --- */
 mixed *distinct_array (mixed *arr);
 
+/* --- border --- */
+mapping query_border_charset ();
+string *format_border (mapping data);
 /* --- color --- */
 string wrap_ansi (string str, int width);
 int hex_to_int (string base16);
@@ -36,7 +39,6 @@ string format_exit_reverse (string dir);
 string format_stat_brief (string stat);
 string format_stat_verbose (string stat);
 string format_integer (int num);
-string *format_border (mapping data);
 
 /* --- grammar --- */
 string remove_article (string str);
