@@ -15,7 +15,6 @@ void command (string input, mapping flags) {
             "align": "center",
         ]),
     ]);
-    string *border;
     int nImm = 0, nChar = 0;
     object *immList = ({ }), *charList = ({ });
     string *headerItems = ({ }), *bodyItems = ({ }), *footerItems = ({ });
@@ -69,8 +68,5 @@ void command (string input, mapping flags) {
     footerItems += ({ nChar + " character" + (nChar != 1 ? "s" : "") });
     data["footer"]["items"] = ({ implode(footerItems, ", ") });
 
-    border = format_border(data);
-    foreach (string line in border) {
-        message("system", line + "\n", this_character());
-    }
+    border(data);
 }

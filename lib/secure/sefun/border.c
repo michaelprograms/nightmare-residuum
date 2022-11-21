@@ -354,8 +354,5 @@ string *format_border (mapping data) {
 }
 
 void border (mapping data) {
-    object target = SEFUN->this_user();
-    foreach (string line in format_border(data)) {
-        message("system", line + "\n", target);
-    }
+    SEFUN->this_user()->handle_pager(format_border(data));
 }

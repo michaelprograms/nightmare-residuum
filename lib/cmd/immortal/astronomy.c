@@ -1,5 +1,4 @@
 void command (string input, mapping flags) {
-    string *border;
     mapping *items = ({ });
 
     foreach (string key,mapping a in D_ASTRONOMY->query_astronomy()) {
@@ -55,11 +54,8 @@ void command (string input, mapping flags) {
         });
     }
 
-    border = format_border(([
+    border(([
         "title": "ASTRONOMY",
         "body": items,
     ]));
-    foreach (string line in border) {
-        message("system", line + "\n", this_character());
-    }
 }

@@ -7,7 +7,7 @@ void create () {
 
 void command (string input, mapping flags) {
     object tc = this_character(), target = tc;
-    string *border, subtitle, *body = ({}), *list;
+    string subtitle, *body = ({}), *list;
 
     if (input && tc->query_immortal()) {
         if (find_character(input)) target = find_character(input);
@@ -35,12 +35,9 @@ void command (string input, mapping flags) {
         "items": list,
     ]) });
 
-    border = format_border(([
+    border(([
         "title": "Channels",
         "subtitle": subtitle,
         "body": body,
     ]));
-    foreach (string line in border) {
-        message("system", line + "\n", tc);
-    }
 }

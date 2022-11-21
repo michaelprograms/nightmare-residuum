@@ -7,8 +7,6 @@ void create () {
 
 void command (string input, mapping flags) {
     object tc = this_character();
-    string *border;
-
     object char;
 
     if (!input || input == "") {
@@ -22,7 +20,7 @@ void command (string input, mapping flags) {
         return;
     }
 
-    border = format_border(([
+    border(([
         "title": "SCORE",
         "subtitle": char->query_cap_name(),
         "header": ([
@@ -42,9 +40,6 @@ void command (string input, mapping flags) {
             "columns": 2,
         ]),
     ]));
-    foreach (string line in border) {
-        message("system", line + "\n", tc);
-    }
 
     destruct(char);
 }

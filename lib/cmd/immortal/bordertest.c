@@ -1,22 +1,18 @@
 void command (string input, mapping flags) {
-    string *border, *lines = ({ });
 
-    border = format_border(([
+    border(([
     ]));
-    lines += border;
 
-    border = format_border(([
+    border(([
         "title": "TITLE",
     ]));
-    lines += border;
 
-    border = format_border(([
+    border(([
         "title": "TITLE",
         "subtitle": "Subtitle",
     ]));
-    lines += border;
 
-    border = format_border(([
+    border(([
         "header": ([
             "header": "Header Header",
             "items": ({ "Header Item 1", "Header Item 2", "Header Item 3", "Header Item 4", }),
@@ -30,9 +26,8 @@ void command (string input, mapping flags) {
             "items": ({ "Footer Item 1", "Footer Item 2", "Footer Item 3", "Footer Item 4", }),
         ]),
     ]));
-    lines += border;
 
-    border = format_border(([
+    border(([
         "header": ([
             "header": ({ "Header Header 1", "Header Header 2", "Header Header 3", "Header Header 4", }),
             "items": ({ "Header Item 1", "Header Item 2", "Header Item 3", "Header Item 4", }),
@@ -49,9 +44,8 @@ void command (string input, mapping flags) {
             "columns": 4,
         ]),
     ]));
-    lines += border;
 
-    border = format_border(([
+    border(([
         "header": ([
             "header": ({ "Header Header 1", "Header Header 2", "Header Header 3", "Header Header 4", }),
             "items": ({ "Header Item 1", "Header Item 2", "Header Item 3", "Header Item 4", }),
@@ -71,9 +65,8 @@ void command (string input, mapping flags) {
             "align": "center",
         ]),
     ]));
-    lines += border;
 
-    border = format_border(([
+    border(([
         "body": ([
             "items": ({
                 "Test test test test test test test test test test test test test test test.",
@@ -84,9 +77,4 @@ void command (string input, mapping flags) {
             "columns": 1,
         ]),
     ]));
-    lines += border;
-
-    // Display
-
-    this_user()->handle_pager(lines);
 }

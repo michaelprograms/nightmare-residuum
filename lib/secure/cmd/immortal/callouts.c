@@ -7,7 +7,7 @@ void create () {
 
 void command (string input, mapping flags) {
     mixed *callouts;
-    string *border, *items = ({ });
+    string *items = ({ });
     int n;
 
     if (n = sizeof(callouts = call_out_info())) {
@@ -17,7 +17,7 @@ void command (string input, mapping flags) {
         }
     }
 
-    border = format_border(([
+    border(([
         "title": "CALLOUTS",
         "subtitle": mud_name(),
         "body": ([
@@ -31,7 +31,4 @@ void command (string input, mapping flags) {
             "align": "center",
         ]),
     ]));
-    foreach (string line in border) {
-        message("system", line + "\n", this_character());
-    }
 }

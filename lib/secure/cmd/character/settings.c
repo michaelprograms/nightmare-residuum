@@ -7,7 +7,7 @@ void create () {
 
 void command (string input, mapping flags) {
     object tc = this_character(), target = tc, account;
-    string *border, *list = ({ });
+    string *list = ({ });
     mapping header;
 
     if (input && tc->query_immortal()) {
@@ -48,7 +48,7 @@ void command (string input, mapping flags) {
         list += ({ sprintf("%16s : %s", key, ""+value) });
     }
 
-    border = format_border(([
+    border(([
         "title": "SETTINGS",
         "subtitle": target->query_cap_name(),
         "header": header,
@@ -57,7 +57,4 @@ void command (string input, mapping flags) {
             "columns": 1,
         ]),
     ]));
-    foreach (string line in border) {
-        message("system", line + "\n", tc);
-    }
 }

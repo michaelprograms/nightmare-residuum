@@ -8,7 +8,7 @@ void create () {
 void command (string input, mapping flags) {
     object tc = this_character();
     string *msgs;
-    string *border, *body = ({ }), subtitle;
+    string *body = ({ }), subtitle;
 
     if (input == "tells" || input == "tell") {
         if (!sizeof(msgs = tc->query_tell_history())) {
@@ -29,7 +29,7 @@ void command (string input, mapping flags) {
         return;
     }
 
-    border = format_border(([
+    border(([
         "title": "LAST",
         "subtitle": subtitle,
         "body": ([
@@ -38,7 +38,4 @@ void command (string input, mapping flags) {
             "columns": 1,
         ]),
     ]));
-    foreach (string line in border) {
-        message("system", line + "\n", tc);
-    }
 }

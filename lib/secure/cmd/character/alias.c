@@ -9,7 +9,7 @@ void create () {
 private void print_all_aliases (object shell) {
     class ShellAlias alias;
     string *aliasKeys;
-    string *border, *list = ({ });
+    string *list = ({ });
 
     aliasKeys = shell->query_alias_names();
     foreach (string name in sort_array(aliasKeys, 1)) {
@@ -29,7 +29,7 @@ private void print_all_aliases (object shell) {
         }
     }
 
-    border = format_border(([
+    border(([
         "title": "ALIAS",
         "subtitle": "List",
         "body": ([
@@ -45,9 +45,6 @@ private void print_all_aliases (object shell) {
             "align": "center",
         ]),
     ]));
-    foreach (string line in border) {
-        message("system", line + "\n", this_character());
-    }
 }
 
 void command (string input, mapping flags) {

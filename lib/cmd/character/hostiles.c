@@ -7,7 +7,7 @@ void create () {
 
 void command (string input, mapping flags) {
     object tc = this_character(), target = tc;
-    string *border, *items = ({ });
+    string *items = ({ });
 
     if (input && tc->query_immortal()) {
         if (find_character(input)) target = find_character(input);
@@ -18,16 +18,13 @@ void command (string input, mapping flags) {
         items += ({ ob->query_cap_name() });
     }
 
-    border = format_border(([
+    border(([
         "title": "HOSTILES",
         "subtitle": target->query_cap_name(),
         "body": ([
-            "items": sizeof(items) ? items : ({ "No current hostiles" }),
+            "items": sizeof(items) ? items : ({ "No current hostiles." }),
             "columns": sizeof(items) ? 2 : 1,
             "align": sizeof(items) ? "left" : "center",
         ]),
     ]));
-    foreach (string line in border) {
-        message("system", line + "\n", tc);
-    }
 }

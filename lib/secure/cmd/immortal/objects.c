@@ -19,7 +19,7 @@ string format_object (string path, string *children, int indent) {
 void command (string input, mapping flags) {
     object *obs = filter_array(objects(), (:$1 && regexp(file_name($1), "#"):));
     mapping structure = ([ ]);
-    string *border, *list = ({ });
+    string *list = ({ });
 
     foreach (object ob in obs) {
         object parent;
@@ -50,7 +50,7 @@ void command (string input, mapping flags) {
         list += explode(format_object(path, structure[path], 0), "\n");
     }
 
-    border = format_border(([
+    border(([
         "title": "OBJECTS",
         "subtitle": mud_name(),
         "body": ([
@@ -63,5 +63,4 @@ void command (string input, mapping flags) {
             "align": "center",
         ]),
     ]));
-    this_user()->handle_pager(border);
 }

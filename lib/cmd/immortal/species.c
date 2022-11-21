@@ -1,5 +1,5 @@
 void command (string input, mapping flags) {
-    string *border, subtitle;
+    string subtitle;
     mapping *items = ({ });
 
     if (input) {
@@ -52,12 +52,9 @@ void command (string input, mapping flags) {
         });
     }
 
-    border = format_border(([
+    border(([
         "title": "SPECIES",
         "subtitle": subtitle,
         "body": items,
     ]));
-    foreach (string line in border) {
-        message("system", line + "\n", this_character());
-    }
 }

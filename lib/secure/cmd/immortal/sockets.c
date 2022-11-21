@@ -6,7 +6,7 @@ void create () {
 }
 
 void command (string input, mapping flags) {
-    string *border, *sockets = ({}), *netStats = ({ });
+    string *sockets = ({}), *netStats = ({ });
 
     foreach (mixed *s in socket_status()) {
         sockets += ({ s[0], s[1], s[2], s[3], });
@@ -18,7 +18,7 @@ void command (string input, mapping flags) {
     }
     netStats = sort_array(netStats, (: strcmp(ltrim($1), ltrim($2)) :));
 
-    border = format_border(([
+    border(([
         "title": "SOCKETS",
         "subtitle": mud_name(),
         "body": ([
@@ -31,7 +31,4 @@ void command (string input, mapping flags) {
             "columns": 2,
         ]),
     ]));
-    foreach (string line in border) {
-        message("system", line + "\n", this_character());
-    }
 }

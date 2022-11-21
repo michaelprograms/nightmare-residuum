@@ -8,7 +8,6 @@ void create () {
 void command (string input, mapping flags) {
     string path;
     object file;
-    string *border;
     string result, *items;
 
     if (!input) {
@@ -31,7 +30,7 @@ void command (string input, mapping flags) {
     if (sizeof(result)) {
         items = explode(result, "\n");
     }
-    border = format_border(([
+    border(([
         "title": "HELP",
         "subtitle": lower_case(input),
         "body": ([
@@ -40,7 +39,4 @@ void command (string input, mapping flags) {
             "align": sizeof(items) ? "left" : "center",
         ]),
     ]));
-    foreach (string line in border) {
-        message("system", line + "\n", this_character());
-    }
 }

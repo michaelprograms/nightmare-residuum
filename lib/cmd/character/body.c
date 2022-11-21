@@ -7,7 +7,7 @@ void create () {
 
 void command (string input, mapping flags) {
     object tc = this_character(), target = tc;
-    string *border, *items = ({ }), *limbs, *severedLimbs;
+    string *items = ({ }), *limbs, *severedLimbs;
     mapping footer;
 
     if (input && tc->query_immortal()) {
@@ -53,7 +53,7 @@ void command (string input, mapping flags) {
         ]);
     }
 
-    border = format_border(([
+    border(([
         "title": "BODY",
         "subtitle": target->query_cap_name(),
         "header": ([
@@ -70,7 +70,4 @@ void command (string input, mapping flags) {
         ]),
         "footer": footer,
     ]));
-    foreach (string line in border) {
-        message("system", line + "\n", tc);
-    }
 }

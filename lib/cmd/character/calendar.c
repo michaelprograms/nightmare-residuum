@@ -6,7 +6,7 @@ void create () {
 }
 
 void command (string input, mapping flags) {
-    string *border, *body = ({ });
+    string *body = ({ });
     mapping a, footer;
     int t = time(), currentMonth, currentDay;
 
@@ -57,7 +57,7 @@ void command (string input, mapping flags) {
         ]);
     }
 
-    border = format_border(([
+    border(([
         "title": "CALENDAR",
         "body": a ? body : ({
             ([
@@ -70,7 +70,4 @@ void command (string input, mapping flags) {
         }),
         "footer": footer,
     ]));
-    foreach (string line in border) {
-        message("system", line + "\n", this_character());
-    }
 }

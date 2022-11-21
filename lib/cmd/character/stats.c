@@ -7,7 +7,7 @@ void create () {
 
 void command (string input, mapping flags) {
     object tc = this_character(), target = tc;
-    string *border, *items = ({ });
+    string *items = ({ });
 
     if (input && tc->query_immortal()) {
         if (find_character(input)) target = find_character(input);
@@ -25,7 +25,7 @@ void command (string input, mapping flags) {
         });
     }
 
-    border = format_border(([
+    border(([
         "title": "STATS",
         "subtitle": target->query_cap_name(),
         "body": ([
@@ -41,7 +41,4 @@ void command (string input, mapping flags) {
             "align": "center",
         ])
     ]));
-    foreach (string line in border) {
-        message("system", line + "\n", tc);
-    }
 }

@@ -73,7 +73,6 @@ mapping *process_inventory (object target) {
 
 void command (string input, mapping flags) {
     object tc = this_character(), target = tc;
-    string *border;
     mapping *items = ({ });
     mapping footer;
     string *coins = ({ });
@@ -103,14 +102,10 @@ void command (string input, mapping flags) {
         footer["items"] = ({ "You are not carrying any money.", });
     }
 
-    border = format_border(([
+    border(([
         "title": "INVENTORY",
         "subtitle": target->query_cap_name(),
         "body": items,
         "footer": footer,
     ]));
-    foreach (string line in border) {
-        message("system", line + "\n", tc);
-    }
-
 }

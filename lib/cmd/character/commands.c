@@ -6,9 +6,8 @@ void create () {
 }
 
 void command (string input, mapping flags) {
-    object tc = this_character();
     mapping actions = ([ ]);
-    string *border, subtitle;
+    string subtitle;
     mixed *body = ({ });
     mapping header;
 
@@ -52,13 +51,10 @@ void command (string input, mapping flags) {
         body += ({ b });
     }
 
-    border = format_border(([
+    border(([
         "title": "COMMANDS",
         "subtitle": subtitle,
         "header": header,
         "body": body,
     ]));
-    foreach (string line in border) {
-        message("system", line + "\n", tc);
-    }
 }
