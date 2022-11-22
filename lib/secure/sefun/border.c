@@ -354,5 +354,5 @@ string *format_border (mapping data) {
 }
 
 void border (mapping data) {
-    SEFUN->this_user()->handle_pager(format_border(data), 1);
+    SEFUN->this_user()->handle_pager(format_border(data));
 }
