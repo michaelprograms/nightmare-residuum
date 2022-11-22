@@ -5,6 +5,7 @@ nosave private int __ChunkSize = 40;
 
 nomask private void done () {
     __User->input_pop();
+    __User->input_focus();
     destruct(this_object());
 }
 
@@ -16,15 +17,14 @@ nomask private string prompt () {
     if (chunkEnd > __LinesCount) {
         chunkEnd = __LinesCount;
         percent = 100;
-    } else {
-        percent = chunkEnd * 100 / __LinesCount;
-    }
-
-    prompt = sprintf("Lines %i to %i of %i - %i%% ", __LineNum + 1, chunkEnd, __LinesCount, percent);
-    message("system", "----- %^BOLD%^" + prompt + "%^RESET%^ -----", __User);
-
-    if (chunkEnd == __LinesCount) {
         done();
+        return "";
+    } else {
+        int width = to_int(query_account_setting("width")) || 80;
+        percent = chunkEnd * 100 / __LinesCount;
+        prompt = sprintf("Lines %i to %i of %i (%i%%) - press <enter> or <q>", __LineNum + 1, chunkEnd, __LinesCount, percent);
+        prompt = sprintf("%|*s", width, prompt);
+        return "%^B_WHITE%^BLACK%^" + prompt + "%^RESET%^";
     }
 }
 
@@ -68,5 +68,8 @@ void start (string *lines, object user) {
     __LinesCount = sizeof(__Lines);
     __User = user;
     __User->input_push((: handle_page :), (: prompt :));
-    if (catch (handle_page(0))) __User->input_pop();
+    if (catch (handle_page(0))) {
+        __User->input_pop();
+        __User->input_focus();
+    }
 }
