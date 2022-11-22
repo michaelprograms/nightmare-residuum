@@ -22,7 +22,7 @@ nomask private string prompt () {
     } else {
         int width = to_int(query_account_setting("width")) || 80;
         percent = chunkEnd * 100 / __LinesCount;
-        prompt = sprintf("Lines %i to %i of %i (%i%%) - press <enter> or <q>", __LineNum + 1, chunkEnd, __LinesCount, percent);
+        prompt = sprintf("Lines %s to %s of %s (%i%%) --- press <enter> or <q>", format_integer(__LineNum + 1), format_integer(chunkEnd), format_integer(__LinesCount), percent);
         prompt = sprintf("%|*s", width, prompt);
         return "%^B_WHITE%^BLACK%^" + prompt + "%^RESET%^";
     }
