@@ -73,7 +73,7 @@ string *wild_card (string path, string relative_to);
 
 /* --- string --- */
 string identify (mixed a);
-varargs string wrap (string str, int width, int indent);
+varargs string wrap (string str, int width, int indent, int rawANSI);
 int string_compare_same_until (string a, string b);
 string sanitize_name (string name);
 

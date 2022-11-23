@@ -48,7 +48,11 @@ nomask void net_dead () {
 
 void receive_message (string type, string message) {
     D_LOG->log_unique("message_types", type);
-    if (type == "system") {
+    type = lower_case(type);
+    if (type == "raw ansi") {
+        message = replace_string(message, "%^", "%%^^");
+        receive(wrap(message, 0, 0, 1));
+    } else if (type == "system") {
         if (strlen(message) > __LARGEST_PRINTABLE_STRING__) {
             message = message[0..__LARGEST_PRINTABLE_STRING__-1];
         }

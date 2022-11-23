@@ -10,6 +10,7 @@ void command (string input, mapping flags) {
 
     if (!input) {
         write("Prompt is currently set to '" + shell->query_variable("prompt") + "'.\n");
+        message("raw ansi", shell->query_variable("prompt") + "\n", this_character());
     } else {
         write("Changing prompt from '" + shell->query_variable("prompt") + "' to '" + input + "'.\n");
         shell->set_variable("prompt", input);

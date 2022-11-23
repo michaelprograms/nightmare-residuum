@@ -57,7 +57,7 @@ string identify (mixed args...) {
     return "UNKNOWN";
 }
 
-varargs string wrap (string str, int width, int indent) {
+varargs string wrap (string str, int width, int indent, int rawANSI) {
     mapping term;
     object po = previous_object();
 
@@ -67,7 +67,9 @@ varargs string wrap (string str, int width, int indent) {
         else width = 80;
     }
 
-    if (po && po->query_account() && po->query_account()->query_setting("ansi") == "on") {
+    if (rawANSI) {
+        term = ([ ]);
+    } else if (po && po->query_account() && po->query_account()->query_setting("ansi") == "on") {
         term = D_ANSI->query_ansi_term();
     } else {
         term = D_ANSI->query_unknown_term();
