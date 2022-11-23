@@ -14,7 +14,7 @@ object this_account () {
 }
 object this_character () {
     object c;
-    foreach (object ob in ({ previous_object(), previous_object(1), this_user() })) {
+    foreach (object ob in ({ previous_object(), previous_object(1), efun::this_user() })) {
         if (ob && (c = ob->query_character())) {
             break;
         }
