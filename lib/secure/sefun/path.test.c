@@ -100,32 +100,32 @@ void test_sanitize_path () {
     }) :));
 
     __MockCharacter = new("/std/module/id.c");
-    __MockCharacter->set_key_name("tester");
+    __MockCharacter->set_key_name("test"); // must be named test
     __MockShell = new("/secure/shell/shell.c");
     __MockShell->start_shell();
     expect("sanitize_path handles ~", (: ({
-        assert(testOb->sanitize_path("~"), "==", "/realm/tester"),
-        assert(testOb->sanitize_path("~."), "==", "/realm/tester"),
-        assert(testOb->sanitize_path("~/"), "==", "/realm/tester/"),
-        assert(testOb->sanitize_path("~/."), "==", "/realm/tester/"),
-        assert(testOb->sanitize_path("~/dir/.."), "==", "/realm/tester/"),
-        assert(testOb->sanitize_path("~/dir/../."), "==", "/realm/tester/"),
-        assert(testOb->sanitize_path("~/dir/dir/../.."), "==", "/realm/tester/"),
-        assert(testOb->sanitize_path("~/dir/dir/../../."), "==", "/realm/tester/"),
-        assert(testOb->sanitize_path("~/dir/dir/.././../."), "==", "/realm/tester/"),
-        assert(testOb->sanitize_path("~/dir/.././dir2/../."), "==", "/realm/tester/"),
+        assert(testOb->sanitize_path("~"), "==", "/realm/test"),
+        assert(testOb->sanitize_path("~."), "==", "/realm/test"),
+        assert(testOb->sanitize_path("~/"), "==", "/realm/test/"),
+        assert(testOb->sanitize_path("~/."), "==", "/realm/test/"),
+        assert(testOb->sanitize_path("~/dir/.."), "==", "/realm/test/"),
+        assert(testOb->sanitize_path("~/dir/../."), "==", "/realm/test/"),
+        assert(testOb->sanitize_path("~/dir/dir/../.."), "==", "/realm/test/"),
+        assert(testOb->sanitize_path("~/dir/dir/../../."), "==", "/realm/test/"),
+        assert(testOb->sanitize_path("~/dir/dir/.././../."), "==", "/realm/test/"),
+        assert(testOb->sanitize_path("~/dir/.././dir2/../."), "==", "/realm/test/"),
     }) :));
 
     expect("sanitize_path handles cwd", (: ({
-        __MockShell->set_variable("cwd", "/realm/tester/testdir/"),
-        assert(testOb->sanitize_path(""), "==", "/realm/tester/testdir/"),
-        assert(testOb->sanitize_path(), "==", "/realm/tester/testdir/"),
-        assert(testOb->sanitize_path("test"), "==", "/realm/tester/testdir/"),
+        __MockShell->set_variable("cwd", "/realm/test/testdir/"),
+        assert(testOb->sanitize_path(""), "==", "/realm/test/testdir/"),
+        assert(testOb->sanitize_path(), "==", "/realm/test/testdir/"),
+        assert(testOb->sanitize_path("test"), "==", "/realm/test/testdir/"),
 
-        __MockShell->set_variable("cwd", "/realm/tester/otherdir/"),
-        assert(testOb->sanitize_path(""), "==", "/realm/tester/otherdir/"),
-        assert(testOb->sanitize_path(), "==", "/realm/tester/otherdir/"),
-        assert(testOb->sanitize_path("test"), "==", "/realm/tester/otherdir/"),
+        __MockShell->set_variable("cwd", "/realm/test/otherdir/"),
+        assert(testOb->sanitize_path(""), "==", "/realm/test/otherdir/"),
+        assert(testOb->sanitize_path(), "==", "/realm/test/otherdir/"),
+        assert(testOb->sanitize_path("test"), "==", "/realm/test/otherdir/"),
     }) :));
 
     destruct(__MockCharacter);
@@ -150,15 +150,15 @@ void test_absolute_path () {
     }) :));
 
     __MockCharacter = new("/std/module/id.c");
-    __MockCharacter->set_key_name("tester");
+    __MockCharacter->set_key_name("test"); // must be named test
     __MockShell = new("/secure/shell/shell.c");
     __MockShell->start_shell();
 
     expect("absolute_path handles ~ alias for /realm", (: ({
-        assert(testOb->absolute_path("~", "/"), "==", "/realm/tester"),
-        assert(testOb->absolute_path("~/", "/"), "==", "/realm/tester/"),
-        assert(testOb->absolute_path("~file.c", "/"), "==", "/realm/tester/file.c"),
-        assert(testOb->absolute_path("~/file.c", "/"), "==", "/realm/tester/file.c"),
+        assert(testOb->absolute_path("~", "/"), "==", "/realm/test"),
+        assert(testOb->absolute_path("~/", "/"), "==", "/realm/test/"),
+        assert(testOb->absolute_path("~file.c", "/"), "==", "/realm/test/file.c"),
+        assert(testOb->absolute_path("~/file.c", "/"), "==", "/realm/test/file.c"),
     }) :));
 
     destruct(__MockCharacter);

@@ -44,7 +44,7 @@ void test_requirements () {
     }) :));
 
     __MockCharacter = new("/std/character.c");
-    __MockCharacter->set_key_name("tester");
+    __MockCharacter->set_key_name("test"); // must be named test
     expect("can_verb_rule should use requirements", (: ({
         // test singular requirements
         testOb->set_requirements(REQUIREMENT_NONE),
