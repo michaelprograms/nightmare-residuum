@@ -3,9 +3,11 @@ nosave private string *__Lines;
 nosave private int __LineNum, __LinesCount;
 nosave private int __ChunkSize = 40;
 
-nomask private void done () {
+nomask private void done (int focus) {
     __User->input_pop();
-    __User->input_focus();
+    if (focus) {
+        __User->input_focus();
+    }
     destruct(this_object());
 }
 
@@ -17,7 +19,7 @@ nomask private string prompt () {
     if (chunkEnd > __LinesCount) {
         chunkEnd = __LinesCount;
         percent = 100;
-        done();
+        done(1);
         return "";
     } else {
         int width = to_int(query_account_setting("width")) || 80;
@@ -37,12 +39,10 @@ private void handle_page (mixed arg) {
     if (arg) {
         switch (arg[0]) {
             case 'q':
-                return done();
+                done(0);
+                return; // to prompt
             default:
                 __LineNum += __ChunkSize;
-                if (__LineNum > __LinesCount) {
-                    return done();
-                }
         }
     }
 
@@ -54,7 +54,7 @@ private void handle_page (mixed arg) {
         return; // to prompt
     }
 
-    done();
+    done(0);
 }
 
 void start (string *lines, object user) {
