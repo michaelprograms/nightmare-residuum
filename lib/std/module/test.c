@@ -1,15 +1,15 @@
-#define ANSI(p) "\e["+(p)+"m"
-#define RESET (this_user() ? "%^RESET%^" : ANSI(0))
-#define BOLD (this_user() ? "%^BOLD%^" : ANSI(1))
-#define UNDERLINE (this_user() ? "%^UNDERLINE%^" : ANSI(4))
-#define BLACK (this_user() ? "%^BLACK%^" : ANSI(30))
-#define RED (this_user() ? "%^RED%^" : ANSI(31))
-#define GREEN (this_user() ? "%^GREEN%^" : ANSI(32))
-#define ORANGE (this_user() ? "%^ORANGE%^" : ANSI(33))
-#define CYAN (this_user() ? "%^CYAN%^" : ANSI(36))
-#define B_RED (this_user() ? "%^B_RED%^" : ANSI(41))
-#define B_GREEN (this_user() ? "%^B_GREEN%^" : ANSI(42))
-#define B_ORANGE (this_user() ? "%^B_ORANGE%^BLACK%^" : ANSI(43))
+#define ANSI(p)     "\e["+(p)+"m"
+#define RESET       (this_character() ? "%^RESET%^" : ANSI(0))
+#define BOLD        (this_character() ? "%^BOLD%^" : ANSI(1))
+#define UNDERLINE   (this_character() ? "%^UNDERLINE%^" : ANSI(4))
+#define BLACK       (this_character() ? "%^BLACK%^" : ANSI(30))
+#define RED         (this_character() ? "%^RED%^" : ANSI(31))
+#define GREEN       (this_character() ? "%^GREEN%^" : ANSI(32))
+#define ORANGE      (this_character() ? "%^ORANGE%^" : ANSI(33))
+#define CYAN        (this_character() ? "%^CYAN%^" : ANSI(36))
+#define B_RED       (this_character() ? "%^B_RED%^" : ANSI(41))
+#define B_GREEN     (this_character() ? "%^B_GREEN%^" : ANSI(42))
+#define B_ORANGE    (this_character() ? "%^B_ORANGE%^BLACK%^" : ANSI(43))
 
 nosave protected mixed UNDEFINED = (([])[0]); // equivalent of UNDEFINED
 
@@ -173,11 +173,8 @@ private void done_current_test () {
     after_each_test();
 
     currentTestLog = "  Testing " + BOLD + UNDERLINE + currentTestFn + RESET + " (" + ORANGE + sprintf("%.2f", (timeAfter-timeBefore)/1000000.0) + RESET + " ms):" + currentTestLog;
-    if (this_user()) {
-        message("system", currentTestLog + "\n", this_user());
-    } else {
-        debug_message(currentTestLog);
-    }
+    write(currentTestLog + "\n");
+
     if (strlen(currentFailLog) > 0) {
         totalFailLog += (sizeof(totalFailLog) > 0 ? "\n" : "") + CYAN + UNDERLINE + base_name() + RESET + ": " + UNDERLINE + BOLD + currentTestFn + RESET + " (" + ORANGE + sprintf("%.2f", (timeAfter-timeBefore)/1000000.0) + RESET + " ms):" + currentFailLog;
     }
