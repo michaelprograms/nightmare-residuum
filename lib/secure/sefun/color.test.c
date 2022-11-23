@@ -71,10 +71,9 @@ void test_random_color () {
     Color = testOb->query_random_color();
     expect("query_random_color returns random triplets", (: ({
         assert(sizeof(Color), "==", 3),
-        // triplets are unique
-        assert(Color[0], "!=", UNDEFINED),
-        assert(Color[1], "!=", UNDEFINED),
-        assert(Color[2], "!=", UNDEFINED),
+        assert(Color[0] >= 0 && Color[0] <= 255, "==", 1),
+        assert(Color[1] >= 0 && Color[1] <= 255, "==", 1),
+        assert(Color[2] >= 0 && Color[2] <= 255, "==", 1),
     }) :));
 }
 
