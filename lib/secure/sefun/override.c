@@ -14,7 +14,7 @@ object *users () {
 
 nomask void write (string msg) {
     if (this_character()) {
-        this_character()->receive_message("wrap", msg);
+        this_character()->receive_message("system", msg);
     } else if (this_user()) {
         this_user()->receive_message("system", msg);
     } else {
