@@ -40,7 +40,7 @@ void create () {
         "B_CYAN":           ANSI(46),
         "B_WHITE":          ANSI(47),
     ]);
-    unknownTerm = map(ansiTerm, (: "" :));
+    unknownTerm = map(ansiTerm, function () { return ""; });
 }
 
 mapping query_ansi_term () { return ansiTerm; }
