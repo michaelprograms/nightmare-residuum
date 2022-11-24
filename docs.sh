@@ -28,7 +28,6 @@ for type in ${types[@]} ; do
             # new doc file path
             newDoc=${libDocs}/${type}/${filename%.md}
             tmpDoc=${newDoc}.tmp
-            # echo "Processing ${newDoc}"
 
             cp ${file} ${tmpDoc}        # copy to temporary file
             sed -i '1,4 d' ${tmpDoc}    # trim beginning of file
