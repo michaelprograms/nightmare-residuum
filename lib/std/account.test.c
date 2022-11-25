@@ -56,7 +56,7 @@ void test_account_password () {
         assert((: testOb->set_password("test") :), "catch", "*Illegal attempt to account->set_password\n"),
     }) :));
     expect("account test password is blank", (: ({
-        assert(testOb->query_password("test"), "==", 0),
+        assert(testOb->query_password(), "==", 0),
     }) :));
 }
 
