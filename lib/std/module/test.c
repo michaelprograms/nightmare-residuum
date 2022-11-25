@@ -1,15 +1,15 @@
 #define ANSI(p)     "\e["+(p)+"m"
-#define RESET       (this_character() ? "%^RESET%^" : ANSI(0))
-#define BOLD        (this_character() ? "%^BOLD%^" : ANSI(1))
-#define UNDERLINE   (this_character() ? "%^UNDERLINE%^" : ANSI(4))
-#define BLACK       (this_character() ? "%^BLACK%^" : ANSI(30))
-#define RED         (this_character() ? "%^RED%^" : ANSI(31))
-#define GREEN       (this_character() ? "%^GREEN%^" : ANSI(32))
-#define ORANGE      (this_character() ? "%^ORANGE%^" : ANSI(33))
-#define CYAN        (this_character() ? "%^CYAN%^" : ANSI(36))
-#define B_RED       (this_character() ? "%^B_RED%^" : ANSI(41))
-#define B_GREEN     (this_character() ? "%^B_GREEN%^" : ANSI(42))
-#define B_ORANGE    (this_character() ? "%^B_ORANGE%^BLACK%^" : ANSI(43))
+#define RESET       ANSI(0)
+#define BOLD        ANSI(1)
+#define UNDERLINE   ANSI(4)
+#define BLACK       ANSI(30)
+#define RED         ANSI(31)
+#define GREEN       ANSI(32)
+#define ORANGE      ANSI(33)
+#define CYAN        ANSI(36)
+#define B_RED       ANSI(41)
+#define B_GREEN     ANSI(42)
+#define B_ORANGE    ANSI(43)
 
 nosave protected mixed UNDEFINED = (([])[0]); // equivalent of UNDEFINED
 
@@ -125,7 +125,7 @@ private void finish_test () {
     if (sizeof(testObjectUntestedFns) > 0) {
         write("\n  Found " + BOLD + UNDERLINE + "Untested Functions" + RESET + "\n");
         foreach (string fn in testObjectUntestedFns) {
-            write(RED + "    ?" + RESET + " " + fn + "\n");
+            write(ORANGE + "    ?" + RESET + " " + fn + "\n");
         }
     }
 
