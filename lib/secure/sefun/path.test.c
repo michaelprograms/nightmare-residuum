@@ -72,7 +72,7 @@ void test_sanitize_path () {
     }) :));
 
     expect("sanitize_path handles . and ..", (: ({
-        assert(testOb->sanitize_path(""), "==", "/"),
+        assert((:testOb->sanitize_path(""):), "catch", "*Bad argument 1 to path->sanitize_path\n"),
         assert(testOb->sanitize_path("."), "==", "/"),
         assert(testOb->sanitize_path("/"), "==", "/"),
         assert(testOb->sanitize_path("/."), "==", "/"),
@@ -118,14 +118,14 @@ void test_sanitize_path () {
 
     expect("sanitize_path handles cwd", (: ({
         __MockShell->set_variable("cwd", "/realm/test/testdir/"),
-        assert(testOb->sanitize_path(""), "==", "/realm/test/testdir/"),
-        assert(testOb->sanitize_path(), "==", "/realm/test/testdir/"),
         assert(testOb->sanitize_path("test"), "==", "/realm/test/testdir/"),
+        assert((: testOb->sanitize_path("") :), "catch", "*Bad argument 1 to path->sanitize_path\n"),
+        assert((: testOb->sanitize_path() :), "catch", "*Bad argument 1 to path->sanitize_path\n"),
 
         __MockShell->set_variable("cwd", "/realm/test/otherdir/"),
-        assert(testOb->sanitize_path(""), "==", "/realm/test/otherdir/"),
-        assert(testOb->sanitize_path(), "==", "/realm/test/otherdir/"),
         assert(testOb->sanitize_path("test"), "==", "/realm/test/otherdir/"),
+        assert((: testOb->sanitize_path("") :), "catch", "*Bad argument 1 to path->sanitize_path\n"),
+        assert((: testOb->sanitize_path() :), "catch", "*Bad argument 1 to path->sanitize_path\n"),
     }) :));
 
     destruct(__MockCharacter);

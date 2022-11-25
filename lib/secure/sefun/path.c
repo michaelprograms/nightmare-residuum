@@ -21,7 +21,11 @@ string sanitize_path (string path) {
     int i = 0;
     int trailingSlash;
 
-    if (undefinedp(path) || !path || path == "" || (path[0] != '/' && path[0] != '~' && path[0] != '^')) {
+    if (!stringp(path) || !sizeof(path)) {
+        error("Bad argument 1 to path->sanitize_path");
+    }
+
+    if ((path[0] != '/' && path[0] != '~' && path[0] != '^')) {
         if (previous_object() && previous_object()->query_shell()) {
             path = previous_object()->query_shell()->query_variable("cwd");
         }
