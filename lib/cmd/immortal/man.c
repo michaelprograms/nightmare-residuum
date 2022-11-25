@@ -8,9 +8,7 @@ void command (string input, mapping flags) {
 
     foreach (string type in ({ "apply", "efun", "lpc" })) {
         if (file_size(path = "/doc/" + type + "/" + input) > 0) {
-            foreach (string line in explode(read_file(path), "\n")) {
-                message("action", line + "\n", this_character());
-            }
+            this_user()->handle_pager(read_file(path));
             return;
         }
     }
