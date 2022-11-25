@@ -10,10 +10,9 @@ void after_each_test () {
     if (objectp(testOb)) destruct(testOb);
 }
 
-object __MockCharacter;
-object query_character () {
-    return __MockCharacter;
-}
+nosave private int __StatusDisable, __StatusBusy;
+int query_disable () { return __StatusDisable; }
+int query_busy () { return __StatusBusy; }
 
 void test_name () {
     expect_function("query_name", testOb);
@@ -43,8 +42,6 @@ void test_requirements () {
         assert(testOb->query_requirements(), "==", REQUIREMENT_BUSY & REQUIREMENT_DISABLE),
     }) :));
 
-    __MockCharacter = new("/std/character.c");
-    __MockCharacter->set_key_name("test"); // must be named test
     expect("can_verb_rule should use requirements", (: ({
         // test singular requirements
         testOb->set_requirements(REQUIREMENT_NONE),
@@ -56,7 +53,7 @@ void test_requirements () {
         assert(testOb->check_busy(), "==", 1),
         assert(testOb->can_verb_rule("verb", "rule"), "==", 1),
 
-        __MockCharacter->set_busy(1),
+        __StatusBusy = 1,
         assert(testOb->check_busy(), "regex", "^You are too busy"),
         assert(testOb->can_verb_rule("verb", "rule"), "regex", "^You are too busy"),
 
@@ -65,24 +62,23 @@ void test_requirements () {
         assert(testOb->check_disable(), "==", 1),
         assert(testOb->can_verb_rule("verb", "rule"), "==", 1),
 
-        __MockCharacter->set_disable(1),
+        __StatusDisable = 1,
         assert(testOb->check_disable(), "regex", "^You are not able"),
         assert(testOb->can_verb_rule("verb", "rule"), "regex", "^You are not able"),
 
         // test multiple requirements
         testOb->set_requirements(REQUIREMENT_BUSY | REQUIREMENT_DISABLE),
-        __MockCharacter->set_busy(0),
-        __MockCharacter->set_disable(0),
+        __StatusBusy = 0,
+        __StatusDisable = 0,
         assert(testOb->can_verb_rule("verb", "rule"), "==", 1),
         // busy
-        __MockCharacter->set_busy(1),
+        __StatusBusy = 1,
         assert(testOb->can_verb_rule("verb", "rule"), "regex", "^You are too busy"),
         // both
-        __MockCharacter->set_disable(1),
+        __StatusDisable = 1,
         assert(testOb->can_verb_rule("verb", "rule"), "regex", "^You are too busy"),
         // disable
-        __MockCharacter->set_busy(0),
+        __StatusBusy = 0,
         assert(testOb->can_verb_rule("verb", "rule"), "regex", "^You are not able"),
     }) :));
-    destruct(__MockCharacter);
 }

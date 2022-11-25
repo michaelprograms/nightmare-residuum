@@ -29,7 +29,6 @@ int query_requirements () {
 }
 
 mixed check_busy () {
-
     if (previous_object()->query_busy() > 0) {
         return "You are too busy to do that right now.";
     } else {
