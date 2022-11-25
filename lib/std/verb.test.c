@@ -14,14 +14,6 @@ nosave private int __StatusDisable, __StatusBusy;
 int query_disable () { return __StatusDisable; }
 int query_busy () { return __StatusBusy; }
 
-void test_name () {
-    expect_function("query_name", testOb);
-
-    expect("handles verb name", (: ({
-        assert(testOb->query_name(), "==", "verb"),
-    }) :));
-}
-
 void test_requirements () {
     expect_function("set_requirements", testOb);
     expect_function("query_requirements", testOb);

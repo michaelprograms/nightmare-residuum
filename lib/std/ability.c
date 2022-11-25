@@ -6,17 +6,6 @@ nosave private mapping __Reqs;
 nosave private mapping __SkillPowers;
 nosave private mapping __Weapons = ([ ]);
 
-void create () {
-    ::create();
-    __Reqs = ([ ]);
-    __SkillPowers = ([ ]);
-    if (query_name() != "ability") {
-        add_rules(({ "", "LIV", }));
-    }
-    set_requirements(REQUIREMENT_BUSY | REQUIREMENT_DISABLE);
-    set_syntax(query_name()+" ([target])");
-}
-
 /* ----- ability requirements ----- */
 
 void set_ability_requirements (mapping reqs) {
@@ -430,4 +419,15 @@ void do_verb_liv (mixed args...) {
 // Handle no input
 void do_verb_rule (mixed args...) {
     handle_ability_use(previous_object(), 0);
+}
+
+void create () {
+    ::create();
+    __Reqs = ([ ]);
+    __SkillPowers = ([ ]);
+    if (query_name() != "ability") {
+        add_rules(({ "", "LIV", }));
+    }
+    set_requirements(REQUIREMENT_BUSY | REQUIREMENT_DISABLE);
+    set_syntax(query_name()+" ([target])");
 }

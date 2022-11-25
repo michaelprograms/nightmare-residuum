@@ -1,13 +1,19 @@
-#include <verb.h>
-
 inherit M_TEST;
 
 private nosave object testOb;
 void before_each_test () {
-    testOb = clone_object("/std/verb.c");
+    testOb = clone_object("/std/command.c");
 }
 void after_each_test () {
     if (objectp(testOb)) destruct(testOb);
+}
+
+void test_name () {
+    expect_function("query_name", testOb);
+
+    expect("handles command name", (: ({
+        assert(testOb->query_name(), "==", "command"),
+    }) :));
 }
 
 void test_help_text () {

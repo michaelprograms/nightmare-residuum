@@ -4,18 +4,13 @@ inherit STD_COMMAND;
 inherit M_CLEAN;
 
 nosave private int __Requirements = REQUIREMENT_NONE;
-nosave private string __Verb;
 
-string query_name () {
-    return __Verb;
-}
-
-protected varargs void add_rules (mixed *rules, mixed *syns) {
+protected varargs void add_rules (string *rules, string *syns) {
     foreach (string rule in rules) {
-        parse_add_rule(__Verb, rule);
-        if (!undefinedp(syns)) {
+        parse_add_rule(query_name(), rule);
+        if (!arrayp(syns)) {
             foreach (string syn in syns) {
-                parse_add_synonym(syn, __Verb, rule);
+                parse_add_synonym(syn, query_name(), rule);
             }
         }
     }
@@ -46,7 +41,7 @@ mixed check_disable () {;
 /* ----- applies ----- */
 
 void create () {
-    __Verb = split_path(base_name())[1];
+    command::create();
     set_no_clean(1);
     parse_init();
 }
