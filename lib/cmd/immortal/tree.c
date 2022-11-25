@@ -48,7 +48,6 @@ varargs string *tree (string file, int indent, string fn, mapping b, int index, 
     if (index > 0 && index == maxIndex) {
         prefix[indent-1] = " ";
     }
-
     if (indent > 0) {
         for (int i = 0; i < indent-1; i ++ ) {
             if (prefix[i]) tmp += prefix[i] + "  ";
