@@ -22,7 +22,7 @@ varargs string *tree (object ob, int indent, mapping b, int index, int maxIndex,
         }
         tmp += (index == maxIndex ? b["bl"] : b["l"]) + b["h"] + " ";
     }
-    tmp += index + " " + (!indent && ob->inventory_accessible() ? "%^UNDERLINE%^BOLD%^" : "") + (ob->query_cap_name() ? ob->query_cap_name()+" ": "") + file_name(ob)+ (!indent ? "%^RESET%^" : "");
+    tmp += index + ". " + (!indent && ob->inventory_accessible() ? "%^UNDERLINE%^BOLD%^" : "") + (ob->query_cap_name() ? ob->query_cap_name()+" ": "") + file_name(ob)+ (!indent ? "%^RESET%^" : "");
     obs -= ({ ob });
 
     result += ({ tmp });
@@ -82,11 +82,18 @@ void command (string input, mapping flags) {
     }
 
     border(([
-        "title": "OBJECTS2",
+        "title": "OBJECTS",
         "subtitle": input,
         "body": ([
             "items": list,
             "columns": 1,
         ]),
+        "footer": ([
+            "items": ({
+                sizeof(list) + " object" + (sizeof(list) != 1 ? "s" : "")
+            }),
+            "align": "center",
+            "columns": 1,
+        ])
     ]));
 }
