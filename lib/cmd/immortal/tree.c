@@ -1,29 +1,8 @@
 varargs string *tree (string file, int indent, string fn, mapping b, int index, int maxIndex);
 
-private nosave mapping __Border = ([
-    "utf-8": ([
-        // lines
-        "h": "─",
-        "v": "│",
-        // corners
-        "bl": "└",
-        // joints
-        "l": "├",
-    ]),
-    "US-ASCII": ([
-        // lines
-        "h": "-",
-        "v": "|",
-        // corners
-        "bl": "'",
-        // joints
-        "l": "|",
-    ]),
-]);
-
 void command (string input, mapping flags) {
     string file, fn;
-    mapping b = __Border[query_encoding()];
+    mapping b = query_border_charset();
 
     if (!input) {
         message("system", "Syntax: tree -fn=function [file]\n", this_user());
