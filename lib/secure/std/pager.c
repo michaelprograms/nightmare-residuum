@@ -16,7 +16,7 @@ nomask private string prompt () {
     int percent;
     string prompt = "";
 
-    if (chunkEnd > __LinesCount) {
+    if (chunkEnd >= __LinesCount) {
         chunkEnd = __LinesCount;
         percent = 100;
         done(1);
