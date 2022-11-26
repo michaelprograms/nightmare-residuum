@@ -13,6 +13,8 @@ nosave private string __TerminalType;
 nosave private string __TerminalColor = "256";
 nosave private string __IPAddr;
 
+int is_user() { return 1; }
+
 /* --- interactive apply --- */
 
 nomask void logon () {

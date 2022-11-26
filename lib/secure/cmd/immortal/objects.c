@@ -5,49 +5,37 @@ void create () {
     set_help_text("The objects command is used to view the list of objects in your current environment.\n\nUsing the all argument will show the entire list of objects.\n\nUsing a name or file filter will show the list of objects that match either filter.");
 }
 
-nosave private object *obs;
+mapping format_data (object ob) {
+    mapping result = ([ ]);
+    object *contents;
+    int l;
 
-varargs string *tree (object ob, int indent, mapping b, int index, int maxIndex, mapping prefix) {
-    string *result = ({ }), tmp = "";
-    object *contents = ob->query_contents();
-    int l = sizeof(contents);
+    if (!ob) return 0;
 
-    if (index > 0 && index == maxIndex) {
-        prefix[indent-1] = " ";
-    }
-    if (indent > 0) {
-        for (int i = 0; i < indent-1; i ++ ) {
-            if (prefix[i]) tmp += prefix[i] + "  ";
-            else tmp += b["v"] + "  ";
-        }
-        tmp += (index == maxIndex ? b["bl"] : b["l"]) + b["h"] + " ";
-    }
-    tmp += index + ". " + (!indent && ob->inventory_accessible() ? "%^UNDERLINE%^BOLD%^" : "") + (ob->query_cap_name() ? ob->query_cap_name()+" ": "") + file_name(ob)+ (!indent ? "%^RESET%^" : "");
-    obs -= ({ ob });
-
-    result += ({ tmp });
-    indent ++;
     if (ob->is_character()) {
-        result += tree(ob->query_user(), indent, b, 0, 0, prefix);
-        result += tree(ob->query_user()->query_shell(), indent+1, b, 1, 2, prefix);
-        result += tree(ob->query_user()->query_account(), indent+1, b, 2, 2, prefix);
+        result[file_name(ob->query_user())] = format_data(ob->query_user());
+    }
+    if (ob->is_user()) {
+        result[file_name(ob->query_shell())] = format_data(ob->query_shell());
+        result[file_name(ob->query_account())] = format_data(ob->query_account());
     }
     if (ob->is_vendor()) {
-        result += tree(ob->query_vendor_inventory(), indent, b, 1, sizeof(ob->query_vendor_inventory()), prefix);
+        result[file_name(ob->query_vendor_inventory())] = format_data(ob->query_vendor_inventory());
     }
-
+    contents = ob->query_contents();
+    l = sizeof(contents);
     for (int i = 0; i < l; i ++) {
-        result += tree(contents[i], indent, b, i+1, l, prefix);
+        result[contents[i]->query_cap_name() + " " + file_name(contents[i])] = format_data(contents[i]);
     }
 
     return result;
 }
 
 void command (string input, mapping flags) {
-    mapping b = query_border_charset();
-    object *blueprints, *rooms, *containers;
-    string *list = ({ });
-    int l, n;
+    object *obs, *blueprints, *rooms, *containers;
+    int l;
+
+    mapping data = ([ ]);
 
     if (!input) {
         obs = ({ environment(this_character()) });
@@ -65,35 +53,28 @@ void command (string input, mapping flags) {
     rooms = sort_array(rooms, (: strcmp(base_name($1), base_name($2)) :));
     l = sizeof(rooms);
     for (int i = 0; i < l; i ++) {
-        list += tree(rooms[i], 0, b, i+1, l, ([ ]));
+        data[rooms[i]] = format_data(rooms[i]);
     }
-    n += l;
 
     containers = filter_array(obs, (: $1 && $1->inventory_accessible() :));
     l = sizeof(containers);
     for (int i = 0; i < l; i ++) {
-        list += tree(containers[i], 0, b, n+i+1, n+l, ([ ]));
+        data[containers[i]] = format_data(containers[i]);
     }
-    n += l;
 
     l = sizeof(obs);
     for (int i = 0; i < l; i ++) {
-        list += tree(obs[i], 0, b, n+i+1, n+l, ([ ]));
+        data[obs[i]] = format_data(obs[i]);
     }
 
     border(([
         "title": "OBJECTS",
         "subtitle": input,
-        "body": ([
-            "items": list,
-            "columns": 1,
-        ]),
-        "footer": ([
-            "items": ({
-                sizeof(list) + " object" + (sizeof(list) != 1 ? "s" : "")
-            }),
-            "align": "center",
-            "columns": 1,
-        ])
+        "body": ({
+            ([
+                "items": tree(data),
+                "columns": 1,
+            ])
+        }),
     ]));
 }

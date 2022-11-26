@@ -356,3 +356,59 @@ string *format_border (mapping data) {
 void border (mapping data) {
     SEFUN->this_user()->handle_pager(format_border(data));
 }
+
+private varargs string *format_tree (string key, mapping value, mapping b, int indent, int index, int maxIndex, mapping prefix) {
+    string *result = ({ }), tmp = "";
+    string *ids;
+    int i, l;
+
+    if (indent > 0) {
+        for (i = 0; i < indent; i ++) {
+            if (i > 0) {
+                if (prefix[i]) {
+                    tmp += "  ";
+                } else {
+                    tmp += b["v"] + " ";
+                }
+            }
+        }
+        if (index == maxIndex) {
+            tmp += b["bl"];
+            prefix[indent] = 1;
+        } else {
+            tmp += b["l"];
+        }
+        tmp += b["h"];
+    }
+
+    ids = keys(value);
+    l = sizeof(ids);
+    if (l) {
+        key = "%^UNDERLINE%^" + key + "%^UNDERLINE_OFF%^";
+    }
+    tmp += index + ". " + key;
+    indent ++;
+    result += ({ tmp });
+    for (i = 0; i < l; i ++) {
+        result += format_tree(ids[i], value[ids[i]], b, indent, i, l-1, prefix);
+        prefix[indent] = 0;
+    }
+
+    return result;
+}
+string *tree (mapping value) {
+    string *result = ({ });
+    mapping b = query_border_charset();
+    string *ids;
+    int i, l;
+
+    if (!mapp(value) || !sizeof(value)) error("Bad argument 1 to border->tree");
+
+    ids = keys(value);
+    l = sizeof(ids);
+    for (i = 0; i < l; i ++) {
+        result += format_tree(ids[i], value[ids[i]], b, 0, i, l-1, ([ ]));
+    }
+
+    return result;
+}
