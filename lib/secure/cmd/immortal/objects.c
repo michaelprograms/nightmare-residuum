@@ -1,8 +1,26 @@
 inherit STD_COMMAND;
 
+mapping format_data (object ob);
+
 void create () {
     set_syntax("objects (all|[name filter]|[file filter])");
     set_help_text("The objects command is used to view the list of objects in your current environment.\n\nUsing the all argument will show the entire list of objects.\n\nUsing a name or file filter will show the list of objects that match either filter.");
+}
+
+void set_data (mapping result, object ob) {
+    mapping tmp = format_data(ob);
+    string key;
+
+    if (!ob) return;
+    write("set_data "+identify(ob)+"\n");
+    key = file_name(ob);
+    if (ob->query_cap_name()) {
+        key = ob->query_cap_name() + " " + key;
+    }
+    if (sizeof(tmp)) {
+        key = "%^UNDERLINE%^" + key + "%^RESET%^";
+    }
+    result[key] = tmp;
 }
 
 mapping format_data (object ob) {
@@ -12,30 +30,46 @@ mapping format_data (object ob) {
 
     if (!ob) return 0;
 
+    write("format_data "+identify(ob)+"\n");
     if (ob->is_character()) {
-        result[file_name(ob->query_user())] = format_data(ob->query_user());
+        set_data(result, ob->query_user());
+
     }
     if (ob->is_user()) {
-        result[file_name(ob->query_shell())] = format_data(ob->query_shell());
-        result[file_name(ob->query_account())] = format_data(ob->query_account());
+        set_data(result, ob->query_shell());
+        set_data(result, ob->query_account());
     }
     if (ob->is_vendor()) {
-        result[file_name(ob->query_vendor_inventory())] = format_data(ob->query_vendor_inventory());
+        set_data(result, ob->query_vendor_inventory());
     }
     contents = ob->query_contents();
     l = sizeof(contents);
     for (int i = 0; i < l; i ++) {
-        result[contents[i]->query_cap_name() + " " + file_name(contents[i])] = format_data(contents[i]);
+        set_data(result, contents[i]);
     }
 
     return result;
 }
+void format_type (mapping data, object *obs) {
+    int i, l;
+    string key;
+    mapping tmp;
+
+    l = sizeof(obs);
+    for (i = 0; i < l; i ++) {
+        tmp = format_data(obs[i]);
+        key = file_name(obs[i]);
+        if (sizeof(tmp)) {
+            key = "%^UNDERLINE%^" + key + "%^RESET%^";
+        }
+        data[key] = tmp;
+    }
+}
 
 void command (string input, mapping flags) {
-    object *obs, *blueprints, *rooms, *containers;
-    int l;
-
+    object *obs, *rooms, *containers;
     mapping data = ([ ]);
+
 
     if (!input) {
         obs = ({ environment(this_character()) });
@@ -45,27 +79,19 @@ void command (string input, mapping flags) {
         obs = filter_array(objects(), (: $1 && ($1->query_key_name() == $(input) || regexp(file_name($1), $(input))) :));
     }
 
+    // format rooms first
     rooms = filter_array(obs, (: $1 && $1->is_room() :));
-    obs -= rooms;
-    blueprints = filter_array(obs, (: $1 && !environment($1) && !clonep($1) && !regexp(file_name($1), "#") :));
-    obs -= blueprints;
-
     rooms = sort_array(rooms, (: strcmp(base_name($1), base_name($2)) :));
-    l = sizeof(rooms);
-    for (int i = 0; i < l; i ++) {
-        data[rooms[i]] = format_data(rooms[i]);
-    }
+    obs -= rooms;
+    format_type(data, rooms);
 
+    // format containers next
     containers = filter_array(obs, (: $1 && $1->inventory_accessible() :));
-    l = sizeof(containers);
-    for (int i = 0; i < l; i ++) {
-        data[containers[i]] = format_data(containers[i]);
-    }
+    obs -= containers;
+    format_type(data, obs);
 
-    l = sizeof(obs);
-    for (int i = 0; i < l; i ++) {
-        data[obs[i]] = format_data(obs[i]);
-    }
+    // format rest of obs
+    format_type(data, obs);
 
     border(([
         "title": "OBJECTS",

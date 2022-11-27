@@ -383,9 +383,6 @@ private varargs string *format_tree (string key, mapping value, mapping b, int i
 
     ids = keys(value);
     l = sizeof(ids);
-    if (l) {
-        key = "%^UNDERLINE%^" + key + "%^UNDERLINE_OFF%^";
-    }
     tmp += index + ". " + key;
     indent ++;
     result += ({ tmp });
