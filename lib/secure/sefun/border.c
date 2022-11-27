@@ -381,9 +381,9 @@ private varargs string *format_tree (string key, mapping value, mapping b, int i
         tmp += b["h"];
     }
 
-    ids = keys(value);
+    ids = sort_array(keys(value), (: to_int(explode($1," ")[0]) < to_int(explode($2," ")[0]) ? 0 : 1 :));
     l = sizeof(ids);
-    tmp += index + ". " + key;
+    tmp += key;
     indent ++;
     result += ({ tmp });
     for (i = 0; i < l; i ++) {
@@ -401,7 +401,7 @@ string *tree (mapping value) {
 
     if (!mapp(value) || !sizeof(value)) error("Bad argument 1 to border->tree");
 
-    ids = keys(value);
+    ids = sort_array(keys(value), (: to_int(explode($1," ")[0]) < to_int(explode($2," ")[0]) ? 0 : 1 :));
     l = sizeof(ids);
     for (i = 0; i < l; i ++) {
         result += format_tree(ids[i], value[ids[i]], b, 0, i, l-1, ([ ]));

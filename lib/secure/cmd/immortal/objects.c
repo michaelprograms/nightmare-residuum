@@ -7,7 +7,7 @@ void create () {
     set_help_text("The objects command is used to view the list of objects in your current environment.\n\nUsing the all argument will show the entire list of objects.\n\nUsing a name or file filter will show the list of objects that match either filter.");
 }
 
-private void set_data (mapping result, object ob) {
+private void set_data (mapping result, object ob, int index) {
     mapping tmp = format_data(ob);
     string key;
 
@@ -19,30 +19,33 @@ private void set_data (mapping result, object ob) {
     if (sizeof(tmp)) {
         key = "%^UNDERLINE%^" + key + "%^RESET%^";
     }
+    key = index + ". " + key;
     result[key] = tmp;
 }
 private mapping format_data (object ob) {
     mapping result = ([ ]);
-    object *contents;
+    object *contents = ({ });
     int l;
 
     if (!ob) return 0;
 
     if (ob->is_character()) {
-        set_data(result, ob->query_user());
-
+        contents += ({ ob->query_user() });
     }
     if (ob->is_user()) {
-        set_data(result, ob->query_shell());
-        set_data(result, ob->query_account());
+        contents += ({ ob->query_shell() });
+        contents += ({ ob->query_account() });
     }
     if (ob->is_vendor()) {
-        set_data(result, ob->query_vendor_inventory());
+        contents += ob->query_vendor_inventory();
     }
-    contents = ob->query_contents();
+    if (ob->query_contents()) {
+        contents += ob->query_contents();
+    }
+
     l = sizeof(contents);
     for (int i = 0; i < l; i ++) {
-        set_data(result, contents[i]);
+        set_data(result, contents[i], i);
     }
 
     return result;
@@ -59,6 +62,7 @@ private void format_type (mapping data, object *obs) {
         if (sizeof(tmp)) {
             key = "%^UNDERLINE%^" + key + "%^RESET%^";
         }
+        key = i + ". " + key;
         data[key] = tmp;
     }
 }

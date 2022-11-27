@@ -1,8 +1,43 @@
-varargs string *tree (string file, int indent, string fn, mapping b, int index, int maxIndex);
+mapping localtree (string file, string fn, int index, int maxIndex) {
+    mapping result = ([ ]), tmp;
+    string *inherits, err, key;
+    object ob;
+    int l, searchFlag = 0;
+
+    if (!file) {
+        return 0;
+    }
+
+    ob = find_object(file);
+    if (!ob) {
+        err = catch (ob = load_object(file));
+        if (err) return 0;
+    }
+
+    l = sizeof(inherits = inherit_list(ob));
+    searchFlag = (stringp(fn) && function_exists(fn, ob) + ".c" == file);
+
+    if (searchFlag) {
+        key = index + ". %^CYAN%^" + file + "%^RESET%^ <- " + fn;
+    } else {
+        key = index + ". " + file;
+    }
+
+    if (!mapp(result[key])) {
+        result[key] = ([ ]);
+    }
+    for (int i = 0; i < l; i ++) {
+        tmp = localtree(inherits[i], fn, i, l);
+        result[key] += tmp;
+    }
+
+    return result;
+}
 
 void command (string input, mapping flags) {
     string file, fn;
-    mapping b = query_border_charset();
+    mapping data = ([ ]);
+    string key;
 
     if (!input) {
         message("system", "Syntax: tree -fn=function [file]\n", this_user());
@@ -20,52 +55,12 @@ void command (string input, mapping flags) {
     } else {
         message("system", "Tree of " + file + "\n\n", this_user());
     }
-    foreach (string line in tree(file, 0, fn, b, 0, 0, ([ ]))) {
+
+    data = localtree(file, fn, 0, 1);
+    key = file;
+
+    foreach (string line in tree(data)) {
         message("system", line + "\n", this_user());
     }
     message("system", "\n", this_user());
-}
-
-varargs string *tree (string file, int indent, string fn, mapping b, int index, int maxIndex, mapping prefix) {
-    string *result = ({ }), tmp = "", *inherits, err;
-    object ob;
-    int l, searchFlag = 0;
-
-    if (!file) {
-        return ({ "tree: file not found." });
-    }
-
-    ob = find_object(file);
-    if (!ob) {
-        err = catch (ob = load_object(file));
-        if (err) return ({ "tree: unable to load " + file + ": " + err });
-    }
-    if (!ob) result += ({ "tree: " + file + " not found." });
-
-    l = sizeof(inherits = inherit_list(ob));
-    searchFlag = (stringp(fn) && function_exists(fn, ob) + ".c" == file);
-
-    if (index > 0 && index == maxIndex) {
-        prefix[indent-1] = " ";
-    }
-    if (indent > 0) {
-        for (int i = 0; i < indent-1; i ++ ) {
-            if (prefix[i]) tmp += prefix[i] + "  ";
-            else tmp += b["v"] + "  ";
-        }
-        tmp += (index == maxIndex ? b["bl"] : b["l"]) + b["h"] + " ";
-    }
-    if (searchFlag) {
-        tmp += "%^CYAN%^" + file + "%^RESET%^ <- " + fn;
-    } else {
-        tmp += file;
-    }
-    result += ({ tmp });
-
-    indent ++;
-    for (int i = 0; i < l; i ++) {
-        result += tree(inherits[i], indent, fn, b, i+1, l, prefix);
-    }
-
-    return result;
 }
