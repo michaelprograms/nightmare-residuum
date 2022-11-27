@@ -7,12 +7,11 @@ void create () {
     set_help_text("The objects command is used to view the list of objects in your current environment.\n\nUsing the all argument will show the entire list of objects.\n\nUsing a name or file filter will show the list of objects that match either filter.");
 }
 
-void set_data (mapping result, object ob) {
+private void set_data (mapping result, object ob) {
     mapping tmp = format_data(ob);
     string key;
 
     if (!ob) return;
-    write("set_data "+identify(ob)+"\n");
     key = file_name(ob);
     if (ob->query_cap_name()) {
         key = ob->query_cap_name() + " " + key;
@@ -22,15 +21,13 @@ void set_data (mapping result, object ob) {
     }
     result[key] = tmp;
 }
-
-mapping format_data (object ob) {
+private mapping format_data (object ob) {
     mapping result = ([ ]);
     object *contents;
     int l;
 
     if (!ob) return 0;
 
-    write("format_data "+identify(ob)+"\n");
     if (ob->is_character()) {
         set_data(result, ob->query_user());
 
@@ -50,7 +47,7 @@ mapping format_data (object ob) {
 
     return result;
 }
-void format_type (mapping data, object *obs) {
+private void format_type (mapping data, object *obs) {
     int i, l;
     string key;
     mapping tmp;
@@ -69,7 +66,6 @@ void format_type (mapping data, object *obs) {
 void command (string input, mapping flags) {
     object *obs, *rooms, *containers;
     mapping data = ([ ]);
-
 
     if (!input) {
         obs = ({ environment(this_character()) });
