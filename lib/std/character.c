@@ -185,7 +185,7 @@ void describe_environment_long () {
     } else {
         string *long, result = "", line;
         int l;
-        long = ({ "%^BOLD%^" + env->query_short() + "%^RESET%^" }) + explode(wrap_ansi(env->query_long(), width-18), "\n");
+        long = ({ "%^BOLD%^" + env->query_short() + "%^RESET%^" }) + explode(wrap_ansi(env->query_long(), width-16), "\n");
 
         map = map(map, (: $1+" " :));
         l = max(({ sizeof(map), sizeof(long) }));
@@ -193,7 +193,7 @@ void describe_environment_long () {
             if (i < sizeof(map)) {
                 line = map[i];
             } else {
-                line = sprintf("%*s", 18, "");
+                line = sprintf("%*s", 16, "");
             }
             if (i < sizeof(long)) {
                 line += long[i];
