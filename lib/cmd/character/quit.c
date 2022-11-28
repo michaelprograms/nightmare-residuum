@@ -7,9 +7,9 @@ void create () {
 
 void command (string input, mapping flags) {
     if (!this_character()) {
-        write("Quitting out...\n");
+        message("action", "Quitting out...", this_user());
     } else {
-        write("Quitting out of " + this_character()->query_cap_name() + ".\n");
+        message("action", "Quitting out of " + this_character()->query_cap_name() + ".", this_user());
     }
     this_user()->quit_character();
 }

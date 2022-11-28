@@ -25,7 +25,7 @@ void command (string input, mapping flags) {
         }
         subtitle = sizeof(msgs) + " say" + (sizeof(msgs) != 1 ? "s" : "");
     } else {
-        message("action", "Syntax: <last says|tells>\n", tc);
+        message("action", "Syntax: <last says|tells>", tc);
         return;
     }
 

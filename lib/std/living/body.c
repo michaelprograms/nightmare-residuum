@@ -94,11 +94,11 @@ void handle_limb_sever (string limb) {
     }
 
     if (__Limbs[limb]["type"] == "FATAL") {
-        message("combat alert", "Your "+limb+" receives a mortal blow!\n", this_object());
-        message("combat info", possessive_noun(this_object())+" "+limb+" receives a mortal blow!\n", environment(), this_object());
+        message("combat alert", "Your "+limb+" receives a mortal blow!", this_object());
+        message("combat info", possessive_noun(this_object())+" "+limb+" receives a mortal blow!", environment(), this_object());
     } else {
-        message("combat alert", "Your "+limb+" is severed!\n", this_object());
-        message("combat info", possessive_noun(this_object())+" "+limb+" is severed!\n", environment(), this_object());
+        message("combat alert", "Your "+limb+" is severed!", this_object());
+        message("combat info", possessive_noun(this_object())+" "+limb+" is severed!", environment(), this_object());
     }
 
     // remove wielded weapon
@@ -157,9 +157,9 @@ varargs int handle_damage (int damage, string limb, object source) {
         if (limbDamagePct >= 100) {
             call_out((: handle_limb_sever($(limb)) :), 0);
         } else if (limbDamagePct >= 75) {
-            message("combat alert", "Your "+limb+" is badly damaged!\n", this_object());
+            message("combat alert", "Your "+limb+" is badly damaged!", this_object());
         } else if (limbDamagePct >= 50) {
-            message("combat alert", "Your "+limb+" is injured!\n", this_object());
+            message("combat alert", "Your "+limb+" is injured!", this_object());
         }
     }
 
@@ -226,8 +226,8 @@ varargs mixed handle_wear (object ob) {
     ob->set_worn(this_object());
 
     limbConj = conjunction(ob->query_limbs());
-    message("verb", "You wear " + ob->query_name() + " on your " + limbConj + ".\n", this_object());
-    message("verb", this_object()->query_cap_name() + " wears " + ob->query_name() + " on " + possessive(this_object()) + " " + limbConj + ".\n", environment(), this_object());
+    message("action", "You wear " + ob->query_name() + " on your " + limbConj + ".", this_object());
+    message("action", this_object()->query_cap_name() + " wears " + ob->query_name() + " on " + possessive(this_object()) + " " + limbConj + ".", environment(), this_object());
 
     return 1;
 }
@@ -246,8 +246,8 @@ varargs mixed handle_unwear (object ob) {
     ob->set_worn(0);
 
     limbConj = conjunction(ob->query_limbs());
-    message("verb", "You remove " + ob->query_name() + " from your " + limbConj + ".\n", this_object());
-    message("verb", this_object()->query_cap_name() + " removes " + ob->query_name() + " from " + possessive(this_object()) + " " + limbConj + ".\n", environment(), this_object());
+    message("action", "You remove " + ob->query_name() + " from your " + limbConj + ".", this_object());
+    message("action", this_object()->query_cap_name() + " removes " + ob->query_name() + " from " + possessive(this_object()) + " " + limbConj + ".", environment(), this_object());
 
     return 1;
 }
@@ -306,8 +306,8 @@ varargs mixed handle_wield (object ob) {
     ob->set_wielded(this_object());
 
     limbConj = conjunction(this_object()->query_wielded_limbs(ob));
-    message("verb", "You wield " + ob->query_name() + " in your " + limbConj + ".\n", this_object());
-    message("verb", this_object()->query_cap_name() + " wields " + ob->query_name() + " in " + possessive(this_object()) + " " + limbConj + ".\n", environment(), this_object());
+    message("action", "You wield " + ob->query_name() + " in your " + limbConj + ".", this_object());
+    message("action", this_object()->query_cap_name() + " wields " + ob->query_name() + " in " + possessive(this_object()) + " " + limbConj + ".", environment(), this_object());
 
     return 1;
 }
@@ -328,8 +328,8 @@ varargs mixed handle_unwield (object ob) {
         __Wielded[limb] = 0;
     }
 
-    message("verb", "You unwield " + ob->query_name() + " from your " + limbConj + ".\n", this_object());
-    message("verb", this_object()->query_cap_name() + " unwields " + ob->query_name() + " from " + possessive(this_object()) + " " + limbConj + ".\n", environment(), this_object());
+    message("action", "You unwield " + ob->query_name() + " from your " + limbConj + ".", this_object());
+    message("action", this_object()->query_cap_name() + " unwields " + ob->query_name() + " from " + possessive(this_object()) + " " + limbConj + ".", environment(), this_object());
 
     return 1;
 }

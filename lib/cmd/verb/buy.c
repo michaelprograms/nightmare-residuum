@@ -25,7 +25,7 @@ void do_buy_str_from_obj (mixed args...) {
         vendor = args[1];
         vendor->handle_buy(str, po);
     } else {
-        message("action", "Buy what from which vendor?\n", po);
+        message("action", "Buy what from which vendor?", po);
         return;
     }
 }
@@ -42,9 +42,9 @@ void do_buy_str (mixed args...) {
     if (environment(po) && sizeof(args)) {
         vendors = filter(environment(po)->query_living_contents(), (: $1->is_vendor() :));
         if (sizeof(vendors) == 1) {
-            do_buy_str_from_obj(args[0], vendors[0]); // , args[0], vendors[0]->query_name());
+            do_buy_str_from_obj(args[0], vendors[0]);
         } else {
-            message("action", "Buy what from which vendor?\n", po);
+            message("action", "Buy what from which vendor?", po);
         }
     }
 }
@@ -55,5 +55,5 @@ mixed can_buy (mixed args...) {
     return 1;
 }
 void do_buy (mixed args...) {
-    message("action", "Buy what from which vendor?\n", previous_object());
+    message("action", "Buy what from which vendor?", previous_object());
 }

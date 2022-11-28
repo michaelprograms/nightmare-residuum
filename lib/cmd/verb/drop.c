@@ -17,8 +17,8 @@ mixed can_drop_obj (object ob, string str) {
 void do_drop_obj (object ob, string str) {
     object po = previous_object(), env = environment(po);
 
-    message("verb", "You drop " + ob->query_name() + ".\n", po);
-    message("verb", po->query_cap_name() + " drops some " + ob->query_name() + ".\n", env, po);
+    message("action", "You drop " + ob->query_name() + ".", po);
+    message("action", po->query_cap_name() + " drops some " + ob->query_name() + ".", env, po);
     ob->handle_move(environment(this_character()));
 }
 void do_drop_obs (mixed *info, string str) {
@@ -53,12 +53,12 @@ mixed do_drop_wrd_wrd (mixed args...) {
 
     coins = new("/std/item/coins.c");
     if (!coins->handle_move(env) || !po->add_currency(currency, -amount)) {
-        message("verb", "You are unable to drop that.\n", po);
+        message("action", "You are unable to drop that.", po);
         coins->handle_remove();
         return 1;
     }
     coins->add_currency(currency, amount);
-    message("verb", "You drop " + amount + " " + currency + ".\n", po);
-    message("verb", po->query_cap_name() + " drops some " + currency + ".\n", env, po);
+    message("action", "You drop " + amount + " " + currency + ".", po);
+    message("action", po->query_cap_name() + " drops some " + currency + ".", env, po);
     return 1;
 }

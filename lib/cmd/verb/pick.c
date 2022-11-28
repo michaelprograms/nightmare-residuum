@@ -17,13 +17,13 @@ void do_pick_obj (object ob, string verb) {
     object p;
 
     if (ob->query_picks() < 1 || !ob->query_pick_item()) {
-        message("verb", ob->query_cap_name() + " has nothing to pick.\n", this_character());
+        message("action", ob->query_cap_name() + " has nothing to pick.", this_character());
         return;
     }
 
     ob->handle_pick();
     p = new(ob->query_pick_item());
     p->handle_move(this_character());
-    message("verb", "You pick " + p->query_name() + " from " + ob->query_name() + ".\n", this_character());
-    message("verb", this_character()->query_cap_name() + " picks " + p->query_name() + " from " + ob->query_name() + ".\n", environment(this_character()), this_character());
+    message("action", "You pick " + p->query_name() + " from " + ob->query_name() + ".", this_character());
+    message("action", this_character()->query_cap_name() + " picks " + p->query_name() + " from " + ob->query_name() + ".", environment(this_character()), this_character());
 }

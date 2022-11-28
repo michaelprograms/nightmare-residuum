@@ -31,7 +31,7 @@ mixed can_done () {
     return environment(this_character()) == this_object();
 }
 void do_done () {
-    message("action", "You stand upon the circle in the center of the chamber.\nEverything goes dark for a moment.\n", this_character());
+    message("action", "You stand upon the circle in the center of the chamber.\nEverything goes dark for a moment.", this_character());
     this_character()->handle_go(HUMAN_ROOM + "square.c", "teleport", "out of the obelisk", "out of the obelisk");
     this_character()->describe_environment();
 }

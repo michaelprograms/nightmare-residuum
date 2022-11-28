@@ -139,14 +139,14 @@ varargs void enter_world (int override) {
         }
         D_CHANNEL->send_system("connection", query_cap_name() + " enters " + mud_name() + ".");
         master()->handle_parse_refresh();
-        message("system", query_cap_name() + " suddenly appears into existence.\n", environment(), this_object());
+        message("action", query_cap_name() + " suddenly appears into existence.", environment(), this_object());
     }
     describe_environment();
     set_heart_beat(1);
 }
 
 void exit_world () {
-    message("system", query_cap_name() + " suddenly fades from existence.\n", environment(), this_object());
+    message("action", query_cap_name() + " suddenly fades from existence.", environment(), this_object());
     D_CHANNEL->send_system("connection", query_cap_name() + " exits " + mud_name() + ".");
 
     save_character(1);
@@ -155,7 +155,7 @@ void exit_world () {
 }
 
 void enter_freezer () {
-    message("system", query_cap_name()+" suddenly fades from existence.\n", environment(), this_object());
+    message("action", query_cap_name()+" suddenly fades from existence.", environment(), this_object());
     handle_move("/domain/Nowhere/room/freezer.c");
     D_CHANNEL->send_system("connection", query_cap_name() + " disconnects from " + mud_name() + ".");
     set_heart_beat(0);
@@ -164,7 +164,7 @@ void enter_freezer () {
 void exit_freezer () {
     handle_move(query_environment_path());
     D_CHANNEL->send_system("connection", query_cap_name() + " reconnects to " + mud_name() + ".");
-    message("system", query_cap_name()+" suddenly appears into existence.\n", environment(), this_object());
+    message("action", query_cap_name()+" suddenly appears into existence.", environment(), this_object());
     describe_environment();
     set_heart_beat(1);
 }
@@ -180,8 +180,8 @@ void describe_environment_long () {
         map = env->query_room_exit_map();
     }
     if (!sizeof(map)) {
-        message("room", "%^BOLD%^" + env->query_short() + "%^RESET%^\n", this_object());
-        message("room", env->query_long() + "\n", this_object());
+        message("room", "%^BOLD%^" + env->query_short() + "%^RESET%^", this_object());
+        message("room", env->query_long(), this_object());
     } else {
         string *long, result = "", line;
         int l;
@@ -200,7 +200,7 @@ void describe_environment_long () {
             }
             result += line + "\n";
         }
-        message("system", result + "\n", this_object());
+        message("system", result, this_object());
     }
 }
 
@@ -218,7 +218,7 @@ varargs void describe_environment_senses (string sense, string focus) {
         } else if (stringp(tmp)) {
             result = tmp;
         }
-        message("room listen", result + "\n", this_object());
+        message("room listen", result, this_object());
     }
     if ((!sense || sense == "smell") && (tmp = environment()->query_smell(focus))) {
         if (functionp(tmp)) {
@@ -226,7 +226,7 @@ varargs void describe_environment_senses (string sense, string focus) {
         } else if (stringp(tmp)) {
             result = tmp;
         }
-        message("room smell", result + "\n", this_object());
+        message("room smell", result, this_object());
     }
 }
 
@@ -235,10 +235,10 @@ private void describe_environment_exits () {
     int numExits;
 
     if (!(numExits = sizeof(exits = environment()->query_exit_dirs()))) {
-        message("room exits", "There are no exits.\n\n", this_object());
+        message("room exits", "There are no exits.\n", this_object());
     } else {
         exits = map_array(exits, (: "%^CYAN%^BOLD%^" + $1 + "%^BOLD_OFF%^DEFAULT%^" :));
-        message("room exits", "\nThere " + (numExits > 1 ? "are" : "is") + " " + cardinal(numExits) + " exit" + (numExits > 1 ? "s" : "") + ": " + conjunction(exits) + ".\n\n", this_object());
+        message("room exits", "\nThere " + (numExits > 1 ? "are" : "is") + " " + cardinal(numExits) + " exit" + (numExits > 1 ? "s" : "") + ": " + conjunction(exits) + ".\n", this_object());
     }
 }
 
@@ -282,7 +282,7 @@ private void describe_environment_living_contents () {
         shorts[0] = capitalize(shorts[0]);
         shorts = map_array(shorts, (: "%^BOLD%^" + $1 + "%^BOLD_OFF%^DEFAULT%^" :));
         conjunctions = conjunction(shorts);
-        message("room living contents", conjunctions + " " + (sizeof(contents) > 1 ? "are" : "is") + " here.\n\n", this_object());
+        message("room living contents", conjunctions + " " + (sizeof(contents) > 1 ? "are" : "is") + " here.\n", this_object());
     }
 }
 
@@ -297,7 +297,7 @@ private void describe_environment_item_contents () {
         shorts[0] = capitalize(shorts[0]);
         shorts = map_array(shorts, (: "%^BOLD%^" + $1 + "%^BOLD_OFF%^DEFAULT%^" :));
         conjunctions = conjunction(shorts);
-        message("room item contents", conjunctions + " " + (sizeof(contents) > 1 ? "are" : "is") + " here.\n", this_object());
+        message("room item contents", conjunctions + " " + (sizeof(contents) > 1 ? "are" : "is") + " here.", this_object());
     }
 }
 
@@ -305,12 +305,12 @@ void describe_environment () {
     object env;
 
     if (!(env = environment()) || !env->is_room()) {
-        message("system", "You do not have an environment.\n", this_object());
+        message("room", "You do not have an environment.", this_object());
         return;
     }
 
     if (query_immortal()) {
-        message("room", "%^UNDERLINE%^" + file_name(env) + "%^RESET%^\n", this_object());
+        message("room", "%^UNDERLINE%^" + file_name(env) + "%^RESET%^", this_object());
     }
 
     describe_environment_long();

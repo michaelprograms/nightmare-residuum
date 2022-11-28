@@ -89,7 +89,7 @@ nomask void input_focus () {
     if (info->type != STATE_INPUT_CHARACTER && info->prompt) {
         if (functionp(info->prompt)) prompt = evaluate(info->prompt);
         else prompt = info->prompt;
-        if (prompt) message("input", prompt, this_object());
+        if (prompt) message("prompt", prompt, this_object());
     }
     if (info->type == STATE_INPUT_CHARACTER) {
         efun::get_char((: dispatch_input :), info->secure | 2);
@@ -104,7 +104,7 @@ private nomask int create_handler () {
     this_object()->shell_start();
 
     if (!sizeof(stack)) {
-        message("input", "Unable to process input.\n", this_object());
+        message("system", "Unable to process input.", this_object());
         destruct();
         return 1;
     }

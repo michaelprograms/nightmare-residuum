@@ -32,8 +32,8 @@ void do_say_str (mixed args...) {
     myMsg = "You " + verb + ": " + msg;
     yourMsg = po->query_cap_name() + " " + verb + "s: " + msg;
 
-    message("say", myMsg + "\n", po);
-    message("say", yourMsg + "\n", who);
+    message("say", myMsg, po);
+    message("say", yourMsg, who);
 
     po->add_say_history(myMsg);
     who->add_say_history(yourMsg);

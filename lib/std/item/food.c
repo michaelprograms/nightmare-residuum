@@ -14,8 +14,8 @@ mixed direct_eat_obj (mixed args...) {
 }
 
 void handle_eat (object character) {
-    message("action", "You eat " + query_name() + ".\n", character);
-    message("action", character->query_cap_name() + " eats " + query_name() + ".\n", environment(character), character);
+    message("action", "You eat " + query_name() + ".", character);
+    message("action", character->query_cap_name() + " eats " + query_name() + ".", environment(character), character);
     character->add_hp(__Strength);
     character->add_sp(__Strength);
     character->add_mp(__Strength);

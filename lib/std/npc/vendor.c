@@ -63,7 +63,7 @@ void handle_list (string str, object po) {
         do_command("say I have the following items, " + po->query_cap_name() + ".");
     }
     foreach (object ob in items) {
-        message("action", sprintf("  %-30s%s %s", ob->query_short(), format_integer(ob->query_value()), query_vendor_currency()) + "\n", po);
+        message("action", sprintf("  %-30s%s %s", ob->query_short(), format_integer(ob->query_value()), query_vendor_currency()), po);
     }
 
 }
@@ -88,13 +88,13 @@ void handle_buy (string str, object po) {
     }
 
     do_command("say Here's your " + item->query_short() + ", " + po->query_cap_name() + "!");
-    message("action", "You buy " + item->query_short() + " for " + value + " " + __VendorCurrency + ".\n", po);
-    message("action", po->query_cap_name() + " buys " + item->query_short() + ".\n", environment(po), po);
+    message("action", "You buy " + item->query_short() + " for " + value + " " + __VendorCurrency + ".", po);
+    message("action", po->query_cap_name() + " buys " + item->query_short() + ".", environment(po), po);
 
     po->add_currency(__VendorCurrency, -value);
     if (!item->handle_move(po)) {
-        message("action", "You cannot hold " + item->query_short() + " and it falls from your grasp.\n", po);
-        message("action", po->query_cap_name() + " cannot hold " + item->query_short() + " and it falls from " + possessive(po) + " grasp.\n", environment(po), po);
+        message("action", "You cannot hold " + item->query_short() + " and it falls from your grasp.", po);
+        message("action", po->query_cap_name() + " cannot hold " + item->query_short() + " and it falls from " + possessive(po) + " grasp.", environment(po), po);
         item->handle_move(environment(po));
     }
 }
@@ -117,8 +117,8 @@ void handle_sell (object item, object po) {
         return;
     }
     po->add_currency(__VendorCurrency, value);
-    message("action", "You sell " + item->query_short() + " for " + value + " " + __VendorCurrency + ".\n", po);
-    message("action", po->query_cap_name() + " sells " + item->query_short() + ".\n", environment(po), po);
+    message("action", "You sell " + item->query_short() + " for " + value + " " + __VendorCurrency + ".", po);
+    message("action", po->query_cap_name() + " sells " + item->query_short() + ".", environment(po), po);
 }
 
 /* ----- object applies ----- */

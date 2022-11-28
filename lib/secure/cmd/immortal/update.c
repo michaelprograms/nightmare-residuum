@@ -16,7 +16,7 @@ void command (string input, mapping flags) {
     object *keep = ({ });
 
     if (!input || input == "") {
-        message("system", "Update which file?\n", this_user());
+        message("action", "Update which file?", this_user());
         return;
     } if (input == "here") {
         input = file_name(environment(this_character()));
@@ -26,15 +26,15 @@ void command (string input, mapping flags) {
             input = this_user()->query_shell()->query_variable("cwd") + "/" + input;
         }
         input = sanitize_path(input);
-        message("system", "Updating " + input + (flags["R"] ? " and deep inherits " : (flags["r"] ? " and inherits " : "")) + "...\n", this_user());
+        message("action", "Updating " + input + (flags["R"] ? " and deep inherits " : (flags["r"] ? " and inherits " : "")) + "...", this_user());
     }
 
     switch (file_size(input)) {
         case -1:
-            message("system", "update: " + input + " not found.\n", this_user());
+            message("action", "update: " + input + " not found.", this_user());
             return;
         case 0:
-            message("system", "update: " + input + " is empty.\n", this_user());
+            message("action", "update: " + input + " is empty.", this_user());
             return;
     }
 
@@ -47,7 +47,7 @@ void command (string input, mapping flags) {
         if (!ob) {
             tmp = catch (ob = load_object(input));
             if (tmp) {
-                message("system", "update failed: " + input + ":\n" + tmp + "\n", this_user());
+                message("action", "update failed: " + input + ":\n" + tmp, this_user());
                 return;
             }
         }
@@ -71,13 +71,13 @@ void command (string input, mapping flags) {
             if (!tmp) {
                 // @TODO cleanup how testing on recursive updates work
                 // string test = list[i][0..<2] + "test.c";
-                message("system", "update: " + list[i] + ": Ok\n", this_user());
+                message("action", "update: " + list[i] + ": Ok", this_user());
                 // if (file_size(test) > 0) {
                 //     testStart = perf_counter_ns();
                 //     D_TEST->process_file(test, (: done :), 1);
                 // }
             } else {
-                message("system", "update failed: " + list[i] + ":\n" + tmp + "\n", this_user());
+                message("action", "update failed: " + list[i] + ":\n" + tmp, this_user());
                 return;
             }
         }
@@ -103,7 +103,7 @@ void command (string input, mapping flags) {
     tmp = catch (load_object(input));
     if (!tmp) {
         string test = input[0..<2] + "test.c";
-        message("system", "update: " + input + ": Ok\n", this_user());
+        message("action", "update: " + input + ": Ok", this_user());
         foreach (object l in keep) {
             l->handle_move(input);
         }
@@ -114,6 +114,6 @@ void command (string input, mapping flags) {
             D_TEST->process_file(test, (: done :), 1);
         }
     } else {
-        message("system", "update failed: " + input + ":\n" + tmp + "\n", this_user());
+        message("action", "update failed: " + input + ":\n" + tmp, this_user());
     }
 }

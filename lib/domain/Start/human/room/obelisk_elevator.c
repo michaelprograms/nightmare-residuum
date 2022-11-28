@@ -8,8 +8,8 @@ void story_action_final (object character) {
         if (sizeof(this_object()->query_living_contents()) == 0) {
             this_object()->remove_exit(dir);
         }
-        message("action", "The doors close behind you.\n", ob);
-        message("action", "The doors on the obelisk close behind " + ob->query_cap_name() + ".\n", environment(ob), ob);
+        message("action", "The doors close behind you.", ob);
+        message("action", "The doors on the obelisk close behind " + ob->query_cap_name() + ".", environment(ob), ob);
     }, "obelisk");
 }
 

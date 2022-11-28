@@ -6,7 +6,7 @@ void reset_pickable () {
     if (__Picks < __MaxPicks) {
         __Picks ++;
         if (environment()) {
-            message("action", __Message + "\n", environment());
+            message("action", __Message, environment());
         }
     }
 }

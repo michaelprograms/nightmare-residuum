@@ -107,9 +107,9 @@ varargs int handle_go (mixed dest, string verb, string dir, string reverse) {
 
     move = handle_move(newEnv);
 
-    message("go", "You " + verb + " %^DIR%^" + dir + "%^DEFAULT%^.\n", this_object());
-    message("go", query_cap_name() + " " + verbs + " %^DIR%^in%^DEFAULT%^ from " + article + "%^DIR%^" + (reverse ? reverse : format_exit_reverse(dir)) + "%^DEFAULT%^.\n", newEnv->query_living_contents(), this_object());
-    message("go", query_cap_name() + " " + verbs + " %^DIR%^" + dir + "%^DEFAULT%^.\n", oldEnv->query_living_contents(), this_object());
+    message("go", "You " + verb + " %^DIR%^" + dir + "%^DEFAULT%^.", this_object());
+    message("go", query_cap_name() + " " + verbs + " %^DIR%^in%^DEFAULT%^ from " + article + "%^DIR%^" + (reverse ? reverse : format_exit_reverse(dir)) + "%^DEFAULT%^.", newEnv->query_living_contents(), this_object());
+    message("go", query_cap_name() + " " + verbs + " %^DIR%^" + dir + "%^DEFAULT%^.", oldEnv->query_living_contents(), this_object());
 
     return move;
 }

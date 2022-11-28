@@ -19,7 +19,7 @@ mixed do_smell () {
     if (env->query_smell("default")) {
         previous_object()->describe_environment_senses("smell");
     } else {
-        message("action", "There is nothing to smell.\n", po);
+        message("action", "There is nothing to smell.", po);
     }
     return 1;
 }
@@ -36,7 +36,7 @@ void do_smell_str (mixed args...) {
     if (sizeof(args)) str = args[0];
 
     if (!str || !env->query_smell(str)) {
-        message("action", "Smell what?\n", po);
+        message("action", "Smell what?", po);
         return;
     }
     previous_object()->describe_environment_senses("smell", str);

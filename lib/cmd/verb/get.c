@@ -21,14 +21,14 @@ mixed can_get_obj (object ob, string str) {
 void do_get_obj (object ob, string str) {
     object po = previous_object();
 
-    message("verb", "You take " + ob->query_name() + ".\n", po);
-    message("verb", po->query_cap_name() + " takes " + ob->query_name() + ".\n", environment(po), po);
+    message("action", "You take " + ob->query_name() + ".", po);
+    message("action", po->query_cap_name() + " takes " + ob->query_name() + ".", environment(po), po);
     ob->handle_move(po);
 }
 void do_get_obs (mixed *info, string str) {
     foreach (mixed item in info) {
         if (stringp(item)) {
-            message("verb", item + "\n", previous_object());
+            message("action", item, previous_object());
         } else {
             do_get_obj(item, str);
         }
@@ -45,8 +45,8 @@ mixed do_get_obj_from_obj (mixed args...) {
     object po = previous_object();
     object ob = args[0], container = args[1];
 
-    message("verb", "You take " + ob->query_name() + " from " + container->query_name() + ".\n", po);
-    message("verb", po->query_cap_name() + " takes " + ob->query_name() + " from " + container->query_name() + ".\n", environment(po), po);
+    message("action", "You take " + ob->query_name() + " from " + container->query_name() + ".", po);
+    message("action", po->query_cap_name() + " takes " + ob->query_name() + " from " + container->query_name() + ".", environment(po), po);
     ob->handle_move(po);
     return 1;
 }

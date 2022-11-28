@@ -38,7 +38,7 @@ int query_defeat () {
 }
 void handle_victory (object source) {
     int exp = D_EXPERIENCE->query_value(source);
-    message("system", "You gain " + exp + " experience.\n", this_object());
+    message("action", "You gain " + exp + " experience.", this_object());
     add_experience(exp);
     add_victory();
 }
@@ -52,7 +52,7 @@ void handle_defeat (int keep) {
         corpse->setup_body(this_object());
         corpse->handle_move(env);
         if (this_object()->query_cap_name()) {
-            message("system", this_object()->query_cap_name() + " drops %^RED%^dead%^RESET%^.\n", env, this_object());
+            message("action", this_object()->query_cap_name() + " drops %^RED%^dead%^RESET%^.", env, this_object());
         }
     }
 

@@ -8,7 +8,7 @@ private void output_long (string dir, mixed *files) {
     foreach (string file in files) {
         loaded = file[1] != -2 && find_object(dir + file[0]) ? "*" : "";
         filename = file[0] + (file[1] == -2 ? "/" : "");
-        message("system", sprintf("%:-3s%:-5s%:-25s %8d  %s", loaded, acc, ctime(file[2]), file[1], filename)+"\n", this_character());
+        message("action", sprintf("%:-3s%:-5s%:-25s %8d  %s", loaded, acc, ctime(file[2]), file[1], filename), this_user());
     }
 }
 private void output_brief (string dir, mixed *files) {
@@ -41,7 +41,7 @@ private void output_brief (string dir, mixed *files) {
             if (index < max) line += sprintf("%:-"+(widest+3)+"s", list[index]);
             else line += sprintf("%:-"+(widest+3)+"s", "");
         }
-        message("action", line + "\n", this_character());
+        message("action", line, this_character());
     }
 }
 
@@ -59,7 +59,7 @@ void command (string input, mapping flags) {
     }
 
     if (file_size(path) == -1) {
-        message("action", path + ": directory does not exist.\n", this_character());
+        message("action", path + ": directory does not exist.", this_character());
         return;
     } else if (file_size(path) == -2) {
         if (path[<1] != '/') {
@@ -75,7 +75,7 @@ void command (string input, mapping flags) {
         files = filter(files, (: $1[0][0] != '.' :));
     }
 
-    message("action", path + ":" + (!sizeof(files) ? " directory is empty.\n\n" : "\n"), this_character());
+    message("action", path + ":" + (!sizeof(files) ? " directory is empty.\n" : ""), this_character());
     if (flags["l"]) {
         output_long(dir, files);
     } else {

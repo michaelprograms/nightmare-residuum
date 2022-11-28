@@ -59,8 +59,10 @@ void receive_message (string type, string message) {
             message = message[0..__LARGEST_PRINTABLE_STRING__-1];
         }
         receive(wrap(message, 0, 0));
+    } else if (type == "prompt") {
+        receive(wrap(message));
     } else {
-        message = format_message_color(type, message);
+        message = format_message_color(type, message) + "\n";
         receive(wrap(message));
     }
 }

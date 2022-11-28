@@ -12,7 +12,7 @@ void done (mapping results) {
 
 void command (string input, mapping flags) {
     if (input == "all") {
-        message("system", "Running all tests...\n", this_user());
+        message("action", "Running all tests...", this_user());
         D_TEST->run(0);
     } else if (input) {
         string test = input;
@@ -24,9 +24,9 @@ void command (string input, mapping flags) {
             testStart = perf_counter_ns();
             D_TEST->process_file(test, (: done :), 1);
         } else {
-            message("system", "Unable to find test file for " + input + ".\n", this_user());
+            message("action", "Unable to find test file for " + input + ".", this_user());
         }
     } else {
-        message("system", "Test what?\n", this_user());
+        message("action", "Test what?", this_user());
     }
 }

@@ -70,9 +70,9 @@ private void handle_combat_hit (object target, mixed weapon) {
     limb = target->query_random_limb();
 
     if (hit < 1 || query_sp() < 1) {
-        message("combat miss", "You miss " + target->query_cap_name() + " with your " + name + ".\n", this_object());
-        message("combat miss", this_object()->query_cap_name() + " misses you with " + possessive + " " + name + ".\n", target);
-        message("combat miss", this_object()->query_cap_name() + " misses " + target->query_cap_name() + " with " + possessive + " " + name + ".\n", environment(), ({ this_object(), target }));
+        message("combat miss", "You miss " + target->query_cap_name() + " with your " + name + ".", this_object());
+        message("combat miss", this_object()->query_cap_name() + " misses you with " + possessive + " " + name + ".", target);
+        message("combat miss", this_object()->query_cap_name() + " misses " + target->query_cap_name() + " with " + possessive + " " + name + ".", environment(), ({ this_object(), target }));
         train_skill(type + " attack", 0.5);
         target->train_skill(type + " defense", 0.5);
     } else {

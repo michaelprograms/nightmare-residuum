@@ -2,7 +2,7 @@ void command (string input, mapping flags) {
     string path;
 
     if (!input) {
-        message("action", "Syntax: man [function]\n", this_character());
+        message("action", "Syntax: man [function]", this_character());
         return;
     }
 
@@ -13,5 +13,5 @@ void command (string input, mapping flags) {
         }
     }
 
-    message("action", "No such man page found.\n", this_character());
+    message("action", "No such man page found.", this_character());
 }

@@ -9,10 +9,10 @@ void command (string input, mapping flags) {
     object shell = this_user()->query_shell();
 
     if (!input) {
-        write("Prompt is currently set to '" + shell->query_variable("prompt") + "'.\n");
+        message("action", "Prompt is currently set to '" + shell->query_variable("prompt") + "'.", this_character());
         message("raw ansi", shell->query_variable("prompt") + "\n", this_character());
     } else {
-        write("Changing prompt from '" + shell->query_variable("prompt") + "' to '" + input + "'.\n");
+        message("action", "Changing prompt from '" + shell->query_variable("prompt") + "' to '" + input + "'.", this_character());
         shell->set_variable("prompt", input);
     }
 }

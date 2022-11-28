@@ -232,16 +232,16 @@ private void process (int t, string key, mapping a) {
             object *characters = filter(characters(), (: regexp($1->query_environment_path(), "^"+$(key)) && !environment($1)->query_property("indoors") :));
             if (dayPhase == "night") {
                 dayPhase = "dawn";
-                message("astronomy", "%^ORANGE%^The sun appears over the horizon of our reality.%^RESET%^\n", characters);
+                message("astronomy", "%^ORANGE%^The sun appears over the horizon of our reality.%^RESET%^", characters);
             } else if (dayPhase == "dawn") {
                 dayPhase = "day";
-                message("astronomy", "%^YELLOW%^The sun now shines completely on a new day.%^RESET%^\n", characters);
+                message("astronomy", "%^YELLOW%^The sun now shines completely on a new day.%^RESET%^", characters);
             } else if (dayPhase == "day") {
                 dayPhase = "dusk";
-                message("astronomy", "%^BOLD%^CYAN%^The sun begins to fall away into twilight.%^RESET%^\n", characters);
+                message("astronomy", "%^BOLD%^CYAN%^The sun begins to fall away into twilight.%^RESET%^", characters);
             } else if (dayPhase == "dusk") {
                 dayPhase = "night";
-                message("astronomy", "%^BOLD%^BLUE%^Night darkens the whole of our reality.%^RESET%^\n", characters);
+                message("astronomy", "%^BOLD%^BLUE%^Night darkens the whole of our reality.%^RESET%^", characters);
             }
             a["DAY_PHASE"] = dayPhase;
         } else {

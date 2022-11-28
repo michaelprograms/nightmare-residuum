@@ -19,7 +19,7 @@ mixed do_listen () {
     if (env->query_listen("default")) {
         previous_object()->describe_environment_senses("listen");
     } else {
-        message("action", "There is nothing to listen to.\n", po);
+        message("action", "There is nothing to listen to.", po);
     }
     return 1;
 }
@@ -36,7 +36,7 @@ void do_listen_str (mixed args...) {
     if (sizeof(args)) str = args[0];
 
     if (!str || !env->query_listen(str)) {
-        message("action", "Listen to what?\n", po);
+        message("action", "Listen to what?", po);
         return;
     }
     previous_object()->describe_environment_senses("listen", str);

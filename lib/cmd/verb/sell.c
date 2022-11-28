@@ -25,7 +25,7 @@ void do_sell_obj_to_obj (mixed args...) {
         vendor = args[1];
         vendor->handle_sell(ob, po);
     } else {
-        message("action", "Buy what from which vendor?\n", po);
+        message("action", "Buy what from which vendor?", po);
         return;
     }
 }
@@ -44,7 +44,7 @@ void do_sell_obj (mixed args...) {
         if (sizeof(vendors) == 1) {
             do_sell_obj_to_obj(args[0], vendors[0]);
         } else {
-            message("action", "Sell what to which vendor?\n", po);
+            message("action", "Sell what to which vendor?", po);
         }
     }
 }
@@ -55,5 +55,5 @@ mixed can_sell (mixed args...) {
     return 1;
 }
 void do_sell (mixed args...) {
-    message("action", "Sell what to which vendor?\n", previous_object());
+    message("action", "Sell what to which vendor?", previous_object());
 }

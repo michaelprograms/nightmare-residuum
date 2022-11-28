@@ -40,10 +40,10 @@ void do_look_at_str (mixed args...) {
     }
 
     if (!desc) {
-        message("verb", "You do not see that here.\n", po);
+        message("action", "You do not see that here.", po);
     } else {
-        message("verb", desc + "\n", po);
-        message("verb", po->query_cap_name() + " looks over the " + str + ".\n", env, po);
+        message("action", desc, po);
+        message("action", po->query_cap_name() + " looks over the " + str + ".", env, po);
     }
 }
 void do_look_str (mixed args...) {
@@ -68,8 +68,8 @@ varargs mixed do_look_at_obj (object ob, mixed arg) {
 
     if (sizeof(long) && long[<1] != '\n') long += "\n";
 
-    message("verb", "You look over " + ob->query_name() + "...\n" + long, po);
-    message("verb", po->query_cap_name() + " looks over " + ob->query_name() + ".\n", environment(ob), po);
+    message("action", "You look over " + ob->query_name() + "..." + long, po);
+    message("action", po->query_cap_name() + " looks over " + ob->query_name() + ".", environment(ob), po);
 
     return 1;
 }
@@ -91,30 +91,30 @@ mixed do_look_at_liv (object ob, mixed arg...) {
     object *wielded, *worn;
 
     str = (ob->query_gender() == "neither" || ob->query_gender() == "none" ? "" : ob->query_gender() + " ");
-    message("verb", "You look over " + ob->query_cap_name() + " the " + str + ob->query_species() + "...\n", po);
-    message("verb", po->query_cap_name() + " looks you over.\n", ob);
-    message("verb", po->query_cap_name() + " looks over " + ob->query_cap_name() + ".\n", environment(ob), ({ po, ob }));
+    message("action", "You look over " + ob->query_cap_name() + " the " + str + ob->query_species() + "...", po);
+    message("action", po->query_cap_name() + " looks you over.", ob);
+    message("action", po->query_cap_name() + " looks over " + ob->query_cap_name() + ".", environment(ob), ({ po, ob }));
 
     if (str = ob->query_long()) {
         if (sizeof(str) && str[<1] != '\n') str += "\n";
         str = replace_string(str, "%^DEFAULT%^", "%^RESET%^");
-        message("verb", str + "\n", po);
+        message("action", str, po);
     }
     if (po->query_immortal()) {
-        message("verb", "Level: "+ob->query_level()+"\n", po);
-        message("verb", "Vitals: "+ob->query_hp()+"/"+ob->query_max_hp()+" "+ob->query_sp()+"/"+ob->query_max_sp()+" "+ob->query_mp()+"/"+ob->query_max_mp()+"\n", po);
+        message("action", "Level: "+ob->query_level(), po);
+        message("action", "Vitals: "+ob->query_hp()+"/"+ob->query_max_hp()+" "+ob->query_sp()+"/"+ob->query_max_sp()+" "+ob->query_mp()+"/"+ob->query_max_mp(), po);
     }
 
     if (sizeof(wielded = ob->query_wielded_weapons())) {
-        message("verb", capitalize(subjective(ob)) + " is wielding:\n", po);
+        message("action", capitalize(subjective(ob)) + " is wielding:", po);
         foreach (string weapon in wielded) {
-            message("verb", "  " + weapon->query_short() + "\n", po);
+            message("action", "  " + weapon->query_short(), po);
         }
     }
     if (sizeof(worn = ob->query_all_armor())) {
-        message("verb", capitalize(subjective(ob)) + " is wearing:\n", po);
+        message("action", capitalize(subjective(ob)) + " is wearing:", po);
         foreach (string armor in worn) {
-            message("verb", "  " + armor->query_short() + "\n", po);
+            message("action", "  " + armor->query_short(), po);
         }
     }
     return 1;

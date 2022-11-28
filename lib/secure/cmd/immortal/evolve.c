@@ -7,10 +7,10 @@ void create () {
 
 void display (object tc, object target, string type, string old, string now) {
     if (tc == target) {
-        message("action", "You have changed your " + type + " from " + old + " to " + now + ".\n", tc);
+        message("action", "You have changed your " + type + " from " + old + " to " + now + ".", tc);
     } else {
-        message("action", "You have changed " + possessive_noun(target) + " " + type + " from " + old + " to " + now + ".\n", tc);
-        message("action", tc->query_cap_name() + " has changed your " + type + " from " + old + " to " + now + ".\n", target);
+        message("action", "You have changed " + possessive_noun(target) + " " + type + " from " + old + " to " + now + ".", tc);
+        message("action", tc->query_cap_name() + " has changed your " + type + " from " + old + " to " + now + ".", target);
     }
 }
 
@@ -19,7 +19,7 @@ void command (string input, mapping flags) {
     string tmp;
 
     if (!input && !sizeof(flags)) {
-        message("action", "Syntax: <evolve (-l=[level]) (-c=[class]) ([target])>\n", tc);
+        message("action", "Syntax: evolve (-l=[level]) (-c=[class]) ([target])", tc);
         return;
     }
     if (input) {
@@ -39,5 +39,5 @@ void command (string input, mapping flags) {
         display(tc, target, "level", tmp, target->query_level());
     }
 
-    message("action", "Evolution complete.\n", tc);
+    message("action", "Evolution complete.", tc);
 }

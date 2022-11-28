@@ -15,8 +15,8 @@ nosave private mapping syntax = ([
 
 
 void story_action_final (object target) {
-    message("wrap", "A repetitive beeping tone synced to a blinking red light attracts your attention.\n", target);
-    message("wrap", "You " + syntax["look"] + " over your surroundings.\n\n", target);
+    message("action", "A repetitive beeping tone synced to a blinking red light attracts your attention.", target);
+    message("action", "You " + syntax["look"] + " over your surroundings.", target);
     people = people - ({ 0 }) + ({ target });
     target->describe_environment();
 }
@@ -85,7 +85,7 @@ void do_retry () {
 
     write("You tap the retry button on the display.\n");
     write("\n%^RED%^BOLD%^BEEP BEEP BEEP.%^RESET%^\n\n");
-    message("say", "A robotic voice chimes: Warning, knowledge assimilation cannot be initialized on this specimen. Initialize sterilization procedure...\n\n" + err + "! aborting process...\n", environment(previous_object()));
+    message("say", "A robotic voice chimes: Warning, knowledge assimilation cannot be initialized on this specimen. Initialize sterilization procedure...\n\n" + err + "! aborting process...", environment(previous_object()));
 }
 
 /* ----- parser rule: become ----- */
@@ -180,8 +180,8 @@ mixed can_done () {
 void do_done () {
     string err = "%^RED%^BOLD%^ERR-"+(1001+random(9000))+"-"+(1+random(9))+"%^RESET%^";
 
-    message("action", "You press the done button and the tank glass pops open.\n", this_character());
-    message("say", "A robotic voice chimes: Warning, knowledge assimilation process was not completed, specimen may ... " + err + "! please retry...\n", environment(previous_object()));
+    message("action", "You press the done button and the tank glass pops open.", this_character());
+    message("say", "A robotic voice chimes: Warning, knowledge assimilation process was not completed, specimen may ... " + err + "! please retry...", environment(previous_object()));
     this_character()->handle_go(HUMAN_ROOM + "tank_hallway" + (1 + random(3)), "eject", "tank");
     this_character()->describe_environment();
     people = people - ({ 0 }) - ({ this_character() });

@@ -219,15 +219,15 @@ int is_ability_successful (object source, object target) {
 }
 
 void ability_message_attempt (object source, object target, string limb) {
-    message("action", "You attempt to " + query_name() + " " + target->query_cap_name() + "!\n", source);
-    message("action", source->query_cap_name() + " attempts to " + query_name() + " you!\n", target);
-    message("action", source->query_cap_name() + " attempts to " + query_name() + " " + target->query_cap_name() + "!\n", environment(source), ({ source, target }));
+    message("action", "You attempt to " + query_name() + " " + target->query_cap_name() + "!", source);
+    message("action", source->query_cap_name() + " attempts to " + query_name() + " you!", target);
+    message("action", source->query_cap_name() + " attempts to " + query_name() + " " + target->query_cap_name() + "!", environment(source), ({ source, target }));
 }
 
 void ability_message_fail (object source, object target, string limb) {
-    message("action", "You miss your " + query_name() + " attempt on " + target->query_cap_name() + "!\n", source);
-    message("action", source->query_cap_name() + " misses " + possessive(source) + " " + query_name() + " attempt on you!\n", target);
-    message("action", source->query_cap_name() + " misses " + possessive(source) + " " + query_name() + " attempt on " + target->query_cap_name() + "!\n", environment(source), ({ source, target }));
+    message("action", "You miss your " + query_name() + " attempt on " + target->query_cap_name() + "!", source);
+    message("action", source->query_cap_name() + " misses " + possessive(source) + " " + query_name() + " attempt on you!", target);
+    message("action", source->query_cap_name() + " misses " + possessive(source) + " " + query_name() + " attempt on " + target->query_cap_name() + "!", environment(source), ({ source, target }));
 }
 
 void ability_message_success (object source, object target, string limb) {
@@ -255,22 +255,22 @@ private void handle_ability_use (object source, object target) {
     string limb;
 
     if (!verify_ability_requirements(source)) {
-        message("action", "You cannot do that.\n", source);
+        message("action", "You cannot do that.", source);
         return 0;
     }
 
     if (!target && !(target = source->query_target_hostile())) {
-        message("action", "You have no hostile targets present.\n", source);
+        message("action", "You have no hostile targets present.", source);
         return;
     }
 
     if (__Weapons["melee"]) {
         if (sizeof(source->query_wieldable_limbs()) < __Weapons["melee"][0]) {
-            message("action", "You do not have any free hands.\n", source);
+            message("action", "You do not have any free hands.", source);
             return;
         }
     } else if (sizeof(__Weapons) && !(weapon = query_best_weapon(source))) {
-        message("action", "You are not wielding the correct type of weapon.\n", source);
+        message("action", "You are not wielding the correct type of weapon.", source);
         return;
     }
 
@@ -280,13 +280,13 @@ private void handle_ability_use (object source, object target) {
     // verify vitals can pay cost
     if (cost["sp"] > 0) {
         if (source->query_sp() < cost["sp"]) {
-            message("action", "You are too tired to " + query_name() + ".\n", source);
+            message("action", "You are too tired to " + query_name() + ".", source);
             return;
         }
     }
     if (cost["mp"]) {
         if (source->query_mp() < cost["mp"]) {
-            message("action", "You are too drained to " + query_name() + ".\n", source);
+            message("action", "You are too drained to " + query_name() + ".", source);
             return;
         }
     }
@@ -294,13 +294,13 @@ private void handle_ability_use (object source, object target) {
     // check source vitals
     if (cost["sp"] > 0) {
         if (source->query_sp() < cost["sp"]) {
-            message("action", "You are too drained to " + query_name() + ".\n", source);
+            message("action", "You are too drained to " + query_name() + ".", source);
             return;
         }
     }
     if (cost["mp"]) {
         if (source->query_mp() < cost["mp"]) {
-            message("action", "You are too tired to " + query_name() + ".\n", source);
+            message("action", "You are too tired to " + query_name() + ".", source);
             return;
         }
     }
@@ -333,11 +333,11 @@ private void handle_ability_use (object source, object target) {
     damage = calculate_damage(source, target, limb);
     target->handle_damage(damage, limb, source);
     if (source->query_immortal() || source->query_property("debug")) {
-        message("action", "%^ORANGE%^Damage:%^RESET%^ " + damage + "\n", source);
+        message("action", "%^ORANGE%^Damage:%^RESET%^ " + damage, source);
     }
 
     if (target && (target->query_immortal() || target->query_property("debug"))) {
-        message("action", "%^ORANGE%^Damage:%^RESET%^ " + damage + "\n", target);
+        message("action", "%^ORANGE%^Damage:%^RESET%^ " + damage, target);
     }
 
     // @TODO send damage messages

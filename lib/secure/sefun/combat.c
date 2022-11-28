@@ -53,7 +53,7 @@ void display_combat_message (object source, object target, string limb, mixed we
     targetMsg = sprintf("%s %s you%sin the %s with %s %s.", source->query_cap_name(), verbs, adverb, limb, sourcePossessive, weaponName);
     envMsg = sprintf("%s %s %s%sin the %s with %s %s.", source->query_cap_name(), verbs, target->query_cap_name(), adverb, limb, sourcePossessive, weaponName);
 
-    message("combat hit", sourceMsg + "\n", source);
-    message("combat hit", targetMsg + "\n", target);
-    message("combat hit", envMsg + "\n", environment(source), ({ source, target }));
+    message("combat hit", sourceMsg, source);
+    message("combat hit", targetMsg, target);
+    message("combat hit", envMsg, environment(source), ({ source, target }));
 }

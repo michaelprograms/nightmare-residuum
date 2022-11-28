@@ -11,7 +11,7 @@ void command (string input, mapping flags) {
     string result, *items;
 
     if (!input) {
-        message("action", "Syntax: help [command]\n", this_character());
+        message("action", "Syntax: help [command]", this_character());
         return;
     }
 

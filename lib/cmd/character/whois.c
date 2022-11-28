@@ -10,13 +10,13 @@ void command (string input, mapping flags) {
     object char;
 
     if (!input || input == "") {
-        message("action", "Whois which character name?\n", tc);
+        message("action", "Whois which character name?", tc);
         return;
     }
 
     char = D_CHARACTER->query_whois_character(input);
     if (!char) {
-        message("action", "There is no character with that name on " + mud_name() + ".\n", tc);
+        message("action", "There is no character with that name on " + mud_name() + ".", tc);
         return;
     }
 

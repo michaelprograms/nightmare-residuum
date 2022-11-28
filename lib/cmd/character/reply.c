@@ -11,20 +11,20 @@ void command (string input, mapping flags) {
 
     msg = strip_colour(input);
     if (!sizeof(msg)) {
-        message("action", "Syntax: <reply [message]>\n", tc);
+        message("action", "Syntax: <reply [message]>", tc);
         return;
     }
     name = tc->query_tell_reply();
     if (!sizeof(name) || !(target = find_character(name)) || tc == target) {
-        message("action", "You have no one to reply to.\n", tc);
+        message("action", "You have no one to reply to.", tc);
         return;
     }
 
     myMsg = "You reply to " + target->query_cap_name() + ": " + msg;
     yourMsg = tc->query_cap_name() + " replies: " + msg;
 
-    message("tell", myMsg + "\n", tc);
-    message("tell", yourMsg + "\n", target);
+    message("tell", myMsg, tc);
+    message("tell", yourMsg, target);
 
     tc->add_tell_history(myMsg);
     target->add_tell_history(yourMsg);

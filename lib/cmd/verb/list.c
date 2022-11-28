@@ -25,7 +25,7 @@ void do_list_str_from_obj (mixed args...) {
         vendor = args[1];
         vendor->handle_list(str, po);
     } else {
-        message("action", "List from which vendor?\n", po);
+        message("action", "List from which vendor?", po);
         return;
     }
 }
@@ -43,7 +43,7 @@ void do_list_from_obj (mixed args...) {
         vendor = args[0];
         vendor->handle_list(0, po);
     } else {
-        message("action", "List from which vendor?\n", po);
+        message("action", "List from which vendor?", po);
         return;
     }
 }
@@ -64,7 +64,7 @@ void do_list_str (mixed args...) {
         if (sizeof(vendors) == 1) {
             vendors[0]->handle_list(str, po);
         } else {
-            message("action", "List from which vendor?\n", po);
+            message("action", "List from which vendor?", po);
         }
     }
 }

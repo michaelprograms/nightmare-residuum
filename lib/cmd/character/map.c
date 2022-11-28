@@ -6,12 +6,13 @@ void create () {
 }
 
 void command (string input, mapping flags) {
+    object env = environment(this_character());
     string *map;
-    if (map = environment(this_character())->query_map("all")) {
-        message("room_map", implode(map, "\n") + "\n", this_character());
-    } else if (map = environment(this_character())->query_room_exit_map()) {
-        message("room_map", implode(map, "\n") + "\n", this_character());
+    if (map = env->query_map("all")) {
+        message("action", implode(map, "\n"), this_user());
+    } else if (map = env->query_room_exit_map()) {
+        message("action", implode(map, "\n"), this_user());
     } else {
-        write("No map to show.\n");
+        message("action", "No map to show.", this_user());
     }
 }

@@ -17,16 +17,16 @@ void do_advance () {
     levelCost = D_EXPERIENCE->query_level_cost(level);
 
     if (level >= MAX_LEVEL) {
-        message("action", "You can not advance beyond your current level.\n", po);
+        message("action", "You can not advance beyond your current level.", po);
         return;
     }
     if (curExp < levelCost) {
-        message("action", "You do not have enough experience to advance to level " + (level + 1) + ".\n", po);
+        message("action", "You do not have enough experience to advance to level " + (level + 1) + ".", po);
         return;
     }
 
     po->spend_experience(levelCost);
     po->set_level(level + 1);
-    message("action", "You advance to level " + po->query_level() + ".\n", po);
-    message("action", po->query_cap_name() + " advances in level.\n", environment(po), po);
+    message("action", "You advance to level " + po->query_level() + ".", po);
+    message("action", po->query_cap_name() + " advances in level.", environment(po), po);
 }

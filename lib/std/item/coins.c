@@ -48,7 +48,7 @@ void handle_received (object env) {
         list += ({ n + " " + c });
     }
     if (sizeof(list)) {
-        message("action", "You receive " + conjunction(list) + ".\n", env);
+        message("action", "You receive " + conjunction(list) + ".", env);
     }
     check_empty();
 }

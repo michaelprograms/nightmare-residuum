@@ -186,7 +186,6 @@ string apply_gradient (string text, string *gradient) {
 }
 
 string format_message_color (string type, string message) {
-    // unused types: "action", "verb", "wrap", "room"
     if (type == "say") {
         message = "%^CYAN%^" + replace_string(message, ":", ":%^RESET%^");
     } else if (type == "tell") {

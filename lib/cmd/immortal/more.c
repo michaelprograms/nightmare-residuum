@@ -2,7 +2,7 @@ void command (string input, mapping flags) {
     string cwd, file, *lines;
 
     if (!input) {
-        message("action", "Syntax: more [file]\n", this_character());
+        message("action", "Syntax: more [file]", this_character());
         return;
     } else if (input == "here") {
         input = file_name(environment(this_character())) + ".c";
@@ -11,10 +11,10 @@ void command (string input, mapping flags) {
     file = absolute_path(input, cwd);
     switch (file_size(file)) {
         case -2:
-            write("more: " + file + ": not a file.\n");
+            message("action", "more: " + file + ": not a file.", this_character());
             return;
         case -1:
-            write("more: " + file + ": no such file.\n");
+            message("action", "more: " + file + ": no such file.", this_character());
             return;
     }
 

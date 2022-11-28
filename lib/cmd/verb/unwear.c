@@ -21,9 +21,9 @@ void do_unwear_obj (object ob, string str) {
     if ((result = po->handle_unwear(ob)) == 1) {
         return;
     } else if (stringp(result)) {
-        message("verb", result + "\n", po);
+        message("action", result, po);
     } else {
-        message("verb", "You try to remove " + ob->query_name() + " but fail for some reason.\n", po);
+        message("action", "You try to remove " + ob->query_name() + " but fail for some reason.", po);
     }
 }
 void do_unwear_obs (mixed *info, string str) {
