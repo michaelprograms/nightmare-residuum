@@ -16,7 +16,7 @@ void test_channels () {
 
     expect("channels handles available and toggling blocked", (: ({
         // default channel status
-        assert(testOb->query_channels_available(), "==", ({ "chat" })),
+        assert(testOb->query_channels_available(), "==", ({ "chat", "newbie" })),
         assert(testOb->query_channels_blocked(), "==", ({ })),
         assert(testOb->query_channel_blocked("chat"), "==", 0),
         assert(testOb->query_channel_blocked("nonexistant channel"), "==", 0),
@@ -25,13 +25,13 @@ void test_channels () {
         // check toggling blocked on
         assert(testOb->toggle_channel_blocked("chat"), "==", 1),
         assert(testOb->query_channel_blocked("chat"), "==", 1),
-        assert(testOb->query_channels_available(), "==", ({ })),
+        assert(testOb->query_channels_available(), "==", ({ "newbie" })),
         assert(testOb->query_channels_blocked(), "==", ({ "chat" })),
         assert(testOb->toggle_channel_blocked("nonexistant channel"), "==", 0),
         assert(testOb->query_channel_blocked("nonexistant channel"), "==", 0),
         assert(testOb->toggle_channel_blocked("connection"), "==", 1),
         assert(testOb->query_channel_blocked("connection"), "==", 1),
-        assert(testOb->query_channels_available(), "==", ({ })),
+        assert(testOb->query_channels_available(), "==", ({ "newbie" })),
         assert(testOb->query_channels_blocked(), "==", ({ "chat", "connection" })),
 
         // check toggling blocked off
@@ -39,7 +39,7 @@ void test_channels () {
         assert(testOb->query_channel_blocked("chat"), "==", 0),
         assert(testOb->toggle_channel_blocked("connection"), "==", 0),
         assert(testOb->query_channel_blocked("connection"), "==", 0),
-        assert(testOb->query_channels_available(), "==", ({ "chat" })),
+        assert(testOb->query_channels_available(), "==", ({ "chat", "newbie" })),
         assert(testOb->query_channels_blocked(), "==", ({ })),
     }) :));
 }
