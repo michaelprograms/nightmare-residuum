@@ -14,7 +14,7 @@ int query_valid_channel (string channel) {
 
 void create () {
     if (!__Channels) {
-        __Channels = ({ "chat" });
+        __Channels = ({ "chat", "newbie", });
     }
     if (!__SystemChannels) {
         __SystemChannels = ({ "connection" });
