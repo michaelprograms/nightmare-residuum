@@ -185,19 +185,15 @@ void describe_environment_long () {
     } else {
         string *long, result = "", line;
         int l;
-        mapping b = query_border_charset();
-        long = ({ "%^BOLD%^" + env->query_short() + "%^RESET%^" }) + explode(wrap_ansi(env->query_long(), width-17), "\n");
-        for(int i = 0; i < sizeof(map); i ++) {
-            map[i] += "%^GREEN%^" + b["v"] + "%^RESET%^ ";
-        }
-        map = ({ "%^GREEN%^"+sprintf("%15'"+sprintf("%s", b["h"])+"'s%s", "", b["tr"])+"%^RESET%^ " }) + map;
-        map += ({ "%^GREEN%^"+sprintf("%15'"+sprintf("%s", b["h"])+"'s%s", "", b["br"])+"%^RESET%^ " });
+        long = ({ "%^BOLD%^" + env->query_short() + "%^RESET%^" }) + explode(wrap_ansi(env->query_long(), width-18), "\n");
+
+        map = map(map, (: $1+" " :));
         l = max(({ sizeof(map), sizeof(long) }));
         for (int i = 0; i < l; i ++) {
             if (i < sizeof(map)) {
                 line = map[i];
             } else {
-                line = "                %^GREEN%^" + b["v"] + "%^RESET%^ ";
+                line = sprintf("%*s", 18, "");
             }
             if (i < sizeof(long)) {
                 line += long[i];
