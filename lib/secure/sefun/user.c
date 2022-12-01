@@ -1,5 +1,11 @@
 string sanitize_name (string name);
 
+object this_user () {
+    object po = previous_object(-1)[<1];
+    if (strsrch(D_TEST, base_name(po)) == 0) po = previous_object(-1)[<2];
+    return po;
+}
+
 object this_account () {
     object a;
 
