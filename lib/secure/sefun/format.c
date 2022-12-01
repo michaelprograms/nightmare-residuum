@@ -1,54 +1,76 @@
-varargs string format_page (string *items, int columns, int pad, int center) {
-    int width, w, i, j, n, r;
-    string *rows = ({});
+varargs string format_page (string *items, mixed columns, int pad, int center) {
+    int totalWidth, width, numItems, numColumns, remainder, ratioSum;
+    int i, j;
+    string *rows = ({}), row, tmp;
 
-    if (!arrayp(items) || !sizeof(items)) error("Bad argument 1 to format->format_page");
+    if (!arrayp(items) || !sizeof(items)) {
+        error("Bad argument 1 to format->format_page");
+    }
 
-    if (!columns) columns = 2;
-    width = to_int(SEFUN->query_account_setting("width")) - pad * 2;
-    w = width / columns; // width of column
-    n = sizeof(items); // number of columns
-    r = width - (w * columns); // remainder
-    items = map(items, (: "" + $1 :));
+    if (arrayp(columns)) {
+        numColumns = sizeof(columns);
+        for (i = 0; i < numColumns; i ++) {
+            ratioSum += columns[i]; // calculate total columns ratios
+        }
+    } else if (intp(columns) && !undefinedp(columns)) {
+        numColumns = columns;
+    } else {
+        error("Bad argument 2 to format->format_page");
+    }
 
-    for (i = 0; i < n; i += columns) {
-        string row = "";
-        for (j = 0; j < columns; j ++) {
-            string tmp;
-            if (i + j >= n) { // ran out of columns to fill final row
-                row += sprintf("%' '*s", w*(columns-j), " ");
+    totalWidth = to_int(SEFUN->query_account_setting("width")) - pad * 2;
+    items = map(items, (: "" + $1 :)); // force numbers to string
+    numItems = sizeof(items);
+
+    for (i = 0; i < numItems; i += numColumns) {
+        row = "";
+
+        if (ratioSum) {
+            // reset remainder to totalWidth
+            remainder = totalWidth;
+        } else {
+            // determine width of column and remainder
+            width = totalWidth / numColumns;
+            remainder = totalWidth - (width * numColumns);
+        }
+
+        for (j = 0; j < numColumns; j ++) {
+            if (ratioSum) {
+                // calculate this column's width
+                width = totalWidth / ratioSum * columns[j];
+                remainder -= width;
+            }
+
+            if (i + j >= numItems) {
+                // ran out of columns to fill final row
+                row += sprintf("%' '*s", width*(numColumns-j), " ");
                 break;
             }
+
             // check text length without ANSI color
-            if (sizeof(tmp = SEFUN->strip_colour(items[i + j])) > w) {
-                // use stripped text when its longer than w
-                if (columns == 1) {
-                    string *wrapped = explode(SEFUN->wrap(""+items[i + j], w, 0), "\n");
+            if (sizeof(tmp = SEFUN->strip_colour(items[i + j])) > width) {
+                // use stripped text when its longer than width
+                if (numColumns == 1) {
+                    string *wrapped = explode(SEFUN->wrap(items[i + j], width, 0), "\n");
                     foreach (string line in wrapped) {
-                        if (center) {
-                            row += sprintf("%|*s", w, ""+line) + "\n";
-                        } else {
-                            row += sprintf("%-*s", w, ""+line) + "\n";
-                        }
+                        row += sprintf("%"+(center?"|":"-")+"*s", width, ""+line) + "\n";
                     }
                 } else {
-                    row += tmp[0..w-1];
+                    row += tmp[0..width-1];
                 }
             } else {
                 // account for any color codes in the text
                 int diff = sizeof(items[i+j]) - sizeof(tmp);
-
-                if (center) {
-                    row += sprintf("%|*s", w+diff, ""+items[i + j]);
-                } else {
-                    row += sprintf("%-*s", w+diff, ""+items[i + j]);
-                }
-
+                row += sprintf("%"+(center?"|":"-")+"*s", width+diff, items[i + j]);
                 // when color codes present and we're not displaying a RESET, add one
-                if (diff > 0 && items[i + j][<9..] != "%^RESET%^") row += "%^RESET%^";
+                if (diff > 0 && items[i + j][<9..] != "%^RESET%^") {
+                    row += "%^RESET%^";
+                }
             }
         }
-        if (r) row += sprintf("%' '*s", r, "");
+        if (remainder) {
+            row += sprintf("%*s", remainder, "");
+        }
         rows += ({ row });
     }
     return implode(rows, "\n");
