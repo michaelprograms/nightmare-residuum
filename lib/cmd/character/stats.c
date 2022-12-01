@@ -31,7 +31,7 @@ void command (string input, mapping flags) {
         "body": ([
             "header": ({ "Stat", "Base", "Bonus", "Cost", }),
             "items": items,
-            "columns": 4,
+            "columns": ({ 2, 1, 1, 2, }),
         ]),
         "footer": ([
             "items": ({

@@ -19,11 +19,11 @@ void command (string input, mapping flags) {
     if (sizeof(skills)) {
         mapping b = ([
             "header": "Combat",
-            "columns": 2,
+            "columns": ({ 4, 1, 1, }) + ({ 4, 1, 1, }),
             "items": ({ }),
         ]);
         foreach (string skill in skills) {
-            b["items"] += ({ sprintf("%-18s %4s %4s", skill, "" + target->query_skill(skill), target->query_skill_progress(skill)) });
+            b["items"] += ({ skill, target->query_skill(skill), target->query_skill_progress(skill) });
         }
         body += ({ b });
     }
