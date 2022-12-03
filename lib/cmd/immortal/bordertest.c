@@ -13,6 +13,15 @@ void command (string input, mapping flags) {
     ]));
 
     border(([
+        "title": "TITLE",
+        "subtitle": "Subtitle",
+        "header": ([
+            "header": "Header Header",
+            "items": ({ "Header Item 1", "Header Item 2", "Header Item 3", "Header Item 4", }),
+        ]),
+    ]));
+
+    border(([
         "header": ([
             "header": "Header Header",
             "items": ({ "Header Item 1", "Header Item 2", "Header Item 3", "Header Item 4", }),
