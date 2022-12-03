@@ -217,7 +217,11 @@ string *format_border (mapping data) {
     } else { // no title
         line = b["tl"] + (fHeader ? b["t"] : b["h"]) + sprintf("%'"+b["h"]+"'*s", width-4, "") + (fHeader ? b["t"] : b["h"]) + b["tr"];
         if (ansi) {
-            line = SEFUN->apply_gradient(line, colors);
+            if (ansi == "256") {
+                line = SEFUN->apply_gradient(line, colors);
+            } else {
+                line = "\e[36m" + line + "\e[0;37;40m";
+            }
         }
         lines += ({ line });
     }
