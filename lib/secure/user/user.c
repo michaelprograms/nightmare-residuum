@@ -108,6 +108,12 @@ string query_terminal_type () {
 string query_terminal_color () {
     return __TerminalColor;
 }
+void set_terminal_color (string color) {
+    if (color != "256" && color != "16") {
+        return;
+    }
+    __TerminalColor = color;
+}
 
 nomask varargs void quit_character (int destructing) {
     message("system", "Reality "+(random(2)?"explodes into an im":"implodes into an ex")+"plosion of irreality.\n", this_object());
