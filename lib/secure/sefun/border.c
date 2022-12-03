@@ -136,11 +136,11 @@ string *format_border (mapping data) {
     string left, right, format;
     int columnWidth;
 
-    int fTitle = !undefinedp(data["title"]) && data["title"];
+    int fTitle = !!(!undefinedp(data["title"]) && data["title"]);
     int fSubtitle = !undefinedp(data["subtitle"]) && sizeof(data["subtitle"]);
-    int fHeader = !undefinedp(data["header"]) && data["header"];
-    int fBody = !undefinedp(data["body"]) && data["body"];
-    int fFooter = !undefinedp(data["footer"]) && data["footer"];
+    int fHeader = !!(!undefinedp(data["header"]) && data["header"]);
+    int fBody = !!(!undefinedp(data["body"]) && data["body"]);
+    int fFooter = !!(!undefinedp(data["footer"]) && data["footer"]);
 
     b = query_border_charset();
     width = to_int(SEFUN->query_account_setting("width"));
@@ -170,7 +170,7 @@ string *format_border (mapping data) {
         line = "   " + b["tl"] + sprintf("%'"+b["h"]+"'*s", 2 + strlen(data["title"]) + (fSubtitle ? 2 + fSubtitle : 0), "") + b["tr"];
         if (ansi) {
             if (ansi == "256") {
-                line = SEFUN->apply_gradient(line, colors);
+                line = line[0..2] + SEFUN->apply_gradient(line[3..], colors);
             } else {
                 line = "\e[36m" + line + "\e[0;37;40m";
             }
@@ -193,7 +193,7 @@ string *format_border (mapping data) {
         line += (fHeader ? b["t"] : b["h"]) + b["tr"];
         if (ansi) {
             if (ansi == "256") {
-                line = SEFUN->apply_gradient(line[0..4], colors[0..4]) + "\e[0;37;40;1m" + replace_string(line[5..titleLength-1], ":", ":\e[22m") + SEFUN->apply_gradient(line[titleLength..], colors[titleLength..]);
+                line = SEFUN->apply_gradient(line[0..3], colors[0..3]) + "\e[0;37;40;1m" + replace_string(line[4..titleLength], ":", ":\e[22m") + SEFUN->apply_gradient(line[titleLength+1..], colors[titleLength+1..]);
             } else {
                 line = "\e[36m" + line[0..4] + "\e[0;37;40;1m" + line[5..titleLength-1] + "\e[22;36m" + line[titleLength..] + "\e[0;37;40m";
             }
@@ -207,9 +207,17 @@ string *format_border (mapping data) {
         line += (fHeader ? b["v"] : " ") + b["v"];
         if (ansi) {
             if (ansi == "256") {
-                line = SEFUN->apply_gradient(line, colors);
+                line = SEFUN->apply_gradient(line[0..fHeader], colors[0..fHeader]) +
+                        line[1+fHeader..2] +
+                        SEFUN->apply_gradient(line[3..titleLength+1], colors[3..titleLength+1]) +
+                        line[titleLength+2..<2+fHeader] +
+                        SEFUN->apply_gradient(line[<1+fHeader..<1], colors[<1+fHeader..<1]);
             } else {
-                line = "\e[36m" + line + "\e[0;37;40m";
+                line = "\e[36m" + line[0..fHeader] + "\e[0;37;40m" +
+                line[1+fHeader..2] +
+                "\e[36m" + line[3..titleLength+1] + "\e[0;37;40m" +
+                line[titleLength+2..<2+fHeader] +
+                "\e[36m" + line[<1+fHeader..<1] + "\e[0;37;40m";
             }
         }
         lines += ({ line });
