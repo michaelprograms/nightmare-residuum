@@ -22,12 +22,6 @@ void spend_experience (int exp) {
     __TotalExperience = __TotalExperience + exp;
 }
 
-void add_victory () {
-    __Victory = __Victory + 1;
-}
-void add_defeat () {
-    __Defeat = __Defeat + 1;
-}
 int query_victory () {
     if (undefinedp(__Victory)) __Victory = 0;
     return __Victory;
@@ -38,15 +32,14 @@ int query_defeat () {
 }
 void handle_victory (object source) {
     int exp = D_EXPERIENCE->query_value(source);
+    __Victory ++;
     message("action", "You gain " + exp + " experience.", this_object());
     add_experience(exp);
-    add_victory();
 }
 void handle_defeat (int keep) {
     object env = environment(), corpse;
 
-    add_defeat();
-
+    __Defeat ++;
     if (env) {
         corpse = new(ITEM_CORPSE);
         corpse->setup_body(this_object());

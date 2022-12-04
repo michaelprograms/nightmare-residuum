@@ -13,8 +13,6 @@ int query_experience ();
 int query_total_experience ();
 void add_experience (int exp);
 void spend_experience (int exp);
-void add_victory ();
-void add_defeat ();
 int query_victory ();
 int query_defeat ();
 void handle_victory (object source);

@@ -9,7 +9,7 @@ void after_each_test () {
     if (objectp(testOb)) destruct(testOb);
 }
 string *test_order () {
-    return ({ "test_experience", "test_add_victory", "test_add_defeat", "test_handle_victory", });
+    return ({ "test_experience", "test_handle_victory", "test_handle_defeat", });
 }
 
 nosave private int __MockLevel, __MockLiving;
@@ -66,44 +66,9 @@ void test_experience () {
     }) :));
 }
 
-void test_add_victory () {
-    expect_function("add_victory", testOb);
-    expect_function("query_victory", testOb);
-
-    expect("add_victory and query_victory behave", (: ({
-        assert(testOb->query_victory(), "==", 0),
-
-        assert(testOb->add_victory(), "==", 0),
-        assert(testOb->query_victory(), "==", 1),
-
-        assert(testOb->add_victory(), "==", 0),
-        assert(testOb->query_victory(), "==", 2),
-
-        assert(testOb->add_victory(), "==", 0),
-        assert(testOb->query_victory(), "==", 3),
-    }) :));
-}
-
-void test_add_defeat () {
-    expect_function("add_defeat", testOb);
-    expect_function("query_defeat", testOb);
-
-    expect("add_defeat and query_defeat behave", (: ({
-        assert(testOb->query_defeat(), "==", 0),
-
-        assert(testOb->add_defeat(), "==", 0),
-        assert(testOb->query_defeat(), "==", 1),
-
-        assert(testOb->add_defeat(), "==", 0),
-        assert(testOb->query_defeat(), "==", 2),
-
-        assert(testOb->add_defeat(), "==", 0),
-        assert(testOb->query_defeat(), "==", 3),
-    }) :));
-}
-
 void test_handle_victory () {
     expect_function("handle_victory", testOb);
+    expect_function("query_victory", testOb);
 
     // setup test object
     __MockLiving = 1;
@@ -126,6 +91,7 @@ void test_handle_defeat () {
     object r = new(STD_ROOM);
 
     expect_function("handle_defeat", testOb);
+    expect_function("query_defeat", testOb);
 
     // setup test object
     if (testOb) destruct(testOb);
