@@ -57,7 +57,6 @@ mapping query_border_charset () {
             "r": "┤",
             "x": "╳",
             "+": "┼",
-
         ]),
         "US-ASCII": ([
             // lines
