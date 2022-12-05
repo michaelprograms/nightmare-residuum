@@ -336,6 +336,13 @@ varargs int valid_override (string file, string efun_name, string main_file) {
 // valid_seteuid
 
 // valid_shadow
+int valid_shadow (object ob) {
+    if (regexp(file_name(previous_object()), "^/std/mock/")) {
+        return 1;
+    } else {
+        return 0;
+    }
+}
 
 // This apply is called prior to every socket efun.
 int valid_socket (object caller, string fn, mixed *info) {
