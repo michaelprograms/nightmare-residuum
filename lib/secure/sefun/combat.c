@@ -6,7 +6,7 @@
 
 string possessive (mixed value);
 
-void display_combat_message (object source, object target, string limb, mixed weapon, string type, int damage) {
+void display_combat_message (object source, object target, string limb, mixed weapon, string type, int damage, int isAbility) {
     string sourceMsg, targetMsg, envMsg;
     string weaponName;
     int percent;
@@ -15,8 +15,8 @@ void display_combat_message (object source, object target, string limb, mixed we
     if (!source || !target || !weapon || !type) return;
 
     weaponName = objectp(weapon) ? weapon->query_name() : weapon;
-    percent = to_int(damage * 100.0 / target->query_max_hp());
 
+    percent = to_int(damage * 100.0 / target->query_max_hp());
     if (percent < 1) {
         verb = "hit";
         adverb = "ineffectively";
@@ -53,7 +53,13 @@ void display_combat_message (object source, object target, string limb, mixed we
     targetMsg = sprintf("%s %s you%sin the %s with %s %s.", source->query_cap_name(), verbs, adverb, limb, sourcePossessive, weaponName);
     envMsg = sprintf("%s %s %s%sin the %s with %s %s.", source->query_cap_name(), verbs, target->query_cap_name(), adverb, limb, sourcePossessive, weaponName);
 
-    message("combat hit", sourceMsg, source);
-    message("combat hit", targetMsg, target);
-    message("combat hit", envMsg, environment(source), ({ source, target }));
+    if (isAbility) {
+        message("ability hit", sourceMsg, source);
+        message("ability hit", targetMsg, target);
+        message("ability hit", envMsg, environment(source), ({ source, target }));
+    } else {
+        message("combat hit", sourceMsg, source);
+        message("combat hit", targetMsg, target);
+        message("combat hit", envMsg, environment(source), ({ source, target }));
+    }
 }

@@ -217,6 +217,10 @@ string format_message_color (string type, string message) {
         message = "%^GREEN%^" + message + "%^RESET%^";
     } else if (type == "combat alert") {
         message = "%^YELLOW%^" + message + "%^RESET%^";
+    } else if (type == "ability hit") {
+        message = "%^RED%^BOLD%^" + message + "%^RESET%^";
+    } else if (type == "ability miss") {
+        message = "%^BOLD%^" + message + "%^RESET%^";
     }
     return message;
 }

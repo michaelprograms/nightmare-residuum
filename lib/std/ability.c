@@ -172,7 +172,6 @@ int calculate_damage (object source, object target, string limb) {
 
 /* ----- difficulty factor ----- */
 
-
 nosave private int __DifficultyFactor;
 
 void set_difficulty_factor (int factor) {
@@ -225,23 +224,25 @@ void ability_message_attempt (object source, object target, string limb) {
 }
 
 void ability_message_fail (object source, object target, string limb) {
-    message("action", "You miss your " + query_name() + " attempt on " + target->query_cap_name() + "!", source);
-    message("action", source->query_cap_name() + " misses " + possessive(source) + " " + query_name() + " attempt on you!", target);
-    message("action", source->query_cap_name() + " misses " + possessive(source) + " " + query_name() + " attempt on " + target->query_cap_name() + "!", environment(source), ({ source, target }));
+    message("ability miss", "You miss your " + query_name() + " attempt on " + target->query_cap_name() + "!", source);
+    message("ability miss", source->query_cap_name() + " misses " + possessive(source) + " " + query_name() + " attempt on you!", target);
+    message("ability miss", source->query_cap_name() + " misses " + possessive(source) + " " + query_name() + " attempt on " + target->query_cap_name() + "!", environment(source), ({ source, target }));
 }
 
 void ability_message_success (object source, object target, string limb) {
     string myMsg, yourMsg, envMsg;
+    string who, you, plural = pluralize(query_name());
 
     if (limb) {
-        myMsg = "You " + query_name() + " " + possessive_noun(target->query_cap_name()) + " " + limb + "!\n";
-        yourMsg = source->query_cap_name() + " " + pluralize(query_name()) + " your " + limb + "!\n";
-        envMsg = source->query_cap_name() + " " + pluralize(query_name()) + " " + possessive_noun(target->query_cap_name()) + " " + limb + "!\n";
+        who = possessive_noun(target->query_cap_name()) + " " + limb;
+        you = "your " + limb;
     } else {
-        myMsg = "You " + query_name() + " " + target->query_cap_name() + "!\n";
-        yourMsg = source->query_cap_name() + " " + pluralize(query_name()) + " you!\n";
-        envMsg = source->query_cap_name() + " " + pluralize(query_name()) + " " + target->query_cap_name() + "!\n";
+        who = target->query_cap_name();
+        you = "you";
     }
+    myMsg = "You " + query_name() + " " + who + "!";
+    yourMsg = source->query_cap_name() + " " + plural + " " + you + "!";
+    envMsg = source->query_cap_name() + " " + plural + " " + who + "!";
 
     message("action", myMsg, source);
     message("action", yourMsg, target);
@@ -276,7 +277,6 @@ private void handle_ability_use (object source, object target) {
 
     // determine cost
     cost = query_cost();
-
     // verify vitals can pay cost
     if (cost["sp"] > 0) {
         if (source->query_sp() < cost["sp"]) {
@@ -290,7 +290,6 @@ private void handle_ability_use (object source, object target) {
             return;
         }
     }
-
     // check source vitals
     if (cost["sp"] > 0) {
         if (source->query_sp() < cost["sp"]) {
@@ -311,6 +310,7 @@ private void handle_ability_use (object source, object target) {
     if (cost["mp"]) {
         source->add_mp(-cost["mp"]);
     }
+
     // update statuses
     source->set_busy(2);
     source->add_hostile(target);
@@ -331,16 +331,15 @@ private void handle_ability_use (object source, object target) {
 
     // determine damage
     damage = calculate_damage(source, target, limb);
+    display_combat_message(source, target, limb, query_name(), (weapon ? weapon->query_type() : "blunt"), damage, 1);
     target->handle_damage(damage, limb, source);
+
     if (source->query_immortal() || source->query_property("debug")) {
         message("action", "%^ORANGE%^Damage:%^RESET%^ " + damage, source);
     }
-
     if (target && (target->query_immortal() || target->query_property("debug"))) {
         message("action", "%^ORANGE%^Damage:%^RESET%^ " + damage, target);
     }
-
-    // @TODO send damage messages
 
     // train relevant skills
     foreach (string key,int value in __SkillPowers) {
