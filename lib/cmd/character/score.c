@@ -42,14 +42,16 @@ void command (string input, mapping flags) {
                 "header": ({
                     "Experience",
                     "Victories",
+                    "Victory Average",
                     "Defeats",
                 }),
                 "items": ({
                     format_integer(target->query_experience()),
                     target->query_victory(),
-                    target->query_defeat(),
+                    target->query_victory_average(),
+                    sizeof(target->query_defeat()),
                 }),
-                "columns": 3,
+                "columns": 4,
                 "align": "center",
             ]),
             ([

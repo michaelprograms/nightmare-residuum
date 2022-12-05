@@ -14,9 +14,9 @@ int query_total_experience ();
 void add_experience (int exp);
 void spend_experience (int exp);
 int query_victory ();
-int query_defeat ();
+mixed *query_defeat ();
 void handle_victory (object source);
-void handle_defeat (int keep);
+void handle_defeat (object source);
 
 /* ----- body ----- */
 string query_gender ();

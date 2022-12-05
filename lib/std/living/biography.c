@@ -1,7 +1,9 @@
 #include "living.h"
 
 private int __Experience = 0, __TotalExperience = 0;
-private int __Victory = 0, __Defeat = 0;
+private int __Victory = 0, __VictoryLevel;
+private mixed *__Defeat = ({ });
+
 
 int query_experience () {
     if (undefinedp(__Experience)) __Experience = 0;
@@ -26,20 +28,35 @@ int query_victory () {
     if (undefinedp(__Victory)) __Victory = 0;
     return __Victory;
 }
-int query_defeat () {
-    if (undefinedp(__Defeat)) __Defeat = 0;
+int query_victory_average () {
+    if (!__Victory) return 0;
+    return __VictoryLevel / __Victory;
+}
+mixed *query_defeat () {
+    if (!arrayp(__Defeat)) __Defeat = ({ });
     return __Defeat;
 }
 void handle_victory (object source) {
     int exp = D_EXPERIENCE->query_value(source);
     __Victory ++;
+    __VictoryLevel += source->query_level();
     message("action", "You gain " + exp + " experience.", this_object());
     add_experience(exp);
 }
-void handle_defeat (int keep) {
+void handle_defeat (object source) {
     object env = environment(), corpse;
 
-    __Defeat ++;
+    if (!arrayp(__Defeat)) {
+        __Defeat = ({ });
+    }
+
+    __Defeat += ({
+        ({
+            source ? source->query_cap_name() : 0,
+            time()
+        })
+    });
+
     if (env) {
         corpse = new(ITEM_CORPSE);
         corpse->setup_body(this_object());
@@ -49,6 +66,6 @@ void handle_defeat (int keep) {
         }
     }
 
-    if (keep) this_object()->handle_move("/domain/Nowhere/room/defeat.c");
+    if (this_object()->is_character()) this_object()->handle_move("/domain/Nowhere/room/defeat.c");
     else this_object()->handle_remove();
 }

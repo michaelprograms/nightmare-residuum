@@ -107,7 +107,7 @@ varargs void check_lifesigns (object source) {
         message("system", "\nYou have been %^BOLD%^RED%^defeated%^RESET%^!\n\n", this_object());
         message("system", "\n" + this_object()->query_cap_name() + " has been %^BOLD%^RED%^defeated%^RESET%^!\n\n", environment(), this_object());
         if (source) source->handle_victory(this_object());
-        handle_defeat(this_object()->is_character());
+        handle_defeat(source);
     }
 }
 
