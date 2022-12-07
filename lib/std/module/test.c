@@ -328,7 +328,6 @@ void expect (string message, function fn) {
     leftResults = ({ });
     rightResults = ({ });
 
-    totalPassingAsserts += passingAsserts;
     passingAsserts = 0;
     catch (evaluate(fn));
     if (!passingAsserts) currentTestPassed = 0;
@@ -401,6 +400,7 @@ void assert (mixed left, string condition, mixed right) {
 
     if (currentTestPassed || failingExpects == -1) {
         passingAsserts ++;
+        totalPassingAsserts ++;
     } else {
         failingAsserts ++;
     }
