@@ -5,8 +5,13 @@ int start_shadow (object t) {
     return !!shadow(target);
 }
 int stop_shadow () {
-    return remove_shadow(target);
+    if (remove_shadow(target)) {
+        target = 0;
+        return 1;
+    } else {
+        return 0;
+    }
 }
-object query_target () {
+object query_shadow () {
     return target;
 }
