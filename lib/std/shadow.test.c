@@ -17,6 +17,6 @@ void test_shadow () {
         assert(testOb->query_shadow(), "==", UNDEFINED),
         assert(testOb->start_shadow(this_object()), "==", 1),
         assert(testOb->query_shadow(), "==", this_object()),
-        assert(testOb->stop_shadow(this_object()), "==", 1),
+        assert(testOb->stop_shadow(), "==", 1),
     }) :));
 }
