@@ -14,6 +14,9 @@ void command (string input, mapping flags) {
         message("action", "Emote what?", tc);
         return;
     }
+    if (input[<1..] != ".") {
+        input += ".";
+    }
 
     who = environment(tc)->query_living_contents() - ({ tc });
 
