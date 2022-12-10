@@ -30,15 +30,38 @@ void command (string input, mapping flags) {
             }),
             "columns": 2,
         ]),
-        "body": ([
-            "items": ({
-                sprintf("%12s", "Species") + ": " + capitalize(char->query_gender()) + " " + capitalize(char->query_species()),
-                sprintf("%12s", "Level") + ": " + char->query_level(),
-                sprintf("%12s", "Victories") + ": " + char->query_victory(),
-                sprintf("%12s", "Defeats") + ": " + char->query_defeat(),
-            }),
-            "columns": 2,
-        ]),
+        "body": ({
+            ([
+                "header": ({
+                    "Species",
+                    "Class",
+                    "Level",
+                }),
+                "items": ({
+                    capitalize(char->query_gender()) + " " + capitalize(char->query_species()),
+                    capitalize(char->query_class()),
+                    char->query_level(),
+                }),
+                "columns": 3,
+                "align": "center",
+            ]),
+            ([
+                "header": ({
+                    "Experience",
+                    "Victories",
+                    "Victory Average",
+                    "Defeats",
+                }),
+                "items": ({
+                    format_integer(char->query_experience()),
+                    char->query_victory(),
+                    char->query_victory_average(),
+                    sizeof(char->query_defeat()),
+                }),
+                "columns": 4,
+                "align": "center",
+            ]),
+        }),
     ]));
 
     destruct(char);
