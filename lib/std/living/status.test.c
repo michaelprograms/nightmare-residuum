@@ -43,3 +43,26 @@ void test_disable () {
         assert(testOb->query_disable(), "==", 0), // still zero
     }) :));
 }
+
+void test_posture () {
+    expect_function("set_posture", testOb);
+    expect_function("query_posture", testOb);
+
+    expect("posture should be settable and queryable", (: ({
+        assert(testOb->query_posture(), "==", "standing"),
+
+        testOb->set_posture("sitting"),
+        assert(testOb->query_posture(), "==", "sitting"),
+        testOb->set_posture("laying"),
+        assert(testOb->query_posture(), "==", "laying"),
+        testOb->set_posture("standing"),
+        assert(testOb->query_posture(), "==", "standing"),
+    }) :));
+
+    // expect("postures should heal on heartbeat", (: ({
+        // resting
+
+        // sleeping
+
+    // }) :));
+}
