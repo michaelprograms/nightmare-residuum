@@ -10,9 +10,9 @@ void after_each_test () {
     if (objectp(testOb)) destruct(testOb);
 }
 
-nosave private int __StatusDisable, __StatusBusy;
-int query_disable () { return __StatusDisable; }
-int query_busy () { return __StatusBusy; }
+nosave private int __Disable, __Busy;
+int query_disable () { return __Disable; }
+int query_busy () { return __Busy; }
 
 void test_requirements () {
     expect_function("set_requirements", testOb);
@@ -45,7 +45,7 @@ void test_requirements () {
         assert(testOb->check_busy(), "==", 1),
         assert(testOb->can_verb_rule("verb", "rule"), "==", 1),
 
-        __StatusBusy = 1,
+        __Busy = 1,
         assert(testOb->check_busy(), "regex", "^You are too busy"),
         assert(testOb->can_verb_rule("verb", "rule"), "regex", "^You are too busy"),
 
@@ -54,23 +54,23 @@ void test_requirements () {
         assert(testOb->check_disable(), "==", 1),
         assert(testOb->can_verb_rule("verb", "rule"), "==", 1),
 
-        __StatusDisable = 1,
+        __Disable = 1,
         assert(testOb->check_disable(), "regex", "^You are not able"),
         assert(testOb->can_verb_rule("verb", "rule"), "regex", "^You are not able"),
 
         // test multiple requirements
         testOb->set_requirements(REQUIREMENT_BUSY | REQUIREMENT_DISABLE),
-        __StatusBusy = 0,
-        __StatusDisable = 0,
+        __Busy = 0,
+        __Disable = 0,
         assert(testOb->can_verb_rule("verb", "rule"), "==", 1),
         // busy
-        __StatusBusy = 1,
+        __Busy = 1,
         assert(testOb->can_verb_rule("verb", "rule"), "regex", "^You are too busy"),
         // both
-        __StatusDisable = 1,
+        __Disable = 1,
         assert(testOb->can_verb_rule("verb", "rule"), "regex", "^You are too busy"),
         // disable
-        __StatusBusy = 0,
+        __Busy = 0,
         assert(testOb->can_verb_rule("verb", "rule"), "regex", "^You are not able"),
     }) :));
 }

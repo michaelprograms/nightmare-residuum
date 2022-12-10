@@ -1,27 +1,34 @@
-private int __StatusBusy = 0;
-private int __StatusDisable = 0;
+private int __Busy = 0, __Disable = 0;
+private string __Posture;
 
 // Disable prevents actions, combat hits, and movement until expired
-// Busy prevents actions until expired
-
 void set_disable (int value) {
     if (value > -1) {
-        __StatusDisable = value;
+        __Disable = value;
     }
 }
-int query_disable () { return __StatusDisable; }
+int query_disable () { return __Disable; }
 
+// Busy prevents actions until expired
 void set_busy (int value) {
     if (value > -1) {
-        __StatusBusy = value;
+        __Busy = value;
     }
 }
-int query_busy () { return __StatusBusy; }
+int query_busy () { return __Busy; }
 
-void heart_beat () {
-    if (__StatusBusy > 0) __StatusBusy --;
-    if (__StatusDisable > 0) __StatusDisable --;
-
-    // if(!disable) continue_attack();
+void set_posture (string p) {
+    if (!stringp(p) && !sizeof(p)) error("Bad argument 1 to status->set_posture");
+    if (member_array(p, ({ "sit", "lay", "rest", "sleep", })) > -1) error("Bad argument 1 to status->set_posture");
+    __Posture = p;
 }
 
+
+/* ----- applies ----- */
+
+void heart_beat () {
+    if (__Busy > 0) __Busy --;
+    if (__Disable > 0) __Disable --;
+    if (__Posture = "rest") this_object()->heal(1);
+    if (__Posture = "sleep") this_object()->heal(2);
+}
