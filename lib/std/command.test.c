@@ -40,6 +40,30 @@ void test_help_text () {
     }) :));
 }
 
+void test_help_similar () {
+    expect_function("query_help_similar", testOb);
+    expect_function("set_help_similar", testOb);
+
+    expect("handles help similar", (: ({
+        assert(testOb->query_help_similar(), "==", UNDEFINED),
+
+        testOb->set_help_similar(({ "a", "b", "c", })),
+        assert(testOb->query_help_similar(), "==", ({ "a", "b", "c", })),
+
+        testOb->set_help_similar(({ "1", "2", "3", })),
+        assert(testOb->query_help_similar(), "==", ({ "1", "2", "3", })),
+    }) :));
+
+    expect("set_help_similar handles invalid argument 1", (: ({
+        assert((: testOb->set_help_similar(this_object()) :), "catch", "*Bad argument 1 to command->set_help_similar\n"),
+        assert((: testOb->set_help_similar(1.0) :), "catch", "*Bad argument 1 to command->set_help_similar\n"),
+        assert((: testOb->set_help_similar(1) :), "catch", "*Bad argument 1 to command->set_help_similar\n"),
+        assert((: testOb->set_help_similar("") :), "catch", "*Bad argument 1 to command->set_help_similar\n"),
+        assert((: testOb->set_help_similar(([])) :), "catch", "*Bad argument 1 to command->set_help_similar\n"),
+        assert((: testOb->set_help_similar((: 1 :)) :), "catch", "*Bad argument 1 to command->set_help_similar\n"),
+    }) :));
+}
+
 void test_syntax () {
     expect_function("query_syntax", testOb);
     expect_function("set_syntax", testOb);

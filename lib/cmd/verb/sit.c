@@ -8,6 +8,7 @@ void create () {
     set_requirements(REQUIREMENT_BUSY | REQUIREMENT_DISABLE);
     set_syntax("sit");
     set_help_text("Your character will attempt to sit down if not already in that position.");
+    set_help_similar(({ "lay", "stand", }));
 }
 
 mixed can_sit () {
