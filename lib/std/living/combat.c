@@ -13,7 +13,11 @@ protected void handle_combat () {
 
     if (time() % 2 || !(target = query_target_hostile())) return;
     if (this_object()->query_disable()) return;
-    if (this_object()->query_posture() == "sitting" || this_object()->query_posture() == "laying") return;
+
+    if (this_object()->query_posture() == "sitting" || this_object()->query_posture() == "laying") {
+        message("combat info", "You cannot fight while " + this_object()->query_posture() + " down!", this_object());
+        return;
+    }
 
     if ((this_object()->is_npc() || this_object()->is_monster()) && this_object()->query_ability_chance()) {
         this_object()->handle_ability_attack();
