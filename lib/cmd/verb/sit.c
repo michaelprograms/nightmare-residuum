@@ -16,17 +16,19 @@ mixed can_sit () {
 }
 
 void do_sit () {
-    object tc = this_character();
+    object po = previous_object();
 
-    if (tc->query_posture() == "sitting") {
-        message("action", "You are already sitting.", tc);
+    if (po->query_posture() == "sitting") {
+        message("action", "You are already sitting.", po);
         return;
     }
 
-    if (tc->query_posture() == "laying") {
-        message("action", "You sit up.", tc);
+    if (po->query_posture() == "laying") {
+        message("action", "You sit up.", po);
+        message("action", po->query_cap_name() + " sits up.", environment(po), po);
     } else {
-        message("action", "You sit down.", tc);
+        message("action", "You sit down.", po);
+        message("action", po->query_cap_name() + " sits down.", environment(po), po);
     }
-    tc->set_posture("sitting");
+    po->set_posture("sitting");
 }

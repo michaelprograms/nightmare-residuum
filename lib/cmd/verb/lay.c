@@ -16,12 +16,13 @@ mixed can_lay () {
 }
 
 void do_lay () {
-    object tc = this_character();
+    object po = previous_object();
 
-    if (tc->query_posture() == "laying") {
-        message("action", "You are already laying.", tc);
+    if (po->query_posture() == "laying") {
+        message("action", "You are already laying.", po);
     } else {
-        message("action", "You lay down.", tc);
-        tc->set_posture("laying");
+        message("action", "You lay down.", po);
+        message("action", po->query_cap_name() + " lays down.", environment(po), po);
+        po->set_posture("laying");
     }
 }

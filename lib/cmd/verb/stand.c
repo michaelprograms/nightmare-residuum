@@ -16,13 +16,14 @@ mixed can_stand () {
 }
 
 void do_stand () {
-    object tc = this_character();
+    object po = previous_object();
 
-    if (tc->query_posture() == "standing") {
-        message("action", "You are already standing.", tc);
+    if (po->query_posture() == "standing") {
+        message("action", "You are already standing.", po);
         return;
     } else {
-        message("action", "You stand up.", tc);
-        tc->set_posture("standing");
+        message("action", "You stand up.", po);
+        message("action", po->query_cap_name() + " stands up.", environment(po), po);
+        po->set_posture("standing");
     }
 }
