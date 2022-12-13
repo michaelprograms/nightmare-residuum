@@ -287,13 +287,6 @@ string *format_border (mapping data) {
     if (fBody && arrayp(data["body"])) {
         // Body top line
         line = sprintf("%*s", width-2, "");
-        if (ansi) {
-            if (ansi == "256") {
-                line = SEFUN->apply_gradient(line, colors);
-            } else {
-                line = "\e[36m" + line + "\e[0;37;40m";
-            }
-        }
         linesBody += ({ line });
         foreach (mapping child in data["body"]) {
             // Body child header
