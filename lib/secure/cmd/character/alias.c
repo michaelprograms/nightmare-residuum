@@ -35,7 +35,7 @@ private void print_all_aliases (object shell) {
         "body": ([
             "header": ({ "Alias", "Expansion", "Default", }),
             "items": list,
-            "columns": 3,
+            "columns": ({ 1, 3, 2, }),
         ]),
         "footer": ([
             "items": ({
