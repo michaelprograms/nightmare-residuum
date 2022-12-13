@@ -19,7 +19,7 @@ int query_busy () { return __Busy; }
 
 void set_posture (string p) {
     if (!stringp(p) && !sizeof(p)) error("Bad argument 1 to status->set_posture");
-    if (member_array(p, ({ "standing", "sitting", "laying", })) == -1) error("Bad argument 1 to status->set_posture");
+    if (member_array(p, ({ "flying", "laying", "meditating", "sitting", "standing", })) == -1) error("Bad argument 1 to status->set_posture");
     __Posture = p;
 }
 string query_posture () {
@@ -35,5 +35,11 @@ void heart_beat () {
     if (__Busy > 0) __Busy --;
     if (__Disable > 0) __Disable --;
     if (__Posture == "sitting") this_object()->heal(1);
-    if (__Posture == "laying") this_object()->heal(2);
+    else if (__Posture == "laying") this_object()->heal(2);
+    else if (__Posture == "meditating") {
+        this_object()->heal(2);
+        this_object()->add_mp(2+random(2));
+    } else if (__Posture == "flying") {
+        this_object()->add_sp(-(1+random(2)));
+    }
 }

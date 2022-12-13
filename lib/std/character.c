@@ -248,10 +248,12 @@ private string describe_living_item (object ob) {
         case 72..95: tag = " (bruised)"; break;
         case 48..71: tag = " (injured)"; break;
         case 24..47: tag = " (bleeding)"; break;
-        case 0..23: tag = " (dying)"; break;
+        case 0..23:  tag = " (dying)"; break;
     }
-    if (ob->query_posture() == "sitting") tag += " (sitting)";
-    if (ob->query_posture() == "laying") tag += " (laying)";
+    switch (ob->query_posture()) {
+        case "flying": case "laying": case "meditating": case "sitting":
+            tag += " ("+ob->query_posture()+")" break;
+    }
     return ob->query_short("%^RED%^BOLD%^") + tag;
 }
 
