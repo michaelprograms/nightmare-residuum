@@ -20,7 +20,7 @@ void do_fly () {
 
     if (po->query_posture() == "flying") {
         message("action", "You land on your feet.", po);
-        message("action", po->query_cap_name() " lands on " + possessive(po) + " feet.", po);
+        message("action", po->query_cap_name() + " lands on " + possessive(po) + " feet.", po);
         po->set_posture("standing");
         return;
     } else {
