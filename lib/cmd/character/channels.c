@@ -3,6 +3,7 @@ inherit STD_COMMAND;
 void create () {
     set_syntax("channels");
     set_help_text("The channels command is used to view which communication channels you have access to and their blocked status.");
+    set_help_similar(({ "last", "reply", "tell", }));
 }
 
 void command (string input, mapping flags) {

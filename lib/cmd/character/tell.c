@@ -3,6 +3,7 @@ inherit STD_COMMAND;
 void create () {
     set_syntax("tell");
     set_help_text("The tell command is used to send a message from your character to another connected player.");
+    set_help_similar(({ "channels", "last", "reply", }));
 }
 
 void command (string input, mapping flags) {
