@@ -1,5 +1,5 @@
 #define DIR_SAVE_CHARACTER "/save/character"
-#define VALID_TYPES ({ "character", "shell", })
+#define VALID_TYPES ({ "character", "shell", "pet", })
 
 int query_valid_name (string name) {
     int l;
@@ -18,8 +18,10 @@ varargs string query_save_path (string name, string type) {
     return DIR_SAVE_CHARACTER + "/" + name[0..0] + "/" + name + "/" + type + ".o";
 }
 
-int query_exists (string name) {
-    return query_valid_name(name) && unguarded((: file_size, query_save_path(name, "character") :)) > -1;
+varargs int query_exists (string name, string type) {
+    if (!name) error("Bad argument 1 to character->query_exists");
+    if (!stringp(type) || !sizeof(type)) type = "character";
+    return query_valid_name(name) && unguarded((: file_size, query_save_path(name, type) :)) > -1;
 }
 
 object query_whois_character (string name) {

@@ -89,6 +89,8 @@ int query_allowed (object caller, string fn, string file, string mode) {
         // access check passes due to caller requesting valid save path
         if (!strsrch(tmp, "/std/character") && D_CHARACTER->query_valid_save_path(caller->query_key_name(), file)) {
             return 1;
+        } else if (!strsrch(tmp, "/std/npc/pet") && D_CHARACTER->query_valid_save_path(caller->query_owner_name(), file)) {
+            return 1;
         } else if (!strsrch(tmp, "/std/account") && D_ACCOUNT->query_save_path(caller->query_key_name()) == file) {
             return 1;
         } else if (!strsrch(tmp, "/daemon/log") && regexp(file, "^/log/")) {

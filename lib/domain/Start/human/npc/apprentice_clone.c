@@ -20,7 +20,6 @@ void create () {
     set_long("A cloned human by the name of " + capName + ", working as an apprentice for the Snail Nation.");
     set_level(5);
     set_species("human");
-    set_gender(element_of(({ "male", "female" })));
 
     set_ability_list(({ "zap", "bludgeon", }));
     set_ability_chance(50);
