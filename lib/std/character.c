@@ -252,7 +252,7 @@ private string describe_living_item (object ob) {
     }
     switch (ob->query_posture()) {
         case "flying": case "laying": case "meditating": case "sitting":
-            tag += " ("+ob->query_posture()+")" break;
+            tag += " ("+ob->query_posture()+")"; break;
     }
     return ob->query_short("%^RED%^BOLD%^") + tag;
 }
