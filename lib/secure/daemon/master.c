@@ -210,8 +210,8 @@ void error_handler (mapping e, int caught) {
     }
     write_file("/log/"+file, ret);
     // @TODO CHAT_D->do_chat("runtime", ret , 2 , 0);
-    if (this_user(1)) {
-        tell_object(this_user(1), sprintf("%sTrace written to /log/%s\n", e["error"], (caught ? "catch" : "runtime")));
+    if (efun::this_user()) {
+        tell_object(efun::this_user(), sprintf("%sTrace written to /log/%s\n", e["error"], (caught ? "catch" : "runtime")));
     }
     return 0;
 }
