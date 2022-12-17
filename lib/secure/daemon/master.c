@@ -371,7 +371,7 @@ int valid_read (string file, mixed caller, string fn) {
     int valid = 0;
     file = sanitize_path(file);
 
-    if (!(valid = regexp(base_name(caller), "/secure/daemon/[master|access]"))) {
+    if (!(valid = regexp(base_name(caller), "^/secure/daemon/[master|access]"))) {
         valid = D_ACCESS->query_allowed(caller, fn, file, "read");
     }
     if (!valid && !regexp(base_name(previous_object()), "\\.test$")) {
@@ -384,7 +384,7 @@ int valid_write (string file, mixed caller, string fn) {
     int valid = 0;
     file = sanitize_path(file);
 
-    if (!(valid = regexp(base_name(caller), "/secure/daemon/[master|access]"))) {
+    if (!(valid = regexp(base_name(caller), "^/secure/daemon/[master|access]"))) {
         valid = D_ACCESS->query_allowed(caller, fn, file, "write");
     }
     if (!valid && !regexp(base_name(previous_object()), "\\.test$")) {
