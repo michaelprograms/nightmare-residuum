@@ -14,7 +14,7 @@ void command (string input, mapping flags) {
     }
 
     ob = clone_object(file);
-    if (ob->is_living()) {
+    if (ob->is_living() || ob->query_no_get()) {
         message("action", "You clone " + ob->query_cap_name() + " into your environment.", this_character());
         message("action", this_character()->query_cap_name() + " clones " + ob->query_cap_name() + ".", environment(this_character()), this_character());
         ob->handle_move(environment(this_character()));
