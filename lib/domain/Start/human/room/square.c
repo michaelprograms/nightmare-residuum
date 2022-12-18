@@ -30,6 +30,5 @@ void create () {
         HUMAN_ITEM + "obelisk.c": 1,
         HUMAN_ITEM + "plum_tree.c": 1,
         HUMAN_ITEM + "bench.c": 2,
-        HUMAN_NPC + "clone.c": 5,
     ]));
 }
