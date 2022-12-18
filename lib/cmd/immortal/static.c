@@ -20,7 +20,7 @@ void command (string input, mapping flags) {
         (!random($($(r))) ? 0x8 : 0) |
         (!random($($(r))) ? 0x10 : 0) |
         (!random($($(r))) ? 0x20 : 0) |
-        (!random($($(r))) ? 0x40 : 0)
+        (!random($($(r))) ? 0x80 : 0)
     :)) :));
 
     for (int y = 0; y < w/4; y ++) {
