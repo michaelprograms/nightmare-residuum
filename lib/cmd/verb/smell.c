@@ -5,6 +5,7 @@ void create () {
     add_rules(({ "", "STR", }));
     set_syntax("smell ([scent])");
     set_help_text("Your character will attempt to smell the provided scent.");
+    set_help_similar(({ "listen", "look", }));
 }
 
 /* ----- rule: "" ----- */

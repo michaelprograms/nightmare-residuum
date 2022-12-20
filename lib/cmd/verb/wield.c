@@ -8,6 +8,7 @@ void create () {
     set_requirements(REQUIREMENT_BUSY | REQUIREMENT_DISABLE);
     set_syntax("wield [item]");
     set_help_text("Your character will attempt to wield the provided item.");
+    set_help_similar(({ "unwear", "unwield", "wear", }));
 }
 
 mixed can_wield () {

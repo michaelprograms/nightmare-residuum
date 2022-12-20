@@ -5,6 +5,7 @@ void create () {
     add_rules(({ "", "STR", "at STR", "OBJ", "at OBJ", "LIV", "at LIV", }));
     set_syntax("look (at) ([item|target])");
     set_help_text("Your character will attempt to look at the provided item or target.");
+    set_help_similar(({ "listen", "smell", }));
 }
 
 /* ----- rule: "" ----- */

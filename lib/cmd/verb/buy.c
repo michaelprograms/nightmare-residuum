@@ -8,6 +8,7 @@ void create () {
     set_requirements(REQUIREMENT_BUSY | REQUIREMENT_DISABLE);
     set_syntax("buy [item]");
     set_help_text("Your character will attempt to buy the provided item.");
+    set_help_similar(({ "list", "sell", }));
 }
 
 /* ----- STR from OBJ ----- */

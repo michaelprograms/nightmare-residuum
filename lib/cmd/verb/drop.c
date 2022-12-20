@@ -5,6 +5,7 @@ void create () {
     add_rules(({ "", "OBS", "WRD WRD", }));
     set_syntax("drop [item]");
     set_help_text("Your character will attempt to drop the provided item.");
+    set_help_similar(({ "get", "give", "put", }));
 }
 
 mixed can_drop () {

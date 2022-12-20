@@ -5,6 +5,7 @@ void create () {
     add_rules(({ "", "OBS", "OBJ from OBJ", }));
     set_syntax("get [item] (from [container])");
     set_help_text("Your character will attempt to get the provided input.");
+    set_help_similar(({ "drop", "give", "put", }));
 }
 
 /* ----- rule: "" ----- */

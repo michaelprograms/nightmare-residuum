@@ -8,6 +8,7 @@ void create () {
     set_requirements(REQUIREMENT_BUSY | REQUIREMENT_DISABLE);
     set_syntax("wear [item]");
     set_help_text("Your character will attempt to wear the provided item.");
+    set_help_similar(({ "unwear", "unwield", "wield", }));
 }
 
 mixed can_wear () {

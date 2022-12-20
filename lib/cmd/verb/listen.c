@@ -5,6 +5,7 @@ void create () {
     add_rules(({ "", "STR", }));
     set_syntax("listen ([sound])");
     set_help_text("Your character will attempt to listen to the provided sound.");
+    set_help_similar(({ "look", "smell", }));
 }
 
 /* ----- rule: "" ----- */

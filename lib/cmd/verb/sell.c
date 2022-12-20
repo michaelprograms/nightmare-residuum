@@ -8,6 +8,7 @@ void create () {
     set_requirements(REQUIREMENT_BUSY | REQUIREMENT_DISABLE);
     set_syntax("sell ([item]) (to [target])");
     set_help_text("Your character will attempt to sell the provided item to the provided target.");
+    set_help_similar(({ "buy", "list", }));
 }
 
 /* ----- OBJ to OBJ ----- */
