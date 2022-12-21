@@ -97,7 +97,7 @@ void execute_command (string command) {
     // @TODO move to STD_LIVING->do_command
     if (cmdPath = D_COMMAND->query_command(action)) {
         mixed *parse = parse_command_flags(input);
-        call_other(cmdPath + "/" + action, "command", parse[0], parse[1]);
+        catch(call_other(cmdPath + "/" + action, "command", parse[0], parse[1]));
     } else if (__Owner->query_character() && !__Owner->query_character()->do_command(command)) {
         write("Do what?\n");
     }

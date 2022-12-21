@@ -8,7 +8,6 @@
 inherit "/std/class/user_input.c";
 
 nosave private class Input *stack = ({ });
-nosave private int dispatchTarget;
 
 private nomask class Input get_top_handler (int require_handler);
 private nomask class Input get_bottom_handler ();
@@ -20,7 +19,6 @@ nomask int query_input_stack_size () {
 private nomask void dispatch_to_bottom (mixed str) {
     class Input info;
     if (!(info = get_bottom_handler())) return;
-    dispatchTarget = 0;
     evaluate(info->inputFn, str);
 }
 private nomask void dispatch_input (mixed str) {
@@ -30,7 +28,6 @@ private nomask void dispatch_input (mixed str) {
     } else {
         if (!(info = get_top_handler(1))) return;
         if (info->type == STATE_INPUT_SINGLE) input_pop();
-        dispatchTarget = sizeof(stack);
         evaluate(info->inputFn, str);
     }
     if (this_object()) input_focus();
