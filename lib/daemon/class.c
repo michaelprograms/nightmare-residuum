@@ -31,7 +31,7 @@ nosave private mapping __Class = ([
             "ranged defense": 1,
         ]),
     ]),
-    "templar": ([       // str and agi
+    "mystic": ([       // str and agi
         "vitals": ([
             "hp": 2,
             "sp": 2,

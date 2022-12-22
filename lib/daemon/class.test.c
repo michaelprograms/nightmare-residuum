@@ -15,7 +15,7 @@ void test_query_adjust_vitals () {
 
     expect("hp adjustments are queryable", (: ({
         assert(testOb->query_adjust_hp("warrior"), "==", 3),
-        assert(testOb->query_adjust_hp("templar"), "==", 2),
+        assert(testOb->query_adjust_hp("mystic"), "==", 2),
         assert(testOb->query_adjust_hp("scoundrel"), "==", 1),
         assert(testOb->query_adjust_hp("ranger"), "==", 0),
         assert(testOb->query_adjust_hp("psionist"), "==", 0),
@@ -26,7 +26,7 @@ void test_query_adjust_vitals () {
 
     expect("sp adjustments are queryable", (: ({
         assert(testOb->query_adjust_sp("warrior"), "==", 1),
-        assert(testOb->query_adjust_sp("templar"), "==", 2),
+        assert(testOb->query_adjust_sp("mystic"), "==", 2),
         assert(testOb->query_adjust_sp("scoundrel"), "==", 3),
         assert(testOb->query_adjust_sp("ranger"), "==", 2),
         assert(testOb->query_adjust_sp("psionist"), "==", 1),
@@ -37,7 +37,7 @@ void test_query_adjust_vitals () {
 
     expect("mp adjustments are queryable", (: ({
         assert(testOb->query_adjust_mp("warrior"), "==", 0),
-        assert(testOb->query_adjust_mp("templar"), "==", 0),
+        assert(testOb->query_adjust_mp("mystic"), "==", 0),
         assert(testOb->query_adjust_mp("scoundrel"), "==", 0),
         assert(testOb->query_adjust_mp("ranger"), "==", 2),
         assert(testOb->query_adjust_mp("psionist"), "==", 3),
@@ -52,7 +52,7 @@ void test_query_adjust_stats () {
 
     expect("stat adjustments are queryable", (: ({
         assert(testOb->query_adjust_stat("warrior", "strength"), "==", 3),
-        assert(testOb->query_adjust_stat("templar", "strength"), "==", 2),
+        assert(testOb->query_adjust_stat("mystic", "strength"), "==", 2),
         assert(testOb->query_adjust_stat("scoundrel", "strength"), "==", 1),
         assert(testOb->query_adjust_stat("ranger", "strength"), "==", 1),
         assert(testOb->query_adjust_stat("psionist", "strength"), "==", 0),
@@ -68,7 +68,7 @@ void test_query_adjust_skills () {
 
     expect("skill adjustments are queryable", (: ({
         assert(testOb->query_adjust_skill("warrior", "blade attack"), "==", 3),
-        assert(testOb->query_adjust_skill("templar", "blade attack"), "==", 3),
+        assert(testOb->query_adjust_skill("mystic", "blade attack"), "==", 3),
         assert(testOb->query_adjust_skill("scoundrel", "blade attack"), "==", 2),
         assert(testOb->query_adjust_skill("ranger", "blade attack"), "==", 1),
         assert(testOb->query_adjust_skill("psionist", "blade attack"), "==", 0),

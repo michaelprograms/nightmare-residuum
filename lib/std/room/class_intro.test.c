@@ -18,7 +18,7 @@ void test_class () {
         testOb->set_class("warrior"),
         assert(testOb->query_class(), "==", "warrior"),
 
-        testOb->set_class("templar"),
-        assert(testOb->query_class(), "==", "templar"),
+        testOb->set_class("mystic"),
+        assert(testOb->query_class(), "==", "mystic"),
     }) :));
 }

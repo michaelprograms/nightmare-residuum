@@ -6,7 +6,7 @@ private mixed *query_character_border_colors () {
         case "warrior":
             arr1 = ({ 220, 20, 60 });   // Crimson
             break;
-        case "templar":
+        case "mystic":
             arr1 = ({ 255, 215, 0 });   // Gold
             break;
         case "scoundrel":
