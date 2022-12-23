@@ -210,8 +210,8 @@ void error_handler (mapping e, int caught) {
     }
     write_file("/log/"+file, ret);
     // @TODO CHAT_D->do_chat("runtime", ret , 2 , 0);
-    if (efun::this_user()) {
-        tell_object(efun::this_user(), sprintf("%sTrace written to /log/%s\n", e["error"], (caught ? "catch" : "runtime")));
+    if (this_player()) {
+        tell_object(this_player(), sprintf("%sTrace written to /log/%s\n", e["error"], (caught ? "catch" : "runtime")));
     }
     return 0;
 }
@@ -327,7 +327,7 @@ varargs int valid_override (string file, string efun_name, string main_file) {
         case "clone_object":
             return file == "/std/module/test";
     }
-    return regexp(file, "/secure/sefun");
+    return regexp(file, "^/secure/sefun");
 }
 
 
