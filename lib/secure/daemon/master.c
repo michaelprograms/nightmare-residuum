@@ -209,9 +209,9 @@ void error_handler (mapping e, int caught) {
         rename("/log/"+file, "/log/"+file+"-"+time());
     }
     write_file("/log/"+file, ret);
-    // @TODO CHAT_D->do_chat("runtime", ret , 2 , 0);
-    if (this_player()) {
-        tell_object(this_player(), sprintf("%sTrace written to /log/%s\n", e["error"], (caught ? "catch" : "runtime")));
+    D_CHANNEL->send_system("error", ret);
+    if (this_player(1)) {
+        tell_object(this_player(1), sprintf("%sTrace written to /log/%s\n", e["error"], (caught ? "catch" : "runtime")));
     }
     return 0;
 }

@@ -17,7 +17,7 @@ void create () {
         __Channels = ({ "chat", "newbie", });
     }
     if (!__SystemChannels) {
-        __SystemChannels = ({ "connection" });
+        __SystemChannels = ({ "connection", "error", });
     }
 }
 
@@ -27,7 +27,11 @@ private string format_channel_name (string channel) {
 
 private void handle_send (string name, string channel, string msg) {
     string *listeners = filter_array(characters(), (: !$1->query_channel_blocked($(channel)) :));
-    message("channel", (name ? name + " " : "") + format_channel_name(channel) + " " + msg, listeners);
+    string type = "channel";
+    if (channel == "error") {
+        type = "channel error";
+    }
+    message(type, (name ? name + " " : "") + format_channel_name(channel) + " " + msg, listeners);
 }
 
 void send (string channel, string msg) {
