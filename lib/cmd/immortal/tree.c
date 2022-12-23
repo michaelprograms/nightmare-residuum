@@ -37,7 +37,7 @@ mapping localtree (string file, string fn, int index, int maxIndex) {
 void command (string input, mapping flags) {
     string file, fn;
     mapping data = ([ ]);
-    string key;
+    string subtitle;
 
     if (!input) {
         message("system", "Syntax: tree -fn=function [file]", this_user());
@@ -51,16 +51,19 @@ void command (string input, mapping flags) {
     fn = flags["fn"];
 
     if (fn) {
-        message("system", "Tree of " + file + " searching for '" + fn + "':\n\n", this_user());
-    } else {
-        message("system", "Tree of " + file + "\n\n", this_user());
+        subtitle = "Searching for '" + fn + "'";
     }
 
     data = localtree(file, fn, 0, 1);
-    key = file;
 
-    foreach (string line in tree(data)) {
-        message("system", line + "\n", this_user());
-    }
-    message("system", "\n", this_user());
+    border(([
+        "title": "TREE",
+        "subtitle": subtitle,
+        "body": ({
+            ([
+                "items": tree(data),
+                "columns": 1,
+            ])
+        }),
+    ]));
 }
