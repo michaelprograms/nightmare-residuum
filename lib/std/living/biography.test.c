@@ -131,7 +131,7 @@ void test_handle_defeat () {
         assert(sizeof($(r)->query_item_contents()), "==", 0),
 
         // test defeat with keep
-        assert($(mockCharacter)->stop_shadow(testOb), "==", 1),
+        assert($(mockCharacter)->stop_shadow(), "==", 1),
         assert(testOb->handle_defeat(this_object()), "==", 0),
         assert(objectp(testOb), "==", 0),
         assert(sizeof($(r)->query_living_contents()), "==", 0),
