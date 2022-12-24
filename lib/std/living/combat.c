@@ -54,7 +54,7 @@ private void handle_combat_hit (object target, mixed weapon) {
         type = weapon->query_type();
         name = weapon->query_name();
     } else if (stringp(weapon)) {
-        type = "melee";
+        type = "brawl";
         name = weapon;
     } else {
         return; // invalid weapon

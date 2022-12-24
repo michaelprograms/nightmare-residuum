@@ -47,8 +47,8 @@ void test_type () {
         testOb->set_type("knife"),
         assert(testOb->query_type(), "==", "knife"),
 
-        testOb->set_type("melee"),
-        assert(testOb->query_type(), "==", "melee"),
+        testOb->set_type("brawl"),
+        assert(testOb->query_type(), "==", "brawl"),
 
         testOb->set_type("projectile"),
         assert(testOb->query_type(), "==", "projectile"),

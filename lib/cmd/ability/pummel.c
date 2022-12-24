@@ -8,15 +8,15 @@ void create () {
     set_ability_requirements(([
         "mystic": ([
             "skills": ([
-                "melee attack": 1,
+                "brawl attack": 1,
             ]),
         ])
     ]));
     set_skill_powers(([
-        "melee": 20,
+        "brawl": 20,
     ]));
     set_weapons(([
-        "melee": ({ 1 }),
+        "brawl": ({ 1 }),
     ]));
     set_help_text("Pummel your opponent with your fist.");
 }

@@ -23,8 +23,8 @@ void set_level (int l) {
     set_skill("blunt defense", n * 3);
     set_skill("knife attack", n * 4);
     set_skill("knife defense", n * 3);
-    set_skill("melee attack", n * 4);
-    set_skill("melee defense", n * 3);
+    set_skill("brawl attack", n * 4);
+    set_skill("brawl defense", n * 3);
     set_skill("psionic attack", n * 4);
     set_skill("psionic defense", n * 3);
     set_skill("projectile attack", n * 4);

@@ -27,15 +27,15 @@ void test_set_level () {
         assert(testOb->query_level(), "==", 1),
         assert(testOb->query_stat("strength"), "==", 0),
         assert(testOb->query_stat("endurance"), "==", 0),
-        assert(testOb->query_skill("melee attack"), "==", 0),
-        assert(testOb->query_skill("melee defense"), "==", 0),
+        assert(testOb->query_skill("brawl attack"), "==", 0),
+        assert(testOb->query_skill("brawl defense"), "==", 0),
 
         testOb->set_level(10),
         assert(testOb->query_level(), "==", 10),
         assert(testOb->query_stat("strength"), ">", 0),
         assert(testOb->query_stat("endurance"), ">", 0),
-        assert(testOb->query_skill("melee attack"), ">", 0),
-        assert(testOb->query_skill("melee defense"), ">", 0),
+        assert(testOb->query_skill("brawl attack"), ">", 0),
+        assert(testOb->query_skill("brawl defense"), ">", 0),
     }) :));
 }
 

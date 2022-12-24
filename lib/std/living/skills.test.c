@@ -21,20 +21,20 @@ void test_query_and_set_skill () {
     expect_function("set_skill", testOb);
 
     expect("handles setting and querying skill", (: ({
-        testOb->set_skill("melee attack", 12345),
-        testOb->set_skill("melee defense", 12345),
+        testOb->set_skill("brawl attack", 12345),
+        testOb->set_skill("brawl defense", 12345),
         testOb->set_skill("blade attack", 12345),
         testOb->set_skill("blade defense", 12345),
-        assert(testOb->query_skill("melee attack"), "==", 12345),
-        assert(testOb->query_skill("melee defense"), "==", 12345),
+        assert(testOb->query_skill("brawl attack"), "==", 12345),
+        assert(testOb->query_skill("brawl defense"), "==", 12345),
         assert(testOb->query_skill("blade attack"), "==", 12345),
         assert(testOb->query_skill("blade defense"), "==", 12345),
-        testOb->set_skill("melee attack", 321),
-        testOb->set_skill("melee defense", 321),
+        testOb->set_skill("brawl attack", 321),
+        testOb->set_skill("brawl defense", 321),
         testOb->set_skill("blade attack", 321),
         testOb->set_skill("blade defense", 321),
-        assert(testOb->query_skill("melee attack"), "==", 321),
-        assert(testOb->query_skill("melee defense"), "==", 321),
+        assert(testOb->query_skill("brawl attack"), "==", 321),
+        assert(testOb->query_skill("brawl defense"), "==", 321),
         assert(testOb->query_skill("blade attack"), "==", 321),
         assert(testOb->query_skill("blade defense"), "==", 321),
     }) :));
@@ -45,11 +45,11 @@ void test_train_progress () {
     expect_function("query_skill_progress", testOb);
 
     expect("handles training and progress", (: ({
-        testOb->set_skill("melee attack", 1),
-        assert(testOb->query_skill("melee attack"), "==", 1),
-        assert(testOb->query_skill_progress("melee attack"), "==", "0%"),
-        assert(to_int(testOb->query_skill_progress("melee attack")), "==", 0),
-        testOb->train_skill("melee attack"),
-        assert(to_int(testOb->query_skill_progress("melee attack")), ">", 0),
+        testOb->set_skill("brawl attack", 1),
+        assert(testOb->query_skill("brawl attack"), "==", 1),
+        assert(testOb->query_skill_progress("brawl attack"), "==", "0%"),
+        assert(to_int(testOb->query_skill_progress("brawl attack")), "==", 0),
+        testOb->train_skill("brawl attack"),
+        assert(to_int(testOb->query_skill_progress("brawl attack")), ">", 0),
     }) :));
 }

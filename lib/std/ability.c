@@ -13,7 +13,7 @@ void set_ability_requirements (mapping reqs) {
     /* Data format:
     "anyone|class|species": ([
         "level" : 1,
-        "skills" : ([ "melee attack": 1, ]),
+        "skills" : ([ "brawl attack": 1, ]),
         "stats" : ([ "strength": 1, ]),
     ]),
     */
@@ -125,7 +125,7 @@ mapping query_cost () {
         case "psionic":
             vitalType = "mp";
             break;
-        case "ranged": case "melee": default:
+        case "ranged": case "brawl": default:
             vitalType = "sp";
             break;
         }
@@ -156,7 +156,7 @@ int calculate_damage (object source, object target, string limb) {
                 sourceStat = source->query_stat("agility");
                 damage += random(source->query_sp() * 5 / 100 + 1);
                 break;
-            case "melee": default:
+            case "brawl": default:
                 sourceStat = source->query_stat("strength");
                 damage += random(source->query_sp() * 5 / 100 + 1);
                 break;
@@ -214,7 +214,7 @@ int is_ability_successful (object source, object target) {
         } else if (key == "ranged") {
             sourceN += source->query_stat("agility") * value / powerTotal;
             targetN += target->query_stat("luck") * value / powerTotal;
-        } else { // melee and all else
+        } else { // brawl and all else
             sourceN += source->query_stat("strength") * value / powerTotal;
             targetN += target->query_stat("endurance") * value / powerTotal;
         }
@@ -287,8 +287,8 @@ private void handle_ability_use (object source, object target) {
             return;
         }
 
-        if (__Weapons["melee"]) {
-            if (sizeof(source->query_wieldable_limbs()) < __Weapons["melee"][0]) {
+        if (__Weapons["brawl"]) {
+            if (sizeof(source->query_wieldable_limbs()) < __Weapons["brawl"][0]) {
                 message("action", "You do not have any free hands.", source);
                 return;
             }

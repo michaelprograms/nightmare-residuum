@@ -36,7 +36,7 @@ void display_combat_message (object source, object target, string limb, mixed we
             case 2: i = 1; break;
             case 1: default: i = 0; break;
         }
-        if (member_array(type, ({ "blunt", "melee", "psionic", })) > -1) {
+        if (member_array(type, ({ "blunt", "brawl", "psionic", })) > -1) {
             verb = BLUNT_VERBS[i];
             adverb = BLUNT_ADVERBS[i];
         } else if (member_array(type, ({ "blade", "knife", "projectile", "ranged", })) > -1) {

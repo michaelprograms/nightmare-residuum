@@ -23,8 +23,8 @@ void test_skill_powers () {
     expect("handles skill powers", (: ({
         assert(testOb->query_skill_powers(), "==", ([ ])),
 
-        testOb->set_skill_powers(([ "melee": 5, ])),
-        assert(testOb->query_skill_powers(), "==", ([ "melee": 5, ])),
+        testOb->set_skill_powers(([ "brawl": 5, ])),
+        assert(testOb->query_skill_powers(), "==", ([ "brawl": 5, ])),
 
         testOb->set_skill_powers(([ "ranged": 5, "psionic": 5, ])),
         assert(testOb->query_skill_powers(), "==", ([ "ranged": 5, "psionic": 5, ])),
