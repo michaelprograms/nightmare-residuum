@@ -122,6 +122,9 @@ int add_hostile (object ob) {
     if (!ob || !ob->is_living() || member_array(ob, __Hostiles) > -1) {
         return 0;
     }
+    if (ob == this_object()) {
+        error("Bad argument 1 to combat->add_hostile");
+    }
     __Hostiles += ({ ob });
     return 1;
 }

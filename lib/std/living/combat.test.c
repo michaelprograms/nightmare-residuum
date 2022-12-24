@@ -11,6 +11,7 @@ void after_each_test () {
 
 void test_hostiles () {
     object ob1 = new(STD_LIVING), ob2 = new(STD_LIVING);
+    object mockCharacter = new("/std/mock/character.c");
 
     expect_function("add_hostile", testOb);
     expect_function("remove_hostile", testOb);
@@ -18,6 +19,8 @@ void test_hostiles () {
     expect_function("query_hostiles", testOb);
 
     expect("handles adding, querying, and removing hostiles", (: ({
+        assert($(mockCharacter)->start_shadow(testOb), "==", 1),
+
         // test adding and removing
         assert(sizeof(testOb->query_hostiles()), "==", 0),  // no hostiles
         assert(testOb->add_hostile($(ob1)), "==", 1),       // 1st hostile added
@@ -42,8 +45,14 @@ void test_hostiles () {
         assert(testOb->add_hostile($(ob2)), "==", 1),       // 2nd hostile added
         assert($(ob2)->handle_remove(), "==", 1),           // 2nd hostile destructed
         assert(sizeof(testOb->query_hostiles()), "==", 1),  // only 1 hostile
+
+        // test bad targets
+        assert((: testOb->add_hostile(testOb) :), "catch", "*Bad argument 1 to combat->add_hostile\n"),
+
+        assert($(mockCharacter)->stop_shadow(), "==", 1),
     }) :));
 
     if (ob1) ob1->handle_remove();
     if (ob2) ob2->handle_remove();
+    if (mockCharacter) destruct(mockCharacter);
 }
