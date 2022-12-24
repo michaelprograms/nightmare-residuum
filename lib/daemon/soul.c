@@ -178,9 +178,6 @@ varargs string parse_emote (object target, string msg, object *who, mixed *args)
         if (c < 'a') names = capitalize(names);
         emote += (names ? names : "") + fmt[i+1];
     }
-    if (strlen(emote) > 0 && emote[<1] != '\n') {
-        emote += "\n";
-    }
     return emote;
 }
 
