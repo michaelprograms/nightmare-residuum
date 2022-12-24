@@ -18,6 +18,8 @@ private mapping query_default_skills () {
         "psionic defense": ([ "level": 0, "points": 0, ]),
         "ranged attack": ([ "level": 0, "points": 0, ]),
         "ranged defense": ([ "level": 0, "points": 0, ]),
+        "medicine": ([ "level": 0, "points": 0, ]),
+        "theurgy": ([ "level": 0, "points": 0, ]),
     ]);
 }
 
@@ -79,5 +81,4 @@ varargs void train_skill (string skill, float multiplier) {
         __Skills[skill]["level"] = __Skills[skill]["level"] + 1;
         message("system", "%^YELLOW%^You feel more experienced in the " + skill + " skill.%^RESET%^\n", this_object());
     }
-
 }
