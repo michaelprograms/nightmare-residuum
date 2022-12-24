@@ -5,6 +5,7 @@ inherit STD_VERB;
 nosave private mapping __Reqs;
 nosave private mapping __SkillPowers;
 nosave private mapping __Weapons = ([ ]);
+nosave private string __Type;
 
 /* ----- ability requirements ----- */
 
@@ -45,6 +46,18 @@ int verify_ability_requirements (object source) {
         return 1;
     }
     return 0;
+}
+
+/* ----- ability type ----- */
+
+void set_ability_type (string type) {
+    if (member_array(type, ({ "attack", "defense", "utility", })) == -1) {
+        error("Bad argument 1 to ability->set_ability_type");
+    }
+    __Type = type;
+}
+string query_ability_type () {
+    return __Type;
 }
 
 /* ----- ability weapons ----- */
@@ -255,53 +268,46 @@ private void handle_ability_use (object source, object target) {
     object weapon;
     string limb;
 
+    if (!__Type) {
+        error("Ability "+query_name()+" does not have an ability type set");
+    }
+
     if (!verify_ability_requirements(source)) {
         message("action", "You cannot do that.", source);
         return 0;
     }
 
-    if (!target && !(target = source->query_target_hostile())) {
-        message("action", "You have no hostile targets present.", source);
-        return;
-    }
-
-    if (__Weapons["melee"]) {
-        if (sizeof(source->query_wieldable_limbs()) < __Weapons["melee"][0]) {
-            message("action", "You do not have any free hands.", source);
+    if (__Type == "attack") {
+        if (target == source) {
+            message("action", "You cannot " + query_name() + " yourself.", source);
             return;
         }
-    } else if (sizeof(__Weapons) && !(weapon = query_best_weapon(source))) {
-        message("action", "You are not wielding the correct type of weapon.", source);
-        return;
+        if (!target && !(target = source->query_target_hostile())) {
+            message("action", "You have no hostile targets present.", source);
+            return;
+        }
+
+        if (__Weapons["melee"]) {
+            if (sizeof(source->query_wieldable_limbs()) < __Weapons["melee"][0]) {
+                message("action", "You do not have any free hands.", source);
+                return;
+            }
+        } else if (sizeof(__Weapons) && !(weapon = query_best_weapon(source))) {
+            message("action", "You are not wielding the correct type of weapon.", source);
+            return;
+        }
     }
 
     // determine cost
     cost = query_cost();
-    // verify vitals can pay cost
-    if (cost["sp"] > 0) {
-        if (source->query_sp() < cost["sp"]) {
-            message("action", "You are too tired to " + query_name() + ".", source);
-            return;
-        }
-    }
-    if (cost["mp"]) {
-        if (source->query_mp() < cost["mp"]) {
-            message("action", "You are too drained to " + query_name() + ".", source);
-            return;
-        }
-    }
     // check source vitals
-    if (cost["sp"] > 0) {
-        if (source->query_sp() < cost["sp"]) {
-            message("action", "You are too drained to " + query_name() + ".", source);
-            return;
-        }
+    if (cost["sp"] > 0 && source->query_sp() < cost["sp"]) {
+        message("action", "You are too drained to " + query_name() + ".", source);
+        return;
     }
-    if (cost["mp"]) {
-        if (source->query_mp() < cost["mp"]) {
-            message("action", "You are too tired to " + query_name() + ".", source);
-            return;
-        }
+    if (cost["mp"] > 0 && source->query_mp() < cost["mp"]) {
+        message("action", "You are too tired to " + query_name() + ".", source);
+        return;
     }
     // update source vitals
     if (cost["sp"] > 0) {
@@ -313,32 +319,34 @@ private void handle_ability_use (object source, object target) {
 
     // update statuses
     source->set_busy(2);
-    source->add_hostile(target);
-    target->add_hostile(source);
-    // @TODO re-enable this when determing busy vs disable
-    // source->set_disable(2);
+    if (__Type == "attack") {
+        source->add_hostile(target);
+        target->add_hostile(source);
+        // @TODO re-enable this when determing busy vs disable
+        // source->set_disable(2);
 
-    limb = target->query_random_limb();
+        limb = target->query_random_limb();
 
-    // send attempt and success or fail messages
-    this_object()->ability_message_attempt(source, target, limb);
-    if (is_ability_successful(source, target)) {
-        this_object()->ability_message_success(source, target, limb);
-    } else {
-        this_object()->ability_message_fail(source, target, limb);
-        return;
-    }
+        // send attempt and success or fail messages
+        this_object()->ability_message_attempt(source, target, limb);
+        if (is_ability_successful(source, target)) {
+            this_object()->ability_message_success(source, target, limb);
+        } else {
+            this_object()->ability_message_fail(source, target, limb);
+            return;
+        }
 
-    // determine damage
-    damage = calculate_damage(source, target, limb);
-    display_combat_message(source, target, limb, query_name(), (weapon ? weapon->query_type() : "blunt"), damage, 1);
-    target->handle_damage(damage, limb, source);
+        // determine damage
+        damage = calculate_damage(source, target, limb);
+        display_combat_message(source, target, limb, query_name(), (weapon ? weapon->query_type() : "blunt"), damage, 1);
+        target->handle_damage(damage, limb, source);
 
-    if (source->query_immortal() || source->query_property("debug")) {
-        message("action", "%^ORANGE%^Damage:%^RESET%^ " + damage, source);
-    }
-    if (target && (target->query_immortal() || target->query_property("debug"))) {
-        message("action", "%^ORANGE%^Damage:%^RESET%^ " + damage, target);
+        if (source->query_immortal() || source->query_property("debug")) {
+            message("action", "%^ORANGE%^Damage:%^RESET%^ " + damage, source);
+        }
+        if (target && (target->query_immortal() || target->query_property("debug"))) {
+            message("action", "%^ORANGE%^Damage:%^RESET%^ " + damage, target);
+        }
     }
 
     // train relevant skills
