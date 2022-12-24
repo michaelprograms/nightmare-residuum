@@ -65,9 +65,9 @@ string query_ability_type () {
 void set_weapons (mapping weapons) {
     /*
     ([
-        "knife": ({ 1 }),
-        "sword": ({ 1, 2 }),
+        "blade": ({ 1, 2 }),
         "blunt": ({ 2, }),
+        "brawl": ({ 1 }),
     ])
     */
     __Weapons = weapons;

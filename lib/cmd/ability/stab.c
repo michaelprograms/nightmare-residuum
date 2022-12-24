@@ -8,16 +8,16 @@ void create () {
     set_ability_requirements(([
         "scoundrel": ([
             "skills": ([
-                "knife attack": 1,
+                "blade attack": 1,
             ]),
         ])
     ]));
     set_skill_powers(([
-        "knife": 20,
+        "blade": 20,
     ]));
     set_weapons(([
-        "knife": ({ 1 }),
+        "blade": ({ 1 }),
     ]));
     set_difficulty_factor(110);
-    set_help_text("Stab your opponent with a knife.");
+    set_help_text("Stab your opponent with a blade.");
 }

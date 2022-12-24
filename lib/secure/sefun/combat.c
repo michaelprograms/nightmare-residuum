@@ -39,7 +39,7 @@ void display_combat_message (object source, object target, string limb, mixed we
         if (member_array(type, ({ "blunt", "brawl", "psionic", })) > -1) {
             verb = BLUNT_VERBS[i];
             adverb = BLUNT_ADVERBS[i];
-        } else if (member_array(type, ({ "blade", "knife", "projectile", "ranged", })) > -1) {
+        } else if (member_array(type, ({ "blade", "ranged", })) > -1) {
             verb = SHARP_VERBS[i];
             adverb = SHARP_ADVERBS[i];
         }
