@@ -51,7 +51,7 @@ int verify_ability_requirements (object source) {
 /* ----- ability type ----- */
 
 void set_ability_type (string type) {
-    if (member_array(type, ({ "attack", "defense", "utility", })) == -1) {
+    if (member_array(type, ({ "attack", "utility", })) == -1) {
         error("Bad argument 1 to ability->set_ability_type");
     }
     __Type = type;
@@ -198,7 +198,7 @@ int query_difficulty_factor () {
     return __DifficultyFactor;
 }
 
-/* ----- ability success ----- */
+/* ----- success ----- */
 
 int is_ability_successful (object source, object target) {
     int sourceN = 0, targetN = 0;
@@ -207,60 +207,97 @@ int is_ability_successful (object source, object target) {
 
     // @TODO if (target->query_paralyzed()) return 100;
 
-    foreach (string key,int value in __SkillPowers) {
-        if (key == "psionic") {
-            sourceN += source->query_stat("intelligence") * value / powerTotal;
-            targetN += target->query_stat("perception") * value / powerTotal;
-        } else if (key == "ranged") {
-            sourceN += source->query_stat("agility") * value / powerTotal;
-            targetN += target->query_stat("luck") * value / powerTotal;
-        } else { // brawl and all else
-            sourceN += source->query_stat("strength") * value / powerTotal;
-            targetN += target->query_stat("endurance") * value / powerTotal;
+    if (__Type == "attack") {
+        foreach (string key,int value in __SkillPowers) {
+            if (key == "psionic") {
+                sourceN += source->query_stat("intelligence") * value / powerTotal;
+                targetN += target->query_stat("perception") * value / powerTotal;
+            } else if (key == "ranged") {
+                sourceN += source->query_stat("agility") * value / powerTotal;
+                targetN += target->query_stat("luck") * value / powerTotal;
+            } else { // blade, blunt, brawl
+                sourceN += source->query_stat("strength") * value / powerTotal;
+                targetN += target->query_stat("endurance") * value / powerTotal;
+            }
         }
+        // success range is 10% to 100%
+        targetN = targetN * query_difficulty_factor() / 100;
+        if (sourceN < targetN) {
+            chance = sourceN * 100 / targetN;
+            chance = max(({ 10, min(({ 100, chance })) }));
+        }
+        return (1+random(100)) <= chance;
+    } else if (__Type == "utility") {
+        return 1;
     }
-
-    targetN = targetN * query_difficulty_factor() / 100;
-
-    // success range is 10% to 100%
-    if (sourceN < targetN) {
-        chance = sourceN * 100 / targetN;
-        chance = max(({ 10, min(({ 100, chance })) }));
-    }
-    return (1+random(100)) <= chance;
+    return 0;
 }
 
+/* ----- messages ----- */
+
 void ability_message_attempt (object source, object target, string limb) {
-    message("action", "You attempt to " + query_name() + " " + target->query_cap_name() + "!", source);
-    message("action", source->query_cap_name() + " attempts to " + query_name() + " you!", target);
-    message("action", source->query_cap_name() + " attempts to " + query_name() + " " + target->query_cap_name() + "!", environment(source), ({ source, target }));
+    if (__Type == "attack") {
+        message("action", "You attempt to " + query_name() + " " + target->query_cap_name() + "!", source);
+        message("action", source->query_cap_name() + " attempts to " + query_name() + " you!", target);
+        message("action", source->query_cap_name() + " attempts to " + query_name() + " " + target->query_cap_name() + "!", environment(source), ({ source, target }));
+    } else if (__Type == "utility") {
+        if (source == target) {
+            message("action", "You attempt to " + query_name() + " towards yourself.", source);
+            message("action", source->query_cap_name() + " attempts to " + query_name() + " towards " + reflexive(source) + ".", environment(source), ({ source }));
+        } else {
+            message("action", "You attempt to " + query_name() + " towards " + target->query_cap_name() + ".", source);
+            message("action", source->query_cap_name() + " attempts to " + query_name() + " towards you.", target);
+            message("action", source->query_cap_name() + " attempts to " + query_name() + " towards " + target->query_cap_name() + ".", environment(source), ({ source, target }));
+        }
+    }
 }
 
 void ability_message_fail (object source, object target, string limb) {
-    message("ability miss", "You miss your " + query_name() + " attempt on " + target->query_cap_name() + "!", source);
-    message("ability miss", source->query_cap_name() + " misses " + possessive(source) + " " + query_name() + " attempt on you!", target);
-    message("ability miss", source->query_cap_name() + " misses " + possessive(source) + " " + query_name() + " attempt on " + target->query_cap_name() + "!", environment(source), ({ source, target }));
+    if (__Type == "attack") {
+        message("ability miss", "You miss your " + query_name() + " attempt on " + target->query_cap_name() + "!", source);
+        message("ability miss", source->query_cap_name() + " misses " + possessive(source) + " " + query_name() + " attempt on you!", target);
+        message("ability miss", source->query_cap_name() + " misses " + possessive(source) + " " + query_name() + " attempt on " + target->query_cap_name() + "!", environment(source), ({ source, target }));
+    } else if (__Type == "utility") {
+        if (source == target) {
+            message("action", "Your " + query_name() + " fails to affect yourself.", source);
+            message("ability miss", possessive_noun(source->query_cap_name()) + " " + query_name() + " fails to affect " + reflexive(source) + ".", environment(source), ({ source }));
+        } else {
+            message("ability miss", "Your " + query_name() + " fails to affect " + target->query_cap_name() + ".", source);
+            message("ability miss", possessive_noun(source->query_cap_name()) + " " + query_name() + " fails to affect you.", target);
+            message("ability miss", possessive_noun(source->query_cap_name()) + " " + query_name() + " fails to affect " + target->query_cap_name() + ".", environment(source), ({ source, target }));
+        }
+    }
 }
 
 void ability_message_success (object source, object target, string limb) {
-    string myMsg, yourMsg, envMsg;
     string who, you, plural = pluralize(query_name());
 
-    if (limb) {
-        who = possessive_noun(target->query_cap_name()) + " " + limb;
-        you = "your " + limb;
-    } else {
-        who = target->query_cap_name();
-        you = "you";
+    if (__Type == "attack") {
+        if (limb) {
+            who = possessive_noun(target->query_cap_name()) + " " + limb;
+            you = "your " + limb;
+        } else {
+            who = target->query_cap_name();
+            you = "you";
+        }
+        message("action", "You " + query_name() + " " + who + "!", source);
+        message("action", source->query_cap_name() + " " + plural + " " + you + "!", target);
+        message("action", source->query_cap_name() + " " + plural + " " + who + "!", environment(source), ({ source, target }));
+    } else if (__Type == "utility") {
+        if (source == target) {
+            message("action", "You " + query_name() + " towards yourself.", source);
+            message("action", source->query_cap_name() + " " + plural + " towards " + reflexive(source) + " effectively.", environment(source), ({ source, target }));
+        } else {
+            who = target->query_cap_name();
+            you = "you";
+            message("action", "You " + query_name() + " towards " + who + " effectively.", source);
+            message("action", source->query_cap_name() + " " + plural + " towards " + you + " effectively.", target);
+            message("action", source->query_cap_name() + " " + plural + " towards " + who + " effectively.", environment(source), ({ source, target }));
+        }
     }
-    myMsg = "You " + query_name() + " " + who + "!";
-    yourMsg = source->query_cap_name() + " " + plural + " " + you + "!";
-    envMsg = source->query_cap_name() + " " + plural + " " + who + "!";
-
-    message("action", myMsg, source);
-    message("action", yourMsg, target);
-    message("action", envMsg, environment(source), ({ source, target }));
 }
+
+/* ----- use ability ----- */
 
 private void handle_ability_use (object source, object target) {
     mapping cost;
@@ -296,6 +333,10 @@ private void handle_ability_use (object source, object target) {
             message("action", "You are not wielding the correct type of weapon.", source);
             return;
         }
+    } else if (__Type == "utility") {
+        if (!target) {
+            target = source;
+        }
     }
 
     // determine cost
@@ -324,18 +365,20 @@ private void handle_ability_use (object source, object target) {
         target->add_hostile(source);
         // @TODO re-enable this when determing busy vs disable
         // source->set_disable(2);
+    }
 
-        limb = target->query_random_limb();
+    limb = target->query_random_limb();
 
-        // send attempt and success or fail messages
-        this_object()->ability_message_attempt(source, target, limb);
-        if (is_ability_successful(source, target)) {
-            this_object()->ability_message_success(source, target, limb);
-        } else {
-            this_object()->ability_message_fail(source, target, limb);
-            return;
-        }
+    // send attempt and success or fail messages
+    this_object()->ability_message_attempt(source, target, limb);
+    if (is_ability_successful(source, target)) {
+        this_object()->ability_message_success(source, target, limb);
+    } else {
+        this_object()->ability_message_fail(source, target, limb);
+        return;
+    }
 
+    if (__Type == "attack") {
         // determine damage
         damage = calculate_damage(source, target, limb);
         display_combat_message(source, target, limb, query_name(), (weapon ? weapon->query_type() : "blunt"), damage, 1);
@@ -347,13 +390,21 @@ private void handle_ability_use (object source, object target) {
         if (target && (target->query_immortal() || target->query_property("debug"))) {
             message("action", "%^ORANGE%^Damage:%^RESET%^ " + damage, target);
         }
+    } else if (__Type == "utility") {
+        this_object()->handle_utility(source, target, limb);
     }
 
     // train relevant skills
-    foreach (string key,int value in __SkillPowers) {
-        source->train_skill(key + " attack", 1.0 + value / 100.0);
-        if (target) {
-            target->train_skill(key + " defense", 1.0 + value / 100.0);
+    if (__Type == "attack") {
+        foreach (string key,int value in __SkillPowers) {
+            source->train_skill(key + " attack", 1.0 + value / 100.0);
+            if (target) {
+                target->train_skill(key + " defense", 1.0 + value / 100.0);
+            }
+        }
+    } else if (__Type == "utility") {
+        foreach (string key,int value in __SkillPowers) {
+            source->train_skill(key, 1.0 + value / 100.0);
         }
     }
 }
