@@ -12,6 +12,7 @@ mixed unguarded (function f);
 
 /* --- array --- */
 mixed *distinct_array (mixed *arr);
+mixed reduce (mixed *arr, function fn, mixed result);
 
 /* --- border --- */
 mapping query_border_charset ();

@@ -8,3 +8,20 @@ mixed *distinct_array (mixed *arr) {
     }
     return keys(tmp);
 }
+
+mixed reduce (mixed *arr, function fn, mixed result) {
+    int i, l;
+
+    if (!arrayp(arr) || !sizeof(arr)) error("Bad argument 1 to array->reduce");
+    if (!functionp(fn)) error("Bad argument 2 to array->reduce");
+    if (undefinedp(result)) error("Bad argument 3 to array->reduce");
+
+    l = sizeof(arr);
+    for (i = 0; i < l; i ++) {
+        result = evaluate(fn, result, arr[i], i);
+        // callback parameters:
+        // function (mixed result, mixed item, int i)
+    }
+
+    return result;
+}
