@@ -51,7 +51,7 @@ int verify_ability_requirements (object source) {
 /* ----- ability type ----- */
 
 void set_ability_type (string type) {
-    if (member_array(type, ({ "attack", "utility", })) == -1) {
+    if (member_array(type, ({ "attack", "heal", "utility", })) == -1) {
         error("Bad argument 1 to ability->set_ability_type");
     }
     __Type = type;
@@ -227,7 +227,7 @@ int is_ability_successful (object source, object target) {
             chance = max(({ 10, min(({ 100, chance })) }));
         }
         return (1+random(100)) <= chance;
-    } else if (__Type == "utility") {
+    } else if (__Type == "heal" || __Type == "utility") {
         return 1;
     }
     return 0;
@@ -240,7 +240,7 @@ void ability_message_attempt (object source, object target, string limb) {
         message("action", "You attempt to " + query_name() + " " + target->query_cap_name() + "!", source);
         message("action", source->query_cap_name() + " attempts to " + query_name() + " you!", target);
         message("action", source->query_cap_name() + " attempts to " + query_name() + " " + target->query_cap_name() + "!", environment(source), ({ source, target }));
-    } else if (__Type == "utility") {
+    } else if (__Type == "heal" || __Type == "utility") {
         if (source == target) {
             message("action", "You attempt to " + query_name() + " towards yourself.", source);
             message("action", source->query_cap_name() + " attempts to " + query_name() + " towards " + reflexive(source) + ".", environment(source), ({ source }));
@@ -257,7 +257,7 @@ void ability_message_fail (object source, object target, string limb) {
         message("ability miss", "You miss your " + query_name() + " attempt on " + target->query_cap_name() + "!", source);
         message("ability miss", source->query_cap_name() + " misses " + possessive(source) + " " + query_name() + " attempt on you!", target);
         message("ability miss", source->query_cap_name() + " misses " + possessive(source) + " " + query_name() + " attempt on " + target->query_cap_name() + "!", environment(source), ({ source, target }));
-    } else if (__Type == "utility") {
+    } else if (__Type == "heal" || __Type == "utility") {
         if (source == target) {
             message("action", "Your " + query_name() + " fails to affect yourself.", source);
             message("ability miss", possessive_noun(source->query_cap_name()) + " " + query_name() + " fails to affect " + reflexive(source) + ".", environment(source), ({ source }));
@@ -283,7 +283,7 @@ void ability_message_success (object source, object target, string limb) {
         message("action", "You " + query_name() + " " + who + "!", source);
         message("action", source->query_cap_name() + " " + plural + " " + you + "!", target);
         message("action", source->query_cap_name() + " " + plural + " " + who + "!", environment(source), ({ source, target }));
-    } else if (__Type == "utility") {
+    } else if (__Type == "heal" || __Type == "utility") {
         if (source == target) {
             message("action", "You " + query_name() + " towards yourself.", source);
             message("action", source->query_cap_name() + " " + plural + " towards " + reflexive(source) + " effectively.", environment(source), ({ source, target }));
@@ -333,7 +333,7 @@ private void handle_ability_use (object source, object target) {
             message("action", "You are not wielding the correct type of weapon.", source);
             return;
         }
-    } else if (__Type == "utility") {
+    } else if (__Type == "heal" || __Type == "utility") {
         if (!target) {
             target = source;
         }
@@ -390,6 +390,8 @@ private void handle_ability_use (object source, object target) {
         if (target && (target->query_immortal() || target->query_property("debug"))) {
             message("action", "%^ORANGE%^Damage:%^RESET%^ " + damage, target);
         }
+    } else if (__Type == "heal") {
+        this_object()->handle_heal(source, target, limb);
     } else if (__Type == "utility") {
         this_object()->handle_utility(source, target, limb);
     }
@@ -402,7 +404,7 @@ private void handle_ability_use (object source, object target) {
                 target->train_skill(key + " defense", 1.0 + value / 100.0);
             }
         }
-    } else if (__Type == "utility") {
+    } else if (__Type == "heal" || __Type == "utility") {
         foreach (string key,int value in __SkillPowers) {
             source->train_skill(key, 1.0 + value / 100.0);
         }
@@ -416,6 +418,8 @@ string help (object char) {
     int n;
 
     result = ::help(char);
+
+    result += "\n%^CYAN%^BOLD%^Type%^RESET%^\n" + capitalize(__Type) + "\n";
 
     if (sizeof(__Reqs)) {
         foreach (string key,mapping value in __Reqs) {
@@ -437,8 +441,8 @@ string help (object char) {
             }
             result += implode(tmp, ", ") + "\n";
         }
-
     }
+
     if (n = sizeof(__Weapons)) {
         result += "\n%^CYAN%^BOLD%^Weapons%^RESET%^\n";
         foreach (string key,int *value in __Weapons) {

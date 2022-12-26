@@ -4,7 +4,7 @@ inherit STD_ABILITY;
 
 void create () {
     ::create();
-    set_ability_type("utility");
+    set_ability_type("heal");
     set_ability_requirements(([
         "mystic": ([
             "level": 1,
@@ -17,7 +17,7 @@ void create () {
     set_help_text("Chant soothing words towards a target to restore vitals.");
 }
 
-void handle_utility (object source, object target, string limb) {
+void handle_heal (object source, object target, string limb) {
     int n;
 
     n = 1 + random(5);
