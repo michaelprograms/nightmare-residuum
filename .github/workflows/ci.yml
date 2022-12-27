@@ -28,7 +28,7 @@ jobs:
         sudo apt install -y build-essential autoconf automake bison expect libmysqlclient-dev libpcre3-dev libpq-dev libsqlite3-dev libssl-dev libtool libz-dev telnet libgtest-dev libjemalloc-dev
       timeout-minutes: 5
     - name: Cache Driver
-      uses: actions/cache@v2
+      uses: actions/cache@v3
       id: cache
       with:
         path: build
