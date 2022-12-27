@@ -16,7 +16,7 @@ on:
 
 jobs:
   build-and-test:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     steps:
     - name: Checkout Repository
       uses: actions/checkout@v2.6.0
@@ -25,9 +25,8 @@ jobs:
     - name: Install Packages
       run: |
         sudo apt update
-        sudo apt install -y build-essential autoconf automake bison expect libevent-dev libmysqlclient-dev libpcre3-dev libpq-dev libsqlite3-dev libssl-dev libtool libz-dev telnet libgtest-dev libjemalloc-dev
+        sudo apt install -y build-essential autoconf automake bison expect libmysqlclient-dev libpcre3-dev libpq-dev libsqlite3-dev libssl-dev libtool libz-dev telnet libgtest-dev libjemalloc-dev
       timeout-minutes: 5
-
     - name: Cache Driver
       uses: actions/cache@v2
       id: cache
@@ -39,7 +38,6 @@ jobs:
       run: ./build.sh
       shell: bash
       timeout-minutes: 10
-
     - name: Run Tests
       run: ./run-tests.sh
       shell: bash
