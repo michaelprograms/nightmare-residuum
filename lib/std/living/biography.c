@@ -46,6 +46,8 @@ void handle_victory (object source) {
 void handle_defeat (object source) {
     object env = environment(), corpse;
 
+    remove_call_out();
+
     if (!arrayp(__Defeat)) {
         __Defeat = ({ });
     }
