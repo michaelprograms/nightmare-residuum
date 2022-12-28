@@ -30,6 +30,66 @@ private mixed *query_character_border_colors () {
     return ({ arr1, arr2 });
 }
 
+nosave private mapping __BorderCharset = ([
+    "utf-8": ([
+        // lines
+        "h": "─",
+        "v": "│",
+        // diagonals
+        "dd": "╲",
+        "du": "╱",
+        // corners
+        "tl": "┌",
+        "tr": "┐",
+        "br": "┘",
+        "bl": "└",
+        // joints
+        "t": "┬",
+        "b": "┴",
+        "l": "├",
+        "r": "┤",
+        "x": "╳",
+        "+": "┼",
+    ]),
+    "US-ASCII": ([
+        // lines
+        "h": "-",
+        "v": "|",
+        // diagonals
+        "dd": "\\",
+        "du": "/",
+        // corners
+        "tl": ".",
+        "tr": ".",
+        "br": "'",
+        "bl": "'",
+        // joints
+        "t": "-",
+        "b": "-",
+        "l": "|",
+        "r": "|",
+        "x": "x",
+        "+": "+",
+    ]),
+    "screenreader": ([
+        // lines
+        "h": " ",
+        "v": " ",
+        // diagonals
+        "dd": " ",
+        "du": " ",
+        // corners
+        "tl": " ",
+        "tr": " ",
+        "br": " ",
+        "bl": " ",
+        // joints
+        "t": " ",
+        "b": " ",
+        "l": " ",
+        "r": " ",
+    ]),
+]);
 mapping query_border_charset () {
     string type;
     if (SEFUN->query_account_setting("screenreader") == "on") {
@@ -37,66 +97,7 @@ mapping query_border_charset () {
     } else {
         type = query_encoding();
     }
-    return ([
-        "utf-8": ([
-            // lines
-            "h": "─",
-            "v": "│",
-            // diagonals
-            "dd": "╲",
-            "du": "╱",
-            // corners
-            "tl": "┌",
-            "tr": "┐",
-            "br": "┘",
-            "bl": "└",
-            // joints
-            "t": "┬",
-            "b": "┴",
-            "l": "├",
-            "r": "┤",
-            "x": "╳",
-            "+": "┼",
-        ]),
-        "US-ASCII": ([
-            // lines
-            "h": "-",
-            "v": "|",
-            // diagonals
-            "dd": "\\",
-            "du": "/",
-            // corners
-            "tl": ".",
-            "tr": ".",
-            "br": "'",
-            "bl": "'",
-            // joints
-            "t": "-",
-            "b": "-",
-            "l": "|",
-            "r": "|",
-            "x": "x",
-            "+": "+",
-        ]),
-        "screenreader": ([
-            // lines
-            "h": " ",
-            "v": " ",
-            // diagonals
-            "dd": " ",
-            "du": " ",
-            // corners
-            "tl": " ",
-            "tr": " ",
-            "br": " ",
-            "bl": " ",
-            // joints
-            "t": " ",
-            "b": " ",
-            "l": " ",
-            "r": " ",
-        ]),
-    ])[type];
+    return copy(__BorderCharset[type]);
 }
 
 // create a unicode border around action output
