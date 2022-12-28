@@ -385,9 +385,7 @@ private void handle_ability_use (object source, object *targets) {
     // @TODO re-enable this when determing busy vs disable
     // source->set_disable(2);
 
-    write(query_name()+" "+identify(targets)+"\n");
     foreach (object target in targets) {
-        write(__Type+" "+identify(target)+"\n");
         if (__Type == "attack") {
             source->add_hostile(target);
             target->add_hostile(source);
@@ -538,7 +536,6 @@ void do_verb_liv (mixed args...) {
 
 // Handle no input
 void do_verb_rule (mixed args...) {
-    write("do_verb_rule: "+identify(args)+"\n");
     handle_ability_use(previous_object(), ({ 0 }));
 }
 
