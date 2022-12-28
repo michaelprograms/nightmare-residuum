@@ -12,9 +12,10 @@ void create () {
     ]));
     set_skill_powers(([
         "medicine": 5,
-        "theurgy": 10,
+        "theurgy": 5,
     ]));
-    set_help_text("Chant soothing words towards a target to restore vitals.");
+    set_targets(3);
+    set_help_text("Chant soothing words towards a target to restore hit points.");
 }
 
 void handle_heal (object source, object target, string limb) {
@@ -28,7 +29,7 @@ void handle_heal (object source, object target, string limb) {
         message("action", possessive_noun(target->query_cap_name()) + " wounds heal slightly.", environment(target), target);
         message("action", "Your wounds heal slightly.", target);
     }
-    target->heal(n);
+    target->add_hp(n);
 
     if (source->query_immortal() || source->query_property("debug")) {
         message("action", "%^CYAN%^Heal:%^RESET%^ " + n, source);

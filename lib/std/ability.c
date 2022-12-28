@@ -6,6 +6,7 @@ nosave private mapping __Reqs;
 nosave private mapping __SkillPowers;
 nosave private mapping __Weapons = ([ ]);
 nosave private string __Type;
+nosave private int __NumTargets;
 
 /* ----- ability requirements ----- */
 
@@ -58,6 +59,16 @@ void set_ability_type (string type) {
 }
 string query_ability_type () {
     return __Type;
+}
+
+/* ----- ability targets ----- */
+
+void set_targets (int n) {
+    if (undefinedp(n)) error("Bad argument 1 to ability->set_targets");
+    __NumTargets = n;
+}
+int query_targets () {
+    return __NumTargets;
 }
 
 /* ----- ability weapons ----- */
@@ -299,11 +310,12 @@ void ability_message_success (object source, object target, string limb) {
 
 /* ----- use ability ----- */
 
-private void handle_ability_use (object source, object target) {
+private void handle_ability_use (object source, object *targets) {
     mapping cost;
     int damage;
     object weapon;
     string limb;
+    int l;
 
     if (!__Type) {
         error("Ability "+query_name()+" does not have an ability type set");
@@ -315,29 +327,39 @@ private void handle_ability_use (object source, object target) {
     }
 
     if (__Type == "attack") {
-        if (target == source) {
-            message("action", "You cannot " + query_name() + " yourself.", source);
-            return;
+        if ((!targets || !targets[0])) {
+            targets = ({ source->query_target_hostile() });
         }
-        if (!target && !(target = source->query_target_hostile())) {
+        if ((!targets || !targets[0])) {
             message("action", "You have no hostile targets present.", source);
             return;
         }
 
-        if (__Weapons["brawl"]) {
-            if (sizeof(source->query_wieldable_limbs()) < __Weapons["brawl"][0]) {
-                message("action", "You do not have any free hands.", source);
-                return;
-            }
-        } else if (sizeof(__Weapons) && !(weapon = query_best_weapon(source))) {
-            message("action", "You are not wielding the correct type of weapon.", source);
+    } else if (__Type == "heal" || __Type == "utility") {
+        if ((!targets || !targets[0])) {
+            targets = ({ source });
+        }
+        if ((!targets || !targets[0])) {
+            message("action", "You have no friendly targets present.", source);
             return;
         }
-    } else if (__Type == "heal" || __Type == "utility") {
-        if (!target) {
-            target = source;
-        }
     }
+
+    if (__Weapons["brawl"]) {
+        if (sizeof(source->query_wieldable_limbs()) < __Weapons["brawl"][0]) {
+            message("action", "You do not have any free hands.", source);
+            return;
+        }
+    } else if (sizeof(__Weapons) && !(weapon = query_best_weapon(source))) {
+        message("action", "You are not wielding the correct type of weapon.", source);
+        return;
+    }
+
+    if (__NumTargets < sizeof(targets)) {
+        return;
+    }
+
+    l = min(({ sizeof(targets), __NumTargets }));
 
     // determine cost
     cost = query_cost();
@@ -360,53 +382,55 @@ private void handle_ability_use (object source, object target) {
 
     // update statuses
     source->set_busy(2);
-    if (__Type == "attack") {
-        source->add_hostile(target);
-        target->add_hostile(source);
-        // @TODO re-enable this when determing busy vs disable
-        // source->set_disable(2);
-    }
+    // @TODO re-enable this when determing busy vs disable
+    // source->set_disable(2);
 
-    limb = target->query_random_limb();
-
-    // send attempt and success or fail messages
-    this_object()->ability_message_attempt(source, target, limb);
-    if (is_ability_successful(source, target)) {
-        this_object()->ability_message_success(source, target, limb);
-    } else {
-        this_object()->ability_message_fail(source, target, limb);
-        return;
-    }
-
-    if (__Type == "attack") {
-        // determine damage
-        damage = calculate_damage(source, target, limb);
-        display_combat_message(source, target, limb, query_name(), (weapon ? weapon->query_type() : "blunt"), damage, 1);
-        target->handle_damage(damage, limb, source);
-
-        if (source->query_immortal() || source->query_property("debug")) {
-            message("action", "%^ORANGE%^Damage:%^RESET%^ " + damage, source);
+    write(query_name()+" "+identify(targets)+"\n");
+    foreach (object target in targets) {
+        write(__Type+" "+identify(target)+"\n");
+        if (__Type == "attack") {
+            source->add_hostile(target);
+            target->add_hostile(source);
         }
-        if (target && (target->query_immortal() || target->query_property("debug"))) {
-            message("action", "%^ORANGE%^Damage:%^RESET%^ " + damage, target);
-        }
-    } else if (__Type == "heal") {
-        this_object()->handle_heal(source, target, limb);
-    } else if (__Type == "utility") {
-        this_object()->handle_utility(source, target, limb);
-    }
+        limb = target->query_random_limb();
+        // send attempt and success or fail messages
+        this_object()->ability_message_attempt(source, target, limb);
+        if (is_ability_successful(source, target)) {
+            this_object()->ability_message_success(source, target, limb);
 
-    // train relevant skills
-    if (__Type == "attack") {
-        foreach (string key,int value in __SkillPowers) {
-            source->train_skill(key + " attack", 1.0 + value / 100.0);
-            if (target) {
-                target->train_skill(key + " defense", 1.0 + value / 100.0);
+            if (__Type == "attack") {
+                // determine damage
+                damage = calculate_damage(source, target, limb);
+                display_combat_message(source, target, limb, query_name(), (weapon ? weapon->query_type() : "blunt"), damage, 1);
+                target->handle_damage(damage, limb, source);
+
+                // train relevant skills
+                foreach (string key,int value in __SkillPowers) {
+                    source->train_skill(key + " attack", 1.0 + value / 100.0);
+                    if (target) target->train_skill(key + " defense", 1.0 + value / 100.0);
+                }
+
+                if (source->query_immortal() || source->query_property("debug")) {
+                    message("action", "%^ORANGE%^Damage:%^RESET%^ " + damage, source);
+                }
+                if (target && (target->query_immortal() || target->query_property("debug"))) {
+                    message("action", "%^ORANGE%^Damage:%^RESET%^ " + damage, target);
+                }
+            } else if (__Type == "heal") {
+                this_object()->handle_heal(source, target, limb);
+
+                foreach (string key,int value in __SkillPowers) {
+                    source->train_skill(key, 1.0 + value / 100.0);
+                }
+            } else if (__Type == "utility") {
+                this_object()->handle_utility(source, target, limb);
+
+                foreach (string key,int value in __SkillPowers) {
+                    source->train_skill(key, 1.0 + value / 100.0);
+                }
             }
-        }
-    } else if (__Type == "heal" || __Type == "utility") {
-        foreach (string key,int value in __SkillPowers) {
-            source->train_skill(key, 1.0 + value / 100.0);
+        } else {
+            this_object()->ability_message_fail(source, target, limb);
         }
     }
 }
@@ -456,9 +480,26 @@ string help (object char) {
 /* ----- applies ----- */
 
 int direct_verb_liv (mixed args...) {
+    if (sizeof(args) < 2) {
+        return 0;
+    }
+    if (!args[1]->is_living()) {
+        return 0;
+    }
+    if (__Type == "attack") {
+        if (args[1] == this_character()) {
+            return 0;
+        }
+        return 1;
+    } else if (__Type == "heal" || __Type == "utility") {
+        return 1;
+    }
     return 1;
 }
 
+mixed can_verb_lvs (mixed args...) {
+    return can_verb_rule(args);
+}
 mixed can_verb_liv (mixed args...) {
     return can_verb_rule(args);
 }
@@ -466,7 +507,24 @@ mixed can_verb (mixed args...) {
     return can_verb_rule(args);
 }
 
-// Handle input
+// Handle multiple target input
+void do_verb_lvs (mixed args...) {
+    object *targets;
+
+    if (sizeof(args) < 2) return;
+
+    targets = args[1];
+    if (sizeof(targets) && __NumTargets == 1) {
+        handle_ability_use(previous_object(), ({ targets[0] }));
+        return;
+    }
+    message("action", "do_verb_lvs: "+identify(args), previous_object());
+    if (__NumTargets > 1) {
+        handle_ability_use(previous_object(), targets[0..__NumTargets-1]);
+    }
+}
+
+// Handle single target input
 void do_verb_liv (mixed args...) {
     object target;
 
@@ -475,20 +533,22 @@ void do_verb_liv (mixed args...) {
         target = args[1];
     }
 
-    handle_ability_use(previous_object(), target);
+    handle_ability_use(previous_object(), ({ target }));
 }
 
 // Handle no input
 void do_verb_rule (mixed args...) {
-    handle_ability_use(previous_object(), 0);
+    write("do_verb_rule: "+identify(args)+"\n");
+    handle_ability_use(previous_object(), ({ 0 }));
 }
 
 void create () {
     ::create();
     __Reqs = ([ ]);
     __SkillPowers = ([ ]);
+    __NumTargets = 1;
     if (query_name() != "ability") {
-        add_rules(({ "", "LIV", }));
+        add_rules(({ "", "LIV", "LVS", }));
     }
     set_requirements(REQUIREMENT_BUSY | REQUIREMENT_DISABLE);
     set_syntax(query_name()+" ([target])");
