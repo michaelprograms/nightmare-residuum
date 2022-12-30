@@ -130,7 +130,7 @@ mapping query_border_charset () {
 string *format_border (mapping data) {
     string *lines = ({ }), line, *linesBody = ({ });
     mapping b; // border charset
-    int width, n;
+    int width;
     string ansi, *colors, *colors2, *colorsBody, *colorsBody2;
     mixed *borderColors;
     string left, right, format;
@@ -144,7 +144,6 @@ string *format_border (mapping data) {
 
     b = query_border_charset();
     width = to_int(SEFUN->query_account_setting("width"));
-    n = 0;
     if (SEFUN->query_account_setting("ansi") == "on") {
         ansi = this_user()->query_terminal_color();
     }
@@ -164,7 +163,7 @@ string *format_border (mapping data) {
     }
 
     if (fTitle) {
-        int titleLength = 0;
+        int titleLength = 0, n = 0;
 
         // Title Line 1
         line = "   " + b["tl"] + sprintf("%'"+b["h"]+"'*s", 2 + strlen(data["title"]) + (fSubtitle ? 2 + fSubtitle : 0), "") + b["tr"];
