@@ -210,8 +210,8 @@ void error_handler (mapping e, int caught) {
     }
     write_file("/log/"+file, ret);
     D_CHANNEL->send_system("error", ret);
-    if (this_player(1)) {
-        tell_object(this_player(1), sprintf("%sTrace written to /log/%s\n", e["error"], (caught ? "catch" : "runtime")));
+    if (efun::this_player(1)) {
+        tell_object(efun::this_player(1), sprintf("%sTrace written to /log/%s\n", e["error"], (caught ? "catch" : "runtime")));
     }
     return 0;
 }
@@ -327,7 +327,7 @@ varargs int valid_override (string file, string efun_name, string main_file) {
         case "clone_object":
             return file == "/std/module/test";
     }
-    return regexp(file, "^/secure/sefun");
+    return regexp(file, "^/secure/(sefun|daemon/master)");
 }
 
 
