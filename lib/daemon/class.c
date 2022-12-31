@@ -218,3 +218,7 @@ int query_adjust_skill (string c, string skill) {
         return 0;
     }
 }
+
+int query_max_stat (string c, string stat, int level) {
+    return level * (2 + query_adjust_stat(c, stat));
+}
