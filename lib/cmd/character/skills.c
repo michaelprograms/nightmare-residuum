@@ -19,7 +19,7 @@ void command (string input, mapping flags) {
     if (sizeof(skillsCombat)) {
         body += ({
             ([
-                "header": "Combat",
+                "header": ({ "Combat" }),
                 "columns": ({ 4, 1, 1, 4, 1, 1, }),
                 "items": reduce(skillsCombat, (: $1 += ({ $2, $(target)->query_skill($2), $(target)->query_skill_progress($2) }) :), ({ })),
             ])
@@ -30,7 +30,7 @@ void command (string input, mapping flags) {
     if (sizeof(skillsTalents)) {
         body += ({
             ([
-                "header": "Talents",
+                "header": ({ "Talents" }),
                 "columns": ({ 4, 1, 1, 4, 1, 1}),
                 "items": reduce(skillsTalents, (: $1 += ({ $2, $(target)->query_skill($2), $(target)->query_skill_progress($2) }) :), ({ })),
             ])

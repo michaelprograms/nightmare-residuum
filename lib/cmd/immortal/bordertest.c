@@ -107,4 +107,43 @@ void command (string input, mapping flags) {
             "align": "left",
         ]),
     ]));
+
+    border(([
+        "title": "TITLE",
+        "subtitle": "Subtitle",
+        "header": ({
+            ([
+                "header": ({ "Header Header 1", "Header Header 2", "Header Header 3", }),
+                "items": ({ "Header Item 1", "Header Item 2", "Header Item 3", }),
+                "columns": ({ 3, 2, 1, }),
+                "align": "left",
+            ]),
+            ([
+                "header": ({ "Header Header 1", "Header Header 2", "Header Header 3", }),
+                "items": ({ "Header Item 1", "Header Item 2", "Header Item 3", }),
+                "columns": ({ 3, 2, 1, }),
+                "align": "left",
+            ]),
+        }),
+        "body": ([
+            "header": ({ "Body Header 1", "Body Header 2", "Body Header 3", }),
+            "items": ({ "Body Item 1", "Body Item 2", "Body Item 3", }),
+            "columns": ({ 3, 2, 1, }),
+            "align": "left",
+        ]),
+        "footer": ({
+            ([
+                "header": ({ "Footer Header 1", "Footer Header 2", "Footer Header 3", }),
+                "items": ({ "Footer Item 1", "Footer Item 2", "Footer Item 3", }),
+                "columns": ({ 3, 2, 1, }),
+                "align": "left",
+            ]),
+            ([
+                "header": ({ "Footer Header 1", "Footer Header 2", "Footer Header 3", }),
+                "items": ({ "Footer Item 1", "Footer Item 2", "Footer Item 3", }),
+                "columns": ({ 3, 2, 1, }),
+                "align": "left",
+            ]),
+        }),
+    ]));
 }

@@ -38,14 +38,14 @@ void command (string input, mapping flags) {
     if (!sizeof(items)) {
         items += ({
             ([
-                "header": "Bodytypes",
+                "header": ({ "Bodytypes" }),
                 "items": keys(D_SPECIES->query_bodytypes()),
                 "columns": 3,
             ])
         });
         items += ({
             ([
-                "header": "Species",
+                "header": ({ "Species" }),
                 "items": keys(D_SPECIES->query_species()),
                 "columns": 3,
             ])

@@ -21,7 +21,7 @@ void command (string input, mapping flags) {
         list += ({ sprintf("%-15s %s", channel, target->query_channel_blocked(channel) ? "blocked" : "") });
     }
     body += ({ ([
-        "header": "Channels",
+        "header": ({ "Channels" }),
         "columns": 2,
         "items": list,
     ]) });
@@ -31,7 +31,7 @@ void command (string input, mapping flags) {
         list += ({ sprintf("%-15s %s", channel, target->query_channel_blocked(channel) ? "blocked" : "") });
     }
     body += ({ ([
-        "header": "System Channels",
+        "header": ({ "System Channels" }),
         "columns": 2,
         "items": list,
     ]) });
