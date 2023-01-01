@@ -52,7 +52,7 @@ void command (string input, mapping flags) {
         ]),
         "footer": ([
             "items": ({
-                "You have " + format_integer(target->query_experience()) + " experience points to train",
+                "You have " + format_integer(target->query_experience()) + " experience points to "+format_syntax("improve [stat]")+" with.",
             }),
             "columns": 1,
             "align": "center",
