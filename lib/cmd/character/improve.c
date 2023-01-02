@@ -28,6 +28,11 @@ void command (string input, mapping flags) {
         return;
     }
 
+    if (tc->query_stat_base(stat) <= D_CLASS->query_max_stat(tc->query_class(), stat, tc->query_level())) {
+        message("action", "Your " + stat + " is already at the maximum.", tc);
+        return;
+    }
+
     tc->add_experience(-cost);
     tc->set_stat(stat, tc->query_stat_base(stat) + 1);
     message("action", "You train your " + stat + ", improving it to " + tc->query_stat_base(stat) + ".", tc);
