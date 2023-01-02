@@ -13,20 +13,17 @@ inherit "/secure/sefun/string.c";
 inherit "/secure/sefun/time.c";
 inherit "/secure/sefun/user.c";
 
+string driver_version () {
+    mixed *lt = localtime(to_int(pcre_extract(__VERSION__, "^fluffos ([0-9]+)\\-")[0]));
+    return sprintf("%d-%2'0'd-%2'0'd", lt[5], lt[4]+1, lt[3]);
+}
+
 int driver_port () {
     return __PORT__;
 }
 
-string driver_version () {
-    string v = "0.0.0";
-#ifdef __VERSION__
-    v = __VERSION__;
-#endif
-    return explode(v, ".")[0];
-}
-
 string mudlib_version () {
-    return "NR v0.1";
+    return "NR v0.3";
 }
 
 string mud_name () {
