@@ -75,7 +75,7 @@ void setup_stats (object ob) {
 
     foreach (string stat in ({ "strength", "perception", "endurance", "charisma", "intelligence", "agility", "luck" })) {
         adjust = query_adjust_stat(s, stat);
-        ob->set_stat(stat, 10 + random(6 + adjust * 2));
+        ob->set_stat(stat, 5 + (adjust * 2));
     }
 }
 

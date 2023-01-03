@@ -6,7 +6,6 @@ inherit M_STORY;
 nosave private object *people = ({ });
 nosave private mapping syntax = ([
     "become": format_syntax("become female|male|neither"),
-    "roll": format_syntax("roll stats"),
     "randomize": format_syntax("randomize"),
     "done": format_syntax("done"),
     "look": format_syntax("look"),
@@ -15,7 +14,7 @@ nosave private mapping syntax = ([
 
 
 void story_action_final (object target) {
-    message("action", "A repetitive beeping tone synced to a blinking red light attracts your attention.", target);
+    message("action", "A repetitive beeping tone synced to a blinking %^RED%^BOLD%^red light%^RESET%^ attracts your attention.", target);
     message("action", "You " + syntax["look"] + " over your surroundings.", target);
     people = people - ({ 0 }) + ({ target });
     target->describe_environment();
@@ -40,12 +39,10 @@ string prepare_long () {
         long += sprintf("%-16s", "Species:") + " " + tc->query_species() + "\n";
         long += sprintf("%-16s", "Age:") + " " + 18 + "\n"; // @TODO
         long += sprintf("%-16s", "Gender:") + " " + tc->query_gender() + "\n";
-        long += sprintf("%-16s", "Health:") + " Healthy\n";
-        long += sprintf("%-16s", "Knowledge:") + " " + err + "\n\n";
+        long += sprintf("%-16s", "Status:") + " Healthy\n\n";
         long += "WARNING! "+err+": knowledge assimilation unable to proceed.\nPress " + syntax["retry"] + " to restart procedure.\n\n";
         long += "Options:\n";
         long += "  " + syntax["become"] + "\n";
-        long += "  " + syntax["roll"] + "\n";
         long += "  " + syntax["randomize"] + "\n\n";
         long += "  " + syntax["done"] + "";
     }
@@ -69,8 +66,6 @@ void create () {
     parse_add_rule("retry", "");
     parse_add_rule("become", "");
     parse_add_rule("become", "STR");
-    parse_add_rule("roll", "");
-    parse_add_rule("roll", "STR");
     parse_add_rule("randomize", "");
     parse_add_rule("done", "");
 }
@@ -122,37 +117,6 @@ void do_become_str (mixed args...) {
     write("You become " + str + ".\n");
 }
 
-/* ----- parser rule: roll ----- */
-
-// setup_stats
-mixed can_roll () {
-    return environment(this_character()) == this_object();
-}
-void do_roll () {
-    write("Syntax: " + syntax["roll"] + "\n");
-}
-mixed can_roll_str (mixed args...) {
-    return environment(this_character()) == this_object();
-}
-void do_roll_str (mixed args...) {
-    object tc = this_character();
-    string str;
-
-    if (sizeof(args)) {
-        str = args[0];
-    }
-
-    if (str != "stats") {
-        return do_roll();
-    }
-
-    write("You tap the roll stats button on the display.\n");
-    write("A shock arcs through your body!\n");
-
-    D_SPECIES->setup_stats(tc);
-    write("Your body's stats change.\n");
-}
-
 /* ----- parser rule: randomize ----- */
 
 mixed can_randomize () {
@@ -167,9 +131,6 @@ void do_randomize () {
 
     tc->set_gender(gender = ({ "female", "male", "neither"})[random(3)]);
     write("You become " + gender + ".\n");
-
-    D_SPECIES->setup_stats(tc);
-    write("Your body's stats change.\n");
 }
 
 /* ----- parser rule: done ----- */
