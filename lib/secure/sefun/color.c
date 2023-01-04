@@ -169,6 +169,8 @@ string *color_gradient (int *color1, int *color2, int steps) {
     return gradient;
 }
 
+// Applies the array gradient to the string text.
+// sizeof(gradient) must equal sizeof(text)
 string apply_gradient (string text, string *gradient) {
     string *line, result = "";
     int i, l;
