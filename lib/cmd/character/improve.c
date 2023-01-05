@@ -28,7 +28,7 @@ void command (string input, mapping flags) {
         return;
     }
 
-    if (tc->query_stat_base(stat) <= D_CLASS->query_max_stat(tc->query_class(), stat, tc->query_level())) {
+    if (tc->query_stat_base(stat) >= D_CLASS->query_max_stat(tc->query_class(), stat, tc->query_level())) {
         message("action", "Your " + stat + " is already at the maximum.", tc);
         return;
     }
