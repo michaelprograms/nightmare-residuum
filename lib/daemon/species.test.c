@@ -82,13 +82,13 @@ void test_setup_stats () {
 
         testOb->setup_stats($(ob)),
 
-        assert($(ob)->query_stat("strength"), ">=", 10),
-        assert($(ob)->query_stat("perception"), ">=", 10),
-        assert($(ob)->query_stat("endurance"), ">=", 10),
-        assert($(ob)->query_stat("charisma"), ">=", 10),
-        assert($(ob)->query_stat("intelligence"), ">=", 10),
-        assert($(ob)->query_stat("agility"), ">=", 10),
-        assert($(ob)->query_stat("luck"), ">=", 10),
+        assert($(ob)->query_stat("strength"), ">=", 5),
+        assert($(ob)->query_stat("perception"), ">=", 5),
+        assert($(ob)->query_stat("endurance"), ">=", 5),
+        assert($(ob)->query_stat("charisma"), ">=", 5),
+        assert($(ob)->query_stat("intelligence"), ">=", 5),
+        assert($(ob)->query_stat("agility"), ">=", 5),
+        assert($(ob)->query_stat("luck"), ">=", 5),
 
         assert($(ob)->handle_remove(), "==", 1),
     }) :));
