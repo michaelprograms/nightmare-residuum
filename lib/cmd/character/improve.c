@@ -35,5 +35,6 @@ void command (string input, mapping flags) {
 
     tc->add_experience(-cost);
     tc->set_stat(stat, tc->query_stat_base(stat) + 1);
-    message("action", "You train your " + stat + ", improving it to " + tc->query_stat_base(stat) + ".", tc);
+    message("action", "You improve your " + stat + " to " + tc->query_stat_base(stat) + ".", tc);
+    D_LOG->log("character/stats", ctime()+" "+tc->query_key_name()+" "+stat+" to "+tc->query_stat_base(stat));
 }
