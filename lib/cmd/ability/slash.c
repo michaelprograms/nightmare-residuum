@@ -18,5 +18,5 @@ void create () {
     set_weapons(([
         "blade": ({ 1, 2 }),
     ]));
-    set_help_text("Bash your opponent with a blunt weapon.");
+    set_help_text("Slash your opponent with a bladed weapon.");
 }
