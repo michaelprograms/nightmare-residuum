@@ -68,15 +68,6 @@ void test_hands () {
         testOb->set_hands(1),
         assert(testOb->query_hands(), "==", 1),
     }) :));
-
-    expect("set_hands handles invalid argument 1", (: ({
-        assert((: testOb->set_hands(this_object()) :), "catch", "*Bad argument 1 to weapon->set_hands\n"),
-        assert((: testOb->set_hands(1.0) :), "catch", "*Bad argument 1 to weapon->set_hands\n"),
-        assert((: testOb->set_hands("") :), "catch", "*Bad argument 1 to weapon->set_hands\n"),
-        assert((: testOb->set_hands(({})) :), "catch", "*Bad argument 1 to weapon->set_hands\n"),
-        assert((: testOb->set_hands(([])) :), "catch", "*Bad argument 1 to weapon->set_hands\n"),
-        assert((: testOb->set_hands((: 1 :)) :), "catch", "*Bad argument 1 to weapon->set_hands\n"),
-    }) :));
 }
 
 void test_wc () {

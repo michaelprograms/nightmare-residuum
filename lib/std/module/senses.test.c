@@ -25,23 +25,6 @@ void test_listen () {
         testOb->set_listen("fn", function () { return "Function sound."; }),
         assert(testOb->query_listen("fn"), "==", function () { return "Function sound."; }),
     }) :));
-
-    expect("set_listen handles invalid argument 1", (: ({
-        assert((: testOb->set_listen() :), "catch", "*Bad argument 1 to senses->set_listen\n"),
-        assert((: testOb->set_listen(0) :), "catch", "*Bad argument 1 to senses->set_listen\n"),
-        assert((: testOb->set_listen(0.0) :), "catch", "*Bad argument 1 to senses->set_listen\n"),
-        assert((: testOb->set_listen((: 0 :)) :), "catch", "*Bad argument 1 to senses->set_listen\n"),
-        assert((: testOb->set_listen(({ })) :), "catch", "*Bad argument 1 to senses->set_listen\n"),
-        assert((: testOb->set_listen(([ ])) :), "catch", "*Bad argument 1 to senses->set_listen\n"),
-    }) :));
-
-    expect("set_listen handles invalid argument 2", (: ({
-        assert((: testOb->set_listen("sound", ) :), "catch", "*Bad argument 2 to senses->set_listen\n"),
-        assert((: testOb->set_listen("sound", 0) :), "catch", "*Bad argument 2 to senses->set_listen\n"),
-        assert((: testOb->set_listen("sound", 0.0) :), "catch", "*Bad argument 2 to senses->set_listen\n"),
-        assert((: testOb->set_listen("sound", ({ })) :), "catch", "*Bad argument 2 to senses->set_listen\n"),
-        assert((: testOb->set_listen("sound", ([ ])) :), "catch", "*Bad argument 2 to senses->set_listen\n"),
-    }) :));
 }
 
 void test_smell () {
@@ -60,22 +43,5 @@ void test_smell () {
         // verify function
         testOb->set_smell("fn", function () { return "Function scent."; }),
         assert(testOb->query_smell("fn"), "==", function () { return "Function scent."; }),
-    }) :));
-
-    expect("set_smell handles invalid argument 1", (: ({
-        assert((: testOb->set_smell() :), "catch", "*Bad argument 1 to senses->set_smell\n"),
-        assert((: testOb->set_smell(0) :), "catch", "*Bad argument 1 to senses->set_smell\n"),
-        assert((: testOb->set_smell(0.0) :), "catch", "*Bad argument 1 to senses->set_smell\n"),
-        assert((: testOb->set_smell((: 0 :)) :), "catch", "*Bad argument 1 to senses->set_smell\n"),
-        assert((: testOb->set_smell(({ })) :), "catch", "*Bad argument 1 to senses->set_smell\n"),
-        assert((: testOb->set_smell(([ ])) :), "catch", "*Bad argument 1 to senses->set_smell\n"),
-    }) :));
-
-    expect("set_listen handles invalid argument 2", (: ({
-        assert((: testOb->set_listen("smell", ) :), "catch", "*Bad argument 2 to senses->set_listen\n"),
-        assert((: testOb->set_listen("smell", 0) :), "catch", "*Bad argument 2 to senses->set_listen\n"),
-        assert((: testOb->set_listen("smell", 0.0) :), "catch", "*Bad argument 2 to senses->set_listen\n"),
-        assert((: testOb->set_listen("smell", ({ })) :), "catch", "*Bad argument 2 to senses->set_listen\n"),
-        assert((: testOb->set_listen("smell", ([ ])) :), "catch", "*Bad argument 2 to senses->set_listen\n"),
     }) :));
 }

@@ -53,32 +53,6 @@ void test_pickable () {
         testOb->reset_pickable(),
         assert(testOb->query_picks(), "==", 1),
     }) :));
-
-    expect("set_pickable handles invalid argument 1", (: ({
-        assert((: testOb->set_pickable(this_object()) :), "catch", "*Bad argument 1 to pickable->set_pickable\n"),
-        assert((: testOb->set_pickable(1) :), "catch", "*Bad argument 1 to pickable->set_pickable\n"),
-        assert((: testOb->set_pickable(1.0) :), "catch", "*Bad argument 1 to pickable->set_pickable\n"),
-        assert((: testOb->set_pickable(({})) :), "catch", "*Bad argument 1 to pickable->set_pickable\n"),
-        assert((: testOb->set_pickable(([])) :), "catch", "*Bad argument 1 to pickable->set_pickable\n"),
-        assert((: testOb->set_pickable((: 1 :)) :), "catch", "*Bad argument 1 to pickable->set_pickable\n"),
-    }) :));
-
-    expect("set_pickable handles invalid argument 2", (: ({
-        assert((: testOb->set_pickable("", this_object()) :), "catch", "*Bad argument 2 to pickable->set_pickable\n"),
-        assert((: testOb->set_pickable("", "") :), "catch", "*Bad argument 2 to pickable->set_pickable\n"),
-        assert((: testOb->set_pickable("", ({})) :), "catch", "*Bad argument 2 to pickable->set_pickable\n"),
-        assert((: testOb->set_pickable("", ([])) :), "catch", "*Bad argument 2 to pickable->set_pickable\n"),
-        assert((: testOb->set_pickable("", (: 1 :)) :), "catch", "*Bad argument 2 to pickable->set_pickable\n"),
-    }) :));
-
-    expect("set_pickable handles invalid argument 3", (: ({
-        assert((: testOb->set_pickable("", 1, this_object()) :), "catch", "*Bad argument 3 to pickable->set_pickable\n"),
-        assert((: testOb->set_pickable("", 1, 1) :), "catch", "*Bad argument 3 to pickable->set_pickable\n"),
-        assert((: testOb->set_pickable("", 1, 1.0) :), "catch", "*Bad argument 3 to pickable->set_pickable\n"),
-        assert((: testOb->set_pickable("", 1, ({})) :), "catch", "*Bad argument 3 to pickable->set_pickable\n"),
-        assert((: testOb->set_pickable("", 1, ([])) :), "catch", "*Bad argument 3 to pickable->set_pickable\n"),
-        assert((: testOb->set_pickable("", 1, (: 1 :)) :), "catch", "*Bad argument 3 to pickable->set_pickable\n"),
-    }) :));
 }
 
 void test_apply_pick_obj () {

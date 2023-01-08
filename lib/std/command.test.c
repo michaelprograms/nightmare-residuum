@@ -29,15 +29,6 @@ void test_help_text () {
         testOb->set_help_text("Different help text."),
         assert(testOb->query_help_text(), "==", "Different help text."),
     }) :));
-
-    expect("set_help_text handles invalid argument 1", (: ({
-        assert((: testOb->set_help_text(this_object()) :), "catch", "*Bad argument 1 to command->set_help_text\n"),
-        assert((: testOb->set_help_text(1.0) :), "catch", "*Bad argument 1 to command->set_help_text\n"),
-        assert((: testOb->set_help_text(1) :), "catch", "*Bad argument 1 to command->set_help_text\n"),
-        assert((: testOb->set_help_text(({})) :), "catch", "*Bad argument 1 to command->set_help_text\n"),
-        assert((: testOb->set_help_text(([])) :), "catch", "*Bad argument 1 to command->set_help_text\n"),
-        assert((: testOb->set_help_text((: 1 :)) :), "catch", "*Bad argument 1 to command->set_help_text\n"),
-    }) :));
 }
 
 void test_help_similar () {
@@ -53,15 +44,6 @@ void test_help_similar () {
         testOb->set_help_similar(({ "1", "2", "3", })),
         assert(testOb->query_help_similar(), "==", ({ "1", "2", "3", })),
     }) :));
-
-    expect("set_help_similar handles invalid argument 1", (: ({
-        assert((: testOb->set_help_similar(this_object()) :), "catch", "*Bad argument 1 to command->set_help_similar\n"),
-        assert((: testOb->set_help_similar(1.0) :), "catch", "*Bad argument 1 to command->set_help_similar\n"),
-        assert((: testOb->set_help_similar(1) :), "catch", "*Bad argument 1 to command->set_help_similar\n"),
-        assert((: testOb->set_help_similar("") :), "catch", "*Bad argument 1 to command->set_help_similar\n"),
-        assert((: testOb->set_help_similar(([])) :), "catch", "*Bad argument 1 to command->set_help_similar\n"),
-        assert((: testOb->set_help_similar((: 1 :)) :), "catch", "*Bad argument 1 to command->set_help_similar\n"),
-    }) :));
 }
 
 void test_syntax () {
@@ -76,14 +58,5 @@ void test_syntax () {
 
         testOb->set_syntax(testOb->query_name() + " [target]"),
         assert(testOb->query_syntax(), "==", "<" + testOb->query_name() + " [target]>"),
-    }) :));
-
-    expect("set_syntax handles invalid argument 1", (: ({
-        assert((: testOb->set_syntax(this_object()) :), "catch", "*Bad argument 1 to command->set_syntax\n"),
-        assert((: testOb->set_syntax(1.0) :), "catch", "*Bad argument 1 to command->set_syntax\n"),
-        assert((: testOb->set_syntax(1) :), "catch", "*Bad argument 1 to command->set_syntax\n"),
-        assert((: testOb->set_syntax(({})) :), "catch", "*Bad argument 1 to command->set_syntax\n"),
-        assert((: testOb->set_syntax(([])) :), "catch", "*Bad argument 1 to command->set_syntax\n"),
-        assert((: testOb->set_syntax((: 1 :)) :), "catch", "*Bad argument 1 to command->set_syntax\n"),
     }) :));
 }

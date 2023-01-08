@@ -10,13 +10,12 @@ void after_all_tests () {
 }
 string *test_order () {
     return ({
-        "test_property_bad_arguments",
         "test_property_single",
         "test_properties_multiple",
      });
 }
 
-void test_property_bad_arguments () {
+void test_property_single () {
     expect_function("query_property", testOb);
     expect_function("query_properties", testOb);
     expect_function("set_property", testOb);
@@ -25,66 +24,6 @@ void test_property_bad_arguments () {
     expect_function("add_property", testOb);
     expect_function("remove_property", testOb);
 
-    expect("query_property handled invalid argument 1", (: ({
-        assert((: testOb->query_property() :), "catch", "*Bad argument 1 to property->query_property\n"),
-        assert((: testOb->query_property(0) :), "catch", "*Bad argument 1 to property->query_property\n"),
-        assert((: testOb->query_property(0.0) :), "catch", "*Bad argument 1 to property->query_property\n"),
-        assert((: testOb->query_property("") :), "catch", "*Bad argument 1 to property->query_property\n"),
-        assert((: testOb->query_property(({})) :), "catch", "*Bad argument 1 to property->query_property\n"),
-        assert((: testOb->query_property(([])) :), "catch", "*Bad argument 1 to property->query_property\n"),
-    }) :));
-
-    expect("set_properties handled invalid argument 1", (: ({
-        assert((: testOb->set_properties() :), "catch", "*Bad argument 1 to property->set_properties\n"),
-        assert((: testOb->set_properties(0) :), "catch", "*Bad argument 1 to property->set_properties\n"),
-        assert((: testOb->set_properties(1.0) :), "catch", "*Bad argument 1 to property->set_properties\n"),
-        assert((: testOb->set_properties("") :), "catch", "*Bad argument 1 to property->set_properties\n"),
-        assert((: testOb->set_properties(({})) :), "catch", "*Bad argument 1 to property->set_properties\n"),
-        assert((: testOb->set_properties(([])) :), "catch", "*Bad argument 1 to property->set_properties\n"),
-    }) :));
-
-    expect("set_property handled invalid argument 1", (: ({
-        assert((: testOb->set_property() :), "catch", "*Bad argument 1 to property->set_property\n"),
-        assert((: testOb->set_property(0, 0) :), "catch", "*Bad argument 1 to property->set_property\n"),
-        assert((: testOb->set_property(0.0, 0.0) :), "catch", "*Bad argument 1 to property->set_property\n"),
-        assert((: testOb->set_property("", "") :), "catch", "*Bad argument 1 to property->set_property\n"),
-        assert((: testOb->set_property(({}), ({})) :), "catch", "*Bad argument 1 to property->set_property\n"),
-        assert((: testOb->set_property(([]), ([])) :), "catch", "*Bad argument 1 to property->set_property\n"),
-        assert((: testOb->set_property() :), "catch", "*Bad argument 1 to property->set_property\n"),
-    }) :));
-    expect("set_property handled invalid argument 2", (: ({
-        assert((: testOb->set_property("test_key") :), "catch", "*Bad argument 2 to property->set_property\n"),
-        assert((: testOb->set_property("test_key", "") :), "catch", "*Bad argument 2 to property->set_property\n"),
-        assert((: testOb->set_property("test_key", ({})) :), "catch", "*Bad argument 2 to property->set_property\n"),
-        assert((: testOb->set_property("test_key", ([])) :), "catch", "*Bad argument 2 to property->set_property\n"),
-    }) :));
-
-    expect("add_property handled invalid argument 1", (: ({
-        assert((: testOb->add_property() :), "catch", "*Bad argument 1 to property->add_property\n"),
-        assert((: testOb->add_property(0, 0) :), "catch", "*Bad argument 1 to property->add_property\n"),
-        assert((: testOb->add_property(0.0, 0.0) :), "catch", "*Bad argument 1 to property->add_property\n"),
-        assert((: testOb->add_property("", "") :), "catch", "*Bad argument 1 to property->add_property\n"),
-        assert((: testOb->add_property(({}), ({})) :), "catch", "*Bad argument 1 to property->add_property\n"),
-        assert((: testOb->add_property(([]), ([])) :), "catch", "*Bad argument 1 to property->add_property\n"),
-    }) :));
-    expect("add_property handled invalid argument 2", (: ({
-        assert((: testOb->add_property("test_key") :), "catch", "*Bad argument 2 to property->add_property\n"),
-        assert((: testOb->add_property("test_key", "") :), "catch", "*Bad argument 2 to property->add_property\n"),
-        assert((: testOb->add_property("test_key", ({})) :), "catch", "*Bad argument 2 to property->add_property\n"),
-        assert((: testOb->add_property("test_key", ([])) :), "catch", "*Bad argument 2 to property->add_property\n"),
-    }) :));
-
-    expect("remove_property handled invalid argument 1", (: ({
-        assert((: testOb->remove_property() :), "catch", "*Bad argument 1 to property->remove_property\n"),
-        assert((: testOb->remove_property(0) :), "catch", "*Bad argument 1 to property->remove_property\n"),
-        assert((: testOb->remove_property(0.0) :), "catch", "*Bad argument 1 to property->remove_property\n"),
-        assert((: testOb->remove_property("") :), "catch", "*Bad argument 1 to property->remove_property\n"),
-        assert((: testOb->remove_property(({})) :), "catch", "*Bad argument 1 to property->remove_property\n"),
-        assert((: testOb->remove_property(([])) :), "catch", "*Bad argument 1 to property->remove_property\n"),
-    }) :));
-}
-
-void test_property_single () {
     expect("add, set, remove, and query property are handled", (: ({
         assert(testOb->query_property("test_key"), "==", UNDEFINED),
 

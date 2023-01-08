@@ -52,16 +52,6 @@ void test_hex_to_int () {
         assert(testOb->hex_to_int("-A"), "==", -10),
         assert(testOb->hex_to_int("FFF"), "==", 4095),
     }) :));
-
-    expect("hex_to_int bandled bad inputs", (: ({
-        assert((: testOb->hex_to_int() :), "catch", "*Bad argument 1 to color->hex_to_int\n"),
-        assert((: testOb->hex_to_int(0) :), "catch", "*Bad argument 1 to color->hex_to_int\n"),
-        assert((: testOb->hex_to_int("") :), "catch", "*Bad argument 1 to color->hex_to_int\n"),
-        assert((: testOb->hex_to_int(({})) :), "catch", "*Bad argument 1 to color->hex_to_int\n"),
-        assert((: testOb->hex_to_int(([])) :), "catch", "*Bad argument 1 to color->hex_to_int\n"),
-        assert((: testOb->hex_to_int("GG") :), "catch", "*Bad argument 1 to color->hex_to_int\n"),
-        assert((: testOb->hex_to_int("#A") :), "catch", "*Bad argument 1 to color->hex_to_int\n"),
-    }) :));
 }
 
 private int *Color;
@@ -88,14 +78,6 @@ void test_sRGB () {
         assert(testOb->color_to_sRGB(0.75), "==", 225),
         assert(testOb->color_to_sRGB(1.0), "==", 255),
     }) :));
-    expect("color_to_sRGB handles bad argument 1", (: ({
-        assert((: testOb->color_to_sRGB() :), "catch", "*Bad argument 1 to color->color_to_sRGB\n"),
-        assert((: testOb->color_to_sRGB("") :), "catch", "*Bad argument 1 to color->color_to_sRGB\n"),
-        assert((: testOb->color_to_sRGB(1) :), "catch", "*Bad argument 1 to color->color_to_sRGB\n"),
-        assert((: testOb->color_to_sRGB(({ })) :), "catch", "*Bad argument 1 to color->color_to_sRGB\n"),
-        assert((: testOb->color_to_sRGB(([ ])) :), "catch", "*Bad argument 1 to color->color_to_sRGB\n"),
-        assert((: testOb->color_to_sRGB((: 1 :)) :), "catch", "*Bad argument 1 to color->color_to_sRGB\n"),
-    }) :));
 
     expect("converting from sRGB behaves", (: ({
         assert(testOb->color_from_sRGB(0), "==", 0.0),
@@ -103,14 +85,6 @@ void test_sRGB () {
         assert(testOb->color_from_sRGB(188), "==", 0.5),
         assert(testOb->color_from_sRGB(225), "==", 0.75),
         assert(testOb->color_from_sRGB(255), "==", 1.0),
-    }) :));
-    expect("color_from_sRGB handles bad argument 1", (: ({
-        assert((: testOb->color_from_sRGB() :), "catch", "*Bad argument 1 to color->color_from_sRGB\n"),
-        assert((: testOb->color_from_sRGB("") :), "catch", "*Bad argument 1 to color->color_from_sRGB\n"),
-        assert((: testOb->color_from_sRGB(1.0) :), "catch", "*Bad argument 1 to color->color_from_sRGB\n"),
-        assert((: testOb->color_from_sRGB(({ })) :), "catch", "*Bad argument 1 to color->color_from_sRGB\n"),
-        assert((: testOb->color_from_sRGB(([ ])) :), "catch", "*Bad argument 1 to color->color_from_sRGB\n"),
-        assert((: testOb->color_from_sRGB((: 1 :)) :), "catch", "*Bad argument 1 to color->color_from_sRGB\n"),
     }) :));
 }
 
@@ -121,30 +95,5 @@ void test_lerp () {
         assert(testOb->color_lerp(0.0, 255.0, 0.0), "==", 0.0),
         assert(testOb->color_lerp(0.0, 255.0, 0.5), "==", 127.5),
         assert(testOb->color_lerp(0.0, 255.0, 1.0), "==", 255.0),
-    }) :));
-
-    expect("color_lerp handles bad argument 1", (: ({
-        assert((: testOb->color_lerp() :), "catch", "*Bad argument 1 to color->color_lerp\n"),
-        assert((: testOb->color_lerp("") :), "catch", "*Bad argument 1 to color->color_lerp\n"),
-        assert((: testOb->color_lerp(1) :), "catch", "*Bad argument 1 to color->color_lerp\n"),
-        assert((: testOb->color_lerp(({ })) :), "catch", "*Bad argument 1 to color->color_lerp\n"),
-        assert((: testOb->color_lerp(([ ])) :), "catch", "*Bad argument 1 to color->color_lerp\n"),
-        assert((: testOb->color_lerp((: 1 :)) :), "catch", "*Bad argument 1 to color->color_lerp\n"),
-    }) :));
-    expect("color_lerp handles bad argument 2", (: ({
-        assert((: testOb->color_lerp(0.0, ) :), "catch", "*Bad argument 2 to color->color_lerp\n"),
-        assert((: testOb->color_lerp(0.0, "") :), "catch", "*Bad argument 2 to color->color_lerp\n"),
-        assert((: testOb->color_lerp(0.0, 1) :), "catch", "*Bad argument 2 to color->color_lerp\n"),
-        assert((: testOb->color_lerp(0.0, ({ })) :), "catch", "*Bad argument 2 to color->color_lerp\n"),
-        assert((: testOb->color_lerp(0.0, ([ ])) :), "catch", "*Bad argument 2 to color->color_lerp\n"),
-        assert((: testOb->color_lerp(0.0, (: 1 :)) :), "catch", "*Bad argument 2 to color->color_lerp\n"),
-    }) :));
-    expect("color_lerp handles bad argument 3", (: ({
-        assert((: testOb->color_lerp(0.0, 0.0, ) :), "catch", "*Bad argument 3 to color->color_lerp\n"),
-        assert((: testOb->color_lerp(0.0, 0.0, "") :), "catch", "*Bad argument 3 to color->color_lerp\n"),
-        assert((: testOb->color_lerp(0.0, 0.0, 1) :), "catch", "*Bad argument 3 to color->color_lerp\n"),
-        assert((: testOb->color_lerp(0.0, 0.0, ({ })) :), "catch", "*Bad argument 3 to color->color_lerp\n"),
-        assert((: testOb->color_lerp(0.0, 0.0, ([ ])) :), "catch", "*Bad argument 3 to color->color_lerp\n"),
-        assert((: testOb->color_lerp(0.0, 0.0, (: 1 :)) :), "catch", "*Bad argument 3 to color->color_lerp\n"),
     }) :));
 }

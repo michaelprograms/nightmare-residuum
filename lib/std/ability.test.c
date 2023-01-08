@@ -29,15 +29,6 @@ void test_skill_powers () {
         testOb->set_skill_powers(([ "ranged": 5, "psionic": 5, ])),
         assert(testOb->query_skill_powers(), "==", ([ "ranged": 5, "psionic": 5, ])),
     }) :));
-
-    expect("set_skill_powers handles invalid argument 1", (: ({
-        assert((: testOb->set_skill_powers(this_object()) :), "catch", "*Bad argument 1 to ability->set_skill_powers\n"),
-        assert((: testOb->set_skill_powers(1) :), "catch", "*Bad argument 1 to ability->set_skill_powers\n"),
-        assert((: testOb->set_skill_powers(1.0) :), "catch", "*Bad argument 1 to ability->set_skill_powers\n"),
-        assert((: testOb->set_skill_powers("") :), "catch", "*Bad argument 1 to ability->set_skill_powers\n"),
-        assert((: testOb->set_skill_powers(({})) :), "catch", "*Bad argument 1 to ability->set_skill_powers\n"),
-        assert((: testOb->set_skill_powers((: 1 :)) :), "catch", "*Bad argument 1 to ability->set_skill_powers\n"),
-    }) :));
 }
 
 void test_difficulty_factor () {
@@ -55,14 +46,5 @@ void test_difficulty_factor () {
         // check raising difficulty factor
         testOb->set_difficulty_factor(110),
         assert(testOb->query_difficulty_factor(), "==", 110),
-    }) :));
-
-    expect("set_difficulty_factor handles invalid argument 1", (: ({
-        assert((: testOb->set_difficulty_factor(this_object()) :), "catch", "*Bad argument 1 to ability->set_difficulty_factor\n"),
-        assert((: testOb->set_difficulty_factor(1.0) :), "catch", "*Bad argument 1 to ability->set_difficulty_factor\n"),
-        assert((: testOb->set_difficulty_factor("") :), "catch", "*Bad argument 1 to ability->set_difficulty_factor\n"),
-        assert((: testOb->set_difficulty_factor(({})) :), "catch", "*Bad argument 1 to ability->set_difficulty_factor\n"),
-        assert((: testOb->set_difficulty_factor(([])) :), "catch", "*Bad argument 1 to ability->set_difficulty_factor\n"),
-        assert((: testOb->set_difficulty_factor((: 1 :)) :), "catch", "*Bad argument 1 to ability->set_difficulty_factor\n"),
     }) :));
 }

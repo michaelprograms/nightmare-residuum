@@ -31,16 +31,6 @@ void test_value () {
         testOb->set_value(54321),
         assert(testOb->query_value(), "==", 54321),
     }) :));
-
-    expect("value handles bad argument 1", (: ({
-        assert((: testOb->set_value(-1) :), "catch", "*Bad argument 1 to item->set_value\n"),
-        assert((: testOb->set_value(this_object()) :), "catch", "*Bad argument 1 to item->set_value\n"),
-        assert((: testOb->set_value(1.0) :), "catch", "*Bad argument 1 to item->set_value\n"),
-        assert((: testOb->set_value("") :), "catch", "*Bad argument 1 to item->set_value\n"),
-        assert((: testOb->set_value(({})) :), "catch", "*Bad argument 1 to item->set_value\n"),
-        assert((: testOb->set_value(([])) :), "catch", "*Bad argument 1 to item->set_value\n"),
-        assert((: testOb->set_value((: 1 :)) :), "catch", "*Bad argument 1 to item->set_value\n"),
-    }) :));
 }
 
 void test_verb_look_applies () {

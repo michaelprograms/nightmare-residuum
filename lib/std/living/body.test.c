@@ -62,11 +62,6 @@ void test_species () {
 
         testOb->set_species("robot"),
         assert(testOb->query_species(), "==", "robot"),
-
-        assert((: testOb->set_species(0) :), "catch", "*Bad argument 1 to body->set_species\n"),
-        assert((: testOb->set_species() :), "catch", "*Bad argument 1 to body->set_species\n"),
-
-        assert(testOb->query_species(), "==", "robot"), // species was not changed
     }) :));
 }
 

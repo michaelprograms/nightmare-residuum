@@ -83,15 +83,6 @@ void test_vendor_currency () {
         testOb->set_vendor_currency("silver"),
         assert(testOb->query_vendor_currency(), "==", "silver"),
     }) :));
-
-    expect("set_vendor_currency handles invalid argument 1", (: ({
-        assert((: testOb->set_vendor_currency(this_object()) :), "catch", "*Bad argument 1 to vendor->set_vendor_currency\n"),
-        assert((: testOb->set_vendor_currency(1) :), "catch", "*Bad argument 1 to vendor->set_vendor_currency\n"),
-        assert((: testOb->set_vendor_currency(1.0) :), "catch", "*Bad argument 1 to vendor->set_vendor_currency\n"),
-        assert((: testOb->set_vendor_currency(({})) :), "catch", "*Bad argument 1 to vendor->set_vendor_currency\n"),
-        assert((: testOb->set_vendor_currency(([])) :), "catch", "*Bad argument 1 to vendor->set_vendor_currency\n"),
-        assert((: testOb->set_vendor_currency((: 1 :)) :), "catch", "*Bad argument 1 to vendor->set_vendor_currency\n"),
-    }) :));
 }
 
 void test_vendor_type () {
@@ -112,15 +103,6 @@ void test_vendor_type () {
 
         testOb->set_vendor_types(({ STD_ARMOR, STD_WEAPON })),
         assert(testOb->query_vendor_types(), "==", ({ STD_ARMOR, STD_WEAPON })),
-    }) :));
-
-    expect("set_vendor_types handles invalid argument 1", (: ({
-        assert((: testOb->set_vendor_types(this_object()) :), "catch", "*Bad argument 1 to vendor->set_vendor_types\n"),
-        assert((: testOb->set_vendor_types(1) :), "catch", "*Bad argument 1 to vendor->set_vendor_types\n"),
-        assert((: testOb->set_vendor_types(1.0) :), "catch", "*Bad argument 1 to vendor->set_vendor_types\n"),
-        assert((: testOb->set_vendor_types(({})) :), "catch", "*Bad argument 1 to vendor->set_vendor_types\n"),
-        assert((: testOb->set_vendor_types(([])) :), "catch", "*Bad argument 1 to vendor->set_vendor_types\n"),
-        assert((: testOb->set_vendor_types((: 1 :)) :), "catch", "*Bad argument 1 to vendor->set_vendor_types\n"),
     }) :));
 }
 

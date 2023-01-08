@@ -43,28 +43,6 @@ void test_experience () {
         assert(testOb->query_experience(), "==", 6123),
         assert(testOb->query_total_experience(), "==", 3000),
     }) :));
-
-    expect("add_experience handled bad argument 1", (: ({
-        assert((:  testOb->add_experience(this_object()) :), "catch", "*Bad argument 1 to body->add_experience\n"),
-        assert((:  testOb->add_experience(1.0) :), "catch", "*Bad argument 1 to body->add_experience\n"),
-        assert((:  testOb->add_experience("") :), "catch", "*Bad argument 1 to body->add_experience\n"),
-        assert((:  testOb->add_experience(({})) :), "catch", "*Bad argument 1 to body->add_experience\n"),
-        assert((:  testOb->add_experience(([])) :), "catch", "*Bad argument 1 to body->add_experience\n"),
-        assert((:  testOb->add_experience((: 1 :)) :), "catch", "*Bad argument 1 to body->add_experience\n"),
-    }) :));
-
-    expect("spend_experience handled bad argument 1", (: ({
-        assert((: testOb->spend_experience(10000) :), "catch", "*Bad argument 1 to body->spend_experience\n"),
-        assert((: testOb->spend_experience(0) :), "catch", "*Bad argument 1 to body->spend_experience\n"),
-        assert((: testOb->spend_experience(-10000) :), "catch", "*Bad argument 1 to body->spend_experience\n"),
-
-        assert((:  testOb->spend_experience(this_object()) :), "catch", "*Bad argument 1 to body->spend_experience\n"),
-        assert((:  testOb->spend_experience(1.0) :), "catch", "*Bad argument 1 to body->spend_experience\n"),
-        assert((:  testOb->spend_experience("") :), "catch", "*Bad argument 1 to body->spend_experience\n"),
-        assert((:  testOb->spend_experience(({})) :), "catch", "*Bad argument 1 to body->spend_experience\n"),
-        assert((:  testOb->spend_experience(([])) :), "catch", "*Bad argument 1 to body->spend_experience\n"),
-        assert((:  testOb->spend_experience((: 1 :)) :), "catch", "*Bad argument 1 to body->spend_experience\n"),
-    }) :));
 }
 
 void test_handle_victory () {

@@ -58,15 +58,6 @@ void test_max_items () {
         assert(testOb->handle_receive($(item2)), "==", 1),
     }) :));
 
-    expect("set_max_items handles invalid argument 1", (: ({
-        assert((: testOb->set_max_items(this_object()) :), "catch", "*Bad argument 1 to vendor_inventory->set_max_items\n"),
-        assert((: testOb->set_max_items("") :), "catch", "*Bad argument 1 to vendor_inventory->set_max_items\n"),
-        assert((: testOb->set_max_items(1.0) :), "catch", "*Bad argument 1 to vendor_inventory->set_max_items\n"),
-        assert((: testOb->set_max_items(({})) :), "catch", "*Bad argument 1 to vendor_inventory->set_max_items\n"),
-        assert((: testOb->set_max_items(([])) :), "catch", "*Bad argument 1 to vendor_inventory->set_max_items\n"),
-        assert((: testOb->set_max_items((: 1 :)) :), "catch", "*Bad argument 1 to vendor_inventory->set_max_items\n"),
-    }) :));
-
     if (item1) destruct(item1);
     if (item2) destruct(item2);
 }

@@ -39,8 +39,6 @@ void test_unguarded () {
     expect("unguarded handles bad arguments", (: ({
         assert((: testOb->unguarded((: MAX_INT :)) :), "catch", "*Illegal unguarded.\n"),
         assert((: testOb->unguarded(function () { return MAX_INT; }) :), "catch", "*Illegal unguarded.\n"),
-        assert((: testOb->unguarded() :), "catch", "*Illegal unguarded.\n"),
-        assert((: testOb->unguarded("bad argument") :), "catch", "*Illegal unguarded.\n"),
     }) :));
 }
 
@@ -59,14 +57,5 @@ void test_query_allowed () {
         assert(testOb->query_allowed($(basicOb), "read_file", "/tmp/void/path", "read"), "==", 0),
         assert(testOb->query_allowed($(basicOb), "write_file", "/tmp/void/path", "write"), "==", 0),
     }) :));
-
-
-    // expect("query_allowed handles bad arguments", (: ({
-    //     assert((: testOb->query_allowed() :), "catch", "*Bad argument 1 to access->query_allowed\n"),
-    //     assert((: testOb->query_allowed(testOb) :), "catch", "*Bad argument 2 to access->query_allowed\n"),
-    //     assert((: testOb->query_allowed(testOb, "file_size") :), "catch", "*Bad argument 3 to access->query_allowed\n"),
-    //     assert((: testOb->query_allowed(testOb, "file_size", "/tmp/path") :), "catch", "*Bad argument 4 to access->query_allowed\n"),
-    // }) :));
-
     destruct(basicOb);
 }

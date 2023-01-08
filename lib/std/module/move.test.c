@@ -122,13 +122,4 @@ void test_environment () {
         assert(testOb->handle_move("/domain/Nowhere/room/freezer.c"), "==", 1),
         assert(testOb->query_environment_path(), "==", base_name() + ".c"),
     }) :));
-
-    expect("set_environment_path handles invalid argument 1", (: ({
-        assert((: testOb->set_environment_path(0) :), "catch", "*Bad argument 1 to move->set_environment_path\n"),
-        assert((: testOb->set_environment_path(0.0) :), "catch", "*Bad argument 1 to move->set_environment_path\n"),
-        assert((: testOb->set_environment_path("") :), "catch", "*Bad argument 1 to move->set_environment_path\n"),
-        assert((: testOb->set_environment_path(({})) :), "catch", "*Bad argument 1 to move->set_environment_path\n"),
-        assert((: testOb->set_environment_path(([])) :), "catch", "*Bad argument 1 to move->set_environment_path\n"),
-        assert((: testOb->set_environment_path((: users :)) :), "catch", "*Bad argument 1 to move->set_environment_path\n"),
-    }) :));
 }

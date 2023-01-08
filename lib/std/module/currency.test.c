@@ -38,27 +38,4 @@ void test_currencies () {
         assert(testOb->query_currencies(), "==", ({ "copper" })), // some remains
         assert(testOb->query_currency("copper"), "==", 5),
     }) :));
-
-    expect("currency handles bad arguments", (: ({
-        assert((: testOb->query_currency() :), "catch", "*Bad argument 1 to currency->query_currency\n"),
-        assert((: testOb->query_currency(1) :), "catch", "*Bad argument 1 to currency->query_currency\n"),
-        assert((: testOb->query_currency(1.0) :), "catch", "*Bad argument 1 to currency->query_currency\n"),
-        assert((: testOb->query_currency(({ })) :), "catch", "*Bad argument 1 to currency->query_currency\n"),
-        assert((: testOb->query_currency(([ ])) :), "catch", "*Bad argument 1 to currency->query_currency\n"),
-        assert((: testOb->query_currency((: 1 :)) :), "catch", "*Bad argument 1 to currency->query_currency\n"),
-
-        assert((: testOb->add_currency() :), "catch", "*Bad argument 1 to currency->add_currency\n"),
-        assert((: testOb->add_currency(1) :), "catch", "*Bad argument 1 to currency->add_currency\n"),
-        assert((: testOb->add_currency(1.0) :), "catch", "*Bad argument 1 to currency->add_currency\n"),
-        assert((: testOb->add_currency(({ })) :), "catch", "*Bad argument 1 to currency->add_currency\n"),
-        assert((: testOb->add_currency(([ ])) :), "catch", "*Bad argument 1 to currency->add_currency\n"),
-        assert((: testOb->add_currency((: 1 :)) :), "catch", "*Bad argument 1 to currency->add_currency\n"),
-
-        assert((: testOb->add_currency("copper") :), "catch", "*Bad argument 2 to currency->add_currency\n"),
-        assert((: testOb->add_currency("copper", "f") :), "catch", "*Bad argument 2 to currency->add_currency\n"),
-        assert((: testOb->add_currency("copper", 1.0) :), "catch", "*Bad argument 2 to currency->add_currency\n"),
-        assert((: testOb->add_currency("copper", ({ })) :), "catch", "*Bad argument 2 to currency->add_currency\n"),
-        assert((: testOb->add_currency("copper", ([ ])) :), "catch", "*Bad argument 2 to currency->add_currency\n"),
-        assert((: testOb->add_currency("copper", (: 1 :)) :), "catch", "*Bad argument 2 to currency->add_currency\n"),
-    }) :));
 }

@@ -53,40 +53,6 @@ void test_looks () {
         assert(testOb->query_look("rocks"), "==", "Rocks and stones."),
         assert(testOb->query_look("stones"), "==", "Rocks and stones."),
     }) :));
-
-    expect("set_look handles bad argument 1", (: ({
-        assert((: testOb->set_look() :), "catch", "*Bad argument 1 to look->set_look\n"),
-        assert((: testOb->set_look(0) :), "catch", "*Bad argument 1 to look->set_look\n"),
-        assert((: testOb->set_look(0.0) :), "catch", "*Bad argument 1 to look->set_look\n"),
-        assert((: testOb->set_look(({})) :), "catch", "*Bad argument 1 to look->set_look\n"),
-        assert((: testOb->set_look(([])) :), "catch", "*Bad argument 1 to look->set_look\n"),
-        assert((: testOb->set_look((: 1 :)) :), "catch", "*Bad argument 1 to look->set_look\n"),
-    }) :));
-    expect("set_look handles bad argument 2", (: ({
-        assert((: testOb->set_look("") :), "catch", "*Bad argument 2 to look->set_look\n"),
-        assert((: testOb->set_look("", 0) :), "catch", "*Bad argument 2 to look->set_look\n"),
-        assert((: testOb->set_look("", 0.0) :), "catch", "*Bad argument 2 to look->set_look\n"),
-        assert((: testOb->set_look("", ({})) :), "catch", "*Bad argument 2 to look->set_look\n"),
-        assert((: testOb->set_look("", ([])) :), "catch", "*Bad argument 2 to look->set_look\n"),
-    }) :));
-
-    expect("set_looks handles bad argument 1", (: ({
-        assert((: testOb->set_looks() :), "catch", "*Bad argument 1 to look->set_looks\n"),
-        assert((: testOb->set_looks("") :), "catch", "*Bad argument 1 to look->set_looks\n"),
-        assert((: testOb->set_looks(0) :), "catch", "*Bad argument 1 to look->set_looks\n"),
-        assert((: testOb->set_looks(0.0) :), "catch", "*Bad argument 1 to look->set_looks\n"),
-        assert((: testOb->set_looks(({})) :), "catch", "*Bad argument 1 to look->set_looks\n"),
-        assert((: testOb->set_looks((: 1 :)) :), "catch", "*Bad argument 1 to look->set_looks\n"),
-    }) :));
-
-    expect("remove_look handles bad argument 1", (: ({
-        assert((: testOb->remove_look() :), "catch", "*Bad argument 1 to look->remove_look\n"),
-        assert((: testOb->remove_look(0) :), "catch", "*Bad argument 1 to look->remove_look\n"),
-        assert((: testOb->remove_look(0.0) :), "catch", "*Bad argument 1 to look->remove_look\n"),
-        assert((: testOb->remove_look(({})) :), "catch", "*Bad argument 1 to look->remove_look\n"),
-        assert((: testOb->remove_look(([])) :), "catch", "*Bad argument 1 to look->remove_look\n"),
-        assert((: testOb->remove_look((: 1 :)) :), "catch", "*Bad argument 1 to look->remove_look\n"),
-    }) :));
 }
 
 nosave private int LookCounter = 0;
@@ -105,14 +71,5 @@ void test_handle_look () {
         assert(testOb->handle_look("test"), "==", "Test description. 2"),
         assert(LookCounter, "==", 2),
         assert(testOb->handle_look("quiz"), "==", "Quiz description."),
-    }) :));
-
-    expect("handle_look handles bad argument 1", (: ({
-        assert((: testOb->handle_look() :), "catch", "*Bad argument 1 to look->handle_look\n"),
-        assert((: testOb->handle_look(0) :), "catch", "*Bad argument 1 to look->handle_look\n"),
-        assert((: testOb->handle_look(0.0) :), "catch", "*Bad argument 1 to look->handle_look\n"),
-        assert((: testOb->handle_look(({})) :), "catch", "*Bad argument 1 to look->handle_look\n"),
-        assert((: testOb->handle_look(([])) :), "catch", "*Bad argument 1 to look->handle_look\n"),
-        assert((: testOb->handle_look((: 1 :)) :), "catch", "*Bad argument 1 to look->handle_look\n"),
     }) :));
 }

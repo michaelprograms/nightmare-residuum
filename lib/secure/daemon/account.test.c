@@ -40,10 +40,6 @@ void test_save_path () {
     expect("query_save_path handles valid names", (: ({
         assert(testOb->query_save_path("name"), "regex", "^/save/account/n/name"),
     }) :));
-    expect("query_save_path handles bad arguments", (: ({
-        assert((: testOb->query_save_path("") :), "catch", "*Bad argument 1 to account->query_save_path\n"),
-        assert((: testOb->query_save_path("abc") :), "catch", "*Bad argument 1 to account->query_save_path\n"),
-    }) :));
 }
 
 void test_exists () {

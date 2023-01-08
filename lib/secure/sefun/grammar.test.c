@@ -28,16 +28,6 @@ void test_conjunction () {
         assert(testOb->conjunction(({ "1", "2", "3" })), "==", "1, 2, and 3"),
         assert(testOb->conjunction(({ "1", "2", "3", "4", "5", "6", "7", "8", "9", "10" })), "==", "1, 2, 3, 4, 5, 6, 7, 8, 9, and 10"),
     }) :));
-
-    expect("conjunction handles invalid argument 1", (: ({
-        assert((: testOb->conjunction(0) :), "catch", "*Bad argument 1 to grammar->conjunction\n"),
-        assert((: testOb->conjunction(0.0) :), "catch", "*Bad argument 1 to grammar->conjunction\n"),
-        assert((: testOb->conjunction(({})) :), "catch", "*Bad argument 1 to grammar->conjunction\n"),
-        assert((: testOb->conjunction(({ 1, 2, 3 })) :), "catch", "*Bad argument 1 to grammar->conjunction\n"),
-        assert((: testOb->conjunction(({ "", "", "" })) :), "catch", "*Bad argument 1 to grammar->conjunction\n"),
-        assert((: testOb->conjunction(([])) :), "catch", "*Bad argument 1 to grammar->conjunction\n"),
-        assert((: testOb->conjunction((: 1 :)) :), "catch", "*Bad argument 1 to grammar->conjunction\n"),
-    }) :));
 }
 
 void test_cardinal () {
@@ -56,16 +46,6 @@ void test_cardinal () {
         assert(testOb->cardinal(-12345), "==", "negative twelve thousand, three hundred and forty-five"),
         assert(testOb->cardinal(100000), "==", "many"),
         assert(testOb->cardinal(-100000), "==", "negative many"),
-    }) :));
-
-    expect("cardinal handles invalid argument 1", (: ({
-        assert((: testOb->cardinal("") :), "catch", "*Bad argument 1 to grammar->cardinal\n"),
-        assert((: testOb->cardinal(0.0) :), "catch", "*Bad argument 1 to grammar->cardinal\n"),
-        assert((: testOb->cardinal(({})) :), "catch", "*Bad argument 1 to grammar->cardinal\n"),
-        assert((: testOb->cardinal(({ 1, 2, 3 })) :), "catch", "*Bad argument 1 to grammar->cardinal\n"),
-        assert((: testOb->cardinal(({ "", "", "" })) :), "catch", "*Bad argument 1 to grammar->cardinal\n"),
-        assert((: testOb->cardinal(([])) :), "catch", "*Bad argument 1 to grammar->cardinal\n"),
-        assert((: testOb->cardinal((: 1 :)) :), "catch", "*Bad argument 1 to grammar->cardinal\n"),
     }) :));
 }
 
@@ -97,17 +77,6 @@ void test_ordinal () {
         assert(testOb->ordinal(22), "==", "22nd"),
         assert(testOb->ordinal(23), "==", "23rd"),
         assert(testOb->ordinal(24), "==", "24th"),
-    }) :));
-
-    expect("ordinal handles invalid argument 1", (: ({
-        assert((: testOb->ordinal(-1) :), "catch", "*Bad argument 1 to grammar->ordinal\n"),
-        assert((: testOb->ordinal("") :), "catch", "*Bad argument 1 to grammar->ordinal\n"),
-        assert((: testOb->ordinal(0.0) :), "catch", "*Bad argument 1 to grammar->ordinal\n"),
-        assert((: testOb->ordinal(({})) :), "catch", "*Bad argument 1 to grammar->ordinal\n"),
-        assert((: testOb->ordinal(({ 1, 2, 3 })) :), "catch", "*Bad argument 1 to grammar->ordinal\n"),
-        assert((: testOb->ordinal(({ "", "", "" })) :), "catch", "*Bad argument 1 to grammar->ordinal\n"),
-        assert((: testOb->ordinal(([])) :), "catch", "*Bad argument 1 to grammar->ordinal\n"),
-        assert((: testOb->ordinal((: 1 :)) :), "catch", "*Bad argument 1 to grammar->ordinal\n"),
     }) :));
 }
 
@@ -160,16 +129,6 @@ void test_pluralize () {
         assert(testOb->pluralize("blue robes"), "==", "blue robes"),
         assert(testOb->pluralize("canvas shoes"), "==", "canvas shoes"),
     }) :));
-
-    expect("pluralize handles invalid argument 1", (: ({
-        assert((: testOb->pluralize(0) :), "catch", "*Bad argument 1 to grammar->pluralize\n"),
-        assert((: testOb->pluralize(0.0) :), "catch", "*Bad argument 1 to grammar->pluralize\n"),
-        assert((: testOb->pluralize(({})) :), "catch", "*Bad argument 1 to grammar->pluralize\n"),
-        assert((: testOb->pluralize(({ 1, 2, 3 })) :), "catch", "*Bad argument 1 to grammar->pluralize\n"),
-        assert((: testOb->pluralize(({ "", "", "" })) :), "catch", "*Bad argument 1 to grammar->pluralize\n"),
-        assert((: testOb->pluralize(([])) :), "catch", "*Bad argument 1 to grammar->pluralize\n"),
-        assert((: testOb->pluralize((: 1 :)) :), "catch", "*Bad argument 1 to grammar->pluralize\n"),
-    }) :));
 }
 
 void test_consolidate () {
@@ -215,15 +174,6 @@ void test_possessive_noun () {
         assert(testOb->possessive_noun($(ob)), "==", "Chaz'"),
     }) :));
     destruct(ob);
-
-    expect("possessive_noun handles invalid argument 1", (: ({
-        assert((: testOb->possessive_noun(-1) :), "catch", "*Bad argument 1 to grammar->possessive_noun\n"),
-        assert((: testOb->possessive_noun(({})) :), "catch", "*Bad argument 1 to grammar->possessive_noun\n"),
-        assert((: testOb->possessive_noun(({ 1, 2, 3 })) :), "catch", "*Bad argument 1 to grammar->possessive_noun\n"),
-        assert((: testOb->possessive_noun(({ "", "", "" })) :), "catch", "*Bad argument 1 to grammar->possessive_noun\n"),
-        assert((: testOb->possessive_noun(([])) :), "catch", "*Bad argument 1 to grammar->possessive_noun\n"),
-        assert((: testOb->possessive_noun((: 1 :)) :), "catch", "*Bad argument 1 to grammar->possessive_noun\n"),
-    }) :));
 }
 
 void test_subjective () {

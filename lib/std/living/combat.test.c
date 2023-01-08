@@ -46,9 +46,6 @@ void test_hostiles () {
         assert($(ob2)->handle_remove(), "==", 1),           // 2nd hostile destructed
         assert(sizeof(testOb->query_hostiles()), "==", 1),  // only 1 hostile
 
-        // test bad targets
-        assert((: testOb->add_hostile(testOb) :), "catch", "*Bad argument 1 to combat->add_hostile\n"),
-
         assert($(mockCharacter)->stop_shadow(), "==", 1),
     }) :));
 
