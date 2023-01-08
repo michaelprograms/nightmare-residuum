@@ -309,6 +309,10 @@ string make_path_absolute (string rel_path) {
 // valid_bind
 
 // valid_database
+// actions: connect, exec, fetch, close
+int valid_database (object ob, string action, mixed *info) {
+    return 1;
+}
 
 // valid_hide
 

@@ -127,12 +127,16 @@ void test_security_applies () {
 object basicOb;
 void test_valid_applies () {
     // expect_function("valid_bind", testOb);
-    // expect_function("valid_database", testOb);
+    expect_function("valid_database", testOb);
     // expect_function("valid_hide", testOb);
     // expect_function("valid_link", testOb);
     // expect_function("valid_object", testOb);
 
     expect_function("valid_read", testOb);
+
+    expect("valid_database handles calls", (: ({
+        assert(testOb->valid_database(0, 0, 0), "==", 1),
+    }) :));
 
     expect("valid_read handles calls", (: ({
         assert(file_name(basicOb = new(STD_OBJECT)), "regex", STD_OBJECT[0..<3]+"#[0-9]+"),
