@@ -11,11 +11,11 @@ void create () {
     set_help_similar(({ "fly", "land", "lay", "sit", "stand", }));
 }
 
-mixed can_sit () {
+mixed can_meditate () {
     return 1;
 }
 
-void do_sit () {
+void do_meditate () {
     object po = previous_object();
 
     if (po->query_posture() == "sitting") {
