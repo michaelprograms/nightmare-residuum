@@ -84,14 +84,6 @@ void handle_received (object env) {
     }
 }
 
-/* ----- applies ----- */
-
-void create () {
-    ::create();
-    if (!clonep()) return;
-    set_heart_beat(1);
-}
-
 void handle_receive_living_in_env (object living) {
     if (living->is_character() && __Aggressive > 0 && !query_hostile(living)) {
         if (living->query_stat("charisma") < __Aggressive) {
@@ -103,4 +95,21 @@ void handle_receive_living_in_env (object living) {
             add_hostile(living);
         }
     }
+}
+
+/* ----- applies ----- */
+
+void create () {
+    ::create();
+    if (!clonep()) return;
+    set_heart_beat(1);
+}
+
+void heart_beat () {
+    if (!clonep()) return;
+
+    if (random(2) && member_array(query_posture(), ({ "sitting", "laying" })) > -1 && sizeof(query_present_hostiles())) {
+        this_object()->do_command("stand");
+    }
+    ::heart_beat();
 }
