@@ -14,7 +14,10 @@ protected void handle_combat () {
     if (time() % 2 || !(target = query_target_hostile())) return;
     if (this_object()->query_disable()) return;
 
-    if (this_object()->query_posture() == "sitting" || this_object()->query_posture() == "laying") {
+    if (this_object()->query_posture() == "meditating") {
+        this_object()->set_posture("sitting");
+    }
+    if (member_array(this_object()->query_posture(), ({ "sitting", "laying" })) > -1) {
         message("combat info", "You cannot fight while " + this_object()->query_posture() + " down!", this_object());
         return;
     }
