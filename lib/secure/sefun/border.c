@@ -159,7 +159,8 @@ private string *format_border_item (mapping item, int width, string ansi, string
         if (sizeof(item["header"]) > columnWidth) {
             item["header"] = item["header"][0..columnWidth-1];
         }
-        line = left + "  " + (ansi?"\e[0;37;40;1m":"") + SEFUN->format_page(item["header"], item["columns"], 4, (item["align"] == "center")) + (ansi?"\e[22m":"") + "  " + right;
+        if (ansi) item["header"] = map(item["header"], (: "%^RESET%^BOLD%^UNDERLINE%^"+$1+"%^RESET%^" :));
+        line = left + "  " + SEFUN->format_page(item["header"], item["columns"], 4, (item["align"] == "center")) + "  " + right;
         lines += ({ line });
     }
     // items
