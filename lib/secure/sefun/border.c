@@ -43,6 +43,10 @@ nosave private mapping __BorderCharset = ([
         "tr": "┐",
         "br": "┘",
         "bl": "└",
+        "tlr": "╭",
+        "trr": "╮",
+        "blr": "╰",
+        "brr": "╯",
         // joints
         "t": "┬",
         "b": "┴",
@@ -63,6 +67,10 @@ nosave private mapping __BorderCharset = ([
         "tr": ".",
         "br": "'",
         "bl": "'",
+        "tlr": ".",
+        "trr": ".",
+        "blr": "'",
+        "brr": "'",
         // joints
         "t": "-",
         "b": "-",
@@ -83,6 +91,10 @@ nosave private mapping __BorderCharset = ([
         "tr": " ",
         "br": " ",
         "bl": " ",
+        "tlr": " ",
+        "trr": " ",
+        "blr": " ",
+        "brr": " ",
         // joints
         "t": " ",
         "b": " ",
@@ -173,6 +185,8 @@ string *format_border (mapping data) {
     int fBody = !!(!undefinedp(data["body"]) && data["body"]);
     int fFooter = !!(!undefinedp(data["footer"]) && data["footer"]);
 
+    string radius = "r";
+
     b = query_border_charset();
     width = to_int(SEFUN->query_account_setting("width"));
     screenreader = SEFUN->query_account_setting("screenreader") == "on";
@@ -205,7 +219,7 @@ string *format_border (mapping data) {
     if (fTitle) {
         int n = 0;
         // Title Line 1
-        line = "   " + b["tl"] + sprintf("%'"+b["h"]+"'*s", 2 + strlen(data["title"]) + (fSubtitle ? 2 + fSubtitle : 0), "") + b["tr"];
+        line = "   " + b["tl"+radius] + sprintf("%'"+b["h"]+"'*s", 2 + strlen(data["title"]) + (fSubtitle ? 2 + fSubtitle : 0), "") + b["tr"+radius];
         if (ansi) {
             if (ansi == "256") {
                 line = line[0..2] + SEFUN->apply_gradient(line[3..], colors);
@@ -215,7 +229,7 @@ string *format_border (mapping data) {
         }
         lines += ({ line });
         // Title Line 2
-        line = b["tl"] + (fHeader ? b["t"] : b["h"]) + b["h"];
+        line = b["tl"+radius] + (fHeader ? b["t"] : b["h"]) + b["h"];
         line += b["r"] + " " + data["title"];
         n += 5 + strlen(data["title"]);
         if (fSubtitle) {
@@ -227,7 +241,7 @@ string *format_border (mapping data) {
         line += " " + b["l"] + b["h"];
         n += 3;
         line += sprintf("%'"+b["h"]+"'*s", width-2-n, "");
-        line += (fHeader ? b["t"] : b["h"]) + b["tr"];
+        line += (fHeader ? b["t"] : b["h"]) + b["tr"+radius];
         if (ansi) {
             if (ansi == "256") {
                 line = SEFUN->apply_gradient(line[0..3], colors[0..3]) + "\e[0;37;40;1m" + replace_string(line[4..l], ":", ":\e[22m") + SEFUN->apply_gradient(line[l+1..], colors[l+1..]);
@@ -239,7 +253,7 @@ string *format_border (mapping data) {
 
         // Title Line 3
         line = b["v"] + (fHeader ? b["v"] : " ") + " ";
-        line += b["bl"] + sprintf("%'"+b["h"]+"'*s", 2 + strlen(data["title"]) + (data["subtitle"] ? 2 + fSubtitle : 0), "") + b["br"];
+        line += b["bl"+radius] + sprintf("%'"+b["h"]+"'*s", 2 + strlen(data["title"]) + (data["subtitle"] ? 2 + fSubtitle : 0), "") + b["br"+radius];
         line += sprintf("%*s", width-1-n, "");
         line += (fHeader ? b["v"] : " ") + b["v"];
         if (ansi) {
@@ -260,7 +274,7 @@ string *format_border (mapping data) {
         lines += ({ line });
 
     } else { // no title
-        line = b["tl"] + (fHeader ? b["t"] : b["h"]) + sprintf("%'"+b["h"]+"'*s", width-4, "") + (fHeader ? b["t"] : b["h"]) + b["tr"];
+        line = b["tl"+radius] + (fHeader ? b["t"] : b["h"]) + sprintf("%'"+b["h"]+"'*s", width-4, "") + (fHeader ? b["t"] : b["h"]) + b["tr"+radius];
         if (ansi) {
             if (ansi == "256") {
                 line = SEFUN->apply_gradient(line, colors);
@@ -280,7 +294,7 @@ string *format_border (mapping data) {
             }
         }
         // Header bottom line
-        line = b["v"] + b["bl"] + sprintf("%'"+b["h"]+"'*s", width-4, "") + b["br"] + b["v"];
+        line = b["v"] + b["bl"+radius] + sprintf("%'"+b["h"]+"'*s", width-4, "") + b["br"+radius] + b["v"];
         lines += ({ line });
         headerEnd = sizeof(lines) - 1;
     }
@@ -297,7 +311,7 @@ string *format_border (mapping data) {
 
     if (fFooter) {
         // Footer top line
-        line = b["v"] + b["tl"] + sprintf("%'"+b["h"]+"'*s", width-4, "") + b["tr"] + b["v"];
+        line = b["v"] + b["tl"+radius] + sprintf("%'"+b["h"]+"'*s", width-4, "") + b["tr"+radius] + b["v"];
         lines += ({ line });
         footerLine = sizeof(lines) - 1;
         // Footer Items
@@ -308,10 +322,10 @@ string *format_border (mapping data) {
             lines += format_border_item(data["footer"][i], width, ansi, b["v"]+b["v"], b["v"]+b["v"]);
         }
         // Footer Bottom line
-        line = b["bl"] + b["b"] + sprintf("%'"+b["h"]+"'*s", width-4, "") + b["b"] + b["br"];
+        line = b["bl"+radius] + b["b"] + sprintf("%'"+b["h"]+"'*s", width-4, "") + b["b"] + b["br"+radius];
     } else {
         // Footer Bottom line
-        line = b["bl"] + sprintf("%'"+b["h"]+"'*s", width-2, "") + b["br"];
+        line = b["bl"+radius] + sprintf("%'"+b["h"]+"'*s", width-2, "") + b["br"+radius];
     }
     if (ansi) {
         if (ansi == "256") {
