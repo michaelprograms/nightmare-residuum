@@ -41,7 +41,7 @@ void command (string input, mapping flags) {
     }
     foreach (string type in keys(actions)) {
         mapping b = ([
-            "header": capitalize(type),
+            "header": ({ capitalize(type) }),
             "columns": 4,
             "items": ({ }),
         ]);
