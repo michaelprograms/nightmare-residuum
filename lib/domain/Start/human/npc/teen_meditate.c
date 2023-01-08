@@ -16,4 +16,5 @@ void create () {
     set_ability_chance(25);
 
     add_currency("copper", 1 + random(10));
+    this_object()->set_posture("meditating");
 }
