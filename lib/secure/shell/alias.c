@@ -2,8 +2,8 @@
 
 inherit "/std/class/shell_alias.c";
 
-private mapping __Aliases = ([]);
-private string *__XAliases = ({});
+private mapping __Aliases = ([ ]);
+private string *__XAliases = ({ });
 
 nomask string *query_alias_names () {
     return keys(__Aliases);
