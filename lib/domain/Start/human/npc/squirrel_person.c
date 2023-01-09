@@ -74,6 +74,7 @@ void do_adopt_str (mixed args...) {
     pet->set_name(possessive_noun(po->query_cap_name())+" squirrel");
     pet->set_short(pet->query_cap_name());
     pet->set_long("A squirrel tamed by the Squirrel Person, "+subjective(pet->query_gender())+" is very friendly.");
+    pet->set_following(1);
     pet->save_data();
 
     do_command("say You want to take a squirrel? Here you go... I expect you to take good care of "+objective(pet->query_gender())+"!");
