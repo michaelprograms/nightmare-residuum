@@ -35,10 +35,15 @@ int query_following () {
 void heart_beat () {
     ::heart_beat();
 
-    if (__Owner && __Following && environment() != environment(__Owner)) {
-        message("action", query_cap_name() + " leaves to follow " + __Owner->query_cap_name() + ".", environment(), this_object());
-        this_object()->handle_move(environment(__Owner));
-        message("action", query_cap_name() + " arrives to follow you.", __Owner);
-        message("action", query_cap_name() + " arrives to follow " + __Owner->query_cap_name() + ".", environment(), ({ this_object(), __Owner }));
+    if (__Owner) {
+        if (__Following && environment() != environment(__Owner)) {
+            message("action", query_cap_name() + " leaves to follow " + __Owner->query_cap_name() + ".", environment(), this_object());
+            this_object()->handle_move(environment(__Owner));
+            message("action", query_cap_name() + " arrives to follow you.", __Owner);
+            message("action", query_cap_name() + " arrives to follow " + __Owner->query_cap_name() + ".", environment(), ({ this_object(), __Owner }));
+        }
+        if (sizeof(__Owner->query_present_hostiles()) && !sizeof(query_present_hostiles())) {
+            do_command("aid " + __Owner->query_key_name());
+        }
     }
 }
