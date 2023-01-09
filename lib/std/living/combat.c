@@ -156,6 +156,9 @@ object query_target_hostile () {
 /* ----- parser applies ----- */
 
 mixed direct_attack_liv (mixed args...) {
-    object ob = previous_object();
-    return environment() == environment(ob) && ob != this_object() && !query_hostile(ob);
+    object po = previous_object();
+    return environment() == environment(po) && po != this_object() && !query_hostile(po);
+}
+mixed direct_aid_liv (mixed args...) {
+    return direct_attack_liv(args);
 }
