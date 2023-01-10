@@ -12,7 +12,7 @@ nosave private int __NumTargets;
 
 void set_ability_requirements (mapping reqs) {
     /* Data format:
-    "anyone|class|species": ([
+    "anyone|class|species|NPC": ([
         "level" : 1,
         "skills" : ([ "brawl attack": 1, ]),
         "stats" : ([ "strength": 1, ]),
@@ -24,13 +24,18 @@ int verify_ability_requirements (object source) {
     if (!source || !source->is_living()) return 0;
 
     if (source->query_immortal()) return 1;
-    // if (source->is_monster() || source->is_npc()) return 1;
 
     // no requirements exist
     if (!sizeof(__Reqs)) return 1;
 
     foreach (string key,mapping value in __Reqs) {
-        if (source->query_class() != key && source->query_species() != key && key != "anyone") continue;
+        if (key == "NPC") {
+            if (!source->is_npc()) {
+                continue;
+            }
+        } else if (source->query_class() != key && source->query_species() != key && key != "anyone") {
+            continue;
+        }
         if (intp(value["level"])) {
             if (source->query_level() < value["level"]) return 0;
         }
