@@ -73,13 +73,13 @@ void do_adopt_str (mixed args...) {
     pet->set_adjective(({ "tame" }));
     pet->set_name(possessive_noun(po->query_cap_name())+" squirrel");
     pet->set_short(pet->query_cap_name());
-    pet->set_long("A squirrel tamed by the Squirrel Person, "+subjective(pet->query_gender())+" is very friendly.");
+    pet->set_long("A squirrel tamed by the Squirrel Person, "+subjective(pet)+" is very friendly.");
     pet->set_following(1);
     pet->set_ability_list(({ "bite", "scratch", }));
     pet->set_ability_chance(25);
     pet->save_data();
 
-    do_command("say You want to take a squirrel? Here you go... I expect you to take good care of "+objective(pet->query_gender())+"!");
+    do_command("say You want to take a squirrel? Here you go... I expect you to take good care of "+objective(pet)+"!");
     message("action", "A squirrel walks over to your side.", po);
     message("action", "A squirrel walks over to "+possessive_noun(po->query_cap_name())+" side.", environment(po), po);
     pet->handle_move(environment(po));
@@ -121,7 +121,7 @@ void do_recall_str (mixed args...) {
     pet->set_adjective(({ "tame" }));
     pet->set_name(possessive_noun(po->query_cap_name())+" squirrel");
     pet->set_short(pet->query_cap_name());
-    pet->set_long("A squirrel tamed by the Squirrel Person, "+subjective(pet->query_gender())+" is very friendly.");
+    pet->set_long("A squirrel tamed by the Squirrel Person, "+subjective(pet)+" is very friendly.");
     pet->set_ability_list(({ "bite", "scratch", }));
     pet->set_ability_chance(25);
     pet->restore_data();
