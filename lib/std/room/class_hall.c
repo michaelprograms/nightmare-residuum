@@ -1,6 +1,5 @@
 inherit STD_ROOM;
 inherit M_ADVANCE;
-inherit M_TRAIN;
 
 nosave private string __Class;
 

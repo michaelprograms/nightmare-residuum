@@ -1,7 +1,5 @@
 #include "human.h"
 
-inherit M_TRAIN;
-
 inherit STD_ROOM;
 
 void create () {
