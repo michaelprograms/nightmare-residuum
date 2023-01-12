@@ -7,6 +7,9 @@ void before_each_test () {
 void after_each_test () {
     if (objectp(testOb)) destruct(testOb);
 }
+string *test_ignore () {
+    return ::test_ignore() + ({ "handle_remove" });
+}
 
 nosave private object db;
 void test_connect () {
@@ -20,7 +23,8 @@ void test_connect () {
         db = testOb->connect(([ "db": "/save/test/database.db", ])),
         assert(objectp(db), "==", 1),
         assert(testOb->query_handle(), ">", 0),
-
+    }) :));
+    expect("handle is queryable", (: ({
         // query non-existant
         assert(db->query("SELECT * FROM `Test`"), "==", UNDEFINED),
 
@@ -45,8 +49,10 @@ void test_connect () {
 
         // drop table
         assert(db->query("DROP TABLE `Test`"), "==", UNDEFINED),
-
+    }) :));
+    expect("close stops a handle", (: ({
         // close
         assert(testOb->close(), "==", 1),
+        assert(testOb->query_handle(), "==", 0),
     }) :));
 }
