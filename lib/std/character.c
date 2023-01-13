@@ -137,24 +137,26 @@ varargs void enter_world (int override) {
         if (err) {
             handle_move("/domain/Nowhere/room/void.c");
         }
+        D_LOG->log("character/enter", ctime() + " " + query_name() + " enters from " + query_ip_number());
         D_CHANNEL->send_system("connection", query_cap_name() + " enters " + mud_name() + ".");
-        master()->handle_parse_refresh();
         message("action", query_cap_name() + " suddenly appears into existence.", environment(), this_object());
+        master()->handle_parse_refresh();
     }
     describe_environment();
     set_heart_beat(1);
 }
 
 void exit_world () {
+    D_LOG->log("character/enter", ctime() + " " + query_name() + " exits from " + query_ip_number());
     message("action", query_cap_name() + " suddenly fades from existence.", environment(), this_object());
     D_CHANNEL->send_system("connection", query_cap_name() + " exits " + mud_name() + ".");
-
     save_character(1);
     handle_remove();
     master()->handle_parse_refresh();
 }
 
 void enter_freezer () {
+    D_LOG->log("character/enter", ctime() + " " + query_name() + " disconnects from " + query_ip_number());
     message("action", query_cap_name()+" suddenly fades from existence.", environment(), this_object());
     handle_move("/domain/Nowhere/room/freezer.c");
     D_CHANNEL->send_system("connection", query_cap_name() + " disconnects from " + mud_name() + ".");
@@ -162,6 +164,7 @@ void enter_freezer () {
 }
 
 void exit_freezer () {
+    D_LOG->log("character/enter", ctime() + " " + query_name() + " reconnects from " + query_ip_number());
     handle_move(query_environment_path());
     D_CHANNEL->send_system("connection", query_cap_name() + " reconnects to " + mud_name() + ".");
     message("action", query_cap_name()+" suddenly appears into existence.", environment(), this_object());
