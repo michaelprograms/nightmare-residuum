@@ -21,5 +21,4 @@ int can_receive (object ob) {
 void create () {
     advance::create();
     room::create();
-    train::create();
 }
