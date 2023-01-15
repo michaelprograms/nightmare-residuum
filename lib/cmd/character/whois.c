@@ -21,7 +21,7 @@ void command (string input, mapping flags) {
     }
 
     border(([
-        "title": "SCORE",
+        "title": "WHOIS",
         "subtitle": char->query_cap_name(),
         "header": ([
             "items": ({
