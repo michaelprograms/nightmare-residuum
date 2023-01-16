@@ -159,7 +159,7 @@ varargs int handle_damage (int damage, string limb, object source) {
         limbDamagePct = __Limbs[limb]["damage"]*100/__Limbs[limb]["maxdamage"];
 
         if (limbDamagePct >= 100) {
-            call_out((: handle_limb_sever($(limb)) :), 0);
+            handle_limb_sever(limb);
         } else if (limbDamagePct >= 75) {
             message("combat alert", "Your "+limb+" is badly damaged!", this_object());
         } else if (limbDamagePct >= 50) {
