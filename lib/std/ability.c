@@ -357,6 +357,21 @@ void ability_message_success (object source, object target, string limb) {
     }
 }
 
+void ability_debug_message (object source, object target, int damage) {
+    string phrase;
+    if (__Type == "attack") {
+        phrase = "%^ORANGE%^Damage:%^RESET%^";
+    } else if (__Type == "heal") {
+        phrase = "%^CYAN%^Heal:%^RESET%^";
+    }
+    if (source && (source->query_immortal() || source->query_property("debug"))) {
+        message("action", phrase + " " + damage, source);
+    }
+    if (target && (target->query_immortal() || target->query_property("debug"))) {
+        message("action", phrase + " " + damage, target);
+    }
+}
+
 /* ----- use ability ----- */
 
 private void handle_ability_use (object source, object *targets) {
@@ -457,12 +472,7 @@ private void handle_ability_use (object source, object *targets) {
                     if (target) target->train_skill(key + " defense", 1.0 + value / 100.0);
                 }
 
-                if (source->query_immortal() || source->query_property("debug")) {
-                    message("action", "%^ORANGE%^Damage:%^RESET%^ " + damage, source);
-                }
-                if (target && (target->query_immortal() || target->query_property("debug"))) {
-                    message("action", "%^ORANGE%^Damage:%^RESET%^ " + damage, target);
-                }
+                ability_debug_message(source, target, damage);
             } else if (__Type == "heal") {
                 // determine heal
                 damage = calculate_heal(source, target, limb);
@@ -474,17 +484,7 @@ private void handle_ability_use (object source, object *targets) {
                 foreach (string key,int value in __SkillPowers) {
                     source->train_skill(key, 1.0 + value / 100.0);
                 }
-
-                if (source->query_immortal() || source->query_property("debug")) {
-                    message("action", "%^CYAN%^Heal:%^RESET%^ " + damage, source);
-                }
-                if (target && (target->query_immortal() || target->query_property("debug")) && target != source) {
-                    message("action", "%^CYAN%^Heal:%^RESET%^ " + damage, target);
-                }
-
-                foreach (string key,int value in __SkillPowers) {
-                    source->train_skill(key, 1.0 + value / 100.0);
-                }
+                ability_debug_message(source, target, damage);
             } else if (__Type == "utility") {
                 this_object()->handle_utility(source, target, limb);
 
