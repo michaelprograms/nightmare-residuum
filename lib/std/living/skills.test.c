@@ -12,7 +12,7 @@ void test_query_all_skills () {
     expect_function("query_all_skills", testOb);
 
     expect("query_all_skills should return skills", (: ({
-        assert(sizeof(testOb->query_all_skills()), "==", 12),
+        assert(sizeof(testOb->query_all_skills()), "==", 13),
     }) :));
 }
 

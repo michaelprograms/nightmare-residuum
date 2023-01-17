@@ -16,6 +16,7 @@ private mapping query_default_skills () {
         "ranged defense": ([ "level": 0, "points": 0, ]),
         "medicine": ([ "level": 0, "points": 0, ]),
         "theurgy": ([ "level": 0, "points": 0, ]),
+        "anatomy": ([ "level": 0, "points": 0, ]),
     ]);
 }
 
