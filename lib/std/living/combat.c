@@ -111,7 +111,19 @@ private void handle_combat_hit (object target, mixed weapon) {
 }
 
 varargs void check_lifesigns (object source) {
+    int dead = 0;
+
     if (query_hp() < 1) {
+        dead = 1;
+    }
+    if (!dead) {
+        foreach (string limb in this_object()->query_severed_limbs()) {
+            if (this_object()->query_limb(limb)["type"] == "FATAL") {
+                dead = 1;
+            }
+        }
+    }
+    if (dead) {
         message("system", "\nYou have been %^BOLD%^RED%^defeated%^RESET%^!\n\n", this_object());
         message("system", "\n" + this_object()->query_cap_name() + " has been %^BOLD%^RED%^defeated%^RESET%^!\n\n", environment(), this_object());
         if (source) source->handle_victory(this_object());

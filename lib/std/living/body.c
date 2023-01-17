@@ -116,9 +116,6 @@ void handle_limb_sever (string limb) {
         }
     }
 
-    // deal half limb damage as HP damage
-    this_object()->handle_damage(max(({ __Limbs[limb]["damage"], __Limbs[limb]["maxdamage"] }))/2, 0);
-
     // mark limb as severed
     __Limbs[limb]["status"] = "severed";
     __Limbs[limb]["damage"] = -1;
@@ -128,6 +125,8 @@ void handle_limb_sever (string limb) {
     limbOb->setup_bodypart(this_object()->query_cap_name(), limb);
     limbOb->handle_move(environment());
 
+    // deal half limb damage as HP damage
+    this_object()->handle_damage(max(({ __Limbs[limb]["damage"], __Limbs[limb]["maxdamage"] }))/2, 0);
     if (__Limbs[limb]["attach"] && __Limbs[limb]["attach"] != limb) {
         handle_limb_sever(__Limbs[limb]["attach"]);
     }
@@ -145,6 +144,10 @@ void handle_limb_restore (string limb) {
 
 varargs int handle_damage (int damage, string limb, object source) {
     int beforeHp = query_hp();
+
+    if (!this_object()) {
+        return 0;
+    }
 
     add_hp(-damage);
     if (query_max_hp() < query_hp()) set_hp(query_max_hp());
@@ -165,6 +168,10 @@ varargs int handle_damage (int damage, string limb, object source) {
         } else if (limbDamagePct >= 50) {
             message("combat alert", "Your "+limb+" is injured!", this_object());
         }
+    }
+
+    if (!this_object()) {
+        return 0;
     }
 
     if (this_object()->is_character()) {
