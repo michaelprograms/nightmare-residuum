@@ -151,7 +151,41 @@ mapping query_cost () {
     return cost;
 }
 
-/* ----- damage ----- */
+/* ----- calculations ----- */
+
+int calculate_heal (object source, object target, string limb) {
+    int damage;
+    int sourceStat, targetStat;
+    int n;
+
+    // base heal
+    damage = random(5 + source->query_level());
+    damage += random(source->query_stat("luck") * 5 / 100 + 1);
+
+    // skill powers
+    foreach (string key,int value in __SkillPowers) {
+        switch (key) {
+            case "anatomy":
+                n = 3;
+                break;
+            case "theurgy":
+                n = 1;
+                break;
+            case "medicine": default:
+                n = 2;
+                break;
+            break;
+        }
+        damage += source->query_skill(key) * n / 4 + random(source->query_skill(key) * (4-n) / 4);
+        sourceStat = source->query_stat("intelligence");
+        damage += (sourceStat * 50 / 100) + random(sourceStat * 50 / 100 + 1);
+    }
+
+    targetStat = target->query_stat("charisma");
+    damage += ((targetStat * 10 / 100) + random(targetStat * 10 / 100 + 1));
+
+    return damage;
+}
 
 int calculate_damage (object source, object target, string limb) {
     int damage;
@@ -178,7 +212,9 @@ int calculate_damage (object source, object target, string limb) {
                 spRatio ++;
                 break;
         }
+        // stat damage
         damage += (sourceStat * 50 / 100) + random(sourceStat * 50 / 100 + 1);
+        // vitals damage
         if (spRatio) {
             damage += random(to_int(source->query_sp() * 5.0 * spRatio / (spRatio + mpRatio)));
         }
@@ -186,6 +222,7 @@ int calculate_damage (object source, object target, string limb) {
             damage += random(to_int(source->query_mp() * 5.0 * mpRatio / (spRatio + mpRatio)));
         }
 
+        // skill damage & mitigations
         sourceSkill = source->query_skill(key + " attack");
         targetSkill = target->query_skill(key + " defense");
         damage += (sourceSkill * value / 100) + random(sourceSkill * value / 100 + 1);
@@ -427,7 +464,23 @@ private void handle_ability_use (object source, object *targets) {
                     message("action", "%^ORANGE%^Damage:%^RESET%^ " + damage, target);
                 }
             } else if (__Type == "heal") {
-                this_object()->handle_heal(source, target, limb);
+                // determine heal
+                damage = calculate_heal(source, target, limb);
+                display_heal_message(source, target, limb, damage);
+                // @TODO determine hp/sp/mp
+                target->add_hp(damage);
+
+                // train relevant skills
+                foreach (string key,int value in __SkillPowers) {
+                    source->train_skill(key, 1.0 + value / 100.0);
+                }
+
+                if (source->query_immortal() || source->query_property("debug")) {
+                    message("action", "%^CYAN%^Heal:%^RESET%^ " + damage, source);
+                }
+                if (target && (target->query_immortal() || target->query_property("debug")) && target != source) {
+                    message("action", "%^CYAN%^Heal:%^RESET%^ " + damage, target);
+                }
 
                 foreach (string key,int value in __SkillPowers) {
                     source->train_skill(key, 1.0 + value / 100.0);
