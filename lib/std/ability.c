@@ -56,13 +56,13 @@ int verify_ability_requirements (object source) {
 
 /* ----- ability type ----- */
 
-void set_ability_type (string type) {
+void set_type (string type) {
     if (member_array(type, ({ "attack", "heal", "utility", })) == -1) {
-        error("Bad argument 1 to ability->set_ability_type");
+        error("Bad argument 1 to ability->set_type");
     }
     __Type = type;
 }
-string query_ability_type () {
+string query_type () {
     return __Type;
 }
 

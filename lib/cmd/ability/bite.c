@@ -4,7 +4,7 @@ inherit STD_ABILITY;
 
 void create () {
     ::create();
-    set_ability_type("attack");
+    set_type("attack");
     set_ability_requirements(([
         "NPC": ([
             "level": 1,
