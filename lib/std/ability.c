@@ -181,8 +181,8 @@ int calculate_damage (object source, object target, string limb) {
 
         sourceSkill = source->query_skill(key + " attack");
         targetSkill = target->query_skill(key + " defense");
-        damage += (sourceSkill * 20 / 100) + random(sourceSkill * 80 / 100 + 1);
-        damage -= (targetSkill * 20 / 100) + random(targetSkill * 80 / 100 + 1);
+        damage += (sourceSkill * value / 100) + random(sourceSkill * value / 100 + 1);
+        damage -= (targetSkill * value / 100) + random(targetSkill * value / 100 + 1);
     }
 
     // apply target mitigations
