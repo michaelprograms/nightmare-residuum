@@ -528,7 +528,6 @@ void do_verb_lvs (mixed args...) {
         handle_ability_use(previous_object(), ({ targets[0] }));
         return;
     }
-    message("action", "do_verb_lvs: "+identify(args), previous_object());
     if (__NumTargets > 1) {
         handle_ability_use(previous_object(), targets[0..__NumTargets-1]);
     }
