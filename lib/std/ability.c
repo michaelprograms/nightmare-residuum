@@ -157,6 +157,7 @@ int calculate_damage (object source, object target, string limb) {
     int damage;
     int sourceStat, targetStat;
     int sourceSkill, targetSkill;
+    int spRatio, mpRatio;
 
     // base damage
     damage = random(5 + source->query_level());
@@ -166,18 +167,24 @@ int calculate_damage (object source, object target, string limb) {
         switch (key) {
             case "psionic":
                 sourceStat = source->query_stat("intelligence");
-                damage += random(source->query_mp() * 5 / 100 + 1);
+                mpRatio ++;
                 break;
             case "ranged":
                 sourceStat = source->query_stat("agility");
-                damage += random(source->query_sp() * 5 / 100 + 1);
+                spRatio ++;
                 break;
             case "brawl": default:
                 sourceStat = source->query_stat("strength");
-                damage += random(source->query_sp() * 5 / 100 + 1);
+                spRatio ++;
                 break;
         }
         damage += (sourceStat * 50 / 100) + random(sourceStat * 50 / 100 + 1);
+        if (spRatio) {
+            damage += random(to_int(source->query_sp() * 5.0 * spRatio / (spRatio + mpRatio)));
+        }
+        if (mpRatio) {
+            damage += random(to_int(source->query_mp() * 5.0 * mpRatio / (spRatio + mpRatio)));
+        }
 
         sourceSkill = source->query_skill(key + " attack");
         targetSkill = target->query_skill(key + " defense");
