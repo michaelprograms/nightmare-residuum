@@ -39,7 +39,7 @@ nosave private mapping __Bodies = ([
         "right claw": ([ "type": "WIELD", "percent": 20 ]),
         "tail": ([ "percent": 25 ]),
     ]),
-    "gastopod": ([
+    "gastropod": ([
         "head": ([ "type": "FATAL", "percent": 25 ]),
         "left eye stalk": ([ "percent": 20 ]),
         "right eye stalk": ([ "percent": 20 ]),
@@ -49,7 +49,7 @@ nosave private mapping __Bodies = ([
         "foot": ([ "percent": 25 ]),
         "mantle": ([ "percent": 50 ]),
     ]),
-    "gastopod": ([
+    "gastropod-shelled": ([
         "head": ([ "type": "FATAL", "percent": 25 ]),
         "left eye stalk": ([ "percent": 20 ]),
         "right eye stalk": ([ "percent": 20 ]),
@@ -164,8 +164,8 @@ nosave private mapping __Species = ([
     "hamster":      ([ "body": "quadruped" ]),
     "pigeon":       ([ "body": "fowl" ]),
     "rat":          ([ "body": "quadruped-tail" ]),
-    "slug":         ([ "body": "gastopod" ]),
-    "snail":        ([ "body": "gastopod-shelled" ]),
+    "slug":         ([ "body": "gastropod" ]),
+    "snail":        ([ "body": "gastropod-shelled" ]),
     "squirrel":     ([ "body": "quadruped-tail" ]),
     "synthetic":    ([ "body": "quadruped-robot" ]),
     "termite":      ([ "body": "hexapod" ]),
