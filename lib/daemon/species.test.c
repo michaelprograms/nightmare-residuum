@@ -8,15 +8,15 @@ void after_each_test () {
     if (objectp(testOb)) destruct(testOb);
 }
 
-void test_species_bodytypes () {
-    expect_function("query_bodytypes", testOb);
+void test_species_bodies () {
+    expect_function("query_bodies", testOb);
     expect_function("query_species", testOb);
 
-    expect("bodytypes exist", (: ({
-        assert(mapp(testOb->query_bodytypes()), "==", 1),
-        assert(sizeof(testOb->query_bodytypes()), ">", 0),
+    expect("bodies exist", (: ({
+        assert(mapp(testOb->query_bodies()), "==", 1),
+        assert(sizeof(testOb->query_bodies()), ">", 0),
         // verify common bodytype
-        assert(mapp(testOb->query_bodytypes()["quadruped"]), "==", 1),
+        assert(mapp(testOb->query_bodies()["quadruped"]), "==", 1),
     }) :));
 
     expect("species exist", (: ({
@@ -41,7 +41,7 @@ void test_setup_body () {
         limbs[limb] = ob->query_limb(limb);
     }
 
-    expect("species bodytypes exist", (: ({
+    expect("species bodies exist", (: ({
         // verify limbs exist
         assert(sizeof(keys($(limbs))), ">", 0),
         // compare body to limbs
@@ -68,7 +68,6 @@ void test_setup_stats () {
 
     expect_function("setup_stats", testOb);
 
-    //
     ob = new(STD_LIVING);
     ob->set_species("human");
     expect("stats are setup", (: ({

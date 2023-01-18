@@ -16,8 +16,8 @@ void command (string input, mapping flags) {
                 ])
             });
         }
-        if (member_array(input, keys(D_SPECIES->query_bodytypes())) > -1) {
-            mapping m = D_SPECIES->query_bodytypes()[input];
+        if (member_array(input, keys(D_SPECIES->query_bodies())) > -1) {
+            mapping m = D_SPECIES->query_bodies()[input];
             string *limbs = keys(m);
             subtitle = input + " bodytype";
 
@@ -39,7 +39,7 @@ void command (string input, mapping flags) {
         items += ({
             ([
                 "header": ({ "Bodytypes" }),
-                "items": keys(D_SPECIES->query_bodytypes()),
+                "items": keys(D_SPECIES->query_bodies()),
                 "columns": 3,
             ])
         });
