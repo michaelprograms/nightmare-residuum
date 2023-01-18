@@ -36,7 +36,7 @@ protected void handle_combat () {
             "flops about helplessly",
             "tries to look menacing",
             "uselessly flops around",
-        })) + ".\n", environment(), this_object());
+        })) + ".", environment(), this_object());
     }
     for (int h = 0; h < hits; h ++) {
         if (!target) break;
@@ -124,8 +124,8 @@ varargs void check_lifesigns (object source) {
         }
     }
     if (dead) {
-        message("system", "\nYou have been %^BOLD%^RED%^defeated%^RESET%^!\n\n", this_object());
-        message("system", "\n" + this_object()->query_cap_name() + " has been %^BOLD%^RED%^defeated%^RESET%^!\n\n", environment(), this_object());
+        message("defeat", "\nYou have been %^BOLD%^RED%^defeated%^RESET%^!\n", this_object());
+        message("defeat", "\n" + this_object()->query_cap_name() + " has been %^BOLD%^RED%^defeated%^RESET%^!\n", environment(), this_object());
         if (source) source->handle_victory(this_object());
         handle_defeat(source);
     }
