@@ -1,6 +1,6 @@
 string identify (mixed args...) {
     mixed a;
-    int i, s;
+    int i, l;
     string ret;
     mapping RealMap;
 
@@ -32,12 +32,12 @@ string identify (mixed args...) {
         ret = "([ ";
         RealMap = a;
         a = sort_array(keys(RealMap), 1);
-        s = sizeof(a);
-        for (i = 0 ; i < s ; i ++) {
+        l = sizeof(a);
+        for (i = 0 ; i < l ; i ++) {
             if (i) ret += ", ";
             ret += identify(a[i]) + ": " + identify(RealMap[a[i]]);
         }
-        return ret + (s ? " " : "") + "])";
+        return ret + (l ? " " : "") + "])";
     }
     if (functionp(a)) {
         return sprintf("%O", a);
@@ -47,13 +47,24 @@ string identify (mixed args...) {
     }
     if (arrayp(a)) {
         ret = "({ ";
-        s = sizeof(a);
-        for (i = 0; i < s; i ++) {
+        l = sizeof(a);
+        for (i = 0; i < l; i ++) {
             if (i) ret += ", ";
             ret += identify(a[i]);
         }
-        return ret + (s ? " " : "") + "})";
+        return ret + (l ? " " : "") + "})";
     }
+    if (bufferp(a)) {
+        l = sizeof(a);
+        ret = "BUFFER (";
+        for (i = 0; i < l; i ++) {
+            ret += "0x" + sprintf("%X", a[i]);
+            if (i < l-1) ret += ", ";
+        }
+        ret += ")";
+        return ret;
+    }
+    // UNKNOWN should never be returned
     return "UNKNOWN";
 }
 

@@ -103,6 +103,10 @@ void test_identify () {
     expect("identify handles array", (: ({
         assert(testOb->identify(({ 1, 2, 3})), "==", "({ 1, 2, 3 })"),
     }) :));
+
+    expect("identify handles buffer", (: ({
+        assert(testOb->identify(read_buffer("/secure/sefun/string.test.c", 0, 8)), "==", "BUFFER (0x69, 0x6E, 0x68, 0x65, 0x72, 0x69, 0x74, 0x20)"),
+    }) :));
 }
 
 void test_wrap () {
