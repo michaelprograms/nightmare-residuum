@@ -378,7 +378,7 @@ void ability_debug_message (object source, object target, int damage) {
     if (source && (source->query_immortal() || source->query_property("debug"))) {
         message("action", phrase + " " + damage, source);
     }
-    if (target && (target->query_immortal() || target->query_property("debug"))) {
+    if (target && target != source && (target->query_immortal() || target->query_property("debug"))) {
         message("action", phrase + " " + damage, target);
     }
 }
