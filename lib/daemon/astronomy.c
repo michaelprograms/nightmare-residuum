@@ -238,7 +238,7 @@ private void process (int t, string key, mapping a) {
                 message("astronomy", "%^YELLOW%^The sun now shines on a new day.%^RESET%^", characters);
             } else if (dayPhase == "day") {
                 dayPhase = "dusk";
-                message("astronomy", "%^BOLD%^CYAN%^The sun begins to fall away into twilight.%^RESET%^", characters);
+                message("astronomy", "%^BOLD%^CYAN%^The sun falls away into twilight.%^RESET%^", characters);
             } else if (dayPhase == "dusk") {
                 dayPhase = "night";
                 message("astronomy", "%^BOLD%^BLUE%^The sun disappears below the horizon.%^RESET%^", characters);
