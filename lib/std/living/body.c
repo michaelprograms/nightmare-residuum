@@ -140,6 +140,16 @@ void handle_limb_restore (string limb) {
     __Limbs[limb]["damage"] = 0;
 }
 
+void handle_limb_heal (string limb, int n) {
+    if (__Limbs[limb]["status"] == "severed") {
+        return;
+    }
+    __Limbs[limb]["damage"] -= n;
+    if (__Limbs[limb]["damage"] < 0) {
+        __Limbs[limb]["damage"] = 0;
+    }
+}
+
 /* ----- damage ----- */
 
 varargs int handle_damage (int damage, string limb, object source) {
