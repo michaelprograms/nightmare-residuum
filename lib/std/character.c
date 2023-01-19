@@ -240,7 +240,7 @@ private void describe_environment_exits () {
     if (!(numExits = sizeof(exits = environment()->query_exit_dirs()))) {
         message("room exits", "There are no exits.\n", this_object());
     } else {
-        exits = map_array(exits, (: "%^CYAN%^BOLD%^" + $1 + "%^BOLD_OFF%^DEFAULT%^" :));
+        exits = map(exits, (: "%^CYAN%^BOLD%^" + $1 + "%^BOLD_OFF%^DEFAULT%^" :));
         message("room exits", "\nThere " + (numExits > 1 ? "are" : "is") + " " + cardinal(numExits) + " exit" + (numExits > 1 ? "s" : "") + ": " + conjunction(exits) + ".\n", this_object());
     }
 }
@@ -277,12 +277,12 @@ private void describe_environment_living_contents () {
     });
     list = unique_array(list, (: describe_living_item :));
     if (sizeof(list)) {
-        shorts = map_array(list, function (object *obs) {
+        shorts = map(list, function (object *obs) {
             return consolidate(sizeof(obs), describe_living_item(obs[0]));
         });
-        shorts = map_array(shorts, (: $1 :));
+        shorts = map(shorts, (: $1 :));
         shorts[0] = capitalize(shorts[0]);
-        shorts = map_array(shorts, (: "%^BOLD%^" + $1 + "%^BOLD_OFF%^DEFAULT%^" :));
+        shorts = map(shorts, (: "%^BOLD%^" + $1 + "%^BOLD_OFF%^DEFAULT%^" :));
         message("room living contents", conjunction(shorts) + " " + (sizeof(contents) > 1 ? "are" : "is") + " here.\n", this_object());
     }
 }
@@ -294,9 +294,9 @@ private void describe_environment_item_contents () {
 
     list = unique_array(contents, (: $1->query_short("%^MAGENTA%^BOLD%^") :));
     if (sizeof(list)) {
-        shorts = sort_array(map_array(list, (: consolidate(sizeof($1), $1[0]->query_short("%^MAGENTA%^BOLD%^")) :)), 1);
+        shorts = sort_array(map(list, (: consolidate(sizeof($1), $1[0]->query_short("%^MAGENTA%^BOLD%^")) :)), 1);
         shorts[0] = capitalize(shorts[0]);
-        shorts = map_array(shorts, (: "%^BOLD%^" + $1 + "%^BOLD_OFF%^DEFAULT%^" :));
+        shorts = map(shorts, (: "%^BOLD%^" + $1 + "%^BOLD_OFF%^DEFAULT%^" :));
         message("room item contents", conjunction(shorts) + " " + (sizeof(contents) > 1 ? "are" : "is") + " here.", this_object());
     }
 }
