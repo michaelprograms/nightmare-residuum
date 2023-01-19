@@ -295,20 +295,31 @@ int is_ability_successful (object source, object target) {
 
 /* ----- messages ----- */
 
-void ability_message_attempt (object source, object target, string limb) {
+void ability_message_attempt (object source, object *targets) {
+    string names;
+    int n;
+
+    // move source to end of list
+    if ((n = member_array(source, targets)) > -1) {
+        targets -= ({ source });
+        targets += ({ source });
+    }
+
+    names = conjunction(map(targets, (: $1 == $(source) ? "yourself" : $1->query_cap_name() :)));
+
     if (__Type == "attack") {
-        message("action", "You attempt to " + query_name() + " " + target->query_cap_name() + "!", source);
-        message("action", source->query_cap_name() + " attempts to " + query_name() + " you!", target);
-        message("action", source->query_cap_name() + " attempts to " + query_name() + " " + target->query_cap_name() + "!", environment(source), ({ source, target }));
+        message("action", "You attempt to " + query_name() + " " + names + "!", source);
+        message("action", source->query_cap_name() + " attempts to " + query_name() + " you!", targets);
     } else if (__Type == "heal" || __Type == "utility") {
-        if (source == target) {
-            message("action", "You attempt to " + query_name() + " towards yourself.", source);
-            message("action", source->query_cap_name() + " attempts to " + query_name() + " towards " + reflexive(source) + ".", environment(source), ({ source }));
-        } else {
-            message("action", "You attempt to " + query_name() + " towards " + target->query_cap_name() + ".", source);
-            message("action", source->query_cap_name() + " attempts to " + query_name() + " towards you.", target);
-            message("action", source->query_cap_name() + " attempts to " + query_name() + " towards " + target->query_cap_name() + ".", environment(source), ({ source, target }));
-        }
+        message("action", "You attempt to " + query_name() + " towards " + names + ".", source);
+        message("action", source->query_cap_name() + " attempts to " + query_name() + " towards you.", targets - ({ source }));
+    }
+
+    names = conjunction(map(targets, (: $1 == $(source) ? reflexive($(source)) : $1->query_cap_name() :)));
+    if (__Type == "attack") {
+        message("action", source->query_cap_name() + " attempts to " + query_name() + " " + names + "!", environment(source), ({ source, targets... }));
+    } else if (__Type == "heal" || __Type == "utility") {
+        message("action", source->query_cap_name() + " attempts to " + query_name() + " towards " + names + ".", environment(source), ({ source }));
     }
 }
 
@@ -449,14 +460,16 @@ private void handle_ability_use (object source, object *targets) {
     // @TODO re-enable this when determing busy vs disable
     // source->set_disable(2);
 
+    // send attempt messages
+    this_object()->ability_message_attempt(source, targets);
+
     foreach (object target in targets) {
         if (__Type == "attack") {
             source->add_hostile(target);
             target->add_hostile(source);
         }
         limb = target->query_random_limb();
-        // send attempt and success or fail messages
-        this_object()->ability_message_attempt(source, target, limb);
+        // send success or fail messages
         if (is_ability_successful(source, target)) {
             this_object()->ability_message_success(source, target, limb);
 
