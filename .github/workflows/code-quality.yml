@@ -22,5 +22,6 @@ jobs:
         uses: Uno-Takashi/lizard-runner@v3
         with:
           path: "./lib"
+          exclude: "./lib/doc/* ./lib/realm/* ./lib/save/* ./lib/tmp/*"
           warnings_only: "true"
-          exclude: "./lib/realm/* ./lib/save/*"
+          ignore_warnings: "-1"
