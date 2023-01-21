@@ -23,5 +23,4 @@ jobs:
         with:
           path: "./lib"
           exclude: "./lib/doc/* ./lib/realm/* ./lib/save/* ./lib/tmp/*"
-          warnings_only: "true"
           ignore_warnings: "-1"
