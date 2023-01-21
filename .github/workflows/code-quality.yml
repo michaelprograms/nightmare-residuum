@@ -22,5 +22,9 @@ jobs:
         uses: Uno-Takashi/lizard-runner@v3
         with:
           path: "./lib"
-          exclude: "./lib/doc/* ./lib/realm/* ./lib/save/* ./lib/tmp/* *.test.c"
+          exclude: "./lib/doc/* ./lib/realm/* ./lib/save/* ./lib/tmp/*"
+          sort: "cyclomatic_complexity"
+          warnings_only: "true"
           ignore_warnings: "-1"
+          modified: "true"
+          CCN: 20
