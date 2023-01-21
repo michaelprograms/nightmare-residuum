@@ -81,10 +81,9 @@ int query_targets () {
 /* ----- ability weapons ----- */
 
 void set_weapons (mapping weapons) {
-    /*
+    /* Data format:
     ([
-        "blade": ({ 1, 2 }),
-        "blunt": ({ 2, }),
+        "blade|blunt": ({ 1, 2 }),
         "brawl": ({ 1 }),
     ])
     */
@@ -103,6 +102,9 @@ void set_weapons (mapping weapons) {
         }
     }
     __Weapons = weapons;
+}
+mapping query_weapons () {
+    return __Weapons;
 }
 object query_best_weapon (object source) {
     object weapon;

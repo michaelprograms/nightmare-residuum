@@ -20,7 +20,7 @@ void test_skill_powers () {
     expect_function("query_skill_powers", testOb);
     expect_function("set_skill_powers", testOb);
 
-    expect("handles skill powers", (: ({
+    expect("handles setting and querying skill powers", (: ({
         assert(testOb->query_skill_powers(), "==", ([ ])),
 
         testOb->set_skill_powers(([ "brawl": 5, ])),
@@ -28,6 +28,21 @@ void test_skill_powers () {
 
         testOb->set_skill_powers(([ "ranged": 5, "psionic": 5, ])),
         assert(testOb->query_skill_powers(), "==", ([ "ranged": 5, "psionic": 5, ])),
+    }) :));
+}
+
+void test_weapons () {
+    expect_function("query_weapons", testOb);
+    expect_function("set_weapons", testOb);
+
+    expect("handles setting and querying skill weapons", (: ({
+        assert(testOb->query_weapons(), "==", ([ ])),
+
+        testOb->set_weapons(([ "brawl": ({ 1 }), ])),
+        assert(testOb->query_weapons(), "==", ([ "brawl": ({ 1 }), ])),
+
+        testOb->set_weapons(([ "brawl": ({ 1 }), "blade": ({ 1, 2 }), "blunt": ({ 1, 2 }), ])),
+        assert(testOb->query_weapons(), "==", ([ "brawl": ({ 1 }), "blade": ({ 1, 2 }), "blunt": ({ 1, 2 }), ])),
     }) :));
 }
 
