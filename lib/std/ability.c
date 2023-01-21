@@ -69,7 +69,9 @@ string query_type () {
 /* ----- ability targets ----- */
 
 void set_targets (int n) {
-    if (undefinedp(n)) error("Bad argument 1 to ability->set_targets");
+    if (undefinedp(n) || !intp(n)) {
+        error("Bad argument 1 to ability->set_targets");
+    }
     __NumTargets = n;
 }
 int query_targets () {
@@ -86,6 +88,20 @@ void set_weapons (mapping weapons) {
         "brawl": ({ 1 }),
     ])
     */
+    // Validate weapons
+    if (undefinedp(weapons) || !mapp(weapons)) {
+        error("Bad argument 1 to ability->set_weapons");
+    }
+    foreach (string key,int *hands in weapons) {
+        if (member_array(key, ({ "blade", "blunt", "brawl" })) == -1) {
+            error("Bad argument (keys) to ability->set_weapons");
+        }
+        foreach (int hand in hands) {
+            if (hand < 1 || hand > 2) {
+                error("Bad argument (values) to ability->set_weapons");
+            }
+        }
+    }
     __Weapons = weapons;
 }
 object query_best_weapon (object source) {
