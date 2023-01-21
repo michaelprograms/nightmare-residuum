@@ -22,23 +22,38 @@ jobs:
       uses: actions/checkout@v3
       with:
         submodules: true
+        
     - name: Install Packages
       run: |
         sudo apt update
         sudo apt install -y build-essential autoconf automake bison expect libmysqlclient-dev libpcre3-dev libpq-dev libsqlite3-dev libssl-dev libtool libz-dev telnet libgtest-dev libjemalloc-dev
       timeout-minutes: 5
+
     - name: Cache Driver
       uses: actions/cache@v3
       id: cache
       with:
         path: build
         key: ${{ hashFiles('**/driver/src') }}
+
     - name: Build Driver
       if: steps.cache.outputs.cache-hit != 'true'
       run: ./build.sh
       shell: bash
       timeout-minutes: 10
+
     - name: Run Tests
       run: ./run-tests.sh
       shell: bash
       timeout-minutes: 1
+
+    - name: Cyclomatic Complexity Analyzer
+      uses: Uno-Takashi/lizard-runner@v3
+      with:
+        path: "./lib"
+        exclude: "./lib/doc/* ./lib/realm/* ./lib/save/* ./lib/tmp/*"
+        sort: "cyclomatic_complexity"
+        warnings_only: "true"
+        ignore_warnings: "-1"
+        modified: "true"
+        CCN: 20
