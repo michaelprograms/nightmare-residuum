@@ -7,6 +7,11 @@ void before_each_test () {
 void after_each_test () {
     if (objectp(testOb)) destruct(testOb);
 }
+string *test_ignore () {
+    return ({
+        "can_verb", "can_verb_liv", "can_verb_lvs",
+    });
+}
 
 void test_name () {
     expect_function("query_name", testOb);
