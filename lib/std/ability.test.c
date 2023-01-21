@@ -16,6 +16,24 @@ void test_name () {
     }) :));
 }
 
+void test_type () {
+    expect_function("query_type", testOb);
+    expect_function("set_type", testOb);
+
+    expect("handles setting and querying type", (: ({
+        assert(testOb->query_type(), "==", UNDEFINED),
+
+        testOb->set_type("attack"),
+        assert(testOb->query_type(), "==", "attack"),
+
+        testOb->set_type("heal"),
+        assert(testOb->query_type(), "==", "heal"),
+
+        testOb->set_type("utility"),
+        assert(testOb->query_type(), "==", "utility"),
+    }) :));
+}
+
 void test_skill_powers () {
     expect_function("query_skill_powers", testOb);
     expect_function("set_skill_powers", testOb);
