@@ -1,0 +1,25 @@
+name: Cyclomatic Complexity Analyzer on ubuntu
+
+on:
+  push:
+    branches:
+      - main
+    paths-ignore:
+      - 'docs/**'
+  pull_request:
+    branches:
+      - main
+    paths-ignore:
+      - 'docs/**'
+
+jobs:
+  lizard:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v3
+      - name: Lizard Runner
+        uses: Uno-Takashi/lizard-runner@v3
+        with:
+          path: "./lib"
+          exclude: "./lib/realm/* ./lib/save/*"
