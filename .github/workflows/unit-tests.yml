@@ -1,6 +1,4 @@
-# This is a basic workflow that is manually triggered
-
-name: CI on ubuntu
+name: Unit Tests on ubuntu
 
 on:
   push:
