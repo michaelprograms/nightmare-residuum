@@ -7,9 +7,7 @@ void before_each_test () {
 void after_each_test () {
     if (objectp(testOb)) destruct(testOb);
 }
-string *test_ignore () {
-    return ::test_ignore() + ({ "handle_remove" });
-}
+string *test_ignore () { return ({ "handle_remove" }); }
 
 nosave private object db;
 void test_connect () {

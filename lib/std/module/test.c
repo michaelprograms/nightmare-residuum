@@ -11,6 +11,8 @@
 #define B_GREEN     ANSI(42)
 #define B_ORANGE    ANSI(43)
 
+#define TEST_IGNORE_DEFAULTS ({ "before_all_tests", "before_each_test", "after_each_test", "after_all_tests", "test_order", "test_ignore", "clone_object", "execute_test", "create", "init", "reset", "heart_beat", })
+
 nosave protected mixed UNDEFINED = (([])[0]); // equivalent of UNDEFINED
 
 /* -----  ----- */
@@ -36,22 +38,7 @@ void before_each_test () { }
 void after_each_test () { }
 void after_all_tests () { }
 string *test_order () { return 0; }
-string *test_ignore () {
-    return ({
-        "before_all_tests",
-        "before_each_test",
-        "after_each_test",
-        "after_all_tests",
-        "test_order",
-        "test_ignore",
-        "clone_object",
-        "execute_test",
-        "create",
-        "init",
-        "reset",
-        "heart_beat",
-    });
-}
+string *test_ignore () { return ({ }); };
 
 /* ----- test functions ----- */
 
@@ -72,11 +59,14 @@ protected object clone_object (string path) {
     string *fns;
     object ob;
 
-    if (file_size(path) < 1) {
+    if (!stringp(path) || file_size(path) < 1) {
         error("Invalid path passed to test->clone_object");
     }
     ob = efun::clone_object(path);
-    fns = filter_array(functions(ob, 2), (: function_exists($1, $2) :), ob) - test_ignore();
+    // get list of functions from the test object
+    fns = filter(functions(ob, 2), (: function_exists($1, $2) :), ob);
+    // remove ignored functions
+    fns = fns - TEST_IGNORE_DEFAULTS - test_ignore();
     foreach (string fn in fns) {
         if (member_array(fn, testObjectFns) == -1) {
             testObjectFns += ({ fn });
@@ -99,10 +89,10 @@ private string *query_test_functions () {
     fns = test_order();
 
     if (!sizeof(fns)) {
-        fns = functions(this_object(), 2) - test_ignore();
+        fns = functions(this_object(), 2) - TEST_IGNORE_DEFAULTS - test_ignore();
     } else if (sizeof(fns) != sizeof(functions(this_object(), 2))) {
         // grab any tests that were not included in test_order and test_ignore
-        string *otherTestFns = functions(this_object(), 2) - test_ignore() - fns;
+        string *otherTestFns = functions(this_object(), 2) - TEST_IGNORE_DEFAULTS - test_ignore() - fns;
         fns += otherTestFns;
     }
 

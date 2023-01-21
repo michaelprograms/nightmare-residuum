@@ -24,7 +24,7 @@ string *test_order () {
     nTestOrder ++;
     return testOrder;
 }
-string *test_ignore () { return ::test_ignore() + ({ "test_should_be_ignored" }); }
+string *test_ignore () { return ({ "test_should_be_ignored" }); }
 
 void test_expects_passing () {
     expect_function("expect_function", testOb);
