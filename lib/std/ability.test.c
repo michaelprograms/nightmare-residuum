@@ -62,7 +62,7 @@ void test_weapons () {
     expect_function("query_weapons", testOb);
     expect_function("set_weapons", testOb);
 
-    expect("handles setting and querying skill weapons", (: ({
+    expect("handles setting and querying weapons", (: ({
         assert(testOb->query_weapons(), "==", ([ ])),
 
         testOb->set_weapons(([ "brawl": ({ 1 }), ])),
@@ -70,6 +70,22 @@ void test_weapons () {
 
         testOb->set_weapons(([ "brawl": ({ 1 }), "blade": ({ 1, 2 }), "blunt": ({ 1, 2 }), ])),
         assert(testOb->query_weapons(), "==", ([ "brawl": ({ 1 }), "blade": ({ 1, 2 }), "blunt": ({ 1, 2 }), ])),
+    }) :));
+}
+
+void test_targets () {
+    expect_function("query_targets", testOb);
+    expect_function("set_targets", testOb);
+
+    expect("handles setting and querying targets", (: ({
+        // default
+        assert(testOb->query_targets(), "==", 1),
+
+        testOb->set_targets(2),
+        assert(testOb->query_targets(), "==", 2),
+
+        testOb->set_targets(10),
+        assert(testOb->query_targets(), "==", 10),
     }) :));
 }
 

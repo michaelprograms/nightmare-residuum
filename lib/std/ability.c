@@ -6,7 +6,7 @@ nosave private mapping __Reqs;
 nosave private mapping __SkillPowers;
 nosave private mapping __Weapons = ([ ]);
 nosave private string __Type;
-nosave private int __NumTargets;
+nosave private int __NumTargets = 1;
 
 /* ----- ability requirements ----- */
 
@@ -69,7 +69,7 @@ string query_type () {
 /* ----- ability targets ----- */
 
 void set_targets (int n) {
-    if (undefinedp(n) || !intp(n)) {
+    if (undefinedp(n) || !intp(n) || n < 0) {
         error("Bad argument 1 to ability->set_targets");
     }
     __NumTargets = n;
