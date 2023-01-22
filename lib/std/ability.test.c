@@ -13,6 +13,9 @@ string *test_ignore () {
     });
 }
 
+nosave private int __MockLiving;
+int is_living () { return __MockLiving; }
+
 void test_name () {
     expect_function("query_name", testOb);
 
@@ -85,4 +88,58 @@ void test_difficulty_factor () {
         testOb->set_difficulty_factor(110),
         assert(testOb->query_difficulty_factor(), "==", 110),
     }) :));
+}
+
+void test_direct_verb_lib () {
+    object ob;
+
+    expect_function("direct_verb_liv", testOb);
+
+    // setuip test living object
+    ob = new(STD_LIVING);
+    ob->set_species("human");
+
+    // setup test object
+    __MockLiving = 1;
+
+    expect("handles ", (: ({
+        // not enough arguments
+        assert(testOb->direct_verb_liv(), "==", 0),
+        assert(testOb->direct_verb_liv(1), "==", 0),
+
+        // arguments but no type
+        assert(testOb->direct_verb_liv(1, 1), "==", 0),
+        // no type invalid against source
+        assert(testOb->direct_verb_liv(1, this_object()), "==", 0),
+        // no type invalid against target
+        assert(testOb->direct_verb_liv(1, $(ob)), "==", 0),
+
+        // set attack type
+        testOb->set_type("attack"),
+        assert(testOb->query_type(), "==", "attack"),
+        // attack type but no living
+        assert(testOb->direct_verb_liv(1, 1), "==", 0),
+        // attack invalid against source
+        assert(testOb->direct_verb_liv(1, this_object()), "==", 0),
+        // attack target
+        assert(testOb->direct_verb_liv(1, $(ob)), "==", 1),
+
+        // set heal type
+        testOb->set_type("heal"),
+        assert(testOb->query_type(), "==", "heal"),
+        // heal source
+        assert(testOb->direct_verb_liv(1, this_object()), "==", 1),
+        // heal target
+        assert(testOb->direct_verb_liv(1, $(ob)), "==", 1),
+
+        // set utility type
+        testOb->set_type("utility"),
+        assert(testOb->query_type(), "==", "utility"),
+        // utility source
+        assert(testOb->direct_verb_liv(1, this_object()), "==", 1),
+        // utility target
+        assert(testOb->direct_verb_liv(1, $(ob)), "==", 1),
+    }) :));
+
+    destruct(ob);
 }

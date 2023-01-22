@@ -577,18 +577,19 @@ int direct_verb_liv (mixed args...) {
     if (sizeof(args) < 2) {
         return 0;
     }
-    if (!args[1]->is_living()) {
+
+    if (!objectp(args[1]) || !args[1]->is_living()) {
         return 0;
     }
     if (__Type == "attack") {
-        if (args[1] == this_character()) {
+        if (args[1] == previous_object()) {
             return 0;
         }
         return 1;
     } else if (__Type == "heal" || __Type == "utility") {
         return 1;
     }
-    return 1;
+    return 0;
 }
 
 mixed can_verb_lvs (mixed args...) {
