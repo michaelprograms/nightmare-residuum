@@ -386,7 +386,7 @@ void ability_message_success (object source, object target, string limb) {
     }
 }
 
-void ability_debug_message (object source, object target, int damage) {
+private void ability_debug_message (object source, object target, int damage) {
     string phrase;
     if (__Type == "attack") {
         phrase = "%^ORANGE%^Damage:%^RESET%^";
