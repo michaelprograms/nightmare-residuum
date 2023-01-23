@@ -142,6 +142,8 @@ void test_async_test (function done) {
 }
 
 void test_lifecycle_events () {
+    expect_function("query_expect_catch", testOb);
+
     expect("lifecycle events execute in order", (: ({
         assert(nBeforeAll, "==", 1), // before_all_tests
         assert(nBeforeEach, "==", sizeof(testOrder)), // before_each_test
