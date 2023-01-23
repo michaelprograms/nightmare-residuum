@@ -34,7 +34,7 @@ void set_help_similar (string *similar) {
     __HelpSimilar = similar;
 }
 
-string help (object char) {
+string handle_help (object char) {
     string result;
 
     result = "\n%^CYAN%^BOLD%^" + sprintf("%-12s", "Syntax") + "%^RESET%^\n" + query_syntax() + "\n";

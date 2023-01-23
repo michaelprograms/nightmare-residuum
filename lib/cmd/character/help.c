@@ -22,8 +22,8 @@ void command (string input, mapping flags) {
     ) {
         path += "/" + input + ".c";
         file = find_object(path) || load_object(path);
-        if (function_exists("help", file)) {
-            result = call_other(path, "help", this_character());
+        if (function_exists("handle_help", file)) {
+            result = call_other(path, "handle_help", this_character());
         }
     }
 

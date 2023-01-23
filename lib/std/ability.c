@@ -531,11 +531,11 @@ private void handle_ability_use (object source, object *targets) {
 
 /* ----- help ----- */
 
-string help (object char) {
+string handle_help (object char) {
     string result, *tmp;
     int n;
 
-    result = ::help(char);
+    result = ::handle_help(char);
 
     result += "\n%^CYAN%^BOLD%^Type%^RESET%^\n" + capitalize(__Type) + "\n";
 
