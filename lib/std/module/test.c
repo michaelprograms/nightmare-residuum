@@ -38,7 +38,7 @@ void before_each_test () { }
 void after_each_test () { }
 void after_all_tests () { }
 string *test_order () { return 0; }
-string *test_ignore () { return ({ }); };
+string *test_ignore () { return ({ }); }
 
 /* ----- test functions ----- */
 
