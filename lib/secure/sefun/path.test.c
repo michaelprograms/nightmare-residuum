@@ -170,7 +170,7 @@ void test_assure_dir () {
         assert(file_size(PATH_TEST_DIR), "==", -1), // verify testdir doesn't exist
 
         assert(testOb->assure_dir(PATH_TEST_DIR), "==", 1), // testdir has been created
-        assert(file_size(PATH_TEST_DIR), "==", -2), // verify testdir doesn't exist
+        assert(file_size(PATH_TEST_DIR), "==", -2), // verify testdir exists
 
         rmdir(PATH_TEST_DIR),
         assert(file_size(PATH_TEST_DIR), "==", -1), // verify testdir doesn't exist

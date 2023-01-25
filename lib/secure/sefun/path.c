@@ -88,11 +88,12 @@ int assure_dir (string path) {
         return 0;
     }
     dirs = split_path(path);
+    // dirs[1] potentially contains a filename with extension
     dirs = explode(dirs[0], "/") + (!regexp(dirs[1], "\\.") ? ({ dirs[1] }) : ({}));
     for (int i = 0; check && i < sizeof(dirs); i ++) {
         dir = dir + "/" + dirs[i];
-        if (SEFUN->unguarded((: file_size, dir :)) == -1) {
-            check = SEFUN->unguarded((: mkdir, dir :));
+        if (file_size(dir) == -1) {
+            check = mkdir(dir);
         }
     }
     return check;
