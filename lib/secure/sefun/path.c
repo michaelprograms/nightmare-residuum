@@ -89,7 +89,7 @@ int assure_dir (string path) {
     }
     dirs = split_path(path);
     // dirs[1] potentially contains a filename with extension
-    dirs = explode(dirs[0], "/") + (!regexp(dirs[1], "\\.") ? ({ dirs[1] }) : ({}));
+    dirs = explode(dirs[0], "/") + (!regexp(dirs[1], "\\.") ? ({ dirs[1] }) : ({ }));
     for (int i = 0; check && i < sizeof(dirs); i ++) {
         dir = dir + "/" + dirs[i];
         if (file_size(dir) == -1) {
