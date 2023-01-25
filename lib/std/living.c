@@ -8,6 +8,7 @@ inherit "/std/living/biography.c";
 inherit "/std/living/body.c";
 inherit "/std/living/class.c";
 inherit "/std/living/combat.c";
+inherit "/std/living/protection.c";
 inherit "/std/living/skills.c";
 inherit "/std/living/stats.c";
 inherit "/std/living/status.c";
@@ -20,6 +21,11 @@ int is_living () { return 1; }
 void create () {
     combat::create();
     object::create();
+}
+
+int handle_remove () {
+    protection::handle_remove();
+    clean::handle_remove();
 }
 
 void heart_beat () {

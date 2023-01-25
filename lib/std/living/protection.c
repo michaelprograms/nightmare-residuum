@@ -1,23 +1,40 @@
 nosave private int __Protection;
 
-void clear_protection () {
-    // @TODO remove timers?
-    __Protection = 0;
+int query_protection () {
+    if (undefinedp(__Protection)) {
+        __Protection = 0;
+    }
+    return __Protection;
 }
-void set_protection (int n) {
+int set_protection (int n) {
     __Protection = n;
+    return __Protection;
+}
+int clear_protection () {
+    while (find_call_out("remove_protection") > -1) {
+        remove_call_out("remove_protection");
+    }
+    __Protection = 0;
+    message("protection", "The protective shield around you fades away.", this_object());
+    return __Protection;
 }
 int add_protection (int n, int time) {
     __Protection += n;
+    message("protection", "A protective shield forms around around you.", this_object());
 
-    if (n >= 0 && time > 0) {
-        call_out("add_protection", time, -n, 0);
-        message("protection", "A protective shield forms around around you.", this_object());
-    } else {
-        message("protection", "The protective shield around you fades " + (__Protection ? "slightly" : "away") + ".", this_object());
+    if (time > 0) {
+        call_out("remove_protection", time, n);
     }
-    return 1;
-}
-int query_protection () {
+
     return __Protection;
+}
+int remove_protection (int n) {
+    __Protection -= n;
+    message("protection", "The protective shield around you fades " + (__Protection > 0 ? "slightly" : "away") + ".", this_object());
+
+    return __Protection;
+}
+
+int handle_remove () {
+    clear_protection();
 }
