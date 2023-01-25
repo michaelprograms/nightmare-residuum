@@ -25,7 +25,7 @@ void create () {
 
 int handle_remove () {
     protection::handle_remove();
-    clean::handle_remove();
+    return clean::handle_remove();
 }
 
 void heart_beat () {

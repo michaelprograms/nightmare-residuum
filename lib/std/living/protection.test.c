@@ -30,10 +30,10 @@ void test_add_protection () {
         // initial value
         assert(testOb->query_protection(), "==", 0),
         // add
-        assert(testOb->add_protection(4), "==", 4),
+        assert(testOb->add_protection(4, 0), "==", 4),
         assert(testOb->query_protection(), "==", 4),
         // add
-        assert(testOb->add_protection(6), "==", 10),
+        assert(testOb->add_protection(6, 0), "==", 10),
         assert(testOb->query_protection(), "==", 10),
     }) :));
 }
