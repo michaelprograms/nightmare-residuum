@@ -83,6 +83,7 @@ int assure_dir (string path) {
     string *dirs;
     string dir = "";
     int check = 1;
+    int i, l;
 
     if (!path) {
         return 0;
@@ -90,10 +91,19 @@ int assure_dir (string path) {
     dirs = split_path(path);
     // dirs[1] potentially contains a filename with extension
     dirs = explode(dirs[0], "/") + (!regexp(dirs[1], "\\.") ? ({ dirs[1] }) : ({ }));
-    for (int i = 0; check && i < sizeof(dirs); i ++) {
+    l = sizeof(dirs);
+    for (i = 0; check && i < l; i ++) {
         dir = dir + "/" + dirs[i];
-        if (file_size(dir) == -1) {
+        switch(file_size(dir)) {
+        case -2:
+            continue;
+            break;
+        case -1:
             check = mkdir(dir);
+            break;
+        default:
+            check = 0;
+            break;
         }
     }
     return check;
