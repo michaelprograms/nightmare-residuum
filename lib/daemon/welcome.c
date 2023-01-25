@@ -3,20 +3,20 @@ string query_banner () {
     string text = "\e[0;37;40m"; // start with ANSI reset
     string *colors = allocate(6); // left padding
 
-    int clump = 0;
-    string tmp;
+    string tmp, dot = " ";
     int pad;
+    int r = 25 + 1+random(125);
 
     lines = explode(read_file("/etc/welcome"), "\n");
     tmp = " " + mud_name() + " ";
-    pad = 40-strlen(tmp)/2;
+    pad = 40 - strlen(tmp) / 2;
     lines[<2] = lines[<2][0..pad-1] + tmp + lines[<2][80-pad..79];
 
     tmp = " Driver: " + driver_version() + "   Mudlib: " + mudlib_version() + " ";
-    pad = 40-strlen(tmp)/2;
+    pad = 40 - strlen(tmp) / 2;
     lines[<1] = lines[<1][0..pad-1] + tmp + lines[<1][80-pad+strlen(tmp)%2..79];
 
-    if (previous_object() && previous_object()->query_terminal_color() == "256") {
+    if (this_user() && this_user()->query_terminal_color() == "256") {
         int *c1 = query_random_color();
         int *c2 = ({ 191, 191, 191, });
         colors += color_gradient(c1, c2, 34);
@@ -33,15 +33,21 @@ string query_banner () {
             if (i == sizeof(lines) - 1 && j >= pad && j <= strlen(lines[i])-pad) {
                 text += lines[i][j..j]; // preserve dots in driver/mudlib versions
             } else if (lines[i][j..j] == ".") {
-                if (clump > 0) {
-                    clump --;
-                    text += " ";
-                } else if (random(16)) {
-                    text += " ";
+                if (this_user() && this_user()->query_terminal_color() == "256") {
+                    dot[0] = 10240 + (
+                        (!random(r) ? 0x1 : 0) |
+                        (!random(r) ? 0x2 : 0) |
+                        (!random(r) ? 0x4 : 0) |
+                        (!random(r) ? 0x40 : 0) |
+                        (!random(r) ? 0x8 : 0) |
+                        (!random(r) ? 0x10 : 0) |
+                        (!random(r) ? 0x20 : 0) |
+                        (!random(r) ? 0x80 : 0)
+                    );
                 } else {
-                    clump = 4;
-                    text += "\e[0;37;40m.";
+                    dot = random(8+1+random(24)) ? " " : ".";
                 }
+                text += "\e[0;37;40m" + dot;
             } else if (lines[i][j..j] != " ") {
                 if (i > 0 && i < 8) text += colors[j];
                 text += lines[i][j..j] + "\e[0;37;40m";
