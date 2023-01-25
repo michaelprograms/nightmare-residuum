@@ -30,7 +30,7 @@ string query_banner () {
 
     for (int i = 0; i < sizeof(lines); i ++) {
         for (int j = 0; j < sizeof(lines[i]); j ++) {
-            if (i == sizeof(lines) - 1 && j >= pad && j <= strlen(lines[i])-pad) {
+            if (i == sizeof(lines) - 1 && j >= pad && j <= strlen(lines[i])-pad-1) {
                 text += lines[i][j..j]; // preserve dots in driver/mudlib versions
             } else if (lines[i][j..j] == ".") {
                 if (this_user() && this_user()->query_terminal_color() == "256") {
@@ -44,8 +44,11 @@ string query_banner () {
                         (!random(r) ? 0x20 : 0) |
                         (!random(r) ? 0x80 : 0)
                     );
+                    if (dot[0] == 10240) {
+                        dot = " ";
+                    }
                 } else {
-                    dot = random(8+1+random(24)) ? " " : ".";
+                    dot = random(r/2) ? " " : ".";
                 }
                 text += "\e[0;37;40m" + dot;
             } else if (lines[i][j..j] != " ") {
