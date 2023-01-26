@@ -160,16 +160,16 @@ void test_absolute_path () {
     destruct(__MockShell);
 }
 
-void test_assure_dir () {
-    expect_function("assure_dir", testOb);
+void test_mkdirs () {
+    expect_function("mkdirs", testOb);
 
-    expect("assure_dir creates dirs if missing", (: ({
-        assert(testOb->assure_dir("/save/test"), "==", 1), // test should exist already
+    expect("mkdirs creates dirs if missing", (: ({
+        assert(testOb->mkdirs("/save/test"), "==", 1), // test should exist already
 
         rmdir(PATH_TEST_DIR),
         assert(file_size(PATH_TEST_DIR), "==", -1), // verify testdir doesn't exist
 
-        assert(testOb->assure_dir(PATH_TEST_DIR), "==", 1), // testdir has been created
+        assert(testOb->mkdirs(PATH_TEST_DIR), "==", 1), // testdir has been created
         assert(file_size(PATH_TEST_DIR), "==", -2), // verify testdir exists
 
         rmdir(PATH_TEST_DIR),

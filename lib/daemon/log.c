@@ -13,8 +13,8 @@ int log_unique (string filename, string entry) {
     if (regexp(entry, "\n$")) {
         entry = entry[0..<2];
     }
-    if (!assure_dir(filename + ".log")) {
-        return 0; // dummy extension for assure_dir
+    if (!mkdirs(filename)) {
+        return 0;
     }
 
     lines = explode(read_file(filename) || "", "\n");
@@ -36,8 +36,8 @@ int log (string filename, string entry) {
     if (!regexp(entry, "\n$")) {
         entry += "\n";
     }
-    if (!assure_dir(filename + ".log")) {
-        return 0; // dummy extension for assure_dir
+    if (!mkdirs(filename)) {
+        return 0;
     }
     if (file_size(filename) > 20000) { // 20 kb
         rename(filename, filename+"-"+time());

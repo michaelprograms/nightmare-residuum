@@ -79,21 +79,19 @@ varargs string absolute_path (string relative_path, mixed relative_to) {
 }
 
 // Check path recursively and create dirs
-int assure_dir (string path) {
-    string *dirs;
-    string dir = "";
-    int check = 1;
-    int i, l;
+int mkdirs (string path) {
+    string *dirs, dir = "";
+    int i, l, check = 1;
 
     if (!path) {
         return 0;
     }
-    dirs = split_path(path);
-    // dirs[1] potentially contains a filename with extension
-    dirs = explode(dirs[0], "/") + (!regexp(dirs[1], "\\.") ? ({ dirs[1] }) : ({ }));
+    dirs = explode(path, "/") - ({ "" });
+    // dirs[<1] potentially contains a filename with extension
+    dirs = dirs[0..<2] + (!regexp(dirs[<1], "\\.") ? ({ dirs[<1] }) : ({ }));
     l = sizeof(dirs);
     for (i = 0; check && i < l; i ++) {
-        dir = dir + "/" + dirs[i];
+        dir += "/" + dirs[i];
         switch(file_size(dir)) {
         case -2:
             continue;

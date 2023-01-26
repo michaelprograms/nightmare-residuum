@@ -4,7 +4,7 @@ inherit M_TEST;
 
 private nosave object testOb;
 void before_all_tests () {
-    unguarded((: assure_dir, PATH_TEST_SAVE :));
+    unguarded((: mkdirs, PATH_TEST_SAVE :));
     unguarded((: rm, PATH_TEST_SAVE :));
 }
 void before_each_test () {

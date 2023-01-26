@@ -72,7 +72,7 @@ string *split_path (string path);
 string base_path (string path);
 string sanitize_path (string path);
 varargs string absolute_path (string relative_path, mixed relative_to);
-int assure_dir (string path);
+int mkdirs (string path);
 string *wild_card (string path, string relative_to);
 
 /* --- string --- */
