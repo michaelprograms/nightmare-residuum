@@ -164,6 +164,8 @@ void test_mkdirs () {
     expect_function("mkdirs", testOb);
 
     expect("mkdirs creates dirs if missing", (: ({
+        assert(testOb->mkDirs(""), "==", 0), // no errors for empty string
+
         assert(testOb->mkdirs("/save/test"), "==", 1), // test should exist already
 
         rmdir(PATH_TEST_DIR),

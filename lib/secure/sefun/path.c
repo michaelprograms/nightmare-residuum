@@ -79,11 +79,13 @@ varargs string absolute_path (string relative_path, mixed relative_to) {
 }
 
 // Check path recursively and create dirs
+// Path can be a directory or filename (which will be truncated)
+// Returns 1 for directory exists or 0 for failure
 int mkdirs (string path) {
     string *dirs, dir = "";
     int i, l, check = 1;
 
-    if (!path) {
+    if (!stringp(path) || !sizeof(path)) {
         return 0;
     }
     dirs = explode(path, "/") - ({ "" });
@@ -100,7 +102,7 @@ int mkdirs (string path) {
             check = mkdir(dir);
             break;
         default:
-            check = 0;
+            check = 0; // a file already exists with this path
             break;
         }
     }
