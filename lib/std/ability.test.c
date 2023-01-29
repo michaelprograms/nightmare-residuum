@@ -160,3 +160,21 @@ void test_direct_verb_lib () {
 
     destruct(ob);
 }
+
+void test_ability_requirements () {
+    expect_function("query_ability_requirements", testOb);
+    expect_function("set_ability_requirements", testOb);
+
+    expect("handles setting and querying requirements", (: ({
+        // default value
+        assert(testOb->query_ability_type(), "==", UNDEFINED),
+
+        // check updated
+        testOb->set_ability_requirements(([ "anyone": ([ "level": 1, ]), ])),
+        assert(testOb->query_ability_requirements(), "==", ([ "anyone": ([ "level": 1, ]), ])),
+
+        // check updated
+        testOb->set_ability_requirements(([ "scoundrel": ([ "level": 5, ]), ])),
+        assert(testOb->query_ability_requirements(), "==", ([ "scoundrel": ([ "level": 5, ]), ])),
+    }) :));
+}

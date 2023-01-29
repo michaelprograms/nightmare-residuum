@@ -10,6 +10,9 @@ nosave private int __NumTargets = 1;
 
 /* ----- ability requirements ----- */
 
+mapping query_ability_requirements () {
+    return __Reqs;
+}
 void set_ability_requirements (mapping reqs) {
     /* Data format:
     "anyone|class|species|NPC": ([
