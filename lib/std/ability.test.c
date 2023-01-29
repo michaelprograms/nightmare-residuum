@@ -178,3 +178,32 @@ void test_ability_requirements () {
         assert(testOb->query_ability_requirements(), "==", ([ "scoundrel": ([ "level": 5, ]), ])),
     }) :));
 }
+
+void test_handle_help () {
+    expect_function("handle_help", testOb);
+
+    expect("handles additional formatting help file", (: ({
+        // command.test.c tests basic formatting
+
+        // should contain Type section always
+        testOb->set_type("utility"),
+        assert(testOb->query_type(), "==", "utility"),
+        assert(regexp(testOb->handle_help(this_object()), "Type"), "==", 1),
+        assert(regexp(testOb->handle_help(this_object()), "Utility"), "==", 1),
+
+        // should contain ability requirements
+        assert(regexp(testOb->handle_help(this_object()), "Anyone Requirements"), "==", 0),
+        testOb->set_ability_requirements(([ "anyone": ([ "level": 1, "stats": ([ "strength": 1, ]), "skills": ([ "brawl attack": 1, ]) ]), ])),
+        assert(regexp(testOb->handle_help(this_object()), "Anyone Requirements"), "==", 1),
+        assert(regexp(testOb->handle_help(this_object()), "Level 1, 1 strength, 1 brawl attack"), "==", 1),
+
+        // should contain weapon requirements
+        assert(regexp(testOb->handle_help(this_object()), "Weapons"), "==", 0),
+        testOb->set_weapons(([ "brawl": ({ 1 }), ])),
+        assert(regexp(testOb->handle_help(this_object()), "Weapons"), "==", 1),
+        assert(regexp(testOb->handle_help(this_object()), "one handed brawl"), "==", 1),
+        // updated weapon requirements
+        testOb->set_weapons(([ "blunt": ({ 1, 2 }), ])),
+        assert(regexp(testOb->handle_help(this_object()), "one handed blunt, two handed blunt"), "==", 1),
+    }) :));
+}
