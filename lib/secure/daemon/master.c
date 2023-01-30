@@ -176,7 +176,7 @@ private string trace_line (object obj, string prog, string file, int line) {
     else ret += sprintf(" at line %d\n", line);
     return ret;
 }
-private varargs string standard_trace (mapping e, int flag) {
+private varargs string standard_trace (mapping e) {
     string ret, t;
     mapping *trace;
     int i, n;
@@ -185,7 +185,6 @@ private varargs string standard_trace (mapping e, int flag) {
     trace = e["trace"];
     n = sizeof(trace);
     for (i = 0; i < n; i ++) {
-        if(flag) ret += sprintf("#%d: ", i);
         t = trace_line(trace[i]["object"], trace[i]["program"], trace[i]["file"], trace[i]["line"]);
         ret += sprintf("'%s' at %s", trace[i]["function"], t);
     }
