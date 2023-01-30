@@ -114,6 +114,6 @@ void command (string input, mapping flags) {
             D_TEST->process_file(test, (: done :), 1);
         }
     } else {
-        message("action", "update failed: " + input + ":\n" + tmp, this_user());
+        message("action", "update failed: " + input, this_user());
     }
 }
