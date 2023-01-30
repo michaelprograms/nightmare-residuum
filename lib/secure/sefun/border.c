@@ -119,12 +119,13 @@ mapping query_border_charset () {
 // /*
 //     "title": "TITLE",
 //     "subtitle": "Subtitle",
+//     "ansi": /* 0 || undefined */,
 //     "header": ({
 //         ([
 //             "header": ({ /* array of strings */ }),
 //             "items": ({ /* array of strings */ }),
 //             "columns": 2 || ({ /* array of integer ratios */ }),
-//             "align": "left|center",
+//             "align": "left || center",
 //         ]),
 //     }),
 //     "body": ({
@@ -132,7 +133,7 @@ mapping query_border_charset () {
 //             "header": ({ /* array of strings */ }),
 //             "items": ({ /* array of strings */ }),
 //             "columns": 2 || ({ /* array of integer ratios */ }),
-//             "align": "left|center",
+//             "align": "left || center",
 //         ]),
 //     }),
 //     "footer": ({
@@ -140,7 +141,7 @@ mapping query_border_charset () {
 //             "header": ({ /* array of strings */ }),
 //             "items": ({ /* array of strings */ }),
 //             "columns": 2 || ({ /* array of integer ratios */ }),
-//             "align": "left|center",
+//             "align": "left || center",
 //         ]),
 //     }),
 // */
@@ -202,7 +203,7 @@ string *format_border (mapping data) {
         data["footer"] = ({ data["footer"] });
     }
 
-    if (SEFUN->query_account_setting("ansi") == "on") {
+    if (undefinedp(data["ansi"]) && SEFUN->query_account_setting("ansi") == "on") {
         ansi = this_user()->query_terminal_color();
     }
     if (ansi == "256") {
