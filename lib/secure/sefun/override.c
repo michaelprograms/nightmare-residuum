@@ -23,6 +23,14 @@ nomask void write (string msg) {
     }
 }
 
+varargs void message (mixed type, string message, mixed target, mixed exclude) {
+    debug_message(sprintf("message %O %O %O %O", type, message, target, exclude));
+    if (!sizeof(message) || (!objectp(target) && !arrayp(target))) {
+        return;
+    }
+    efun::message(type, message, target, exclude);
+}
+
 // say
 
 // shout

@@ -64,7 +64,7 @@ nomask varargs int input_to ();
 nomask object this_player (int flag);
 object *users ();
 nomask void write (string msg);
-// varargs void message (mixed type, string message, mixed target, mixed exclude);
+varargs void message (mixed type, string message, mixed target, mixed exclude);
 
 /* --- path --- */
 string user_path (string name);
