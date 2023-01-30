@@ -59,8 +59,11 @@ void test_skill_powers () {
 }
 
 void test_weapons () {
+    object liv, weaponBlade, weaponBlunt;
+
     expect_function("query_weapons", testOb);
     expect_function("set_weapons", testOb);
+    expect_function("query_best_weapon", testOb);
 
     expect("handles setting and querying weapons", (: ({
         assert(testOb->query_weapons(), "==", ([ ])),
@@ -71,6 +74,49 @@ void test_weapons () {
         testOb->set_weapons(([ "brawl": ({ 1 }), "blade": ({ 1, 2 }), "blunt": ({ 1, 2 }), ])),
         assert(testOb->query_weapons(), "==", ([ "brawl": ({ 1 }), "blade": ({ 1, 2 }), "blunt": ({ 1, 2 }), ])),
     }) :));
+
+    liv = new(STD_LIVING);
+    liv->set_species("human");
+    weaponBlade = new(STD_WEAPON);
+    weaponBlade->set_type("blade");
+    weaponBlade->set_wc(5);
+    weaponBlade->set_name("test blade");
+    weaponBlunt = new(STD_WEAPON);
+    weaponBlunt->set_type("blunt");
+    weaponBlunt->set_wc(5);
+    weaponBlunt->set_name("test blunt");
+
+    expect("handles setting and querying weapons", (: ({
+        assert($(liv)->query_species(), "==", "human"),
+        assert($(liv)->query_wielded_weapons(), "==", ({ })),
+
+        testOb->set_weapons(([ "brawl": ({ 1 }), ])),
+        assert(testOb->query_best_weapon($(liv)), "==", UNDEFINED),
+
+        // start with 1 handed
+        testOb->set_weapons(([ "blunt": ({ 1 }), ])),
+        // not wielded yet
+        assert(testOb->query_best_weapon($(liv)), "==", UNDEFINED),
+        // wield blade
+        assert($(liv)->handle_wield($(weaponBlade)), "==", 1),
+        assert(testOb->query_best_weapon($(liv)), "==", UNDEFINED),
+        // wield blunt
+        assert($(liv)->handle_wield($(weaponBlunt)), "==", 1),
+        assert(testOb->query_best_weapon($(liv)), "==", $(weaponBlunt)),
+        // change to 2 handed
+        testOb->set_weapons(([ "blunt": ({ 2 }), ])),
+        assert(testOb->query_best_weapon($(liv)), "==", UNDEFINED),
+        assert($(liv)->handle_unwield($(weaponBlade)), "==", 1),
+        assert($(liv)->handle_unwield($(weaponBlunt)), "==", 1),
+        $(weaponBlunt)->set_hands(2),
+        assert($(weaponBlunt)->query_hands(), "==", 2),
+        assert($(liv)->handle_wield($(weaponBlunt)), "==", 1),
+        assert(testOb->query_best_weapon($(liv)), "==", $(weaponBlunt)),
+    }) :));
+
+    if (liv) liv->handle_remove();
+    if (weaponBlade) weaponBlade->handle_remove();
+    if (weaponBlunt) weaponBlunt->handle_remove();
 }
 
 void test_targets () {
