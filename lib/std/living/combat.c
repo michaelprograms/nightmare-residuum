@@ -101,6 +101,7 @@ private void handle_combat_hit (object target, mixed weapon) {
         damage -= secure_random(query_stat("luck") * 10 / 100 + 1);
         damage -= secure_random(query_skill(type + " defense") * 20 / 100 + 1);
         damage -= target->query_limb_armor(limb);
+        damage -= target->query_protection();
 
         display_combat_message(this_object(), target, limb, weapon, type, damage, 0);
         if (damage > 0) target->handle_damage(damage, limb, this_object());

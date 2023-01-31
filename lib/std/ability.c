@@ -256,6 +256,8 @@ int calculate_damage (object source, object target, string limb) {
     damage -= random(10 + target->query_level());
     damage -= random(target->query_stat("luck") * 10 / 100 + 1);
     damage -= target->query_limb_armor(limb);
+    damage -= target->query_protection();
+
 
     if (damage < 0) {
         damage = 0;
