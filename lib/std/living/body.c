@@ -160,7 +160,9 @@ varargs int handle_damage (int damage, string limb, object source) {
     }
 
     add_hp(-damage);
-    if (query_max_hp() < query_hp()) set_hp(query_max_hp());
+    if (query_max_hp() < query_hp()) {
+        set_hp(query_max_hp());
+    }
 
     if (stringp(limb) && limb != "" && this_object()->query_limb(limb)) {
         int limbDamagePct;
