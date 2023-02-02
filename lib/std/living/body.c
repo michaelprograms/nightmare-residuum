@@ -163,6 +163,9 @@ varargs int handle_damage (int damage, string limb, object source) {
     if (query_max_hp() < query_hp()) {
         set_hp(query_max_hp());
     }
+    if (this_object()->is_character()) {
+        message("system", sprintf("hp: %d (%d) sp: %d    mp: %d\n", query_hp(), query_hp() - beforeHp, query_sp(), query_mp()), this_object());
+    }
 
     if (stringp(limb) && limb != "" && this_object()->query_limb(limb)) {
         int limbDamagePct;
@@ -182,14 +185,6 @@ varargs int handle_damage (int damage, string limb, object source) {
         }
     }
 
-    if (!this_object()) {
-        return 0;
-    }
-
-    if (this_object()->is_character()) {
-        message("system", sprintf("hp: %d (%d) sp: %d    mp: %d\n", query_hp(), query_hp() - beforeHp, query_sp(), query_mp()), this_object());
-    }
-    check_lifesigns(source);
     return damage;
 }
 

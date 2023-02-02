@@ -60,13 +60,6 @@ void handle_defeat (object source) {
     if (__Defeated) {
         return;
     }
-    __Defeated = 1;
-    __Defeat += ({
-        ({
-            source ? source->query_cap_name() : 0,
-            time()
-        })
-    });
 
     this_object()->clear_protection();
     remove_call_out();
@@ -79,6 +72,14 @@ void handle_defeat (object source) {
             message("action", this_object()->query_cap_name() + " drops %^RED%^dead%^RESET%^.", env, this_object());
         }
     }
+
+    __Defeated = 1;
+    __Defeat += ({
+        ({
+            source ? source->query_cap_name() : 0,
+            time()
+        })
+    });
 
     if (this_object()->is_character()) this_object()->handle_move("/domain/Nowhere/room/defeat.c");
     else this_object()->handle_remove();
