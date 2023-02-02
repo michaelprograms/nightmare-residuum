@@ -135,7 +135,7 @@ varargs void check_lifesigns (object source) {
 /* ----- hostiles ----- */
 
 int add_hostile (object ob) {
-    if (!ob || !ob->is_living() || member_array(ob, __Hostiles) > -1) {
+    if (!ob || !ob->is_living() || member_array(ob, __Hostiles) > -1 || ob->query_defeated()) {
         return 0;
     }
     if (ob == this_object()) {

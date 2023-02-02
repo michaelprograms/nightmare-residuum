@@ -20,5 +20,9 @@ varargs string query_short (string defaultANSI) {
         s = replace_string(s, "%^DEFAULT%^", defaultANSI);
     }
 
+    if (this_object()->query_defeated()) {
+        s += " ((%^WHITE%^defeated%^DEFAULT%^))";
+    }
+
     return s;
 }

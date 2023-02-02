@@ -3,7 +3,7 @@
 private int __Experience = 0, __TotalExperience = 0;
 private int __Victory = 0, __VictoryLevel;
 private mixed *__Defeat = ({ });
-
+private int __Defeated = 0;
 
 int query_experience () {
     if (undefinedp(__Experience)) __Experience = 0;
@@ -36,6 +36,13 @@ mixed *query_defeat () {
     if (!arrayp(__Defeat)) __Defeat = ({ });
     return __Defeat;
 }
+int query_defeated () {
+    return __Defeated;
+}
+void set_defeated (int d) {
+    __Defeated = d;
+}
+
 void handle_victory (object source) {
     int exp = D_EXPERIENCE->query_value(source);
     __Victory ++;
@@ -46,19 +53,23 @@ void handle_victory (object source) {
 void handle_defeat (object source) {
     object env = environment(), corpse;
 
-    this_object()->clear_protection();
-    remove_call_out();
-
     if (!arrayp(__Defeat)) {
         __Defeat = ({ });
     }
 
+    if (__Defeated) {
+        return;
+    }
+    __Defeated = 1;
     __Defeat += ({
         ({
             source ? source->query_cap_name() : 0,
             time()
         })
     });
+
+    this_object()->clear_protection();
+    remove_call_out();
 
     if (env) {
         corpse = new(ITEM_CORPSE);

@@ -80,6 +80,8 @@ void test_handle_defeat () {
 
     expect_function("handle_defeat", testOb);
     expect_function("query_defeat", testOb);
+    expect_function("set_defeated", testOb);
+    expect_function("query_defeated", testOb);
 
     // setup test object
     if (testOb) destruct(testOb);
@@ -95,13 +97,17 @@ void test_handle_defeat () {
         // test defeat with keep
         assert($(mockCharacter)->start_shadow(testOb), "==", 1),
         assert(testOb->is_character(), "==", 1),
+        assert(testOb->query_defeated(), "==", 0),
         assert(testOb->handle_defeat(this_object()), "==", 0),
         assert(objectp(testOb), "==", 1),
+        assert(testOb->query_defeated(), "==", 1),
         assert(testOb->query_defeat(), "==", ({ ({ "Biography Test", time() }) })),
         assert(sizeof($(r)->query_living_contents()), "==", 0),
         assert(sizeof($(r)->query_item_contents()), "==", 1),
         assert(!!present("corpse", $(r)), "==", 1),
         assert(present("corpse", $(r))->handle_remove(), "==", 1),
+        testOb->set_defeated(0),
+        assert(testOb->query_defeated(), "==", 0),
 
         // move test object back
         assert(testOb->handle_move($(r)), "==", 1),
