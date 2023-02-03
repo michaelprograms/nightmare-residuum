@@ -22,7 +22,7 @@ private void display_account_menu () {
     foreach (string name in __Account->query_character_names()) {
         mapping character = __Account->query_character(name);
         string tmp = "%^CYAN%^" + sprintf("%-22s", "<" + character["name"] + ">") + "%^RESET%^";
-        tmp += sprintf("%-16s", capitalize(character["type"]+""));
+        tmp += sprintf("%-16s", capitalize(character["species"]+""));
         tmp += sprintf("%-24s", character["last_location"]);
         // @TODO change for connected / disconnected
         tmp += sprintf("%-20s", time_ago(character["last_action"]));
