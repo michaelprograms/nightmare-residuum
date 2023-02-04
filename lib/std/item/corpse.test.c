@@ -51,8 +51,8 @@ void test_body () {
     expect("body is setup to match", (: ({
         testOb->setup_body($(liv)),
         // verify we set corpse information
-        assert(testOb->query_name(), "==", "corpse of tester"),
-        assert(testOb->query_id(), "==", ({ "corpse", "corpseoftester", "corpse of tester" })),
+        assert(testOb->query_name(), "==", "corpse of a tester"),
+        assert(testOb->query_id(), "==", ({ "corpse", "corpseofatester", "corpse of a tester", "corpse of tester", })),
         assert(testOb->query_short(), "==", "the corpse of a tester"),
     }) :));
 
