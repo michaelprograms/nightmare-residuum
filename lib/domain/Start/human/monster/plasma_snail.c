@@ -13,7 +13,7 @@ void create() {
     set_name("plasma snail");
     set_short("a " + plasmaSnail);
     set_long("A snail swirling with a colorful array of plasma.");
-    set_level(3);
+    set_level(1);
     set_species("snail");
     set_ability_list(({ "zap" }));
     set_ability_chance(50);
