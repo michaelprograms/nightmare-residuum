@@ -85,7 +85,7 @@ void handle_received (object env) {
 }
 
 void handle_receive_living_in_env (object living) {
-    if (living->is_character() && __Aggressive > 0 && !query_hostile(living)) {
+    if (living->is_character() && !living->is_defeated() && __Aggressive > 0 && !query_hostile(living)) {
         if (living->query_stat("charisma") < __Aggressive) {
             message("action", "%^RED%^BOLD%^You attack " + living->query_cap_name() + "!%^RESET%^", this_object());
             message("action", "%^RED%^BOLD%^" + this_object()->query_cap_name() + " attacks you!%^RESET%^", living);
