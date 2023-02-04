@@ -14,8 +14,7 @@ inherit "/secure/sefun/time.c";
 inherit "/secure/sefun/user.c";
 
 string driver_version () {
-    mixed *lt = localtime(to_int(pcre_extract(__VERSION__, "^fluffos ([0-9]+)\\-")[0]));
-    return sprintf("%d-%2'0'd-%2'0'd", lt[5], lt[4]+1, lt[3]);
+    return explode(__VERSION__, "-")[0];
 }
 
 int driver_port () {
