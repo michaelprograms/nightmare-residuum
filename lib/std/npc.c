@@ -9,24 +9,24 @@ int is_npc () { return 1; }
 void set_level (int l) {
     int n = l + 1;
 
-    set_stat("strength", n * 4);
-    set_stat("perception", n * 5);
-    set_stat("endurance", n * 5);
-    set_stat("charisma", n * 3);
-    set_stat("intelligence", n * 4);
-    set_stat("agility", n * 5);
-    set_stat("luck", to_int(n * 2.5) + random(n + 1));
+    set_stat("strength", l + n * 4);
+    set_stat("perception", l + n * 5);
+    set_stat("endurance", l + n * 5);
+    set_stat("charisma", l + n * 3);
+    set_stat("intelligence", l + n * 4);
+    set_stat("agility", l + n * 5);
+    set_stat("luck", to_int(l + n * 2.5) + random(n + 1));
 
-    set_skill("blade attack", n * 4);
-    set_skill("blade defense", n * 3);
-    set_skill("brawl attack", n * 4);
-    set_skill("brawl defense", n * 3);
-    set_skill("blunt attack", n * 4);
-    set_skill("blunt defense", n * 3);
-    set_skill("psionic attack", n * 4);
-    set_skill("psionic defense", n * 3);
-    set_skill("ranged attack", n * 4);
-    set_skill("ranged defense", n * 3);
+    set_skill("blade attack", l + n * 4);
+    set_skill("blade defense", l + n * 3);
+    set_skill("brawl attack", l + n * 4);
+    set_skill("brawl defense", l + n * 3);
+    set_skill("blunt attack", l + n * 4);
+    set_skill("blunt defense", l + n * 3);
+    set_skill("psionic attack", l + n * 4);
+    set_skill("psionic defense", l + n * 3);
+    set_skill("ranged attack", l + n * 4);
+    set_skill("ranged defense", l + n * 3);
 
     ::set_level(l);
 }
