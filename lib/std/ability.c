@@ -582,7 +582,7 @@ int direct_verb_liv (mixed args...) {
         return 0;
     }
 
-    if (!objectp(args[1]) || !args[1]->is_living()) {
+    if (!objectp(args[1]) || !args[1]->is_living() || args[1]->query_defeated()) {
         return 0;
     }
     if (__Type == "attack") {
