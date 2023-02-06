@@ -582,11 +582,11 @@ int direct_verb_liv (mixed args...) {
         return 0;
     }
 
-    if (!objectp(args[1]) || !args[1]->is_living() || args[1]->query_defeated()) {
+    if (!objectp(args[1]) || !args[1]->is_living()) {
         return 0;
     }
     if (__Type == "attack") {
-        if (args[1] == previous_object()) {
+        if (args[1] == previous_object() || args[1]->query_defeated()) {
             return 0;
         }
         return 1;
