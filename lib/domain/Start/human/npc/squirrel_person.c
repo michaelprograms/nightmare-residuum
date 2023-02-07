@@ -38,13 +38,13 @@ void create () {
 /* ----- parser rule: adopt ----- */
 
 mixed can_adopt () {
-    return previous_object()->is_character() && environment(previous_object()) == environment(this_object());
+    return previous_object()->is_character() && environment(previous_object()) == environment();
 }
 void do_adopt () {
     message("action", "Adopt what?", previous_object());
 }
 mixed can_adopt_str (mixed args...) {
-    return previous_object()->is_character() && environment(previous_object()) == environment(this_object());
+    return previous_object()->is_character() && environment(previous_object()) == environment();
 }
 void do_adopt_str (mixed args...) {
     object po = previous_object(), pet;
@@ -88,13 +88,13 @@ void do_adopt_str (mixed args...) {
 /* ----- parser rule: recall ----- */
 
 mixed can_recall () {
-    return previous_object()->is_character() && environment(previous_object()) == environment(this_object());
+    return previous_object()->is_character() && environment(previous_object()) == environment();
 }
 void do_recall () {
     message("action", "Recall what?", previous_object());
 }
 mixed can_recall_str (mixed args...) {
-    return previous_object()->is_character() && environment(previous_object()) == environment(this_object());
+    return previous_object()->is_character() && environment(previous_object()) == environment();
 }
 void do_recall_str (mixed args...) {
     object po = previous_object(), pet;
