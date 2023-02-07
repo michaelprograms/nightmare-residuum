@@ -216,6 +216,8 @@ string format_message_color (string type, string message) {
     } else if (type == "channel error") {
         message = replace_string(message, "((", "%^CYAN%^(%^RED%^BOLD%^");
         message = replace_string(message, "))", "%^BOLD_OFF%^CYAN%^)%^RESET%^");
+    } else if (type == "attack") {
+        message = "%^RED%^BOLD%^" + message + "%^RESET%^";
     } else if (type == "combat hit") {
         message = "%^RED%^" + message + "%^RESET%^";
     } else if (type == "combat miss") {

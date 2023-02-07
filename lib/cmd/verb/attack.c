@@ -16,9 +16,9 @@ mixed can_attack_liv (object lv, string str) {
     return 1;
 }
 void do_attack_liv (object ob, string str) {
-    message("action", "%^RED%^BOLD%^You attack " + ob->query_cap_name() + "!%^RESET%^", previous_object());
-    message("action", "%^RED%^BOLD%^" + previous_object()->query_cap_name() + " attacks you!%^RESET%^", ob);
-    message("action", "%^RED%^BOLD%^" + previous_object()->query_cap_name() + " attacks " + ob->query_cap_name() + "!%^RESET%^", environment(previous_object()), previous_object());
+    message("attack", "You attack " + ob->query_cap_name() + "!", previous_object());
+    message("attack", previous_object()->query_cap_name() + " attacks you!", ob);
+    message("attack", previous_object()->query_cap_name() + " attacks " + ob->query_cap_name() + "!", environment(previous_object()), previous_object());
 
     previous_object()->add_hostile(ob);
     ob->add_hostile(previous_object());

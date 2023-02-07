@@ -21,15 +21,15 @@ void do_aid_liv (object ob, string str) {
 
     targets = ob->query_present_hostiles();
     if (sizeof(targets)) {
-        message("action", "%^RED%^BOLD%^You run to " + possessive_noun(ob->query_cap_name()) + " aid!%^RESET%^", po);
-        message("action", "%^RED%^BOLD%^" + po->query_cap_name() + " runs to your aid!%^RESET%^", ob);
-        message("action", "%^RED%^BOLD%^" + po->query_cap_name() + " runs to " + possessive_noun(ob->query_cap_name()) + " aid!%^RESET%^", environment(po), ({ po, ob }));
+        message("attack", "You run to " + possessive_noun(ob->query_cap_name()) + " aid!", po);
+        message("attack", po->query_cap_name() + " runs to your aid!", ob);
+        message("attack", po->query_cap_name() + " runs to " + possessive_noun(ob->query_cap_name()) + " aid!", environment(po), ({ po, ob }));
     }
 
     foreach (object target in ob->query_present_hostiles()) {
-        message("action", "%^RED%^BOLD%^You attack " + target->query_cap_name() + "!%^RESET%^", po);
-        message("action", "%^RED%^BOLD%^" + po->query_cap_name() + " attacks you!%^RESET%^", target);
-        message("action", "%^RED%^BOLD%^" + po->query_cap_name() + " attacks " + target->query_cap_name() + "!%^RESET%^", environment(po), ({ po, target }));
+        message("attack", "You attack " + target->query_cap_name() + "!", po);
+        message("attack", po->query_cap_name() + " attacks you!", target);
+        message("attack", po->query_cap_name() + " attacks " + target->query_cap_name() + "!", environment(po), ({ po, target }));
 
         po->add_hostile(target);
         target->add_hostile(po);
