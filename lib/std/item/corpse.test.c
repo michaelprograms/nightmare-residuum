@@ -35,7 +35,6 @@ void test_corpse () {
         assert(testOb->is_item(), "==", 1),
         assert(testOb->is_corpse(), "==", 1),
         assert(testOb->is_character(), "==", UNDEFINED),
-        assert(testOb->is_monster(), "==", UNDEFINED),
         assert(testOb->is_npc(), "==", UNDEFINED),
     }) :));
 }

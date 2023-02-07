@@ -16,7 +16,6 @@ void test_npc () {
         assert(testOb->is_living(), "==", 1),
         assert(testOb->is_character(), "==", 1),
         assert(testOb->is_npc(), "==", UNDEFINED),
-        assert(testOb->is_monster(), "==", UNDEFINED),
     }) :));
 }
 

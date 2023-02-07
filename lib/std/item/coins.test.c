@@ -17,7 +17,6 @@ void test_currency () {
         assert(testOb->is_item(), "==", 1),
         assert(testOb->is_currency(), "==", 1),
         assert(testOb->is_character(), "==", UNDEFINED),
-        assert(testOb->is_monster(), "==", UNDEFINED),
         assert(testOb->is_npc(), "==", UNDEFINED),
     }) :));
 }

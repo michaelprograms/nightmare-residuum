@@ -1,4 +1,4 @@
-inherit STD_MONSTER;
+inherit STD_NPC;
 
 void create () {
     ::create();

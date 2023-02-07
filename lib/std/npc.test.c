@@ -15,7 +15,6 @@ void test_npc () {
     expect("is_npc behaves", (: ({
         assert(testOb->is_living(), "==", 1),
         assert(testOb->is_npc(), "==", 1),
-        assert(testOb->is_monster(), "==", UNDEFINED),
         assert(testOb->is_character(), "==", UNDEFINED),
     }) :));
 }

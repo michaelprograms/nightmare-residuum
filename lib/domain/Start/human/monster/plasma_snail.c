@@ -1,4 +1,4 @@
-inherit STD_MONSTER;
+inherit STD_NPC;
 
 #define PLASMA_COLORS ({ "%^BLUE%^", "%^BLUE%^", "%^BLUE%^", "%^WHITE%^", "%^CYAN%^", "%^GREEN%^" })
 

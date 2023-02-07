@@ -19,7 +19,6 @@ void test_vendor () {
         assert(testOb->is_living(), "==", 1),
         assert(testOb->is_vendor(), "==", 1),
         assert(testOb->is_npc(), "==", 1),
-        assert(testOb->is_monster(), "==", UNDEFINED),
     }) :));
 }
 

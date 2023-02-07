@@ -14,7 +14,6 @@ void test_living () {
     expect("is_living returns true", (: ({
         assert(testOb->is_living(), "==", 1),
         assert(testOb->is_npc(), "==", 0),
-        assert(testOb->is_monster(), "==", 0),
         assert(testOb->is_character(), "==", 0),
     }) :));
 }

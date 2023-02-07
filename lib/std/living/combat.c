@@ -30,7 +30,7 @@ protected void handle_combat () {
 
     target->add_hostile(this_object());
 
-    if ((this_object()->is_npc() || this_object()->is_monster()) && this_object()->query_ability_chance()) {
+    if (this_object()->is_npc() && this_object()->query_ability_chance()) {
         this_object()->handle_ability_attack();
     }
 
