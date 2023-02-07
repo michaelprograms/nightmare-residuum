@@ -18,14 +18,14 @@ void create () {
     set_reset(([
         HUMAN_ITEM + "bench.c": 1,
         HUMAN_ITEM + "fountain.c": 1,
-        HUMAN_MONSTER + "ant.c": !random(3),
-        HUMAN_MONSTER + "bee.c": !random(3),
-        HUMAN_MONSTER + "beetle.c": !random(3),
-        HUMAN_MONSTER + "fly.c": !random(3),
-        HUMAN_MONSTER + "hamster.c": 1,
-        HUMAN_MONSTER + "squirrel.c": !random(3),
-        HUMAN_MONSTER + "termite.c": !random(3),
-        HUMAN_MONSTER + "wasp.c": !random(3),
-        HUMAN_MONSTER + "pigeon.c": !random(2),
+        HUMAN_NPC + "ant.c": !random(3),
+        HUMAN_NPC + "bee.c": !random(3),
+        HUMAN_NPC + "beetle.c": !random(3),
+        HUMAN_NPC + "fly.c": !random(3),
+        HUMAN_NPC + "hamster.c": 1,
+        HUMAN_NPC + "squirrel.c": !random(3),
+        HUMAN_NPC + "termite.c": !random(3),
+        HUMAN_NPC + "wasp.c": !random(3),
+        HUMAN_NPC + "pigeon.c": !random(2),
     ]));
 }

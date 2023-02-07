@@ -14,6 +14,6 @@ void create () {
         "street": "A street sign is labeled W. Market St.",
     ]));
     set_reset(([
-        HUMAN_MONSTER + "plasma_snail.c": 1,
+        HUMAN_NPC + "plasma_snail.c": 1,
     ]));
 }

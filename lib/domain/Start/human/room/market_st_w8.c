@@ -17,7 +17,7 @@ void create () {
         "light": "The light is redirected with reflective surfaces to provide natural light in here.",
     ]));
     set_reset(([
-        HUMAN_MONSTER + "plasma_snail.c": 1,
+        HUMAN_NPC + "plasma_snail.c": 1,
         HUMAN_NPC + "guard_clone.c": 2,
     ]));
 }
