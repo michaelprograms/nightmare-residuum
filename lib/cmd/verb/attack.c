@@ -16,12 +16,17 @@ mixed can_attack_liv (object lv, string str) {
     return 1;
 }
 void do_attack_liv (object ob, string str) {
-    message("attack", "You attack " + ob->query_cap_name() + "!", previous_object());
-    message("attack", previous_object()->query_cap_name() + " attacks you!", ob);
-    message("attack", previous_object()->query_cap_name() + " attacks " + ob->query_cap_name() + "!", environment(previous_object()), previous_object());
+    object po = previous_object();
+    if (ob && ob->query_defeated()) {
+        message("action", "You cannot attack someone who is already defeated.", po);
+        return;
+    }
+    message("attack", "You attack " + ob->query_cap_name() + "!", po);
+    message("attack", po->query_cap_name() + " attacks you!", ob);
+    message("attack", po->query_cap_name() + " attacks " + ob->query_cap_name() + "!", environment(po), po);
 
-    previous_object()->add_hostile(ob);
-    ob->add_hostile(previous_object());
+    po->add_hostile(ob);
+    ob->add_hostile(po);
 }
 void do_attack_lvs (mixed *info, string str) {
     foreach (mixed item in info) {
