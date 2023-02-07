@@ -43,7 +43,6 @@ jobs:
       timeout-minutes: 10
 
     - name: Run Tests
-      run: ./run-tests.sh
       run: ./build/bin/driver lib/secure/etc/nightmare-residuum.config -ftest
       shell: bash
       timeout-minutes: 1
