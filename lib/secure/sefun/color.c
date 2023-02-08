@@ -77,9 +77,9 @@ int *query_random_color () {
     int r = 255;
 
     c[0] = 64 + random(192);
-    r -= c[0];
+    r -= (c[0] * 3 / 4);
     c[1] = random(r);
-    r -= c[1];
+    r -= (c[1] * 3 / 4);
     c[2] = random(r);
 
     c = shuffle(c);
