@@ -280,6 +280,27 @@ int query_difficulty_factor () {
     return __DifficultyFactor;
 }
 
+/* ----- targets ----- */
+
+object *verify_targets (object source, object *targets) {
+    if (__Type == "attack") {
+        if ((!targets || !targets[0])) {
+            targets = ({ source->query_target_hostile() });
+        }
+        if ((!targets || !targets[0])) {
+            return 0;
+        }
+    } else if (__Type == "heal" || __Type == "utility") {
+        if ((!targets || !targets[0])) {
+            targets = ({ source });
+        }
+        if ((!targets || !targets[0])) {
+            return 0;
+        }
+    }
+    return targets;
+}
+
 /* ----- success ----- */
 
 int is_ability_successful (object source, object target) {
@@ -423,23 +444,9 @@ private void handle_ability_use (object source, object *targets) {
         return 0;
     }
 
-    if (__Type == "attack") {
-        if ((!targets || !targets[0])) {
-            targets = ({ source->query_target_hostile() });
-        }
-        if ((!targets || !targets[0])) {
-            message("action", "You have no hostile targets present.", source);
-            return;
-        }
-
-    } else if (__Type == "heal" || __Type == "utility") {
-        if ((!targets || !targets[0])) {
-            targets = ({ source });
-        }
-        if ((!targets || !targets[0])) {
-            message("action", "You have no friendly targets present.", source);
-            return;
-        }
+    if (!(targets = verify_targets(source, targets))) {
+        message("action", "You have no " + (__Type == "attack" ? "hostile" : "friendly") + " targets present.", source);
+        return;
     }
 
     if (__Weapons["brawl"]) {
