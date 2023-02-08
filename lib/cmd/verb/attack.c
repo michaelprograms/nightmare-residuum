@@ -17,6 +17,10 @@ mixed can_attack_liv (object lv, string str) {
 }
 void do_attack_liv (object ob, string str) {
     object po = previous_object();
+    if (po->query_defeated()) {
+        message("action", "You cannot attack someone while you are defeated.", po);
+        return;
+    }
     if (ob && ob->query_defeated()) {
         message("action", "You cannot attack someone who is already defeated.", po);
         return;
