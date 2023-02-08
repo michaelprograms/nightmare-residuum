@@ -247,15 +247,19 @@ private void describe_environment_exits () {
 
 private string describe_living_item (object ob) {
     string tag = "";
-    switch (ob->query_hp() * 100 / (ob->query_max_hp() + 1)) {
-        case 72..95: tag = " (bruised)"; break;
-        case 48..71: tag = " (injured)"; break;
-        case 24..47: tag = " (bleeding)"; break;
-        case 0..23:  tag = " (dying)"; break;
-    }
-    switch (ob->query_posture()) {
-        case "flying": case "laying": case "meditating": case "sitting":
-            tag += " ("+ob->query_posture()+")"; break;
+    if (ob->query_defeated()) {
+        tag += " (defeated)";
+    } else {
+        switch (ob->query_hp() * 100 / (ob->query_max_hp() + 1)) {
+            case 72..95: tag = " (bruised)"; break;
+            case 48..71: tag = " (injured)"; break;
+            case 24..47: tag = " (bleeding)"; break;
+            case 0..23:  tag = " (dying)"; break;
+        }
+        switch (ob->query_posture()) {
+            case "flying": case "laying": case "meditating": case "sitting":
+                tag += " ("+ob->query_posture()+")"; break;
+        }
     }
     return ob->query_short("%^RED%^BOLD%^") + tag;
 }
