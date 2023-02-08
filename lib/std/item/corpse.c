@@ -21,7 +21,7 @@ void setup_body (object ob) {
 
     if (!ob) error("Bad argument 1 to corpse->setup_body");
 
-    set_name("corpse of " + ob->query_short());
+    set_name("corpse of " + ob->query_name());
     set_id(({ "corpse", "corpse of " + ob->query_short(), "corpse of " + ob->query_name() }));
     set_short("the corpse of " + ob->query_short("%^DEFAULT%^"));
     set_long("Here lies the body of " + ob->query_cap_name() + ".");
