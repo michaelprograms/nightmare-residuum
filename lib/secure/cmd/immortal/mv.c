@@ -16,6 +16,9 @@ void command (string input, mapping flags) {
     cwd = this_user()->query_shell()->query_variable("cwd");
     file1 = absolute_path(file1, cwd);
     file2 = absolute_path(file2, cwd);
+    if (file2[<1] == '/') {
+        file2 = file2[0..<2];
+    }
     if (file_size(file2) == -2) {
         file2 += "/" + explode(file1, "/")[<1];
     }
