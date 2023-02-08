@@ -5,20 +5,20 @@ string query_banner () {
 
     string tmp, dot = " ";
     int pad;
-    int r = 25 + 1+random(125);
+    int r = 25 + 1+random(100);
 
     lines = explode(read_file("/etc/welcome"), "\n");
-    tmp = " " + mud_name() + " ";
+    tmp = "  " + mud_name() + "  ";
     pad = 40 - strlen(tmp) / 2;
     lines[<2] = lines[<2][0..pad-1] + tmp + lines[<2][80-pad..79];
 
-    tmp = " Driver: " + driver_version() + "   Mudlib: " + mudlib_version() + " ";
+    tmp = "  " + driver_version() + "   " + mudlib_version() + "  ";
     pad = 40 - strlen(tmp) / 2;
     lines[<1] = lines[<1][0..pad-1] + tmp + lines[<1][80-pad+strlen(tmp)%2..79];
 
     if (this_user() && this_user()->query_terminal_color() == "256") {
         int *c1 = query_random_color();
-        int *c2 = ({ 191, 191, 191, });
+        int *c2 = allocate(3, 159+random(32));
         colors += color_gradient(c1, c2, 34);
         for (int i = sizeof(colors)-1; i > -1; i --) {
             colors[i] = "\e[38;2;"+colors[i]+"m";
