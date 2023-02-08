@@ -27,7 +27,7 @@ string mudlib_version () {
 
 string mud_name () {
     string name = "Nightmare Residuum";
-#ifdef MUDNAME
+#ifdef MUD_NAME
     name = MUD_NAME;
 #endif
     return name;
