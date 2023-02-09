@@ -44,6 +44,7 @@ void set_stat (string stat, int n) {
     // @TODO security
     __Stats[stat] = n;
     this_object()->update_vitals();
+    this_object()->update_limbs();
 }
 void add_stat_bonus (string stat, int n) {
     if (!__StatsBonus) {

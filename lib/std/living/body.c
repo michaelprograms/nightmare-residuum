@@ -27,8 +27,6 @@ string query_species () {
     return stringp(__Species) ? __Species : "unknown";
 }
 void set_species (string species) {
-    // @TODO security
-
     if (!stringp(species)) error("Bad argument 1 to body->set_species");
 
     __Species = species;
@@ -54,7 +52,6 @@ void set_level (int l) {
 /* ----- limbs ----- */
 
 protected void update_limbs () {
-    // @TODO this should probably be called on level/stat change
     mapping newLimbs = D_SPECIES->setup_body(this_object());
 
     foreach (string limb,mapping value in newLimbs || ([])) {
