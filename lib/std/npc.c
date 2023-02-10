@@ -97,6 +97,22 @@ void handle_receive_living_in_env (object living) {
     }
 }
 
+void handle_movement () {
+    object env;
+    string *exits;
+
+    if (!this_object() || !(env = environment())) {
+        return;
+    }
+
+    exits = env->query_exit_directions();
+    if (sizeof(exits) < 1) {
+        return;
+    }
+
+    do_command("go " + element_of(exits));
+}
+
 /* ----- applies ----- */
 
 void create () {
