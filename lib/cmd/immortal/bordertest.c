@@ -88,6 +88,17 @@ void command (string input, mapping flags) {
     ]));
 
     border(([
+        "body": ([
+            "items": ({
+                "Test.",
+            }),
+            "align": "left",
+            "columns": 1,
+        ]),
+        "ansi": 0,
+    ]));
+
+    border(([
         "header": ([
             "header": ({ "Header Header 1", "Header Header 2", "Header Header 3", }),
             "items": ({ "Header Item 1", "Header Item 2", "Header Item 3", }),
