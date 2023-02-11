@@ -93,7 +93,7 @@ void set_adjective (string *adj) {
     if (undefinedp(adj) || !arrayp(adj) || !sizeof(adj)) {
         error("Bad argument 1 to id->set_adjective");
     }
-    __Adj = filter_array(__Adj + adj, (: $1 && $1 != "" :));
+    __Adj = filter(__Adj + adj, (: $1 && $1 != "" :));
     refresh_id();
 }
 void add_adjective (string adj) {

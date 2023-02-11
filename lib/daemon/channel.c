@@ -26,7 +26,7 @@ private string format_channel_name (string channel) {
 }
 
 private void handle_send (string name, string channel, string msg) {
-    string *listeners = filter_array(characters(), (: !$1->query_channel_blocked($(channel)) :));
+    string *listeners = filter(characters(), (: !$1->query_channel_blocked($(channel)) :));
     string type = "channel";
     if (channel == "error") {
         type = "channel error";

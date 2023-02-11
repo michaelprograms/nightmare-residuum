@@ -22,7 +22,7 @@ void command (string input, mapping flags) {
         "arm", "hand", "leg", "foot",
         "paw", "wing", "tail",
     })) {
-        foreach (string l in sort_array(filter_array(limbs, (: regexp($1, $(type)) :)), 1)) {
+        foreach (string l in sort_array(filter(limbs, (: regexp($1, $(type)) :)), 1)) {
             mapping limb = target->query_limb(l);
             items += ({
                 l,

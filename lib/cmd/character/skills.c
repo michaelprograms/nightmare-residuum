@@ -15,7 +15,7 @@ void command (string input, mapping flags) {
         else if (present(input, environment(tc))) target = present(input, environment(tc));
     }
 
-    skillsCombat = sort_array(filter_array(tc->query_all_skills(), (: regexp($1, "[a-z]+ attack|defense") :)), 1);
+    skillsCombat = sort_array(filter(tc->query_all_skills(), (: regexp($1, "[a-z]+ attack|defense") :)), 1);
     if (sizeof(skillsCombat)) {
         body += ({
             ([
@@ -26,7 +26,7 @@ void command (string input, mapping flags) {
         });
     }
 
-    skillsTalents = sort_array(filter_array(tc->query_all_skills(), (: member_array($1, ({ "medicine", "theurgy" })) > -1 :)), 1);
+    skillsTalents = sort_array(filter(tc->query_all_skills(), (: member_array($1, ({ "medicine", "theurgy" })) > -1 :)), 1);
     if (sizeof(skillsTalents)) {
         body += ({
             ([

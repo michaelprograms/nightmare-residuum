@@ -105,7 +105,7 @@ string conjunction (string *list) {
     int i, max;
 
     if (arrayp(list)) {
-        list = filter_array(list, (: stringp($1) && strlen($1) > 0 :));
+        list = filter(list, (: stringp($1) && strlen($1) > 0 :));
     }
     if (!arrayp(list) || !sizeof(list)) error("Bad argument 1 to grammar->conjunction");
     for (i = 0, max = sizeof(list); i < max; i ++) {

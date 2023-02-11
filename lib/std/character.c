@@ -269,7 +269,7 @@ private void describe_environment_living_contents () {
     mixed *list;
     string *shorts;
 
-    list = filter_array(contents, (: $1 != this_object() :));
+    list = filter(contents, (: $1 != this_object() :));
     list = sort_array(list, function (object a, object b) {
         if (a->is_character()) {
             if (b->is_character()) return strcmp(a->query_cap_name(), b->query_cap_name());

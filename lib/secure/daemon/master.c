@@ -33,7 +33,7 @@ string privs_file (string filename) {
 varargs string *epilog (int load_empty) {
     string *preload = ({ });
     if (!load_empty && file_size(CFG_PRELOAD) > 0) {
-        preload = filter_array(explode(read_file(CFG_PRELOAD), "\n") - ({ "" }), (: $1[0] != '#' :));
+        preload = filter(explode(read_file(CFG_PRELOAD), "\n") - ({ "" }), (: $1[0] != '#' :));
     }
     return preload;
 }
@@ -196,7 +196,7 @@ void error_handler (mapping e, int caught) {
     string ret, file = caught ? "catch" : "runtime";
 
     if (caught && sizeof(e["trace"]) > 1 && e["trace"][1]["program"] == D_TEST) {
-        object test = filter_array(e["trace"], (: $1["file"] == M_TEST :))[0]["object"];
+        object test = filter(e["trace"], (: $1["file"] == M_TEST :))[0]["object"];
         if (test && !test->query_expect_catch()) {
             write("--- CAUGHT DURING TEST:\n" + standard_trace(e) + "\n---\n");
         }
@@ -217,7 +217,7 @@ void error_handler (mapping e, int caught) {
 
 private string *read_file_disabled_warnings (string file) {
     string *lines = file_size(file) > 0 ? explode(read_file(file), "\n") : ({});
-    lines = filter_array(lines, (: regexp($1,"// disable warning:") :));
+    lines = filter(lines, (: regexp($1,"// disable warning:") :));
     return map_array(lines, (: $1[strsrch($1, ": ")+2..<1] :));
 }
 

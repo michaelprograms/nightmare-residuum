@@ -1,6 +1,6 @@
 #include "user.h"
 
-#define QUERY_FIRST_IMMORTAL !!filter_array(get_dir("/realm/"), (:$1 && $1[0..0] != ".":))
+#define QUERY_FIRST_IMMORTAL !!filter(get_dir("/realm/"), (:$1 && $1[0..0] != ".":))
 
 nosave private string __Species;
 nosave private object __Character;
@@ -40,7 +40,7 @@ nomask private void character_enter (int newbie) {
     remove_call_out();
 
     // Check for existing character
-    chars = filter_array(children(STD_CHARACTER) - ({ __Character }), (: $1 && $1->query_key_name() == __Character->query_key_name() :));
+    chars = filter(children(STD_CHARACTER) - ({ __Character }), (: $1 && $1->query_key_name() == __Character->query_key_name() :));
     if (sizeof(chars) > 0 && (char = chars[0])) {
         if (char->query_user() && interactive(char->query_user())) {
             write(char->query_cap_name()+" is connected and interactive.\n");
@@ -84,7 +84,7 @@ nomask private void character_override () {
     remove_call_out();
 
     // Verify existing character still here
-    chars = filter_array(children(STD_CHARACTER) - ({ __Character }), (: $1 && $1->query_key_name() == __Character->query_key_name():));
+    chars = filter(children(STD_CHARACTER) - ({ __Character }), (: $1 && $1->query_key_name() == __Character->query_key_name():));
     if (sizeof(chars) > 0 && (char = chars[0])) {
         destruct(__Character);
         // Swap character's user

@@ -131,7 +131,7 @@ string *wild_card (string path, string relative_to) {
         match -= ({ ".." });
     }
     if (!path || path[0] != '.') {
-        match = filter_array(match, (: $1[0] != '.' :));
+        match = filter(match, (: $1[0] != '.' :));
     }
     for (int i = 0; i < sizeof(match); i ++) {
         if (file_size(split[0] + split[1]) == -2) {

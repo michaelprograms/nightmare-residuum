@@ -59,7 +59,7 @@ mixed expand_alias (string input) {
     string *xverbMatches, expandedInput;
     int numArgs = sizeof(argv) - 1, i, j;
 
-    xverbMatches = filter_array(__XAliases, (: strsrch($2, $1) == 0 :), argv[0]);
+    xverbMatches = filter(__XAliases, (: strsrch($2, $1) == 0 :), argv[0]);
     if (sizeof(xverbMatches) > 1) {
         error("Alias conflict: can't distinguish between " + implode(xverbMatches, ", "));
     } else if (sizeof(xverbMatches) == 1) {

@@ -76,17 +76,17 @@ void command (string input, mapping flags) {
     } else if (input == "all") {
         obs = objects();
     } else {
-        obs = filter_array(objects(), (: $1 && ($1->query_key_name() == $(input) || regexp(file_name($1), $(input))) :));
+        obs = filter(objects(), (: $1 && ($1->query_key_name() == $(input) || regexp(file_name($1), $(input))) :));
     }
 
     // format rooms first
-    rooms = filter_array(obs, (: $1 && $1->is_room() :));
+    rooms = filter(obs, (: $1 && $1->is_room() :));
     rooms = sort_array(rooms, (: strcmp(base_name($1), base_name($2)) :));
     obs -= rooms;
     format_type(data, rooms);
 
     // format containers next
-    containers = filter_array(obs, (: $1 && $1->inventory_accessible() :));
+    containers = filter(obs, (: $1 && $1->inventory_accessible() :));
     obs -= containers;
     format_type(data, obs);
 

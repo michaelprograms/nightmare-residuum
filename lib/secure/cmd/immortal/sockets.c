@@ -12,7 +12,7 @@ void command (string input, mapping flags) {
         sockets += ({ s[0], s[1], s[2], s[3], });
     }
 
-    foreach (string key, int value in filter_array(network_stats(), (: strsrch($1, "socket") > -1 :))) {
+    foreach (string key, int value in filter(network_stats(), (: strsrch($1, "socket") > -1 :))) {
         key = replace_string(key, " sockets", "");
         netStats += ({ sprintf("%20s", key) + " : " + value });
     }

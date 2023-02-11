@@ -64,12 +64,12 @@ protected void update_limbs () {
 }
 string *query_limbs () {
     string *limbs = keys(__Limbs || ([ ]));
-    limbs = filter_array(limbs, (: __Limbs[$1]["status"] != "severed" :));
+    limbs = filter(limbs, (: __Limbs[$1]["status"] != "severed" :));
     return limbs;
 }
 string *query_severed_limbs () {
     string *limbs = keys(__Limbs || ([ ]));
-    limbs = filter_array(limbs, (: __Limbs[$1]["status"] == "severed" :));
+    limbs = filter(limbs, (: __Limbs[$1]["status"] == "severed" :));
     return limbs;
 }
 mapping query_limb (string limb) {

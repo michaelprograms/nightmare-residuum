@@ -170,11 +170,11 @@ int query_hostile (object ob) {
     return member_array(ob, __Hostiles) > -1;
 }
 object *query_hostiles () {
-    __Hostiles = filter_array(__Hostiles, (: !undefinedp($1) :));
+    __Hostiles = filter(__Hostiles, (: !undefinedp($1) :));
     return __Hostiles;
 }
 object *query_present_hostiles () {
-    return filter_array(query_hostiles(), (: environment($1) == environment() :));
+    return filter(query_hostiles(), (: environment($1) == environment() :));
 }
 object query_target_hostile () {
     object *hostiles = query_present_hostiles();
