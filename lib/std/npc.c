@@ -3,6 +3,7 @@ inherit STD_LIVING;
 nosave private string *__AbilityList;
 nosave private int __AbilityChance;
 nosave private int __Aggressive;
+nosave private int __Wander = 0, __NextWander;
 
 int is_npc () { return 1; }
 
@@ -97,7 +98,20 @@ void handle_receive_living_in_env (object living) {
     }
 }
 
-void handle_movement () {
+/* ----- wander ----- */
+
+int query_next_wander () {
+    return __NextWander;
+}
+int query_wander () {
+    return __Wander;
+}
+void set_wander (int m) {
+    __Wander = m;
+    __NextWander = 0;
+}
+
+void handle_wander () {
     object env;
     string *exits;
 
@@ -117,15 +131,26 @@ void handle_movement () {
 
 void create () {
     ::create();
-    if (!clonep()) return;
+    if (!clonep()) {
+        return;
+    }
     set_heart_beat(1);
 }
 
 void heart_beat () {
-    if (!clonep()) return;
+    if (!clonep()) {
+        return;
+    }
 
     if (random(2) && member_array(query_posture(), ({ "sitting", "laying" })) > -1 && sizeof(query_present_hostiles())) {
-        this_object()->do_command("stand");
+        do_command("stand");
     }
     ::heart_beat();
+
+    if (__Wander && __NextWander >= __Wander) {
+        handle_wander();
+        __NextWander = 0;
+    } else if (random(2)) {
+        __NextWander ++;
+    }
 }
