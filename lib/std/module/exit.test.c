@@ -69,15 +69,15 @@ void test_exits_before_after () {
     r2 = new(STD_ROOM);
     ob = new(STD_NPC);
 
-    expect("exits handles before and after functions", (: ({
-        r1->set_exit("east", file_name(r2), function (object ob, string dir) {
-            checkBefore ++;
-            return 1;
-        }, function (object ob, string dir) {
-            checkAfter ++;
-        }),
-        r2->set_exit("west", file_name(r1)),
+    r1->set_exit("east", file_name(r2), function (object ob, string dir) {
+        checkBefore ++;
+        return 1;
+    }, function (object ob, string dir) {
+        checkAfter ++;
+    });
+    r2->set_exit("west", file_name(r1));
 
+    expect("exits handles before and after functions", (: ({
         assert(ob->handle_move(r1), "==", 1),
         assert(r1->handle_go(ob, "walk", "east"), "==", 1),
         assert(checkBefore, "==", 1),
