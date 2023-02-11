@@ -82,3 +82,90 @@ void test_aggressive (function done) {
         evaluate(done);
     }, 0, done);
 }
+
+nosave private object r1, r2, ob;
+
+void test_wander () {
+    expect_function("set_wander", testOb);
+    expect_function("query_wander", testOb);
+    expect_function("set_next_wander", testOb);
+    expect_function("query_next_wander", testOb);
+
+    expect("wander is queryable and settable", (: ({
+        assert(testOb->query_wander(), "==", 0),
+
+        testOb->set_wander(1),
+        assert(testOb->query_wander(), "==", 1),
+        assert(testOb->query_next_wander(), "==", 0),
+
+        testOb->set_wander(10),
+        assert(testOb->query_wander(), "==", 10),
+        assert(testOb->query_next_wander(), "==", 0),
+
+        testOb->set_wander(50),
+        assert(testOb->query_wander(), "==", 50),
+        assert(testOb->query_next_wander(), "==", 0),
+
+        testOb->set_wander(0),
+        assert(testOb->query_wander(), "==", 0),
+        assert(testOb->query_next_wander(), "==", 0),
+    }) :));
+
+    expect("wander sets up next_wander", (: ({
+        testOb->set_next_wander(10),
+        assert(testOb->query_next_wander(), "==", 10),
+
+        testOb->set_next_wander(50),
+        assert(testOb->query_next_wander(), "==", 50),
+    }) :));
+
+    // verify wandering
+    r1 = new(STD_ROOM);
+    r2 = new(STD_ROOM);
+    ob = new(STD_NPC);
+
+    r1->set_exit("east", file_name(r2));
+    r2->set_exit("west", file_name(r1));
+
+    expect("wander moves to neighboring room", (: ({
+        assert(ob->handle_move(r1), "==", 1),
+
+        // wander not set up, won't move
+        ob->heart_beat(),
+        assert(environment(ob), "==", r1),
+
+        // setup wander value of 1 (moves on 2nd heartbeat)
+        ob->set_wander(1),
+        assert(ob->query_next_wander(), "==", 0),
+        // won't move on first heartbeat
+        ob->heart_beat(),
+        assert(environment(ob), "==", r1),
+        assert(ob->query_next_wander(), "==", 1),
+        // moves
+        ob->heart_beat(),
+        assert(environment(ob), "==", r2),
+        assert(ob->query_next_wander(), "==", 0),
+
+        // setup wander value of 3 (moves on 4th heartbeat)
+        ob->set_wander(3),
+        assert(ob->query_next_wander(), "==", 0),
+        // won't move on first three heartbeats
+        ob->heart_beat(),
+        assert(environment(ob), "==", r2),
+        assert(ob->query_next_wander(), "==", 1),
+        ob->heart_beat(),
+        assert(environment(ob), "==", r2),
+        assert(ob->query_next_wander(), "==", 2),
+        ob->heart_beat(),
+        assert(environment(ob), "==", r2),
+        assert(ob->query_next_wander(), "==", 3),
+        // moves
+        ob->heart_beat(),
+        assert(environment(ob), "==", r1),
+        assert(ob->query_next_wander(), "==", 0),
+    }) :));
+
+    destruct(ob);
+    destruct(r1);
+    destruct(r2);
+}

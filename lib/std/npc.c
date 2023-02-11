@@ -103,11 +103,14 @@ void handle_receive_living_in_env (object living) {
 int query_next_wander () {
     return __NextWander;
 }
+void set_next_wander (int n) {
+    __NextWander = n;
+}
 int query_wander () {
     return __Wander;
 }
-void set_wander (int m) {
-    __Wander = m;
+void set_wander (int n) {
+    __Wander = n;
     __NextWander = 0;
 }
 
@@ -150,7 +153,7 @@ void heart_beat () {
     if (__Wander && __NextWander >= __Wander) {
         handle_wander();
         __NextWander = 0;
-    } else if (random(2)) {
+    } else {
         __NextWander ++;
     }
 }
