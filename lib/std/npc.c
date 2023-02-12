@@ -3,7 +3,7 @@ inherit STD_LIVING;
 nosave private string *__AbilityList;
 nosave private int __AbilityChance;
 nosave private int __Aggressive;
-nosave private int __Wander = 0, __NextWander;
+nosave private int __Wander = 0, __Wanders = 0, __NextWander = 0;
 
 int is_npc () { return 1; }
 
@@ -113,6 +113,9 @@ void set_wander (int n) {
     __Wander = n;
     __NextWander = 0;
 }
+int query_wanders () {
+    return __Wanders;
+}
 
 void handle_wander () {
     object env;
@@ -150,9 +153,10 @@ void heart_beat () {
     }
     ::heart_beat();
 
-    if (__Wander && __NextWander >= __Wander) {
+    if (__Wander && __NextWander >= __Wander && __Wanders < 5) {
         handle_wander();
         __NextWander = 0;
+        __Wanders ++;
     } else {
         __NextWander ++;
     }
