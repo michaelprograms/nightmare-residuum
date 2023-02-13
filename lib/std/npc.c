@@ -86,14 +86,24 @@ void handle_received (object env) {
 }
 
 void handle_receive_living_in_env (object living) {
-    if (living->is_character() && !living->query_defeated() && __Aggressive > 0 && !query_hostile(living)) {
-        if (living->query_stat("charisma") < __Aggressive) {
+    if (living->is_character()) {
+        // auto attack characters
+        if (
+            __Aggressive > 0 &&
+            !living->query_defeated() &&
+            living->query_stat("charisma") < __Aggressive &&
+            !query_hostile(living)
+        ) {
             message("attack", "You attack " + living->query_cap_name() + "!", this_object());
             message("attack", this_object()->query_cap_name() + " attacks you!", living);
             message("attack", this_object()->query_cap_name() + " attacks " + living->query_cap_name() + "!", environment(), ({ this_object(), living }));
-
             living->add_hostile(this_object());
             add_hostile(living);
+        }
+
+        // reset wander count
+        if (__Wander) {
+            __Wanders = 0;
         }
     }
 }
@@ -133,6 +143,16 @@ void handle_wander () {
     do_command("go " + element_of(exits));
 }
 
+void attempt_wander () {
+    if (__Wander && __NextWander >= __Wander && __Wanders < 20) {
+        handle_wander();
+        __NextWander = 0;
+        __Wanders ++;
+    } else {
+        __NextWander ++;
+    }
+}
+
 /* ----- applies ----- */
 
 void create () {
@@ -153,11 +173,5 @@ void heart_beat () {
     }
     ::heart_beat();
 
-    if (__Wander && __NextWander >= __Wander && __Wanders < 5) {
-        handle_wander();
-        __NextWander = 0;
-        __Wanders ++;
-    } else {
-        __NextWander ++;
-    }
+    attempt_wander();
 }

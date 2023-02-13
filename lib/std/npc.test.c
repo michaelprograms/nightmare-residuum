@@ -130,39 +130,39 @@ void test_wander () {
         assert(testOb->handle_move(r1), "==", 1),
 
         // wander not set up, won't move
-        testOb->heart_beat(),
+        testOb->attempt_wander(),
         assert(environment(testOb), "==", r1),
         assert(testOb->query_wanders(), "==", 0),
 
-        // setup wander value of 1 (moves on 2nd heartbeat)
+        // setup wander value of 1 (moves on 2nd attempt)
         testOb->set_wander(1),
         assert(testOb->query_next_wander(), "==", 0),
-        // won't move on first heartbeat
-        testOb->heart_beat(),
+        // won't move on first attempt
+        testOb->attempt_wander(),
         assert(environment(testOb), "==", r1),
         assert(testOb->query_next_wander(), "==", 1),
         assert(testOb->query_wanders(), "==", 0),
         // moves
-        testOb->heart_beat(),
+        testOb->attempt_wander(),
         assert(environment(testOb), "==", r2),
         assert(testOb->query_next_wander(), "==", 0),
         assert(testOb->query_wanders(), "==", 1),
 
-        // setup wander value of 3 (moves on 4th heartbeat)
+        // setup wander value of 3 (moves on 4th attempt)
         testOb->set_wander(3),
         assert(testOb->query_next_wander(), "==", 0),
-        // won't move on first three heartbeats
-        testOb->heart_beat(),
+        // won't move on first three attempts
+        testOb->attempt_wander(),
         assert(environment(testOb), "==", r2),
         assert(testOb->query_next_wander(), "==", 1),
-        testOb->heart_beat(),
+        testOb->attempt_wander(),
         assert(environment(testOb), "==", r2),
         assert(testOb->query_next_wander(), "==", 2),
-        testOb->heart_beat(),
+        testOb->attempt_wander(),
         assert(environment(testOb), "==", r2),
         assert(testOb->query_next_wander(), "==", 3),
         // moves
-        testOb->heart_beat(),
+        testOb->attempt_wander(),
         assert(environment(testOb), "==", r1),
         assert(testOb->query_next_wander(), "==", 0),
         assert(testOb->query_wanders(), "==", 2),
