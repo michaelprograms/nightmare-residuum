@@ -6,7 +6,10 @@ void command (string input, mapping flags) {
         return;
     }
 
-    if (ob = find_character(input)) {
+    if (
+        (ob = find_character(input)) ||
+        (regexp(input, "#") && (ob = find_object(input)))
+    ) {
         message("action", "Going to "+input+"...", this_character());
         this_character()->handle_go(environment(ob), "teleport", "away");
         this_character()->describe_environment();
