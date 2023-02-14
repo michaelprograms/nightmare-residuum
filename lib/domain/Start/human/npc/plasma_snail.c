@@ -18,4 +18,5 @@ void create() {
     set_ability_list(({ "zap" }));
     set_ability_chance(50);
     set_aggressive(20);
+    set_wander(10);
 }
