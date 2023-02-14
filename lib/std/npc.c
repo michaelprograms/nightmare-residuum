@@ -144,12 +144,14 @@ void handle_wander () {
 }
 
 void attempt_wander () {
-    if (__Wander && __NextWander >= __Wander && __Wanders < 20) {
-        handle_wander();
-        __NextWander = 0;
-        __Wanders ++;
-    } else {
-        __NextWander ++;
+    if (__Wander) {
+        if (__NextWander >= __Wander && __Wanders < 20) {
+            handle_wander();
+            __NextWander = 0;
+            __Wanders ++;
+        } else {
+            __NextWander ++;
+        }
     }
 }
 
