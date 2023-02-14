@@ -6,7 +6,7 @@ void create () {
 }
 
 void command (string input, mapping flags) {
-    string *sockets = ({}), *netStats = ({ });
+    string *sockets = ({ }), *netStats = ({ });
 
     foreach (mixed *s in socket_status()) {
         sockets += ({ s[0], s[1], s[2], s[3], });
