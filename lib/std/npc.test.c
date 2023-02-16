@@ -91,6 +91,8 @@ void test_wander () {
     expect_function("query_wanders", testOb);
     expect_function("set_next_wander", testOb);
     expect_function("query_next_wander", testOb);
+    expect_function("attempt_wander", testOb);
+    expect_function("handle_wander", testOb);
 
     expect("wander is queryable and settable", (: ({
         assert(testOb->query_wander(), "==", 0),
@@ -164,6 +166,13 @@ void test_wander () {
         // moves
         testOb->attempt_wander(),
         assert(environment(testOb), "==", r1),
+        assert(testOb->query_next_wander(), "==", 0),
+        assert(testOb->query_wanders(), "==", 2),
+
+        // skipping checks and moves
+        testOb->handle_wander(),
+        assert(environment(testOb), "==", r2),
+        // values don't increment
         assert(testOb->query_next_wander(), "==", 0),
         assert(testOb->query_wanders(), "==", 2),
     }) :));
