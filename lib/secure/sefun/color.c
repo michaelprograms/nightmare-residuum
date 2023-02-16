@@ -13,7 +13,7 @@ string strip_colour (string str) {
 string wrap_ansi (string str, int width) {
     string *linesANSI, *linesUnknown;
     string strANSI, strUnknown, lastWord;
-    int posANSI, posUnknown, i, n, jagged, diff;
+    int posANSI, posUnknown, i, n, diff;
 
     strUnknown = terminal_colour(str, D_ANSI->query_unknown_term(), width, 0);
     strUnknown = replace_string(strUnknown, "\e[49;49m", "");
@@ -33,26 +33,22 @@ string wrap_ansi (string str, int width) {
 
         diff = width - sizeof(linesUnknown[i]);
         if (diff > 0) {
-            if (!jagged) {
-                // when difference in length between ANSI and Unknown,
-                // we want to insert padding before the final ANSI tags.
-                // find last word in Unknown to the end (includes spaces)
-                posUnknown = strsrch(linesUnknown[i], " ", -1);
-                lastWord = linesUnknown[i][posUnknown..];
-                posUnknown = strsrch(linesUnknown[i], lastWord, -1);
-                lastWord = linesUnknown[i][posUnknown..];
-                if (posUnknown <= 0) {
+            // when difference in length between ANSI and Unknown,
+            // we want to insert padding before the final ANSI tags.
+            // find last word in Unknown to the end (includes spaces)
+            posUnknown = strsrch(linesUnknown[i], " ", -1);
+            lastWord = linesUnknown[i][posUnknown..];
+            posUnknown = strsrch(linesUnknown[i], lastWord, -1);
+            lastWord = linesUnknown[i][posUnknown..];
+            if (posUnknown <= 0) {
+                linesANSI[i] += sprintf("%' '*s", diff, "");
+            } else {
+                posANSI = strsrch(linesANSI[i], lastWord, -1);
+                if (posANSI == -1) {
                     linesANSI[i] += sprintf("%' '*s", diff, "");
                 } else {
-                    posANSI = strsrch(linesANSI[i], lastWord, -1);
-                    if (posANSI == -1) {
-                        linesANSI[i] += sprintf("%' '*s", diff, "");
-                    } else {
-                        linesANSI[i] = linesANSI[i][0..posANSI + sizeof(lastWord)-1] + sprintf("%' '*s", diff, "") + linesANSI[i][posANSI + sizeof(lastWord)..];
-                    }
+                    linesANSI[i] = linesANSI[i][0..posANSI + sizeof(lastWord)-1] + sprintf("%' '*s", diff, "") + linesANSI[i][posANSI + sizeof(lastWord)..];
                 }
-            } else {
-                linesANSI[i] += sprintf("%' '*s", diff, "");
             }
             diff = 0;
         }
