@@ -348,7 +348,7 @@ string *format_border (mapping data) {
                 right += ({ left[i] });
             }
             for (i = headerStart; i < l-1; i ++) {
-                if (i < headerEnd || i > footerLine) {
+                if (i < headerEnd || (i > footerLine && footerLine > 0)) {
                     lines[i] = "\e[38;2;"+left[i-headerStart]+"m"+lines[i][0..1]+"\e[0;37;40m" + lines[i][2..<3] + "\e[38;2;"+right[i-headerStart]+"m" + lines[i][<2..] + "\e[0;37;40m";
                 } else if (i == headerEnd || i == footerLine) {
                     mixed *gradient;
@@ -357,7 +357,7 @@ string *format_border (mapping data) {
                     rside = map(explode(right[i-headerStart], ";"), (: to_int($1) :));
                     gradient = SEFUN->color_gradient(lside, rside, width);
                     lines[i] = SEFUN->apply_gradient(lines[i], gradient);
-                } else if (i < footerLine) {
+                } else if (i < footerLine || !footerLine) {
                     lines[i] = "\e[38;2;"+left[i-headerStart]+"m"+lines[i][0..0]+"\e[0;37;40m" + lines[i][1..<2] + "\e[38;2;"+right[i-headerStart]+"m" + lines[i][<1..] + "\e[0;37;40m";
                 }
             }
