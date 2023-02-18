@@ -1,7 +1,5 @@
 inherit STD_COMMAND;
 
-mapping format_data (object ob);
-
 void create () {
     set_syntax("heartbeats ([name filter]|[file filter])");
     set_help_text("The heartbeats command is used to view the list of objects with heartbeats.\n\nUsing a name or file filter will show the list of objects that match either filter.");
