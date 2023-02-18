@@ -1,5 +1,6 @@
 private string *__Channels;
 private string *__SystemChannels;
+private mapping __History = ([ ]);
 
 /* ----- helpers ----- */
 
@@ -9,9 +10,21 @@ string *query_channels () {
 string *query_system_channels () {
     return __SystemChannels;
 }
-
 int query_valid_channel (string channel) {
     return member_array(channel, __Channels) > -1 || member_array(channel, __SystemChannels) > -1;
+}
+
+string *query_history (string channel) {
+    return __History[channel];
+}
+void add_history (string channel, string msg) {
+    if (!arrayp(__History[channel])) {
+        __History[channel] = ({ });
+    }
+    __History[channel] += ({ msg });
+    if (sizeof(__History[channel]) > 20) {
+        __History[channel] = __History[channel][0..19];
+    }
 }
 
 private string format_channel_name (string channel) {
@@ -20,11 +33,11 @@ private string format_channel_name (string channel) {
 
 private void handle_send (string name, string channel, string msg) {
     string *listeners = filter(characters(), (: !$1->query_channel_blocked($(channel)) :));
-    string type = "channel";
-    if (channel == "error") {
-        type = "channel error";
-    }
-    message(type, (name ? name + " " : "") + format_channel_name(channel) + " " + msg, listeners);
+    string type = (channel == "error" ? "channel error" : "channel");
+    string m = (name ? name + " " : "") + format_channel_name(channel) + " " + msg;
+
+    message(type, m, listeners);
+    add_history(channel, m);
 }
 
 /* ----- send to channel ----- */
