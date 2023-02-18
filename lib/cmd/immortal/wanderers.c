@@ -21,6 +21,7 @@ void command (string input, mapping flags) {
     foreach (object ob in obs) {
         items += ({
             file_name(ob),
+            ob->query_wander(),
             ob->query_wanders(),
             ob->query_next_wander(),
         });
@@ -31,9 +32,9 @@ void command (string input, mapping flags) {
         "subtitle": input,
         "body": ({
             ([
-                "header": ({ "Object", "Wanders", "Next", }),
+                "header": ({ "Object", "Wander", "Wanders", "Next", }),
                 "items": items,
-                "columns": ({ 5, 1, 1, }),
+                "columns": ({ 6, 1, 1, 1, }),
             ])
         }),
     ]));
