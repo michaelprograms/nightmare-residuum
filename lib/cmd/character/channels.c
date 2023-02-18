@@ -22,7 +22,7 @@ void command (string input, mapping flags) {
     }
     body += ({ ([
         "header": ({ "Channels" }),
-        "columns": 2,
+        "columns": 4,
         "items": list,
     ]) });
 
@@ -32,7 +32,7 @@ void command (string input, mapping flags) {
     }
     body += ({ ([
         "header": ({ "System Channels" }),
-        "columns": 2,
+        "columns": 4,
         "items": list,
     ]) });
 
