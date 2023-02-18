@@ -37,7 +37,7 @@ void display_combat_message (object source, object target, string limb, mixed we
 void display_heal_message (object source, object target, string limb, int damage);
 
 /* --- format --- */
-varargs string format_page (string *items, int columns, int pad);
+varargs string format_page (string *items, mixed columns, int pad, int center, string ansi);
 string format_syntax (string text);
 string format_exit_brief (string dir);
 string format_exit_verbose (string dir);

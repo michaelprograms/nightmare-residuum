@@ -1,4 +1,4 @@
-varargs string format_page (string *items, mixed columns, int pad, int center) {
+varargs string format_page (string *items, mixed columns, int pad, int center, string ansi) {
     int totalWidth, width, numItems, numColumns, remainder, ratioSum;
     int i, j;
     string *rows = ({}), row, tmp;
@@ -51,7 +51,12 @@ varargs string format_page (string *items, mixed columns, int pad, int center) {
             if (sizeof(tmp = SEFUN->strip_colour(items[i + j])) > width) {
                 // use stripped text when its longer than width
                 if (numColumns == 1) {
-                    string *wrapped = explode(SEFUN->wrap_ansi(items[i + j], width), "\n");
+                    string *wrapped;
+                    if (undefinedp(ansi)) {
+                        wrapped = explode(SEFUN->wrap_ansi(items[i + j], width), "\n");
+                    } else if (ansi == 0) {
+                        wrapped = explode(SEFUN->wrap(items[i + j], width), "\n");
+                    }
                     foreach (string line in wrapped) {
                         row += sprintf("%"+(center?"|":"-")+"*s", width, ""+line) + "\n";
                     }
