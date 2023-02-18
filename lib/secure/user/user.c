@@ -9,17 +9,22 @@ inherit "/secure/user/shell.c";
 #define CONNECT_TIMEOUT 60
 
 nosave private int calloutBanner, calloutTimeout;
-nosave private string __TerminalType;
-nosave private string __TerminalColor = "256";
-nosave private string __IPAddr;
+
+nosave private mapping __Terminal = ([
+    "ip": 0,
+    "type": 0,
+    "color": "256",
+    "client": 0,
+]);
 
 int is_user() { return 1; }
 
 /* --- interactive apply --- */
 
 nomask void logon () {
-    debug_message(ctime() + " connect from " + query_ip_number()); // @TODO log_file
-    D_LOG->log("connect", ctime() + " " + query_ip_number());
+    __Terminal["ip"] = query_ip_number();
+    D_LOG->log("connect", ctime() + " " + __Terminal["ip"]);
+    debug_message(ctime() + " connect from " + __Terminal["ip"]);
 
     receive_message("system", "Connecting...\n");
     calloutBanner = call_out_walltime(function () {
@@ -68,18 +73,18 @@ void receive_message (string type, string message) {
 }
 
 void terminal_type (string term) {
+    __Terminal["type"] = term;
     D_LOG->log_unique("term", term);
 
-    __TerminalType = term;
     term = lower_case(explode(term, " ")[0]);
 
     if (member_array(term, ({ "cmud", })) > -1) {
         set_encoding("ascii");
     } else if (member_array(term, ({ "zmud", })) > -1) {
         set_encoding("ascii");
-        __TerminalColor = "16";
-    } else if (member_array(term, ({ "mudslinger", "xterm-256color", })) > -1) {
-        __TerminalColor = "16";
+        __Terminal["color"] = "16";
+    } else if (member_array(term, ({ "mudslinger", })) > -1) {
+        __Terminal["color"] = "16";
     }
 
     if (!undefinedp(calloutBanner)) { // force prompt
@@ -87,32 +92,45 @@ void terminal_type (string term) {
         calloutBanner = 0;
         receive_message("system", D_WELCOME->query_banner() + "\n");
         account_input();
-        if (this_user() && interactive(this_user())) telnet_ga();
+        if (this_user() && interactive(this_user())) {
+            telnet_ga(); // telnet go ahead for prompt to not line return
+        }
     }
 }
 
-void receive_environ (string var, string value) {
-    // Web clients send this
-    // if (var == "IPADDRESS") {
-    //     // @TODO use this instead of query_ip_address?
-    // }
-    // var can also be "CLIENT_NAME", "CLIENT_VERSION"
-
+void receive_environ (string key, string value) {
+    switch (key) {
+        case "IPADDRESS":
+            __Terminal["ip"] = value + " (" + __Terminal["ip"] + ")";
+            break;
+        case "CLIENT_NAME":
+            __Terminal["client"] = value;
+            break;
+        // case "CLIENT_VERSION":
+        //     break;
+    }
 }
 
 /* --- interactive non-apply */
 
+mixed query_terminal (string key) {
+    return __Terminal["key"];
+}
+void set_terminal (string key, mixed value) {
+    __Terminal[key] = value;
+}
+
 string query_terminal_type () {
-    return __TerminalType;
+    return __Terminal["type"];
 }
 string query_terminal_color () {
-    return __TerminalColor;
+    return __Terminal["color"];
 }
 void set_terminal_color (string color) {
     if (color != "256" && color != "16") {
         return;
     }
-    __TerminalColor = color;
+    __Terminal["color"] = color;
 }
 
 nomask varargs void quit_character (int destructing) {
