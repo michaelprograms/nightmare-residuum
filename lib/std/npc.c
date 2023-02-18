@@ -149,7 +149,7 @@ void attempt_wander () {
             handle_wander();
             __NextWander = 0;
             __Wanders ++;
-        } else {
+        } else if (__NextWander < 20) {
             __NextWander ++;
         }
     }
