@@ -25,8 +25,17 @@ void command (string input, mapping flags) {
             body += map(msgs, (: format_message_color("say", $1) :));
         }
         subtitle = sizeof(msgs) + " say" + (sizeof(msgs) != 1 ? "s" : "");
+    } else if (D_CHANNEL->query_valid_channel(input)) {
+        string type = (input == "error" ? "channel error" : "channel");
+
+        if (!sizeof(msgs = D_CHANNEL->query_history(input))) {
+            body += ({ "No history for " + input + " channel." });
+        } else {
+            body += map(msgs, (: format_message_color($(type), $1) :));
+        }
+        subtitle = sizeof(msgs) + " message" + (sizeof(msgs) != 1 ? "s" : "");
     } else {
-        message("action", "Syntax: <last says|tells>", tc);
+        message("action", "Syntax: " + query_syntax(), tc);
         return;
     }
 
