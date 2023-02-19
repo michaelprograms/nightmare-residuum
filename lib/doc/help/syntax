@@ -1,0 +1,9 @@
+Syntaxes represent actions that a user can enter to interact with their environment or the MUD. They visually describe how an action can be performed with different user inputs.
+
+<look (at) ([item|target])>
+<action (optional) [input1|input2]>
+
+A syntax is surrounded by arrows, < and >, and contains a phrase.
+A phrase surrounded by brackets, [ and ], specifies an input.
+A phrase surrounded in parenthesis, ( and ), is optional.
+Phrases separated by a separator, |, requires one of the phrases.
