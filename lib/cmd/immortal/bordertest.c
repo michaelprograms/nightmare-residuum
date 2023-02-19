@@ -80,7 +80,7 @@ void command (string input, mapping flags) {
             "items": ({
                 "Test test test test test test test test test test test test test test test.",
                 "",
-                "Test.",
+                "Test. %^CYAN%^<test1>%^RESET%^" + format_syntax("<test2>"),
             }),
             "align": "left",
             "columns": 1,

@@ -165,7 +165,7 @@ private string *format_border_item (mapping item, int width, string ansi, string
         lines += ({ line });
     }
     // items
-    format = sizeof(item["items"]) > 0 ? SEFUN->format_page(item["items"], item["columns"], 4, (item["align"] == "center"), 0) : "";
+    format = sizeof(item["items"]) > 0 ? SEFUN->format_page(item["items"], item["columns"], 4, (item["align"] == "center")) : "";
     foreach (string l in explode(format, "\n") - ({""})) {
         lines += ({ left + "  " + l + "  " + right });
     }
