@@ -13,30 +13,36 @@ nosave private int calloutBanner, calloutTimeout;
 nosave private mapping __Terminal = ([
     "ip": 0,
     "type": 0,
+    "encoding": "unknown",
     "color": "256",
-    "client": 0,
+    "client": "unknown",
 ]);
 
 int is_user() { return 1; }
+
+nomask void logon_banner () {
+    if (!calloutBanner) {
+        return;
+    }
+    calloutBanner = 0;
+
+    receive_message("system", D_WELCOME->query_banner() + "\n");
+    account_input();
+    if (this_user() && interactive(this_user())) {
+        telnet_ga(); // telnet go ahead for prompt to not line return
+    }
+}
 
 /* --- interactive apply --- */
 
 nomask void logon () {
     __Terminal["ip"] = query_ip_number();
+    __Terminal["encoding"] = query_encoding();
     D_LOG->log("connect", ctime() + " " + __Terminal["ip"]);
     debug_message(ctime() + " connect from " + __Terminal["ip"]);
 
     receive_message("system", "Connecting...\n");
-    calloutBanner = call_out_walltime(function () {
-        if (!calloutBanner) {
-            return;
-        }
-        receive_message("system", D_WELCOME->query_banner() + "\n");
-        account_input();
-        if (this_user() && interactive(this_user())) {
-            telnet_ga(); // telnet go ahead for prompt to not line return
-        }
-    }, 0.5); // allow time for terminal_type apply to be called
+    calloutBanner = call_out_walltime((: logon_banner :), 0.5); // allow time for terminal_type apply to be called
 }
 
 nomask void net_dead () {
@@ -73,28 +79,22 @@ void receive_message (string type, string message) {
 }
 
 void terminal_type (string term) {
-    __Terminal["type"] = term;
     D_LOG->log_unique("term", term);
 
     term = lower_case(explode(term, " ")[0]);
+    __Terminal["type"] = term;
 
-    if (member_array(term, ({ "cmud", })) > -1) {
-        set_encoding("ascii");
-    } else if (member_array(term, ({ "zmud", })) > -1) {
-        set_encoding("ascii");
+    if (member_array(term, ({ "cmud", "zmud", })) > -1) {
+        // set_encoding("US-ASCII"); // @TODO currently not working
         __Terminal["color"] = "16";
     } else if (member_array(term, ({ "mudslinger", })) > -1) {
         __Terminal["color"] = "16";
     }
 
-    if (!undefinedp(calloutBanner)) { // force prompt
+    if (!undefinedp(calloutBanner)) { // force banner
         remove_call_out(calloutBanner);
-        calloutBanner = 0;
-        receive_message("system", D_WELCOME->query_banner() + "\n");
-        account_input();
-        if (this_user() && interactive(this_user())) {
-            telnet_ga(); // telnet go ahead for prompt to not line return
-        }
+        calloutBanner = -1;
+        logon_banner();
     }
 }
 
@@ -114,7 +114,7 @@ void receive_environ (string key, string value) {
 /* --- interactive non-apply */
 
 mixed query_terminal (string key) {
-    return __Terminal["key"];
+    return __Terminal[key];
 }
 void set_terminal (string key, mixed value) {
     __Terminal[key] = value;
