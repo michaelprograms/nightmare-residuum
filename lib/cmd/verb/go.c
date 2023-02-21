@@ -4,7 +4,7 @@ void create () {
     verb::create();
     add_rules(({ "", "STR" }));
     set_syntax("go [direction]");
-    set_help_text("Your character will attempt to move to the provided direction.");
+    set_help_text("Your character will attempt to move in the provided direction.");
 }
 
 mixed can_go () {
@@ -34,7 +34,9 @@ varargs void do_go_str (string dir) {
     object po = previous_object(), env = environment(po);
     string exit;
 
-    if (po->query_posture() == "sitting") po->do_command("stand");
+    if (po->query_posture() != "standing") {
+        po->do_command("stand");
+    }
 
     if (dir == "enter") {
         if (exit = env->query_default_enter()) dir = exit;
