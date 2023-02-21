@@ -10,6 +10,9 @@ void create () {
         "east": HUMAN_ROOM + "walnut_st_w1.c",
         "west": HUMAN_ROOM + "park_sw.c",
     ]));
+    set_climbs(([
+        "ivy": HUMAN_ROOM + "roof.c",
+    ]));
     set_looks(([
         "street": "A village street labeled W Walnut St.",
     ]));
