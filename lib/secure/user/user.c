@@ -12,6 +12,8 @@ nosave private int calloutBanner, calloutTimeout;
 
 nosave private mapping __Terminal = ([
     "ip": 0,
+    "width": 80,
+    "height": 40,
     "type": 0,
     "encoding": "unknown",
     "color": "256",
@@ -59,25 +61,6 @@ nomask void net_dead () {
     destruct();
 }
 
-void receive_message (string type, string message) {
-    D_LOG->log_unique("message_types", type);
-    type = lower_case(type);
-    if (type == "raw ansi") {
-        message = replace_string(message, "%^", "%%^^");
-        receive(wrap(message, 0, 0, 1));
-    } else if (type == "system") {
-        if (strlen(message) > __LARGEST_PRINTABLE_STRING__) {
-            message = message[0..__LARGEST_PRINTABLE_STRING__-1];
-        }
-        receive(wrap(message, 0, 0));
-    } else if (type == "prompt") {
-        receive(wrap(message));
-    } else {
-        message = format_message_color(type, message) + "\n";
-        receive(wrap(message));
-    }
-}
-
 void terminal_type (string term) {
     D_LOG->log_unique("term", term);
 
@@ -108,6 +91,30 @@ void receive_environ (string key, string value) {
             break;
         // case "CLIENT_VERSION":
         //     break;
+    }
+}
+
+void window_size (int width, int height) {
+    __Terminal["width"] = width;
+    __Terminal["height"] = height;
+}
+
+void receive_message (string type, string message) {
+    D_LOG->log_unique("message_types", type);
+    type = lower_case(type);
+    if (type == "raw ansi") {
+        message = replace_string(message, "%^", "%%^^");
+        receive(wrap(message, 0, 0, 1));
+    } else if (type == "system") {
+        if (strlen(message) > __LARGEST_PRINTABLE_STRING__) {
+            message = message[0..__LARGEST_PRINTABLE_STRING__-1];
+        }
+        receive(wrap(message, 0, 0));
+    } else if (type == "prompt") {
+        receive(wrap(message));
+    } else {
+        message = format_message_color(type, message) + "\n";
+        receive(wrap(message));
     }
 }
 
