@@ -9,11 +9,12 @@ cp -f local_options ./driver/src/
 
 cd build
 cmake ../driver \
-  -DCMAKE_BUILD_TYPE=Release \
   -DPACKAGE_DB_SQLITE=2 \
   -DPACKAGE_UIDS=OFF \
   -DPACKAGE_MUDLIB_STATS=OFF \
   -DPACKAGE_EXTERNAL=ON
+
+# -DCMAKE_BUILD_TYPE=Release \
 
 make install
 cd ..
