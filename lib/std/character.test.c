@@ -22,6 +22,7 @@ void test_npc () {
 void test_user () {
     expect_function("set_user", testOb);
     expect_function("query_user", testOb);
+    expect_function("set_last_action", testOb);
 
     expect("user is settable and queryable", (: ({
         assert(testOb->query_user(), "==", UNDEFINED),
@@ -43,7 +44,7 @@ void test_times () {
     expect("user has a last action time", (: ({
         // last action time is now
         assert(testOb->query_last_action(), "==", UNDEFINED),
-        testOb->update_last_action(),
+        testOb->set_last_action(),
         assert(testOb->query_last_action(), "==", time()),
     }) :));
     expect("user has a connection time", (: ({

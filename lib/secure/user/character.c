@@ -113,7 +113,7 @@ nomask void handle_character_override () {
 
 nomask protected void character_exit () {
     if (__Character) {
-        __Character->update_last_action();
+        __Character->set_last_action();
         query_account()->update_character_data(__Character);
         __Character->exit_world();
         __Species = 0;
@@ -121,6 +121,6 @@ nomask protected void character_exit () {
 }
 
 nomask protected void character_linkdead () {
-    __Character->update_last_action();
+    __Character->set_last_action();
     __Character->enter_freezer();
 }

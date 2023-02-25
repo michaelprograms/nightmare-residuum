@@ -87,7 +87,6 @@ object query_user () {
     return __User;
 }
 void set_user (object user) {
-    // @TODO security?
     __User = user;
 }
 
@@ -95,7 +94,6 @@ int query_immortal () {
     return __Immortal;
 }
 void set_immortal (int i) {
-    // @TODO security?
     __Immortal = i;
     if (__Immortal) {
         if (file_size("/realm/" + query_key_name() + "/") == -1) {
@@ -107,7 +105,7 @@ void set_immortal (int i) {
 int query_created () {
     return __Created;
 }
-void update_last_action () { // @TODO set_last_action?
+void set_last_action () {
     __LastAction = time();
 }
 int query_last_action () {
