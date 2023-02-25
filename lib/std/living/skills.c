@@ -40,7 +40,6 @@ string query_skill_progress (string skill) {
     // @TODO if level < max level
     next = query_skill_next_points(skill);
     return to_int(__Skills[skill]["points"] * 100.0 / next) + "%";
-    // @TODO else return "MAX";
 }
 
 int query_skill (string skill) {
@@ -49,8 +48,6 @@ int query_skill (string skill) {
 }
 
 void set_skill (string skill, int level) {
-    // @TODO security
-
     if (!__Skills) __Skills = query_default_skills();
 
     if (!__Skills[skill]) {
