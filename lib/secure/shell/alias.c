@@ -51,7 +51,10 @@ varargs void add_alias (string name, string template, string *defaults, int xver
     this_object()->save_data();
 }
 
-// @TODO remove_alias
+nomask void remove_alias (string name) {
+    map_delete(__Aliases, name);
+    __XAliases -= ({ name });
+}
 
 mixed expand_alias (string input) {
     string *argv = explode(input, " ");
