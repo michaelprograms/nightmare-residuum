@@ -9,6 +9,7 @@ void create () {
     set_listen("default", "Occasionally several faint thuds can be heard from the west.");
     set_smell("default", "A wiff of wildflowers comes from somewhere.");
     set_exits(([
+        "east": HUMAN_ROOM + "spruce_st_w2.c",
         "south": HUMAN_ROOM + "second_st_n5.c",
         "enter west": HUMAN_ROOM + "intro_ranger.c",
     ]));
