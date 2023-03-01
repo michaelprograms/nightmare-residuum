@@ -1,6 +1,19 @@
-nosave private mapping __Exits = ([ ]);
+nosave private mapping __Exits = ([
+// Data Format:
+/*
+    STRING: ([                  // Direction
+        "room":     STRING,     // Path of room
+        "before":   FUNCTION,   // before exit fn: 0 for failure, 1 for success
+        "after":    FUNCTION,   // after exit fn
+        "reverse":  STRING,     // override automatic direction reverse lookup
+        "door":     STRING,     // ID of the door blocking exit
+        "key":      STRING,     // ID of the key for door
+        "open":     INT,        // door open status
+        "locked":   INT,        // door locked status
+    ])
+*/
+]);
 nosave private mapping __Climbs = ([ ]);
-nosave private mapping __Door = ([ ]); // @TODO
 
 /* ----- exits ----- */
 
@@ -36,7 +49,7 @@ string query_default_out () {
     return sizeof(outs) == 1 ? outs[0] : 0;
 }
 
-varargs void set_exit (string dir, string dest, function before, function after, string reverse) {
+varargs void set_exit (string dir, string dest, function before, function after, string reverse, string door, string key, int locked) {
     if (!stringp(dir)) error("Bad argument 1 to exit->set_exit");
     if (!stringp(dest)) error("Bad argument 2 to exit->set_exit");
 
@@ -45,6 +58,12 @@ varargs void set_exit (string dir, string dest, function before, function after,
     if (functionp(before)) __Exits[dir]["before"] = before;
     if (functionp(after)) __Exits[dir]["after"] = after;
     if (stringp(reverse)) __Exits[dir]["reverse"] = reverse;
+    if (stringp(door)) {
+        __Exits[dir]["door"] = door;
+        __Exits[dir]["open"] = 0;
+        if (stringp(key)) __Exits[dir]["key"] = key;
+        if (intp(locked)) __Exits[dir]["locked"] = locked;
+    }
 }
 void set_exits (mapping exits) {
     __Exits = ([ ]);
@@ -86,6 +105,10 @@ mixed handle_go (object ob, string method, string dir) {
         return 0;
     } else if (exit["room"]) {
         if ((regexp(exit["room"], "#[0-9]+") && find_object(exit["room"])) || (file_size(exit["room"]) > 0)) {
+            if (exit["door"] && !exit["open"]) {
+                message("action", "You bump into the " + exit["door"] + " blocking you from going " + dir + ".", ob);
+                return 0;
+            }
             ob->handle_go(exit["room"], method, dir, exit["reverse"]);
             ob->describe_environment();
             if (exit["after"]) {
@@ -171,4 +194,57 @@ mixed handle_climb (object ob, string method, string dir) {
     } else {
         return 0;
     }
+}
+
+/* ----- doors ----- */
+
+string *query_doors () {
+    mapping doors = map_mapping(filter_mapping(__Exits, (: $2["door"] :)), (: $2["door"] :));
+    return keys(doors) + values(doors);
+}
+string query_door_dir (string door) {
+    mapping m = filter_mapping(__Exits, (: $2["door"] == $(door) :));
+    if (sizeof(m)) {
+        return keys(m)[0];
+    }
+    return 0;
+}
+// string query_dir_door (string dir) {
+
+// }
+
+void set_open (string str, int open) {
+    mapping doors = map_mapping(filter_mapping(__Exits, (: $2["door"] :)), (: $2["door"] :));
+
+    if (member_array(str, values(doors)) > -1) {        // doors
+        __Exits[query_door_dir(str)]["open"] = open;
+    } else if (member_array(str, keys(doors)) > -1) {   // exits
+        __Exits[str]["open"] = open;
+    }
+}
+
+int handle_open (object ob, string str) {
+    mapping doors = map_mapping(filter_mapping(__Exits, (: $2["door"] :)), (: $2["door"] :));
+    string dir, door;
+
+    if (member_array(str, values(doors)) > -1) {        // doors
+        door = str;
+        dir = query_door_dir(door);
+    } else if (member_array(str, keys(doors)) > -1) {   // exits
+        dir = str;
+        door = __Exits[dir]["door"];
+    } else {
+        return 0;
+    }
+
+    if (__Exits[dir]["open"]) {
+        message("action", "The " + door + " to the " + dir + " is already open.", ob);
+    } else {
+        message("action", "You open the " + door + " to the " + dir + ".", ob);
+        message("action", ob->query_cap_name() + " opens the " + door + " to the " + dir + ".", environment(ob), ob);
+        __Exits[dir]["open"] = 1;
+        __Exits[dir]["room"]->set_open(door, 1);
+        message("action", "The " + door + " to the " + format_exit_reverse(dir) + " opens.", load_object(__Exits[dir]["room"]));
+    }
+    return 1;
 }
