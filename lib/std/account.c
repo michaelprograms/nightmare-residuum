@@ -21,8 +21,7 @@ private mapping __Characters = ([
 private mapping __Settings = ([ ]);
 private int __EdSetup;  // @TODO
 
-
-// cache variable, @TODO should probably be renamed
+// cache variable
 nosave private string *__CharacterNames = ({});
 
 // -----------------------------------------------------------------------------
