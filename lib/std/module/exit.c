@@ -248,3 +248,29 @@ int handle_open (object ob, string str) {
     }
     return 1;
 }
+
+int handle_close (object ob, string str) {
+    mapping doors = map_mapping(filter_mapping(__Exits, (: $2["door"] :)), (: $2["door"] :));
+    string dir, door;
+
+    if (member_array(str, values(doors)) > -1) {        // doors
+        door = str;
+        dir = query_door_dir(door);
+    } else if (member_array(str, keys(doors)) > -1) {   // exits
+        dir = str;
+        door = __Exits[dir]["door"];
+    } else {
+        return 0;
+    }
+
+    if (!__Exits[dir]["open"]) {
+        message("action", "The " + door + " to the " + dir + " is already closed.", ob);
+    } else {
+        message("action", "You close the " + door + " to the " + dir + ".", ob);
+        message("action", ob->query_cap_name() + " closes the " + door + " to the " + dir + ".", environment(ob), ob);
+        __Exits[dir]["open"] = 0;
+        __Exits[dir]["room"]->set_open(door, 0);
+        message("action", "The " + door + " to the " + format_exit_reverse(dir) + " closes.", load_object(__Exits[dir]["room"]));
+    }
+    return 1;
+}
