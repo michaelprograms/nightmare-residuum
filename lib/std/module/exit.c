@@ -222,6 +222,15 @@ void set_open (string str, int open) {
         __Exits[str]["open"] = open;
     }
 }
+void set_locked (string str, int locked) {
+    mapping doors = map_mapping(filter_mapping(__Exits, (: $2["door"] :)), (: $2["door"] :));
+
+    if (member_array(str, values(doors)) > -1) {        // doors
+        __Exits[query_door_dir(str)]["locked"] = locked;
+    } else if (member_array(str, keys(doors)) > -1) {   // exits
+        __Exits[str]["locked"] = locked;
+    }
+}
 
 int handle_open (object ob, string str) {
     mapping doors = map_mapping(filter_mapping(__Exits, (: $2["door"] :)), (: $2["door"] :));
@@ -271,6 +280,66 @@ int handle_close (object ob, string str) {
         __Exits[dir]["open"] = 0;
         __Exits[dir]["room"]->set_open(door, 0);
         message("action", "The " + door + " to the " + format_exit_reverse(dir) + " closes.", load_object(__Exits[dir]["room"]));
+    }
+    return 1;
+}
+
+int handle_lock (object ob, string str, object key) {
+    mapping doors = map_mapping(filter_mapping(__Exits, (: $2["door"] :)), (: $2["door"] :));
+    string dir, door;
+
+    if (member_array(str, values(doors)) > -1) {        // doors
+        door = str;
+        dir = query_door_dir(door);
+    } else if (member_array(str, keys(doors)) > -1) {   // exits
+        dir = str;
+        door = __Exits[dir]["door"];
+    } else {
+        return 0;
+    }
+
+    if (!__Exits[dir]["key"]) {
+        message("action", "The " + door + " to the " + dir + " does not have a lock.", ob);
+    } else if (__Exits[dir]["key"]["open"]) {
+        message("action", "The " + door + " to the " + dir + " cannot be locked while open.", ob);
+    } else if (__Exits[dir]["locked"]) {
+        message("action", "The " + door + " to the " + dir + " is already locked.", ob);
+    } else if (key->query_name() == __Exits[dir]["key"]) {
+        message("action", "You lock the " + door + " to the " + dir + " with " + key->query_short() + ".", ob);
+        message("action", ob->query_cap_name() + " locks the " + door + " to the " + dir + " with " + key->query_short() + ".", environment(ob), ob);
+        __Exits[dir]["locked"] = 1;
+        __Exits[dir]["room"]->set_locked(door, 1);
+        message("action", "The " + door + " to the " + format_exit_reverse(dir) + " clicks locked.", load_object(__Exits[dir]["room"]));
+    }
+    return 1;
+}
+
+int handle_unlock (object ob, string str, object key) {
+    mapping doors = map_mapping(filter_mapping(__Exits, (: $2["door"] :)), (: $2["door"] :));
+    string dir, door;
+
+    if (member_array(str, values(doors)) > -1) {        // doors
+        door = str;
+        dir = query_door_dir(door);
+    } else if (member_array(str, keys(doors)) > -1) {   // exits
+        dir = str;
+        door = __Exits[dir]["door"];
+    } else {
+        return 0;
+    }
+
+    if (!__Exits[dir]["key"]) {
+        message("action", "The " + door + " to the " + dir + " does not have a lock.", ob);
+    } else if (__Exits[dir]["key"]["open"]) {
+        message("action", "The " + door + " to the " + dir + " cannot be unlocked while open.", ob);
+    } else if (!__Exits[dir]["locked"]) {
+        message("action", "The " + door + " to the " + dir + " is already unlocked.", ob);
+    } else if (key->query_name() == __Exits[dir]["key"]) {
+        message("action", "You unlock the " + door + " to the " + dir + " with " + key->query_short() + ".", ob);
+        message("action", ob->query_cap_name() + " unlocks the " + door + " to the " + dir + " with " + key->query_short() + ".", environment(ob), ob);
+        __Exits[dir]["locked"] = 0;
+        __Exits[dir]["room"]->set_locked(door, 0);
+        message("action", "The " + door + " to the " + format_exit_reverse(dir) + " clicks unlocked.", load_object(__Exits[dir]["room"]));
     }
     return 1;
 }
