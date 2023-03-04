@@ -213,6 +213,27 @@ string query_door_dir (string door) {
 
 // }
 
+int query_open (string str) {
+    mapping doors = map_mapping(filter_mapping(__Exits, (: $2["door"] :)), (: $2["door"] :));
+
+    if (member_array(str, values(doors)) > -1) {        // doors
+        return __Exits[query_door_dir(str)]["open"];
+    } else if (member_array(str, keys(doors)) > -1) {   // exits
+        return __Exits[str]["open"];
+    }
+    return -1;
+}
+int query_locked (string str) {
+    mapping doors = map_mapping(filter_mapping(__Exits, (: $2["door"] :)), (: $2["door"] :));
+
+    if (member_array(str, values(doors)) > -1) {        // doors
+        return __Exits[query_door_dir(str)]["locked"];
+    } else if (member_array(str, keys(doors)) > -1) {   // exits
+        return __Exits[str]["locked"];
+    }
+    return -1;
+}
+
 void set_open (string str, int open) {
     mapping doors = map_mapping(filter_mapping(__Exits, (: $2["door"] :)), (: $2["door"] :));
 

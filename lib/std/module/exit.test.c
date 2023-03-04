@@ -214,4 +214,43 @@ void test_exit_reverse_override () {
     if (r2) destruct(r2);
 }
 
-// @TODO bad arguments
+void test_doors () {
+    r1 = new(STD_ROOM);
+    r2 = new(STD_ROOM);
+
+    expect_function("query_doors", testOb);
+    expect_function("query_open", testOb);
+    expect_function("query_locked", testOb);
+    // expect_function("set_open", testOb);
+    // expect_function("set_locked", testOb);
+    // expect_function("query_door_dir", testOb);
+    // expect_function("handle_open", testOb);
+    // expect_function("handle_close", testOb);
+    // expect_function("handle_lock", testOb);
+    // expect_function("handle_unlock", testOb);
+
+    expect("doors behave", (: ({
+        // no doors are setup
+        assert(r1->query_doors(), "==", ({ })),
+        assert(r2->query_doors(), "==", ({ })),
+        assert(r1->query_open("door"), "==", -1),
+        assert(r2->query_open("door"), "==", -1),
+        assert(r1->query_locked("door"), "==", -1),
+        assert(r2->query_locked("door"), "==", -1),
+
+        // setup door
+        r1->set_exit("east", file_name(r2), 0, 0, 0, "door", 0, 0),
+        r2->set_exit("west", file_name(r1), 0, 0, 0, "door", 0, 0),
+
+        // doors are setup
+        assert(r1->query_doors(), "==", ({ "east", "door", })),
+        assert(r2->query_doors(), "==", ({ "west", "door", })),
+        assert(r1->query_open("door"), "==", 0),
+        assert(r2->query_open("door"), "==", 0),
+        assert(r1->query_locked("door"), "==", 0),
+        assert(r2->query_locked("door"), "==", 0),
+    }) :));
+
+    if (r1) destruct(r1);
+    if (r2) destruct(r2);
+}
