@@ -270,7 +270,10 @@ int handle_open (object ob, string str) {
         return 0;
     }
 
-    if (__Exits[dir]["open"]) {
+    if (__Exits[dir]["locked"]) {
+        message("action", "The " + door + " to the " + dir + " is locked.", ob);
+        message("action", ob->query_cap_name() + " attempts to open the " + door + " to the " + dir + ".", environment(ob), ob);
+    } else if (__Exits[dir]["open"]) {
         message("action", "The " + door + " to the " + dir + " is already open.", ob);
     } else {
         message("action", "You open the " + door + " to the " + dir + ".", ob);
