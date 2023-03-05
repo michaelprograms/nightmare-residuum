@@ -27,7 +27,7 @@ void setup_body (object ob) {
     set_long("Here lies the body of " + ob->query_cap_name() + ".");
 
     if (sizeof(currencies = ob->query_currencies())) {
-        object coins = new(ITEM_COINS);
+        object coins = new(STD_COINS);
         foreach (string currency in currencies) {
             coins->add_currency(currency, ob->query_currency(currency));
             ob->add_currency(currency, -ob->query_currency(currency));

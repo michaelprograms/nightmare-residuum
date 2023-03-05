@@ -18,8 +18,8 @@
 
 // std item inheritables
 #define STD_ARMOR       "/std/item/armor.c"
-#define ITEM_COINS      "/std/item/coins.c"
-#define ITEM_CORPSE     "/std/item/corpse.c"
+#define STD_COINS      "/std/item/coins.c"
+#define STD_CORPSE     "/std/item/corpse.c"
 #define STD_FOOD        "/std/item/food.c"
 #define STD_KEY         "/std/item/key.c"
 #define STD_WEAPON      "/std/item/weapon.c"

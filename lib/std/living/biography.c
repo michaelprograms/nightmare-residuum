@@ -65,7 +65,7 @@ void handle_defeat (object source) {
     remove_call_out();
 
     if (env) {
-        corpse = new(ITEM_CORPSE);
+        corpse = new(STD_CORPSE);
         corpse->setup_body(this_object());
         corpse->handle_move(env);
         if (this_object()->query_cap_name()) {
