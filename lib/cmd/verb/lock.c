@@ -29,8 +29,8 @@ mixed do_lock_str_with_obj (mixed args...) {
         key = args[1];
     }
 
-    if (member_array(str, env->query_doors()) > -1) {
-        if (env->handle_lock(po, str, key)) return 1;
+    if (env->handle_lock(po, str, key)) {
+        return 1;
     }
 
     message("action", "There is no " + str + " to lock here.", po);

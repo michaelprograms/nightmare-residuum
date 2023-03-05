@@ -28,8 +28,8 @@ mixed do_close_str (mixed args...) {
         str = args[0];
     }
 
-    if (member_array(str, env->query_doors()) > -1) {
-        if (env->handle_close(po, str)) return 1;
+    if (env->handle_close(po, str)) {
+        return 1;
     }
 
     message("action", "There is no " + str + " to close here.", po);

@@ -28,8 +28,8 @@ mixed do_open_str (mixed args...) {
         str = args[0];
     }
 
-    if (member_array(str, env->query_doors()) > -1) {
-        if (env->handle_open(po, str)) return 1;
+    if (env->handle_open(po, str)) {
+        return 1;
     }
 
     message("action", "There is no " + str + " to open here.", po);

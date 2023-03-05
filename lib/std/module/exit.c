@@ -264,7 +264,7 @@ int handle_open (object ob, string str) {
         door = str;
         dir = query_door_dir(door);
     } else if (member_array(str, keys(doors)) > -1) {   // exits
-        dir = str;
+        dir = format_exit_verbose(str);
         door = __Exits[dir]["door"];
     } else {
         return 0;
@@ -293,7 +293,7 @@ int handle_close (object ob, string str) {
         door = str;
         dir = query_door_dir(door);
     } else if (member_array(str, keys(doors)) > -1) {   // exits
-        dir = str;
+        dir = format_exit_verbose(str);
         door = __Exits[dir]["door"];
     } else {
         return 0;
@@ -319,7 +319,7 @@ int handle_lock (object ob, string str, object key) {
         door = str;
         dir = query_door_dir(door);
     } else if (member_array(str, keys(doors)) > -1) {   // exits
-        dir = str;
+        dir = format_exit_verbose(str);
         door = __Exits[dir]["door"];
     } else {
         return 0;
@@ -349,7 +349,7 @@ int handle_unlock (object ob, string str, object key) {
         door = str;
         dir = query_door_dir(door);
     } else if (member_array(str, keys(doors)) > -1) {   // exits
-        dir = str;
+        dir = format_exit_verbose(str);
         door = __Exits[dir]["door"];
     } else {
         return 0;
