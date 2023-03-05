@@ -61,8 +61,11 @@ varargs void set_exit (string dir, string dest, function before, function after,
     if (stringp(door)) {
         __Exits[dir]["door"] = door;
         __Exits[dir]["open"] = 0;
-        if (stringp(key)) __Exits[dir]["key"] = key;
-        if (intp(locked)) __Exits[dir]["locked"] = locked;
+        if (!undefinedp(key) && stringp(key)) __Exits[dir]["key"] = key;
+        if (!undefinedp(locked) && intp(locked)) __Exits[dir]["locked"] = locked;
+        else if (__Exits[dir]["key"]) {
+            __Exits[dir]["locked"] = 1;
+        }
     }
 }
 void set_exits (mapping exits) {
