@@ -357,7 +357,7 @@ int handle_unlock (object ob, string str, object key) {
 
     if (!__Exits[dir]["key"]) {
         message("action", "The " + door + " to the " + dir + " does not have a lock.", ob);
-    } else if (__Exits[dir]["key"]["open"]) {
+    } else if (__Exits[dir]["open"]) {
         message("action", "The " + door + " to the " + dir + " cannot be unlocked while open.", ob);
     } else if (!__Exits[dir]["locked"]) {
         message("action", "The " + door + " to the " + dir + " is already unlocked.", ob);
