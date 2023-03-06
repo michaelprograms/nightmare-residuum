@@ -15,7 +15,7 @@ int clean_up (int inherited);
 nomask string *query_alias_names ();
 // nomask class ShellAlias query_alias (string alias);
 varargs void add_alias (string name, string template, string *defaults, int xverb);
-// remove_alias
+nomask void remove_alias (string name);
 mixed expand_alias (string input);
 
 /* --- variable --- */

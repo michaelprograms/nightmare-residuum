@@ -99,7 +99,6 @@ mixed expand_alias (string input) {
 
 void create () {
     if (clonep()) {
-        // @TODO defaults shouldn't count against player num
         if (!sizeof(__Aliases)) {
             add_alias("l", "look");
             add_alias("n", "go north");
@@ -113,7 +112,7 @@ void create () {
             add_alias("u", "go up");
             add_alias("d", "go down");
             add_alias("ent", "go enter");
-            // add_alias("cl", "climb");
+            add_alias("cl", "climb");
             add_alias("'", "say", 0, 1);
         }
     }
