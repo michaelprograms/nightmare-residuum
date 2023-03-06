@@ -243,8 +243,10 @@ void test_doors () {
         r2->set_exit("west", file_name(r1), 0, 0, 0, "door", 0, 0),
 
         // doors are setup
-        assert(r1->query_doors(), "==", ({ "east", "door", })),
-        assert(r2->query_doors(), "==", ({ "west", "door", })),
+        assert(r1->query_doors(), "==", ({ "door", })),
+        assert(r2->query_doors(), "==", ({ "door", })),
+        assert(r1->query_doors(1), "==", ({ "east", "door", })),
+        assert(r2->query_doors(1), "==", ({ "west", "door", })),
         assert(r1->query_open("door"), "==", 0),
         assert(r2->query_open("door"), "==", 0),
         assert(r1->query_locked("door"), "==", 0),

@@ -201,9 +201,9 @@ mixed handle_climb (object ob, string method, string dir) {
 
 /* ----- doors ----- */
 
-string *query_doors () {
+varargs string *query_doors (int directions) {
     mapping doors = map_mapping(filter_mapping(__Exits, (: $2["door"] :)), (: $2["door"] :));
-    return keys(doors) + values(doors);
+    return (directions ? keys(doors) : ({ })) + values(doors);
 }
 string query_door_dir (string door) {
     mapping m = filter_mapping(__Exits, (: $2["door"] == $(door) :));
