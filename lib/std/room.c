@@ -142,15 +142,15 @@ string *query_room_exit_map() {
     ]);
     mapping exits = query_exits();
     mapping pics = ([
-        "nw": exits["northwest"] && (roomOb["nw"] = find_object(exits["northwest"]["room"],1)) ? roomOb["nw"]->query_room_exits_picture() : blank,
-        "n":  exits["north"]     && (roomOb["n"]  = find_object(exits["north"]["room"],1)) ? roomOb["n"]->query_room_exits_picture() : blank,
-        "ne": exits["northeast"] && (roomOb["ne"] = find_object(exits["northeast"]["room"],1)) ? roomOb["ne"]->query_room_exits_picture() : blank,
-        "w":  exits["west"]      && (roomOb["w"]  = find_object(exits["west"]["room"],1)) ? roomOb["w"]->query_room_exits_picture() : blank,
+        "nw": exits["northwest"] && file_size(exits["northwest"]["room"]) > 0 && (roomOb["nw"] = find_object(exits["northwest"]["room"],1)) ? roomOb["nw"]->query_room_exits_picture() : blank,
+        "n":  exits["north"]     && file_size(exits["north"]["room"]) > 0 && (roomOb["n"] = find_object(exits["north"]["room"],1)) ? roomOb["n"]->query_room_exits_picture() : blank,
+        "ne": exits["northeast"] && file_size(exits["northeast"]["room"]) > 0 && (roomOb["ne"] = find_object(exits["northeast"]["room"],1)) ? roomOb["ne"]->query_room_exits_picture() : blank,
+        "w":  exits["west"]      && file_size(exits["west"]["room"]) > 0 && (roomOb["w"] = find_object(exits["west"]["room"],1)) ? roomOb["w"]->query_room_exits_picture() : blank,
         "x":  query_room_exits_picture(),
-        "e":  exits["east"]      && (roomOb["e"]  = find_object(exits["east"]["room"],1)) ? roomOb["e"]->query_room_exits_picture() : blank,
-        "sw": exits["southwest"] && (roomOb["sw"] = find_object(exits["southwest"]["room"],1)) ? roomOb["sw"]->query_room_exits_picture() : blank,
-        "s":  exits["south"]     && (roomOb["s"]  = find_object(exits["south"]["room"],1)) ? roomOb["s"]->query_room_exits_picture() : blank,
-        "se": exits["southeast"] && (roomOb["se"] = find_object(exits["southeast"]["room"],1)) ? roomOb["se"]->query_room_exits_picture() : blank,
+        "e":  exits["east"]      && file_size(exits["east"]["room"]) > 0 && (roomOb["e"] = find_object(exits["east"]["room"],1)) ? roomOb["e"]->query_room_exits_picture() : blank,
+        "sw": exits["southwest"] && file_size(exits["southwest"]["room"]) > 0 && (roomOb["sw"] = find_object(exits["southwest"]["room"],1)) ? roomOb["sw"]->query_room_exits_picture() : blank,
+        "s":  exits["south"]     && file_size(exits["south"]["room"]) > 0 && (roomOb["s"] = find_object(exits["south"]["room"],1)) ? roomOb["s"]->query_room_exits_picture() : blank,
+        "se": exits["southeast"] && file_size(exits["southeast"]["room"]) > 0 && (roomOb["se"] = find_object(exits["southeast"]["room"],1)) ? roomOb["se"]->query_room_exits_picture() : blank,
     ]);
     // w-n
     // w-s
