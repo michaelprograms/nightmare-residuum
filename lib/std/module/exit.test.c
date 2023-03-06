@@ -238,10 +238,9 @@ void test_doors () {
         assert(r1->query_locked("door"), "==", -1),
         assert(r2->query_locked("door"), "==", -1),
 
-        // setup door
+        // setup door without key
         r1->set_exit("east", file_name(r2), 0, 0, 0, "door", 0, 0),
         r2->set_exit("west", file_name(r1), 0, 0, 0, "door", 0, 0),
-
         // doors are setup
         assert(r1->query_doors(), "==", ({ "door", })),
         assert(r2->query_doors(), "==", ({ "door", })),
@@ -251,6 +250,25 @@ void test_doors () {
         assert(r2->query_open("door"), "==", 0),
         assert(r1->query_locked("door"), "==", 0),
         assert(r2->query_locked("door"), "==", 0),
+
+        // setup locked door with key
+        r1->set_exit("east", file_name(r2), 0, 0, 0, "door", "test key", 1),
+        r2->set_exit("west", file_name(r1), 0, 0, 0, "door", 0, 1),
+        // doors are setup
+        assert(r1->query_open("door"), "==", 0),
+        assert(r2->query_open("door"), "==", 0),
+        assert(r1->query_locked("door"), "==", 1),
+        assert(r2->query_locked("door"), "==", 1),
+
+        // setup unlocked door with key
+        r1->set_exit("east", file_name(r2), 0, 0, 0, "door", "test key", 0),
+        r2->set_exit("west", file_name(r1), 0, 0, 0, "door", 0, 0),
+        // doors are setup
+        assert(r1->query_open("door"), "==", 0),
+        assert(r2->query_open("door"), "==", 0),
+        assert(r1->query_locked("door"), "==", 0),
+        assert(r2->query_locked("door"), "==", 0),
+
     }) :));
 
     if (r1) destruct(r1);
