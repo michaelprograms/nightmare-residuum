@@ -212,9 +212,13 @@ string query_door_dir (string door) {
     }
     return 0;
 }
-// string query_dir_door (string dir) {
-
-// }
+string query_dir_door (string dir) {
+    mapping doors = map_mapping(filter_mapping(__Exits, (: $2["door"] :)), (: $2["door"] :));
+    if (member_array(dir, keys(doors)) > -1) {
+        return __Exits[dir]["door"];
+    }
+    return 0;
+}
 
 int query_open (string str) {
     mapping doors = map_mapping(filter_mapping(__Exits, (: $2["door"] :)), (: $2["door"] :));

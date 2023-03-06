@@ -224,6 +224,7 @@ varargs void describe_environment_senses (string sense, string focus) {
         }
         message("room listen", result, this_object());
     }
+    result = "";
     if ((!sense || sense == "smell") && (tmp = environment()->query_smell(focus))) {
         if (functionp(tmp)) {
             result = evaluate(tmp);
@@ -232,17 +233,29 @@ varargs void describe_environment_senses (string sense, string focus) {
         }
         message("room smell", result, this_object());
     }
+
+    if (result) {
+        message("system", "\n", this_object());
+    }
 }
 
 private void describe_environment_exits () {
     string *exits;
     int numExits;
 
-    if (!(numExits = sizeof(exits = environment()->query_exit_dirs()))) {
+    if (!(numExits = sizeof(exits = environment()->query_exit_directions()))) {
         message("room exits", "There are no exits.\n", this_object());
     } else {
-        exits = map(exits, (: "%^CYAN%^BOLD%^" + $1 + "%^BOLD_OFF%^DEFAULT%^" :));
-        message("room exits", "\nThere " + (numExits > 1 ? "are" : "is") + " " + cardinal(numExits) + " exit" + (numExits > 1 ? "s" : "") + ": " + conjunction(exits) + ".\n", this_object());
+        exits = map(exits, function (string dir) {
+            string door = environment()->query_dir_door(dir);
+            int open;
+            if (door) {
+                open = environment()->query_open(door);
+                door = " " + (!open ? "[" : "(") + door + (!open ? "]" : ")");
+            }
+            return "%^CYAN%^BOLD%^" + dir + "%^BOLD_OFF%^" + (door ? door : "") + "%^DEFAULT%^";
+        });
+        message("room exits", "There " + (numExits > 1 ? "are" : "is") + " " + cardinal(numExits) + " exit" + (numExits > 1 ? "s" : "") + ": " + conjunction(exits) + ".\n", this_object());
     }
 }
 
