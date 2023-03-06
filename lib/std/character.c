@@ -20,6 +20,19 @@ void describe_environment ();
 int query_immortal ();
 
 int is_character () { return 1; }
+int query_immortal () {
+    return __Immortal;
+}
+void set_immortal (int i) {
+    __Immortal = i;
+    if (__Immortal) {
+        if (file_size("/realm/" + query_key_name() + "/") == -1) {
+            mkdir("/realm/" + query_key_name() + "/");
+        }
+    }
+}
+
+/* ----- save ----- */
 
 varargs void save_character (int exit) {
     update_autoload(exit);
@@ -31,7 +44,7 @@ void restore_character () {
     restore_autoload();
 }
 
-// -----------------------------------------------------------------------------
+/* ----- applies ----- */
 
 void create () {
     living::create();
@@ -50,6 +63,14 @@ void heart_beat () {
         save_character();
     }
 }
+
+void receive_message (string type, string message) {
+    if (__User) {
+        __User->receive_message(type, message);
+    }
+}
+
+/* ----- overrides ----- */
 
 string query_character_short () {
     string short = query_cap_name();
@@ -77,29 +98,11 @@ void set_name (string name) {
 
 // -----------------------------------------------------------------------------
 
-void receive_message (string type, string message) {
-    if (__User) {
-        __User->receive_message(type, message);
-    }
-}
-
 object query_user () {
     return __User;
 }
 void set_user (object user) {
     __User = user;
-}
-
-int query_immortal () {
-    return __Immortal;
-}
-void set_immortal (int i) {
-    __Immortal = i;
-    if (__Immortal) {
-        if (file_size("/realm/" + query_key_name() + "/") == -1) {
-            mkdir("/realm/" + query_key_name() + "/");
-        }
-    }
 }
 
 int query_created () {
