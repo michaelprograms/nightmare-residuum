@@ -9,12 +9,12 @@ void create () {
     set_listen("default", "Water loudly splashes into the fountain basin.");
     set_smell("default", "Fresh air smelling of grass.");
     set_exits(([
-        "northwest": HUMAN_ROOM + "parkway_st_4.c",
+        "northwest": HUMAN_ROOM + "parkway_4.c",
         "west": HUMAN_ROOM + "chestnut_st_w4.c",
         "east": HUMAN_ROOM + "chestnut_st_w2.c",
         "north": HUMAN_ROOM + "second_st_n4.c",
         "south": HUMAN_ROOM + "second_st_n2.c",
-        "southeast": HUMAN_ROOM + "parkway_st_2.c",
+        "southeast": HUMAN_ROOM + "parkway_2.c",
     ]));
     set_looks(([
         "street": "The street signs are labeled Second St, Chestnut St, and Parkway.",

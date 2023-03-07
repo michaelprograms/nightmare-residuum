@@ -20,7 +20,7 @@ void create () {
         ({ "street", "streets" }): "Street signs located around the plaza in the cardinal directions of north, east, south, and west labeled N. Broad St., E. Market St., S. Broad St., and W. Market St. respectfully",
     ]));
     set_exits(([
-        "northwest": HUMAN_ROOM + "parkway_st_1.c",
+        "northwest": HUMAN_ROOM + "parkway_1.c",
         "north": HUMAN_ROOM + "broad_st_n1.c",
         "east": HUMAN_ROOM + "market_st_e1.c",
         "south": HUMAN_ROOM + "broad_st_s1.c",

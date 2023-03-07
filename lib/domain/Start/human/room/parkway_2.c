@@ -10,7 +10,7 @@ void create () {
     set_smell("default", "Fresh air smelling of grass.");
     set_exits(([
         "northwest": HUMAN_ROOM + "park_nw.c",
-        "southeast": HUMAN_ROOM + "parkway_st_1.c",
+        "southeast": HUMAN_ROOM + "parkway_1.c",
     ]));
     set_looks(([
         "street": "A street sign is labeled Parkway.",
