@@ -14,7 +14,7 @@ void create () {
     set_looks(([
 
     ]));
-    set_items(([
+    set_looks(([
 
     ]));
 }
