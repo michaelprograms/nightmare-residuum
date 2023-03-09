@@ -17,7 +17,7 @@ void create () {
         "doorways": "There are identical doorways on the northern and southern walls, however there is a down arrow etched into the southern wall while the northern wall has an up arrow.",
     ]));
     set_exits(([
-        "enter north": HUMAN_ROOM + "obelisk_elevator.c",
+        "enter north": HUMAN_ROOM + "vault_elevator.c",
     ]));
     set_reset(([
         HUMAN_ITEM + "stasis_body.c": 1,
@@ -32,6 +32,6 @@ mixed can_done () {
 }
 void do_done () {
     message("action", "You stand upon the circle in the center of the chamber.\nEverything goes dark for a moment.", this_character());
-    this_character()->handle_go(HUMAN_ROOM + "square.c", "teleport", "out of the obelisk", "out of the obelisk");
+    this_character()->handle_go(HUMAN_ROOM + "museum_1.c", "teleport", "out of the vault");
     this_character()->describe_environment();
 }

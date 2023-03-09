@@ -4,7 +4,7 @@ inherit STD_ROOM;
 inherit M_STORY;
 
 void story_action_final (object character) {
-    set_exit("out north", HUMAN_ROOM + "obelisk_structure.c", 0, function (object ob, string dir) {
+    set_exit("out north", HUMAN_ROOM + "vault_structure.c", 0, function (object ob, string dir) {
         if (sizeof(this_object()->query_living_contents()) == 0) {
             this_object()->remove_exit(dir);
         }
