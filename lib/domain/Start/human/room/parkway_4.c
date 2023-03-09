@@ -5,7 +5,7 @@ inherit STD_ROOM;
 void create () {
     ::create();
     set_short("a wide village street");
-    set_long("A wide street travels southeast with green spaces instead of buildings. A large building with columns surrounding the entrance blocks further passage northwest. Birch trees branch over the street and open green spaces. Flower beds are prepared near street intersections.");
+    set_long("A wide street travels southeast with green spaces instead of buildings. A large building with columns surrounding the entrance blocks further passage northwest. Birch trees branch over the street and open green spaces. Flower beds are prepared near street intersections. An obelisk can be seen to the southeast. A framework of hexagons glimmer far overhead.");
     set_listen("default", "Birds chirp from the trees.");
     set_smell("default", "Fresh air smelling of grass.");
     set_exits(([
