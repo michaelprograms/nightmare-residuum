@@ -10,4 +10,5 @@ void create () {
     set_long("A greasy rat peering at you cautiously.");
     set_level(1);
     set_species("rat");
+    set_ability_list(({ "bite", "scratch", }));
 }
