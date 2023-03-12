@@ -8,7 +8,7 @@ void create () {
         "no attack": 1,
     ]));
     set_short("a large stone structure");
-    set_long("The interior cavity of a tall structure which growers narrower towards the top. Four stone walls enclose the chamber at a distance. Several lamps are scattered around the cavern, casting a white light across the room. Doorways can be seen on the northern and southern walls.");
+    set_long("The interior cavity of a tall structure which grows narrower towards the top. Four stone walls enclose the chamber at a distance. Several lamps are scattered around the cavern, casting a white light across the room. Doorways can be seen on the northern and southern walls.");
     set_looks(([
         ({ "structure", "cavity" }): "Inside of a tall stone structure which is narrower at the top. Far above the top of the structure turns to darkness before a ceiling is seen.",
         "wall": "Dimly lit stone walls in the distance enclose the chamber.",
