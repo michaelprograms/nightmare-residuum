@@ -59,7 +59,6 @@ private void handle_page (mixed arg) {
 
 void start (string *lines, object user) {
     object account;
-    // @TODO check param
 
     if (user && (account = user->query_account())) {
         __ChunkSize = to_int(account->query_setting("lines"));
