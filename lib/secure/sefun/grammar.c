@@ -87,7 +87,7 @@ string consolidate (int n, string str) {
     }
 
     words = explode(str, " ");
-    tmp = lower_case(words[0]); // @TODO strip_colours?
+    tmp = lower_case(words[0]);
     if (member_array(tmp, ({"a","an","the","one"})) > -1) words = words[1..];
 
     result = sprintf("%s %s", cardinal(n), pluralize(implode(words, " ")));
