@@ -138,23 +138,37 @@ nosave private mapping __Species = ([
     /* Character Species */
     "human":        ([
         "body": "biped",
-        "strength": 2,
-        "perception": 1,
-        "endurance": 1,
-        "charisma": 1,
-        "intelligence": 2,
-        "agility": 2,
-        "luck": 1,
+        "stats": ([
+            "strength": 2,
+            "perception": 1,
+            "endurance": 1,
+            "charisma": 1,
+            "intelligence": 2,
+            "agility": 2,
+            "luck": 1,
+        ]),
+        "vitals": ([
+            "hp": 1,
+            "sp": 1,
+            "mp": 1,
+        ]),
     ]),
     "zotarian":     ([
         "body": "biped",
-        "strength": 1,
-        "perception": 2,
-        "endurance": 1,
-        "charisma": 2,
-        "intelligence": 2,
-        "agility": 1,
-        "luck": 1,
+        "stats": ([
+            "strength": 1,
+            "perception": 2,
+            "endurance": 1,
+            "charisma": 2,
+            "intelligence": 2,
+            "agility": 1,
+            "luck": 1,
+        ]),
+        "vitals": ([
+            "hp": 0,
+            "sp": 0,
+            "mp": 3,
+        ]),
     ]),
     /* NPC Species */
     "ant":          ([ "body": "hexapod" ]),
@@ -178,8 +192,34 @@ mapping query_species () { return __Species; }
 
 /* ----- species adjustments ----- */
 
+int query_adjust_hp (string s) {
+    if (__Species[s] && __Species[s]["vitals"]) {
+        return __Species[s]["vitals"]["hp"];
+    } else {
+        return 0;
+    }
+}
+int query_adjust_sp (string s) {
+    if (__Species[s] && __Species[s]["vitals"]) {
+        return __Species[s]["vitals"]["sp"];
+    } else {
+        return 0;
+    }
+}
+int query_adjust_mp (string s) {
+    if (__Species[s] && __Species[s]["vitals"]) {
+        return __Species[s]["vitals"]["mp"];
+    } else {
+        return 0;
+    }
+}
+
 int query_adjust_stat (string s, string stat) {
-    return __Species[s] && __Species[s][stat] ? __Species[s][stat] : 0;
+    if (__Species[s] && __Species[s]["stats"]) {
+        return __Species[s]["stats"][stat];
+    } else {
+        return 0;
+    }
 }
 
 /* ----- setup ----- */
