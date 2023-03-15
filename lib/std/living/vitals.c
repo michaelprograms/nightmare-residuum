@@ -69,14 +69,15 @@ void set_mp (int n) {
 
 varargs void update_vitals (int heal) {
     string c = this_object()->query_class();
+    string s = this_object()->query_species();
     int level = this_object()->query_level() || 1;
     int statHP = this_object()->query_stat("endurance") || 0;
     int statSP = this_object()->query_stat("agility") || 0;
     int statMP = this_object()->query_stat("intelligence") || 0;
 
-    int adjHP = D_CLASS->query_adjust_hp(c) + 0; // @TODO species modifier
-    int adjSP = D_CLASS->query_adjust_sp(c) + 0; // @TODO species modifier
-    int adjMP = D_CLASS->query_adjust_mp(c) + 0; // @TODO species modifier
+    int adjHP = D_CLASS->query_adjust_hp(c) + D_SPECIES->query_adjust_hp(s);
+    int adjSP = D_CLASS->query_adjust_sp(c) + D_SPECIES->query_adjust_sp(s);
+    int adjMP = D_CLASS->query_adjust_mp(c) + D_SPECIES->query_adjust_mp(s);
 
     int maxHP = (1 + level + statHP) * (10 + adjHP);
     int maxSP = (1 + level + statSP) * ( 5 + adjSP);
