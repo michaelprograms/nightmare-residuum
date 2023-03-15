@@ -107,7 +107,16 @@ mapping query_border_charset () {
     if (SEFUN->query_account_setting("screenreader") == "on") {
         type = "screenreader";
     } else {
-        type = query_encoding();
+        if (this_user()) {
+            switch (this_user()->query_terminal("type")) {
+                case "cmud": case "zmud":
+                    type = "US-ASCII";
+                    break;
+                default:
+                    type = query_encoding();
+                    break;
+            }
+        }
     }
     return copy(__BorderCharset[type]);
 }
