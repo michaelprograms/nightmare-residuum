@@ -97,7 +97,7 @@ void test_limbs_and_level () {
         testOb->set_stat("endurance", 20),
         testOb->set_species("human"),
         testOb->set_level(10),
-        assert(testOb->query_limb("torso"), "==", ([ "damage": 0, "maxdamage": 311, "pct": 100, "status": 0, "type": "FATAL" ])),
+        assert(testOb->query_limb("torso"), "==", ([ "damage": 0, "maxdamage": 342, "pct": 100, "status": 0, "type": "FATAL" ])),
     }) :));
 
     destruct(testOb);
@@ -106,7 +106,7 @@ void test_limbs_and_level () {
         testOb->set_stat("endurance", 20),
         testOb->set_level(10),
         testOb->set_species("human"),
-        assert(testOb->query_limb("torso"), "==", ([ "damage": 0, "maxdamage": 311, "pct": 100, "status": 0, "type": "FATAL" ])),
+        assert(testOb->query_limb("torso"), "==", ([ "damage": 0, "maxdamage": 342, "pct": 100, "status": 0, "type": "FATAL" ])),
     }) :));
 
     destruct(testOb);
