@@ -54,12 +54,36 @@ void test_setup_body () {
 void test_adjust_stat () {
     expect_function("query_adjust_stat", testOb);
 
-    expect("species stats are adjustable", (: ({
+    expect("stats adjustments are queryable", (: ({
         assert(testOb->query_adjust_stat("human", "strength"), "==", 2),
 
         assert(testOb->query_adjust_stat("unknown species", "strength"), "==", 0),
 
         assert(testOb->query_adjust_stat("human", "unknown stat"), "==", 0),
+    }) :));
+}
+
+void test_adjust_vitals () {
+    expect_function("query_adjust_hp", testOb);
+    expect_function("query_adjust_sp", testOb);
+    expect_function("query_adjust_mp", testOb);
+
+    expect("hp adjustments are queryable", (: ({
+        assert(testOb->query_adjust_hp("human"), "==", 1),
+
+        assert(testOb->query_adjust_hp("nonexistant"), "==", 0),
+    }) :));
+
+    expect("sp adjustments are queryable", (: ({
+        assert(testOb->query_adjust_sp("human"), "==", 1),
+
+        assert(testOb->query_adjust_sp("nonexistant"), "==", 0),
+    }) :));
+
+    expect("mp adjustments are queryable", (: ({
+        assert(testOb->query_adjust_mp("human"), "==", 1),
+
+        assert(testOb->query_adjust_mp("nonexistant"), "==", 0),
     }) :));
 }
 
