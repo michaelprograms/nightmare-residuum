@@ -20,10 +20,24 @@ void test_query_stat_cost () {
         assert(testOb->query_stat_cost("luck", 0, 0, 0), "==", 1),
         assert(testOb->query_stat_cost("luck", -1, 0, 0), "==", 1),
         assert(testOb->query_stat_cost("luck", -50, 0, 0), "==", 1),
+        assert(testOb->query_stat_cost("luck", 100, 0, 0), "==", 5052847),
         assert(testOb->query_stat_cost("luck", 1, 0, 0), ">", 1),
-        assert(testOb->query_stat_cost("luck", 2, 0, 0), ">", testOb->query_stat_cost("luck", 1)),
-        assert(testOb->query_stat_cost("luck", 100, 0, 0), ">", testOb->query_stat_cost("luck", 2)),
-        assert(testOb->query_stat_cost("luck", 1000, 0, 0), ">", testOb->query_stat_cost("luck", 100)),
+        assert(testOb->query_stat_cost("luck", 2, 0, 0), ">", testOb->query_stat_cost("luck", 1, 0, 0)),
+        assert(testOb->query_stat_cost("luck", 100, 0, 0), ">", testOb->query_stat_cost("luck", 2, 0, 0)),
+        assert(testOb->query_stat_cost("luck", 1000, 0, 0), ">", testOb->query_stat_cost("luck", 100, 0, 0)),
+    }) :));
+
+    expect("query_stat_cost adjusted by race and class", (: ({
+        assert(testOb->query_stat_cost("luck", 0, "psionist", "human"), "==", 1),
+        assert(testOb->query_stat_cost("luck", -1, "psionist", "human"), "==", 1),
+        assert(testOb->query_stat_cost("luck", -50, "psionist", "human"), "==", 1),
+        assert(testOb->query_stat_cost("luck", 100, "psionist", "human"), "==", 4617050),
+        assert(testOb->query_stat_cost("luck", 1, "psionist", "human"), ">", 1),
+        assert(testOb->query_stat_cost("luck", 2, "psionist", "human"), ">", testOb->query_stat_cost("luck", 1, "psionist", "human")),
+        assert(testOb->query_stat_cost("luck", 100, "psionist", "human"), ">", testOb->query_stat_cost("luck", 2, "psionist", "human")),
+        assert(testOb->query_stat_cost("luck", 1000, "psionist", "human"), ">", testOb->query_stat_cost("luck", 100, "psionist", "human")),
+
+        assert(testOb->query_stat_cost("luck", 100, "psionist", "human"), ">", testOb->query_stat_cost("luck", 1, 0, 0)),
     }) :));
 
     // @TODO class and species adjustments
