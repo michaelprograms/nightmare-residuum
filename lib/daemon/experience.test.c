@@ -27,7 +27,7 @@ void test_query_stat_cost () {
         assert(testOb->query_stat_cost("luck", 1000, 0, 0), ">", testOb->query_stat_cost("luck", 100, 0, 0)),
     }) :));
 
-    expect("query_stat_cost adjusted by race and class", (: ({
+    expect("query_stat_cost adjusted by species and class", (: ({
         assert(testOb->query_stat_cost("luck", 0, "psionist", "human"), "==", 1),
         assert(testOb->query_stat_cost("luck", -1, "psionist", "human"), "==", 1),
         assert(testOb->query_stat_cost("luck", -50, "psionist", "human"), "==", 1),
@@ -39,8 +39,6 @@ void test_query_stat_cost () {
 
         assert(testOb->query_stat_cost("luck", 100, "psionist", "human"), ">", testOb->query_stat_cost("luck", 1, 0, 0)),
     }) :));
-
-    // @TODO class and species adjustments
 }
 
 void test_query_skill_cost () {
