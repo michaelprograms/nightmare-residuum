@@ -13,9 +13,8 @@ void create () {
         "up": HUMAN_ROOM + "museum_2.c",
     ]));
     set_looks(([
-
-    ]));
-    set_looks(([
-
+        ({ "building", "ceiling", "walls" }): "A building of large proportions. The lobby is a large room with high ceilings and distant walls.",
+        "floor": "The floor is a polished white stone in large blocks.",
+        "staircase": "The staircase is in the back of the lobby. The steps are wide stones with a short wall as a railing.",
     ]));
 }
