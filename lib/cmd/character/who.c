@@ -17,7 +17,7 @@ void command (string input, mapping flags) {
     ]);
     int nImm = 0, nChar = 0;
     object *immList = ({ }), *charList = ({ });
-    string *headerItems = ({ }), *bodyItems = ({ }), *footerItems = ({ });
+    string *bodyItems = ({ }), *footerItems = ({ });
 
     foreach (object user in users()) {
         object char;
@@ -34,15 +34,14 @@ void command (string input, mapping flags) {
 
     if (sizeof(immList) > 0) {
         immList = sort_array(immList, (: strcmp($1->query_name(), $2->query_name()) :));
-        headerItems += ({
-            conjunction(map(immList, (: "%^MAGENTA%^BOLD%^"+$1->query_cap_name()+"%^RESET%^" :)))
-        });
-        data["header"] = ([
-            "header": ({ "Immortals" }),
-            "items": headerItems,
-            "columns": 1,
-            "align": "center",
-        ]);
+        foreach (object imm in immList) {
+            bodyItems += ({
+                imm->query_level(),
+                imm->query_short(),
+                capitalize(imm->query_species()),
+                capitalize(imm->query_class()),
+            });
+        }
         footerItems += ({ nImm + " immortal" + (nImm > 1 ? "s" : "") });
     }
 
@@ -50,7 +49,7 @@ void command (string input, mapping flags) {
     foreach (object char in charList) {
         bodyItems += ({
             char->query_level(),
-            char->query_cap_name(),
+            char->query_short(),
             capitalize(char->query_species()),
             capitalize(char->query_class()),
         });
@@ -58,7 +57,7 @@ void command (string input, mapping flags) {
 
     data["body"] = sizeof(bodyItems) ? ([
         "items": bodyItems,
-        "columns": 4,
+        "columns": ({ 1, 4, 1, 1 }),
         "align": "left",
     ]) : ([
         "items": ({ "No player characters connected" }),
