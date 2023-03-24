@@ -170,11 +170,11 @@ private string *format_border_item (mapping item, int width, string ansi, string
             item["header"] = item["header"][0..columnWidth-1];
         }
         if (ansi) item["header"] = map(item["header"], (: "%^RESET%^BOLD%^UNDERLINE%^"+$1+"%^RESET%^" :));
-        line = left + "  " + SEFUN->format_page(item["header"], item["columns"], 4, (item["align"] == "center"), undefinedp(ansi)) + "  " + right;
+        line = left + "  " + SEFUN->format_page(item["header"], item["columns"], 4, (item["align"] == "center"), ansi) + "  " + right;
         lines += ({ line });
     }
     // items
-    format = sizeof(item["items"]) > 0 ? SEFUN->format_page(item["items"], item["columns"], 4, (item["align"] == "center")) : "";
+    format = sizeof(item["items"]) > 0 ? SEFUN->format_page(item["items"], item["columns"], 4, (item["align"] == "center"), ansi) : "";
     foreach (string l in explode(format, "\n") - ({""})) {
         lines += ({ left + "  " + l + "  " + right });
     }
