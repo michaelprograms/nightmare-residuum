@@ -14,6 +14,7 @@ void create () {
     ]));
     set_looks(([
         ({ "building", "ceiling", "walls" }): "A building of large proportions. The lobby is a large room with high ceilings and distant walls.",
+        "lobby": "The entrance to the building, it features several different paths to traverse through.",
         "floor": "The floor is a polished white stone in large blocks.",
         "staircase": "The staircase is in the back of the lobby. The steps are wide stones with a short wall as a railing.",
         ({ "hallways", "wings" }): "Two hallways branch off from the main lobby, leading to the wings of the building.",
