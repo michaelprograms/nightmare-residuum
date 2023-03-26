@@ -4,6 +4,7 @@ inherit STD_ROOM;
 
 void create () {
     ::create();
+    set_properties(([ "indoors": 1, ]));
     set_short("a hallway junction");
     set_long("A sparse hallway junction in front of an open tank. A large number two is etched onto the wall next to the tank. The floor is covered in dust with footprints leading to the east. A hallway leading west to east walks in front of several tanks, while a shorter hallway leads north away from the tanks.");
     set_exits(([

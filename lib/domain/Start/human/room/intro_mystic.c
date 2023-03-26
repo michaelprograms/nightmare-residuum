@@ -6,6 +6,7 @@ void create () {
     ::create();
     set_properties(([
         "no attack": 1,
+        "indoors": 1,
     ]));
     set_short("a mystic's hall");
     set_long("The inside of a brick building that consists of a room that is deeper than wide. There is a set of open doors to the north facing the street. Along the walls are stained glass windows consisting of mystics in various combat poses while the ceiling is vaulted high above with exposed wooden beams. Several pews are positioned in rows facing a central altar at the far end of the room. A staircase leads down to the catacombs.");

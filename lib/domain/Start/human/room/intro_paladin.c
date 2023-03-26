@@ -6,6 +6,7 @@ void create () {
     ::create();
     set_properties(([
         "no attack": 1,
+        "indoors": 1,
     ]));
     set_short("a paladin's hall");
     set_long("The inside of a wide brick building that consists of a tall, ornate room. There is an open door to the east facing the street. Along the walls are stained glass windows consisting of paladins in various combat poses while the ceiling is arched high above. Several pews are positioned before stations that are used for prayer. A staircase leads down to the basement.");

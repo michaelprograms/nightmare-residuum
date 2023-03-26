@@ -6,6 +6,7 @@ void create () {
     ::create();
     set_properties(([
         "no attack": 1,
+        "indoors": 1,
     ]));
     set_short("a warrior's hall");
     set_long("The second floor of a brick building that consists of the personal training area of the warriors. Training equipment can be seen scattered around the sides of the room. A staircase leads back down to the first floor.");

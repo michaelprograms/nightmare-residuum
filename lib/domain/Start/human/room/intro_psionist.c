@@ -6,6 +6,7 @@ void create () {
     ::create();
     set_properties(([
         "no attack": 1,
+        "indoors": 1,
     ]));
     set_short("a psionist's hall");
     set_long("The inside of a wide brick building that consists of a large unfurnished room. There is an open door to the east facing the street next to several wide and tall windows. Meditation mats are scattered around the floor. A staircase leads up to the second floor.");

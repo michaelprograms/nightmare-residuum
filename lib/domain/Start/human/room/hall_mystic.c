@@ -6,6 +6,7 @@ void create () {
     ::create();
     set_properties(([
         "no attack": 1,
+        "indoors": 1,
     ]));
     set_short("a mystic's hall");
     set_long("The basement floor of a brick building that consists of the catacombs of the mystic. The walls are filled with chambers upon which the dried remains of mystics rest. The ground is a mixture of gravel and dirt. A staircase leads back up to the first floor.");

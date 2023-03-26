@@ -6,6 +6,7 @@ void create () {
     ::create();
     set_properties(([
         "no attack": 1,
+        "indoors": 1,
     ]));
     set_short("a scoundrel's hall");
     set_long("The inside of a wide brick building that used to be a warehouse. There is an open double door to the west facing the street letting in a column of light. A collection of old crates are positioned around the warehouse. Dust has built up on the floor, with a cleared path leading off to the side of the room where a staircase leads down to the second floor.");

@@ -15,6 +15,7 @@ void story_action_final (object character) {
 
 void create () {
     ::create();
+    set_properties(([ "indoors": 1, ]))
     set_short("a small room");
     set_long("An enclosed room with smooth blank walls.");
     set_story_lines(({

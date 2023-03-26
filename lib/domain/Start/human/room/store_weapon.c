@@ -6,6 +6,7 @@ void create () {
     ::create();
     set_properties(([
         "no attack": 1,
+        "indoors": 1,
     ]));
     set_short("a weapon store");
     set_long("The inside of a brick building that consists of an open room. There is a glass window to the south facing the street with a door to the side and a display of weapons in the window. Behind the counter are several more racks of weapons.");

@@ -12,7 +12,6 @@ nosave private mapping syntax = ([
     "retry": format_syntax("retry"),
 ]);
 
-
 void story_action_final (object target) {
     message("action", "A repetitive beeping tone synced to a blinking %^RED%^BOLD%^red light%^RESET%^ attracts your attention.", target);
     message("action", "You " + syntax["look"] + " over your surroundings.", target);
@@ -51,6 +50,7 @@ string prepare_long () {
 
 void create () {
     ::create();
+    set_properties(([ "indoors": 1, ]));
     set_short("a tank");
     set_long((: prepare_long :));
     set_story_delay(4);

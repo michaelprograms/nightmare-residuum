@@ -4,9 +4,7 @@ inherit STD_ROOM;
 
 void create () {
     ::create();
-    set_properties(([
-        "no attack": 1,
-    ]));
+    set_properties(([ "indoors": 1, ]));
     set_short("a large stone structure");
     set_long("The interior cavity of a tall structure which grows narrower towards the top. Four stone walls enclose the chamber at a distance. Several lamps are scattered around the cavern, casting a white light across the room. Doorways can be seen on the northern and southern walls.");
     set_looks(([

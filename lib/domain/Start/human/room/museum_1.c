@@ -4,6 +4,7 @@ inherit STD_ROOM;
 
 void create () {
     ::create();
+    set_properties(([ "indoors": 1, ]));
     set_short("a spacious lobby");
     set_long("The entrance to a building consisting of a spacious lobby with high ceilings and polished floors. The walls are made of stone blocks and covered with some tapestries. A grand staircase along the back of the lobby leads up towards another floor that looks down upon the lobby. Hallways branch to the east and south, heading to the wings of the building.");
     set_exits(([

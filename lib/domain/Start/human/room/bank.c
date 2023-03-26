@@ -7,6 +7,10 @@ nosave private string __BankDefault = "copper";
 
 void create () {
     ::create();
+    set_properties(([
+        "no attack": 1,
+        "indoors": 1,
+    ]))
     set_short("a village bank");
     set_long("The inside of a brick building that consists of a large open room. There is a large glass window to the north facing the street with a door to the side. There is a vault towards the south of the building. A counter with a sign lists the available services.");
     set_exits(([

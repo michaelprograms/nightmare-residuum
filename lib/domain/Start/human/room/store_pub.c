@@ -6,6 +6,7 @@ void create () {
     ::create();
     set_properties(([
         "no attack": 1,
+        "indoors": 1,
     ]));
     set_short("a village pub");
     set_long("The inside of a brick building that consists of an open room. A doorway in the southwest corner of the building exits out to the road intersection. There are several large windows facing west to the street with benches out front. Several tall chairs are placed around the inside in front of a large counter with a large flat surface. Various bottles are stored on some shelves on the wall behind the counter.");

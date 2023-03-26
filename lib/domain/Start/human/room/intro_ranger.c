@@ -6,6 +6,7 @@ void create () {
     ::create();
     set_properties(([
         "no attack": 1,
+        "indoors": 1,
     ]));
     set_short("a ranger's hall");
     set_long("The inside of a wide brick building which isn't much since it ends quickly after beginning. A field of mixed grasses stretches to the west behind the brick-front. The entrance is an archway with an open metal gate separating the inside from the street. Several archery targets are placed to the west out in the field. A wooden fence surrounds the field to obscure view.");
