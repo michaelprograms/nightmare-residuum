@@ -9,7 +9,7 @@ void create () {
     set_listen("default", "Birds chirp from the trees.");
     set_smell("default", "Fresh air smelling of grass.");
     set_exits(([
-        "northwest": HUMAN_ROOM + "museum_1.c",
+        "enter": HUMAN_ROOM + "museum_1.c",
         "southeast": HUMAN_ROOM + "park_nw.c",
     ]));
     set_looks(([
