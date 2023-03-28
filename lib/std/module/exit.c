@@ -41,11 +41,11 @@ string query_exit (string dir) {
     return 0;
 }
 string query_default_enter () {
-    string *enters = filter(keys(__Exits), (: strsrch($1, "enter") > -1 :));
+    string *enters = filter(keys(__Exits), (: regexp($1, "^enter") :));
     return sizeof(enters) == 1 ? enters[0] : 0;
 }
 string query_default_out () {
-    string *outs = filter(keys(__Exits), (: strsrch($1, "out") > -1 :));
+    string *outs = filter(keys(__Exits), (: regexp($1, "^out") :));
     return sizeof(outs) == 1 ? outs[0] : 0;
 }
 
