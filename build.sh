@@ -16,5 +16,5 @@ cmake ../driver \
 
 # -DCMAKE_BUILD_TYPE=Release \
 
-make install
+make -j `nproc` install
 cd ..
