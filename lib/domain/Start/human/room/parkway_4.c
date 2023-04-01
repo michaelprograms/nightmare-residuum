@@ -9,12 +9,12 @@ void create () {
     set_listen("default", "Birds chirp from the trees.");
     set_smell("default", "Fresh air smelling of grass.");
     set_exits(([
-        "enter": HUMAN_ROOM + "museum_1.c",
+        "enter northwest": HUMAN_ROOM + "museum_1.c",
         "southeast": HUMAN_ROOM + "park_nw.c",
     ]));
     set_looks(([
         "street": "A street sign is labeled Parkway.",
-        "building": "A large marble building that takes spans the width of the street block. It looks to be a couple stories tall with an ornate crowning around the roof line. Some windows are spaced out along the side of the building. Columns span the entranceway.",
+        ({ "building", "columns", }): "A large marble building that takes spans the width of the street block. It looks to be a couple stories tall with an ornate crowning around the roof line. Some windows are spaced out along the side of the building. Columns span the entranceway.",
     ]));
     set_reset(([
         HUMAN_ITEM + "artwork_4.c": 1,
