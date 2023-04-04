@@ -24,7 +24,7 @@ void command (string input, mapping flags) {
             ob->query_wander(),
             ob->query_wanders(),
             ob->query_next_wander(),
-            file_name(environment(ob)),
+            environment(ob) ? file_name(environment(ob)) : "No environment",
             "",
             "",
             "",
