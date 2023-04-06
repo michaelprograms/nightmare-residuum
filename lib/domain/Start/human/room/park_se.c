@@ -16,6 +16,7 @@ void create () {
     ]));
     set_looks(([
         "street": "The street signs are labeled Fourth St and Walnut St.",
+        ({ "framework", "hexagons"}): "Far above, the hexagons form a geodesic dome.",
     ]));
     set_reset(([
         HUMAN_ITEM + "bench.c": 1,

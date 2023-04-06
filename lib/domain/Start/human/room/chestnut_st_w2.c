@@ -12,5 +12,6 @@ void create () {
     ]));
     set_looks(([
         "street": "A village street labeled W Chestnut St.",
+        ({ "framework", "hexagons"}): "Far above, the hexagons form a geodesic dome.",
     ]));
 }

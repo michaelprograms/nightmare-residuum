@@ -11,5 +11,6 @@ void create () {
     ]));
     set_looks(([
         "ivy": "The ivy looks sturdy enough to climb.",
+        ({ "framework", "hexagons"}): "Far above, the hexagons form a geodesic dome.",
     ]));
 }

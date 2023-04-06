@@ -12,6 +12,7 @@ void create () {
     ]));
     set_looks(([
         "street": "A street sign is labeled E. Pine St.",
+        ({ "framework", "hexagons"}): "Far above, the hexagons form a geodesic dome.",
     ]));
     set_reset(([
         HUMAN_NPC + "teen_suspicious.c": 2,

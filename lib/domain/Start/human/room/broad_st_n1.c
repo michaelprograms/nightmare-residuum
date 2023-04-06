@@ -15,6 +15,7 @@ void create () {
         "street": "A street sign is labeled N. Broad St.",
         "building": "The open doors leads into a hall for all adventuerers.",
         "banner": "The banner simply says Adventurer Hall.",
-        "square": "A square plaza with trees, benches, and more.",
+        "square": "A square plaza with trees, benches, and more.",v
+        ({ "framework", "hexagons"}): "Far above, the hexagons form a geodesic dome.",
     ]));
 }

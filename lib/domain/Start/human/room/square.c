@@ -15,7 +15,7 @@ void create () {
         ({ "center", "plaza", "square" }): "The central meeting point of the village, where most of the locals pass by during their day.",
         "dwellings": "Squat brick buildings of two floors in height. Modest windows with wooden shutters adorn their front.",
         ({ "birch", "trees" }): "Birch trees of various ages branch over the plaza's perimeter.",
-        "hexagons": "Far above, the hexagons form a geodesic dome.",
+        ({ "framework", "hexagons"}): "Far above, the hexagons form a geodesic dome.",
         "streets": "The streets Broad and Market meet and cross here.",
         ({ "street", "streets" }): "Street signs located around the plaza in the cardinal directions of north, east, south, and west labeled N. Broad St., E. Market St., S. Broad St., and W. Market St. respectfully",
     ]));

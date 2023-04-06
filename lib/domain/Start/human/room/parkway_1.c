@@ -14,6 +14,7 @@ void create () {
     ]));
     set_looks(([
         "street": "A street sign is labeled Parkway.",
+        ({ "framework", "hexagons"}): "Far above, the hexagons form a geodesic dome.",
     ]));
     set_reset(([
         HUMAN_ITEM + "artwork_1.c": 1,

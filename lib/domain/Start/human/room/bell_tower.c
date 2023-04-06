@@ -16,5 +16,6 @@ void create () {
         "street": "The quiet village street passes before the temple.",
         "bell": "A bell hangs from the center of the tower, with another piece of metal for a clapper dangling from inside the bell.",
         "platform": "A creaky wooden platform built into the tower to allow a person passage to operate the bell tower.",
+        ({ "framework", "hexagons"}): "Far above, the hexagons form a geodesic dome.",
     ]));
 }

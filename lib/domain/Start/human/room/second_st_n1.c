@@ -16,6 +16,7 @@ void create () {
     set_looks(([
         "street": "A street sign is labeled N. Second St.",
         "building": "The building looks to be a psionist hall.",
+        ({ "framework", "hexagons"}): "Far above, the hexagons form a geodesic dome.",
     ]));
     set_reset(([
         HUMAN_NPC + "teen_meditate.c": 2,
