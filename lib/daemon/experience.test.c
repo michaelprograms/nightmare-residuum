@@ -54,7 +54,18 @@ void test_query_skill_cost () {
         assert(testOb->query_skill_cost("blade attack", 1000, 0, 0), ">", testOb->query_skill_cost("blade attack", 100)),
     }) :));
 
-    // @TODO class and species adjustments
+    expect("query_skill_cost adjusted by species and class", (: ({
+        assert(testOb->query_skill_cost("blade attack", 0, "warrior", "human"), "==", 1),
+        assert(testOb->query_skill_cost("blade attack", -1, "warrior", "human"), "==", 1),
+        assert(testOb->query_skill_cost("blade attack", -50, "warrior", "human"), "==", 1),
+        assert(testOb->query_skill_cost("blade attack", 100, "warrior", "human"), "==", 53137),
+        assert(testOb->query_skill_cost("blade attack", 1, "warrior", "human"), ">", 1),
+        assert(testOb->query_skill_cost("blade attack", 2, "warrior", "human"), ">", testOb->query_skill_cost("blade attack", 1, "warrior", "human")),
+        assert(testOb->query_skill_cost("blade attack", 100, "warrior", "human"), ">", testOb->query_skill_cost("blade attack", 2, "warrior", "human")),
+        assert(testOb->query_skill_cost("blade attack", 1000, "warrior", "human"), ">", testOb->query_skill_cost("blade attack", 100, "warrior", "human")),
+
+        assert(testOb->query_skill_cost("blade attack", 100, "warrior", "human"), ">", testOb->query_skill_cost("blade attack", 1, 0, 0)),
+    }) :));
 }
 
 void test_query_level_cost () {
