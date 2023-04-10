@@ -12,6 +12,7 @@ private int resetFnCalled = 0;
 void test_resets () {
     function resetFn = function () {
         resetFnCalled ++;
+        return 0;
     };
 
     expect_function("query_reset", testOb);
