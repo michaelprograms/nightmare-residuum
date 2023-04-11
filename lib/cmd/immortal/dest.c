@@ -8,7 +8,12 @@ void command (string input, mapping flags) {
     }
 
     ob = present(input, this_character());
-    if (!ob) ob = present(input, environment(this_character()));
+    if (!ob) {
+        ob = present(input, environment(this_character()));
+    }
+    if (!ob) {
+        ob = find_object(input);
+    }
     if (ob) {
         name = ob->is_living() ? ob->query_cap_name() : ob->query_name();
         message("action", "You dest " + name + ".", this_character());
