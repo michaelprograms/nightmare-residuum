@@ -13,6 +13,8 @@ string *query_system_channels () {
 int query_valid_channel (string channel) {
     if (channel[<1] == ':') {
         channel = channel[0..<2];
+    } else if (channel[<5..] == "emote") {
+        channel = channel[0..<6];
     }
     return member_array(channel, __Channels) > -1 || member_array(channel, __SystemChannels) > -1;
 }
@@ -61,6 +63,9 @@ void send (string channel, string msg) {
 
     if (channel[<1] == ':') {
         channel = channel[0..<2];
+        emote = 1;
+    } else if (channel[<5..] == "emote") {
+        channel = channel[0..<6];
         emote = 1;
     }
     if (msg[0] == ':') {
