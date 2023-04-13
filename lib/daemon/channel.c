@@ -11,6 +11,9 @@ string *query_system_channels () {
     return __SystemChannels;
 }
 int query_valid_channel (string channel) {
+    if (channel[<1] == ':') {
+        channel = channel[0..<2];
+    }
     return member_array(channel, __Channels) > -1 || member_array(channel, __SystemChannels) > -1;
 }
 
@@ -31,10 +34,16 @@ private string format_channel_name (string channel) {
     return (member_array(channel, query_channels()) > -1 ? "[[" : "((") + channel + (member_array(channel, query_channels()) > -1 ? "]]" : "))" );
 }
 
-private void handle_send (string name, string channel, string msg) {
+private void handle_send (string name, string channel, string msg, int emote) {
     string *listeners = filter(characters(), (: !$1->query_channel_blocked($(channel)) :));
-    string type = (channel == "error" ? "channel error" : "channel");
-    string m = (name ? name + " " : "") + format_channel_name(channel) + " " + msg;
+    string type, m;
+
+    type = (channel == "error" ? "channel error" : "channel");
+    if (emote) {
+        m = format_channel_name(channel) + " " + (name ? name + " " : "") + msg;
+    } else {
+        m = (name ? name + " " : "") + format_channel_name(channel) + " " + msg;
+    }
 
     message(type, m, listeners);
     add_history(channel, m);
@@ -44,8 +53,22 @@ private void handle_send (string name, string channel, string msg) {
 
 void send (string channel, string msg) {
     object tc;
+    int emote;
 
-    if (!channel || member_array(channel, __Channels + __SystemChannels) == -1) {
+    if (!channel) {
+        return;
+    }
+
+    if (channel[<1] == ':') {
+        channel = channel[0..<2];
+        emote = 1;
+    }
+    if (msg[0] == ':') {
+        msg = msg[1..];
+        emote = 1;
+    }
+
+    if (member_array(channel, __Channels + __SystemChannels) == -1) {
         return;
     }
 
@@ -67,12 +90,12 @@ void send (string channel, string msg) {
         tc->toggle_channel_blocked(channel);
         message("channel",  "Channel " + format_channel_name(channel) + " is no longer blocked.", tc);
     }
-    handle_send(tc->query_cap_name(), channel, msg);
+    handle_send(tc->query_cap_name(), channel, msg, emote);
 }
 
 void send_system (string channel, string msg) {
     if (member_array(channel, __SystemChannels) == -1) return;
-    handle_send(0, channel, msg);
+    handle_send(0, channel, msg, 0);
 }
 
 /* ----- applies ----- */
