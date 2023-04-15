@@ -13,7 +13,7 @@ int log_unique (string filename, string entry) {
     if (regexp(entry, "\n$")) {
         entry = entry[0..<2];
     }
-    if (!mkdirs(filename)) {
+    if (!mkdirs(filename + ".txt")) { // dummy extension
         return 0;
     }
 
@@ -36,7 +36,7 @@ int log (string filename, string entry) {
     if (!regexp(entry, "\n$")) {
         entry += "\n";
     }
-    if (!mkdirs(filename)) {
+    if (!mkdirs(filename + ".txt")) { // dummy extension
         return 0;
     }
     if (file_size(filename) > 20000) { // 20 kb
