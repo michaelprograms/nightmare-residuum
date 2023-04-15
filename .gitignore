@@ -15,4 +15,7 @@
 # Temporary files
 /lib/tmp
 
+# Certificate files
+/tls
+
 !/**/.gitignore
