@@ -98,9 +98,12 @@ private void read_socket (int fd, mixed message, string addr) {
     }
     */
 }
+void write_socket(int fd) {
+
+}
 
 private void listen_socket (int fd) {
-    int socket = socket_accept(fd, "read_socket", 0); // no write callback?
+    int socket = socket_accept(fd, "read_socket", "write_socket");
 
     authenticate_ipc(fd);
 
