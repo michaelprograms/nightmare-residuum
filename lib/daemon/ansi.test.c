@@ -15,13 +15,12 @@ void test_ansi_terms () {
     expect_function("query_ansi_term", testOb);
 
     term = testOb->query_ansi_term();
-    expect("query_ansi_term has 34 items", (: ({
+    expect("query_ansi_term has 543 items", (: ({
         assert(mapp(term), "==", 1),
-        assert(sizeof(term), "==", 34),
+        assert(sizeof(term), "==", 543),
     }) :));
 
     foreach (string key in keys(term)) {
-        if (key == "ENDTERM") continue; // skip this one
         if (term[key] == "") {
             fail ++;
         }
@@ -37,9 +36,9 @@ void test_unknown_terms () {
     expect_function("query_unknown_term", testOb);
 
     term = testOb->query_unknown_term();
-    expect("query_unknown_term has 34 items", (: ({
+    expect("query_unknown_term has 543 items", (: ({
         assert(mapp(term), "==", 1),
-        assert(sizeof(term), "==", 34),
+        assert(sizeof(term), "==", 543),
     }) :));
 
     foreach (string key in keys(term)) {
@@ -55,7 +54,7 @@ void test_unknown_terms () {
 void test_parse () {
     expect_function("parse", testOb);
 
-    expect("parse parses all colors", (: ({
+    expect("parse parses all basic colors", (: ({
         assert(testOb->parse("%^RESET%^"), "==", "\e[0;37;40m"),
         assert(testOb->parse("%^BOLD%^"), "==", "\e[1m"),
         assert(testOb->parse("%^ITALIC%^"), "==", "\e[3m"),
@@ -87,5 +86,14 @@ void test_parse () {
         assert(testOb->parse("%^B_MAGENTA%^"), "==", "\e[45m"),
         assert(testOb->parse("%^B_CYAN%^"), "==", "\e[46m"),
         assert(testOb->parse("%^B_WHITE%^"), "==", "\e[47m"),
+    }) :));
+
+    expect("parse parses xterm colors", (: ({
+        assert(testOb->parse("%^AAA%^"), "==", "\e[38;5;16m"),
+        assert(testOb->parse("%^BBB%^"), "==", "\e[38;5;59m"),
+        assert(testOb->parse("%^CCC%^"), "==", "\e[38;5;102m"),
+        assert(testOb->parse("%^DDD%^"), "==", "\e[38;5;145m"),
+        assert(testOb->parse("%^EEE%^"), "==", "\e[38;5;188m"),
+        assert(testOb->parse("%^FFF%^"), "==", "\e[38;5;231m"),
     }) :));
 }
