@@ -16,6 +16,6 @@
 /lib/tmp
 
 # Certificate files
-/tls
+/lib/secure/etc/tls
 
 !/**/.gitignore
