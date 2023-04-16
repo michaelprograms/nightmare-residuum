@@ -12,12 +12,10 @@ mapping term;
 void test_ansi_terms () {
     int fail;
 
-    expect_function("query_ansi_term", testOb);
-
     term = testOb->query_ansi_term();
     expect("query_ansi_term has 543 items", (: ({
         assert(mapp(term), "==", 1),
-        assert(sizeof(term), "==", 543),
+        assert(sizeof(term), "==", 543)
     }) :));
 
     foreach (string key in keys(term)) {
@@ -32,8 +30,6 @@ void test_ansi_terms () {
 
 void test_unknown_terms () {
     int fail = 0;
-
-    expect_function("query_unknown_term", testOb);
 
     term = testOb->query_unknown_term();
     expect("query_unknown_term has 543 items", (: ({
@@ -51,9 +47,14 @@ void test_unknown_terms () {
     }) :));
 }
 
-void test_parse () {
-    expect_function("parse", testOb);
+void test_keys () {
+    expect("query_keys matches terms", (: ({
+        assert(sizeof(testOb->query_keys()), "==", sizeof(testOb->query_ansi_term())),
+        assert(sizeof(testOb->query_keys()), "==", sizeof(testOb->query_unknown_term())),
+    }) :));
+}
 
+void test_parse () {
     expect("parse parses all basic colors", (: ({
         assert(testOb->parse("%^RESET%^"), "==", "\e[0;37;40m"),
         assert(testOb->parse("%^BOLD%^"), "==", "\e[1m"),
