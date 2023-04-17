@@ -47,6 +47,20 @@ jobs:
         replace: "./lib"
         include: "lib/secure/etc/nightmare-residuum.config"
 
+    - name: Replace TLS Port
+      uses: jacobtomlinson/gha-find-replace@v3
+      with:
+        find: "external_port_1: telnet 6667"
+        replace: ""
+        include: "lib/secure/etc/nightmare-residuum.config"
+
+    - name: Replace TLS Port
+      uses: jacobtomlinson/gha-find-replace@v3
+      with:
+        find: "external_port_1_tls: cert=secure/etc/tls/nightmare-residuum.com.crt key=secure/etc/tls/nightmare-residuum.com.key"
+        replace: ""
+        include: "lib/secure/etc/nightmare-residuum.config"
+
     - name: Run Tests
       run: ./build/bin/driver lib/secure/etc/nightmare-residuum.config -ftest
       shell: bash
