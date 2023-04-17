@@ -56,7 +56,7 @@ private void monitor_ipc () {
 
 private void authenticate_ipc (int socket) {
     string addr = socket_address(socket);
-    if (addr != "127.0.0.1") {
+    if (addr != "127.0.0.1" && addr != "0.0.0.0") {
         socket_close(socket);
         error("Bad socket request from " + addr);
     }
@@ -73,7 +73,7 @@ void send_to_sockets (string message) {
 
 // -----------------------------------------------------------------------------
 
-private void read_socket (int fd, mixed message, string addr) {
+private void read_socket (int fd, mixed message) {
     if (!stringp(message)) {
         socket_close(fd);
         error("Bad message from read_socket");
@@ -81,6 +81,7 @@ private void read_socket (int fd, mixed message, string addr) {
 
     authenticate_ipc(fd);
 
+    debug_message("D_IPC->read_socket received " + message);
     /*
     // Examples:
     // CHAT:chan:pos:nick:msg
