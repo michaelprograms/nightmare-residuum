@@ -47,18 +47,18 @@ jobs:
         replace: "./lib"
         include: "lib/secure/etc/nightmare-residuum.config"
 
-    - name: Disable external_port_2
+    - name: Disable external_port_1
       uses: jacobtomlinson/gha-find-replace@v3
       with:
-        find: "external_port_2: telnet 6667"
-        replace: "# external_port_2: telnet 6667"
+        find: "external_port_1"
+        replace: "# external_port_1"
         include: "lib/secure/etc/nightmare-residuum.config"
 
-    - name: Disable external_port_2_tls
+    - name: Rename external_port_2 to external_port_1
       uses: jacobtomlinson/gha-find-replace@v3
       with:
-        find: "external_port_2_tls: cert=secure/etc/tls/nightmare-residuum.com.crt key=secure/etc/tls/nightmare-residuum.com.key"
-        replace: "# external_port_2_tls: cert=secure/etc/tls/nightmare-residuum.com.crt key=secure/etc/tls/nightmare-residuum.com.key"
+        find: "external_port_2: telnet 6666"
+        replace: "external_port_1: telnet 6666"
         include: "lib/secure/etc/nightmare-residuum.config"
 
     - name: Run Tests
