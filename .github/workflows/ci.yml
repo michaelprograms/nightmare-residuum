@@ -40,6 +40,13 @@ jobs:
       shell: bash
       timeout-minutes: 10
 
+    - name: Replace Absolute Path with Relative Path
+        uses: jacobtomlinson/gha-find-replace@v3
+        with:
+          find: "/home/mud/game/lib"
+          replace: "./lib"
+          include: "lib/secure/etc/nightmare-residuum.config"
+
     - name: Run Tests
       run: ./build/bin/driver lib/secure/etc/nightmare-residuum.config -ftest
       shell: bash
