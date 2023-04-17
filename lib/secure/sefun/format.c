@@ -52,9 +52,9 @@ varargs string format_page (string *items, mixed columns, int pad, int center, s
                 // use stripped text when its longer than width
                 if (numColumns == 1) {
                     string *wrapped;
-                    if (undefinedp(ansi)) {
+                    if (ansi) {
                         wrapped = explode(SEFUN->wrap_ansi(items[i + j], width), "\n");
-                    } else if (ansi == 0) {
+                    } else {
                         wrapped = explode(SEFUN->wrap(items[i + j], width), "\n");
                     }
                     foreach (string line in wrapped) {
