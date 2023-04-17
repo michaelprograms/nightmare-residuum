@@ -13,9 +13,9 @@ void test_ansi_terms () {
     int fail;
 
     term = testOb->query_ansi_term();
-    expect("query_ansi_term has 543 items", (: ({
+    expect("query_ansi_term has 541 items", (: ({
         assert(mapp(term), "==", 1),
-        assert(sizeof(term), "==", 543)
+        assert(sizeof(term), "==", 541)
     }) :));
 
     foreach (string key in keys(term)) {
@@ -32,9 +32,9 @@ void test_unknown_terms () {
     int fail = 0;
 
     term = testOb->query_unknown_term();
-    expect("query_unknown_term has 543 items", (: ({
+    expect("query_unknown_term has 541 items", (: ({
         assert(mapp(term), "==", 1),
-        assert(sizeof(term), "==", 543),
+        assert(sizeof(term), "==", 541),
     }) :));
 
     foreach (string key in keys(term)) {
@@ -60,13 +60,11 @@ void test_parse () {
         assert(testOb->parse("%^BOLD%^"), "==", "\e[1m"),
         assert(testOb->parse("%^ITALIC%^"), "==", "\e[3m"),
         assert(testOb->parse("%^UNDERLINE%^"), "==", "\e[4m"),
-        assert(testOb->parse("%^FLASH%^"), "==", "\e[5m"),
         assert(testOb->parse("%^INVERSE%^"), "==", "\e[7m"),
         assert(testOb->parse("%^STRIKE%^"), "==", "\e[9m"),
         assert(testOb->parse("%^BOLD_OFF%^"), "==", "\e[22m"),
         assert(testOb->parse("%^ITALIC_OFF%^"), "==", "\e[23m"),
         assert(testOb->parse("%^UNDERLINE_OFF%^"), "==", "\e[24m"),
-        assert(testOb->parse("%^FLASH_OFF%^"), "==", "\e[25m"),
         assert(testOb->parse("%^INVERSE_OFF%^"), "==", "\e[27m"),
         assert(testOb->parse("%^STRIKE_OFF%^"), "==", "\e[29m"),
         assert(testOb->parse("%^BLACK%^"), "==", "\e[30m"),
