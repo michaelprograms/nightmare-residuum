@@ -23,7 +23,7 @@ void command (string input, mapping flags) {
         return strcmp(a, b);
     });
     xtermColors = xtermColors[0..<25] + ({ " ", " ", " ", " ", " ", " ", " ", " " }) + xtermColors[<24..];
-    xtermColors = map(xtermColors, (: ($1 != " " ? "%^"+$1+"%^" : "")+(member_array($1, ({"AAA", "G01","G02","G03","G04","C16"})) > -1 ? "B_WHITE%^" : "")+" "+sprintf("%3|s", $1)+" %^RESET%^" :));
+    xtermColors = map(xtermColors, (: ($1 != " " ? "%^"+$1+"%^" : "")+(member_array($1, ({"AAA", "G01","G02","G03","G04","C16"})) > -1 ? "B_WHITE%^" : "")+implode(explode(sprintf("%3|s", $1), ""), "%^")+"%^RESET%^" :));
 
     border(([
         "title": "COLORS",
