@@ -17,4 +17,7 @@ void create () {
     set_looks(([
 
     ]));
+    set_reset(([
+        HUMAN_NPC + "vendor_cafe.c": 1,
+    ]));
 }
