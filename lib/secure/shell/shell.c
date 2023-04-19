@@ -91,7 +91,7 @@ void execute_command (string command) {
     input = sizeof(split) > 1 ? command[(strlen(action)+1)..] : 0;
 
     if (D_CHANNEL->query_valid_channel(action)) {
-        return D_CHANNEL->send(action, input);
+        return D_CHANNEL->send(action, query_character(), input);
     }
 
     // @TODO move to STD_LIVING->do_command
