@@ -36,7 +36,7 @@ private string format_channel_name (string channel) {
     return (member_array(channel, query_channels()) > -1 ? "[[" : "((") + channel + (member_array(channel, query_channels()) > -1 ? "]]" : "))" );
 }
 
-private void handle_send (string name, string channel, string msg, int emote) {
+private void handle_send (string name, string channel, string msg, int emote, int ipc) {
     string *listeners = filter(characters(), (: !$1->query_channel_blocked($(channel)) :));
     string type, m;
 
@@ -49,12 +49,22 @@ private void handle_send (string name, string channel, string msg, int emote) {
 
     message(type, m, listeners);
     add_history(channel, m);
+    if (channel != "error" && !ipc) {
+        D_IPC->send("CHAT:" + channel + ":" + (name ? name + ":" : "") + msg);
+    }
 }
 
 /* ----- send to channel ----- */
 
-void send (string channel, string msg) {
-    object tc;
+void send_ipc (string channel, string name, string msg) {
+    if (!channel || !name || !msg) {
+        return;
+    }
+
+    handle_send(name, channel, msg, 0, 1);
+}
+
+void send (string channel, object source, string msg) {
     int emote;
 
     if (!channel) {
@@ -77,30 +87,28 @@ void send (string channel, string msg) {
         return;
     }
 
-    tc = this_character();
-
     if (!msg) {
-        tc->toggle_channel_blocked(channel);
-        if (tc->query_channel_blocked(channel)) {
-            message("channel",  "Channel " + format_channel_name(channel) + " is now blocked.", tc);
+        source->toggle_channel_blocked(channel);
+        if (source->query_channel_blocked(channel)) {
+            message("channel",  "Channel " + format_channel_name(channel) + " is now blocked.", source);
         } else {
-            message("channel",  "Channel " + format_channel_name(channel) + " is no longer blocked.", tc);
+            message("channel",  "Channel " + format_channel_name(channel) + " is no longer blocked.", source);
         }
         return;
     } else if (msg && member_array(channel, __SystemChannels) > -1) {
-        message("channel",  "Channel " + format_channel_name(channel) + " is read only.", tc);
+        message("channel",  "Channel " + format_channel_name(channel) + " is read only.", source);
         return;
     }
-    if (tc->query_channel_blocked(channel)) {
-        tc->toggle_channel_blocked(channel);
-        message("channel",  "Channel " + format_channel_name(channel) + " is no longer blocked.", tc);
+    if (source->query_channel_blocked(channel)) {
+        source->toggle_channel_blocked(channel);
+        message("channel",  "Channel " + format_channel_name(channel) + " is no longer blocked.", source);
     }
-    handle_send(tc->query_cap_name(), channel, msg, emote);
+    handle_send(source->query_cap_name(), channel, msg, emote, 0);
 }
 
 void send_system (string channel, string msg) {
     if (member_array(channel, __SystemChannels) == -1) return;
-    handle_send(0, channel, msg, 0);
+    handle_send(0, channel, msg, 0, 0);
 }
 
 /* ----- applies ----- */

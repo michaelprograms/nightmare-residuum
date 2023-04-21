@@ -1,7 +1,7 @@
 #include <driver/socket_err.h>
 #include <socket.h>
 
-#define IPC_PORT (driver_port() + 1)
+#define IPC_PORT 6668
 #define IPC_INTERVAL 30
 
 inherit M_CLEAN;
@@ -9,7 +9,7 @@ inherit M_CLEAN;
 private void setup_ipc ();
 private void monitor_ipc ();
 private void authenticate_ipc (int socket);
-private void read_socket (int s, mixed message, string addr);
+private void read_socket (int s, mixed message);
 private void listen_socket (int fd);
 private void close_socket (int fd);
 
@@ -56,13 +56,14 @@ private void monitor_ipc () {
 
 private void authenticate_ipc (int socket) {
     string addr = socket_address(socket);
-    if (addr != "127.0.0.1" && addr != "0.0.0.0") {
+    // 0.0.0.0 and 127.0.0.1 are only allowed connections
+    if (!regexp(addr, "0\\.0\\.0\\.0|127\\.0\\.0\\.1 [0-9]+")) {
         socket_close(socket);
         error("Bad socket request from " + addr);
     }
 }
 
-void send_to_sockets (string message) {
+void send (string message) {
     foreach (int client in __Clients) {
         int socket = socket_write(client, message);
         if (socket < 0) {
@@ -81,23 +82,20 @@ private void read_socket (int fd, mixed message) {
 
     authenticate_ipc(fd);
 
-    debug_message("D_IPC->read_socket received " + message);
     /*
     // Examples:
-    // CHAT:chan:pos:nick:msg
+    // CHAT:channel:name:message
     // GEN:name:/save/gen/Name/file.txt
-
-    if (message[0..4] == "CHAT:") {
-        // string chan, pos, nick, msg;
-        // if (sscanf(data, "CHAT:%s:%s:%s:%s", chan, pos, nick, msg) != 4) {
-        //     debug("Malformed chat msg:" + socket_address(fd) + ":" + data);
-        //     return;
-        // }
-        // CHAT_D->ipc_chat(chan, nick, msg);
-    } else if (message[0..3] == "GEN:") {
-        // do something
-    }
     */
+    if (message[0..4] == "CHAT:") {
+        string chan, nick, msg;
+        if (sscanf(message, "CHAT:%s:%s:%s", chan, nick, msg) != 3) {
+            error("Malformed IPC chat message from " + socket_address(fd) + ":" + message);
+            return;
+        }
+        D_CHANNEL->send_ipc(chan, nick, msg);
+    }
+
 }
 void write_socket(int fd) {
 
