@@ -25,9 +25,9 @@ void create () {
     if (clonep()) {
         query_vendor_inventory()->set_max_items(20);
         query_vendor_inventory()->set_reset(([
-
+            HUMAN_ITEM + "croissant.c": 4,
         ]));
     }
-    // set_vendor_types(({ STD_ARMOR }));
+    set_vendor_types(({ STD_FOOD }));
     set_vendor_currency("copper");
 }
