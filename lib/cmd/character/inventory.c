@@ -52,7 +52,7 @@ mapping *process_inventory (object target) {
         inventory += ({ process_section(weapon, "Weapons", target) });
     }
     if (sizeof(armor)) {
-        inventory += ({ process_section(armor, "Weapons", target) });
+        inventory += ({ process_section(armor, "Armor", target) });
     }
     if (sizeof(items)) {
         inventory += ({ process_section(items, "Items", target) });
