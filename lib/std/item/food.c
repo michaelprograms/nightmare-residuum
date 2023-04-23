@@ -7,7 +7,9 @@ int is_food () { return 1; }
 void set_strength (int s) {
     __Strength = s;
 }
-int query_strength () { return __Strength; }
+int query_strength () {
+    return __Strength;
+}
 
 mixed direct_eat_obj (mixed args...) {
     return (environment() == previous_object());

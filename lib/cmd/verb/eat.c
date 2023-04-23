@@ -8,6 +8,7 @@ void create () {
     set_requirements(REQUIREMENT_BUSY | REQUIREMENT_DISABLE);
     set_syntax("eat [item]");
     set_help_text("Your character will attempt to eat the provided item.");
+    set_help_similar(({ "drink", }));
 }
 
 mixed can_eat () {

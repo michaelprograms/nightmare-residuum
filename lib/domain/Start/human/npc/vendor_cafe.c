@@ -26,6 +26,7 @@ void create () {
         query_vendor_inventory()->set_max_items(20);
         query_vendor_inventory()->set_reset(([
             HUMAN_ITEM + "croissant.c": 4,
+            HUMAN_ITEM + "tea.c": 4,
         ]));
     }
     set_vendor_types(({ STD_FOOD }));
