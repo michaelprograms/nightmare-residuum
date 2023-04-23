@@ -439,6 +439,11 @@ string parser_error_message (int type, object ob, mixed arg, int plural) {
     if (ob) err = ob->query_short();
     else err = "";
 
+    if (arg[<1] == '\n') {
+        // trim newline added by driver
+        arg = arg[0..<2];
+    }
+
     debug_message("parser_error_message: "+type+" "+identify(ob)+" "+arg+" "+plural);
     switch (type) {
     case 0:
