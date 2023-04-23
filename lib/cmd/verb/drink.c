@@ -16,5 +16,5 @@ mixed can_drink () {
 }
 
 void do_drink_obj (object ob, string str) {
-    ob->handle_drink(this_character());
+    ob->handle_consume(this_character());
 }

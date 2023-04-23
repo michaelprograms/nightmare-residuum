@@ -4,12 +4,12 @@
 // std
 #define STD_ACCOUNT     "/std/account.c"
 #define STD_CHARACTER   "/std/character.c"
+#define STD_CONSUMABLE  "/std/consumable.c"
 #define STD_ITEM        "/std/item.c"
 #define STD_LIVING      "/std/living.c"
 #define STD_NPC         "/std/npc.c"
 #define STD_OBJECT      "/std/object.c"
 #define STD_ROOM        "/std/room.c"
-#define STD_STORAGE     "/std/item/storage.c"
 
 // std actions
 #define STD_ABILITY     "/std/ability.c"
@@ -23,6 +23,7 @@
 #define STD_DRINK       "/std/item/drink.c"
 #define STD_FOOD        "/std/item/food.c"
 #define STD_KEY         "/std/item/key.c"
+#define STD_STORAGE     "/std/item/storage.c"
 #define STD_WEAPON      "/std/item/weapon.c"
 
 // std room inheritables
@@ -47,7 +48,7 @@
 #define M_PICKABLE      "/std/module/pickable.c"
 #define M_PROPERTY      "/std/module/property.c"
 #define M_RESET         "/std/module/reset.c"
-#define M_SENSES         "/std/module/senses.c"
+#define M_SENSES        "/std/module/senses.c"
 #define M_STORY         "/std/module/story.c"
 #define M_TEST          "/std/module/test.c"
 

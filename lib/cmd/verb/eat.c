@@ -16,5 +16,5 @@ mixed can_eat () {
 }
 
 void do_eat_obj (object ob, string str) {
-    ob->handle_eat(this_character());
+    ob->handle_consume(this_character());
 }
