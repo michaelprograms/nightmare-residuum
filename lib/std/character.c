@@ -179,27 +179,27 @@ void describe_environment_long () {
     object env = environment();
     string *map = ({ });
     int width = __User->query_account()->query_setting("width");
+    int sm, sl, l;
+    string *long, result = "", line;
 
     if (__User->query_account()->query_setting("screenreader") == "off") {
         map = env->query_room_exit_map();
     }
-    if (!sizeof(map)) {
+    if (!(sm = sizeof(map))) {
         message("room", "%^BOLD%^" + env->query_short() + "%^RESET%^", this_object());
         message("room", env->query_long(), this_object());
     } else {
-        string *long, result = "", line;
-        int l;
         long = ({ "%^BOLD%^" + env->query_short() + "%^RESET%^" }) + explode(wrap_ansi(env->query_long(), width-16), "\n");
 
         map = map(map, (: $1+" " :));
-        l = max(({ sizeof(map), sizeof(long) }));
+        l = max(({ sm, sl }));
         for (int i = 0; i < l; i ++) {
-            if (i < sizeof(map)) {
+            if (i < sm) {
                 line = map[i];
             } else {
                 line = sprintf("%*s", 16, "");
             }
-            if (i < sizeof(long)) {
+            if (i < sl) {
                 line += long[i];
             }
             result += line + "\n";
