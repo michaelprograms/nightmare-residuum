@@ -14,9 +14,9 @@ void create () {
         set_gender("female");
     }
     capName = capitalize(name);
-    set_id(({ name, "clone", "shopkeeper", "vendor", }));
+    set_id(({ name, "clone", "barista", "vendor", }));
     set_name(capName);
-    set_short(capName + " the shopkeeper");
+    set_short(capName + " the barista");
     set_long("A cloned human by the name of " + capName + ", working as cafe worker.");
     set_level(10);
     set_species("human");
