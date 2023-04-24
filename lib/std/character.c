@@ -190,7 +190,7 @@ void describe_environment_long () {
         message("room", env->query_long(), this_object());
     } else {
         long = ({ "%^BOLD%^" + env->query_short() + "%^RESET%^" }) + explode(wrap_ansi(env->query_long(), width-16), "\n");
-
+        sl = sizeof(long);
         map = map(map, (: $1+" " :));
         l = max(({ sm, sl }));
         for (int i = 0; i < l; i ++) {
