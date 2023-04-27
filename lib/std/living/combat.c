@@ -58,7 +58,7 @@ protected void handle_combat () {
 }
 
 private void handle_combat_hit (object target, mixed weapon) {
-    int hit = 0;
+    int hit = 0, damage = 0;
     string type, name, possessive, limb;
 
     if (objectp(weapon)) {
@@ -92,8 +92,6 @@ private void handle_combat_hit (object target, mixed weapon) {
         train_skill(type + " attack", 0.5);
         target->train_skill(type + " defense", 0.5);
     } else {
-        int damage = 0;
-
         // Base Damage
         damage = random(10);
         damage += (query_stat("strength") * 10 / 100);
