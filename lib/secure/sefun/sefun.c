@@ -9,6 +9,7 @@ inherit "/secure/sefun/format.c";
 inherit "/secure/sefun/grammar.c";
 inherit "/secure/sefun/override.c";
 inherit "/secure/sefun/path.c";
+inherit "/secure/sefun/roll.c";
 inherit "/secure/sefun/string.c";
 inherit "/secure/sefun/time.c";
 inherit "/secure/sefun/user.c";

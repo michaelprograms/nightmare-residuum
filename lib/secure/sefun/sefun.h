@@ -75,6 +75,9 @@ varargs string absolute_path (string relative_path, mixed relative_to);
 int mkdirs (string path);
 string *wild_card (string path, string relative_to);
 
+/* --- roll --- */
+mixed *roll_die (int times, int sides);
+
 /* --- string --- */
 string identify (mixed a);
 varargs string wrap (string str, int width, int indent, int rawANSI);
