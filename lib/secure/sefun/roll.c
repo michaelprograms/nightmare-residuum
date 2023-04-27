@@ -7,7 +7,7 @@ mixed *roll_die (int times, int sides) {
     rolls = allocate(times, (: 1 + random($(sides)) :));
 
     return ({
-        reduce(rolls, (: $1 + $2 :), 0),
+        SEFUN->reduce(rolls, (: $1 + $2 :), 0),
         rolls
     });
 }
