@@ -67,8 +67,6 @@ varargs mixed do_look_at_obj (object ob, mixed arg) {
     object po = previous_object();
     string long = replace_string(ob->query_long(), "%^DEFAULT%^", "%^RESET%^");
 
-    if (sizeof(long) && long[<1] != '\n') long += "\n";
-
     message("action", "You look over " + ob->query_short() + "...\n" + long, po);
     message("action", po->query_cap_name() + " looks over " + ob->query_name() + ".", environment(ob), po);
 
