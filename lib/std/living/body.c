@@ -212,27 +212,55 @@ object *query_all_armor () {
     }
     return worn;
 }
-int query_can_wear_armor (object ob) {
-    if (!mapp(__Worn)) __Worn = ([ ]);
+mixed query_can_wear_armor (object armor) {
+    int worn;
+    string wielded;
 
-    foreach (string limb in ob->query_limbs()) {
+    if (!mapp(__Worn)) {
+        __Worn = ([ ]);
+    }
+
+    foreach (string limb in armor->query_limbs()) {
+        if (armor->query_type() == "shield" && __Wielded[limb]) {
+            wielded = limb;
+        }
         if (!arrayp(__Worn[limb])) continue;
-        foreach (object worn in __Worn[limb]) {
-            if (ob->query_type() == worn->query_type()) {
-                return 0;
+        foreach (object ob in __Worn[limb]) {
+            if (armor->query_type() == ob->query_type()) {
+                worn ++;
             }
         }
     }
+
+    switch (armor->query_type()) {
+    case "shield":
+        if (worn || member_array("shield", query_all_armor()) > -1) {
+            return "You are already wearing a " + armor->query_type()+ ".";
+        }
+        if (wielded) {
+            return "You cannot wear a shield while wielding a weapon in your " + wielded + ".";
+        }
+        break;
+    default:
+        if (worn) {
+            return "You are already wearing a " + armor->query_type()+ ".";
+        }
+        break;
+    }
+
     return 1;
 }
 
 varargs mixed handle_wear (object ob) {
     string limbConj;
+    string result;
 
     if (!mapp(__Worn)) __Worn = ([ ]);
 
     if (ob->query_worn()) return "You are already wearing " + ob->query_name() + ".";
-    if (!query_can_wear_armor(ob)) return "You are already wearing " + ob->query_type() + ".";
+    result = query_can_wear_armor(ob);
+    if (stringp(result)) return result;
+    else if (intp(result) != 1) return "You are already wearing " + ob->query_type() + ".";
 
     foreach (string limb in ob->query_limbs()) {
         if (!arrayp(__Worn[limb])) __Worn[limb] = ({ });

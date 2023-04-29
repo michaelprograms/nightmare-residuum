@@ -51,7 +51,7 @@ void set_ac (int ac) {
 
 mixed direct_wear_obj (mixed args...) {
     object po = previous_object();
-    return environment() == po && !__Worn && po->query_can_wear_armor(this_object());
+    return environment() == po && !__Worn;
 }
 mixed direct_unwear_obj (mixed args...) {
     object po = previous_object();
