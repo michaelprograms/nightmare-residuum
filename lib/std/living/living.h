@@ -31,6 +31,7 @@ mapping query_limb (string limb);
 string query_random_limb ();
 int query_limb_armor (string limb);
 object *query_all_armor ();
+object query_worn_shield ();
 mixed query_can_wear_armor (object ob);
 varargs mixed handle_wear (object armor);
 varargs mixed handle_unwear (object armor);

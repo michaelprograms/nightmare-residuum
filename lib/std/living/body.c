@@ -212,6 +212,17 @@ object *query_all_armor () {
     }
     return worn;
 }
+object query_worn_shield () {
+    object shield;
+    foreach (string limb in keys(__Worn)) {
+        foreach (object ob in __Worn[limb]) {
+            if (ob->query_type() == "shield") {
+                shield = ob;
+            }
+        }
+    }
+    return shield;
+}
 mixed query_can_wear_armor (object armor) {
     int worn;
     string wielded;
