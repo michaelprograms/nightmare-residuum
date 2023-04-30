@@ -52,18 +52,18 @@ void test_body () {
         // verify we set corpse information
         assert(testOb->query_name(), "==", "corpse of tester"),
         assert(testOb->query_id(), "==", ({ "corpse", "corpseoftester", "corpse of a tester", "corpse of tester", })),
-        assert(testOb->query_short(), "==", "the corpse of a tester"),
+        assert(testOb->query_short(), "==", "corpse of a tester"),
     }) :));
 
     liv->set_short("a %^BOLD%^tester%^DEFAULT%^");
     expect("body handles short with DEFAULT", (: ({
         testOb->setup_body($(liv)),
         // verify %^DEFAULT%^ turns to %^RESET%^
-        assert(testOb->query_short(), "==", "the corpse of a %^BOLD%^tester%^RESET%^"),
+        assert(testOb->query_short(), "==", "corpse of a %^BOLD%^tester%^RESET%^"),
         // verify we keep %^DEFAULT%^ instead of replacing to %^RESET%^
-        assert(testOb->query_short("%^DEFAULT%^"), "==", "the corpse of a %^BOLD%^tester%^DEFAULT%^"),
+        assert(testOb->query_short("%^DEFAULT%^"), "==", "corpse of a %^BOLD%^tester%^DEFAULT%^"),
         // verify we override %^DEFAULT%^ with %^RESET%^
-        assert(testOb->query_short("%^RED%^"), "==", "the corpse of a %^BOLD%^tester%^RED%^"),
+        assert(testOb->query_short("%^RED%^"), "==", "corpse of a %^BOLD%^tester%^RED%^"),
     }) :));
 
     liv->add_currency("copper", 12345);

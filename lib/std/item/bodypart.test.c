@@ -34,7 +34,7 @@ void test_bodypart () {
         testOb->setup_bodypart("Someone", "some limb"),
         // verify we set bodypart information
         assert(testOb->query_name(), "==", "piece of some limb"),
-        assert(testOb->query_short(), "==", "a piece of Someone's some limb"),
+        assert(testOb->query_short(), "==", "piece of Someone's some limb"),
         assert(testOb->query_id(), "==", ({ "bodypart", "body part", "limb", "pieceofsomelimb", "piece of some limb", "some limb", })),
     }) :));
 }
