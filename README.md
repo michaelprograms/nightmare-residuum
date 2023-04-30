@@ -4,7 +4,7 @@
 
 An [LPMud](https://en.wikipedia.org/wiki/LPMud) inspired by the [Nightmare Mudlib](https://github.com/fluffos/nightmare3) but utilizing modern [fluffos](https://github.com/fluffos/fluffos) driver features.
 
-![image](https://user-images.githubusercontent.com/1260602/235332602-dd4fb705-8b14-4bc9-9b85-fec29276bf84.png)
+![image](https://user-images.githubusercontent.com/1260602/235332632-4cede3ef-9cb4-4db7-856c-470bd327c4bd.png)
 
 ## Fluffos Driver
 
