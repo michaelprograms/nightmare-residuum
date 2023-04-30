@@ -20,7 +20,7 @@ void setup_bodypart (string owner, string limb) {
     possOwner = possessive_noun(__Owner);
 
     set_name("piece of " + __Limb);
-    set_short("a piece of " + possOwner + " " + __Limb);
+    set_short("piece of " + possOwner + " " + __Limb);
     set_long("This is the severed " + __Limb + " of " + __Owner + ".\n");
     set_id(({ "piece of " + __Limb, __Limb }));
 }

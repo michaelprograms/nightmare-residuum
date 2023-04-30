@@ -23,7 +23,7 @@ void setup_body (object ob) {
 
     set_name("corpse of " + ob->query_name());
     set_id(({ "corpse", "corpse of " + ob->query_short(), "corpse of " + ob->query_name() }));
-    set_short("the corpse of " + ob->query_short("%^DEFAULT%^"));
+    set_short("corpse of " + ob->query_short("%^DEFAULT%^"));
     set_long("Here lies the body of " + ob->query_cap_name() + ".");
 
     if (sizeof(currencies = ob->query_currencies())) {
