@@ -6,10 +6,52 @@ void create () {
     __Hostiles = ({ });
 }
 
+mapping *query_combat_table (object target) {
+    mapping *table;
+    float levelAdjust;
+
+    levelAdjust = (target->query_level() - this_object()->query_level()) / 5.0;
+
+    table = ({
+        ([
+            "id": "miss",
+            "value": 5.0 + levelAdjust
+        ]),
+        ([
+            "id": "resist",
+            "value": 0.0
+        ]),
+        ([
+            "id": "block",
+            "value": (target && target->query_worn_shield() ? 5.0 + levelAdjust: 0.0)
+        ]),
+        ([
+            "id": "parry",
+            "value": (sizeof(target && target->query_wielded_weapons()) ? 5.0 + levelAdjust : 0.0)
+        ]),
+        ([
+            "id": "evade",
+            "value": 5.0 + levelAdjust
+        ]),
+        ([
+            "id": "critical hit",
+            "value": 5.0 + levelAdjust
+        ]),
+        ([
+            "id": "regular hit",
+            "value": 100.0
+        ]),
+    });
+
+    return table;
+}
+
 protected void handle_combat () {
-    object target;
-    mixed *weapons;
+    object target, *weapons;
     int min, max, hits;
+    mapping *table;
+    int d100;
+    float sum = 0;
 
     target = query_target_hostile();
     this_object()->check_lifesigns(query_target_hostile());
@@ -35,6 +77,8 @@ protected void handle_combat () {
     }
 
     weapons = query_wielded_weapons() + query_wieldable_limbs();
+
+    table = query_combat_table(target);
     min = sizeof(weapons[0..2]) + query_stat("agility") / 100;
     max = sizeof(weapons[0..2]) + query_stat("agility") / 50;
     hits = min + random(max - min + 1);
@@ -49,7 +93,41 @@ protected void handle_combat () {
 
     for (int h = 0; h < hits; h ++) {
         if (!target) break;
-        handle_combat_hit(target, weapons[random(sizeof(weapons))]);
+
+        if (query_sp() > 0) {
+            d100 = roll_die(1, 100)[0];
+        }
+        sum = 0;
+        foreach (mapping m in table) {
+            if (!m["value"]) continue;
+            sum = min(({ 100.0, sum + m["value"], }));
+            if (d100 <= sum) {
+                switch(m["id"]) {
+                case "miss":
+                    handle_combat_miss(target, element_of(weapons));
+                    break;
+                // case "resist": // @TODO
+                //     break;
+                case "block":
+                    target->handle_combat_block(target);
+                    break;
+                case "parry":
+                    target->handle_combat_parry(target, element_of(weapons));
+                    break;
+                case "evade":
+                    target->handle_combat_evade(target);
+                    break;
+                case "critical hit":
+                    handle_combat_hit(target, weapons[random(sizeof(weapons))], 1);
+                    break;
+                case "regular hit":
+                    handle_combat_hit(target, weapons[random(sizeof(weapons))], 0);
+                    break;
+                }
+                break;
+            }
+        }
+
     }
     add_sp(-(random(hits) + 1));
     if (target) {
@@ -57,9 +135,8 @@ protected void handle_combat () {
     }
 }
 
-private void handle_combat_hit (object target, mixed weapon) {
-    int hit = 0, damage = 0;
-    string type, name, possessive, limb;
+private void handle_combat_miss (object target, mixed weapon) {
+    string type, name, possessive = possessive(this_object());
 
     if (objectp(weapon)) {
         type = weapon->query_type();
@@ -71,50 +148,88 @@ private void handle_combat_hit (object target, mixed weapon) {
         return; // invalid weapon
     }
 
-    // Miss chance
-    hit = (query_stat("agility") * 75 / 100);
-    hit += random(query_stat("agility") * 75 / 100 + 1);
-    hit += random(target->query_stat("luck") * 5 / 100 + 1);
-    hit += random(query_skill(type + " attack") * 20 / 100 + 1);
+    message("combat miss", "You miss " + target->query_cap_name() + " with your " + name + ".", this_object());
+    message("combat miss", this_object()->query_cap_name() + " misses you with " + possessive + " " + name + ".", target);
+    message("combat miss", this_object()->query_cap_name() + " misses " + target->query_cap_name() + " with " + possessive + " " + name + ".", environment(), ({ this_object(), target }));
+    train_skill(type + " attack", 0.5);
+    target->train_skill(type + " defense", 0.5);
+}
+private void handle_combat_block (object target) {
+    string possessive = possessive(this_object());
+    object shield = this_object()->query_worn_shield();
 
-    hit -= (target->query_stat("agility") * 25 / 100);
-    hit -= random(target->query_stat("agility") * 25 / 100 + 1);
-    hit -= random(target->query_stat("luck") * 5 / 100 + 1);
-    hit -= random(target->query_skill(type + " defense") * 20 / 100 + 1);
+    if (!shield) {
+        return; // invalid shield
+    }
 
-    possessive = possessive(this_object());
+    message("combat miss", "You block " + target->query_cap_name() + " with your " + shield->query_name() + ".", this_object());
+    message("combat miss", this_object()->query_cap_name() + " blocks you with " + possessive + " " + shield->query_name() + ".", target);
+    message("combat miss", this_object()->query_cap_name() + " blocks " + target->query_cap_name() + " with " + possessive + " " + shield->query_name() + ".", environment(), ({ this_object(), target }));
+}
+private void handle_combat_parry (object target) {
+    string type, name, possessive = possessive(this_object());
+    mixed *weapons = query_wielded_weapons() + query_wieldable_limbs(), weapon = element_of(weapons);
+
+    if (objectp(weapon)) {
+        type = weapon->query_type();
+        name = weapon->query_name();
+    } else if (stringp(weapon)) {
+        type = "brawl";
+        name = weapon;
+    } else {
+        return; // invalid weapon
+    }
+
+    message("combat miss", "You parry " + target->query_cap_name() + " with your " + name + ".", this_object());
+    message("combat miss", this_object()->query_cap_name() + " parries you with " + possessive + " " + name + ".", target);
+    message("combat miss", this_object()->query_cap_name() + " parries " + target->query_cap_name() + " with " + possessive + " " + name + ".", environment(), ({ this_object(), target }));
+}
+private void handle_combat_evade (object target) {
+    message("combat miss", "You evade " + possessive_noun(target->query_cap_name()) + " attack.", this_object());
+    message("combat miss", this_object()->query_cap_name() + " evades your attack.", target);
+    message("combat miss", this_object()->query_cap_name() + " evades " + possessive_noun(target->query_cap_name()) + " attack.", environment(), ({ this_object(), target }));
+}
+private void handle_combat_hit (object target, mixed weapon, int crit) {
+    int damage = 0;
+    string type, name, limb;
+
+    if (objectp(weapon)) {
+        type = weapon->query_type();
+        name = weapon->query_name();
+    } else if (stringp(weapon)) {
+        type = "brawl";
+        name = weapon;
+    } else {
+        return; // invalid weapon
+    }
+
     limb = target->query_random_limb();
 
-    if (hit < 1 || query_sp() < 1) {
-        message("combat miss", "You miss " + target->query_cap_name() + " with your " + name + ".", this_object());
-        message("combat miss", this_object()->query_cap_name() + " misses you with " + possessive + " " + name + ".", target);
-        message("combat miss", this_object()->query_cap_name() + " misses " + target->query_cap_name() + " with " + possessive + " " + name + ".", environment(), ({ this_object(), target }));
-        train_skill(type + " attack", 0.5);
-        target->train_skill(type + " defense", 0.5);
-    } else {
-        // Base Damage
-        damage = random(10);
-        damage += (query_stat("strength") * 10 / 100);
-        damage += random(query_stat("strength") * 10 / 100 + 1);
-        damage += random(query_sp() * 10 / 100 + 1);
-        damage += random(query_stat("luck") * 5 / 100 + 1);
-        damage += random(query_skill(type + " attack") * 20 / 100 + 1);
-
-        // apply target mitigations
-        damage -= (query_stat("endurance") * 10 / 100);
-        damage -= random(query_stat("endurance") * 10 / 100 + 1);
-        damage -= secure_random(query_hp() * 10 / 100 + 1);
-        damage -= secure_random(query_stat("luck") * 10 / 100 + 1);
-        damage -= secure_random(query_skill(type + " defense") * 20 / 100 + 1);
-        damage -= target->query_limb_armor(limb);
-        damage -= target->query_protection();
-
-        display_combat_message(this_object(), target, limb, weapon, type, damage, 0);
-        if (damage > 0) target->handle_damage(damage, limb, this_object());
-
-        train_skill(type + " attack");
-        if (target) target->train_skill(type + " defense");
+    // Base Damage
+    damage = random(10);
+    damage += (query_stat("strength") * 10 / 100);
+    damage += random(query_stat("strength") * 10 / 100 + 1);
+    damage += random(query_sp() * 10 / 100 + 1);
+    damage += random(query_stat("luck") * 5 / 100 + 1);
+    damage += random(query_skill(type + " attack") * 20 / 100 + 1);
+    if (crit) {
+        damage = damage * 3 / 2;
     }
+
+    // apply target mitigations
+    damage -= (query_stat("endurance") * 10 / 100);
+    damage -= random(query_stat("endurance") * 10 / 100 + 1);
+    damage -= secure_random(query_hp() * 10 / 100 + 1);
+    damage -= secure_random(query_stat("luck") * 10 / 100 + 1);
+    damage -= secure_random(query_skill(type + " defense") * 20 / 100 + 1);
+    damage -= target->query_limb_armor(limb);
+    damage -= target->query_protection();
+
+    display_combat_message(this_object(), target, limb, weapon, type, damage, 0);
+    if (damage > 0) target->handle_damage(damage, limb, this_object());
+
+    train_skill(type + " attack");
+    if (target) target->train_skill(type + " defense");
 }
 
 varargs void check_lifesigns (object source) {

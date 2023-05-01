@@ -50,7 +50,11 @@ string query_sub_class();
 
 /* ----- combat ----- */
 protected void handle_combat ();
-private void handle_combat_hit (object target, mixed weapon);
+private void handle_combat_miss (object target, mixed weapon);
+private void handle_combat_block (object target);
+private void handle_combat_parry (object target);
+private void handle_combat_evade (object target);
+private void handle_combat_hit (object target, mixed weapon, int crit);
 varargs void check_lifesigns (object source);
 varargs int handle_damage (int damage, string limb, object source);
 int add_hostile (object ob);
