@@ -310,8 +310,13 @@ varargs mixed handle_unwear (object ob) {
 
 string *query_wieldable_limbs () {
     string *wieldable = ({ });
+    object shield = query_worn_shield();
     foreach (string l in query_limbs()) {
-        if (__Limbs[l]["type"] == "WIELD" && !__Wielded[l]) wieldable += ({ l });
+        if (__Limbs[l]["type"] == "WIELD" && !__Wielded[l]) {
+            if (!shield || (shield && member_array(l, shield->query_limbs()) == -1)) {
+                wieldable += ({ l });
+            }
+        }
     }
     return wieldable;
 }
