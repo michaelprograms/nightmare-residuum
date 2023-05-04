@@ -202,7 +202,6 @@ string format_message_color (string type, string message) {
         message = "%^MAGENTA%^" + replace_string(message, "%^DEFAULT%^", "%^MAGENTA%^") + "%^RESET%^";
     } else if (type == "room exits") {
         message = replace_string(message, "%^DEFAULT%^", "%^GREEN%^");
-        message = replace_string(message, ":", ":%^RESET%^");
         message = "%^GREEN%^" + message + "%^RESET%^";
     } else if (type == "channel") {
         message = replace_string(message, "[[", "%^GREEN%^[%^BOLD%^");
