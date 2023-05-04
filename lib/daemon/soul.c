@@ -4,7 +4,7 @@ private mapping __Emotes = ([ ]);
 nosave private mapping __EmotesDefault = ([ ]);
 
 private void generate_defaults () {
-    string *list = ({ "smile", "frown", "nod", "cheer", "scream", "fingerguns", "laugh", "grin", "scowl", "chuckle", "point", "wave", "cry", });
+    string *list = ({ "smile", "frown", "nod", "cheer", "scream", "fingerguns", "laugh", "grin", "scowl", "chuckle", "point", "wave", "cry", "clap", });
 
     foreach (string emote in list) {
         __EmotesDefault[emote] = ([
