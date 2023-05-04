@@ -64,6 +64,9 @@ void handle_defeat (object source) {
     this_object()->clear_protection();
     remove_call_out();
 
+    this_object()->remove_hostile(source);
+    source->remove_hostile(this_object());
+
     if (env) {
         corpse = new(STD_CORPSE);
         corpse->setup_body(this_object());
