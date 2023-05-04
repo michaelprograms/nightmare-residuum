@@ -6,7 +6,7 @@ void create () {
     __Hostiles = ({ });
 }
 
-mapping *query_combat_table (object target) {
+mapping *query_combat_table (object target, int hit) {
     mapping *table;
     float levelAdjust;
 
@@ -15,7 +15,7 @@ mapping *query_combat_table (object target) {
     table = ({
         ([
             "id": "miss",
-            "value": 5.0 + levelAdjust
+            "value": min(({ 0.0, 5.0 + levelAdjust + hit }))
         ]),
         ([
             "id": "resist",
@@ -23,19 +23,19 @@ mapping *query_combat_table (object target) {
         ]),
         ([
             "id": "block",
-            "value": (target && target->query_worn_shield() ? 5.0 + levelAdjust: 0.0)
+            "value": (target && target->query_worn_shield() ? min(({ 0.0, 5.0 + levelAdjust - hit })) : 0.0)
         ]),
         ([
             "id": "parry",
-            "value": (sizeof(target && target->query_wielded_weapons()) ? 5.0 + levelAdjust : 0.0)
+            "value": (sizeof(target && target->query_wielded_weapons()) ? min(({ 0.0, 5.0 + levelAdjust - hit })) : 0.0)
         ]),
         ([
             "id": "evade",
-            "value": 5.0 + levelAdjust
+            "value": min(({ 0.0, 5.0 + levelAdjust - hit }))
         ]),
         ([
             "id": "critical hit",
-            "value": 5.0 + levelAdjust
+            "value": min(({ 0.0, 5.0 + levelAdjust - hit }))
         ]),
         ([
             "id": "regular hit",
@@ -78,7 +78,6 @@ protected void handle_combat () {
 
     weapons = query_wielded_weapons() + query_wieldable_limbs();
 
-    table = query_combat_table(target);
     min = sizeof(weapons[0..2]) + query_stat("agility") / 100;
     max = sizeof(weapons[0..2]) + query_stat("agility") / 50;
     hits = min + random(max - min + 1);
@@ -93,6 +92,8 @@ protected void handle_combat () {
 
     for (int h = 0; h < hits; h ++) {
         if (!target) break;
+
+        table = query_combat_table(target, h);
 
         if (query_sp() > 0) {
             d100 = roll_die(1, 100)[0];

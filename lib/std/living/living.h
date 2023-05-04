@@ -49,6 +49,7 @@ void set_sub_class (string c);
 string query_sub_class();
 
 /* ----- combat ----- */
+mapping *query_combat_table (object target, int hit);
 protected void handle_combat ();
 private void handle_combat_miss (object target, mixed weapon);
 private void handle_combat_block (object target);
