@@ -8,7 +8,7 @@ inherit "/secure/user/shell.c";
 
 #define CONNECT_TIMEOUT 60
 
-nosave private int calloutBanner, calloutTimeout;
+nosave private int calloutConnect;
 
 nosave private mapping __Terminal = ([
     "ip": 0,
@@ -23,10 +23,6 @@ nosave private mapping __Terminal = ([
 int is_user() { return 1; }
 
 nomask void logon_banner () {
-    if (!calloutBanner) {
-        return;
-    }
-    calloutBanner = 0;
 
     receive_message("system", D_WELCOME->query_banner() + "\n");
     account_input();
@@ -43,22 +39,8 @@ nomask void logon () {
     D_LOG->log("connect", ctime() + " " + __Terminal["ip"]);
     debug_message(ctime() + " connect from " + __Terminal["ip"]);
 
-    receive_message("system", "%^RESET%^Connecting...\n");
-    calloutBanner = call_out_walltime((: logon_banner :), 0.5); // allow time for terminal_type apply to be called
-}
-
-nomask void net_dead () {
-    if (query_account() && query_character()) {
-        query_account()->update_character_data(query_character());
-        character_linkdead();
-    }
-    if (query_account()) {
-        destruct(query_account());
-    }
-    if (query_shell()) {
-        destruct(query_shell());
-    }
-    destruct();
+    receive_message("system", "%^RESET%^Connected...\n");
+    call_out_walltime((: logon_banner :), 0.5); // allow time for terminal_type apply to be called
 }
 
 void terminal_type (string term) {
@@ -72,12 +54,6 @@ void terminal_type (string term) {
         __Terminal["color"] = "16";
     } else if (member_array(term, ({ "mudslinger", })) > -1) {
         __Terminal["color"] = "16";
-    }
-
-    if (!undefinedp(calloutBanner)) { // force banner
-        remove_call_out(calloutBanner);
-        calloutBanner = -1;
-        logon_banner();
     }
 }
 
@@ -97,6 +73,20 @@ void receive_environ (string key, string value) {
 void window_size (int width, int height) {
     __Terminal["width"] = width;
     __Terminal["height"] = height;
+}
+
+nomask void net_dead () {
+    if (query_account() && query_character()) {
+        query_account()->update_character_data(query_character());
+        character_linkdead();
+    }
+    if (query_account()) {
+        destruct(query_account());
+    }
+    if (query_shell()) {
+        destruct(query_shell());
+    }
+    destruct();
 }
 
 void receive_message (string type, string message) {
@@ -156,12 +146,12 @@ nomask void quit_account () {
 }
 
 nomask void reset_connect_timeout () {
-    if (!undefinedp(calloutTimeout)) remove_call_out(calloutTimeout);
-    calloutTimeout = call_out((: handle_remove, "\nTime exceeded. Connection terminated.\n" :), CONNECT_TIMEOUT);
+    if (!undefinedp(calloutConnect)) remove_call_out(calloutConnect);
+    calloutConnect = call_out((: handle_remove, "\nTime exceeded. Connection terminated.\n" :), CONNECT_TIMEOUT);
 }
 
 nomask varargs void handle_remove (string message) {
-    if (!undefinedp(calloutTimeout)) remove_call_out(calloutTimeout);
+    if (!undefinedp(calloutConnect)) remove_call_out(calloutConnect);
     if (message) message("system", message, this_object());
 
     if (query_shell()) {
