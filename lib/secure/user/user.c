@@ -43,7 +43,7 @@ nomask void logon () {
     D_LOG->log("connect", ctime() + " " + __Terminal["ip"]);
     debug_message(ctime() + " connect from " + __Terminal["ip"]);
 
-    receive_message("system", "Connecting...\n");
+    receive_message("system", "%^RESET%^Connecting...\n");
     calloutBanner = call_out_walltime((: logon_banner :), 0.5); // allow time for terminal_type apply to be called
 }
 
