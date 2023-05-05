@@ -194,6 +194,7 @@ private varargs string standard_trace (mapping e) {
 // This apply is called to handle caught and runtime errors.
 void error_handler (mapping e, int caught) {
     string ret, file = caught ? "catch" : "runtime";
+    object ob;
 
     if (caught && sizeof(e["trace"]) > 1 && e["trace"][1]["program"] == D_TEST) {
         object test = filter(e["trace"], (: $1["file"] == M_TEST :))[0]["object"];
@@ -208,9 +209,11 @@ void error_handler (mapping e, int caught) {
         rename("/log/"+file, "/log/"+file+"-"+time());
     }
     write_file("/log/"+file, ret);
-    D_CHANNEL->send_system("error", ret);
-    if (efun::this_player(1)) {
-        tell_object(efun::this_player(1), sprintf("%sTrace written to /log/%s\n", e["error"], (caught ? "catch" : "runtime")));
+    if ((ob = SEFUN->this_character()) && ob->is_character() && !ob->query_immortal()) {
+        D_CHANNEL->send_system("error", ret);
+    }
+    if (ob = efun::this_player(1)) {
+        tell_object(ob, sprintf("%sTrace written to /log/%s\n", e["error"], file));
     }
     return 0;
 }
