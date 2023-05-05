@@ -205,10 +205,10 @@ void error_handler (mapping e, int caught) {
     }
 
     ret = "--- " + ctime(time()) + "\n" + standard_trace(e) + "\n";
-    if (file_size("/log/"+file) > 20000) { // 20 kb
-        rename("/log/"+file, "/log/"+file+"-"+time());
+    if (file_size("/log/" + file) > 20000) { // 20 kb
+        rename("/log/" + file, "/log/" + file + "-" + time());
     }
-    write_file("/log/"+file, ret);
+    write_file("/log/" + file, ret);
     if ((ob = SEFUN->this_character()) && ob->is_character() && !ob->query_immortal()) {
         D_CHANNEL->send_system("error", ret);
     }
