@@ -1,6 +1,5 @@
 inherit M_PARENT;
 inherit M_SAVE;
-inherit M_PROPERTY;
 
 private string __Name;
 private string __Password;

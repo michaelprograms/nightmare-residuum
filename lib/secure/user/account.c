@@ -39,12 +39,14 @@ private void display_account_menu () {
 }
 
 private string query_unlocked_species () {
-    string *unlocks;
-    if (!sizeof(unlocks = explode(__Account->query_property("unlockedSpecies") || "", ","))) {
-        return "The only species unlocked is human.\n";
-    } else {
-        return "The following species are unlocked:\n" + implode(({"human"}) + unlocks, ", ") + "\n";
-    }
+    // string *unlocks; // @TODO
+    //if (!sizeof(unlocks = explode(__Account->query_property("unlockedSpecies") || "", ","))) {
+    //
+    // } else {
+    //     return "The following species are unlocked:\n" + implode(({"human"}) + unlocks, ", ") + "\n";
+    // }
+
+    return "The only species unlocked is human.\n";
 }
 
 protected nomask varargs void account_input (int state, mixed extra, string input) {
