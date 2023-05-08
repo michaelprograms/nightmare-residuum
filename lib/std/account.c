@@ -101,7 +101,7 @@ void add_character (string name, string nameClean, string species) {
     ]);
     save_data();
 }
-mapping query_character (string name) {
+mapping query_character_by_name (string name) {
     return copy(__Characters[name]);
 }
 int query_playable_characters () {

@@ -20,7 +20,7 @@ private void display_account_menu () {
 
     // @TODO different format for screenreader here?
     foreach (string name in __Account->query_character_names()) {
-        mapping character = __Account->query_character(name);
+        mapping character = __Account->query_character_by_name(name);
         string tmp = "%^CYAN%^" + sprintf("%-22s", "<" + character["name"] + ">") + "%^RESET%^";
         tmp += sprintf("%-16s", capitalize(character["species"]+""));
         tmp += sprintf("%-24s", character["last_location"]);

@@ -118,7 +118,7 @@ nosave private mapping tmpCharacter;
 void test_account_characters () {
     expect_function("query_character_names", testOb);
     expect_function("query_playable_characters", testOb);
-    expect_function("query_character", testOb);
+    expect_function("query_character_by_name", testOb);
     expect_function("add_character", testOb);
     expect_function("update_character_data", testOb);
     expect_function("set_deleted", testOb);
@@ -134,27 +134,27 @@ void test_account_characters () {
 
         assert(testOb->query_playable_characters(), "==", 1),
         assert(testOb->query_character_names(), "==", ({ "tester" })),
-        assert(testOb->query_character("tester")["name"], "==", "Tester"),
-        assert(testOb->query_character("tester")["deleted"], "==", 0),
-        assert(testOb->query_character("tester")["species"], "==", "synthetic"),
-        assert(testOb->query_character("tester")["last_action"], "==", 0),
-        assert(testOb->query_character("tester")["last_location"], "==", 0),
-        assert(testOb->query_character("tester")["level"], "==", 0),
+        assert(testOb->query_character_by_name("tester")["name"], "==", "Tester"),
+        assert(testOb->query_character_by_name("tester")["deleted"], "==", 0),
+        assert(testOb->query_character_by_name("tester")["species"], "==", "synthetic"),
+        assert(testOb->query_character_by_name("tester")["last_action"], "==", 0),
+        assert(testOb->query_character_by_name("tester")["last_location"], "==", 0),
+        assert(testOb->query_character_by_name("tester")["level"], "==", 0),
 
         // ensure character mapping data is a copy and not by reference
-        assert(mapp(tmpCharacter = testOb->query_character("tester")), "==", 1),
+        assert(mapp(tmpCharacter = testOb->query_character_by_name("tester")), "==", 1),
         assert(tmpCharacter["deleted"] = 1, "==", 1),
-        assert(testOb->query_character("tester")["deleted"], "==", 0),
+        assert(testOb->query_character_by_name("tester")["deleted"], "==", 0),
 
         testOb->update_character_data(this_object()), // mock data functions above
-        assert(testOb->query_character("tester")["deleted"], "==", 0),
-        assert(testOb->query_character("tester")["species"], "==", "human"),
-        assert(testOb->query_character("tester")["last_action"], "==", 123456),
-        assert(testOb->query_character("tester")["last_location"], "==", "somewhere"),
-        assert(testOb->query_character("tester")["level"], "==", 123),
+        assert(testOb->query_character_by_name("tester")["deleted"], "==", 0),
+        assert(testOb->query_character_by_name("tester")["species"], "==", "human"),
+        assert(testOb->query_character_by_name("tester")["last_action"], "==", 123456),
+        assert(testOb->query_character_by_name("tester")["last_location"], "==", "somewhere"),
+        assert(testOb->query_character_by_name("tester")["level"], "==", 123),
 
         testOb->set_deleted("tester"),
-        assert(testOb->query_character("tester")["deleted"], "==", 1),
+        assert(testOb->query_character_by_name("tester")["deleted"], "==", 1),
         assert(testOb->query_character_names(), "==", ({ })),
         assert(testOb->query_playable_characters(), "==", 0),
     }) :));
