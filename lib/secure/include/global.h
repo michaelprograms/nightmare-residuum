@@ -73,7 +73,7 @@
 #define D_CHARACTER     "/secure/daemon/character.c"
 #define D_COMMAND       "/secure/daemon/command.c"
 #define D_IPC           "/secure/daemon/ipc.c"
-#define D_TEST          "/secure/daemon/test.c" // needs .c
+#define D_TEST          "/secure/daemon/test.c"
 
 #define OBJ_USER        "/secure/user/user"
 
