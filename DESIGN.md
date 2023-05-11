@@ -18,8 +18,6 @@ Due to this design, the standard `this_player()` efun is ambigious into whether 
 
 `this_user()` - returns the interactive user's USER object
 
-`this_account()` - returns [STD_ACCOUNT](lib/doc/build/STD_ACCOUNT.md) of the interactive user
-
 `this_character()` - returns [STD_CHARACTER](lib/doc/build/STD_CHARACTER.md) object of the interactive user
 
 Chaining off of `this_user()` is also possible.

@@ -8,12 +8,6 @@ object this_user () {
     return po;
 }
 
-object this_account () {
-    object a;
-
-    if (this_user() && (a = this_user()->query_account())) return a;
-    else return 0;
-}
 object this_character () {
     object c;
     foreach (object ob in ({ previous_object(), previous_object(1), efun::this_user() })) {
@@ -35,7 +29,7 @@ object *characters () {
 string query_account_setting (string setting) {
     object account;
 
-    if (!(account = this_account())) return 0;
+    if (!(this_user() && (account = this_user()->query_account()))) return 0;
 
     return account->query_setting(setting);
 }
