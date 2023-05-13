@@ -1,6 +1,6 @@
 void command (string input, mapping flags) {
     string s = " ", msg = "";
-    int width = this_user()->query_account()->query_setting("width");
+    int width = this_user()->query_setting("width");
     int w = width * 2;
     mixed *dots;
     int r;

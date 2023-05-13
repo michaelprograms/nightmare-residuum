@@ -2,7 +2,20 @@
 
 nosave private object __Account;
 
-object query_account () { return __Account; }
+object query_account () { return __Account; } // @TODO deprecate
+
+string query_name () {
+    return __Account->query_name();
+}
+string query_key_name () {
+    return query_name();
+}
+mixed query_setting (string key) {
+    return __Account->query_setting(key);
+}
+mapping query_settings () {
+    return __Account->query_settings();
+}
 
 // -----------------------------------------------------------------------------
 

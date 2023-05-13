@@ -58,10 +58,8 @@ private void handle_page (mixed arg) {
 }
 
 void start (string *lines, object user) {
-    object account;
-
-    if (user && (account = user->query_account())) {
-        __ChunkSize = to_int(account->query_setting("lines"));
+    if (user) {
+        __ChunkSize = to_int(user->query_setting("lines"));
     }
     __Lines = lines;
     __LinesCount = sizeof(__Lines);

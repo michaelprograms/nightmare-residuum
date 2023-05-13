@@ -24,7 +24,7 @@ private void output_brief (string dir, mixed *files) {
         }
     }, dir);
 
-    width = this_user()->query_account()->query_setting("width") - 2;
+    width = this_user()->query_setting("width") - 2;
     foreach (string file in list) {
         if ((w = strlen(file)) > widest) widest = w;
     }

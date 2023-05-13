@@ -18,7 +18,7 @@ void command (string input, mapping flags) {
         "subtitle": target->query_cap_name(),
         "header": ([
             "items": ({
-                sprintf("%12s", "Account") + ": " + target->query_user()->query_account()->query_name(),
+                sprintf("%12s", "Account") + ": " + target->query_user()->query_name(),
                 sprintf("%12s", "Created") + ": " + strftime("%Y/%m/%u", target->query_created()),
             }),
             "columns": 2,

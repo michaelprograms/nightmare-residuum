@@ -87,7 +87,7 @@ string query_long () {
 
     if (!this_user() || !clonep(this_object()) || !environment(this_object())) return long;
 
-    width = this_user()->query_account()->query_setting("width");
+    width = this_user()->query_setting("width");
     w = width * 2;
     a = D_ASTRONOMY->query_astronomy_from_room(environment(this_object()));
     t = time();

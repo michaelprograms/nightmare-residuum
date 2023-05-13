@@ -9,7 +9,7 @@ nomask object this_player (int flag) {
 }
 
 object *users () {
-    return filter(efun::users(), (: $1->query_account() && $1->query_account()->query_name() :));
+    return filter(efun::users(), (: $1 && $1->query_name() :));
 }
 
 nomask void write (string msg) {

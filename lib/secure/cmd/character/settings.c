@@ -6,7 +6,7 @@ void create () {
 }
 
 void command (string input, mapping flags) {
-    object tc = this_character(), target = tc, account;
+    object tc = this_character(), target = tc, user;
     string *list = ({ });
     mapping header;
 
@@ -17,7 +17,7 @@ void command (string input, mapping flags) {
         }
     }
 
-    account = target->query_user()->query_account();
+    user = target->query_user();
 
     if (input) {
         string key, *split;
@@ -36,15 +36,15 @@ void command (string input, mapping flags) {
             "columns": 1,
             "align": "center",
         ]);
-        if (member_array(key, keys(account->query_settings())) == -1) {
+        if (member_array(key, keys(user->query_settings())) == -1) {
             header["items"] = ({ "Invalid setting: " + key });
         } else {
-            account->set_setting(key, value);
+            user->set_setting(key, value);
             header["items"] = ({ "Setting %^BOLD%^" + key + "%^BOLD_OFF%^ to %^BOLD%^" + value + "%^BOLD_OFF%^" });
         }
     }
 
-    foreach (string key,mixed value in account->query_settings()) {
+    foreach (string key,mixed value in user->query_settings()) {
         list += ({ sprintf("%16s : %s", key, ""+value) });
     }
 
