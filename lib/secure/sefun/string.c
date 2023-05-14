@@ -74,8 +74,9 @@ varargs string wrap (string str, int width, int indent, int rawANSI) {
 
     if (!str || !stringp(str)) return "";
     if (undefinedp(width) || width < 0) {
-        if (po && po->query_account()) width = po->query_account()->query_setting("width");
-        else width = 80;
+        if (!(width = po->query_setting("width"))) {
+            width = 80;
+        }
     }
 
     if (rawANSI) {
