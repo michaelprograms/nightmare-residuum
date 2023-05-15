@@ -178,11 +178,11 @@ void exit_freezer () {
 void describe_environment_long () {
     object env = environment();
     string *map = ({ });
-    int width = __User->query_account()->query_setting("width");
+    int width = __User->query_setting("width");
     int sm, sl, l;
     string *long, result = "", line;
 
-    if (__User->query_account()->query_setting("screenreader") == "off") {
+    if (__User->query_setting("screenreader") == "off") {
         map = env->query_room_exit_map();
     }
     if (!(sm = sizeof(map))) {
