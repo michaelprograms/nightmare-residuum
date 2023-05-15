@@ -8,9 +8,15 @@ void after_each_test () {
     if (objectp(testOb)) destruct(testOb);
 }
 
-nosave private object __MockAccount;
-object query_account () {
-    return __MockAccount;
+private nosave string __ANSI = "on";
+private nosave int __Width = 80;
+mixed query_setting (string setting) {
+    if (setting == "ansi") {
+        return __ANSI;
+    }
+    if (setting == "width") {
+        return __Width;
+    }
 }
 
 void test_format_page () {
@@ -18,9 +24,8 @@ void test_format_page () {
 
     expect_function("format_page", testOb);
 
-    __MockAccount = new(STD_ACCOUNT);
-
     expect("format_page handled width=80", (: ({
+        assert(__Width, "==", 80),
         assert(testOb->format_page(({ "a", "b" }), 2), "regex", "^a +b +$"),
         assert(testOb->format_page(({ "a", "b", "c" }), 2), "regex", "^a +b +\nc +$"),
         assert(testOb->format_page(({ "a", "b", "c" }), 1), "regex", "^a +\nb +\nc +$"),
@@ -34,8 +39,8 @@ void test_format_page () {
         assert(strlen(explode(testOb->format_page(({ "a", "b", "c" }), 2, -1), "\n")[0]), "==", 82),
     }) :));
 
-    __MockAccount->set_setting("width", 60);
     expect("format_page handled width=60", (: ({
+        assert(__Width = 60, "==", 60),
         assert(testOb->format_page(({ "a", "b" }), 2), "regex", "^a +b +$"),
         assert(testOb->format_page(({ "a", "b", "c" }), 2), "regex", "^a +b +\nc +$"),
         assert(testOb->format_page(({ "a", "b", "c" }), 1), "regex", "^a +\nb +\nc +$"),
@@ -49,8 +54,8 @@ void test_format_page () {
         assert(strlen(explode(testOb->format_page(({ "a", "b", "c" }), 2, -1), "\n")[0]), "==", 62),
     }) :));
 
-    __MockAccount->set_setting("width", 80);
     expect("format_page handled remainder of width/columns", (: ({
+        assert(__Width = 80, "==", 80),
         assert(strlen(testOb->format_page(({ "a", "b", "c", "d", "e", }), 5, 4)), "==", 72), // remainder = 2
         assert(strlen(testOb->format_page(({ "a", "b", "c" }), 3, 0)), "==", 80), // remainder = 2
         assert(strlen(testOb->format_page(({ "1", "2", "3", "4", "5", "6", "7" }), 7, 0)), "==", 80), // remainder = 3
@@ -73,8 +78,8 @@ void test_format_page () {
         assert(strlen($(row)), "==", 172), // 80 + 10 + 1 + 80 + 1
     }) :));
 
-    __MockAccount->set_setting("width", 20);
     expect("format_page left aligns strings", (: ({
+        assert(__Width = 20, "==", 20),
         assert(testOb->format_page(({ "1", "2", "3", "4" }), 4, 0), "==", "1    2    3    4    "),
         assert(testOb->format_page(({ "1", "2", "3", "4" }), 4, 0, 0), "==", "1    2    3    4    "),
         assert(testOb->format_page(({ "1" }), 1, 0, 0), "==", "1                   "),
@@ -109,26 +114,22 @@ void test_format_page () {
         assert(testOb->format_page(({ "%^RED%^Red text%^RESET%^", "%^BLUE%^Blue text%^RESET%^", }), 2, 0, 1), "==", " %^RED%^Red text%^RESET%^  %^BLUE%^Blue text%^RESET%^"),
         assert(testOb->format_page(({ "%^RED%^Red%^RESET%^", "%^BLUE%^Blue%^RESET%^", }), 2, 0, 1), "==", "    %^RED%^Red%^RESET%^      %^BLUE%^Blue%^RESET%^   "),
     }) :));
-    destruct(__MockAccount);
 }
 
 void test_format_syntax () {
     expect_function("format_syntax", testOb);
 
-    __MockAccount = new(STD_ACCOUNT);
-    __MockAccount->set_setting("ansi", "off");
     expect("format_syntax handles syntaxes with ANSI off", (: ({
-        assert(__MockAccount->query_setting("ansi"), "==", "off"),
+        assert(__ANSI = "off", "==", "off"),
         assert(testOb->format_syntax("syntax"), "==", "<syntax>"),
         assert(testOb->format_syntax("verb [target] ([limb]) (with [thing])"), "==", "<verb [target] ([limb]) (with [thing])>"),
     }) :));
 
-    __MockAccount->set_setting("ansi", "on");
     expect("format_syntax handles syntaxes with ANSI on", (: ({
+        assert(__ANSI = "on", "==", "on"),
         assert(testOb->format_syntax("syntax"), "==", "%^CYAN%^<syntax>%^RESET%^"),
         assert(strip_colour(testOb->format_syntax("syntax target")), "==", "<syntax target>"),
     }) :));
-    destruct(__MockAccount);
 }
 
 void test_format_exit_brief () {
