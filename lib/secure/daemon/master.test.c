@@ -27,7 +27,6 @@ void test_applies () {
 
     expect("connect returns a valid user object", (: ({
         assert(file_name(userOb = testOb->connect(0)), "regex", OBJ_USER+"#[0-9]+"),
-        assert(userOb->query_account(), "==", 0),
         assert(userOb->query_character(), "==", 0),
         assert(userOb->query_shell(), "==", 0),
         assert(destruct(userOb), "==", 0),

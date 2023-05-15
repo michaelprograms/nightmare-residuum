@@ -76,12 +76,9 @@ void window_size (int width, int height) {
 }
 
 nomask void net_dead () {
-    if (query_account() && query_character()) {
-        query_account()->update_character_data(query_character());
+    if (query_name() && query_character()) {
+        this_object()->update_character_data(query_character());
         character_linkdead();
-    }
-    if (query_account()) {
-        destruct(query_account());
     }
     if (query_shell()) {
         destruct(query_shell());
@@ -159,9 +156,6 @@ nomask varargs void handle_remove (string message) {
     }
     if (query_character()) {
         quit_character(1);
-    }
-    if (query_account()) {
-        destruct(query_account());
     }
 
     flush_messages();

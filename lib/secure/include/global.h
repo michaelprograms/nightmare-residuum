@@ -2,7 +2,6 @@
 #define __GLOBAL_H__
 
 // std
-#define STD_ACCOUNT     "/std/account.c"
 #define STD_CHARACTER   "/std/character.c"
 #define STD_CONSUMABLE  "/std/consumable.c"
 #define STD_ITEM        "/std/item.c"

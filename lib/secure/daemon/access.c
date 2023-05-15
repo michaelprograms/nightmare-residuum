@@ -65,7 +65,7 @@ void create () {
 
 // The main function used to check if a caller can perform fn on file in mode.
 int query_allowed (object caller, string fn, string file, string mode) {
-    string *pathPrivs, *privs, priv;
+    string *pathPrivs, *privs, priv, tmp;
     object *stack;
     int i;
 
@@ -84,14 +84,15 @@ int query_allowed (object caller, string fn, string file, string mode) {
 
     // caller utilized unguarded(function)
     if (__Unguarded == caller) {
-        string tmp = base_name(caller);
+        tmp = base_name(caller);
         // debug_message("! D_ACCESS->query_allowed unguarded == caller: "+identify(caller)+" "+tmp);
         // access check passes due to caller requesting valid save path
+        // @TODO convert strsrch to regexp
         if (!strsrch(tmp, "/std/character") && D_CHARACTER->query_valid_save_path(caller->query_key_name(), file)) {
             return 1;
         } else if (!strsrch(tmp, "/std/npc/pet") && D_CHARACTER->query_valid_save_path(caller->query_owner_name(), file)) {
             return 1;
-        } else if (!strsrch(tmp, "/std/account") && D_ACCOUNT->query_save_path(caller->query_key_name()) == file) {
+        } else if (regexp(tmp, "^/secure/user") && D_ACCOUNT->query_save_path(caller->query_key_name()) == file) {
             return 1;
         } else if (!strsrch(tmp, "/daemon/log") && regexp(file, "^/log/")) {
             return 1;

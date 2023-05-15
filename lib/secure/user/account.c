@@ -1,28 +1,151 @@
 #include "user.h"
 
-nosave private object __Account;
+inherit M_SAVE;
 
-object query_account () { return __Account; } // @TODO deprecate
+private string __Name;
+private string __Password;
+private int __Created = time();
+private int __LastOn = time();
+private mapping __Characters = ([
+    /* Data Format:
+        STRING: ([                      // Name sanitized version
+            "species":          STRING, // Species type for BODY
+            "deleted":          INT,    // 0 or 1
+            "level":            INT,
+            "name":             STRING, // Name formatted version
+            "last_action":      INT,    // last seen
+            "last_location":    STRING  // last location short
+        ]),
+    */
+]);
+private mapping __Settings = ([ ]);
+private int __EdSetup;  // @TODO
+
+// cache variable
+nosave private string *__CharacterNames = ({ });
+
+/* -----  ----- */
+
+void ensure_default_settings () {
+    // verify default settings exist
+    if (undefinedp(__Settings["width"])) {
+        __Settings["width"] = 80;
+    }
+    if (undefinedp(__Settings["lines"])) {
+        __Settings["lines"] = 40;
+    }
+    if (undefinedp(__Settings["ansi"])) {
+        __Settings["ansi"] = "on";
+    }
+    if (undefinedp(__Settings["screenreader"])) {
+        __Settings["screenreader"] = "off";
+    }
+}
 
 string query_name () {
-    return __Account->query_name();
+    return __Name;
 }
 string query_key_name () {
-    return query_name();
-}
-mixed query_setting (string key) {
-    return __Account->query_setting(key);
-}
-mapping query_settings () {
-    return __Account->query_settings();
+    return __Name ? lower_case(__Name) : 0;
 }
 
-// -----------------------------------------------------------------------------
+nomask void set_password (string str) {
+    if (base_name(previous_object()) != "/secure/user/user") {  // TODO better way to match?
+        error("Illegal attempt to account->set_password");
+    }
+    __Password = str;
+    save_data();
+}
+nomask string query_password () {
+    return __Password;
+}
+
+int query_created () {
+    return __Created;
+}
+int query_last_on () {
+    return __LastOn;
+}
+void set_last_on () {
+    __LastOn = time();
+}
+
+void add_character (string name, string nameClean, string species) {
+    // @TODO security?
+    __Characters[nameClean] = ([
+        "name": name,
+        "deleted": 0,
+        "species": species,
+        "last_action": 0,
+        "last_location": 0,
+        "level": 0,
+    ]);
+    save_data();
+}
+mapping query_character_by_name (string name) {
+    return copy(__Characters[name]);
+}
+int query_playable_characters () {
+    mapping tmpCharacters = filter_mapping(__Characters, (: !$2["deleted"] :));
+    __CharacterNames = sort_array(keys(tmpCharacters), 1);
+    return sizeof(__CharacterNames) > 0;
+}
+string *query_character_names () {
+    mapping tmpCharacters = filter_mapping(__Characters, (: !$2["deleted"] :));
+    __CharacterNames = sort_array(keys(tmpCharacters), 1);
+    return __CharacterNames;
+}
+void update_character_data (object character) {
+    string name;
+    if (!character || !(name = character->query_key_name())) {
+        return;
+    }
+    __Characters[name]["species"] = character->query_species();
+    __Characters[name]["level"] = character->query_level();
+    __Characters[name]["last_action"] = character->query_last_action();
+    __Characters[name]["last_location"] = character->query_environment_short();
+    save_data();
+}
+
+void set_deleted (string name) {
+    __Characters[name]["deleted"] = 1;
+}
+
+void set_setting (string key, mixed value) {
+    if (!__Settings || !key) return;
+    __Settings[key] = value;
+    save_data();
+}
+mixed query_setting (string key) {
+    if (!__Settings || !key) return 0;
+    if (member_array(key, keys(__Settings)) == -1) return 0;
+    return __Settings[key];
+}
+mapping query_settings () {
+    return __Settings;
+}
+
+/* -----  ----- */
+
+private void load_account (string name) {
+    __Name = name;
+    if (!stringp(__Name)) {  // name can be cleared during account creation
+        return;
+    }
+    set_save_path(D_ACCOUNT->query_save_path(lower_case(__Name)));
+    if (D_ACCOUNT->query_exists(__Name)) {
+        restore_data();
+    }
+
+    ensure_default_settings();
+}
+
+/* -----  ----- */
 
 private void display_account_menu () {
     string msg = "", characterMsg = ""; // creatorMsg = "",
 
-    if (!__Account->query_playable_characters()) {
+    if (!query_playable_characters()) {
         write("\nYou have no characters. You will now create a character.\n");
         account_input(STATE_CHARACTER_ENTER);
         return;
@@ -32,8 +155,8 @@ private void display_account_menu () {
     msg = "\nAccount Actions   : " + format_syntax("settings") + " " + format_syntax("password") + " " + format_syntax("exit") + "%^RESET%^\nCharacter Actions : " + format_syntax("new") + " " + format_syntax("delete") + "\n\n";
 
     // @TODO different format for screenreader here?
-    foreach (string name in __Account->query_character_names()) {
-        mapping character = __Account->query_character_by_name(name);
+    foreach (string name in query_character_names()) {
+        mapping character = query_character_by_name(name);
         string tmp = "%^CYAN%^" + sprintf("%-22s", "<" + character["name"] + ">") + "%^RESET%^";
         tmp += sprintf("%-16s", capitalize(character["species"]+""));
         tmp += sprintf("%-24s", character["last_location"]);
@@ -53,7 +176,7 @@ private void display_account_menu () {
 
 private string query_unlocked_species () {
     // string *unlocks; // @TODO
-    //if (!sizeof(unlocks = explode(__Account->query_property("unlockedSpecies") || "", ","))) {
+    //if (!sizeof(unlocks = explode(query_property("unlockedSpecies") || "", ","))) {
     //
     // } else {
     //     return "The following species are unlocked:\n" + implode(({"human"}) + unlocks, ", ") + "\n";
@@ -81,13 +204,11 @@ protected nomask varargs void account_input (int state, mixed extra, string inpu
                 return;
             } else if (D_ACCOUNT->query_exists(input)) {
                 write("\nExisting account '"+input+"'...\n");
-                __Account = new(STD_ACCOUNT);
-                __Account->set_name(input);
+                load_account(input);
                 input_next((: account_input, STATE_ACCOUNT_PASSWORD, 0 :), PROMPT_PASSWORD_ENTER, 1);
             } else {
                 reset_connect_timeout();
-                __Account = new(STD_ACCOUNT);
-                __Account->set_name(input);
+                load_account(input);
                 write("\nNew account '"+input+"'!\n");
                 write("You should pick a sensible and unique account name.\n");
                 write(PROMPT_ACCOUNT_FORMAT + "\n");
@@ -100,7 +221,7 @@ protected nomask varargs void account_input (int state, mixed extra, string inpu
 
         case STATE_ACCOUNT_CONFIRM:
             if ((input = lower_case(input)) == "" || input[0..0] != "y") {
-                __Account->set_name(0);
+                load_account(0);
                 if (extra >= 2) {
                     return handle_remove("\nInvalid entry. Connection terminated.\n");
                 }
@@ -128,26 +249,26 @@ protected nomask varargs void account_input (int state, mixed extra, string inpu
                 input_next((: account_input, STATE_PASSWORD_NEW, 0 :), PROMPT_PASSWORD_CREATE, 1);
                 return;
             }
-            __Account->set_password(extra);
+            set_password(extra);
             write("Password set.\n");
             input_next((: account_input, STATE_SCREENREADER_HANDLE, 0 :), PROMPT_SCREENREADER_ENTER);
             break;
 
         case STATE_SCREENREADER_HANDLE:
             if (input && strlen(input) > 0 && lower_case(input)[0..0] == "y") {
-                __Account->set_setting("screenreader", "on");
-                __Account->set_setting("ansi", "off");
+                set_setting("screenreader", "on");
+                set_setting("ansi", "off");
             } else {
-                __Account->set_setting("screenreader", "off");
+                set_setting("screenreader", "off");
             }
-            write("Setting screenreader mode " + __Account->query_setting("screenreader") + ".\n");
+            write("Setting screenreader mode " + query_setting("screenreader") + ".\n");
             account_input(STATE_ACCOUNT_COMPLETE);
             break;
 
         case STATE_ACCOUNT_COMPLETE:
-            D_LOG->log("account/new", sprintf("%s : %s : %s\n", ctime(time()), query_ip_number(), __Account->query_name()));
-            if (!__Account->query_playable_characters()) {
-                write("\nWelcome, "+__Account->query_name()+"! You will now create a character.\n");
+            D_LOG->log("account/new", sprintf("%s : %s : %s\n", ctime(time()), query_ip_number(), query_name()));
+            if (!query_playable_characters()) {
+                write("\nWelcome, "+query_name()+"! You will now create a character.\n");
                 account_input(STATE_CHARACTER_ENTER);
                 return;
             } else {
@@ -156,14 +277,14 @@ protected nomask varargs void account_input (int state, mixed extra, string inpu
             break;
 
         case STATE_ACCOUNT_PASSWORD:
-            if (crypt(input, __Account->query_password()) == __Account->query_password()) {
-                __Account->set_last_on();
-                __Account->save_data();
-                if (!__Account->query_playable_characters()) {
-                    write("\nWelcome, "+__Account->query_name()+"! You will now create a character.\n");
+            if (crypt(input, query_password()) == query_password()) {
+                set_last_on();
+                save_data();
+                if (!query_playable_characters()) {
+                    write("\nWelcome, "+query_name()+"! You will now create a character.\n");
                     account_input(STATE_CHARACTER_ENTER);
                 } else {
-                    write("\n\n%^BOLD%^Welcome back, "+__Account->query_name()+". Last seen "+time_ago(__Account->query_last_on())+".%^RESET%^\n");
+                    write("\n\n%^BOLD%^Welcome back, "+query_name()+". Last seen "+time_ago(query_last_on())+".%^RESET%^\n");
                     display_account_menu();
                 }
             } else {
@@ -178,8 +299,8 @@ protected nomask varargs void account_input (int state, mixed extra, string inpu
             if (!input || input == "" || !(input = lower_case(input))) {
                 display_account_menu();
             } else if (input == "exit") {
-                __Account->set_last_on();
-                __Account->save_data();
+                set_last_on();
+                save_data();
                 handle_remove("\nExiting account. Connection closed.\n");
             } else if (input == "settings") {
                 write("\nAccount Settings\n\n");
@@ -192,8 +313,9 @@ protected nomask varargs void account_input (int state, mixed extra, string inpu
                 account_input(STATE_CHARACTER_ENTER);
             } else if (input == "delete") {
                 input_next((: account_input, STATE_CHARACTER_DELETE, 0 :), PROMPT_CHARACTER_DELETE);
-            } else if (member_array(input, __Account->query_character_names()) > -1) {
+            } else if (member_array(input, query_character_names()) > -1) {
                 set_character_name(input);
+                // @TODO check existing for STATE_CHARACTER_OVERRIDE
                 character_enter(0);
             } else {
                 write("Invalid input choice received.\n\n");
@@ -214,8 +336,8 @@ protected nomask varargs void account_input (int state, mixed extra, string inpu
                 }
             } else {
                 if (input && input == "exit") {
-                    __Account->set_last_on();
-                    __Account->save_data();
+                    set_last_on();
+                    save_data();
                     handle_remove("\nExiting account. Connection closed.\n");
                 }
                 if (!D_CHARACTER->query_valid_name(input)) {
@@ -255,7 +377,7 @@ protected nomask varargs void account_input (int state, mixed extra, string inpu
             }
             // @TODO member_array(input, D_ACCESS->query_secure()) { write("Cannot delete"); }
             input = sanitize_name(input);
-            if (member_array(input, __Account->query_character_names()) == -1) {
+            if (member_array(input, query_character_names()) == -1) {
                 write("Invalid character name.\n\n");
                 display_account_menu();
                 return;
@@ -273,11 +395,11 @@ protected nomask varargs void account_input (int state, mixed extra, string inpu
             break;
 
         case STATE_PASSWORD_DELETE_CONFIRM:
-            if (crypt(input, __Account->query_password()) == __Account->query_password()) {
+            if (crypt(input, query_password()) == query_password()) {
                 write("\nDeleted character '" + extra + "'.\n");
-                __Account->set_deleted(extra);
-                __Account->set_last_on();
-                __Account->save_data();
+                set_deleted(extra);
+                set_last_on();
+                save_data();
             } else {
                 write("Invalid password. Character deletion cancelled.\n");
             }
@@ -311,7 +433,7 @@ protected nomask varargs void account_input (int state, mixed extra, string inpu
             }
             write(query_character()->query_cap_name() + " is a " + input + "!\n\n");
             set_character_species(input);
-            __Account->add_character(query_character()->query_cap_name(), query_character()->query_key_name(), query_character()->query_species());
+            add_character(query_character()->query_cap_name(), query_character()->query_key_name(), query_character()->query_species());
             D_LOG->log("character/new", sprintf("%s : %s : %s\n", ctime(time()), query_ip_number(), input));
             write("Entering as " + query_character()->query_cap_name() + "...\n");
             character_enter(1);
@@ -319,12 +441,12 @@ protected nomask varargs void account_input (int state, mixed extra, string inpu
 
         case STATE_SETTINGS_ENTER:
             write("Settings Actions  : " + format_syntax("back") + " " + format_syntax("[setting] [option]") + "\n\n");
-            foreach (string setting in sort_array(keys(__Account->query_settings()), 1)) {
+            foreach (string setting in sort_array(keys(query_settings()), 1)) {
                 string display;
-                if (intp(__Account->query_setting(setting))) {
-                    display = "" + __Account->query_setting(setting);
+                if (intp(query_setting(setting))) {
+                    display = "" + query_setting(setting);
                 } else {
-                    display = __Account->query_setting(setting);  // @TODO ?
+                    display = query_setting(setting);  // @TODO ?
                 }
                 write("  " + sprintf("%-24s", setting) + "  " + display + "\n");
             }
@@ -334,7 +456,7 @@ protected nomask varargs void account_input (int state, mixed extra, string inpu
 
         case STATE_SETTINGS_HANDLE:
             if (input && input != "") {
-                string *settings = keys(__Account->query_settings());
+                string *settings = keys(query_settings());
                 string *split = explode(input, " ");
                 string setting = split[0];
                 if (setting == "back") {
@@ -346,16 +468,16 @@ protected nomask varargs void account_input (int state, mixed extra, string inpu
                 if (member_array(setting, settings) == -1) {
                     write("Invalid setting.\n");
                 } else {
-                    if (intp(__Account->query_setting(setting))) {
+                    if (intp(query_setting(setting))) {
                         int w = to_int(input);
                         if (setting == "width") {
                             if (w < 40) w = 40;
                         }
-                        __Account->set_setting(setting, w);
+                        set_setting(setting, w);
                         write("Setting " + setting + " mode to " + w + ".\n");
                     } else {
                         if (member_array(input, ({ "on", "off"})) > -1) {
-                            __Account->set_setting(setting, input);
+                            set_setting(setting, input);
                             write("Setting " + setting + " mode " + input + ".\n");
                         } else {
                             write("Invalid setting.\n");
