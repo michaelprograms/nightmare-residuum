@@ -8,9 +8,11 @@ void after_each_test () {
     if (objectp(testOb)) destruct(testOb);
 }
 
-nosave private object __MockAccount;
-object query_account () {
-    return __MockAccount;
+private nosave string __ANSI = "on";
+mixed query_setting (string setting) {
+    if (setting == "ansi") {
+        return __ANSI;
+    }
 }
 
 class TestClass {
@@ -115,8 +117,7 @@ void test_wrap () {
     expect_function("wrap", testOb);
 
     expect("wrap handles wrapping text", (: ({
-        assert(file_name(__MockAccount = new(STD_ACCOUNT)), "regex", STD_ACCOUNT[0..<3]+"#[0-9]+"),
-        assert(__MockAccount->query_setting("ansi"), "==", "on"),
+        assert(this_object()->query_setting("ansi"), "==", "on"),
 
         assert(testOb->wrap("test", 80), "==", "test"),
         assert(testOb->wrap("testtesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttest"), "==", "testtesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttest" + $(resetANSI) + $(linewrap) + "test"),
@@ -128,8 +129,7 @@ void test_wrap () {
         assert(testOb->wrap("%^BOLD_OFF%^test", 80), "==", "\e[22mtest"),
         assert(testOb->wrap("%^RED%^test%^RESET%^", 80), "==", "\e[31mtest\e[0;37;40m"),
 
-        __MockAccount->set_setting("ansi", "off"),
-        assert(__MockAccount->query_setting("ansi"), "==", "off"),
+        assert(__ANSI = "off", "==", "off"),
 
         assert(testOb->wrap("test", 80), "==", "test"),
         assert(testOb->wrap("testtesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttest"), "==", "testtesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttest" + $(linewrap) + "test"),
@@ -141,7 +141,6 @@ void test_wrap () {
         assert(testOb->wrap("%^BOLD_OFF%^test", 80), "==", "test"),
         assert(testOb->wrap("%^RED%^test%^RESET%^", 80), "==", "test"),
     }) :));
-    destruct(__MockAccount);
 }
 
 void test_string_compare_same_until () {
