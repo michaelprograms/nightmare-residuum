@@ -89,6 +89,7 @@ varargs string time_ago (int timestamp, int granularity);
 
 /* --- user --- */
 object this_user ();
+object find_user (string name);
 object this_character ();
 object find_character (string name);
 object *characters ();
