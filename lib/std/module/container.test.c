@@ -2,10 +2,9 @@ inherit M_TEST;
 
 private nosave object testOb;
 void before_each_test () {
-    if (objectp(testOb)) destruct(testOb);
     testOb = clone_object("/std/module/container.c");
 }
-void after_all_tests () {
+void after_each_test () {
     if (objectp(testOb)) destruct(testOb);
 }
 
