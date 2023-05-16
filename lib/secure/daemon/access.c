@@ -39,28 +39,6 @@ void create () {
 //     else return 0;
 // }
 
-
-// nomask private int check_user (object ob, string fun, string file, string mode) {
-//     string nom;
-//     int x;
-
-//     if (!sscanf(file, "/realm/%s/%*s", nom)) return 0;
-//     nom = user_path(nom)+"adm/access";
-//     if (file_size(nom+".c") < 0) return 0;
-//     catch(x = (int)call_other(nom, "query_allowed", ob, fun, file, mode));
-//     return x;
-// }
-// nomask private int check_domain (object ob, string fun, string file, string mode) {
-//     string nom;
-//     int x;
-
-//     if (!sscanf(file, "/domain/%s/%*s", nom)) return 0;
-//     nom = "/domain/"+nom+"/adm/access";
-//     if (file_size(nom+".c") < 0) return 0;
-//     catch (x = (int)call_other(nom, "query_allowed", ob, fun, file, mode));
-//     return x;
-// }
-
 // -----------------------------------------------------------------------------
 
 // The main function used to check if a caller can perform fn on file in mode.
@@ -87,14 +65,13 @@ int query_allowed (object caller, string fn, string file, string mode) {
         tmp = base_name(caller);
         // debug_message("! D_ACCESS->query_allowed unguarded == caller: "+identify(caller)+" "+tmp);
         // access check passes due to caller requesting valid save path
-        // @TODO convert strsrch to regexp
-        if (!strsrch(tmp, "/std/character") && D_CHARACTER->query_valid_save_path(caller->query_key_name(), file)) {
+        if (regexp(tmp, "^/std/character") && D_CHARACTER->query_valid_save_path(caller->query_key_name(), file)) {
             return 1;
-        } else if (!strsrch(tmp, "/std/npc/pet") && D_CHARACTER->query_valid_save_path(caller->query_owner_name(), file)) {
+        } else if (regexp(tmp, "^/std/npc/pet") && D_CHARACTER->query_valid_save_path(caller->query_owner_name(), file)) {
             return 1;
         } else if (regexp(tmp, "^/secure/user") && D_ACCOUNT->query_save_path(caller->query_key_name()) == file) {
             return 1;
-        } else if (!strsrch(tmp, "/daemon/log") && regexp(file, "^/log/")) {
+        } else if (regexp(tmp, "^/daemon/log") && regexp(file, "^/log/")) {
             return 1;
         } else {
             // set caller as the stack
@@ -133,15 +110,9 @@ int query_allowed (object caller, string fn, string file, string mode) {
 
         // access check fails due to trying to write with no read privilege
         if (!pathPrivs && mode == "write") return 0;
-        // @TODO check_user really necessary? :/
-        // { if (userp(stack[i]) && check_user(stack[i], fn, file, mode)) continue; else return 0; }
 
         // skip stack entry if privs and pathPrivs are identical arrays
         if (sizeof(privs & pathPrivs)) continue;
-
-        // @TODO check_user and check_domain really necessary? :/
-        // if (userp(stack[i]) && check_user(stack[i], fn, file, mode)) continue;
-        // if (userp(stack[i]) && check_domain(stack[i], fn, file, mode)) continue;
 
         // access check fails due to reaching a stack entry without privilege
         return 0;
@@ -192,7 +163,7 @@ mixed unguarded (function f) {
     string err;
     mixed value;
 
-    if (!f || !functionp(f) || !regexp(base_name(previous_object(0)), "^\\/secure\\/sefun\\/") || (functionp(f) & FP_OWNER_DESTED)) {
+    if (!f || !functionp(f) || !regexp(base_name(previous_object(0)), "^/secure/sefun/") || (functionp(f) & FP_OWNER_DESTED)) {
         error("Illegal unguarded.");
         return 0;
     }
