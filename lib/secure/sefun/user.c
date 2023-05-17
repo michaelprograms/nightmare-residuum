@@ -27,7 +27,7 @@ object find_character (string name) {
 }
 
 object *characters () {
-    return map(filter(users() || ({}), (: $1 && interactive($1) && $1->query_character() :)) || ({}), (: $1->query_character() :)) || ({});
+    return map(filter(users() || ({ }), (: $1 && interactive($1) && $1->query_character() :)) || ({ }), (: $1->query_character() :)) || ({ });
 }
 
 string query_account_setting (string setting) {
