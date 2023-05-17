@@ -127,7 +127,10 @@ mapping query_settings () {
 
 /* -----  ----- */
 
-private void load_account (string name) {
+void load_account (string name) {
+    if (!regexp(base_name(this_user()), "^/secure/(user|daemon/test)")) {
+        return 0;
+    }
     __Name = name;
     if (!stringp(__Name)) {  // name can be cleared during account creation
         return;
