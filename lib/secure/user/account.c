@@ -50,7 +50,7 @@ string query_key_name () {
 }
 
 nomask void set_password (string str) {
-    if (base_name(previous_object()) != "/secure/user/user") {  // TODO better way to match?
+    if (base_name(previous_object()) != "/secure/user/user") {
         error("Illegal attempt to account->set_password");
     }
     __Password = str;
@@ -127,7 +127,7 @@ mapping query_settings () {
 
 /* -----  ----- */
 
-void load_account (string name) {
+void set_name (string name) {
     if (!regexp(base_name(this_user()), "^/secure/(user|daemon/test)")) {
         return 0;
     }
@@ -207,11 +207,11 @@ protected nomask varargs void account_input (int state, mixed extra, string inpu
                 return;
             } else if (D_ACCOUNT->query_exists(input)) {
                 write("\nExisting account '"+input+"'...\n");
-                load_account(input);
+                set_name(input);
                 input_next((: account_input, STATE_ACCOUNT_PASSWORD, 0 :), PROMPT_PASSWORD_ENTER, 1);
             } else {
                 reset_connect_timeout();
-                load_account(input);
+                set_name(input);
                 write("\nNew account '"+input+"'!\n");
                 write("You should pick a sensible and unique account name.\n");
                 write(PROMPT_ACCOUNT_FORMAT + "\n");
@@ -224,7 +224,7 @@ protected nomask varargs void account_input (int state, mixed extra, string inpu
 
         case STATE_ACCOUNT_CONFIRM:
             if ((input = lower_case(input)) == "" || input[0..0] != "y") {
-                load_account(0);
+                set_name(0);
                 if (extra >= 2) {
                     return handle_remove("\nInvalid entry. Connection terminated.\n");
                 }
@@ -491,4 +491,8 @@ protected nomask varargs void account_input (int state, mixed extra, string inpu
             account_input(STATE_SETTINGS_ENTER);
             break;
     }
+}
+
+void create () {
+    ensure_default_settings();
 }
