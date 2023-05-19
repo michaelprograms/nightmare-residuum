@@ -6,6 +6,7 @@ void create () {
 }
 
 void command (string input, mapping flags) {
-    message("action", "\n" + mud_name() + " is entering shutdown mode.\n", characters());
+    message("system", "Everything is suddenly nothing as irreality takes control.\n", characters());
+    users()->quit_account();
     shutdown();
 }
