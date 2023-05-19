@@ -9,6 +9,7 @@
 #define STD_NPC         "/std/npc.c"
 #define STD_OBJECT      "/std/object.c"
 #define STD_ROOM        "/std/room.c"
+#define STD_USER        "/std/user.c"
 
 // std actions
 #define STD_ABILITY     "/std/ability.c"
@@ -73,8 +74,6 @@
 #define D_COMMAND       "/secure/daemon/command.c"
 #define D_IPC           "/secure/daemon/ipc.c"
 #define D_TEST          "/secure/daemon/test.c"
-
-#define OBJ_USER        "/secure/user/user"
 
 #define MASTER          "/secure/daemon/master"
 #define SEFUN           "/secure/sefun/sefun"

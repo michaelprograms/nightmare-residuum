@@ -4,7 +4,7 @@ inherit M_TEST;
 
 private nosave object testOb;
 void before_each_test () {
-    testOb = clone_object("/secure/user/account.c");
+    testOb = clone_object("/std/user/account.c");
 }
 void after_each_test () {
     if (objectp(testOb)) destruct(testOb);
@@ -19,7 +19,7 @@ void test_account_name () {
     expect_function("set_name", testOb);
 
     expect("account name is settable and queryable", (: ({
-        assert(testOb->query_name(), "==", 0),
+        assert(testOb->query_name(), "==", UNDEFINED),
         testOb->set_name("accounttest"),
         assert(testOb->query_name(), "==", "accounttest"),
         assert(testOb->query_key_name(), "==", "accounttest"),

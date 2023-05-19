@@ -1,4 +1,3 @@
-
 void handle_pager (mixed arg) {
     string *lines;
 

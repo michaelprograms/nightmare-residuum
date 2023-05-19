@@ -9,7 +9,7 @@ object connect (int port) {
     object ob;
     string err;
 
-    if (err = catch(ob = clone_object(OBJ_USER))) {
+    if (err = catch(ob = clone_object(STD_USER))) {
         if (!this_user()) {
             debug_message(err);
         } else {
@@ -329,7 +329,7 @@ varargs int valid_override (string file, string efun_name, string main_file) {
     switch (efun_name) {
         case "input_to":
         case "get_char":
-            return file == "/secure/user/input";
+            return file == "/std/user/input";
         case "clone_object":
             return file == "/std/module/test";
     }

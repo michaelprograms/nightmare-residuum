@@ -50,7 +50,7 @@ string query_key_name () {
 }
 
 nomask void set_password (string str) {
-    if (base_name(previous_object()) != "/secure/user/user") {
+    if (base_name(previous_object()) != STD_USER[0..<3]) {
         error("Illegal attempt to account->set_password");
     }
     __Password = str;
@@ -128,7 +128,7 @@ mapping query_settings () {
 /* -----  ----- */
 
 void set_name (string name) {
-    if (!regexp(base_name(this_user()), "^/secure/(user|daemon/test)")) {
+    if (!regexp(base_name(this_user()), "^("+STD_USER[0..<3]+"|"+D_TEST[0..<3]+")")) {
         return 0;
     }
     __Name = name;

@@ -26,7 +26,7 @@ void test_applies () {
     expect_function("connect", testOb);
 
     expect("connect returns a valid user object", (: ({
-        assert(file_name(userOb = testOb->connect(0)), "regex", OBJ_USER+"#[0-9]+"),
+        assert(file_name(userOb = testOb->connect(0)), "regex", STD_USER[0..<3]+"#[0-9]+"),
         assert(userOb->query_character(), "==", 0),
         assert(userOb->query_shell(), "==", 0),
         assert(destruct(userOb), "==", 0),
@@ -105,8 +105,8 @@ void test_security_applies () {
     expect("valid_override handles requests", (: ({
         assert(testOb->valid_override("/secure/sefun/override"), "==", 1),
         assert(testOb->valid_override("/insecure"), "==", 0),
-        assert(testOb->valid_override("/secure/user/input", "input_to"), "==", 1),
-        assert(testOb->valid_override("/secure/user/input", "get_char"), "==", 1),
+        assert(testOb->valid_override("/std/user/input", "input_to"), "==", 1),
+        assert(testOb->valid_override("/std/user/input", "get_char"), "==", 1),
     }) :));
 }
 

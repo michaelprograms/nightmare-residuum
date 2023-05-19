@@ -12,5 +12,5 @@ string query_save_path (string name) {
 }
 
 int query_exists (string name) {
-    return query_valid_name(name) && unguarded((: file_size, query_save_path(name) :)) > -1;
+    return query_valid_name(name) && file_size(query_save_path(name)) > -1;
 }

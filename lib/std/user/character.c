@@ -105,7 +105,7 @@ nomask private void character_override () {
 
 nomask void handle_character_override () {
     object po;
-    if (base_name(po = previous_object()) == OBJ_USER && po->query_character() == __Character) {
+    if (base_name(po = previous_object()) == STD_USER[0..<3] && po->query_character() == __Character) {
         __Character = 0;
         handle_remove("\nYour connection has been overriden from " + query_ip_number(po) + ".\n\n");
     }

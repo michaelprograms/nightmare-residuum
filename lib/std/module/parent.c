@@ -5,7 +5,7 @@ object query_parent () {
 }
 
 int set_parent (object ob) {
-    if (!regexp(base_name(ob), "^(/secure/user/user|/std/module/parent.test)")) {
+    if (!regexp(base_name(ob), "^("+STD_USER[0..<3]+"|"+M_PARENT[0..<3]+".test)")) {
         return 0;
     }
     __Parent = ob;

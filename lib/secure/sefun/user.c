@@ -8,7 +8,7 @@ object this_user () {
     return po;
 }
 object find_user (string name) {
-    object *results = filter(children(OBJ_USER), (: $1 && $1->query_key_name() == $(name) :));
+    object *results = filter(children(STD_USER), (: $1 && $1->query_key_name() == $(name) :));
     return sizeof(results) ? results[0] : 0;
 }
 

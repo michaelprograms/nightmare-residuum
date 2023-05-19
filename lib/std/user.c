@@ -1,10 +1,10 @@
-#include "user.h"
+#include "/std/user/user.h"
 
-inherit "/secure/user/account.c";
-inherit "/secure/user/character.c";
-inherit "/secure/user/input.c";
-inherit "/secure/user/output.c";
-inherit "/secure/user/shell.c";
+inherit "/std/user/account.c";
+inherit "/std/user/character.c";
+inherit "/std/user/input.c";
+inherit "/std/user/output.c";
+inherit "/std/user/shell.c";
 
 #define CONNECT_TIMEOUT 60
 
@@ -23,7 +23,6 @@ nosave private mapping __Terminal = ([
 int is_user() { return 1; }
 
 nomask void logon_banner () {
-
     receive_message("system", D_WELCOME->query_banner() + "\n");
     account_input();
     if (this_user() && interactive(this_user())) {
