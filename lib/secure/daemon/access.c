@@ -47,16 +47,26 @@ int query_allowed (object caller, string fn, string file, string mode) {
     object *stack;
     int i;
 
-    if (!objectp(caller)) error("Bad argument 1 to access->query_allowed");
-    if (!stringp(fn)) error("Bad argument 2 to access->query_allowed");
-    if (!stringp(file)) error("Bad argument 3 to access->query_allowed");
-    if (!stringp(mode)) error("Bad argument 4 to access->query_allowed");
+    if (!objectp(caller)) {
+        error("Bad argument 1 to access->query_allowed");
+    }
+    if (!stringp(fn)) {
+        error("Bad argument 2 to access->query_allowed");
+    }
+    if (!stringp(file)) {
+        error("Bad argument 3 to access->query_allowed");
+    }
+    if (!stringp(mode)) {
+        error("Bad argument 4 to access->query_allowed");
+    }
 
     // attempt to match the target file path to __Read path permissions
     pathPrivs = match_path(__Read, file);
 
     // access check passes due to root privilege of matched file path being ALL
-    if (pathPrivs && sizeof(pathPrivs) && pathPrivs[0] == ACCESS_ALL) return 1;
+    if (sizeof(pathPrivs) && pathPrivs[0] == ACCESS_ALL) {
+        return 1;
+    }
 
     // debug_message("! D_ACCESS->query_allowed with " + identify(caller) + ", "+identify(pathPrivs)+", "+file+" fn: "+fn);
 
@@ -81,7 +91,6 @@ int query_allowed (object caller, string fn, string file, string mode) {
         // set all previous objects and caller as the stack
         i = sizeof(stack = previous_object(-1) + ({ caller }));
     }
-    // @TODO ? else if (__Unguarded && base_name(caller) == SEFUN) {}
 
     // debug_message("! D_ACCESS->query_allowed stack is: "+identify(stack));
 
@@ -91,28 +100,43 @@ int query_allowed (object caller, string fn, string file, string mode) {
         if (!stack[i]) continue;
 
         // skip if stack entry is member of the access system
-        if (stack[i] == this_object() || file_name(stack[i]) == MASTER || file_name(stack[i]) == SEFUN) continue;
+        tmp = file_name(stack[i]);
+        if (stack[i] == this_object() || tmp == MASTER || tmp == SEFUN) {
+            continue;
+        }
 
         // access check fails due to no privs found for stack entry
-        if (!(priv = query_privs(stack[i]))) return 0;
+        if (!(priv = query_privs(stack[i]))) {
+            return 0;
+        }
 
         // skip if trying to read with no read privilege
-        if (!pathPrivs && mode == "read") continue;
+        if (!pathPrivs && mode == "read") {
+            continue;
+        }
 
         // prepare list of stack entry's privilege groups
         privs = explode(priv, ":"); // @TODO when does this receive a : separated list?
 
         // skip stack entry without SECURE priv
-        if (member_array(ACCESS_SECURE, privs) != -1) continue;
+        if (member_array(ACCESS_SECURE, privs) != -1) {
+            continue;
+        }
 
         // skip stack entry with privs containing that of target file
-        if (member_array(query_file_privs(file), privs) != -1) continue;
+        if (member_array(query_file_privs(file), privs) != -1) {
+            continue;
+        }
 
         // access check fails due to trying to write with no read privilege
-        if (!pathPrivs && mode == "write") return 0;
+        if (!pathPrivs && mode == "write") {
+            return 0;
+        }
 
         // skip stack entry if privs and pathPrivs are identical arrays
-        if (sizeof(privs & pathPrivs)) continue;
+        if (sizeof(privs & pathPrivs)) {
+            continue;
+        }
 
         // access check fails due to reaching a stack entry without privilege
         return 0;
@@ -163,14 +187,22 @@ mixed unguarded (function f) {
     string err;
     mixed value;
 
-    if (!f || !functionp(f) || !regexp(base_name(previous_object(0)), "^/secure/sefun/") || (functionp(f) & FP_OWNER_DESTED)) {
-        error("Illegal unguarded.");
-        return 0;
+    if (!f || !functionp(f)) {
+        error("Bad argument 1 to access->unguarded");
+    }
+
+    if (
+        !regexp(base_name(previous_object(0)), "^/secure/sefun/") ||
+        (functionp(f) & FP_OWNER_DESTED)
+    ) {
+        error("Bad previous_object to access->unguarded");
     }
     previous_unguarded = __Unguarded;
     __Unguarded = previous_object(1);
     err = catch (value = evaluate(f));
     __Unguarded = previous_unguarded;
-    if (err) error(err);
+    if (err) {
+        error(err);
+    }
     return value;
 }
