@@ -15,7 +15,13 @@ void command (string input, mapping flags) {
         ob = find_object(input);
     }
     if (ob) {
-        name = ob->is_living() ? ob->query_cap_name() : ob->query_name();
+        if (ob->is_living()) {
+            name = ob->query_cap_name();
+        } else if (ob->is_room()) {
+            name = ob->query_short();
+        } else {
+            name = ob->query_name();
+        }
         message("action", "You dest " + name + ".", this_character());
         message("action", this_character()->query_cap_name() + " dests you.", ob);
         message("action", this_character()->query_cap_name() + " dests " + name + ".", environment(this_character()), ({ this_character(), ob }));
