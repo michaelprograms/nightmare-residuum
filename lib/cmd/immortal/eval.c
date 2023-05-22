@@ -1,44 +1,63 @@
-// #define TMP_FILE "/tmp/CMD_EVAL_EDIT."+this_character()->query_key_name()+".eval"
 #define ED_BASIC_COMMANDS "\"%^CYAN%^BOLD%^i%^RESET%^\"nsert code, \"%^CYAN%^BOLD%^.%^RESET%^\" to save, e\"%^CYAN%^BOLD%^x%^RESET%^\"ecute, \"%^CYAN%^BOLD%^q%^RESET%^\"uit to abort"
+
+inherit STD_COMMAND;
+
+void create () {
+    set_syntax("eval ([LPC commands])");
+}
 
 void clear_file (string file);
 void execute_file (string file, string input);
 void create_tmp_file (string file, string input);
 
-// void end_edit (mixed *args) {
-//     string file = args[0];
-//     string tmpFile = TMP_FILE;
-//     string input = read_file(tmpFile);
-//     clear_file(file);
-//     execute_file(file, input);
-// }
-// void abort () { }
+void end_edit () {
+    string tmpFile = user_path(this_character()->query_key_name());
+    string input;
 
-void command (string input, mapping flags) {
-    string file = user_path(this_character()->query_key_name());
-
-    if (file_size(file) != -2) {
+    if (file_size(tmpFile) != -2) {
         write("You must have a valid home directory.\n");
         return;
     }
-    file += "/CMD_EVAL_FILE.c";
-    if (!write_file(file, "")) {
+    tmpFile += "/CMD_EVAL_FILE.c";
+    if (!write_file(tmpFile, "")) {
         write("You must have write access.\n");
+        return;
+    }
+    execute_file(tmpFile, input);
+}
+
+void command (string input, mapping flags) {
+    string tmpFile = user_path(this_character()->query_key_name());
+
+    if (file_size(tmpFile) != -2) {
+        message("system", "You must have a valid home directory.\n", this_user());
+        return;
+    }
+    tmpFile += "/CMD_EVAL_FILE.c";
+    if (!write_file(tmpFile, "")) {
+        message("system", "You must have write access.\n", this_user());
         return;
     }
 
     if (input) {
-        if (!regexp(input, ";$")) input = input + ";";
-        if (regexp(input, ";")) input = replace_string(input, "; ", ";\n");
-        clear_file(file);
-        execute_file(file, input);
-    // } else {
-    //     string tmp;
-    //     write("Entering eval ed mode, standard ed commands apply:\n");
-    //     write(ED_BASIC_COMMANDS+"\n");
-    //     write("__________________________________________________________________________\n");
-    //     if (tmp = read_file(TMP_FILE)) write(tmp+"\n"); // this_player()->catch_tell(tmp);
-    //     // this_player()->edit(TMP_FILE, (:end_edit:), (:abort:), ({file}));
+        if (!regexp(input, ";$")) {
+            input = input + ";";
+        }
+        if (regexp(input, ";")) {
+            input = replace_string(input, "; ", ";\n");
+        }
+        clear_file(tmpFile);
+        execute_file(tmpFile, input);
+    } else {
+        string tmp;
+        message("system", "Entering eval ed mode, standard ed commands apply:\n", this_user());
+        message("system", ED_BASIC_COMMANDS + "\n", this_user());
+        message("system", "__________________________________________________________________________\n", this_user());
+        if (tmp = read_file(tmpFile)) {
+            message("system", tmp + "\n", this_user());
+        }
+        clear_file(tmpFile);
+        new("/secure/std/editor.c")->editor_start(tmpFile, (: end_edit :));
     }
     return;
 }
@@ -46,10 +65,13 @@ void command (string input, mapping flags) {
 void execute_file (string file, string input) {
     mixed ret;
     int timeBefore, timeAfter;
+
     create_tmp_file(file, input);
+
     timeBefore = perf_counter_ns();
     ret = call_other(file, "eval");
     timeAfter = perf_counter_ns();
+
     if (regexp(input, "return")) {
         write("Result (%^ORANGE%^" + sprintf("%.2f", (timeAfter - timeBefore)/1000000.0) + " ms%^RESET%^) = " + identify(ret)+"\n");
     } else {
@@ -69,35 +91,11 @@ void create_tmp_file (string file, string input) {
 #define TC this_character()
 #define TO this_object()
 #define ENVTC environment(this_character())
+
+inherit M_CLEAN;
+
 EndCode;
     lines += "mixed eval() {\n    " + input + "\n}";
 
     write_file(file, lines);
 }
-
-// void help() {
-//     write( //ABILITY->format_utility(
-//         "eval ([LPC commands])",
-//         "Creates a temporary file containing [LPC commands]%^RESET%^ which is executed with call_other and the results are returned. If [LPC commands]%^RESET%^ are not input, places the user in edit mode.\n\n"
-//         "Examples:\n"
-//         "> eval return 1 + cos( 0.0 )\n"
-//         "Result = 2.000000\n"
-//         "> eval return explode(\"banana\", \"a\")\n"
-//         "Result = ({ \"b\", \"n\", \"n\" })\n\n"
-//         "> eval\n"
-//         "Entering eval ed mode, standard ed commands apply:\n"
-//         ED_BASIC_COMMANDS+"\n"
-//         "__________________________________________________________________________\n"
-//         "> i"
-//         "> object ob = new(FOOD);\n"
-//         "> ob->set_strength(100);\n"
-//         "> return ob->query_strength();\n"
-//         "> .\n"
-//         "> x\n"
-//         "\"tmp/CREATOR_NAME.eval\" 3 lines 75 bytes"
-//         "Result = 100"
-//         "Exit from ed."
-//     );
-//     //     , 1
-//     // ));
-// }
