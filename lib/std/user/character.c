@@ -56,6 +56,20 @@ nomask private void character_enter (int newbie) {
     }
 }
 
+nomask private void character_reconnect (object char) {
+    remove_call_out();
+
+    if (!char) {
+        error("Bad argument 1 to user/character->character_reconnect");
+    }
+
+    __Character = char;
+    __Character->set_user(this_object());
+    shell_start();
+    write("\n\nReturning " + __Character->query_cap_name() + " from linkdeath...\n\n");
+    __Character->exit_freezer();
+}
+
 nomask private void character_override (object char) {
     remove_call_out();
 
@@ -63,14 +77,9 @@ nomask private void character_override (object char) {
         error("Bad argument 1 to user/character->character_override");
     }
 
-    if (__Character) {
-        destruct(__Character);
-    }
-
     // Swap character's user
     __Character = char;
-    write("\n\nOverriding connection of " + __Character->query_cap_name() + "...\n\n");
-    __Character->query_user()->handle_character_override();
+    if (char->query_user())
     __Character->set_user(this_object());
     __Character->set_parent(this_object());
 

@@ -189,8 +189,6 @@ private string query_unlocked_species () {
 }
 
 protected nomask varargs void account_input (int state, mixed extra, string input) {
-    object char;
-
     switch (state) {
         case STATE_ACCOUNT_ENTER:
             reset_connect_timeout();
@@ -320,14 +318,13 @@ protected nomask varargs void account_input (int state, mixed extra, string inpu
                 input_next((: account_input, STATE_CHARACTER_DELETE, 0 :), PROMPT_CHARACTER_DELETE);
             } else if (member_array(input, query_character_names()) > -1) {
                 // Check for existing character
-                if (char = find_character(input)) {
-                    if (char->query_user() && interactive(char->query_user())) {
+                if (extra = find_character(input)) {
+                    if (extra->query_user() && interactive(extra->query_user())) {
                         reset_connect_timeout();
-                        write(char->query_cap_name()+" is connected and interactive.\n\n");
-                        input_next((: account_input, STATE_CHARACTER_OVERRIDE, input :), PROMPT_CHARACTER_OVERRIDE);
+                        write(extra->query_cap_name()+" is connected and interactive.\n\n");
+                        input_next((: account_input, STATE_CHARACTER_OVERRIDE, extra :), PROMPT_CHARACTER_OVERRIDE);
                     } else {
-                        set_character_name(input);
-                        character_override(char);
+                        character_reconnect(extra);
                     }
                 } else { // fresh login
                     set_character_name(input);
@@ -429,7 +426,11 @@ protected nomask varargs void account_input (int state, mixed extra, string inpu
                 return;
             } else {
                 write("extra: "+identify(extra)+"\n");
-                character_override(find_character(extra));
+                write("\n\nOverriding connection of " + extra->query_cap_name() + "...\n\n");
+                if (extra->query_user()) {
+                    extra->query_user()->handle_character_override();
+                }
+                character_override(extra);
             }
             break;
 
