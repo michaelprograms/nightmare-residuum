@@ -24,7 +24,7 @@ int is_user() { return 1; }
 
 nomask void logon_banner () {
     receive_message("system", D_WELCOME->query_banner() + "\n");
-    account_input();
+    account_input(STATE_ACCOUNT_ENTER);
     if (this_user() && interactive(this_user())) {
         telnet_ga(); // telnet go ahead for prompt to not line return
     }

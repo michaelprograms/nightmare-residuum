@@ -189,6 +189,8 @@ private string query_unlocked_species () {
 }
 
 protected nomask varargs void account_input (int state, mixed extra, string input) {
+    object char;
+
     switch (state) {
         case STATE_ACCOUNT_ENTER:
             reset_connect_timeout();
@@ -317,9 +319,20 @@ protected nomask varargs void account_input (int state, mixed extra, string inpu
             } else if (input == "delete") {
                 input_next((: account_input, STATE_CHARACTER_DELETE, 0 :), PROMPT_CHARACTER_DELETE);
             } else if (member_array(input, query_character_names()) > -1) {
-                set_character_name(input);
-                // @TODO check existing for STATE_CHARACTER_OVERRIDE
-                character_enter(0);
+                // Check for existing character
+                if (char = find_character(input)) {
+                    if (char->query_user() && interactive(char->query_user())) {
+                        reset_connect_timeout();
+                        write(char->query_cap_name()+" is connected and interactive.\n\n");
+                        input_next((: account_input, STATE_CHARACTER_OVERRIDE, input :), PROMPT_CHARACTER_OVERRIDE);
+                    } else {
+                        set_character_name(input);
+                        character_override(char);
+                    }
+                } else { // fresh login
+                    set_character_name(input);
+                    character_enter(0);
+                }
             } else {
                 write("Invalid input choice received.\n\n");
                 display_account_menu();
@@ -410,16 +423,14 @@ protected nomask varargs void account_input (int state, mixed extra, string inpu
             break;
 
         case STATE_CHARACTER_OVERRIDE:
-            reset_connect_timeout();
-            input_next((: account_input, STATE_CHARACTER_OVERRIDE_CONFIRM, input :), PROMPT_CHARACTER_OVERRIDE);
-            break;
-
-        case STATE_CHARACTER_OVERRIDE_CONFIRM:
             if ((input = lower_case(input)) == "" || input[0..0] != "y") {
                 write("\nCanceled character connection override.\n");
+                account_input(STATE_ACCOUNT_MENU);
                 return;
+            } else {
+                write("extra: "+identify(extra)+"\n");
+                character_override(find_character(extra));
             }
-            character_override();
             break;
 
         case STATE_SPECIES_ENTER:

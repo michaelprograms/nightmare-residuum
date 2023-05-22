@@ -32,7 +32,6 @@ private void display_account_menu ();
 #define STATE_CHARACTER_DELETE_CONFIRM      24
 #define STATE_PASSWORD_DELETE_CONFIRM       25
 #define STATE_CHARACTER_OVERRIDE            26
-#define STATE_CHARACTER_OVERRIDE_CONFIRM    27
 #define STATE_SPECIES_ENTER                 30
 #define STATE_SPECIES_HANDLE                31
 #define STATE_SETTINGS_ENTER                40
@@ -62,7 +61,7 @@ string query_character_species ();
 object query_character ();
 void set_immortal (int i);
 nomask private void character_enter (int newbie);
-nomask private void character_override ();
+nomask private void character_override (object character);
 nomask void handle_character_override ();
 nomask protected void character_exit ();
 nomask protected void character_linkdead ();
