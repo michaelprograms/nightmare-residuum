@@ -1,3 +1,11 @@
+inherit STD_COMMAND;
+
+void create () {
+    ::create();
+    set_syntax("ls (-a) (-l) ([path])");
+    set_help_text("Attempts to list files matching provided path. The path can contain the '*' wildcard character to filter results.");
+}
+
 private void output_long (string dir, mixed *files) {
     string acc, loaded, filename;
 
@@ -12,7 +20,8 @@ private void output_long (string dir, mixed *files) {
     }
 }
 private void output_brief (string dir, mixed *files) {
-    int widest = 0, w, width, cols, rows, max;
+    int widest = 0, w, width, cols, rows, max, i, index;
+    string line;
     string *list = map(files, function (mixed *file, string dir) {
         if (file[1] == -2) return "      " + file[0] + "/";
         else {
@@ -28,18 +37,25 @@ private void output_brief (string dir, mixed *files) {
     foreach (string file in list) {
         if ((w = strlen(file)) > widest) widest = w;
     }
-    if (widest > width / 3 - 3) widest = width / 3 - 3;
+    if (widest > width / 3 - 3) {
+        widest = width / 3 - 3;
+    }
     cols = width / (widest + 3);
     max = sizeof(list);
     rows = max / cols;
-    if (max % cols) rows ++;
+    if (max % cols) {
+        rows ++;
+    }
 
-    for (int i = 0; i < rows; i ++) {
-        string line = "";
+    for (i = 0; i < rows; i ++) {
+        line = "";
         for (int j = 0; j < cols; j ++) {
-            int index = (rows * j) + i;
-            if (index < max) line += sprintf("%:-"+(widest+3)+"s", list[index]);
-            else line += sprintf("%:-"+(widest+3)+"s", "");
+            index = (rows * j) + i;
+            if (index < max) {
+                line += sprintf("%:-"+(widest+3)+"s", list[index]);
+            } else {
+                line += sprintf("%:-"+(widest+3)+"s", "");
+            }
         }
         message("action", line, this_character());
     }
@@ -48,6 +64,7 @@ private void output_brief (string dir, mixed *files) {
 void command (string input, mapping flags) {
     string path, dir;
     mixed *files = ({ });
+    int fs, r;
 
     if (!input || input == "") {
         path = this_user()->query_shell()->query_variable("cwd");
@@ -58,10 +75,12 @@ void command (string input, mapping flags) {
         path = sanitize_path(input);
     }
 
-    if (file_size(path) == -1) {
+    fs = file_size(path);
+    r = regexp(path, "\\*");
+    if (!r && fs == -1) {
         message("action", path + ": directory does not exist.", this_character());
         return;
-    } else if (file_size(path) == -2) {
+    } else if (fs == -2) {
         if (path[<1] != '/') {
             path += "/";
         }
@@ -70,12 +89,17 @@ void command (string input, mapping flags) {
         dir = path[0..strsrch(path, "/", -1)];
     }
 
-    files = get_dir(path, -1);
+    files = get_dir(path, -1) || ({ });
     if (!flags["a"]) {
         files = filter(files, (: $1[0][0] != '.' :));
     }
 
-    message("action", path + ":" + (!sizeof(files) ? " directory is empty.\n" : ""), this_character());
+    if (!sizeof(files)) {
+        message("action", path + ": " + (r ? "no matches" : "directory is empty.\n"), this_character());
+    } else {
+        message("action", path + ":", this_character());
+    }
+
     if (flags["l"]) {
         output_long(dir, files);
     } else {
