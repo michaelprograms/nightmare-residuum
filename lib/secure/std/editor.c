@@ -33,6 +33,7 @@ void editor_start (string file, function endFn) {
 int clean_up (mixed *args...) {
     if (query_ed_mode() == -1) {
         destruct();
+        return !this_object();
     } else {
         return 1;
     }
