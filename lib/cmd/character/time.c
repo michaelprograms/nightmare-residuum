@@ -1,6 +1,7 @@
 inherit STD_COMMAND;
 
 void create () {
+    ::create();
     set_syntax("time");
     set_help_text("The time command is used to view the current, local, server, and up time.");
 }

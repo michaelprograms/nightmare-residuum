@@ -1,6 +1,7 @@
 inherit STD_COMMAND;
 
 void create () {
+    ::create();
     set_syntax("score");
     set_help_text("The score command is used to view the attributes about your character.");
 }

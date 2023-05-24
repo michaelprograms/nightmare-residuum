@@ -1,6 +1,7 @@
 inherit STD_COMMAND;
 
 void create () {
+    ::create();
     set_syntax("update [file]");
     set_help_text("The update command is used to destruct and reload a file to the latest copy, and run tests of the file, if they exist.");
 }

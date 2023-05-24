@@ -1,6 +1,7 @@
 inherit STD_COMMAND;
 
 void create () {
+    ::create();
     set_syntax("body");
     set_help_text("The body command is used to view the limbs of your character's body.");
 }

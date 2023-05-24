@@ -1,6 +1,7 @@
 inherit STD_COMMAND;
 
 void create () {
+    ::create();
     set_syntax("rmdir [file]");
     set_help_text("The rmdir command is used to remove a directory permanently.");
 }

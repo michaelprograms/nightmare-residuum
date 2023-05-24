@@ -1,6 +1,7 @@
 inherit STD_COMMAND;
 
 void create () {
+    ::create();
     set_syntax("databases");
     set_help_text("The databases command is used to view the entire list of databases.");
 }

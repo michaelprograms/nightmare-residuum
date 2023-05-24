@@ -3,6 +3,7 @@
 inherit STD_COMMAND;
 
 void create () {
+    ::create();
     set_syntax("eval ([LPC commands])");
 }
 

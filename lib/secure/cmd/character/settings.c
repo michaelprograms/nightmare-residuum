@@ -1,6 +1,7 @@
 inherit STD_COMMAND;
 
 void create () {
+    ::create();
     set_syntax("settings ([setting] [value])");
     set_help_text("The settings command is used to view your account's settings.");
 }

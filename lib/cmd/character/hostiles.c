@@ -1,6 +1,7 @@
 inherit STD_COMMAND;
 
 void create () {
+    ::create();
     set_syntax("hostiles");
     set_help_text("The hostiles command is used to view the list of things that are in combat with your character, even if they are in another location.");
 }

@@ -1,6 +1,7 @@
 inherit STD_COMMAND;
 
 void create () {
+    ::create();
     set_syntax("cp [file] [newfile]");
     set_help_text("The cp command is used to save a copy of a file to a new filename.");
 }

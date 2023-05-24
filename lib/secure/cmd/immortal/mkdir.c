@@ -1,6 +1,7 @@
 inherit STD_COMMAND;
 
 void create () {
+    ::create();
     set_syntax("mkdir [directory]");
     set_help_text("The mkdir command is used to create a new directory.");
 }

@@ -1,6 +1,7 @@
 inherit STD_COMMAND;
 
 void create () {
+    ::create();
     set_syntax("last [tell|say|(channel)]");
     set_help_text("The last command is used to view the history of your character's tells, says, or a channel your character has access to.");
     set_help_similar(({ "channels", "reply", "tell", }));

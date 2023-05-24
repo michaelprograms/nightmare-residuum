@@ -1,6 +1,7 @@
 inherit STD_COMMAND;
 
 void create () {
+    ::create();
     set_syntax("inventory");
     set_help_text("The inventory command is used to view the list of items being carried by your character.");
 }

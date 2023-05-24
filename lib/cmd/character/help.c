@@ -1,6 +1,7 @@
 inherit STD_COMMAND;
 
 void create () {
+    ::create();
     set_syntax("help [command]");
     set_help_text("The help command is used to view more information about a command.");
 }

@@ -1,6 +1,7 @@
 inherit STD_COMMAND;
 
 void create () {
+    ::create();
     set_syntax("who");
     set_help_text("The who command is used to view connected characters.");
 }

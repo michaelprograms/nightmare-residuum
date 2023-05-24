@@ -1,6 +1,7 @@
 inherit STD_COMMAND;
 
 void create () {
+    ::create();
     set_syntax("quit");
     set_help_text("The quit command is used to log out of your character.");
 }

@@ -1,6 +1,7 @@
 inherit STD_COMMAND;
 
 void create () {
+    ::create();
     set_syntax("test [file]");
     set_help_text("The test command is used to run the tests of a file, if they exist.");
 }

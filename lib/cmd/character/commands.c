@@ -1,6 +1,7 @@
 inherit STD_COMMAND;
 
 void create () {
+    ::create();
     set_syntax("commands");
     set_help_text("The commands command is used to view the list of possible actions your character can make.");
 }

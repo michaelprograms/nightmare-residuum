@@ -1,6 +1,7 @@
 inherit STD_COMMAND;
 
 void create () {
+    ::create();
     set_syntax("emote [input]");
     set_help_text("The emote command is used to send a custom emote message to your character's environment.");
 }

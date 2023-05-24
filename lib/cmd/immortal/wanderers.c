@@ -1,6 +1,7 @@
 inherit STD_COMMAND;
 
 void create () {
+    ::create();
     set_syntax("wanderers ([name filter]|[file filter])");
     set_help_text("The wanderers command is used to view the list of objects with wanderers.\n\nUsing a name or file filter will show the list of objects that match either filter.");
 }

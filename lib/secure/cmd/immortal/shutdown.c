@@ -1,6 +1,7 @@
 inherit STD_COMMAND;
 
 void create () {
+    ::create();
     set_syntax("shutdown");
     set_help_text("The shutdown command is used to stop the game server.");
 }

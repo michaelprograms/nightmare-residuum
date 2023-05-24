@@ -1,6 +1,7 @@
 inherit STD_COMMAND;
 
 void create () {
+    ::create();
     set_syntax("rm [file]");
     set_help_text("The rm command is used to remove a file permanently.");
 }

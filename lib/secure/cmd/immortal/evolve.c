@@ -1,6 +1,7 @@
 inherit STD_COMMAND;
 
 void create () {
+    ::create();
     set_syntax("evolve -c=class -l=level ([target])");
     set_help_text("The evolve command is used to adjust a target's class or level.");
 }

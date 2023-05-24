@@ -1,6 +1,7 @@
 inherit STD_COMMAND;
 
 void create () {
+    ::create();
     set_syntax("stats");
     set_help_text("The stats command is used to view the primary stats of your character.");
 }

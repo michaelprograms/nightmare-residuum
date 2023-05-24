@@ -1,6 +1,7 @@
 inherit STD_COMMAND;
 
 void create () {
+    ::create();
     set_syntax("idle [character]");
     set_help_text("The idle command is used to view how long ago a connected character last sent a command.");
 }

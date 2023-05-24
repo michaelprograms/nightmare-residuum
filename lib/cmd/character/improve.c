@@ -3,6 +3,7 @@
 inherit STD_COMMAND;
 
 void create () {
+    ::create();
     set_syntax("improve [stat]");
     set_help_text("The improve command is used to spend experience points to permanently increase one of your character's stats.");
 }

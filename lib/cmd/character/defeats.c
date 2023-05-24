@@ -1,6 +1,7 @@
 inherit STD_COMMAND;
 
 void create () {
+    ::create();
     set_syntax("defeats");
     set_help_text("The defeats command is used to view the list of defeats your character has recorded.");
 }

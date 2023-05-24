@@ -1,6 +1,7 @@
 inherit STD_COMMAND;
 
 void create () {
+    ::create();
     set_syntax("callouts");
     set_help_text("The callouts command is used to view the entire list of callouts.");
 }

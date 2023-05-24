@@ -1,6 +1,7 @@
 inherit STD_COMMAND;
 
 void create () {
+    ::create();
     set_syntax("map");
     set_help_text("The map command is used to display the minimap for your character's current environment.");
 }

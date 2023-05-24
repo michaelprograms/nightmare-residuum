@@ -3,6 +3,7 @@
 inherit STD_COMMAND;
 
 void create () {
+    ::create();
     set_syntax("advance");
     set_help_text("The advance command is used to spend experience points to permanently increase your character's level.");
 }

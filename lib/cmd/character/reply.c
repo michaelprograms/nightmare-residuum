@@ -1,6 +1,7 @@
 inherit STD_COMMAND;
 
 void create () {
+    ::create();
     set_syntax("reply");
     set_help_text("The reply command is used to reply to a tell that has been sent to your character.");
     set_help_similar(({ "channels", "last", "tell", }));

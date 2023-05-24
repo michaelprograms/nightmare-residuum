@@ -1,6 +1,7 @@
 inherit STD_COMMAND;
 
 void create () {
+    ::create();
     set_syntax("colors");
     set_help_text("The colors command is used to view the list of supported colors.");
 }

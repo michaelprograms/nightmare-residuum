@@ -1,6 +1,7 @@
 inherit STD_COMMAND;
 
 void create () {
+    ::create();
     set_syntax("sockets");
     set_help_text("The sockets command is used to view the entire list of sockets.");
 }

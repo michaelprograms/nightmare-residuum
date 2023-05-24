@@ -1,6 +1,7 @@
 inherit STD_COMMAND;
 
 void create () {
+    ::create();
     set_syntax("whois");
     set_help_text("The whois command is used to view the information about a character, even if they are disconnected.");
 }

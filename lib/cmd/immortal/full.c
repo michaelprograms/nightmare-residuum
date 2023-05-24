@@ -1,6 +1,7 @@
 inherit STD_COMMAND;
 
 void create () {
+    ::create();
     set_syntax("full [character]");
     set_help_text("The full command is used to return a character's vitals and body to full health.");
 }

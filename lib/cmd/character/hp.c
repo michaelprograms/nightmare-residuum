@@ -1,6 +1,7 @@
 inherit STD_COMMAND;
 
 void create () {
+    ::create();
     set_syntax("hp");
     set_help_text("The hp command is used to view your character's health and other vitals.");
 }

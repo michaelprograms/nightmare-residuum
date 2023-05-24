@@ -1,6 +1,7 @@
 inherit STD_COMMAND;
 
 void create () {
+    ::create();
     set_syntax("ed [file]");
     set_help_text("The ed command is used to enter edit mode on a file.");
 }
