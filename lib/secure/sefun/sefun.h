@@ -82,6 +82,7 @@ mixed *roll_die (int times, int sides);
 string identify (mixed a);
 varargs string wrap (string str, int width, int indent, int rawANSI);
 int string_compare_same_until (string a, string b);
+int string_all_same_character (string str);
 string sanitize_name (string name);
 
 /* --- time --- */
