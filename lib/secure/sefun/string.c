@@ -110,14 +110,6 @@ int string_compare_same_until (string a, string b) {
     return n;
 }
 
-int string_all_same_character (string str) {
-    mapping m = ([ ]);
-    foreach (string s in explode(str, "") || ({ })) {
-        m[s] = 1;
-    }
-    return sizeof(m) == 1;
-}
-
 string sanitize_name (string name) {
     if (undefinedp(name) || !stringp(name)) error("Bad argument 1 to string->sanitize_name");
     name = replace_string(name, " ", "");

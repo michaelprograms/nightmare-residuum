@@ -53,7 +53,7 @@ varargs string format_page (string *items, mixed columns, int pad, int center, s
                 // use stripped text when its longer than width
                 if (numColumns == 1) {
                     // check text is all the same character
-                    if (SEFUN->string_all_same_character(items[i+j])) {
+                    if (pcre_match(items[i+j], "^(.)\\1*$")) {
                         items[i+j] = items[i+j][0..width-1];
                     }
                     if (ansi) {
