@@ -1,7 +1,7 @@
 varargs string format_page (string *items, mixed columns, int pad, int center, string ansi) {
     int totalWidth, width, numItems, numColumns, remainder, ratioSum;
-    int i, j;
-    string *rows = ({}), row, tmp;
+    int i, j, diff;
+    string *rows = ({}), row, tmp, *wrapped, format;
 
     if (!arrayp(items) || !sizeof(items)) {
         error("Bad argument 1 to format->format_page");
@@ -21,6 +21,7 @@ varargs string format_page (string *items, mixed columns, int pad, int center, s
     totalWidth = to_int(SEFUN->query_account_setting("width")) - pad * 2;
     items = map(items, (: "" + $1 :)); // force numbers to string
     numItems = sizeof(items);
+    format = "%" + (center?"|":"-") + "*s";
 
     for (i = 0; i < numItems; i += numColumns) {
         row = "";
@@ -43,32 +44,35 @@ varargs string format_page (string *items, mixed columns, int pad, int center, s
 
             if (i + j >= numItems) {
                 // ran out of columns to fill final row
-                row += sprintf("%' '*s", width*(numColumns-j), " ");
+                row += sprintf("%' '*s", width * (numColumns - j), " ");
                 break;
             }
 
             // check text length without ANSI color
-            if (sizeof(tmp = SEFUN->strip_colour(items[i + j])) > width) {
+            if (sizeof(tmp = SEFUN->strip_colour(items[i+j])) > width) {
                 // use stripped text when its longer than width
                 if (numColumns == 1) {
-                    string *wrapped;
+                    // check text is all the same character
+                    if (SEFUN->string_all_same_character(items[i+j])) {
+                        items[i+j] = items[i+j][0..width-1];
+                    }
                     if (ansi) {
-                        wrapped = explode(SEFUN->wrap_ansi(items[i + j], width), "\n");
+                        wrapped = explode(SEFUN->wrap_ansi(items[i+j], width), "\n");
                     } else {
-                        wrapped = explode(SEFUN->wrap(items[i + j], width), "\n");
+                        wrapped = explode(SEFUN->wrap(items[i+j], width), "\n");
                     }
                     foreach (string line in wrapped) {
-                        row += sprintf("%"+(center?"|":"-")+"*s", width, ""+line) + "\n";
+                        row += sprintf(format, width, "" + line) + "\n";
                     }
                 } else {
                     row += tmp[0..width-1];
                 }
             } else {
                 // account for any color codes in the text
-                int diff = sizeof(items[i+j]) - sizeof(tmp);
-                row += sprintf("%"+(center?"|":"-")+"*s", width+diff, items[i + j]);
+                diff = sizeof(items[i+j]) - sizeof(tmp);
+                row += sprintf(format, width + diff, items[i+j]);
                 // when color codes present and we're not displaying a RESET, add one
-                if (diff > 0 && items[i + j][<9..] != "%^RESET%^") {
+                if (diff > 0 && items[i+j][<9..] != "%^RESET%^") {
                     row += "%^RESET%^";
                 }
             }
