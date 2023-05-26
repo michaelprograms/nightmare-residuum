@@ -5,7 +5,7 @@ nomask private string query_prompt () {
         case 0:
             return ":";
         case -2: default:
-            return "";
+            return "*";
     }
 }
 
