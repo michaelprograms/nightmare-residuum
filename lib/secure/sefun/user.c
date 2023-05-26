@@ -4,6 +4,8 @@ object this_user () {
     object po = previous_object(-1)[<1];
     if (regexp(base_name(po), D_TEST[0..<3])) {
         po = previous_object(-1)[<2];
+    } else if (po->is_room()) {
+        po = efun::this_user();
     }
     return po;
 }
