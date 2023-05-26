@@ -5,37 +5,55 @@ inherit STD_COMMAND;
 void create () {
     ::create();
     set_syntax("eval ([LPC commands])");
+    set_help_text(
+        "Creates a temporary file containing [LPC commands]%^RESET%^ which is executed with call_other and the results are returned. If [LPC commands]%^RESET%^ are not input, places the user in edit mode.\n\n"
+        "Examples:\n"
+        "> eval return 1 + cos(0.0)\n"
+        "Result = 2.000000\n"
+        "> eval return explode(\"banana\", \"a\")\n"
+        "Result = ({ \"b\", \"n\", \"n\" })\n\n"
+        "> eval\n"
+        "Entering eval ed mode, standard ed commands apply:\n"
+        ED_BASIC_COMMANDS+"\n"
+        "________________________________________________________________________________\n"
+        ":i\n"
+        "float f = 1 + sin(0.0);\n"
+        "return f;\n"
+        ".\n"
+        ":x\n"
+        "\"/realm/name/.eval.tmp\" 2 lines 34 bytes\n"
+        "Exit from ed.\n"
+        "Result = 1.000000"
+    );
 }
 
 void clear_file (string file);
 void execute_file (string file, string input);
 void create_tmp_file (string file, string input);
 
-void end_edit () {
-    string tmpFile = user_path(this_character()->query_key_name());
+void end_edit (string evalfile, string tmpfile) {
     string input;
+    object ob;
 
-    if (file_size(tmpFile) != -2) {
-        write("You must have a valid home directory.\n");
-        return;
+    input = read_file(tmpfile);
+    if (ob = find_object(evalfile)) {
+        ob->handle_remove();
     }
-    tmpFile += "/CMD_EVAL_FILE.c";
-    if (!write_file(tmpFile, "")) {
-        write("You must have write access.\n");
-        return;
-    }
-    execute_file(tmpFile, input);
+    execute_file(evalfile, input);
 }
 
 void command (string input, mapping flags) {
-    string tmpFile = user_path(this_character()->query_key_name());
+    string userpath = user_path(this_character()->query_key_name());
+    string evalfile, tmpfile;
+    string tmp;
 
-    if (file_size(tmpFile) != -2) {
+    if (file_size(userpath) != -2) {
         message("system", "You must have a valid home directory.\n", this_user());
         return;
     }
-    tmpFile += "/CMD_EVAL_FILE.c";
-    if (!write_file(tmpFile, "")) {
+
+    evalfile = userpath + "/CMD_EVAL_FILE.c";
+    if (!write_file(evalfile, "")) {
         message("system", "You must have write access.\n", this_user());
         return;
     }
@@ -47,30 +65,29 @@ void command (string input, mapping flags) {
         if (regexp(input, ";")) {
             input = replace_string(input, "; ", ";\n");
         }
-        clear_file(tmpFile);
-        execute_file(tmpFile, input);
+        execute_file(evalfile, input);
     } else {
-        string tmp;
+        tmpfile = userpath + "/.eval.tmp";
         message("system", "Entering eval ed mode, standard ed commands apply:\n", this_user());
         message("system", ED_BASIC_COMMANDS + "\n", this_user());
-        message("system", "__________________________________________________________________________\n", this_user());
-        if (tmp = read_file(tmpFile)) {
+        message("system", "________________________________________________________________________________\n", this_user());
+        if (tmp = read_file(tmpfile)) {
             message("system", tmp + "\n", this_user());
         }
-        clear_file(tmpFile);
-        new("/secure/std/editor.c")->editor_start(tmpFile, (: end_edit :));
+        new("/secure/std/editor.c")->editor_start(tmpfile, (: end_edit($(evalfile), $(tmpfile)) :));
     }
     return;
 }
 
-void execute_file (string file, string input) {
+void execute_file (string evalfile, string input) {
     mixed ret;
     int timeBefore, timeAfter;
 
-    create_tmp_file(file, input);
+    clear_file(evalfile);
+    create_tmp_file(evalfile, input);
 
     timeBefore = perf_counter_ns();
-    ret = call_other(file, "eval");
+    ret = call_other(evalfile, "eval");
     timeAfter = perf_counter_ns();
 
     if (regexp(input, "return")) {
