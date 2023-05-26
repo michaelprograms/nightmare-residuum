@@ -130,18 +130,24 @@ mapping query_room_exits_picture () {
     return picture;
 }
 string *query_room_exit_map() {
-    mapping blank = ([
+    mapping blank, roomOb, exits, pics;
+
+    if (query_property("no map")) {
+        return 0;
+    }
+
+    blank = ([
         "nw": " ", "n":  " ", "ne": " ",
         "w":  " ", "u":  " ", "d":  " ", "e":  " ",
         "sw": " ", "s":  " ", "se": " ",
     ]);
-    mapping roomOb = ([
+    roomOb = ([
         "nw": 0, "n":  0, "ne": 0,
         "w":  0, "u":  0, "d":  0, "e":  0,
         "sw": 0, "s":  0, "se": 0,
     ]);
-    mapping exits = query_exits();
-    mapping pics = ([
+    exits = query_exits();
+    pics = ([
         "nw": exits["northwest"] && file_size(exits["northwest"]["room"]) > 0 && (roomOb["nw"] = find_object(exits["northwest"]["room"],1)) ? roomOb["nw"]->query_room_exits_picture() : blank,
         "n":  exits["north"]     && file_size(exits["north"]["room"]) > 0 && (roomOb["n"] = find_object(exits["north"]["room"],1)) ? roomOb["n"]->query_room_exits_picture() : blank,
         "ne": exits["northeast"] && file_size(exits["northeast"]["room"]) > 0 && (roomOb["ne"] = find_object(exits["northeast"]["room"],1)) ? roomOb["ne"]->query_room_exits_picture() : blank,
@@ -208,6 +214,5 @@ string *query_room_exit_map() {
         pics["sw"]["sw"] + pics["sw"]["d"] + pics["sw"]["s"] + " " + pics["sw"]["se"] +
         pics["s"]["sw"]  + pics["s"]["d"]  + pics["s"]["s"]  + " "  + pics["s"]["se"]  +
         pics["se"]["sw"] + pics["se"]["d"] + pics["se"]["s"] + " " + pics["se"]["se"],
-
     });
 }
