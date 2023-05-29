@@ -3,9 +3,9 @@ nosave private string __CapName;
 nosave private string __KeyName;
 nosave private string __KeyID;
 nosave private string __KeyAdj;
-nosave private string *__ID = ({});
-nosave private string *__Adj = ({});
-nosave private string *__Plural = ({});
+nosave private string *__ID = ({ });
+nosave private string *__Adj = ({ });
+nosave private string *__Plural = ({ });
 
 // -----------------------------------------------------------------------------
 
@@ -141,12 +141,6 @@ private void refresh_id () {
     if (!__KeyAdj && sizeof(__Adj)) {
         __KeyAdj = __Adj[0];
     }
-    // @TODO __Short?
-    // if (__KeyID) {
-    //     if (__KeyAdj) __Short = __KeyAdj + " " + __KeyID;
-    //     else __Short = __KeyID;
-    // } else __Short = "impossible to comprehend";
-
     if (__KeyName && member_array(__KeyName, __ID) == -1) {
         set_id(({ __KeyName }));
     }
