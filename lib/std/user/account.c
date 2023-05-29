@@ -71,7 +71,6 @@ void set_last_on () {
 }
 
 void add_character (string name, string nameClean, string species) {
-    // @TODO security?
     __Characters[nameClean] = ([
         "name": name,
         "deleted": 0,
