@@ -36,6 +36,7 @@ nomask void logon () {
     __Terminal["ip"] = query_ip_number();
     __Terminal["encoding"] = query_encoding();
     D_LOG->log("connect", ctime() + " " + __Terminal["ip"]);
+    D_CHARACTER->increment_connected_total();
     debug_message(ctime() + " connect from " + __Terminal["ip"]);
 
     receive_message("system", "%^RESET%^Connected...\n");

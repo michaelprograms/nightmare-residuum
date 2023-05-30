@@ -1,6 +1,11 @@
 #define DIR_SAVE_CHARACTER "/save/character"
 #define VALID_TYPES ({ "character", "shell", "pet", })
 
+inherit M_CLEAN;
+
+nosave private int __ConnectedConcurrent = 0;
+nosave private int __ConnectedTotal = 0;
+
 int query_valid_name (string name) {
     int l;
     if (!name || (l = strlen(name)) < 4 || l > 18) return 0;
@@ -34,4 +39,33 @@ object query_whois_character (string name) {
     char->restore_data();
     char->set_save_path(0);
     return char;
+}
+
+/* ----- connected info ----- */
+
+int query_connected_concurrent () {
+    return __ConnectedConcurrent;
+}
+int query_connected_total () {
+    return __ConnectedTotal;
+}
+
+int increment_connected_total () {
+    __ConnectedTotal ++;
+}
+
+/* ----- apply ----- */
+
+void heart_beat () {
+    int n = sizeof(characters());
+    if (n > __ConnectedConcurrent) {
+        __ConnectedConcurrent = n;
+    }
+}
+
+void create () {
+    if (!clonep()) {
+        set_heart_beat(1);
+        set_no_clean(1);
+    }
 }

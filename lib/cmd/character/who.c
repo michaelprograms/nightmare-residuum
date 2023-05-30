@@ -66,7 +66,10 @@ void command (string input, mapping flags) {
         "align": "center",
     ]);
     footerItems += ({ nChar + " character" + (nChar != 1 ? "s" : "") });
-    data["footer"]["items"] = ({ implode(footerItems, ", ") });
+    data["footer"]["items"] = ({
+        implode(footerItems, ", ") + " connected",
+        D_CHARACTER->query_connected_concurrent() + " concurrent, " + D_CHARACTER->query_connected_total() + " total"
+    });
 
     border(data);
 }
