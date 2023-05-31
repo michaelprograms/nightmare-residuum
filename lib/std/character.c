@@ -7,8 +7,6 @@ inherit "/std/character/autoload.c";
 inherit "/std/character/channel.c";
 inherit "/std/character/history.c";
 
-#include "living/living.h";
-
 private int __LastAction;
 private int __Created = time();
 private int __Immortal;
@@ -36,6 +34,7 @@ void set_immortal (int i) {
 
 varargs void save_character (int exit) {
     update_autoload(exit);
+    remove_properties();
     save_data();
     reset_autoload();
 }
