@@ -9,9 +9,11 @@ void after_each_test () {
     if (objectp(testOb)) destruct(testOb);
 }
 
-void test_long () {
+void test_long_and_long_footer () {
     expect_function("set_long", testOb);
     expect_function("query_long", testOb);
+    expect_function("set_long_footer", testOb);
+    expect_function("query_long_footer", testOb);
 
     expect("long is settable and queryable", (: ({
         assert(testOb->query_long(), "==", UNDEFINED),
@@ -24,6 +26,19 @@ void test_long () {
 
         testOb->set_long(0),
         assert(testOb->query_long(), "==", 0),
+    }) :));
+
+    expect("long_footer is settable and queryable", (: ({
+        assert(testOb->query_long_footer(), "==", UNDEFINED),
+
+        testOb->set_long_footer("Test long"),
+        assert(testOb->query_long_footer(), "==", "Test long"),
+
+        testOb->set_long_footer((: base_name(previous_object(1)) :)),
+        assert(testOb->query_long_footer(), "==", base_name()),
+
+        testOb->set_long_footer(0),
+        assert(testOb->query_long_footer(), "==", 0),
     }) :));
 }
 
