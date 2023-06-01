@@ -8,6 +8,9 @@ inherit M_PROPERTY;
 inherit M_RESET;
 inherit M_SENSES;
 
+int is_room () { return 1; }
+
+/* ----- applies ----- */
 void create () {
     object::create();
     reset::create();
@@ -23,7 +26,7 @@ void reset () {
     reset::reset();
 }
 
-int is_room () { return 1; }
+/* ----- M_CLEAN ----- */
 
 int clean_up (mixed *args...) {
     foreach (object ob in deep_inventory()) {
@@ -33,6 +36,8 @@ int clean_up (mixed *args...) {
     }
     return ::clean_up();
 }
+
+/* ----- M_CONTAINER ----- */
 
 int handle_receive (object ob) {
     if (ob) {
@@ -80,7 +85,7 @@ int handle_release (object ob) {
     return ::handle_release(ob);
 }
 
-/* ----- map ----- */
+/* ----- room map ----- */
 
 string query_room_map_format () {
     int aggressive = 0, passive = 0, item = 0;
