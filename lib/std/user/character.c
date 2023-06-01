@@ -1,6 +1,6 @@
 #include "user.h"
 
-#define QUERY_FIRST_IMMORTAL !!filter(get_dir("/realm/"), (:$1 && $1[0..0] != ".":))
+#define QUERY_FIRST_IMMORTAL !sizeof(filter(get_dir("/realm/"), (: $1 && $1[0] != '.' :)))
 
 nosave private string __Species;
 nosave private object __Character;
