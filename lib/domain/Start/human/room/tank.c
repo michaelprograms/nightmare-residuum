@@ -3,88 +3,111 @@
 inherit STD_ROOM;
 
 nosave private mapping syntax = ([
-    "become": format_syntax("become female|male|neither"),
+    "become": format_syntax("female|male|neither"),
     "randomize": format_syntax("randomize"),
     "done": format_syntax("done"),
     "look": format_syntax("look"),
     "retry": format_syntax("retry"),
 ]);
 
-string prepare_long () {
-    string long = "The embrace of warm air in the confinement of a transparent cylinder.";
+string prepare_long_footer () {
     object tc = this_character();
-    long += "\n\nA diagnostic display is projected onto the glass. There is a blinking red section displayed with an error code.\n\n";
-    long += "%^BOLD%^Specimen Status%^RESET%^\n";
-    long += sprintf("%-16s", "Species:") + " " + tc->query_species() + "\n";
-    long += sprintf("%-16s", "Age:") + " " + 18 + "\n"; // @TODO
-    long += sprintf("%-16s", "Gender:") + " " + tc->query_gender() + "\n";
-    long += sprintf("%-16s", "Status:") + " Healthy\n\n";
-    long += "WARNING! %^RED%^BOLD%^ERR-" + (1001+random(9000))+"-"+(10001+random(90000)) + "%^RESET%^: knowledge assimilation unable to proceed.\nPress " + syntax["retry"] + " to restart procedure.\n\n";
-    long += "Options:\n";
-    long += "  " + syntax["become"] + "\n";
-    long += "  " + syntax["randomize"] + "\n\n";
-    long += "  " + syntax["done"] + "";
-    return long;
+    border(([
+        "title": "Specimen Status",
+        "header": ([
+            "items": ({
+                "%^RED%^BOLD%^ERROR-" + (1001+random(9000))+"-"+(10001+random(90000)) + "%^RESET%^",
+                "Automatic knowledge transfer unable to proceed.",
+                "Manual selection mode.",
+            }),
+            "columns": 1,
+            "align": "left",
+        ]),
+        "body": ([
+            "items": ({
+                sprintf("%10s %-20s", "Species:", tc->query_species()),
+                sprintf("%10s %-20i", "Age:", 18),
+                sprintf("%10s %-20s", "Gender:", tc->query_gender()),
+            }),
+            "columns": 1,
+            "align": "center",
+        ]),
+        "footer": ([
+            "header": ({ "Options" }),
+            "items": ({
+                syntax["become"],
+                syntax["randomize"],
+                "",
+                "",
+                syntax["done"],
+            }),
+            "columns": 2,
+        ]),
+        "borderColors": ({ ({ 65, 105, 225 }), ({ 65, 105, 225 }) }),
+    ]));
 }
 
 void create () {
     ::create();
     set_properties(([ "indoors": 1, ]));
     set_short("inside a tank");
-    set_long((: prepare_long :));
+    set_long("The embrace of warm air in the confinement of a transparent cylinder.\n\nA diagnostic display is projected onto the glass. There is a blinking red section displayed with an error code.");
+    set_long_footer((: prepare_long_footer :));
     parse_init();
-    parse_add_rule("retry", "");
-    parse_add_rule("become", "");
-    parse_add_rule("become", "STR");
+    parse_add_rule("female", "");
+    parse_add_rule("male", "");
+    parse_add_rule("neither", "");
     parse_add_rule("randomize", "");
     parse_add_rule("done", "");
 }
 
-/* ----- parser rule: retry ----- */
 
-mixed can_retry () {
+/* ----- parser rules: female, male, neither ----- */
+
+mixed can_female () {
     return environment(this_character()) == this_object();
 }
-void do_retry () {
-    string err = "%^RED%^BOLD%^ERR-"+(11+random(90))+"-"+(101+random(900))+"%^RESET%^";
-
-    write("You tap the retry button on the display.\n");
-    write("\n%^RED%^BOLD%^BEEP BEEP BEEP.%^RESET%^\n\n");
-    message("say", "A robotic voice chimes: Warning, knowledge assimilation cannot be initialized on this specimen. Initialize sterilization procedure...\n\n" + err + "! aborting process...", environment(previous_object()));
-}
-
-/* ----- parser rule: become ----- */
-
-mixed can_become () {
-    return environment(this_character()) == this_object();
-}
-void do_become () {
-    write("Syntax: " + syntax["become"] + "\n");
-}
-mixed can_become_str (mixed args...) {
-    return environment(this_character()) == this_object();
-}
-void do_become_str (mixed args...) {
+void do_female () {
     object tc = this_character();
-    string str;
 
-    if (sizeof(args)) {
-        str = args[0];
-    }
-
-    if (member_array(str, ({ "female", "male", "neither" })) == -1) {
-        return do_become();
-    }
-
-    if (str == tc->query_gender()) {
-        write("You are already " + str + ".\n");
+    if (tc->query_gender() == "female") {
+        message("action", "You are already female.", tc);
         return;
     }
 
-    tc->set_gender(str);
-    write("You tap the " + str + " button on the display.\n");
-    write("A shock arcs through your body!\n");
-    write("You become " + str + ".\n");
+    tc->set_gender("female");
+    message("action", "You tap the button on the display.", tc);
+    message("action", "A shock arcs through your body!", tc);
+}
+mixed can_male () {
+    return environment(this_character()) == this_object();
+}
+void do_male () {
+    object tc = this_character();
+
+    if (tc->query_gender() == "male") {
+        message("action", "You are already male.", tc);
+        return;
+    }
+
+    tc->set_gender("male");
+    message("action", "You tap the button on the display.", tc);
+    message("action", "A shock arcs through your body!", tc);
+}
+mixed can_neither () {
+    return environment(this_character()) == this_object();
+}
+void do_neither () {
+    object tc = this_character();
+
+    if (tc->query_gender() == "neither") {
+        message("action", "You are already neither gender.", tc);
+        return;
+    }
+
+    tc->set_gender("neither");
+    message("action", "You tap the button on the display.", tc);
+    message("action", "A shock arcs through your body!", tc);
 }
 
 /* ----- parser rule: randomize ----- */
@@ -99,8 +122,7 @@ void do_randomize () {
     write("You tap the randomize button on the display.\n");
     write("A shock arcs through your body!\n");
 
-    tc->set_gender(gender = ({ "female", "male", "neither"})[random(3)]);
-    write("You become " + gender + ".\n");
+    tc->set_gender(gender = ({ "female", "male", "neither" })[random(3)]);
 }
 
 /* ----- parser rule: done ----- */
@@ -109,10 +131,11 @@ mixed can_done () {
     return environment(this_character()) == this_object();
 }
 void do_done () {
+    object tc = this_character();
     string err = "%^RED%^BOLD%^ERR-"+(1001+random(9000))+"-"+(1+random(9))+"%^RESET%^";
 
-    message("action", "You press the done button and the tank glass pops open.", this_character());
-    message("say", "A robotic voice chimes: Warning, knowledge assimilation process was not completed, specimen may ... " + err + "! please retry...", environment(previous_object()));
-    this_character()->handle_go(HUMAN_ROOM + "tank_hallway" + (1 + random(3)), "eject", "tank");
-    this_character()->describe_environment();
+    message("action", "You press the done button and the tank glass pops open.", tc);
+    message("say", "A robotic voice chimes: Warning, automatic knowledge transfer was not completed, specimen may ... " + err + "! please ret-retry-y...", environment(tc));
+    tc->handle_go(HUMAN_ROOM + "tank_hallway" + (1 + random(3)), "eject", "tank");
+    tc->describe_environment();
 }
