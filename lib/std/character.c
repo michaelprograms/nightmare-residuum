@@ -205,6 +205,9 @@ void describe_environment_long () {
         }
         message("system", result, this_object());
     }
+    if (line = env->query_long_footer()) {
+        message("room", line, this_object());
+    }
 }
 
 varargs void describe_environment_senses (string sense, string focus) {
