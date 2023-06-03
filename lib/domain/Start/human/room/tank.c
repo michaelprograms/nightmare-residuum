@@ -3,7 +3,13 @@
 inherit STD_ROOM;
 
 nosave private mapping syntax = ([
-    "female|male|neither": format_syntax("female|male|neither"),
+    "encode": format_syntax("encode gender|hair|eye|skin|body [attribute]"),
+    "encode_gender": format_syntax("encode gender female|male|neither"),
+    "encode_hair": format_syntax("encode hair [color]"),
+    "encode_eye": format_syntax("encode eye [color]"),
+    "encode_skin": format_syntax("encode skin [color]"),
+    "encode_body": format_syntax("encode body [build]"),
+
     "randomize": format_syntax("randomize"),
     "done": format_syntax("done"),
     "look": format_syntax("look"),
@@ -13,38 +19,57 @@ nosave private mapping syntax = ([
 
 string prepare_long_footer () {
     object tc = this_character();
+    string fmt = "%-10s %-20s";
     border(([
-        "title": "Specimen Status",
+        "title": "STATUS",
+        "subtitle": "%^RED%^BOLD%^ERROR-" + (1001+random(9000))+"-"+(10001+random(90000)) + "%^RESET%^",
         "header": ([
             "items": ({
-                "%^RED%^BOLD%^ERROR-" + (1001+random(9000))+"-"+(10001+random(90000)) + "%^RESET%^",
                 "Automatic knowledge transfer unable to proceed.",
                 "Manual selection mode.",
             }),
             "columns": 1,
             "align": "left",
         ]),
-        "body": ([
-            "items": ({
-                sprintf("%10s %-20i", "AGE:", 18), // @TODO
-                sprintf("%10s %-20s", "SPECIES:", tc->query_species()),
-                sprintf("%10s %-20s", "GENDER:", tc->query_gender()),
-                sprintf("%10s %-20s", "CLASS:", tc->query_class()),
-            }),
-            "columns": 1,
-            "align": "center",
-        ]),
+        "body": ({
+            ([
+                "header": ({ "Select", "Stats" }),
+                "items": ({
+                    // sprintf(fmt, "CREATED:", time_ago(tc->query_created())),
+                    sprintf(fmt, "CLASS:", tc->query_class()),
+                    sprintf(fmt, "PERCEPTION:", ""+tc->query_stat("perception")),
+                    sprintf(fmt, "GENDER:", tc->query_gender()),
+                    sprintf(fmt, "STRENGTH:", ""+tc->query_stat("strength")),
+                    "HAIR",
+                    sprintf(fmt, "ENDURANCE:", ""+tc->query_stat("endurance")),
+                    "EYE:",
+                    sprintf(fmt, "CHARISMA:", ""+tc->query_stat("charisma")),
+                    "SKIN:",
+                    sprintf(fmt, "INTELLIGENCE:", ""+tc->query_stat("intelligence")),
+                    "BODY:",
+                    sprintf(fmt, "AGILITY:", ""+tc->query_stat("agility")),
+                    "",
+                    sprintf(fmt, "LUCK:", ""+tc->query_stat("luck")),
+                }),
+                "columns": 2,
+                "align": "left",
+            ]),
+        }),
         "footer": ([
-            "header": ({ "Options" }),
+            "header": ({ "Actions" }),
             "items": ({
-                syntax["female|male|neither"],
-                syntax["download"],
+                syntax["encode_gender"],
+                syntax["encode_hair"],
+                syntax["encode_eye"],
+                syntax["encode_skin"],
+                syntax["encode_body"],
                 "",
+                syntax["download"],
                 "",
                 syntax["randomize"],
                 syntax["done"],
             }),
-            "columns": 2,
+            "columns": 1,
         ]),
         "borderColors": ({ ({ 65, 105, 225 }), ({ 65, 105, 225 }) }), // Royal Blue
     ]));
@@ -54,67 +79,62 @@ void create () {
     ::create();
     set_properties(([ "indoors": 1, ]));
     set_short("inside a tank");
-    set_long("The embrace of warm air in the confinement of a transparent cylinder.\n\nA diagnostic display is projected onto the glass. There is a blinking red section displayed with an error code.");
+    set_long("The embrace of warm air in the confinement of a transparent cylinder.\n\nA diagnostic display is projected onto the glass.");
     set_long_footer((: prepare_long_footer :));
     parse_init();
-    parse_add_rule("female", "");
-    parse_add_rule("male", "");
-    parse_add_rule("neither", "");
+    parse_add_rule("encode", "");
+    parse_add_rule("encode", "STR");
     parse_add_rule("download", "");
     parse_add_rule("download", "STR");
     parse_add_rule("randomize", "");
     parse_add_rule("done", "");
 }
 
-/* ----- parser rules: female, male, neither ----- */
+/* ----- parser rule: encode ----- */
 
-mixed can_female () {
+mixed can_encode () {
     return environment(this_character()) == this_object();
 }
-void do_female () {
-    object tc = this_character();
-
-    if (tc->query_gender() == "female") {
-        message("action", "You are already female.", tc);
-        return;
-    }
-
-    tc->set_gender("female");
-    message("action", "You tap the button on the display.", tc);
-    message("action", "A shock arcs through your body!", tc);
-    message("system", prepare_long_footer(), tc);
+void do_encode () {
+    write("Syntax: " + syntax["encode"] + "\n");
 }
-mixed can_male () {
+mixed can_encode_str (mixed args...) {
     return environment(this_character()) == this_object();
 }
-void do_male () {
+void do_encode_str (mixed args...) {
     object tc = this_character();
+    string str, *words, word;
 
-    if (tc->query_gender() == "male") {
-        message("action", "You are already male.", tc);
-        return;
+    if (sizeof(args)) {
+        str = args[0];
     }
 
-    tc->set_gender("male");
-    message("action", "You tap the button on the display.", tc);
-    message("action", "A shock arcs through your body!", tc);
-    message("system", prepare_long_footer(), tc);
-}
-mixed can_neither () {
-    return environment(this_character()) == this_object();
-}
-void do_neither () {
-    object tc = this_character();
+    words = explode(str, " ");
 
-    if (tc->query_gender() == "neither") {
-        message("action", "You are already neither gender.", tc);
-        return;
+    if (!sizeof(words)) {
+        return do_encode();
     }
 
-    tc->set_gender("neither");
-    message("action", "You tap the button on the display.", tc);
-    message("action", "A shock arcs through your body!", tc);
-    message("system", prepare_long_footer(), tc);
+    word = words[0];
+    str = implode(words[1..], " ");
+
+    if (word == "gender") {
+        if (member_array(str, ({ "female", "male", "neither" })) == -1) {
+            return do_encode();
+        }
+
+        if (str == tc->query_gender()) {
+            write("You are already " + str + ".\n");
+            return;
+        }
+
+        tc->set_gender(str);
+        write("You tap the " + str + " button on the display.\n");
+        write("A shock arcs through your body!\n");
+        write("You encode yourself " + str + ".\n");
+    } else {
+        return do_encode();
+    }
 }
 
 /* ----- parser rule: download ----- */
