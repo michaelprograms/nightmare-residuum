@@ -4,6 +4,7 @@ inherit STD_OBJECT;
 inherit M_CLEAN;
 inherit M_CONTAINER;
 
+inherit "/std/living/attribute.c";
 inherit "/std/living/biography.c";
 inherit "/std/living/body.c";
 inherit "/std/living/class.c";
