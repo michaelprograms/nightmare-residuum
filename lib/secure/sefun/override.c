@@ -27,6 +27,9 @@ varargs void message (mixed type, string message, mixed target, mixed exclude) {
     if (!sizeof(message) || (!objectp(target) && !arrayp(target))) {
         return;
     }
+    if (!arrayp(exclude) && !objectp(exclude)) {
+        exclude = ({ });
+    }
     efun::message(type, message, target, exclude);
 }
 
