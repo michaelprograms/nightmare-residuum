@@ -124,14 +124,17 @@ nosave private mapping __Bodies = ([
 ]);
 /* Species Example:
     "species name":      ([
-        "body": body,       // required
-        "strength": n,      // optional
-        "perception": n,    // optional
-        "endurance": n,     // optional
-        "charisma": n,      // optional
-        "intelligence": n,  // optional
-        "agility": n,       // optional
-        "luck": n,          // optional
+        "body": body,           // required
+        "attributes": ([ ]),    // optional
+        "stats": ([
+            "strength": n,      // optional
+            "perception": n,    // optional
+            "endurance": n,     // optional
+            "charisma": n,      // optional
+            "intelligence": n,  // optional
+            "agility": n,       // optional
+            "luck": n,          // optional
+        ]),
     ]),
 */
 nosave private mapping __Species = ([
@@ -151,6 +154,14 @@ nosave private mapping __Species = ([
             "hp": 1,
             "sp": 1,
             "mp": 1,
+        ]),
+        "attributes": ([
+            "hair": ({ }),
+            "build": ({ }),
+            "complexion": ({ }),
+            "eye": ({ }),
+            "hair": ({ }),
+            "height": ({ }),
         ]),
     ]),
     "zotarian":     ([
