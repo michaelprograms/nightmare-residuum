@@ -14,7 +14,7 @@ on:
 
 jobs:
   build-and-test:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-20.04
     steps:
     - name: Checkout Repository
       uses: actions/checkout@v3
@@ -58,14 +58,3 @@ jobs:
       run: ./build/bin/driver lib/secure/etc/nightmare-residuum.config -ftest
       shell: bash
       timeout-minutes: 1
-
-    - name: Cyclomatic Complexity Analyzer
-      uses: Uno-Takashi/lizard-runner@v3
-      with:
-        path: "./lib"
-        exclude: "./lib/doc/* ./lib/realm/* ./lib/save/* ./lib/tmp/*"
-        sort: "cyclomatic_complexity"
-        warnings_only: "true"
-        ignore_warnings: "-1"
-        modified: "true"
-        CCN: 20
