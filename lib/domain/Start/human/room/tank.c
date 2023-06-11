@@ -3,13 +3,13 @@
 inherit STD_ROOM;
 
 nosave private mapping syntax = ([
-    "encode": format_syntax("encode gender|build|complexion|eye|hair|height [attribute]"),
+    "encode": format_syntax("encode [attribute] [value]"),
     "encode_gender": format_syntax("encode gender female|male|neither"),
-    "encode_build": format_syntax("encode build [build]"),
-    "encode_complexion": format_syntax("encode complexion [color]"),
-    "encode_eye": format_syntax("encode eye [color]"),
-    "encode_hair": format_syntax("encode hair [color]"),
-    "encode_height": format_syntax("encode height [num]"),
+    "encode_build": format_syntax("encode build athletic|lean|muscular|stout|slender"),
+    "encode_complexion": format_syntax("encode complexion fair|medium|dark"),
+    "encode_eye": format_syntax("encode eye amber|black|blue|brown|green|hazel"),
+    "encode_hair": format_syntax("encode hair auburn|bald|black|blonde|brown|gray"),
+    "encode_height": format_syntax("encode height 160-180"),
 
     "randomize": format_syntax("randomize"),
     "done": format_syntax("done"),
@@ -30,7 +30,7 @@ private void randomize_attributes (object tc) {
 
 string prepare_long_footer () {
     object tc = this_character();
-    string fmt = "%-12s %-20s";
+    string fmt = "%-14s %-20s";
     border(([
         "title": "STATUS",
         "subtitle": "%^RED%^BOLD%^ERROR-" + (1001+random(9000))+"-"+(10001+random(90000)) + "%^RESET%^",
@@ -44,7 +44,7 @@ string prepare_long_footer () {
         ]),
         "body": ({
             ([
-                "header": ({ "Select", "Stats" }),
+                "header": ({ "Attributes", "Stats" }),
                 "items": ({
                     sprintf(fmt, "CLASS:", tc->query_class()),
                     sprintf(fmt, "PERCEPTION:", ""+tc->query_stat("perception")),
@@ -68,14 +68,8 @@ string prepare_long_footer () {
         "footer": ([
             "header": ({ "Actions" }),
             "items": ({
-                syntax["encode_gender"],
-                syntax["encode_build"],
-                syntax["encode_complexion"],
-                syntax["encode_eye"],
-                syntax["encode_hair"],
-                syntax["encode_height"],
-                "",
                 syntax["download"],
+                syntax["encode"],
                 "",
                 syntax["randomize"],
                 syntax["done"],
@@ -130,7 +124,6 @@ void do_encode_str (mixed args...) {
     }
 
     words = explode(str, " ");
-
     if (!sizeof(words)) {
         return do_encode();
     }
@@ -138,9 +131,21 @@ void do_encode_str (mixed args...) {
     word = words[0];
     str = implode(words[1..], " ");
 
+
+    if (member_array(word, ({ "build", "complexion", "eye", "gender", "hair", "height"})) == -1) {
+        write("Syntax: "+syntax["encode"]+"\n");
+        return;
+    }
+
+    if (!sizeof(str) && member_array(word, ({ "build", "complexion", "eye", "gender", "hair", "height"})) > -1) {
+        write("Syntax: "+syntax["encode_"+str]+"\n");
+        return;
+    }
+
     if (word == "gender") {
         if (member_array(str, ({ "female", "male", "neither" })) == -1) {
-            return do_encode();
+            write("Syntax: "+syntax["encode_gender"]+"\n");
+            return;
         }
 
         if (str == tc->query_gender()) {
@@ -153,15 +158,81 @@ void do_encode_str (mixed args...) {
         write("A shock arcs through your body!\n");
         write("You encode yourself " + str + ".\n");
     } else if (word == "build") {
+        if (member_array(str, ({ "athletic", "lean", "muscular", "slender", "stout", })) == -1) {
+            write("Syntax: "+syntax["encode_build"]+"\n");
+            return;
+        }
 
+        if (str == tc->query_attribute("build")) {
+            write("You already have a " + str + " build.\n");
+            return;
+        }
+
+        tc->set_attribute("build", str);
+        write("You tap the " + str + " build button on the display.\n");
+        write("A shock arcs through your body!\n");
+        write("You encode yourself with a " + str + " build.\n");
     } else if (word == "complexion") {
+        if (member_array(str, ({ "fair", "medium", "dark", })) == -1) {
+            write("Syntax: "+syntax["encode_complexion"]+"\n");
+            return;
+        }
 
+        if (str == tc->query_attribute("complexion")) {
+            write("You already have a " + str + " complexion.\n");
+            return;
+        }
+
+        tc->set_attribute("complexion", str);
+        write("You tap the " + str + " complexion button on the display.\n");
+        write("A shock arcs through your body!\n");
+        write("You encode yourself with a " + str + " complexion.\n");
     } else if (word == "eye") {
+        if (member_array(str, ({ "amber", "black", "blue", "brown", "green", "hazel", })) == -1) {
+            write("Syntax: "+syntax["encode_eye"]+"\n");
+            return;
+        }
 
+        if (str == tc->query_attribute("eye")) {
+            write("You are already " + str + " eyed.\n");
+            return;
+        }
+
+        tc->set_attribute("eye", str);
+        write("You tap the " + str + " eye button on the display.\n");
+        write("A shock arcs through your body!\n");
+        write("You encode yourself with " + str + " eyes.\n");
     } else if (word == "hair") {
+        if (member_array(str, ({ "auburn", "bald", "black", "blonde", "brown", "gray", })) == -1) {
+            write("Syntax: "+syntax["encode_hair"]+"\n");
+            return;
+        }
 
+        if (str == tc->query_attribute("hair")) {
+            write("You already have " + str + " hair.\n");
+            return;
+        }
+
+        tc->set_attribute("hair", str);
+        write("You tap the " + str + " hair button on the display.\n");
+        write("A shock arcs through your body!\n");
+        write("You encode yourself with " + str + " hair.\n");
     } else if (word == "height") {
+        int height = to_int(str); // (attributes["height"]["min"] + random(attributes["height"]["max"] - attributes["height"]["min"] + 1))
 
+        if (height < 160 || height > 180) {
+            write("Syntax: "+syntax["encode_height"]+"\n");
+            return;
+        }
+
+        if (str == tc->query_attribute("height")) {
+            write("You already are " + str + " tall.\n");
+            return;
+        }
+        tc->set_attribute("height", str);
+        write("You tap the height slider at " + str + " on the display.\n");
+        write("A shock arcs through your body!\n");
+        write("You encode yourself with " + str + " height.\n");
     } else {
         return do_encode();
     }

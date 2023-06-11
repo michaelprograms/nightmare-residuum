@@ -156,7 +156,7 @@ nosave private mapping __Species = ([
             "mp": 1,
         ]),
         "attributes": ([
-            "build": ({ "lean", "slender", "athletic", "muscular", "stout", }),
+            "build": ({ "athletic", "lean", "muscular", "slender", "stout", }),
             "complexion": ({ "fair", "medium", "dark", }),
             "eye": ({ "amber", "black", "blue", "brown", "green", "hazel", }),
             "hair": ({ "auburn", "bald", "black", "blonde", "brown", "gray", }),
