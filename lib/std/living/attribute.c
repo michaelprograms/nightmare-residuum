@@ -1,8 +1,11 @@
-#define VALID_ATTRIBUTES ({ "body", "eye", "hair", "height", "skin", })
+#define VALID_ATTRIBUTES ({ "build", "complexion", "eye", "hair", "height", })
 
 private mapping __Attribute = ([ ]);
 
 string *query_attributes () {
+    if (!mapp(__Attribute)) {
+        __Attribute = ([ ]);
+    }
     return keys(__Attribute);
 }
 

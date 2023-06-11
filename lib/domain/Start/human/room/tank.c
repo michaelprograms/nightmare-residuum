@@ -3,13 +3,13 @@
 inherit STD_ROOM;
 
 nosave private mapping syntax = ([
-    "encode": format_syntax("encode gender|hair|eye|skin|body [attribute]"),
+    "encode": format_syntax("encode gender|build|complexion|eye|hair|height [attribute]"),
     "encode_gender": format_syntax("encode gender female|male|neither"),
-    "encode_body": format_syntax("encode body [build]"),
+    "encode_build": format_syntax("encode build [build]"),
+    "encode_complexion": format_syntax("encode complexion [color]"),
     "encode_eye": format_syntax("encode eye [color]"),
     "encode_hair": format_syntax("encode hair [color]"),
     "encode_height": format_syntax("encode height [num]"),
-    "encode_skin": format_syntax("encode skin [color]"),
 
     "randomize": format_syntax("randomize"),
     "done": format_syntax("done"),
@@ -18,9 +18,19 @@ nosave private mapping syntax = ([
     "download full": format_syntax("download warrior|mystic|scoundrel|ranger|psionist|paladin"),
 ]);
 
+private void randomize_attributes (object tc) {
+    mapping attributes = D_SPECIES->query_species()["human"]["attributes"];
+
+    tc->set_attribute("build", element_of(attributes["build"]));
+    tc->set_attribute("complexion", element_of(attributes["complexion"]));
+    tc->set_attribute("eye", element_of(attributes["eye"]));
+    tc->set_attribute("hair", element_of(attributes["hair"]));
+    tc->set_attribute("height", "" + (attributes["height"]["min"] + random(attributes["height"]["max"] - attributes["height"]["min"] + 1)));
+}
+
 string prepare_long_footer () {
     object tc = this_character();
-    string fmt = "%-10s %-20s";
+    string fmt = "%-12s %-20s";
     border(([
         "title": "STATUS",
         "subtitle": "%^RED%^BOLD%^ERROR-" + (1001+random(9000))+"-"+(10001+random(90000)) + "%^RESET%^",
@@ -40,15 +50,15 @@ string prepare_long_footer () {
                     sprintf(fmt, "PERCEPTION:", ""+tc->query_stat("perception")),
                     sprintf(fmt, "GENDER:", tc->query_gender()),
                     sprintf(fmt, "STRENGTH:", ""+tc->query_stat("strength")),
-                    sprintf(fmt, "BUILD:", ""+tc->query_attribute("body")),
+                    sprintf(fmt, "BUILD:", ""+tc->query_attribute("build")),
                     sprintf(fmt, "ENDURANCE:", ""+tc->query_stat("endurance")),
-                    sprintf(fmt, "COMPLEXION:", ""+tc->query_attribute("skin")),
+                    sprintf(fmt, "COMPLEXION:", ""+tc->query_attribute("complexion")),
                     sprintf(fmt, "CHARISMA:", ""+tc->query_stat("charisma")),
-                    sprintf(fmt, "HAIR:", ""+tc->query_attribute("hair")),
-                    sprintf(fmt, "INTELLIGENCE:", ""+tc->query_stat("intelligence")),
-                    sprintf(fmt, "HEIGHT:", ""+tc->query_attribute("height")),
-                    sprintf(fmt, "AGILITY:", ""+tc->query_stat("agility")),
                     sprintf(fmt, "EYE:", ""+tc->query_attribute("eye")),
+                    sprintf(fmt, "INTELLIGENCE:", ""+tc->query_stat("intelligence")),
+                    sprintf(fmt, "HAIR:", ""+tc->query_attribute("hair")),
+                    sprintf(fmt, "AGILITY:", ""+tc->query_stat("agility")),
+                    sprintf(fmt, "HEIGHT:", ""+tc->query_attribute("height")),
                     sprintf(fmt, "LUCK:", ""+tc->query_stat("luck")),
                 }),
                 "columns": 2,
@@ -59,11 +69,11 @@ string prepare_long_footer () {
             "header": ({ "Actions" }),
             "items": ({
                 syntax["encode_gender"],
-                syntax["encode_body"],
+                syntax["encode_build"],
+                syntax["encode_complexion"],
                 syntax["encode_eye"],
                 syntax["encode_hair"],
                 syntax["encode_height"],
-                syntax["encode_skin"],
                 "",
                 syntax["download"],
                 "",
@@ -89,6 +99,15 @@ void create () {
     parse_add_rule("download", "STR");
     parse_add_rule("randomize", "");
     parse_add_rule("done", "");
+}
+
+int handle_receive (object ob) {
+    if (ob && ob->is_character()) {
+        if (ob->query_species() == "human" && !sizeof(ob->query_attributes())) {
+            randomize_attributes(ob);
+        }
+    }
+    return ::handle_receive(ob);
 }
 
 /* ----- parser rule: encode ----- */
@@ -133,6 +152,16 @@ void do_encode_str (mixed args...) {
         write("You tap the " + str + " button on the display.\n");
         write("A shock arcs through your body!\n");
         write("You encode yourself " + str + ".\n");
+    } else if (word == "build") {
+
+    } else if (word == "complexion") {
+
+    } else if (word == "eye") {
+
+    } else if (word == "hair") {
+
+    } else if (word == "height") {
+
     } else {
         return do_encode();
     }
@@ -176,6 +205,9 @@ void do_randomize () {
 
     tc->set_gender(element_of(({ "female", "male", "neither" })));
     tc->set_class(element_of(({ "warrior", "mystic", "scoundrel", "ranger", "psionist", "paladin", })));
+
+    randomize_attributes(tc);
+
     message("action", "You tap the button on the display.", tc);
     message("action", "A shock arcs through your body!", tc);
     message("system", prepare_long_footer(), tc);
