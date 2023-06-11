@@ -138,7 +138,7 @@ void do_encode_str (mixed args...) {
     }
 
     if (!sizeof(str) && member_array(word, ({ "build", "complexion", "eye", "gender", "hair", "height"})) > -1) {
-        write("Syntax: "+syntax["encode_"+str]+"\n");
+        write("Syntax: "+syntax["encode_"+word]+"\n");
         return;
     }
 
