@@ -218,8 +218,7 @@ void do_encode_str (mixed args...) {
         write("A shock arcs through your body!\n");
         write("You encode yourself with " + str + " hair.\n");
     } else if (word == "height") {
-        int height = to_int(str); // (attributes["height"]["min"] + random(attributes["height"]["max"] - attributes["height"]["min"] + 1))
-
+        int height = to_int(str);
         if (height < 160 || height > 180) {
             write("Syntax: "+syntax["encode_height"]+"\n");
             return;
