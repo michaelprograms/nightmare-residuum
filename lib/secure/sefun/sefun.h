@@ -83,6 +83,7 @@ string identify (mixed a);
 varargs string wrap (string str, int width, int indent, int rawANSI);
 int string_compare_same_until (string a, string b);
 string sanitize_name (string name);
+mixed *parse_command_flags (string rawInput);
 
 /* --- time --- */
 varargs string time_ago (int timestamp, int granularity);

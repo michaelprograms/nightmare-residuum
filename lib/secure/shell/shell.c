@@ -45,41 +45,6 @@ void handle_remove () {
     destruct();
 }
 
-// Parse the raw input for any command line flags provided
-// Flags must be at the beginning of raw input and in format:
-// -f           or      -flag
-// -f=text      or      -flag=text
-// -f=123.0     or      -flag=123.0
-mixed *parse_command_flags (string rawInput) {
-    string *args, input = "";
-    mapping flags = ([ ]);
-    int x, y, l;
-
-    if (!stringp(rawInput)) {
-        input = rawInput;
-    } else {
-        args = explode(rawInput, " ");
-        l = sizeof(args);
-
-        for (int i = 0; i < l; i ++) {
-            if (regexp(args[i], "^-")) {
-                if ((x = strlen(args[i])) > 1) {
-                    if ((y = strsrch(args[i], "=")) > -1) {
-                        flags[args[i][1..y-1]] = args[i][y+1..];
-                    } else {
-                        flags[args[i][1..]] = 1;
-                    }
-                }
-            } else {
-                input = implode(args[i..], " ");
-                break;
-            }
-        }
-    }
-
-    return ({ input, flags });
-}
-
 void execute_command (string command) {
     string *split, action, input;
     string cmdPath;
