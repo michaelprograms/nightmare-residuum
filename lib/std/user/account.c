@@ -145,7 +145,7 @@ void set_name (string name) {
 /* -----  ----- */
 
 private void display_account_menu () {
-    string msg = "", characterMsg = ""; // creatorMsg = "",
+    string msg = "", characterMsg = "";
 
     if (!query_playable_characters()) {
         write("\nYou have no characters. You will now create a character.\n");
