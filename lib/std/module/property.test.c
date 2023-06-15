@@ -17,7 +17,6 @@ string *test_order () {
 void test_property_single () {
     expect_function("query_property", testOb);
     expect_function("set_property", testOb);
-    expect_function("set_property", testOb);
     expect_function("add_property", testOb);
     expect_function("remove_property", testOb);
 
