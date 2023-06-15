@@ -47,7 +47,6 @@ void handle_remove () {
 
 void execute_command (string command) {
     string *split, action, input;
-    string cmdPath;
 
     if (!command) return;
 
@@ -59,11 +58,7 @@ void execute_command (string command) {
         return D_CHANNEL->send(action, query_character(), input);
     }
 
-    // @TODO move to STD_LIVING->do_command
-    if (cmdPath = D_COMMAND->query_command(action)) {
-        mixed *parse = parse_command_flags(input);
-        catch(call_other(cmdPath + "/" + action, "command", parse[0], parse[1]));
-    } else if (__Owner->query_character() && !__Owner->query_character()->do_command(command)) {
+    if (__Owner->query_character() && !__Owner->query_character()->do_command(command)) {
         write("Do what?\n");
     }
 }

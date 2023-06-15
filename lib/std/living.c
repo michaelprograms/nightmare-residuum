@@ -38,27 +38,33 @@ void heart_beat () {
     handle_combat();
 }
 
-varargs int do_command (string str, int debug) {
-    // string action;
-    // string verb, input;
+varargs int do_command (string command, int debug) {
+    string *split, action, input;
+    string cmdPath;
+
     mixed result, resultGo;
 
-    // sscanf(str, "%s %s", verb, input);
-    // action = D_COMMAND->query_command(verb);
-    // if(stringp(action)) {
-    //     call_other(action, "command", input); // @TODO is this right here?
-    // } else
-    if (!environment()) {
+    if (!environment() || !command) {
         return 0;
     }
 
-    if (strsrch(str, "enter") == 0) {
-        str = "go " + str;
-    } else if (strsrch(str, "out") == 0) {
-        str = "go " + str;
+    if (strsrch(command, "enter") == 0) {
+        command = "go " + command;
+    } else if (strsrch(command, "out") == 0) {
+        command = "go " + command;
     }
 
-    result = parse_sentence(str, debug);
+    split = explode(command, " ") - ({ "" });
+    action = split[0];
+    input = sizeof(split) > 1 ? command[(strlen(action)+1)..] : 0;
+
+    if (cmdPath = D_COMMAND->query_command(action)) {
+        mixed *parse = parse_command_flags(input);
+        catch(call_other(cmdPath + "/" + action, "command", parse[0], parse[1]));
+        return 1;
+    }
+
+    result = parse_sentence(command, debug);
     if (stringp(result)) {
         write(result + "\n");
         return 1;
@@ -85,8 +91,8 @@ varargs int do_command (string str, int debug) {
         write("Unexpected result.\n");
         return 1;
     }
-    if (environment() && environment()->query_exit(str)) {
-        resultGo = parse_sentence("go " + str);
+    if (environment() && environment()->query_exit(command)) {
+        resultGo = parse_sentence("go " + command);
         if (resultGo == 1) {
             return 1;
         }
