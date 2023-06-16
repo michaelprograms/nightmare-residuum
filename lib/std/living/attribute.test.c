@@ -36,4 +36,10 @@ void test_attributes () {
         testOb->set_attribute("height", "test height"),
         assert(testOb->query_attribute("height"), "==", "test height"),
     }) :));
+
+    expect("setting invalid attributes is handled", (: ({
+        assert(testOb->query_attribute("bad attribute"), "==", UNDEFINED),
+        testOb->set_attribute("bad attribute", "bad test attribute"),
+        assert(testOb->query_attribute("bad attribute"), "==", UNDEFINED),
+    }) :));
 }
