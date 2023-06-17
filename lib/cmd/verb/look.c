@@ -85,13 +85,11 @@ mixed can_look_liv (string str, string verb) {
     return can_look_at_liv(str, verb);
 }
 mixed do_look_at_liv (object ob, mixed arg...) {
-    object po = previous_object();
+    object po = previous_object(), *wielded, *worn;
     string str;
-    object *wielded, *worn;
 
-    str = (ob->query_gender() == "neither" || ob->query_gender() == "none" ? "" : ob->query_gender() + " ");
-    message("action", "You look over " + ob->query_cap_name() + " the " + str + ob->query_species() + "...", po);
-    message("action", po->query_cap_name() + " looks you over.", ob);
+    message("action", "You look over " + ob->query_cap_name() + "...", po);
+    message("action", po->query_cap_name() + " looks you over.", ob, po);
     message("action", po->query_cap_name() + " looks over " + ob->query_cap_name() + ".", environment(ob), ({ po, ob }));
 
     if (str = ob->query_long()) {
