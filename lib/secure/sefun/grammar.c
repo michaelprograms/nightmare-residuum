@@ -1,9 +1,28 @@
 string remove_article (string str) {
     string tmp;
-    if (!stringp(str)) error("Bad argument 1 to grammar->remove_article");
-    else if (sscanf(str, "the %s", tmp)) str = tmp;
-    else if (sscanf(str, "a %s", tmp)) str = tmp;
-    else if (sscanf(str, "an %s", tmp)) str = tmp;
+    if (!stringp(str)) {
+        str = "";
+    } else if (sscanf(str, "the %s", tmp)) {
+        str = tmp;
+    } else if (sscanf(str, "a %s", tmp)) {
+        str = tmp;
+    } else if (sscanf(str, "an %s", tmp)) {
+        str = tmp;
+    }
+    return str;
+}
+varargs string add_article (string str, int definite) {
+    if (!stringp(str) || !sizeof(str)) {
+        str = "";
+    } else {
+        if (definite) {
+            str = "the " + remove_article(str);
+        } else if (member_array(str[0], ({ 'a','A','e','E','i','I','o','O','u','U' })) > -1) {
+            str = "an " + str;
+        } else {
+            str = "a " + str;
+        }
+    }
     return str;
 }
 

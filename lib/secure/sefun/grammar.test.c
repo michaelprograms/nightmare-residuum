@@ -11,11 +11,27 @@ void after_each_test () {
 void test_remove_article () {
     expect_function("remove_article", testOb);
 
-    expect("remove_article handles articles", (: ({
+    expect("articles are trimmed", (: ({
+        assert(testOb->remove_article(""), "==", ""),
+
         assert(testOb->remove_article("thing"), "==", "thing"),
+
         assert(testOb->remove_article("the thing"), "==", "thing"),
         assert(testOb->remove_article("a thing"), "==", "thing"),
         assert(testOb->remove_article("an item"), "==", "item"),
+    }) :));
+}
+void test_add_article () {
+    expect_function("add_article", testOb);
+
+    expect("articles are prepended", (: ({
+        assert(testOb->add_article(""), "==", ""),
+
+        assert(testOb->add_article("item"), "==", "an item"),
+        assert(testOb->add_article("item", 1), "==", "the item"),
+
+        assert(testOb->add_article("thing"), "==", "a thing"),
+        assert(testOb->add_article("thing", 1), "==", "the thing"),
     }) :));
 }
 
