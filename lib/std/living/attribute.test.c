@@ -13,6 +13,7 @@ void test_attributes () {
     expect_function("query_attributes", testOb);
     expect_function("query_attribute", testOb);
     expect_function("set_attribute", testOb);
+    expect_function("describe_attributes", testOb);
 
     expect("setting and querying attributes are handled", (: ({
         assert(testOb->query_attribute("build"), "==", UNDEFINED),
@@ -20,6 +21,7 @@ void test_attributes () {
         assert(testOb->query_attribute("eye"), "==", UNDEFINED),
         assert(testOb->query_attribute("hair"), "==", UNDEFINED),
         assert(testOb->query_attribute("height"), "==", UNDEFINED),
+        assert(testOb->describe_attributes(), "==", ""),
 
         testOb->set_attribute("build", "test build"),
         assert(testOb->query_attribute("build"), "==", "test build"),
@@ -35,6 +37,8 @@ void test_attributes () {
 
         testOb->set_attribute("height", "test height"),
         assert(testOb->query_attribute("height"), "==", "test height"),
+
+        assert(testOb->describe_attributes(), "==", "test build build, test complexion complexion, test eye eyes, test hair hair, and test height tall"),
     }) :));
 
     expect("setting invalid attributes is handled", (: ({
