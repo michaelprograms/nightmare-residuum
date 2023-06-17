@@ -22,8 +22,6 @@ Due to this design, the standard `this_player()` efun is ambigious into whether 
 
 Chaining off of `this_user()` is also possible.
 
-`this_user()->query_account()`
-
 `this_user()->query_character()`
 
 `this_user()->query_shell()`
