@@ -79,19 +79,10 @@ string query_character_short () {
 
     return short;
 }
-string query_character_long () {
-    string long = query_cap_name();
-
-    if (query_immortal()) long += " the immortal.";
-    else long += " the character.";
-
-    return long;
-}
 
 void set_name (string name) {
     living::set_name(name);
     set_short((: query_character_short :));
-    set_long((: query_character_long :));
     set_save_path(D_CHARACTER->query_save_path(query_key_name(), "character"));
 }
 

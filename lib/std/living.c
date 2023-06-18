@@ -38,6 +38,46 @@ void heart_beat () {
     handle_combat();
 }
 
+string query_living_long () {
+    string *attributes = ({ });
+    string str = "";
+
+    if (query_gender() != "neither" && query_gender() != "none") {
+        str = query_gender() + " ";
+    }
+    str += query_species();
+    str = query_cap_name() + " is " + add_article(str);
+
+    foreach (string key,string value in query_attributes()) {
+        if (key == "build") {
+            attributes += ({ add_article(value) + " build" });
+        }
+        if (key == "complexion") {
+            attributes += ({ add_article(value) + " complexion" });
+        }
+        if (key == "eye") {
+            attributes += ({ value + " eyes" });
+        }
+        if (key == "hair") {
+            attributes += ({ value + " hair" });
+        }
+        if (key == "height") {
+            attributes += ({ value + " units tall" });
+        }
+    }
+    if (sizeof(attributes)) {
+        str += " with " + conjunction(attributes);
+    }
+    str += ".";
+
+    return str;
+}
+
+void set_name (string name) {
+    object::set_name(name);
+    set_long((: query_living_long :));
+}
+
 varargs int do_command (string command, int debug) {
     string *split, action, input;
     string cmdPath;
