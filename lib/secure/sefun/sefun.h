@@ -48,6 +48,7 @@ string format_integer (int num);
 
 /* --- grammar --- */
 string remove_article (string str);
+varargs string add_article (string str, int definite);
 string cardinal (int n);
 string ordinal (int n);
 string pluralize (mixed single);
