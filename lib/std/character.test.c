@@ -56,7 +56,6 @@ void test_times () {
 void test_name () {
     expect_function("set_name", testOb);
     expect_function("query_character_short", testOb);
-    expect_function("query_character_long", testOb);
 
     expect("name handles character setup", (: ({
         assert(testOb->query_name(), "==", UNDEFINED),

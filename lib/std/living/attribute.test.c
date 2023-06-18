@@ -20,7 +20,7 @@ void test_attributes () {
         assert(testOb->query_attribute("eye"), "==", UNDEFINED),
         assert(testOb->query_attribute("hair"), "==", UNDEFINED),
         assert(testOb->query_attribute("height"), "==", UNDEFINED),
-        assert(testOb->describe_attributes(), "==", ""),
+        assert(testOb->query_attributes(), "==", ([ ])),
 
         testOb->set_attribute("build", "test build"),
         assert(testOb->query_attribute("build"), "==", "test build"),
