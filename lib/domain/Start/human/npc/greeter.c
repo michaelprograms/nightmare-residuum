@@ -14,19 +14,18 @@ void create () {
     set_species("synthetic");
     set_story_delay(5);
     set_story_lines(({
-        (: do_command("say Do not be alarmed. We are certain you have many questions for us.") :),
-        (: do_command("say The first of which is that we are Archaeologists, synthetic beings created by antecedants.") :),
-        (: do_command("say This facility uses a cloning process to repopulate your species and provide pre-programmed education to assist you.") :),
-        (: do_command("say Newborns of your species undergo implantation and knowledge assimilation without error.") :),
-        (: do_command("say However, because of intereference from chaotic elements of conflicts long ago, the process is sometimes incomplete, as in your case.") :),
-        (: do_command("say Because you are not limited by the intended programming, you are enabled to pursue greater capacities than others of your kind.") :),
+        (: do_command("say Do not be alarmed, this unit's designation is R-0111010.") :),
+        (: do_command("say Generations ago R-0111010's kind, the Custodians, discovered this facility.") :),
+        (: do_command("say We Custodians opted to preserve your species as part of our caretaker programming.") :),
+        (: do_command("say Your species has prospered and rebuilt a small civilization here.") :),
+        (: do_command("say However R-111010 urges you to proceed through this museum before adventuring into the world.") :),
     }));
 }
 
 void handle_receive_living_in_env (object living) {
     ::handle_receive_living_in_env(living);
     if (!living->is_character()) return;
-    do_command("say Greetings and salutations, young human. I am R-0111010.");
+    do_command("say Greetings, young human.");
     story_start(living);
 }
 

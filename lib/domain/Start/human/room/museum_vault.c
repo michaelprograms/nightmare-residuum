@@ -15,4 +15,7 @@ void create () {
        "chamber": "This chamber is a large, empty room with a vault entrance in the center of the floor.",
        ({ "archway", "hallway", }): "A hallway leading north and south is visible on the other side of an archway in the stone walls.",
     ]));
+    set_reset(([
+        HUMAN_NPC + "greeter.c": 1,
+    ]));
 }
