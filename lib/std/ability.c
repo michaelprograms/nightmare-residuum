@@ -209,55 +209,51 @@ int calculate_heal (object source, object target, string limb) {
 }
 
 int calculate_damage (object source, object target, string limb) {
-    int damage;
-    int sourceStat, targetStat;
-    int sourceSkill, targetSkill;
-    int spRatio, mpRatio;
-    int numDice;
+    int dice, damage, tmp;
 
     // base damage
-    damage = random(5 + source->query_level());
-    damage += random(source->query_stat("luck") * 5 / 100 + 1);
+    dice = max(({ 1, source->query_level() / 5 }));
+    damage += roll_die(dice, 6)[0];
 
-    foreach (string key,int value in __SkillPowers) {
+    dice = max(({ 1, random(source->query_stat("luck") + 1) / 10 }));
+    damage += roll_die(dice, 6)[0];
+
+    foreach (string key, int value in __SkillPowers) {
         switch (key) {
             case "psionic":
-                sourceStat = source->query_stat("intelligence");
-                mpRatio ++;
+                tmp = source->query_stat("intelligence");
                 break;
             case "ranged":
-                sourceStat = source->query_stat("agility");
-                spRatio ++;
+                tmp = source->query_stat("agility");
                 break;
             case "brawl": default:
-                sourceStat = source->query_stat("strength");
-                spRatio ++;
+                tmp = source->query_stat("strength");
                 break;
         }
         // stat damage
-        numDice = max(({ 1, sourceStat / 10 }));
-        damage += roll_die(numDice, 6)[0];
-
-        // vitals damage
-        if (spRatio) {
-            damage += random(to_int(source->query_sp() * 1.0 * spRatio / (spRatio + mpRatio)));
-        }
-        if (mpRatio) {
-            damage += random(to_int(source->query_mp() * 1.0 * mpRatio / (spRatio + mpRatio)));
-        }
+        dice = max(({ 1, tmp / 10 }));
+        damage += roll_die(dice, 6)[0];
 
         // skill damage & mitigations
-        sourceSkill = source->query_skill(key + " attack");
-        targetSkill = target->query_skill(key + " defense");
-        damage += (sourceSkill * value / 100) + random(sourceSkill * value / 100 + 1);
-        damage -= (targetSkill * value / 100) + random(targetSkill * value / 100 + 1);
+        tmp = source->query_skill(key + " attack") * value / 100;
+        dice = max(({ 1, random(tmp + 1) / 20 }));
+        damage += roll_die(dice, 6)[0];
+
+        tmp = target->query_skill(key + " defense") * value / 100;
+        dice = max(({ 1, random(tmp + 1) / 20 }));
+        damage -= roll_die(dice, 6)[0];
     }
 
     // apply target mitigations
-    targetStat = target->query_stat("endurance");
-    damage -= ((targetStat * 10 / 100) + random(targetStat * 10 / 100 + 1));
-    damage -= random(10 + target->query_level());
-    damage -= random(target->query_stat("luck") * 10 / 100 + 1);
+    dice = max(({ 1, target->query_level() / 5 }));
+    damage -= roll_die(dice, 6)[0];
+
+    dice = max(({ 1, target->query_stat("endurance") / 10 }));
+    damage -= roll_die(dice, 6)[0];
+
+    dice = max(({ 1, random(target->query_stat("luck") + 1) / 10 }));
+    damage -= roll_die(dice, 6)[0];
+
     damage -= target->query_limb_armor(limb);
     damage -= target->query_protection();
 
