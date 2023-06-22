@@ -49,7 +49,6 @@ mapping *query_combat_table (object target, int hit) {
 protected void handle_combat () {
     object target, *weapons;
     int min, max, hits;
-    mapping *table;
     int d100;
     float sum = 0;
 
@@ -93,13 +92,11 @@ protected void handle_combat () {
     for (int h = 0; h < hits; h ++) {
         if (!target) break;
 
-        table = query_combat_table(target, h);
-
         if (query_sp() > 0) {
             d100 = roll_die(1, 100)[0];
         }
         sum = 0;
-        foreach (mapping m in table) {
+        foreach (mapping m in query_combat_table(target, h)) {
             if (!m["value"]) continue;
             sum = min(({ 100.0, sum + m["value"], }));
             if (d100 <= sum) {
