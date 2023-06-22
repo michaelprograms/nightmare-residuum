@@ -213,6 +213,7 @@ int calculate_damage (object source, object target, string limb) {
     int sourceStat, targetStat;
     int sourceSkill, targetSkill;
     int spRatio, mpRatio;
+    int numDice;
 
     // base damage
     damage = random(5 + source->query_level());
@@ -234,13 +235,15 @@ int calculate_damage (object source, object target, string limb) {
                 break;
         }
         // stat damage
-        damage += (sourceStat * 50 / 100) + random(sourceStat * 50 / 100 + 1);
+        numDice = max(({ 1, sourceStat / 10 }));
+        damage += roll_die(numDice, 6)[0];
+
         // vitals damage
         if (spRatio) {
-            damage += random(to_int(source->query_sp() * 5.0 * spRatio / (spRatio + mpRatio)));
+            damage += random(to_int(source->query_sp() * 1.0 * spRatio / (spRatio + mpRatio)));
         }
         if (mpRatio) {
-            damage += random(to_int(source->query_mp() * 5.0 * mpRatio / (spRatio + mpRatio)));
+            damage += random(to_int(source->query_mp() * 1.0 * mpRatio / (spRatio + mpRatio)));
         }
 
         // skill damage & mitigations
