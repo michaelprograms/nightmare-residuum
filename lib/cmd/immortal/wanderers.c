@@ -9,6 +9,7 @@ void create () {
 void command (string input, mapping flags) {
     object *obs;
     string *items = ({ });
+    mapping b = query_border_charset();
 
     if (!input) {
         obs = filter(heart_beats(), (: $1 && $1->query_wander() :));
@@ -25,7 +26,7 @@ void command (string input, mapping flags) {
             ob->query_wander(),
             ob->query_wanders(),
             ob->query_next_wander(),
-            environment(ob) ? file_name(environment(ob)) : "No environment",
+            " " + b["bl"] + b["h"] + (environment(ob) ? file_name(environment(ob)) : "No environment"),
             "",
             "",
             "",
