@@ -24,7 +24,7 @@ void do_say_str (mixed args...) {
         case '?': verb = "ask"; break;
         case '!': verb = "exclaim"; break;
         default:
-            if (po->query_species() == "synthetic") verb = "synthesize";
+            if (po->query_species() == "custodian") verb = "synthesize";
             else verb = "say";
     }
     who = environment(po)->query_living_contents() - ({ po });

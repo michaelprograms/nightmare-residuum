@@ -121,13 +121,13 @@ void test_account_characters () {
         assert(testOb->query_character_names(), "==", ({ })),
         assert(testOb->query_playable_characters(), "==", 0),
 
-        testOb->add_character("Tester", "tester", "synthetic"),
+        testOb->add_character("Tester", "tester", "custodian"),
 
         assert(testOb->query_playable_characters(), "==", 1),
         assert(testOb->query_character_names(), "==", ({ "tester" })),
         assert(testOb->query_character_by_name("tester")["name"], "==", "Tester"),
         assert(testOb->query_character_by_name("tester")["deleted"], "==", 0),
-        assert(testOb->query_character_by_name("tester")["species"], "==", "synthetic"),
+        assert(testOb->query_character_by_name("tester")["species"], "==", "custodian"),
         assert(testOb->query_character_by_name("tester")["last_action"], "==", 0),
         assert(testOb->query_character_by_name("tester")["last_location"], "==", 0),
         assert(testOb->query_character_by_name("tester")["level"], "==", 0),
