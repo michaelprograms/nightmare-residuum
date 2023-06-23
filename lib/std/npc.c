@@ -3,7 +3,7 @@ inherit STD_LIVING;
 nosave private string *__AbilityList;
 nosave private int __AbilityChance;
 nosave private int __Aggressive;
-nosave private int __Wander = 0, __Wanders = 0, __NextWander = 0;
+nosave private int __Wander = 0, __Wanders = 0, __NextWander = 0, __Wandering = 0;
 
 int is_npc () { return 1; }
 
@@ -102,7 +102,7 @@ void handle_receive_living_in_env (object living) {
         }
 
         // reset wander count
-        if (__Wander) {
+        if (__Wander && !__Wandering) {
             __Wanders = 0;
         }
     }
@@ -140,7 +140,11 @@ void handle_wander () {
         return;
     }
 
+    __Wandering = 1;
     do_command("go " + element_of(exits));
+    call_out_walltime(function () {
+        __Wandering = 0;
+    }, 0);
 }
 
 void attempt_wander () {
