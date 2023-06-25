@@ -19,4 +19,7 @@ void create () {
         "hallway": "It leads away from the lobby and turns.",
         ({ "archway", "chamber", }): "A chamber of some sort off of the hallway through an archway.",
     ]));
+    set_reset(([
+        HUMAN_NPC + "museum_custodian.c": 1,
+    ]));
 }
