@@ -3,6 +3,7 @@ inherit M_PARENT;
 inherit M_PROPERTY;
 inherit M_SAVE;
 
+inherit "/std/character/achievement.c";
 inherit "/std/character/autoload.c";
 inherit "/std/character/channel.c";
 inherit "/std/character/history.c";
