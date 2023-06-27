@@ -4,7 +4,7 @@ inherit STD_ROOM;
 
 void create () {
     ::create();
-    set_properties(([ "indoors": 1, ]));
+    set_properties(([ "indoors": 1, "no attack": 1, ]));
     set_short("a historical building");
     set_long("The western hallway of a building with high ceilings and polished floors. The walls are made of stone blocks and covered with tapestries. The hallway leads further west into the building or east to the lobby.");
     set_exits(([

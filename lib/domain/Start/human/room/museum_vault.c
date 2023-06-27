@@ -4,7 +4,7 @@ inherit STD_ROOM;
 
 void create () {
     ::create();
-    set_properties(([ "indoors": 1, ]));
+    set_properties(([ "indoors": 1, "no attack": 1, ]));
     set_short("a chamber inside a building");
     set_long("Inside of a room with bright lights shining down. The concrete floor looks old here and unpolished, with a circular vault entrance located in the center of the chamber. The walls are made of stone blocks and covered with tapestries. An archway leads out of the chamber into a hallway to the east.");
     set_exits(([
