@@ -21,3 +21,9 @@ int query_achievement (string str) {
 string *query_achievements () {
     return keys(__Achievements);
 }
+
+void remove_achievement (string str) {
+    if (!mapp(__Achievements)) __Achievements = ([ ]);
+
+    map_delete(__Achievements, str);
+}

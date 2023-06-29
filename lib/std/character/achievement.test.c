@@ -12,6 +12,7 @@ void test_achievements () {
     expect_function("set_achievement", testOb);
     expect_function("query_achievement", testOb);
     expect_function("query_achievements", testOb);
+    expect_function("remove_achievement", testOb);
 
     expect("achievements are settable and queryable", (: ({
         assert(testOb->query_achievements(), "==", ({ })),
@@ -27,5 +28,8 @@ void test_achievements () {
         assert(testOb->query_achievement("test2"), "==", 1),
 
         assert(testOb->query_achievements(), "==", ({ "test2", "test1", })),
+
+        testOb->remove_achievement("test2"),
+        assert(testOb->query_achievements(), "==", ({ "test1", })),
     }) :));
 }
