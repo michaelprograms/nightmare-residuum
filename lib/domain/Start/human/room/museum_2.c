@@ -16,7 +16,9 @@ void create () {
         object tc = this_character();
         if (!tc->query_achievement("human_museum")) {
             ob->do_command("say " + tc->query_cap_name() + ", one as young as yourself should really look through the rest of this museum. You are nearly done.");
+            return 0;
         }
+        return 1;
     });
     set_looks(([
         ({ "building", "ceiling", "walls" }): "A building of large proportions. The lobby is a large room with high ceilings and distant walls.",
