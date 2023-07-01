@@ -46,10 +46,10 @@ string sanitize_path (string path) {
         string tmp = parts[i];
         if (tmp == "..") {
             if (i) {
-                parts[i-1..i] = ({});
+                parts[i-1..i] = ({ });
                 i --;
             } else {
-                parts[i..i] = ({});
+                parts[i..i] = ({ });
             }
             continue;
         }
@@ -113,7 +113,7 @@ string *wild_card (string path, string relative_to) {
     string cwd, *split, *match;
 
     if (!path || sizeof(path) < 1) {
-        return ({});
+        return ({ });
     }
     cwd = absolute_path(path, relative_to);
     if (cwd == "/") {
@@ -125,7 +125,7 @@ string *wild_card (string path, string relative_to) {
     }
     match = get_dir(cwd);
     if (!match) {
-        match = ({});
+        match = ({ });
     } else {
         match -= ({ "." });
         match -= ({ ".." });

@@ -1,7 +1,7 @@
 varargs string format_page (string *items, mixed columns, int pad, int center, string ansi) {
     int totalWidth, width, numItems, numColumns, remainder, ratioSum;
     int i, j, diff;
-    string *rows = ({}), row, tmp, *wrapped, format;
+    string *rows = ({ }), row, tmp, *wrapped, format;
 
     if (!arrayp(items) || !sizeof(items)) {
         error("Bad argument 1 to format->format_page");
@@ -105,7 +105,7 @@ string format_syntax (string text) {
 }
 
 string format_exit_brief (string dir) {
-    string *result = ({});
+    string *result = ({ });
     if (!stringp(dir)) error("Bad argument 1 to format->format_exit_brief");
     foreach (string part in explode(dir, " ")) {
         switch (part) {
@@ -126,7 +126,7 @@ string format_exit_brief (string dir) {
     return implode(result, " ");
 }
 string format_exit_verbose (string dir) {
-    string *result = ({});
+    string *result = ({ });
     if (!stringp(dir)) error("Bad argument 1 to format->format_exit_verbose");
     foreach (string part in explode(dir, " ")) {
         switch (part) {
@@ -147,7 +147,7 @@ string format_exit_verbose (string dir) {
     return implode(result, " ");
 }
 string format_exit_reverse (string dir) {
-    string *result = ({});
+    string *result = ({ });
     if (!stringp(dir)) error("Bad argument 1 to format->format_exit_reverse");
     foreach (string part in explode(dir, " ")) {
         switch (part) {

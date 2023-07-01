@@ -24,9 +24,9 @@ void test_exits () {
     expect_function("remove_exit", testOb);
 
     expect("exits handles adding and removing", (: ({
-        assert(testOb->query_exits(), "==", ([])),
-        assert(testOb->query_exit_directions(), "==", ({})),
-        assert(testOb->query_exit_destinations(), "==", ({})),
+        assert(testOb->query_exits(), "==", ([ ])),
+        assert(testOb->query_exit_directions(), "==", ({ })),
+        assert(testOb->query_exit_destinations(), "==", ({ })),
 
         testOb->set_exit("north", "/northroom.c"),
         assert(testOb->query_exits(), "==", ([ "north": ([ "room": "/northroom.c" ]) ])),

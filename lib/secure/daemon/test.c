@@ -137,7 +137,7 @@ void display_results (mapping results, int timeStart) {
 
     if (sizeof(results["failLog"]) > 0) {
         write("Failing expects:\n" + (arrayp(results["failLog"]) ? implode(results["failLog"], "\n") : results["failLog"]) + "\n\n");
-        results["failLog"] = ({});
+        results["failLog"] = ({ });
     }
 
     if (sizeof(__TestsMissing)) {
@@ -162,7 +162,7 @@ void process () {
 
 varargs void update_test_data (string path, string ignore) {
     mixed *dir = get_dir(path, -1); // Assumes path has trailing / for dirs
-    string *codeFiles = ({}), tmp;
+    string *codeFiles = ({ }), tmp;
 
     foreach (mixed *file in dir) {
         if (path + file[0] == ignore) continue;

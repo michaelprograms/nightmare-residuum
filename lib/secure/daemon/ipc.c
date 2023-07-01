@@ -13,7 +13,7 @@ private void read_socket (int s, mixed message);
 private void listen_socket (int fd);
 private void close_socket (int fd);
 
-nosave private int *__Clients = ({});
+nosave private int *__Clients = ({ });
 nosave private int __Socket;
 
 // -----------------------------------------------------------------------------

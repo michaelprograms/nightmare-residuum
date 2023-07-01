@@ -2,7 +2,7 @@ inherit STD_ROOM;
 
 
 nosave private string __Layout;
-nosave private mapping __LayoutMap = ([]);
+nosave private mapping __LayoutMap = ([ ]);
 nosave private int __MaxX = -1, __MaxY = -1;
 nosave private string __Inheritable;
 
@@ -25,7 +25,7 @@ void set_layout (string layout) {
                 __MaxX = strlen(lines[y]) - 1;
             }
             if (undefinedp(__LayoutMap[x])) {
-                __LayoutMap[x] = ([]);
+                __LayoutMap[x] = ([ ]);
             }
             if (undefinedp(__LayoutMap[x][y])) {
                 __LayoutMap[x][y] = 0;
@@ -38,7 +38,7 @@ void set_layout (string layout) {
 }
 void set_layout_file (string filename) {
     string *lines;
-    string *layout = ({});
+    string *layout = ({ });
 
     if (file_length(filename) < 1) {
         error("Bad argument 1 to room.virtual->set_layout_file");
@@ -138,7 +138,7 @@ varargs string *query_map (string mode) {
     thisx = to_int(strx);
     thisy = to_int(stry);
 
-    lines = ({});
+    lines = ({ });
 
     if (undefinedp(mode) || mode == "room") {
         ax = thisx - 2;
@@ -153,7 +153,7 @@ varargs string *query_map (string mode) {
     }
 
     for (int y = ay; y <= by; y ++) {
-        string *rooms = ({});
+        string *rooms = ({ });
         for (int x = ax; x <= bx; x ++) {
             if (__LayoutMap[x] && __LayoutMap[x][y]) {
                 string center = (thisx == x && thisy == y ? "X" : " ");

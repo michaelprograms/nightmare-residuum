@@ -219,7 +219,7 @@ void error_handler (mapping e, int caught) {
 }
 
 private string *read_file_disabled_warnings (string file) {
-    string *lines = file_size(file) > 0 ? explode(read_file(file), "\n") : ({});
+    string *lines = file_size(file) > 0 ? explode(read_file(file), "\n") : ({ });
     lines = filter(lines, (: regexp($1,"// disable warning:") :));
     return map_array(lines, (: $1[strsrch($1, ": ")+2..<1] :));
 }

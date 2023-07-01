@@ -77,7 +77,7 @@ void test_identify () {
     }) :));
 
     expect("identify handles map", (: ({
-        assert(testOb->identify(([])), "==", "([ ])"),
+        assert(testOb->identify(([ ])), "==", "([ ])"),
         assert(testOb->identify((["key1":"value1","key2":"value2",])), "==", "([ \"key1\": \"value1\", \"key2\": \"value2\" ])"),
         assert(testOb->identify(([0:1,1:2,])), "==", "([ 0: 1, 1: 2 ])"),
         assert(testOb->identify($(tMap)), "==", "([ \"test1\": \"abc\", \"test2\": 123 ])"),

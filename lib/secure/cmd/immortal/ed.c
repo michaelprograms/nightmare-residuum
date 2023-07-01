@@ -6,7 +6,7 @@ void create () {
     set_help_text("The ed command is used to enter edit mode on a file.");
 }
 
-nosave private mapping __Locks = ([]);
+nosave private mapping __Locks = ([ ]);
 nomask private void unlock (string file) {
     map_delete(__Locks, file);
 }

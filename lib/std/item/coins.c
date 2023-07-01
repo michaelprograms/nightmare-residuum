@@ -36,7 +36,7 @@ void check_empty () {
 }
 
 void handle_received (object env) {
-    string *list = ({});
+    string *list = ({ });
 
     ::handle_received(env);
 

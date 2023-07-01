@@ -109,7 +109,7 @@ void command (string input, mapping flags) {
             l->handle_move(input);
         }
         keep->describe_environment();
-        keep = ({});
+        keep = ({ });
         if (file_size(test) > 0) {
             testStart = perf_counter_ns();
             D_TEST->process_file(test, (: done :), 1);

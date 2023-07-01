@@ -55,7 +55,7 @@ varargs string time_ago (int timestamp, int granularity) {
 
 string time_from_seconds (int seconds) {
     int s = seconds, w, d, h, m;
-    string *results = ({});
+    string *results = ({ });
 
     w = s / WEEK_IN_SECS;
     s = s - (w * WEEK_IN_SECS);

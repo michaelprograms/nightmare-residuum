@@ -1,5 +1,5 @@
-private mapping __Variables = ([]);
-nosave private mapping __VariableHooks = ([]);
+private mapping __Variables = ([ ]);
+nosave private mapping __VariableHooks = ([ ]);
 
 mixed query_variable (string v) {
     return __Variables[v];
@@ -30,9 +30,9 @@ void set_variable_hook (string v, function fn) {
 
 void create () {
     if (!__Variables) {
-        __Variables = ([]);
+        __Variables = ([ ]);
     }
     if (!__VariableHooks) {
-        __VariableHooks = ([]);
+        __VariableHooks = ([ ]);
     }
 }

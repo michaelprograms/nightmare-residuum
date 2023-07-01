@@ -21,7 +21,7 @@ void test_looks () {
     expect_function("remove_look", testOb);
 
     expect("look handles setting, querying, and removing", (: ({
-        assert(testOb->query_looks(), "==", ({})),
+        assert(testOb->query_looks(), "==", ({ })),
         testOb->set_look("test", "Test."),
         assert(testOb->query_looks(), "==", ({ "test" })),
 

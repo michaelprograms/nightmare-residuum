@@ -9,7 +9,7 @@ void create () {
 
 void command (string input, mapping flags) {
     object tc = this_character(), target = tc;
-    string subtitle, *body = ({}), *list;
+    string subtitle, *body = ({ }), *list;
 
     if (input && tc->query_immortal()) {
         if (find_character(input)) target = find_character(input);

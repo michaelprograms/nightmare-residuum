@@ -13,7 +13,7 @@
 
 #define TEST_IGNORE_DEFAULTS ({ "before_all_tests", "before_each_test", "after_each_test", "after_all_tests", "test_order", "test_ignore", "clone_object", "execute_test", "create", "init", "reset", "heart_beat", })
 
-nosave protected mixed UNDEFINED = (([])[0]); // equivalent of UNDEFINED
+nosave protected mixed UNDEFINED = (([ ])[0]); // equivalent of UNDEFINED
 
 /* -----  ----- */
 

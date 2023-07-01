@@ -54,7 +54,7 @@ void set_level (int l) {
 protected void update_limbs () {
     mapping newLimbs = D_SPECIES->setup_body(this_object());
 
-    foreach (string limb,mapping value in newLimbs || ([])) {
+    foreach (string limb,mapping value in newLimbs || ([ ])) {
         if (__Limbs[limb]) {
             value["damage"] = __Limbs[limb]["damage"];
             value["status"] = __Limbs[limb]["status"];
@@ -192,7 +192,7 @@ int query_limb_armor (string limb) {
 
     if (!mapp(__Worn)) __Worn = ([ ]);
 
-    foreach (object ob in __Worn[limb] || ({})) {
+    foreach (object ob in __Worn[limb] || ({ })) {
         ac += ob->query_ac();
     }
 
@@ -287,7 +287,7 @@ varargs mixed handle_wear (object ob) {
 }
 varargs mixed handle_unwear (object ob) {
     string limbConj;
-    if (!mapp(__Worn)) __Worn = ([]);
+    if (!mapp(__Worn)) __Worn = ([ ]);
 
     if (!ob->query_worn()) return "You are not wearing " + ob->query_name() + ".";
 

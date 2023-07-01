@@ -121,7 +121,7 @@ string query_room_map_format () {
 mapping query_room_exits_picture () {
     mapping exits = query_exits();
     mapping b = query_border_charset();
-    mapping picture = ([]);
+    mapping picture = ([ ]);
     picture["nw"] = exits["northwest"] ? b["dd"] : " ";
     picture["n"]  = exits["north"]     ? b["v"]  : " ";
     picture["u"]  = exits["up"]        ? "+"  : " ";

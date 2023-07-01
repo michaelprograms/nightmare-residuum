@@ -35,7 +35,7 @@ void test_id () {
         assert(testOb->query_name(), "==", UNDEFINED),
         assert(testOb->query_cap_name(), "==", UNDEFINED),
         assert(testOb->query_key_name(), "==", UNDEFINED),
-        assert(testOb->query_adjective(), "==", ({})),
+        assert(testOb->query_adjective(), "==", ({ })),
         assert(implode(testOb->query_plural(), ","), "==", ""),
         assert(testOb->set_name("Testee"), "==", 0),
         assert(testOb->query_name(), "==", "testee"),

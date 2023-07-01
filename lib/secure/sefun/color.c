@@ -173,7 +173,7 @@ string apply_gradient (string text, string *gradient) {
 
     line = explode(text, "");
 
-    if (sizeof(text) > sizeof(gradient)) error("Bad arguments to color->apply_gradient: invalid sizes "+sizeof(text)+" vs "+sizeof(gradient || ({})));
+    if (sizeof(text) > sizeof(gradient)) error("Bad arguments to color->apply_gradient: invalid sizes "+sizeof(text)+" vs "+sizeof(gradient || ({ })));
 
     for (i = 0, l = sizeof(line); i < l; i ++) {
         result += "\e[38;2;"+gradient[i]+"m" + line[i];

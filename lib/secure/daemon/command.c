@@ -1,9 +1,9 @@
 inherit M_CLEAN;
 
-nosave private string *__Paths = ({});
-nosave private mapping __Abilities = ([]);
-nosave private mapping __Commands = ([]);
-nosave private mapping __Verbs = ([]);
+nosave private string *__Paths = ({ });
+nosave private mapping __Abilities = ([ ]);
+nosave private mapping __Commands = ([ ]);
+nosave private mapping __Verbs = ([ ]);
 
 string *query_paths () { return __Paths; }
 mapping query_debug_abiltiies () { return __Abilities; }
@@ -14,10 +14,10 @@ void scan_all ();
 
 void create () {
     set_no_clean(1);
-    __Paths = ({});
-    __Abilities = ([]);
-    __Commands = ([]);
-    __Verbs = ([]);
+    __Paths = ({ });
+    __Abilities = ([ ]);
+    __Commands = ([ ]);
+    __Verbs = ([ ]);
     scan_all();
 }
 
@@ -27,7 +27,7 @@ varargs string *query_abilities (string str) {
 
     if (!str) return keys(__Abilities);
     i = sizeof(abilities = keys(__Abilities));
-    tmp = ({});
+    tmp = ({ });
     while (i--) {
         if (member_array(str, __Abilities[abilities[i]]) != -1) {
             tmp += ({ abilities[i] });
@@ -41,7 +41,7 @@ varargs string *query_commands (string str) {
 
     if (!str) return keys(__Commands);
     i = sizeof(cmds = keys(__Commands));
-    tmp = ({});
+    tmp = ({ });
     while (i--) {
         if (member_array(str, __Commands[cmds[i]]) != -1) {
             tmp += ({ cmds[i] });
@@ -55,7 +55,7 @@ varargs string *query_verbs (string str) {
 
     if (!str) return keys(__Verbs);
     i = sizeof(verbs = keys(__Verbs));
-    tmp = ({});
+    tmp = ({ });
     while (i--) {
         if (member_array(str, __Verbs[verbs[i]]) != -1) {
             tmp += ({ verbs[i] });
