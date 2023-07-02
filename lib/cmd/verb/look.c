@@ -71,11 +71,12 @@ mixed can_look_obj (string str, string verb) {
 varargs mixed do_look_at_obj (object ob, mixed arg) {
     object po = previous_object();
     string long = replace_string(ob->query_long(), "%^DEFAULT%^", "%^RESET%^");
+    string type = sizeof(long) > __LARGEST_PRINTABLE_STRING__ / 2 ? "pager" : "action";
 
     message("action", "You look over " + ob->query_short() + "...", po);
-    message("action", long, po);
+    message(type, long, po);
     if (long = ob->query_long_footer()) {
-        message("room", long, po);
+        message("action", long, po);
     }
     message("action", po->query_cap_name() + " looks over " + ob->query_name() + ".", environment(ob), po);
 
