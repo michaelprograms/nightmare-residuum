@@ -101,7 +101,11 @@ void receive_message (string type, string message) {
         receive(wrap(message));
     } else {
         message = format_message_color(type, message) + "\n";
-        receive(wrap(message));
+        if (sizeof(message) > __LARGEST_PRINTABLE_STRING__ / 2) {
+            handle_pager(message);
+        } else {
+            receive(wrap(message));
+        }
     }
 }
 
