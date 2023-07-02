@@ -99,13 +99,11 @@ void receive_message (string type, string message) {
         receive(wrap(message, 0, 0));
     } else if (type == "prompt") {
         receive(wrap(message));
+    } else if (type == "pager" || sizeof(message) > __LARGEST_PRINTABLE_STRING__ / 2) {
+        handle_pager(message);
     } else {
         message = format_message_color(type, message) + "\n";
-        if (sizeof(message) > __LARGEST_PRINTABLE_STRING__ / 2) {
-            handle_pager(message);
-        } else {
-            receive(wrap(message));
-        }
+        receive(wrap(message));
     }
 }
 
