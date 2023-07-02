@@ -15,6 +15,6 @@ void create () {
         ({ "building", "ceiling", "walls" }): "A building of large proportions. This hallway is a large room with high ceilings and distant walls.",
         "floor": "The floor is a polished white stone in large blocks.",
         "lobby": "The entrance to the building.",
-        "hallway": "It leads away from the lobby and turns.",
+        "hallway": "It leads away and also towards the lobby of the building.",
     ]));
 }
