@@ -30,7 +30,7 @@ nomask void logon_banner () {
     }
 }
 
-/* --- interactive apply --- */
+/* ----- interactive apply ----- */
 
 nomask void logon () {
     __Terminal["ip"] = query_ip_number();
@@ -107,7 +107,7 @@ void receive_message (string type, string message) {
     }
 }
 
-/* --- interactive non-apply */
+/* ----- interactive non-apply ----- */
 
 mixed query_terminal (string key) {
     return __Terminal[key];
