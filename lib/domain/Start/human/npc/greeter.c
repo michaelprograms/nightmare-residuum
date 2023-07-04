@@ -2,7 +2,8 @@ inherit STD_NPC;
 inherit M_STORY;
 
 void story_action_final (object character) {
-    do_command("say Your destiny is your own, " + character->query_cap_name() + ".");
+    do_command("say R-111010 urges you to proceed through this museum before adventuring into the world.");
+    character->set_property("human_museum", "");
 }
 
 void create () {
@@ -18,7 +19,6 @@ void create () {
         (: do_command("say Generations ago R-0111010's kind, the Custodians, discovered this facility.") :),
         (: do_command("say We Custodians opted to preserve your species as part of our caretaker programming.") :),
         (: do_command("say Your species has prospered and rebuilt a small civilization here.") :),
-        (: do_command("say However R-111010 urges you to proceed through this museum before adventuring into the world.") :),
     }));
 }
 
