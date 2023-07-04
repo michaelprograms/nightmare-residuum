@@ -77,7 +77,7 @@ varargs mixed do_look_at_obj (object ob, mixed arg) {
     message("action", "You look over " + ob->query_short() + "...", po);
     message(type, long, po);
     if (long = ob->query_long_footer()) {
-        message("action", long, po);
+        message("action", "\n" + long, po);
     }
     message("action", po->query_cap_name() + " looks over " + ob->query_name() + ".", environment(ob), po);
 
