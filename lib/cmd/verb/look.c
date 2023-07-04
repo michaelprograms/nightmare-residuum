@@ -68,6 +68,12 @@ varargs mixed do_look_at_obj (object ob, mixed arg) {
     string long = replace_string(ob->query_long(), "%^DEFAULT%^", "%^RESET%^");
     string type = sizeof(long) > __LARGEST_PRINTABLE_STRING__ / 2 ? "pager" : "action";
 
+    // force pager mode
+    if (strsrch(long, "#!PAGER!#") == 0) {
+        long = long[9..];
+        type = "pager";
+    }
+
     message("action", "You look over " + ob->query_short() + "...", po);
     message(type, long, po);
     if (long = ob->query_long_footer()) {
