@@ -43,12 +43,7 @@ void do_look_at_str (mixed args...) {
     if (!desc) {
         message("action", "You do not see that here.", po);
     } else {
-        string type = "action";
-        if (regexp(desc, "\n") && filter(map(explode(desc, "\n"), (: sizeof($1) :)), (: $1 > 80 :))) {
-            type = "system";
-            desc += "\n";
-        }
-        message(type, desc, po);
+        message("action", desc, po);
         message("action", po->query_cap_name() + " looks over the " + str + ".", env, po);
     }
 }
