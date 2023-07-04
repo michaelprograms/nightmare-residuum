@@ -14,4 +14,7 @@ void create () {
     set_looks(([
 
     ]));
+    set_reset(([
+        HUMAN_ITEM + "sculpture_1.c": 1,
+    ]));
 }
