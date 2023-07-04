@@ -21,7 +21,7 @@ mixed query_property (string key) {
 
 mixed set_property (string key, mixed value) {
     if (!stringp(key) || key == "") error("Bad argument 1 to property->set_property");
-    if (undefinedp(value) || value == "") error("Bad argument 2 to property->set_property");
+    if (undefinedp(value)) error("Bad argument 2 to property->set_property");
     if (arrayp(value) || mapp(value)) error("Bad argument 2 to property->set_property");
     if (!mapp(__Properties)) __Properties = ([ ]);
 

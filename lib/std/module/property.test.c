@@ -29,6 +29,9 @@ void test_property_single () {
         assert(testOb->set_property("test_key2", to_float(123)), "==", to_float(123)),
         assert(testOb->query_property("test_key2"), "==", to_float(123)),
 
+        assert(testOb->set_property("test_key4", ""), "==", ""),
+        assert(testOb->query_property("test_key4"), "==", ""),
+
         assert(testOb->add_property("test_key3", 10), "==", 10),
         assert(testOb->query_property("test_key3"), "==", 10),
         assert(testOb->add_property("test_key3", 1), "==", 11),
