@@ -24,10 +24,8 @@ int query_immortal () {
 }
 void set_immortal (int i) {
     __Immortal = i;
-    if (__Immortal) {
-        if (file_size("/realm/" + query_key_name() + "/") == -1) {
-            mkdir("/realm/" + query_key_name() + "/");
-        }
+    if (__Immortal && file_size("/realm/" + query_key_name() + "/") == -1) {
+        mkdir("/realm/" + query_key_name() + "/");
     }
 }
 
