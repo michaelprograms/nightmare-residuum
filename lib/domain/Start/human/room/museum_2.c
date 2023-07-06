@@ -11,11 +11,10 @@ void create () {
         "north": HUMAN_ROOM + "museum_2_n1.c",
         "west": HUMAN_ROOM + "museum_2_w1.c",
     ]));
-    set_exit("down", HUMAN_ROOM + "museum_1.c", function() {
+    set_exit("down", HUMAN_ROOM + "museum_1.c", function(object po, string dir) {
         object ob = present("synthetic creature");
-        object tc = this_character();
-        if (!tc->query_achievement("human_museum")) {
-            ob->do_command("say " + tc->query_cap_name() + ", one as young as yourself should really look through the rest of this museum. You are nearly done.");
+        if (po->is_character() && !po->query_achievement("human_museum")) {
+            ob->do_command("say " + po->query_cap_name() + ", one as young as yourself should really look through the rest of this museum. You are nearly done.");
             return 0;
         }
         return 1;
