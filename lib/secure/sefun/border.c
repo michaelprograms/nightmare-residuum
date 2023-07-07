@@ -125,10 +125,9 @@ mapping query_border_charset () {
 // https://en.wikipedia.org/wiki/Box_Drawing
 //
 // mapping data = ([
-// /*
-//     "title": "TITLE",
-//     "subtitle": "Subtitle",
-//     "ansi": /* 0 || undefined */,
+//     "title": "TITLE" || UNDEFINED,
+//     "subtitle": "Subtitle" || UNDEFINED,
+//     "ansi": 0 || UNDEFINED,
 //     "header": ({
 //         ([
 //             "header": ({ /* array of strings */ }),
@@ -136,7 +135,7 @@ mapping query_border_charset () {
 //             "columns": 2 || ({ /* array of integer ratios */ }),
 //             "align": "left || center",
 //         ]),
-//     }),
+//     }) || UNDEFINED,
 //     "body": ({
 //         ([
 //             "header": ({ /* array of strings */ }),
@@ -144,7 +143,7 @@ mapping query_border_charset () {
 //             "columns": 2 || ({ /* array of integer ratios */ }),
 //             "align": "left || center",
 //         ]),
-//     }),
+//     }) || UNDEFINED,
 //     "footer": ({
 //         ([
 //             "header": ({ /* array of strings */ }),
@@ -152,8 +151,7 @@ mapping query_border_charset () {
 //             "columns": 2 || ({ /* array of integer ratios */ }),
 //             "align": "left || center",
 //         ]),
-//     }),
-// */
+//     }) || UNDEFINED,
 // ]);
 private string *format_border_item (mapping item, int width, string ansi, string left, string right) {
     string *lines = ({ }), line = "", format;
