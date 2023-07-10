@@ -84,6 +84,8 @@ void command (string input, mapping flags) {
         "body": ([
             "items": ({
                 "Test test test test test test test test test test test test test test test.",
+                "%^UNDERLINE%^Test test test test test test test test test test test test test test test.%^RESET%^",
+                "%^CYAN%^Test test test test test test test test test test test test test test test.%^RESET%^",
                 "",
                 "Test. %^CYAN%^<test1>%^RESET%^" + format_syntax("<test2>"),
             }),
