@@ -179,13 +179,12 @@ private string *format_border_item (mapping item, int width, string ansi, string
 
     return lines;
 }
-string *format_border (mapping data) {
+string *format_border (mapping data, mapping b) {
     string *lines = ({ }), line;
     int width, screenreader;
     string ansi;
     string *colors, *colors2;
     mixed *borderColors;
-    mapping b; // charset for current border
     int headerStart, headerEnd, footerLine;
     int i, l;
     int fTitle = !!(!undefinedp(data["title"]) && data["title"]);
@@ -197,7 +196,6 @@ string *format_border (mapping data) {
 
     string radius = "r";
 
-    b = query_border_charset();
     width = to_int(SEFUN->query_account_setting("width"));
     screenreader = SEFUN->query_account_setting("screenreader") == "on";
 
@@ -382,7 +380,9 @@ string *format_border (mapping data) {
 }
 
 void border (mapping data) {
-    SEFUN->this_user()->handle_pager(format_border(data));
+    mapping b = query_border_charset();
+
+    SEFUN->this_user()->handle_pager(format_border(data, b));
 }
 
 private varargs string *format_tree (string key, mapping value, mapping b, int indent, int index, int maxIndex, mapping prefix) {
