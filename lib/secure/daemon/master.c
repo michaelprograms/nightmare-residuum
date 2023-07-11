@@ -376,13 +376,15 @@ int valid_socket (object caller, string fn, mixed *info) {
 // This apply is called for each of the read efuns
 int valid_read (string file, mixed caller, string fn) {
     int valid = 0;
-    file = sanitize_path(file);
+    if (stringp(file) && sizeof(file)) {
+        file = sanitize_path(file);
 
-    if (!(valid = regexp(base_name(caller), "^/secure/daemon/[master|access]"))) {
-        valid = D_ACCESS->query_allowed(caller, fn, file, "read");
-    }
-    if (!valid && !regexp(base_name(previous_object()), "\\.test$")) {
-        debug_message(ctime()+" "+base_name(caller)+" denied read ("+fn+") to "+file);
+        if (!(valid = regexp(base_name(caller), "^/secure/daemon/[master|access]"))) {
+            valid = D_ACCESS->query_allowed(caller, fn, file, "read");
+        }
+        if (!valid && !regexp(base_name(previous_object()), "\\.test$")) {
+            debug_message(ctime()+" "+base_name(caller)+" denied read ("+fn+") to "+file);
+        }
     }
     return valid;
 }
