@@ -16,7 +16,7 @@ mixed reduce (mixed *arr, function fn, mixed result);
 
 /* --- border --- */
 mapping query_border_charset ();
-string *format_border (mapping data, mapping b);
+string *format_border (mapping data, mapping b, int width, string ansi);
 void border (mapping data);
 string *tree (mapping value);
 

@@ -108,7 +108,7 @@ mapping query_border_charset () {
         type = "screenreader";
     } else {
         if (this_user()) {
-            switch (this_user()->query_terminal("type")) {
+            switch (SEFUN->this_user()->query_terminal("type")) {
                 case "cmud": case "zmud":
                     type = "US-ASCII";
                     break;
@@ -127,7 +127,7 @@ mapping query_border_charset () {
 // mapping data = ([
 //     "title": "TITLE" || UNDEFINED,
 //     "subtitle": "Subtitle" || UNDEFINED,
-//     "ansi": 0 || UNDEFINED,
+//     "ansi": 1 || UNDEFINED,
 //     "header": ({
 //         ([
 //             "header": ({ /* array of strings */ }),
@@ -179,10 +179,8 @@ private string *format_border_item (mapping item, int width, string ansi, string
 
     return lines;
 }
-string *format_border (mapping data, mapping b) {
+string *format_border (mapping data, mapping b, int width, string ansi) {
     string *lines = ({ }), line;
-    int width, screenreader;
-    string ansi;
     string *colors, *colors2;
     mixed *borderColors;
     int headerStart, headerEnd, footerLine;
@@ -196,9 +194,6 @@ string *format_border (mapping data, mapping b) {
 
     string radius = "r";
 
-    width = to_int(SEFUN->query_account_setting("width"));
-    screenreader = SEFUN->query_account_setting("screenreader") == "on";
-
     if (fHeader && mapp(data["header"])) {
         data["header"] = ({ data["header"] });
     }
@@ -209,9 +204,6 @@ string *format_border (mapping data, mapping b) {
         data["footer"] = ({ data["footer"] });
     }
 
-    if (undefinedp(data["ansi"]) && SEFUN->query_account_setting("ansi") == "on") {
-        ansi = this_user()->query_terminal_color();
-    }
     if (ansi && arrayp(data["borderColors"])) {
         borderColors = data["borderColors"];
         colors = SEFUN->color_gradient(borderColors[0..1]..., width);
@@ -268,10 +260,10 @@ string *format_border (mapping data, mapping b) {
         line += (fHeader ? b["v"] : " ") + b["v"];
         if (ansi == "256") {
             line = SEFUN->apply_gradient(line[0..fHeader], colors[0..fHeader]) +
-                    line[1+fHeader..2] +
-                    SEFUN->apply_gradient(line[3..l+1], colors[3..l+1]) +
-                    line[l+2..<2+fHeader] +
-                    SEFUN->apply_gradient(line[<1+fHeader..<1], colors[<1+fHeader..<1]);
+                line[1+fHeader..2] +
+                SEFUN->apply_gradient(line[3..l+1], colors[3..l+1]) +
+                line[l+2..<2+fHeader] +
+                SEFUN->apply_gradient(line[<1+fHeader..<1], colors[<1+fHeader..<1]);
         } else if (ansi) {
             line = "\e[36m" + line[0..fHeader] + "\e[0;37;40m" +
             line[1+fHeader..2] +
@@ -342,36 +334,34 @@ string *format_border (mapping data, mapping b) {
     l = sizeof(lines);
 
     // Colorize edges and separators
-    if (!screenreader) {
-        if (ansi == "256") {
-            string *left = SEFUN->color_gradient(borderColors[0], borderColors[1], l - (headerStart-1))[1..<2];
-            string *right = ({ });
-            for (i = sizeof(left)-1; i >= 0; i --) {
-                right += ({ left[i] });
+    if (ansi == "256") {
+        string *left = SEFUN->color_gradient(borderColors[0], borderColors[1], l - (headerStart-1))[1..<2];
+        string *right = ({ });
+        for (i = sizeof(left)-1; i >= 0; i --) {
+            right += ({ left[i] });
+        }
+        for (i = headerStart; i < l-1; i ++) {
+            if (i < headerEnd || (i > footerLine && footerLine > 0)) {
+                lines[i] = "\e[38;2;"+left[i-headerStart]+"m"+lines[i][0..1]+"\e[0;37;40m" + lines[i][2..<3] + "\e[38;2;"+right[i-headerStart]+"m" + lines[i][<2..] + "\e[0;37;40m";
+            } else if (i == headerEnd || i == footerLine) {
+                mixed *gradient;
+                mixed *lside, *rside;
+                lside = map(explode(left[i-headerStart], ";"), (: to_int($1) :));
+                rside = map(explode(right[i-headerStart], ";"), (: to_int($1) :));
+                gradient = SEFUN->color_gradient(lside, rside, width);
+                lines[i] = SEFUN->apply_gradient(lines[i], gradient);
+            } else if (i < footerLine || !footerLine) {
+                lines[i] = "\e[38;2;"+left[i-headerStart]+"m"+lines[i][0..0]+"\e[0;37;40m" + lines[i][1..<2] + "\e[38;2;"+right[i-headerStart]+"m" + lines[i][<1..] + "\e[0;37;40m";
             }
-            for (i = headerStart; i < l-1; i ++) {
-                if (i < headerEnd || (i > footerLine && footerLine > 0)) {
-                    lines[i] = "\e[38;2;"+left[i-headerStart]+"m"+lines[i][0..1]+"\e[0;37;40m" + lines[i][2..<3] + "\e[38;2;"+right[i-headerStart]+"m" + lines[i][<2..] + "\e[0;37;40m";
-                } else if (i == headerEnd || i == footerLine) {
-                    mixed *gradient;
-                    mixed *lside, *rside;
-                    lside = map(explode(left[i-headerStart], ";"), (: to_int($1) :));
-                    rside = map(explode(right[i-headerStart], ";"), (: to_int($1) :));
-                    gradient = SEFUN->color_gradient(lside, rside, width);
-                    lines[i] = SEFUN->apply_gradient(lines[i], gradient);
-                } else if (i < footerLine || !footerLine) {
-                    lines[i] = "\e[38;2;"+left[i-headerStart]+"m"+lines[i][0..0]+"\e[0;37;40m" + lines[i][1..<2] + "\e[38;2;"+right[i-headerStart]+"m" + lines[i][<1..] + "\e[0;37;40m";
-                }
-            }
-        } else if (ansi) {
-            for (i = headerStart; i < l-1; i ++) {
-                if (i == headerEnd || i == footerLine) {
-                    lines[i] = "\e[36m" + lines[i] + "\e[0;37;40m";
-                } else if (i < headerEnd || i > footerLine) {
-                    lines[i] = "\e[36m"+lines[i][0..1]+"\e[0;37;40m" + lines[i][2..<3] + "\e[36m" + lines[i][<2..] + "\e[0;37;40m";
-                } else if (i < footerLine) {
-                    lines[i] = "\e[36m"+lines[i][0..0]+"\e[0;37;40m" + lines[i][1..<2] + "\e[36m" + lines[i][<1..] + "\e[0;37;40m";
-                }
+        }
+    } else if (ansi) {
+        for (i = headerStart; i < l-1; i ++) {
+            if (i == headerEnd || i == footerLine) {
+                lines[i] = "\e[36m" + lines[i] + "\e[0;37;40m";
+            } else if (i < headerEnd || i > footerLine) {
+                lines[i] = "\e[36m"+lines[i][0..1]+"\e[0;37;40m" + lines[i][2..<3] + "\e[36m" + lines[i][<2..] + "\e[0;37;40m";
+            } else if (i < footerLine) {
+                lines[i] = "\e[36m"+lines[i][0..0]+"\e[0;37;40m" + lines[i][1..<2] + "\e[36m" + lines[i][<1..] + "\e[0;37;40m";
             }
         }
     }
@@ -381,8 +371,14 @@ string *format_border (mapping data, mapping b) {
 
 void border (mapping data) {
     mapping b = query_border_charset();
+    int width = to_int(SEFUN->query_account_setting("width"));
+    string ansi, *result;
+    if (undefinedp(data["ansi"]) && SEFUN->query_account_setting("ansi") == "on") {
+        ansi = this_user()->query_terminal_color();
+    }
 
-    SEFUN->this_user()->handle_pager(format_border(data, b));
+    result = format_border(data, b, width, ansi);
+    SEFUN->this_user()->handle_pager(result);
 }
 
 private varargs string *format_tree (string key, mapping value, mapping b, int indent, int index, int maxIndex, mapping prefix) {

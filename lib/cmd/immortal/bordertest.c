@@ -102,7 +102,7 @@ void command (string input, mapping flags) {
             "align": "left",
             "columns": 1,
         ]),
-        "ansi": 0,
+        "ansi": 1,
     ]));
 
     border(([
