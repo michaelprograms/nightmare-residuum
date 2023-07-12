@@ -122,16 +122,16 @@ mapping query_room_exits_picture () {
     mapping exits = query_exits();
     mapping b = query_border_charset();
     mapping picture = ([ ]);
-    picture["nw"] = exits["northwest"] ? b["dd"] : " ";
-    picture["n"]  = exits["north"]     ? b["v"]  : " ";
-    picture["u"]  = exits["up"]        ? "+"  : " ";
-    picture["ne"] = exits["northeast"] ? b["du"]  : " ";
-    picture["w"]  = exits["west"]      ? b["h"]  : " ";
-    picture["e"]  = exits["east"]      ? b["h"]  : " ";
-    picture["sw"] = exits["southwest"] ? b["du"]  : " ";
-    picture["d"]  = exits["down"]      ? "-"  : " ";
-    picture["s"]  = exits["south"]     ? b["v"]  : " ";
-    picture["se"] = exits["southeast"] ? b["dd"] : " ";
+    picture["nw"] = sizeof(exits["northwest"]) ? b["dd"] : " ";
+    picture["n"]  = sizeof(exits["north"])     ? b["v"]  : " ";
+    picture["u"]  = sizeof(exits["up"])        ? "+"  : " ";
+    picture["ne"] = sizeof(exits["northeast"]) ? b["du"]  : " ";
+    picture["w"]  = sizeof(exits["west"])      ? b["h"]  : " ";
+    picture["e"]  = sizeof(exits["east"])      ? b["h"]  : " ";
+    picture["sw"] = sizeof(exits["southwest"]) ? b["du"]  : " ";
+    picture["d"]  = sizeof(exits["down"])      ? "-"  : " ";
+    picture["s"]  = sizeof(exits["south"])     ? b["v"]  : " ";
+    picture["se"] = sizeof(exits["southeast"]) ? b["dd"] : " ";
     return picture;
 }
 string *query_room_exit_map() {
