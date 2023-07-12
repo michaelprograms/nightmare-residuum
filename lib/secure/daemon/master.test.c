@@ -126,6 +126,10 @@ void test_valid_applies () {
 
     expect("valid_read handles calls", (: ({
         assert(file_name(basicOb = new(STD_OBJECT)), "regex", STD_OBJECT[0..<3]+"#[0-9]+"),
+
+        assert(testOb->valid_read(0, 0, 0), "==", 0),
+        assert(testOb->valid_read(0, testOb, "read_file"), "==", 0),
+
         assert(testOb->valid_read("/", testOb, "read_file"), "==", 1),
         assert(testOb->valid_read("/tmp/void/doesntexist", basicOb, "read_file"), "==", 0),
     }) :));
