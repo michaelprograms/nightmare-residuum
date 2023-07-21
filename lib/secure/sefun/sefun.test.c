@@ -36,3 +36,9 @@ void test_driver_port () {
         assert(testOb->driver_port() > 0, "==", 1),
     }) :));
 }
+void test_call_trace () {
+    expect_function("call_trace", testOb);
+    expect("call_trace returns a port", (: ({
+        assert(regexp(testOb->call_trace(), "/secure/sefun/sefun.test#[0-9]+"), "==", 1),
+    }) :));
+}

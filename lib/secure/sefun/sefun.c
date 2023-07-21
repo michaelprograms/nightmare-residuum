@@ -35,17 +35,22 @@ string mud_name () {
 }
 
 string call_trace () {
-    int i;
     string *programs = map(call_stack(4), (: replace_string($1, ":", "::") :));
     object *objects = call_stack(1);
     string *functions = call_stack(2);
     string *origins = call_stack(3);
-    string res = "";
-
-    i = sizeof(programs);
-    while(i --) {
-        res += sprintf("[%O] %s:%s() (%s)\n", objects[i], programs[i], functions[i], origins[i]);
+    string *res = ({ });
+    int i = sizeof(programs);
+    while (i --) {
+        res += ({
+            sprintf(
+                "[%O] %s:%s() (%s)\n",
+                objects[i],
+                programs[i],
+                functions[i],
+                origins[i]
+            )
+        });
     }
-
-    return res;
+    return implode(res, "\n");
 }
