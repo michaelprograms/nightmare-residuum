@@ -8,7 +8,7 @@ void create () {
         "no attack": 1,
     ]));
     // set_short("");
-    // set_long("");
+    set_long("A wide hallway with joining two side rooms. The walls are a utility corridor white and lacking in any form of markers.");
     set_exits(([
         "north": ORIGIN_ROOM + "northeast.c",
         "south": ORIGIN_ROOM + "southeast.c",
