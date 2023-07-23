@@ -7,7 +7,7 @@ void create () {
     set_properties(([
         "no attack": 1,
     ]));
-    // set_short("");
+    set_short("Origin Point");
     set_long("A central room with exits leading from the corners. The walls are a utility corridor white and lacking in any form of markers.");
     set_exits(([
         "northwest": ORIGIN_ROOM + "northwest.c",
