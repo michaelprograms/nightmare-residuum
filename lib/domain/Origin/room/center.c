@@ -15,7 +15,7 @@ void create () {
         "southeast": ORIGIN_ROOM + "southeast.c",
         "southwest": ORIGIN_ROOM + "southwest.c",
     ]));
-    // set_reset(([
-
-    // ]));
+    set_reset(([
+        ORIGIN_NPC + "greeter.c": 1,
+    ]));
 }
