@@ -44,7 +44,7 @@ string call_trace () {
     while (i --) {
         res += ({
             sprintf(
-                "[%O] %s:%s() (%s)\n",
+                "[%O] %s:%s() (%s)",
                 objects[i],
                 programs[i],
                 functions[i],
