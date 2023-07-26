@@ -13,4 +13,7 @@ void create () {
         "west": ORIGIN_ROOM + "northwest.c",
         "east": ORIGIN_ROOM + "northeast.c",
     ]));
+    set_reset(([
+        ORIGIN_ITEM + "transporter.c": 1,
+    ]));
 }
