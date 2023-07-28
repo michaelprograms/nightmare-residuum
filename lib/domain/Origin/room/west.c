@@ -1,4 +1,5 @@
 #include "origin.h"
+#include "/domain/Start/include/human.h"
 
 inherit STD_ROOM;
 
@@ -12,6 +13,7 @@ void create () {
     set_exits(([
         "north": ORIGIN_ROOM + "northwest.c",
         "south": ORIGIN_ROOM + "southwest.c",
+        "pad": HUMAN_ROOM + "square.c",
     ]));
     set_reset(([
         ORIGIN_ITEM + "transporter.c": 1,
