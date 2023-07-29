@@ -3,13 +3,14 @@ inherit STD_COMMAND;
 void create () {
     ::create();
     set_syntax("recall");
-    set_help_text("The recall command is used to return the Origin point.");
+    set_help_text("The recall command is used to return the Origin Point.");
 }
 
 void teleport (object tc) {
     if (!tc) return;
 
     tc->handle_go("/domain/Origin/room/center.c", "teleport", "away");
+    tc->describe_environment();
 }
 
 void command (string input, mapping flags) {
@@ -19,8 +20,8 @@ void command (string input, mapping flags) {
         message("action", "You cannot recall while hostiles opponents are nearby.", tc);
         return;
     }
-    if (base_name(environment(tc)) == "/domain/Origin/room/center") {
-        message("action", "You are at the Origin recall point already.", tc);
+    if (regexp(base_name(environment(tc)), "/domain/Origin/room/")) {
+        message("action", "You are already at the Origin Point.", tc);
         return;
     }
     message("go", "You begin to teleport...", tc);
