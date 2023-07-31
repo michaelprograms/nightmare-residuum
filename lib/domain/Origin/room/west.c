@@ -13,8 +13,8 @@ void create () {
     set_exits(([
         "north": ORIGIN_ROOM + "northwest.c",
         "south": ORIGIN_ROOM + "southwest.c",
-        "pad": HUMAN_ROOM + "square.c",
     ]));
+    set_exit("pad", HUMAN_ROOM + "square.c", 0, 0, "thin air");
     set_reset(([
         ORIGIN_ITEM + "transporter.c": 1,
     ]));
