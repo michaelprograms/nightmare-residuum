@@ -149,19 +149,20 @@ varargs int do_command (string command, int debug) {
 }
 
 varargs int handle_go (mixed dest, string verb, string dir, string reverse) {
-    string verbs, article;
+    string verbs, article, formatReverse;
     object oldEnv, newEnv;
     int move;
 
     oldEnv = environment();
     newEnv = stringp(dest) ? load_object(dest) : objectp(dest) ? dest : error("Bad argument 1 to living->handle_go");
     verbs = pluralize(verb);
-    article = (!regexp(dir, "^(enter|out|down|up)") ? "the " : "");
+    formatReverse = reverse ? reverse : format_exit_reverse(dir);
+    article = member_array(formatReverse, ({ "north", "northeast", "east", "southeast", "south", "southwest", "west", "northwest" })) > -1 ? "the " : "";
 
     move = handle_move(newEnv);
 
     message("go", "You " + verb + " %^DIR%^" + dir + "%^DEFAULT%^.", this_object());
-    message("go", query_cap_name() + " " + verbs + " %^DIR%^in%^DEFAULT%^ from " + article + "%^DIR%^" + (reverse ? reverse : format_exit_reverse(dir)) + "%^DEFAULT%^.", newEnv->query_living_contents(), this_object());
+    message("go", query_cap_name() + " " + verbs + " %^DIR%^in%^DEFAULT%^ from " + article + "%^DIR%^" + formatReverse + "%^DEFAULT%^.", newEnv->query_living_contents(), this_object());
     message("go", query_cap_name() + " " + verbs + " %^DIR%^" + dir + "%^DEFAULT%^.", oldEnv->query_living_contents(), this_object());
 
     return move;
