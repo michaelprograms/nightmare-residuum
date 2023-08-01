@@ -1,4 +1,5 @@
 nosave private function __EndFn;
+nosave private object __User;
 
 nomask private string query_prompt () {
     switch (query_ed_mode()) {
@@ -13,10 +14,9 @@ private nomask void editor_input (mixed s) {
     if (s == -1) {
         return destruct();
     }
-    message("system", ed_cmd(s), this_user());
+    message("system", ed_cmd(s), __User);
     if (query_ed_mode() == -1) {
-        this_user()->input_pop();
-        // this_user()->set_flag("editing", 0);
+        __User->input_pop();
         if (__EndFn) {
             evaluate(__EndFn);
         }
@@ -25,10 +25,21 @@ private nomask void editor_input (mixed s) {
 }
 void editor_start (string file, function endFn) {
     __EndFn = endFn;
-    this_user()->input_push((: editor_input :), (: query_prompt :));
+    __User = this_user();
+    __User->input_push((: editor_input :), (: query_prompt :));
     ed_start(file, 0);
-    // this_user()->set_flag("editing", 1); // @TODO
 }
+
+/* ----- ed setup ----- */
+
+void query_ed_setup () {
+    return __User->query_ed_setup();
+}
+int set_ed_setup (int code) {
+   __User->set_ed_setup(code);
+}
+
+/* ----- applies ----- */
 
 int clean_up (mixed *args...) {
     if (query_ed_mode() == -1) {

@@ -286,25 +286,16 @@ string make_path_absolute (string rel_path) {
     return sanitize_path(rel_path);
 }
 
-// retrieve_ed_setup
-/*
-    This master apply is called by the ed() efun to retrieve  a  user's  ed
-    setup/configuration  settings.   This  function should return the setup
-    (contained in an int).
+// This apply queries the user's ed config
+int retrieve_ed_setup (object user) {
+    return user->query_ed_setup();
+}
 
-    int retrieve_ed_setup(object user);
-    user->query_ed()
-*/
-
-// save_ed_setup
-/*
-    This  master  apply is called by the ed() efun to save a user's ed set‐
-    up/configuration settings (contained in an int).  This function  should
-    return an int for success (1 or TRUE)/failure (0 or FALSE).
-
-    int save_ed_setup(object user, int config);
-    user->set_ed(config)
-*/
+// This apply saves the user's ed config
+int save_ed_setup (object user, int config) {
+    user->set_ed_setup(config);
+    return 1;
+}
 
 // --- valid applies -----------------------------------------------------------
 

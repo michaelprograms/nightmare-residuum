@@ -14,6 +14,8 @@ nomask void reset_connect_timeout ();
 nomask varargs void handle_remove (string message);
 
 /* --- account --- */
+nomask void set_ed_setup (in code);
+nomask int query_ed_setup();
 protected nomask varargs void account_input (int state, mixed extra, string input);
 private void display_account_menu ();
 #define STATE_ACCOUNT_ENTER                 0

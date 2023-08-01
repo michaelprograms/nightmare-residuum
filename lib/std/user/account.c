@@ -19,10 +19,21 @@ private mapping __Characters = ([
     */
 ]);
 private mapping __Settings = ([ ]);
-private int __EdSetup;  // @TODO
+private int __EdSetup = 0;
 
 // cache variable
 nosave private string *__CharacterNames = ({ });
+
+/* ----- ed setup ----- */
+
+nomask void set_ed_setup (int code) {
+    __EdSetup = code;
+    save_data();
+}
+
+nomask int query_ed_setup () {
+    return __EdSetup;
+}
 
 /* -----  ----- */
 
