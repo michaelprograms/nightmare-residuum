@@ -20,7 +20,7 @@ nosave private mapping __Terminal = ([
     "client": "unknown",
 ]);
 
-int is_user() { return 1; }
+int is_user () { return 1; }
 
 nomask void logon_banner () {
     receive_message("system", D_WELCOME->query_banner() + "\n");
