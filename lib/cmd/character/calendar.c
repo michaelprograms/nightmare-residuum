@@ -22,8 +22,8 @@ void command (string input, mapping flags) {
 
             for (int j = 0; j < 4; j ++) {
                 if (i+j >= sizeof(a["MONTH_NAMES"])) break;
-                else if (i+j == currentMonth) rowHeader += ({ "  %^CYAN%^" + a["MONTH_NAMES"][i+j] + "%^RESET%^" });
-                else rowHeader += ({ "  "+a["MONTH_NAMES"][i+j] });
+                else if (i+j == currentMonth) rowHeader += ({ "%^CYAN%^" + a["MONTH_NAMES"][i+j] + "%^RESET%^" });
+                else rowHeader += ({ a["MONTH_NAMES"][i+j] });
             }
             for (int k = 0; k < 4; k ++) {
                 for (int j = 0; j < 4; j ++) {
