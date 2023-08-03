@@ -40,12 +40,12 @@ void command (string input, mapping flags) {
     string subtitle;
 
     if (!input) {
-        message("system", "Syntax: tree -fn=function [file]", this_user());
+        message("action", "Syntax: tree -fn=function [file]", this_user());
         return;
     }
     file = absolute_path(input, this_user()->query_shell()->query_variable("cwd"));
     if (file_size(file) < 1) {
-        message("system", "tree: no such file.", this_user());
+        message("action", "tree: no such file.", this_user());
         return;
     }
     fn = flags["fn"];
