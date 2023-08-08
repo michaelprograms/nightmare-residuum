@@ -95,7 +95,6 @@ void command (string input, mapping flags) {
         break;
     }
 
-
     border(([
         "title": "TREE",
         "subtitle": subtitle,
