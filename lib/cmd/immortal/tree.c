@@ -1,4 +1,4 @@
-mapping localtree (string file, string fn, int index, int maxIndex) {
+mapping tree_file (string file, string fn, int index, int maxIndex) {
     mapping result = ([ ]), tmp;
     string *inherits, err, key;
     object ob;
@@ -27,7 +27,36 @@ mapping localtree (string file, string fn, int index, int maxIndex) {
         result[key] = ([ ]);
     }
     for (int i = 0; i < l; i ++) {
-        tmp = localtree(inherits[i], fn, i, l);
+        tmp = tree_file(inherits[i], fn, i, l);
+        result[key] += tmp;
+    }
+
+    return result;
+}
+
+mapping tree_directory (string file, string search, int index, int maxIndex) {
+    mapping result = ([ ]), tmp;
+    string *files, key;
+    int l, searchFlag = 0;
+
+    if (!file) {
+        return 0;
+    }
+
+    l = sizeof(files = get_dir(file + "/"));
+    searchFlag = stringp(search) && regexp(file, search);
+
+    if (searchFlag) {
+        key = index + ". %^CYAN%^" + file + "%^RESET%^ <- " + search;
+    } else {
+        key = index + ". " + file;
+    }
+
+    if (!mapp(result[key])) {
+        result[key] = ([ ]);
+    }
+    for (int i = 0; i < l; i ++) {
+        tmp = tree_directory(file + "/" + files[i], search, i, l);
         result[key] += tmp;
     }
 
@@ -35,26 +64,37 @@ mapping localtree (string file, string fn, int index, int maxIndex) {
 }
 
 void command (string input, mapping flags) {
-    string file, fn;
+    string file, tmp;
     mapping data = ([ ]);
     string subtitle;
 
     if (!input) {
-        message("action", "Syntax: tree -fn=function [file]", this_user());
+        message("action", "Syntax: tree (-fn=function) [file]|(-file=file) [dir]", this_user());
         return;
     }
+
     file = absolute_path(input, this_user()->query_shell()->query_variable("cwd"));
-    if (file_size(file) < 1) {
+    switch (file_size(file)) {
+    case -2:
+        if (tmp = flags["file"]) {
+            subtitle = "Searching for '" + tmp + "'";
+        }
+        data = tree_directory(file, tmp, 0, 1);
+        break;
+    case -1:
         message("action", "tree: no such file.", this_user());
         return;
+    case 0:
+        message("action", "tree: file is empty.", this_user());
+        return;
+    default:
+        if (tmp = flags["fn"]) {
+            subtitle = "Searching for '" + tmp + "'";
+        }
+        data = tree_file(file, tmp, 0, 1);
+        break;
     }
-    fn = flags["fn"];
 
-    if (fn) {
-        subtitle = "Searching for '" + fn + "'";
-    }
-
-    data = localtree(file, fn, 0, 1);
 
     border(([
         "title": "TREE",
