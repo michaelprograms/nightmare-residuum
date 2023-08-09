@@ -1,3 +1,11 @@
+inherit STD_COMMAND;
+
+void create () {
+    ::create();
+    set_syntax("tree (-fn=function) [file]|(-file=file) [dir]");
+    set_help_text("The tree command can be used to view a directory structure, or an object's inheritables. Search flags can also be passed.");
+}
+
 mapping tree_file (string file, string fn, int index, int maxIndex) {
     mapping result = ([ ]), tmp;
     string *inherits, err, key;
