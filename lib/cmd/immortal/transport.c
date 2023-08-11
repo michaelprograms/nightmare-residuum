@@ -1,3 +1,11 @@
+inherit STD_COMMAND;
+
+void create () {
+    ::create();
+    set_syntax("transport [character]");
+    set_help_text("The transport command can be used by an immortal to bring another character to their current environment.");
+}
+
 void command (string input, mapping flags) {
     object ob;
 
