@@ -1,3 +1,11 @@
+inherit STD_COMMAND;
+
+void create () {
+    ::create();
+    set_syntax("tail (-n=15) [file]");
+    set_help_text("The tail command can be used to view the last n (default 15) lines of the specified file.");
+}
+
 void command (string input, mapping flags) {
     string cwd, file, *lines;
     int n = 15;
