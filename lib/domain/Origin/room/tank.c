@@ -289,6 +289,6 @@ void do_done () {
     }
 
     message("action", "You press the done button and the tank glass pops open.", tc);
-    tc->handle_go(ORIGIN_ROOM + "center.c", "eject", "tank");
+    tc->handle_go(ORIGIN_ROOM + "center.c", "eject", "from the tank");
     tc->describe_environment();
 }

@@ -1,12 +1,12 @@
-#include "human.h"
+#include "origin.h"
 
 inherit STD_ROOM;
 inherit M_STORY;
 
 void story_action_final (object target) {
-    message("action", "A repetitive beeping tone synced to a blinking %^RED%^BOLD%^red light%^RESET%^ attracts your attention.", target);
+    message("action", "A gradually increasing brightness attracts your attention.", target);
     message("action", "You " + format_syntax("look") + " over your surroundings.", target);
-    target->handle_move(HUMAN_ROOM + "tank");
+    target->handle_move(ORIGIN_ROOM + "tank.c");
     target->describe_environment();
 }
 
