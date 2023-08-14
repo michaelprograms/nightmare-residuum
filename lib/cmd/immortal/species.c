@@ -1,3 +1,11 @@
+inherit STD_COMMAND;
+
+void create () {
+    ::create();
+    set_syntax("species (type)");
+    set_help_text("The species command can be used to view the supported bodytypes and species. Supplying an optional type will filter.");
+}
+
 void command (string input, mapping flags) {
     string subtitle;
     mapping *items = ({ });
