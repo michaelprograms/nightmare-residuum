@@ -1,3 +1,11 @@
+inherit STD_COMMAND;
+
+void create () {
+    ::create();
+    set_syntax("head (-n=15) [file]");
+    set_help_text("The head command can be used to view the first n (default 15) lines of the specified file.");
+}
+
 void command (string input, mapping flags) {
     string cwd, file, *lines;
     int n = 15;
