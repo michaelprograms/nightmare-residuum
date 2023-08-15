@@ -1,9 +1,17 @@
+inherit STD_COMMAND;
+
+void create () {
+    ::create();
+    set_syntax("goto [character|room path]");
+    set_help_text("The goto command can be used by an immortal to go to another character's environment or a specified room path.");
+}
+
 void command (string input, mapping flags) {
     object ob;
     string path;
 
     if (!input) {
-        message("action", "Goto where or who?", this_character());
+        message("action", "Syntax: goto [character|room path]", this_character());
         return;
     }
 
