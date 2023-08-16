@@ -1,3 +1,11 @@
+inherit STD_COMMAND;
+
+void create () {
+    ::create();
+    set_syntax("more [file]");
+    set_help_text("The more command can be used to view the contents of the specified file using the pager system.");
+}
+
 void command (string input, mapping flags) {
     string cwd, file, *lines;
 

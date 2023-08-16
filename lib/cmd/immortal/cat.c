@@ -1,3 +1,11 @@
+inherit STD_COMMAND;
+
+void create () {
+    ::create();
+    set_syntax("cat [file]");
+    set_help_text("The cat command can be used to view the contents of the specified file without using the pager system.");
+}
+
 void command (string input, mapping flags) {
     string cwd, file, *lines;
 
