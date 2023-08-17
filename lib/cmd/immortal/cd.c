@@ -1,3 +1,11 @@
+inherit STD_COMMAND;
+
+void create () {
+    ::create();
+    set_syntax("cd [directory]");
+    set_help_text("The cd command is used to change an immortal's working directory.");
+}
+
 void command (string input, mapping flags) {
     if (!input) {
         input = user_path(this_character()->query_key_name());
