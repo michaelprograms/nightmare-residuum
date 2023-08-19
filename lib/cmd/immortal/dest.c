@@ -1,3 +1,11 @@
+inherit STD_COMMAND;
+
+void create () {
+    ::create();
+    set_syntax("dest [object id]|[object instance]");
+    set_help_text("The dest command is used to destroy a cloned copy of an object by id or using the object instance.");
+}
+
 void command (string input, mapping flags) {
     object ob;
     string name;
