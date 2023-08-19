@@ -1,3 +1,11 @@
+inherit STD_COMMAND;
+
+void create () {
+    ::create();
+    set_syntax("clone [file]");
+    set_help_text("The clone command is used to create a copy of the object in the provided file.");
+}
+
 void command (string input, mapping flags) {
     string cwd, file;
     object ob;
