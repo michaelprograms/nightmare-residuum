@@ -1,3 +1,11 @@
+inherit STD_COMMAND;
+
+void create () {
+    ::create();
+    set_syntax("man [apply|efun|lpc]");
+    set_help_text("The man command is used to view driver documentation for the provided apply, efun, or LPC topic.");
+}
+
 void command (string input, mapping flags) {
     string path;
 
