@@ -1,3 +1,11 @@
+inherit STD_COMMAND;
+
+void create () {
+    ::create();
+    set_syntax("astronomy");
+    set_help_text("The astronomy command is used to view the state of the astronomy daemon.");
+}
+
 void command (string input, mapping flags) {
     mapping *items = ({ });
 
