@@ -11,5 +11,8 @@
         "editor.tabSize": 4,
         "editor.bracketPairColorization.enabled": true,
         "files.eol": "\n",
+        "cSpell.enableFiletypes": [
+            "lpc"
+        ],
     }
 }
