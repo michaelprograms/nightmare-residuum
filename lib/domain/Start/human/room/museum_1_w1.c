@@ -10,6 +10,7 @@ void create () {
     set_exits(([
         "east": HUMAN_ROOM + "museum_1.c",
         "west": HUMAN_ROOM + "museum_1_w2.c",
+        "north": HUMAN_ROOM + "museum_vault.c",
     ]));
     set_looks(([
         ({ "building", "ceiling", "walls" }): "A building of large proportions. This hallway is a large room with high ceilings and distant walls.",

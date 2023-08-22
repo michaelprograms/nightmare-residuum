@@ -9,6 +9,7 @@ void create () {
     set_long("Inside of a room with bright lights shining down. The concrete floor looks old here and unpolished, with a circular vault entrance located in the center of the chamber. The walls are made of stone blocks and covered with tapestries. An archway leads out of the chamber into a hallway to the east.");
     set_exits(([
         "east": HUMAN_ROOM + "museum_1_n1.c",
+        "south": HUMAN_ROOM + "museum_1_w1.c",
     ]));
     set_looks(([
        ({ "vault", "floor", }): "A circular vault exit sits in the center of the chamber's floor. It is sealed and there are no visible controls on the chamber.",

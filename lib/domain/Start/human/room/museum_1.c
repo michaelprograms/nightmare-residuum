@@ -8,11 +8,14 @@ void create () {
     set_short("a spacious lobby");
     set_long("The entrance to a building consisting of a spacious lobby with high ceilings and polished floors. The walls are made of stone blocks and covered with tapestries. A grand staircase along the back of the lobby leads up towards another floor that looks down upon the lobby. Hallways branch to the north and west, heading to the wings of the building.");
     set_exits(([
-        "out southeast": HUMAN_ROOM + "park_nw.c",
         "north": HUMAN_ROOM + "museum_1_n1.c",
         "west": HUMAN_ROOM + "museum_1_w1.c",
         "up": HUMAN_ROOM + "museum_2.c",
     ]));
+    set_exit("out southeast", HUMAN_ROOM + "park_nw.c", function(object po, string dir) {
+        // @TODO
+        return 1;
+    });
     set_looks(([
         ({ "building", "ceiling", "walls" }): "A building of large proportions. The lobby is a large room with high ceilings and distant walls.",
         "lobby": "The entrance to the building, it features several different paths to traverse through.",
