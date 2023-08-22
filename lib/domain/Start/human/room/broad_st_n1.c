@@ -13,7 +13,7 @@ void create () {
     ]));
     set_looks(([
         "street": "A street sign is labeled N. Broad St.",
-        "building": "The open doors leads into a hall for all adventuerers.",
+        "building": "The open doors leads into a hall for all adventurers.",
         "banner": "The banner simply says Adventurer Hall.",
         "square": "A square plaza with trees, benches, and more.",
         ({ "framework", "hexagons"}): "Far above, the hexagons form a geodesic dome.",
