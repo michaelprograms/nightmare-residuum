@@ -143,7 +143,7 @@ private void handle_combat_miss (object target, mixed weapon) {
         type = "brawl";
         name = weapon;
     } else {
-        return; // invalid weapon
+        error("Bad argument 2 to combat->handle_combat_miss");
     }
 
     message("combat miss", "You miss " + target->query_cap_name() + " with your " + name + ".", this_object());
@@ -157,7 +157,7 @@ private void handle_combat_block (object target) {
     object shield = this_object()->query_worn_shield();
 
     if (!shield) {
-        return; // invalid shield
+        error("Bad argument 2 to combat->handle_combat_block");
     }
 
     message("combat miss", "You block " + target->query_cap_name() + " with your " + shield->query_name() + ".", this_object());
@@ -175,7 +175,7 @@ private void handle_combat_parry (object target) {
         type = "brawl";
         name = weapon;
     } else {
-        return; // invalid weapon
+        error("Bad argument 2 to combat->handle_combat_parry");
     }
 
     message("combat miss", "You parry " + target->query_cap_name() + " with your " + name + ".", this_object());
