@@ -188,7 +188,7 @@ private void handle_combat_evade (object target) {
     message("combat miss", this_object()->query_cap_name() + " evades " + possessive_noun(target->query_cap_name()) + " attack.", environment(), ({ this_object(), target }));
 }
 private void handle_combat_hit (object target, mixed weapon, int crit) {
-    int damage = 0;
+    int dice, damage = 0;
     string type, name, limb;
 
     if (objectp(weapon)) {
@@ -204,12 +204,17 @@ private void handle_combat_hit (object target, mixed weapon, int crit) {
     limb = target->query_random_limb();
 
     // Base Damage
-    damage = random(10);
-    damage += (query_stat("strength") * 10 / 100);
-    damage += random(query_stat("strength") * 10 / 100 + 1);
-    damage += random(query_sp() * 10 / 100 + 1);
-    damage += random(query_stat("luck") * 5 / 100 + 1);
-    damage += random(query_skill(type + " attack") * 20 / 100 + 1);
+    damage += roll_die(1, 6)[0];
+
+    dice = max(({ 1, random(source->query_stat("strength") + 1) * 5 / 100 }));
+    damage += roll_die(dice, 6)[0];
+
+    dice = max(({ 1, random(source->query_stat("luck") + 1) * 4 / 100 }));
+    damage += roll_die(dice, 6)[0];
+
+    dice = max(({ 1, random(source->query_skill(type + " attack") + 1) * 20 / 100 }));
+    damage += roll_die(dice, 6)[0];
+
     if (crit) {
         damage = damage * 3 / 2;
     }
