@@ -212,10 +212,10 @@ int calculate_damage (object source, object target, string limb) {
     int dice, damage, tmp;
 
     // base damage
-    dice = max(({ 1, source->query_level() / 5 }));
+    dice = max(({ 1, source->query_level() * 20 / 100 }));
     damage += roll_die(dice, 6)[0];
 
-    dice = max(({ 1, random(source->query_stat("luck") + 1) / 10 }));
+    dice = max(({ 1, random(source->query_stat("luck") + 1) * 4 / 100 }));
     damage += roll_die(dice, 6)[0];
 
     foreach (string key, int value in __SkillPowers) {
@@ -251,7 +251,7 @@ int calculate_damage (object source, object target, string limb) {
     dice = max(({ 1, target->query_stat("endurance") / 10 }));
     damage -= roll_die(dice, 6)[0];
 
-    dice = max(({ 1, random(target->query_stat("luck") + 1) / 10 }));
+    dice = max(({ 1, random(target->query_stat("luck") + 1) / 25 }));
     damage -= roll_die(dice, 6)[0];
 
     damage -= target->query_limb_armor(limb);
