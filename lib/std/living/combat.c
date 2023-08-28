@@ -206,13 +206,13 @@ private void handle_combat_hit (object target, mixed weapon, int crit) {
     // Base Damage
     damage += roll_die(1, 6)[0];
 
-    dice = max(({ 1, random(source->query_stat("strength") + 1) * 5 / 100 }));
+    dice = max(({ 1, random(query_stat("strength") + 1) * 5 / 100 }));
     damage += roll_die(dice, 6)[0];
 
-    dice = max(({ 1, random(source->query_stat("luck") + 1) * 4 / 100 }));
+    dice = max(({ 1, random(query_stat("luck") + 1) * 5 / 100 }));
     damage += roll_die(dice, 6)[0];
 
-    dice = max(({ 1, random(source->query_skill(type + " attack") + 1) * 20 / 100 }));
+    dice = max(({ 1, random(query_skill(type + " attack") + 1) * 20 / 100 }));
     damage += roll_die(dice, 6)[0];
 
     if (crit) {
@@ -220,11 +220,15 @@ private void handle_combat_hit (object target, mixed weapon, int crit) {
     }
 
     // apply target mitigations
-    damage -= (query_stat("endurance") * 10 / 100);
-    damage -= random(query_stat("endurance") * 10 / 100 + 1);
-    damage -= secure_random(query_hp() * 10 / 100 + 1);
-    damage -= secure_random(query_stat("luck") * 10 / 100 + 1);
-    damage -= secure_random(query_skill(type + " defense") * 20 / 100 + 1);
+    dice = max(({ 1, random(target->query_stat("endurance") + 1) * 10 / 100 }));
+    damage -= roll_die(dice, 6)[0];
+
+    dice = max(({ 1, random(target->query_stat("luck") + 1) * 10 / 100 }));
+    damage -= roll_die(dice, 6)[0];
+
+    dice = max(({ 1, random(target->query_skill(type + " defense") + 1) * 20 / 100 }));
+    damage -= roll_die(dice, 6)[0];
+
     damage -= target->query_limb_armor(limb);
     damage -= target->query_protection();
 
