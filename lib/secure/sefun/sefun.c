@@ -15,7 +15,11 @@ inherit "/secure/sefun/time.c";
 inherit "/secure/sefun/user.c";
 
 string driver_version () {
-    return explode(__VERSION__, "-")[0];
+    string v = __VERSION__;
+    v = explode(__VERSION__, "-")[0];
+    v = replace_string(v, " ", " v");
+    v = v[0..<5] + "." + v[<4..<3] + "." + v[<2..];
+    return v;
 }
 
 int driver_port () {
