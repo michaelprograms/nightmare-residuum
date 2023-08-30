@@ -3,7 +3,7 @@
 
 /* --- sefun --- */
 int driver_port ();
-string driver_version ();
+string version ();
 string mudlib_version ();
 string mud_name ();
 string call_trace ();

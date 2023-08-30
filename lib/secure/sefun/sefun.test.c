@@ -8,11 +8,11 @@ void after_each_test () {
     if (objectp(testOb)) destruct(testOb);
 }
 
-void test_driver_version () {
-    expect_function("driver_version", testOb);
-    expect("driver_version returns a version", (: ({
-        assert(stringp(testOb->driver_version()), "==", 1),
-        assert(strlen(testOb->driver_version()) > 0, "==", 1),
+void test_version () {
+    expect_function("version", testOb);
+    expect("version returns a version", (: ({
+        assert(stringp(testOb->version()), "==", 1),
+        assert(strlen(testOb->version()) > 0, "==", 1),
     }) :));
 }
 void test_mudlib_version () {

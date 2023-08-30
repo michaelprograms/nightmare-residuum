@@ -14,7 +14,7 @@ inherit "/secure/sefun/string.c";
 inherit "/secure/sefun/time.c";
 inherit "/secure/sefun/user.c";
 
-string driver_version () {
+string version () {
     string v = __VERSION__;
     v = explode(__VERSION__, "-")[0];
     v = replace_string(v, " ", " v");
