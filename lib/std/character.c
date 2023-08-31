@@ -33,9 +33,14 @@ void set_immortal (int i) {
 
 varargs void save_character (int exit) {
     update_autoload(exit);
-    remove_properties();
+    if (exit) {
+        remove_properties();
+    }
     save_data();
     reset_autoload();
+    if (__User) {
+        __User->update_character_data(this_object());
+    }
 }
 void restore_character () {
     restore_data();
@@ -55,10 +60,7 @@ void heart_beat () {
     __ConnectionTime ++; // 1 second heartbeat
 
     if (__ConnectionTime % 60 == 0) { // autosave
-        if (__User) {
-            __User->update_character_data(this_object());
-        }
-        save_character();
+        save_character(0);
     }
 }
 
@@ -113,7 +115,7 @@ void setup_character () {
         set_level(1);
         D_SPECIES->setup_stats(this_object());
         update_vitals(1);
-        save_character();
+        save_character(0);
     } else {
         restore_character();
         update_vitals(0);

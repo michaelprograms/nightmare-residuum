@@ -54,6 +54,9 @@ nomask private void character_enter (int newbie) {
         }
         __Character->save_data();
     }
+
+    __Character->set_last_action();
+    this_object()->update_character_data(__Character);
 }
 
 nomask private void character_reconnect (object char) {
@@ -68,6 +71,8 @@ nomask private void character_reconnect (object char) {
     shell_start();
     write("\n\nReturning " + __Character->query_cap_name() + " from linkdeath...\n\n");
     __Character->exit_freezer();
+    __Character->set_last_action();
+    this_object()->update_character_data(__Character);
 }
 
 nomask private void character_override (object char) {
@@ -85,6 +90,8 @@ nomask private void character_override (object char) {
 
     shell_start();
     __Character->enter_world(1);
+    __Character->set_last_action();
+    this_object()->update_character_data(__Character);
 }
 
 nomask void handle_character_override () {
@@ -105,6 +112,9 @@ nomask protected void character_exit () {
 }
 
 nomask protected void character_linkdead () {
-    __Character->set_last_action();
-    __Character->enter_freezer();
+    if (__Character) {
+        __Character->set_last_action();
+        this_object()->update_character_data(__Character);
+        __Character->enter_freezer();
+    }
 }

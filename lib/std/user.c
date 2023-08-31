@@ -77,7 +77,6 @@ void window_size (int width, int height) {
 
 nomask void net_dead () {
     if (query_name() && query_character()) {
-        this_object()->update_character_data(query_character());
         character_linkdead();
     }
     if (query_shell()) {
