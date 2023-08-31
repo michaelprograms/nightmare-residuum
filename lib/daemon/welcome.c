@@ -12,7 +12,7 @@ string query_banner () {
     pad = 40 - strlen(tmp) / 2;
     lines[<2] = lines[<2][0..pad-1] + tmp + lines[<2][80-pad..79];
 
-    tmp = "  " + driver_version() + "   " + mudlib_version() + "  ";
+    tmp = "  " + version() + "   " + mudlib_version() + "  ";
     pad = 40 - strlen(tmp) / 2;
     lines[<1] = lines[<1][0..pad-1] + tmp + lines[<1][80-pad+strlen(tmp)%2..79];
 
