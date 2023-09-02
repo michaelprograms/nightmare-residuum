@@ -13,4 +13,7 @@ void create () {
         "ivy": "The ivy looks sturdy enough to climb.",
         ({ "framework", "hexagons"}): "Far above, the hexagons form a geodesic dome.",
     ]));
+    set_reset(([
+        HUMAN_NPC + "pigeon.c": !random(2),
+    ]));
 }
