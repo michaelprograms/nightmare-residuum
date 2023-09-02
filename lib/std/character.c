@@ -295,7 +295,7 @@ private void describe_environment_living_contents () {
         shorts = map(shorts, (: $1 :));
         shorts[0] = capitalize(shorts[0]);
         shorts = map(shorts, (: "%^BOLD%^" + $1 + "%^BOLD_OFF%^DEFAULT%^" :));
-        message("room living contents", conjunction(shorts) + " " + (sizeof(contents) > 1 ? "are" : "is") + " here.\n", this_object());
+        message("room living contents", conjunction(shorts) + " " + (sizeof(shorts) > 1 ? "are" : "is") + " here.\n", this_object());
     }
 }
 
@@ -309,7 +309,7 @@ private void describe_environment_item_contents () {
         shorts = sort_array(map(list, (: consolidate(sizeof($1), $1[0]->query_short("%^MAGENTA%^BOLD%^")) :)), 1);
         shorts[0] = capitalize(shorts[0]);
         shorts = map(shorts, (: "%^BOLD%^" + $1 + "%^BOLD_OFF%^DEFAULT%^" :));
-        message("room item contents", conjunction(shorts) + " " + (sizeof(contents) > 1 ? "are" : "is") + " here.", this_object());
+        message("room item contents", conjunction(shorts) + " " + (sizeof(shorts) > 1 ? "are" : "is") + " here.", this_object());
     }
 }
 
