@@ -12,6 +12,7 @@ void create () {
     ]));
     set_climbs(([
         "ivy": HUMAN_ROOM + "roof.c",
+        "up": HUMAN_ROOM + "roof.c",
     ]));
     set_looks(([
         "street": "A village street labeled W Walnut St.",
