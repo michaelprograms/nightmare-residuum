@@ -58,12 +58,15 @@ void command (string input, mapping flags) {
         if (sizeof(argv) == 1) {
             class ShellAlias alias;
             alias = this_user()->query_shell()->query_alias(argv[0]);
-
-            message("system", "Alias: " + argv[0] + ": " + alias->template + ".\n", this_user());
-            return;
+            if (!alias) {
+                message("action", "Alias '" + argv[0] + "': not found", this_user());
+            } else {
+                message("action", "Alias '" + argv[0] + "': " + alias->template, this_user());
+            }
+        } else {
+            name = implode(argv[1..], " ");
+            message("action", "Adding alias: '" + argv[0] + "' as '" + name + "'", this_user());
+            this_user()->query_shell()->add_alias(argv[0], name);
         }
-        name = implode(argv[1..], " ");
-        message("system", "Adding alias: '" + argv[0] + "' as '" + name + "'.\n", this_user());
-        this_user()->query_shell()->add_alias(argv[0], name);
     }
 }
