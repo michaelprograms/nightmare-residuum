@@ -5,14 +5,14 @@ void create () {
 }
 
 mixed *query_planets () {
-    object db = new("/std/database.c", ([
+    object db = new(STD_DATABASE, ([
         "db": "/save/planet/PlanetChunks.sqlite",
     ]));
     return db->query("SELECT * FROM `Planets`");
 }
 
 mixed *query_planet (string name) {
-    object db = new("/std/database.c", ([
+    object db = new(STD_DATABASE, ([
         "db": "/save/planet/PlanetChunks.sqlite",
     ]));
     return db->query("SELECT * FROM `Chunks` WHERE name = '" + name + "'");

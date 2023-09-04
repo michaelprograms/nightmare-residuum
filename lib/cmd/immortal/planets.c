@@ -7,24 +7,42 @@ void create () {
 }
 
 void command (string input, mapping flags) {
-    mixed *planets;
-    string *items = ({ });
+    mixed *results;
+    mixed *body = ({ });
+    mapping item = ([ ]);
     int n;
 
-    if (n = sizeof(planets = D_PLANET->query_planets())) {
-        foreach (mixed *planet in planets) {
-            items += ({ planet... });
+    if (input) {
+        if (n = sizeof(results = D_PLANET->query_planet(input))) {
+            foreach (mixed *chunk in results) {
+                item = ([
+                    "header": ({ chunk[0] }),
+                    "items": explode(chunk[4], ","),
+                    "columns": 1,
+                ]);
+                body += ({ item });
+            }
+        }
+    } else {
+        if (n = sizeof(results = D_PLANET->query_planets())) {
+            item = ([
+                "header": ({ "Name", "Seed", "Size", }),
+                "items": ({ }),
+                "columns": 3,
+            ]);
+            foreach (mixed *planet in results) {
+                item["items"] += ({ planet... });
+            }
+            body += ({ item });
         }
     }
+
+    message("action", sprintf("body: %O", body), this_character());
 
     border(([
         "title": "PLANETS",
         "subtitle": mud_name(),
-        "body": ([
-            "header": ({ "Name", "Seed", "Size", }),
-            "items": items,
-            "columns": 3,
-        ]),
+        "body": body,
         "footer": ([
             "items": ({ n + " planet" + (n > 1 ? "s" : "") }),
             "columns": 1,
