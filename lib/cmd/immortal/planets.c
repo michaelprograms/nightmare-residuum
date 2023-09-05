@@ -37,8 +37,6 @@ void command (string input, mapping flags) {
         }
     }
 
-    message("action", sprintf("body: %O", body), this_character());
-
     border(([
         "title": "PLANETS",
         "subtitle": mud_name(),
