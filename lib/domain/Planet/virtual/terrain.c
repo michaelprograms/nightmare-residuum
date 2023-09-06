@@ -18,6 +18,7 @@ void add_potential_exit (string name, object room, string dir, int x, int y) {
 void find_and_set_color (object room, string name, int x, int y) {
     mixed *chunk;
     string terrain;
+    int cx, cy;
 
     chunk = D_PLANET->query_planet_chunk(name, x, y);
     if (sizeof(chunk) < 4) {
@@ -25,15 +26,13 @@ void find_and_set_color (object room, string name, int x, int y) {
     }
 
     chunk = explode(chunk[4], ",");
-    x = x % CHUNK_SIZE;
-    y = y % CHUNK_SIZE;
-    if (sizeof(chunk) < y-1 || sizeof(chunk[y-1]) < x-1) {
+    cx = x % CHUNK_SIZE;
+    cy = y % CHUNK_SIZE;
+    if (sizeof(chunk) < cy || sizeof(chunk[cy]) < cx) {
         return;
     }
 
-    terrain = chunk[y-1][x-1..x-1];
-    // write(x+", "+y+" results: "+sprintf("%O", chunk[y-1])+"\n");
-    // write(x+", "+y+" results: "+sprintf("%O", chunk[y-1][x-1..x-1])+"\n");
+    terrain = chunk[cy][cx..cx];
 
     terrain = upper_case(terrain);
 
