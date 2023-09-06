@@ -107,7 +107,7 @@ mixed handle_go (object ob, string method, string dir) {
     } else if (exit["before"] && !(evaluate(exit["before"], ob, dir))) {
         return 0;
     } else if (exit["room"]) {
-        if ((regexp(exit["room"], "#[0-9]+") && find_object(exit["room"])) || (file_size(exit["room"]) > 0)) {
+        if ((regexp(exit["room"], "/virtual/")) || (regexp(exit["room"], "#[0-9]+") && find_object(exit["room"])) || (file_size(exit["room"]) > 0)) {
             if (exit["door"] && !exit["open"]) {
                 message("action", "You bump into the " + exit["door"] + " blocking you from going " + dir + ".", ob);
                 return 0;

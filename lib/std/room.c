@@ -11,6 +11,7 @@ inherit M_SENSES;
 int is_room () { return 1; }
 
 /* ----- applies ----- */
+
 void create () {
     object::create();
     reset::create();
@@ -87,6 +88,14 @@ int handle_release (object ob) {
 
 /* ----- room map ----- */
 
+nosave private string roomSquareColor = "";
+void set_room_square_color (string color) {
+    roomSquareColor = color;
+}
+string query_room_square_color () {
+    return roomSquareColor;
+}
+
 string query_room_map_format () {
     int aggressive = 0, passive = 0, item = 0;
     int cha;
@@ -116,23 +125,30 @@ string query_room_map_format () {
         if (item) num = "%^MAGENTA%^BOLD%^" + (item > 10 ? "+" : ""+item) + "%^RESET%^";
     }
 
-    return "[" + num + "]";
+    return roomSquareColor + "[%^RESET%^" + num + roomSquareColor + "]%^RESET%^";
 }
 varargs mapping query_room_exits_picture (string source) {
     mapping exits = query_exits();
     mapping b = query_border_charset();
     mapping picture = ([ ]);
-    picture["nw"] = sizeof(exits["northwest"]) ? (!source || (source && source == exits["northwest"]["room"]) ? b["dd"] : " ") : " ";
-    picture["n"]  = sizeof(exits["north"])     ? (!source || (source && source == exits["north"]["room"]) ? b["v"]  : " ") : " ";
-    picture["u"]  = sizeof(exits["up"])        ? (!source || (source && source == exits["up"]["room"]) ? "+"  : " ") : " ";
-    picture["ne"] = sizeof(exits["northeast"]) ? (!source || (source && source == exits["northeast"]["room"]) ? b["du"]  : " ") : " ";
-    picture["w"]  = sizeof(exits["west"])      ? (!source || (source && source == exits["west"]["room"]) ? b["h"]  : " ") : " ";
-    picture["e"]  = sizeof(exits["east"])      ? (!source || (source && source == exits["east"]["room"]) ? b["h"]  : " ") : " ";
-    picture["sw"] = sizeof(exits["southwest"]) ? (!source || (source && source == exits["southwest"]["room"]) ? b["du"]  : " ") : " ";
-    picture["d"]  = sizeof(exits["down"])      ? (!source || (source && source == exits["down"]["room"]) ? "-"  : " ") : " ";
-    picture["s"]  = sizeof(exits["south"])     ? (!source || (source && source == exits["south"]["room"]) ? b["v"]  : " ") : " ";
-    picture["se"] = sizeof(exits["southeast"]) ? (!source || (source && source == exits["southeast"]["room"]) ? b["dd"] : " ") : " ";
+    picture["nw"] = sizeof(exits["northwest"]) && (!source || (source && source == exits["northwest"]["room"])) ? b["dd"] : " ";
+    picture["n"]  = sizeof(exits["north"])     && (!source || (source && source == exits["north"]["room"]))     ? b["v"] : " ";
+    picture["u"]  = sizeof(exits["up"])        && (!source || (source && source == exits["up"]["room"]))        ? "+" : " ";
+    picture["ne"] = sizeof(exits["northeast"]) && (!source || (source && source == exits["northeast"]["room"])) ? b["du"] : " ";
+    picture["w"]  = sizeof(exits["west"])      && (!source || (source && source == exits["west"]["room"]))      ? b["h"] : " ";
+    picture["e"]  = sizeof(exits["east"])      && (!source || (source && source == exits["east"]["room"]))      ? b["h"] : " ";
+    picture["sw"] = sizeof(exits["southwest"]) && (!source || (source && source == exits["southwest"]["room"])) ? b["du"]  : " ";
+    picture["d"]  = sizeof(exits["down"])      && (!source || (source && source == exits["down"]["room"]))      ? "-" : " ";
+    picture["s"]  = sizeof(exits["south"])     && (!source || (source && source == exits["south"]["room"]))     ? b["v"] : " ";
+    picture["se"] = sizeof(exits["southeast"]) && (!source || (source && source == exits["southeast"]["room"])) ? b["dd"] : " ";
     return picture;
+}
+int valid_exit (string path) {
+    if (regexp(path, "/virtual/")) {
+        return 1;
+    } else {
+        return file_size(path) > 0;
+    }
 }
 string *query_room_exit_map() {
     mapping blank, roomOb, exits, pics;
@@ -155,15 +171,15 @@ string *query_room_exit_map() {
     exits = query_exits();
     source = file_name() + ".c";
     pics = ([
-        "nw": exits["northwest"] && file_size(exits["northwest"]["room"]) > 0 && (roomOb["nw"] = find_object(exits["northwest"]["room"],1)) ? roomOb["nw"]->query_room_exits_picture(source) : blank,
-        "n":  exits["north"]     && file_size(exits["north"]["room"]) > 0 && (roomOb["n"] = find_object(exits["north"]["room"],1)) ? roomOb["n"]->query_room_exits_picture(source) : blank,
-        "ne": exits["northeast"] && file_size(exits["northeast"]["room"]) > 0 && (roomOb["ne"] = find_object(exits["northeast"]["room"],1)) ? roomOb["ne"]->query_room_exits_picture(source) : blank,
-        "w":  exits["west"]      && file_size(exits["west"]["room"]) > 0 && (roomOb["w"] = find_object(exits["west"]["room"],1)) ? roomOb["w"]->query_room_exits_picture(source) : blank,
+        "nw": exits["northwest"] && valid_exit(exits["northwest"]["room"]) > 0 && (roomOb["nw"] = load_object(exits["northwest"]["room"])) ? roomOb["nw"]->query_room_exits_picture(source) : blank,
+        "n":  exits["north"]     && valid_exit(exits["north"]["room"]) > 0 && (roomOb["n"] = load_object(exits["north"]["room"])) ? roomOb["n"]->query_room_exits_picture(source) : blank,
+        "ne": exits["northeast"] && valid_exit(exits["northeast"]["room"]) > 0 && (roomOb["ne"] = load_object(exits["northeast"]["room"])) ? roomOb["ne"]->query_room_exits_picture(source) : blank,
+        "w":  exits["west"]      && valid_exit(exits["west"]["room"]) > 0 && (roomOb["w"] = load_object(exits["west"]["room"])) ? roomOb["w"]->query_room_exits_picture(source) : blank,
         "x":  query_room_exits_picture(),
-        "e":  exits["east"]      && file_size(exits["east"]["room"]) > 0 && (roomOb["e"] = find_object(exits["east"]["room"],1)) ? roomOb["e"]->query_room_exits_picture(source) : blank,
-        "sw": exits["southwest"] && file_size(exits["southwest"]["room"]) > 0 && (roomOb["sw"] = find_object(exits["southwest"]["room"],1)) ? roomOb["sw"]->query_room_exits_picture(source) : blank,
-        "s":  exits["south"]     && file_size(exits["south"]["room"]) > 0 && (roomOb["s"] = find_object(exits["south"]["room"],1)) ? roomOb["s"]->query_room_exits_picture(source) : blank,
-        "se": exits["southeast"] && file_size(exits["southeast"]["room"]) > 0 && (roomOb["se"] = find_object(exits["southeast"]["room"],1)) ? roomOb["se"]->query_room_exits_picture(source) : blank,
+        "e":  exits["east"]      && valid_exit(exits["east"]["room"]) > 0 && (roomOb["e"] = load_object(exits["east"]["room"])) ? roomOb["e"]->query_room_exits_picture(source) : blank,
+        "sw": exits["southwest"] && valid_exit(exits["southwest"]["room"]) > 0 && (roomOb["sw"] = load_object(exits["southwest"]["room"])) ? roomOb["sw"]->query_room_exits_picture(source) : blank,
+        "s":  exits["south"]     && valid_exit(exits["south"]["room"]) > 0 && (roomOb["s"] = load_object(exits["south"]["room"])) ? roomOb["s"]->query_room_exits_picture(source) : blank,
+        "se": exits["southeast"] && valid_exit(exits["southeast"]["room"]) > 0 && (roomOb["se"] = load_object(exits["southeast"]["room"])) ? roomOb["se"]->query_room_exits_picture(source) : blank,
     ]);
 
     return ({
@@ -186,7 +202,7 @@ string *query_room_exit_map() {
         pics["e"]["nw"] + " " + pics["e"]["n"] + pics["e"]["u"] + pics["e"]["ne"],
 
         pics["w"]["w"] + (roomOb["w"] ? roomOb["w"]->query_room_map_format() : "   ") + pics["w"]["e"] +
-        pics["x"]["w"] + "[%^CYAN%^BOLD%^X%^RESET%^]" + pics["x"]["e"] +
+        pics["x"]["w"] + roomSquareColor + "[%^RESET%^CYAN%^BOLD%^X%^RESET%^" + roomSquareColor + "]%^RESET%^" + pics["x"]["e"] +
         pics["e"]["w"] + (roomOb["e"] ? roomOb["e"]->query_room_map_format() : "   ") + pics["e"]["e"],
 
         pics["w"]["sw"] + pics["w"]["d"] + pics["w"]["s"] + " " + pics["w"]["se"] +

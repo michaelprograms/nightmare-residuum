@@ -28,14 +28,21 @@ void command (string input, mapping flags) {
         if (path[<2..] != ".c") {
             path += ".c";
         }
-        if (file_size(path) == -1) {
-            path = this_user()->query_shell()->query_variable("cwd") + "/" + path;
+        if (!regexp(path, "/virtual/")) {
+            if (file_size(path) == -1) {
+                path = this_user()->query_shell()->query_variable("cwd") + "/" + path;
+            }
+            if (file_size(path) == -1) {
+                message("action", "goto: " + input + " not found.", this_character());
+                return;
+            }
         }
-        if (file_size(path) == -1) {
-            message("action", "goto: " + input + " not found.", this_character());
-            return;
+
+        if (this_character()->query_immortal()) {
+            message("action", "Going to "+path+"...", this_character());
+        } else {
+            message("action", "Going...", this_character());
         }
-        message("action", "Going...", this_character());
         this_character()->handle_go(path, "teleport", "away");
         this_character()->describe_environment();
     }

@@ -116,20 +116,17 @@ mapping get_mud_stats () {
 
 // This apply is called on non-existant files that could be virtually created.
 object compile_object (string path) {
-    object ob;
     string area, room, vpath;
 
-    if (!stringp(path) || !sizeof(path) || file_size(path) < 0) {
+    if (!stringp(path) || !sizeof(path)) {
         error("Bad argument 1 to master->compile_object");
     }
     if (path[0..0] != "/") path = "/" + path;
 
-    if (sscanf(path, "/domain/%s/virtual/room/%s/", area, room)) {
-        vpath = sprintf("%s/%s/virtual/%s", "/domain", area, room);
-        if (file_size(vpath + ".c") >= 0) {
-            if (ob = vpath->virtual_create(path)) {
-                return ob;
-            }
+    if (sscanf(path, "/domain/%s/virtual/room/%s/", area, room) == 2) {
+        vpath = sprintf("/domain/%s/virtual/%s", area, room);
+        if (file_size(vpath + ".c") > 0) {
+            return vpath->virtual_create(path);
         }
     }
     return 0;

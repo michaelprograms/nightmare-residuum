@@ -1,4 +1,4 @@
-inherit "/std/room.virtualized.c";
+inherit STD_ROOM;
 
 void create() {
     ::create();
