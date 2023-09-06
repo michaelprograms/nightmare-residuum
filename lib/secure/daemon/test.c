@@ -132,7 +132,7 @@ void display_results (mapping results, int timeStart) {
     }
 
     if (!undefinedp(timeStart)) {
-        write("\n" + sprintf("%-20s", results["numTests"]+" tests:") + (this_character()?"%^ORANGE%^":"\e[33m") + sprintf("%7.2f", time/1000000.0) + (this_character()?"%^RESET%^":"\e[0m") + " ms\n\n");
+        write("\n" + sprintf("%-20s", results["numTests"]+" tests:") + (this_character()?"%^ORANGE%^":"\e[33m") + sprintf("%7.2f", time/1000000.0) + " ms" + (this_character()?"%^RESET%^":"\e[0m") + "\n\n");
     }
 
     if (sizeof(results["failLog"]) > 0) {
