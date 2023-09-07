@@ -77,9 +77,17 @@ void find_and_set_color (object room, string name, int x, int y) {
     }
 }
 
+int find_planet_size (string name) {
+    mixed *result = D_PLANET->query_planet(name);
+    if (sizeof(result) > 0) {
+        result = result[0];
+    }
+    return sizeof(result) > 2 ? result[2] : 0;
+}
+
 object virtual_create (string arg) {
     string name;
-    int x, y;
+    int x, y, size, xw, xe, yn, ys;
     object room;
 
     if (sscanf(arg, PLANET_V_ROOM + "terrain/%s/%d.%d", name, x, y) != 3) {
@@ -90,17 +98,20 @@ object virtual_create (string arg) {
 
     find_and_set_color(room, name, x, y);
 
-    // @TODO find out size of world
-    // @TODO wrap around world axises
+    size = find_planet_size(name);
+    xw = x - 1 > -1     ? x - 1 : size - 1;
+    xe = x + 1 < size   ? x + 1 : 0;
+    yn = y - 1 >= 0     ? y - 1 : size - 1;
+    ys = y + 1 < size   ? y + 1 : 0;
 
-    add_potential_exit(name, room, "northwest", x - 1, y - 1);
-    add_potential_exit(name, room, "north",     x,     y - 1);
-    add_potential_exit(name, room, "northeast", x + 1, y - 1);
-    add_potential_exit(name, room, "west",      x - 1, y    );
-    add_potential_exit(name, room, "east",      x + 1, y    );
-    add_potential_exit(name, room, "southwest", x - 1, y + 1);
-    add_potential_exit(name, room, "south",     x,     y + 1);
-    add_potential_exit(name, room, "southeast", x + 1, y + 1);
+    add_potential_exit(name, room, "northwest", xw, yn);
+    add_potential_exit(name, room, "north",     x,  yn);
+    add_potential_exit(name, room, "northeast", xe, yn);
+    add_potential_exit(name, room, "west",      xw, y);
+    add_potential_exit(name, room, "east",      xe, y);
+    add_potential_exit(name, room, "southwest", xw, ys);
+    add_potential_exit(name, room, "south",     x,  ys);
+    add_potential_exit(name, room, "southeast", xe, ys);
 
     return room;
 }
