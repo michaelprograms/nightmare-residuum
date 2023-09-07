@@ -17,6 +17,13 @@ mixed *query_planet (string name) {
     object db = new(STD_DATABASE, ([
         "db": "/save/planet/PlanetChunks.sqlite",
     ]));
+    return db->query("SELECT * FROM `Planets` WHERE `name` = '" + name + "'");
+}
+
+mixed *query_planet_chunks (string name) {
+    object db = new(STD_DATABASE, ([
+        "db": "/save/planet/PlanetChunks.sqlite",
+    ]));
     return db->query("SELECT * FROM `Chunks` WHERE `name` = '" + name + "'");
 }
 

@@ -13,7 +13,7 @@ void command (string input, mapping flags) {
     int n;
 
     if (input) {
-        if (n = sizeof(results = D_PLANET->query_planet(input))) {
+        if (n = sizeof(results = D_PLANET->query_planet_chunks(input))) {
             foreach (mixed *chunk in results) {
                 item = ([
                     "header": ({ chunk[0] }),
