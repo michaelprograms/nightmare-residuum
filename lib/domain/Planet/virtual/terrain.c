@@ -8,13 +8,6 @@ int is_virtual_room () { return 1; }
 
 // -----
 
-void add_potential_exit (string name, object room, string dir, int x, int y) {
-    string path = file_name();
-    path = replace_string(path, "virtual", "virtual/room");
-    path = replace_string(path, "terrain", "terrain/" + name);
-    room->set_exit(dir, path + "/" + x + "." + y + ".c");
-}
-
 void find_and_set_color (object room, string name, int x, int y) {
     mixed *chunk;
     string terrain;
@@ -86,7 +79,7 @@ int find_planet_size (string name) {
 }
 
 object virtual_create (string arg) {
-    string name;
+    string name, path;
     int x, y, size, xw, xe, yn, ys;
     object room;
 
@@ -104,14 +97,17 @@ object virtual_create (string arg) {
     yn = y - 1 >= 0     ? y - 1 : size - 1;
     ys = y + 1 < size   ? y + 1 : 0;
 
-    add_potential_exit(name, room, "northwest", xw, yn);
-    add_potential_exit(name, room, "north",     x,  yn);
-    add_potential_exit(name, room, "northeast", xe, yn);
-    add_potential_exit(name, room, "west",      xw, y);
-    add_potential_exit(name, room, "east",      xe, y);
-    add_potential_exit(name, room, "southwest", xw, ys);
-    add_potential_exit(name, room, "south",     x,  ys);
-    add_potential_exit(name, room, "southeast", xe, ys);
+    path = replace_string(file_name(), "virtual", "virtual/room");
+    path = replace_string(path, "terrain", "terrain/" + name);
+
+    room->set_exit("northwest", path + "/" + xw + "." + yn + ".c");
+    room->set_exit("north",     path + "/" + x  + "." + yn + ".c");
+    room->set_exit("northeast", path + "/" + xe + "." + yn + ".c");
+    room->set_exit("west",      path + "/" + xw + "." + y  + ".c");
+    room->set_exit("east",      path + "/" + xe + "." + y  + ".c");
+    room->set_exit("southwest", path + "/" + xw + "." + ys + ".c");
+    room->set_exit("south",     path + "/" + x  + "." + ys + ".c");
+    room->set_exit("southeast", path + "/" + xe + "." + ys + ".c");
 
     return room;
 }
