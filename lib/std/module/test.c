@@ -305,7 +305,7 @@ void expect_function (string fn, object testOb) {
     if (currentTestPassed) {
         testObjectUntestedFns -= ({ fn });
     } else {
-        validate_expect ("false", "true", fn + " does not exist");
+        validate_expect("false", "true", fn + " does not exist");
     }
 }
 
@@ -368,6 +368,10 @@ void assert (mixed left, string condition, mixed right) {
 
     if (currentTestPassed) {
         if (condition == "==") {
+            if (typeof(leftResult) == "float" && typeof(rightResult) == "float") {
+                leftResult = to_float("" + leftResult);
+                rightResult = to_float("" + rightResult);
+            }
             currentTestPassed = leftResult == rightResult;
         } else if (condition == "!=") {
             currentTestPassed = leftResult != rightResult;
