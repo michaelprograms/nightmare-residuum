@@ -7,6 +7,7 @@ inherit "/secure/sefun/color.c";
 inherit "/secure/sefun/combat.c";
 inherit "/secure/sefun/format.c";
 inherit "/secure/sefun/grammar.c";
+inherit "/secure/sefun/noise.c";
 inherit "/secure/sefun/override.c";
 inherit "/secure/sefun/path.c";
 inherit "/secure/sefun/roll.c";

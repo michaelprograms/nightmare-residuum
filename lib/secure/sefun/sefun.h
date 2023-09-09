@@ -61,6 +61,11 @@ string objective (mixed value);
 string possessive (mixed value);
 string reflexive (mixed value);
 
+/* --- noise --- */
+float perlin_noise_2d (float x, float y, int *p, int octaves, float scale);
+float perlin_noise_3d (float x, float y, float z, int *p, int octaves, float scale);
+int *perlin_generate_permutation (string seed);
+
 /* --- override --- */
 nomask varargs int input_to ();
 nomask object this_player (int flag);
