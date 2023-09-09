@@ -528,3 +528,23 @@ string parser_error_message (int type, object ob, mixed arg, int plural) {
 void handle_parse_refresh () {
     parse_refresh();
 }
+
+/* ----- object applies ----- */
+
+void create () {
+    int i;
+    string s = " ";
+    if (clonep()) {
+        return;
+    }
+    for (i = 'a'; i <= 'z'; i ++) {
+        s[0] = i;
+        mkdirs("/save/account/" + s);
+        mkdirs("/save/character/" + s);
+        mkdirs("/save/planet/" + s);
+    }
+    for (i = 0; i <= 9; i ++) {
+        s = "" + i;
+        mkdirs("/save/account/" + s);
+    }
+}
