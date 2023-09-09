@@ -1,105 +1,31 @@
 #include <planet.h>
 
-inherit STD_ROOM;
-
-#define CHUNK_SIZE 32
+inherit M_CLEAN;
 
 int is_virtual_room () { return 1; }
 
-// -----
-
-void find_and_set_color (object room, string name, int x, int y) {
-    mixed *chunk;
-    string terrain;
-    int cx, cy;
-
-    chunk = D_PLANET->query_planet_chunk(name, x, y);
-    if (sizeof(chunk) < 4) {
-        return;
-    }
-
-    chunk = explode(chunk[4], ",");
-    cx = x % CHUNK_SIZE;
-    cy = y % CHUNK_SIZE;
-    if (sizeof(chunk) < cy || sizeof(chunk[cy]) < cx) {
-        return;
-    }
-
-    terrain = chunk[cy][cx..cx];
-
-    terrain = upper_case(terrain);
-
-    switch(terrain[0]) {
-    case '0'..'3':
-        room->set_room_square_color("%^BLUE%^");
-        room->set_short("deep water");
-        room->set_long("Surrounded by deep water.");
-        break;
-    case '4'..'5':
-        room->set_room_square_color("%^BLUE%^BOLD%^");
-        room->set_short("shallow water");
-        room->set_long("Surrounded by shallow water.");
-        break;
-    case '6':
-        room->set_room_square_color("%^YELLOW%^");
-        room->set_short("arid sands");
-        room->set_long("Surrounded by arid sands.");
-        break;
-    case '7':
-        room->set_room_square_color("%^GREEN%^BOLD%^");
-        room->set_short("grassy fields");
-        room->set_long("Surrounded by grassy fields.");
-        break;
-    case '8':
-        room->set_room_square_color("%^GREEN%^");
-        room->set_short("forests");
-        room->set_long("Surrounded by forests.");
-        break;
-    case '9'..'A':
-        room->set_room_square_color("%^ORANGE%^");
-        room->set_short("mountainous terrain");
-        room->set_long("Surrounded by mountainous terrain.");
-        break;
-    case 'B'..'F':
-        room->set_room_square_color("%^BOLD%^");
-        room->set_short("snow covered hills");
-        room->set_long("Surrounded by snow covered hills.");
-        break;
-    default:
-        room->set_room_square_color("%^RED%^");
-    }
-}
-
-int find_planet_size (string name) {
-    mixed *result = D_PLANET->query_planet(name);
-    if (sizeof(result) > 0) {
-        result = result[0];
-    }
-    return sizeof(result) > 2 ? result[2] : 0;
-}
-
 object virtual_create (string arg) {
     string name, path;
-    int x, y, size, xw, xe, yn, ys;
+    int x, y, xw, xe, yn, ys;
     object room;
+    int pSize, pTerrain;
+    mapping planet, *overrides;
 
     if (sscanf(arg, PLANET_V_ROOM + "terrain/%s/%d.%d", name, x, y) != 3) {
         return 0;
     }
 
-    room = new("/domain/Planet/virtual/room/base/terrain.c");
+    // prepare for room
+    path = PLANET_V_ROOM + "terrain/" + name;
+    planet = D_PLANET->query_planet(name);
+    pSize = planet["size"] || 100;
+    xw = x - 1 > -1     ? x - 1 : pSize - 1;
+    xe = x + 1 < pSize  ? x + 1 : 0;
+    yn = y - 1 >= 0     ? y - 1 : pSize - 1;
+    ys = y + 1 < pSize  ? y + 1 : 0;
 
-    find_and_set_color(room, name, x, y);
-
-    size = find_planet_size(name);
-    xw = x - 1 > -1     ? x - 1 : size - 1;
-    xe = x + 1 < size   ? x + 1 : 0;
-    yn = y - 1 >= 0     ? y - 1 : size - 1;
-    ys = y + 1 < size   ? y + 1 : 0;
-
-    path = replace_string(file_name(), "virtual", "virtual/room");
-    path = replace_string(path, "terrain", "terrain/" + name);
-
+    // setup room
+    room = new(PLANET_V_ROOM + "base/terrain.c");
     room->set_exit("northwest", path + "/" + xw + "." + yn + ".c");
     room->set_exit("north",     path + "/" + x  + "." + yn + ".c");
     room->set_exit("northeast", path + "/" + xe + "." + yn + ".c");
@@ -108,6 +34,23 @@ object virtual_create (string arg) {
     room->set_exit("southwest", path + "/" + xw + "." + ys + ".c");
     room->set_exit("south",     path + "/" + x  + "." + ys + ".c");
     room->set_exit("southeast", path + "/" + xe + "." + ys + ".c");
+
+    if (overrides = planet["overrides"]) {
+        overrides = filter(overrides, (: $1["x"] == $(x) && $1["y"] == $(y) :));
+        foreach (mapping override in overrides) {
+            if (override["enter"]) {
+                room->remove_exit(override["dir"]);
+                room->set_exit("enter " + override["dir"], override["room"]);
+            } else if (!override["room"]) {
+                room->remove_exit(override["dir"]);
+            } else {
+                room->set_exit(override["dir"], override["room"]);
+            }
+        }
+    }
+    // setup terrain
+    pTerrain = D_PLANET->query_planet_terrain(name, x, y, pSize);
+    room->set_terrain(pTerrain);
 
     return room;
 }

@@ -4,6 +4,7 @@
 
 # Save Files
 /lib/save
+!/lib/save/planet/Terra.o
 !/lib/save/daemon/soul.o
 
 # Personal Files
