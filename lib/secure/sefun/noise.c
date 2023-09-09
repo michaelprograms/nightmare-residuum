@@ -106,7 +106,7 @@ float noise_3d_permutation (float x, float y, float z, int *p) {
 
     A  = (p[X] + Y) & PERMUTATION_SIZE;
     AA = (p[A] + Z) & PERMUTATION_SIZE;
-    AB = (p[(A+1) & PERMUTATION_SIZE] & PERMUTATION_SIZE + Z) & PERMUTATION_SIZE;
+    AB = (p[(A+1) & PERMUTATION_SIZE] + Z) & PERMUTATION_SIZE;
     B  = (p[(X + 1) & PERMUTATION_SIZE] + Y) & PERMUTATION_SIZE;
     BA = (p[B] & PERMUTATION_SIZE + Z) & PERMUTATION_SIZE;
     BB = (p[(B+1) & PERMUTATION_SIZE] + Z) & PERMUTATION_SIZE;
