@@ -1,3 +1,5 @@
+#include <config.h>
+
 varargs string format_page (string *items, mixed columns, int pad, int center, string ansi) {
     int totalWidth, width, numItems, numColumns, remainder, ratioSum;
     int i, j, diff;
