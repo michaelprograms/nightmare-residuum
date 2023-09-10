@@ -18,7 +18,7 @@ varargs string format_page (string *items, mixed columns, int pad, int center, s
         error("Bad argument 2 to format->format_page");
     }
 
-    totalWidth = to_int(SEFUN->query_account_setting("width")) - pad * 2;
+    totalWidth = (to_int(SEFUN->query_account_setting("width")) || DEFAULT_WIDTH) - pad * 2;
     items = map(items, (: "" + $1 :)); // force numbers to string
     numItems = sizeof(items);
     format = "%" + (center?"|":"-") + "*s";

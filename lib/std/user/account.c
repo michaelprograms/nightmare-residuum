@@ -1,3 +1,5 @@
+#include <config.h>
+
 #include "user.h"
 
 inherit M_SAVE;
@@ -40,10 +42,10 @@ nomask int query_ed_setup () {
 void ensure_default_settings () {
     // verify default settings exist
     if (undefinedp(__Settings["width"])) {
-        __Settings["width"] = 80;
+        __Settings["width"] = DEFAULT_WIDTH;
     }
     if (undefinedp(__Settings["lines"])) {
-        __Settings["lines"] = 40;
+        __Settings["lines"] = DEFAULT_LINES;
     }
     if (undefinedp(__Settings["ansi"])) {
         __Settings["ansi"] = "on";

@@ -1,3 +1,5 @@
+#include <config.h>
+
 #define ED_BASIC_COMMANDS "\"%^CYAN%^BOLD%^i%^RESET%^\"nsert code, \"%^CYAN%^BOLD%^.%^RESET%^\" to save, e\"%^CYAN%^BOLD%^x%^RESET%^\"ecute, \"%^CYAN%^BOLD%^q%^RESET%^\"uit to abort"
 
 inherit STD_COMMAND;
@@ -43,18 +45,19 @@ void end_edit (string evalfile, string tmpfile) {
 }
 
 void command (string input, mapping flags) {
+    object user = this_user();
     string userpath = user_path(this_character()->query_key_name());
-    string evalfile, tmpfile;
-    string tmp;
+    string evalfile, tmpfile, tmp;
+    int width = to_int(query_account_setting("width")) || DEFAULT_WIDTH;
 
     if (file_size(userpath) != -2) {
-        message("system", "You must have a valid home directory.\n", this_user());
+        message("system", "You must have a valid home directory.\n", user);
         return;
     }
 
     evalfile = userpath + "/CMD_EVAL_FILE.c";
     if (!write_file(evalfile, "")) {
-        message("system", "You must have write access.\n", this_user());
+        message("system", "You must have write access.\n", user);
         return;
     }
 
@@ -68,11 +71,10 @@ void command (string input, mapping flags) {
         execute_file(evalfile, input);
     } else {
         tmpfile = userpath + "/.eval.tmp";
-        message("system", "Entering eval ed mode, standard ed commands apply:\n", this_user());
-        message("system", ED_BASIC_COMMANDS + "\n", this_user());
-        message("system", "________________________________________________________________________________\n", this_user());
+        message("system", "Entering eval ed mode, standard ed commands apply:\n", user);
+        message("system", ED_BASIC_COMMANDS + "\n" + sprintf("%*'_'s\n", width, ""), user);
         if (tmp = read_file(tmpfile)) {
-            message("system", tmp + "\n", this_user());
+            message("system", tmp + "\n", user);
         }
         new("/secure/std/editor.c")->editor_start(tmpfile, (: end_edit($(evalfile), $(tmpfile)) :));
     }
