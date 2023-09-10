@@ -9,7 +9,7 @@ string sculpture_long () {
         tc->set_property("human_museum",  prop + "s1");
     }
 
-    if (SEFUN->query_account_setting("screenreader") == "on") {
+    if (query_account_setting("screenreader") == "on") {
         desc += "It depicts a blue and white planet off the horizon of the grey surface of an orbiting moon against the dark backdrop of space.";
     } else {
         // https://dom111.github.io/image-to-ansi/
