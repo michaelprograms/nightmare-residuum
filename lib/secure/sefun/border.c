@@ -1,3 +1,5 @@
+#include <config.h>
+
 private mixed *query_character_border_colors () {
     object po = SEFUN->this_character();
     int *arr1, *arr2 = ({ 192, 192, 192 });
