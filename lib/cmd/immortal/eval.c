@@ -79,15 +79,15 @@ void command (string input, mapping flags) {
     return;
 }
 
-void execute_file (string evalfile, string input) {
+void execute_file (string file, string input) {
     mixed ret;
     int timeBefore, timeAfter;
 
-    clear_file(evalfile);
-    create_tmp_file(evalfile, input);
+    clear_file(file);
+    create_tmp_file(file, input);
 
     timeBefore = perf_counter_ns();
-    ret = call_other(evalfile, "eval");
+    ret = call_other(file, "eval");
     timeAfter = perf_counter_ns();
 
     if (regexp(input, "return")) {
@@ -95,6 +95,7 @@ void execute_file (string evalfile, string input) {
     } else {
         write("Complete (%^ORANGE%^" + sprintf("%.2f", (timeAfter - timeBefore)/1000000.0) + " ms%^RESET%^)\n");
     }
+    if (ret = find_object(file)) destruct(ret);
 }
 
 void clear_file (string file) {
