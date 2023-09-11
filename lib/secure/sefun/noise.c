@@ -3,7 +3,7 @@
 //
 // Example:
 //
-// int *p = perlin_generate_permutation(NAME);
+// int *p = perlin_generate_permutation(SEED);
 // float nx = to_float(x) / SIZE;
 // float ny = to_float(y) / SIZE;
 // float terrain = (1.0 + perlin_noise_2d(nx, ny, p, 8, 15.0)) * 0.5;
@@ -231,6 +231,8 @@ float perlin_noise_3d (float x, float y, float z, int *p, int octaves, float sca
     return total;
 }
 
+/* ----- perlin seeded permutation ----- */
+
 // uses Xorshift128+ to generate a seeded permutation array
 // https://stackoverflow.com/questions/34426499/what-is-the-real-definition-of-the-xorshift128-algorithm
 int *perlin_generate_permutation (string seed) {
@@ -242,8 +244,7 @@ int *perlin_generate_permutation (string seed) {
         return PERMUTATION;
     }
 
-    // Xorshift128+ PRNG initialize
-    // turn seed string into positive integer in state0
+    // Xorshift128+ PRNG initialize: turn seed into positive integer in state0
     p = map(explode(seed, ""), (: $1[0] :));
     j = sizeof(p);
     for (i = 0; i < j; i ++) {
@@ -267,7 +268,7 @@ int *perlin_generate_permutation (string seed) {
         state1 = s1;
         j = state1 % (255 - i + 1);
 
-        // swap with randomly selected remaining permutation
+        // swap with random remaining permutation index
         swap   = p[i  ];
         p[i  ] = p[i+j];
         p[i+j] = swap;
