@@ -293,8 +293,6 @@ protected nomask varargs void account_input (int state, mixed extra, string inpu
 
         case STATE_ACCOUNT_PASSWORD:
             if (crypt(input, query_password()) == query_password()) {
-                set_last_on();
-                save_data();
                 if (!query_playable_characters()) {
                     write("\nWelcome, "+query_name()+"! You will now create a character.\n");
                     account_input(STATE_CHARACTER_ENTER);
@@ -302,6 +300,8 @@ protected nomask varargs void account_input (int state, mixed extra, string inpu
                     write("\n\n%^BOLD%^Welcome back, "+query_name()+". Last seen "+time_ago(query_last_on())+".%^RESET%^\n");
                     display_account_menu();
                 }
+                set_last_on();
+                save_data();
             } else {
                 write("Invalid password.\n");
                 if (extra >= 2) {
