@@ -1,3 +1,5 @@
+#include <config.h>
+
 nosave private object __User;
 nosave private string *__Lines;
 nosave private int __LineNum, __LinesCount;
@@ -22,7 +24,7 @@ nomask private string prompt () {
         done(1);
         return "";
     } else {
-        int width = to_int(query_account_setting("width")) || 80;
+        int width = to_int(query_account_setting("width")) || DEFAULT_WIDTH;
         percent = chunkEnd * 100 / __LinesCount;
         prompt = sprintf("Lines %s to %s of %s (%i%%) --- press <enter> or <q>", format_integer(__LineNum + 1), format_integer(chunkEnd), format_integer(__LinesCount), percent);
         prompt = sprintf("%|*s", width, prompt);
