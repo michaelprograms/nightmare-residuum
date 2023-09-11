@@ -400,12 +400,14 @@ protected nomask varargs void account_input (int state, mixed extra, string inpu
             if (!input || input == "" || !(input = lower_case(input))) {
                 return display_account_menu();
             }
-            // @TODO member_array(input, D_ACCESS->query_secure()) { write("Cannot delete"); }
+            if (D_CHARACTER->query_immortal(input)) {
+                write("Cannot delete an immortal character.\n");
+                return display_account_menu();
+            }
             input = sanitize_name(input);
             if (member_array(input, query_character_names()) == -1) {
                 write("Invalid character name.\n\n");
-                display_account_menu();
-                return;
+                return display_account_menu();
             }
             input_next((: account_input, STATE_CHARACTER_DELETE_CONFIRM, input :), PROMPT_CHARACTER_DELETE_CONFIRM + "[" + input + "] ");
             break;
