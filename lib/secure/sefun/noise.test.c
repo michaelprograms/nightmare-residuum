@@ -12,8 +12,7 @@ string *test_order () {
     return ({
         "test_noise_helpers",
         "test_generate_permutation",
-        "test_noise_2d",
-        "test_noise_3d",
+        "test_noise",
      });
 }
 
@@ -30,26 +29,39 @@ void test_noise_helpers () {
         assert(testOb->noise_fade(1.0), "==", 1.0),
     }) :));
     expect("noise_grad provides directional information", (: ({
-        // 2d
-        assert(testOb->noise_grad(0, 0.0, 0.0, 0.0), "==", 0.0),
-        assert(testOb->noise_grad(1, 0.0, 0.0, 0.0), "==", 0.0),
-        assert(testOb->noise_grad(100, 0.0, 0.0, 0.0), "==", 0.0),
-        assert(testOb->noise_grad(0, 1.0, 1.0, 0.0), "==", 2.0),
-        assert(testOb->noise_grad(1, 1.0, 1.0, 0.0), "==", 0.0),
-        assert(testOb->noise_grad(100, 1.0, 1.0, 0.0), "==", 1.0),
-        assert(testOb->noise_grad(0, 32.0, 32.0, 0.0), "==", 64.0),
-        assert(testOb->noise_grad(1, 32.0, 32.0, 0.0), "==", 0.0),
-        assert(testOb->noise_grad(100, 32.0, 32.0, 0.0), "==", 32.0),
-        // 3d
-        assert(testOb->noise_grad(0, 0.0, 0.0, 0.0), "==", 0.0),
-        assert(testOb->noise_grad(1, 0.0, 0.0, 0.0), "==", 0.0),
-        assert(testOb->noise_grad(100, 0.0, 0.0, 0.0), "==", 0.0),
-        assert(testOb->noise_grad(0, 1.0, 1.0, 1.0), "==", 2.0),
-        assert(testOb->noise_grad(1, 1.0, 1.0, 1.0), "==", 0.0),
-        assert(testOb->noise_grad(100, 1.0, 1.0, 1.0), "==", 2.0),
-        assert(testOb->noise_grad(0, 32.0, 32.0, 32.0), "==", 64.0),
-        assert(testOb->noise_grad(1, 32.0, 32.0, 32.0), "==", 0.0),
-        assert(testOb->noise_grad(100, 32.0, 32.0, 32.0), "==", 64.0),
+        assert(testOb->noise_grad(0,  1.0, 2.0, 3.0), "==",  3.0),
+        assert(testOb->noise_grad(1,  1.0, 2.0, 3.0), "==",  1.0),
+        assert(testOb->noise_grad(2,  1.0, 2.0, 3.0), "==", -1.0),
+        assert(testOb->noise_grad(3,  1.0, 2.0, 3.0), "==", -3.0),
+        assert(testOb->noise_grad(4,  1.0, 2.0, 3.0), "==",  4.0),
+        assert(testOb->noise_grad(5,  1.0, 2.0, 3.0), "==",  2.0),
+        assert(testOb->noise_grad(6,  1.0, 2.0, 3.0), "==", -2.0),
+        assert(testOb->noise_grad(7,  1.0, 2.0, 3.0), "==", -4.0),
+        assert(testOb->noise_grad(8,  1.0, 2.0, 3.0), "==",  5.0),
+        assert(testOb->noise_grad(9,  1.0, 2.0, 3.0), "==",  1.0),
+        assert(testOb->noise_grad(10, 1.0, 2.0, 3.0), "==", -1.0),
+        assert(testOb->noise_grad(11, 1.0, 2.0, 3.0), "==", -5.0),
+        assert(testOb->noise_grad(12, 1.0, 2.0, 3.0), "==",  3.0),
+        assert(testOb->noise_grad(13, 1.0, 2.0, 3.0), "==",  1.0),
+        assert(testOb->noise_grad(14, 1.0, 2.0, 3.0), "==",  1.0),
+        assert(testOb->noise_grad(15, 1.0, 2.0, 3.0), "==", -5.0),
+
+        assert(testOb->noise_grad(0,  1.0, 1.0, 1.0), "==",  2.0),
+        assert(testOb->noise_grad(1,  1.0, 1.0, 1.0), "==",  0.0),
+        assert(testOb->noise_grad(2,  1.0, 1.0, 1.0), "==",  0.0),
+        assert(testOb->noise_grad(3,  1.0, 1.0, 1.0), "==", -2.0),
+        assert(testOb->noise_grad(4,  1.0, 1.0, 1.0), "==",  2.0),
+        assert(testOb->noise_grad(5,  1.0, 1.0, 1.0), "==",  0.0),
+        assert(testOb->noise_grad(6,  1.0, 1.0, 1.0), "==",  0.0),
+        assert(testOb->noise_grad(7,  1.0, 1.0, 1.0), "==", -2.0),
+        assert(testOb->noise_grad(8,  1.0, 1.0, 1.0), "==",  2.0),
+        assert(testOb->noise_grad(9,  1.0, 1.0, 1.0), "==",  0.0),
+        assert(testOb->noise_grad(10, 1.0, 1.0, 1.0), "==",  0.0),
+        assert(testOb->noise_grad(11, 1.0, 1.0, 1.0), "==", -2.0),
+        assert(testOb->noise_grad(12, 1.0, 1.0, 1.0), "==",  2.0),
+        assert(testOb->noise_grad(13, 1.0, 1.0, 1.0), "==",  0.0),
+        assert(testOb->noise_grad(14, 1.0, 1.0, 1.0), "==",  0.0),
+        assert(testOb->noise_grad(15, 1.0, 1.0, 1.0), "==", -2.0),
     }) :));
     expect("noise_lerp weights two numbers", (: ({
         assert(testOb->noise_lerp(0.0, 0.0, 10.0), "==", 0.0),
@@ -72,36 +84,43 @@ void test_generate_permutation () {
     }) :));
 }
 
-void test_noise_2d () {
+void test_noise () {
     int *seedZero = testOb->perlin_generate_permutation(0);
     int *seedTest = testOb->perlin_generate_permutation("test");
 
-    expect("noise_2d_permutation returns different results", (: ({
-        assert(testOb->noise_2d_permutation(3.14, 42.0, $(seedZero)), "==", -0.018920),
+    // https://rosettacode.org/wiki/Perlin_noise
+    // Perlin noise of the 3D point 3.14, 42.0, 7.0 is 0.13691995878400012
+    // Perlin noise of the 2D point 3.14, 42.0 is also 0.13691995878400012
+
+    expect("noise_2d_permutation returns correct non-seeded value", (: ({
+        assert(testOb->noise_2d_permutation(3.14, 42.0, $(seedZero)), "==", 0.136920),
+    }) :));
+    expect("noise_3d_permutation returns correct non-seeded value", (: ({
+        assert(testOb->noise_3d_permutation(3.14, 42.0, 7.0, $(seedZero)), "==", 0.136920),
+        assert(testOb->noise_3d_permutation(3.14, 42.0, 0.0, $(seedZero)), "==", 0.136920),
+    }) :));
+
+    expect("noise_2d_permutation returns seeded value", (: ({
         assert(testOb->noise_2d_permutation(3.14, 42.0, $(seedTest)), "==", 0.155840),
     }) :));
-    expect("perlin_noise_2d returns different results", (: ({
-        assert(testOb->perlin_noise_2d(3.14, 42.0, $(seedZero), 1, 1.0), "==", -0.018920),
-        assert(testOb->perlin_noise_2d(3.14, 42.0, $(seedZero), 8, 15.0), "==", 0.211000),
+    expect("noise_3d_permutation returns seeded value", (: ({
+        assert(testOb->noise_3d_permutation(3.14, 42.0, 7.0, $(seedTest)), "==", -0.018920),
+    }) :));
 
+    expect("perlin_noise_2d returns non-seeded value", (: ({
+        assert(testOb->perlin_noise_2d(3.14, 42.0, $(seedZero), 1, 1.0), "==", 0.136920),
+        assert(testOb->perlin_noise_2d(3.14, 42.0, $(seedZero), 8, 15.0), "==", -0.022626),
+    }) :));
+    expect("perlin_noise_2d returns seeded value", (: ({
         assert(testOb->perlin_noise_2d(3.14, 42.0, $(seedTest), 1, 1.0), "==", 0.155840),
-        assert(testOb->perlin_noise_2d(3.14, 42.0, $(seedTest), 8, 15.0), "==", -0.024632),
+        assert(testOb->perlin_noise_2d(3.14, 42.0, $(seedTest), 8, 15.0), "==", -0.246590),
     }) :));
-}
-
-void test_noise_3d () {
-    int *seedZero = testOb->perlin_generate_permutation(0);
-    int *seedTest = testOb->perlin_generate_permutation("test");
-
-    expect("noise_3d_permutation returns different results", (: ({
-        assert(testOb->noise_3d_permutation(3.14, 42.0, 7.0, $(seedZero)), "==", 0.136920),
-        assert(testOb->noise_3d_permutation(3.14, 42.0, 7.0, $(seedTest)), "==", 0.000000),
-    }) :));
-    expect("perlin_noise_3d returns different results", (: ({
+    expect("perlin_noise_3d returns non-seeded value", (: ({
         assert(testOb->perlin_noise_3d(3.14, 42.0, 7.0, $(seedZero), 1, 1.0), "==", 0.136920),
-        assert(testOb->perlin_noise_3d(3.14, 42.0, 7.0, $(seedZero), 8, 15.0), "==", 0.056902),
-
-        assert(testOb->perlin_noise_3d(3.14, 42.0, 7.0, $(seedTest), 1, 1.0), "==", 0.000000),
-        assert(testOb->perlin_noise_3d(3.14, 42.0, 7.0, $(seedTest), 8, 15.0), "==", -0.299750),
+        assert(testOb->perlin_noise_3d(3.14, 42.0, 7.0, $(seedZero), 8, 15.0), "==", 0.133774),
+    }) :));
+    expect("perlin_noise_3d returns seeded value", (: ({
+        assert(testOb->perlin_noise_3d(3.14, 42.0, 7.0, $(seedTest), 1, 1.0), "==", -0.018920),
+        assert(testOb->perlin_noise_3d(3.14, 42.0, 7.0, $(seedTest), 8, 15.0), "==", -0.306174),
     }) :));
 }

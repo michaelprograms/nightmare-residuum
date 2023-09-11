@@ -1,3 +1,14 @@
+// Perlin noise algorithm for generating seeded randomized values
+// https://rosettacode.org/wiki/Perlin_noise
+//
+// Example:
+//
+// int *p = perlin_generate_permutation(NAME);
+// float nx = to_float(x) / SIZE;
+// float ny = to_float(y) / SIZE;
+// float terrain = (1.0 + perlin_noise_2d(nx, ny, p, 8, 15.0)) * 0.5;
+//
+
 // Ken Perlin's hash lookup table, a randomly arranged array from [0-255]
 #define PERMUTATION ({ \
 151, 160, 137, 91,  90,  15,  131, 13,  201, 95,  96,  53,  194, 233, 7,   225,\
@@ -17,7 +28,6 @@
 184, 84,  204, 176, 115, 121, 50,  45,  127, 4,   150, 254, 138, 236, 205, 93, \
 222, 114, 67,  29,  24,  72,  243, 141, 128, 195, 78,  66,  215, 61,  156, 180,\
 })
-#define PERMUTATION_SIZE 255
 
 /* ----- noise helper functions ----- */
 
@@ -26,7 +36,7 @@ float noise_fade (float t) {
     return t * t * t * (t * (t * 6.0 - 15.0) + 10.0);
 }
 // Source: http://riven8192.blogspot.com/2010/08/calculate-perlinnoise-twice-as-fast.html
-varargs float noise_grad (int hash, float x, float y, float z) {
+float noise_grad (int hash, float x, float y, float z) {
     switch(hash & 0xF) {
         case 0x0: return  x + y;
         case 0x1: return -x + y;
@@ -44,11 +54,13 @@ varargs float noise_grad (int hash, float x, float y, float z) {
         case 0xD: return -y + z;
         case 0xE: return  y - x;
         case 0xF: return -y - z;
-        default: return 0; // never happens
+        default:  return 0; // never happens
     }
 }
-// Linear interpolation function: blend values a and b based on weight t
+// Linear interpolation: blend values a and b based on weight t [0.0-1.0]
 float noise_lerp (float t, float a, float b) {
+    if (0.0 > t) return a;
+    if (1.0 < t) return b;
     return a + t * (b - a);
 }
 
@@ -56,33 +68,41 @@ float noise_lerp (float t, float a, float b) {
 
 float noise_2d_permutation (float x, float y, int *p) {
     float u, v;
-    int A, B, X, Y, A1, B1;
+    int X, Y;
+    int A, AA, AB, B, BA, BB;
 
-    X = to_int(floor(x)) & PERMUTATION_SIZE;
-    Y = to_int(floor(y)) & PERMUTATION_SIZE;
+    // find unit square that contains point
+    X = to_int(x) & 255;
+    Y = to_int(y) & 255;
 
-    x -= floor(x);
-    y -= floor(y);
+    // find relative x,y of point in square
+    x -= to_int(x);
+    y -= to_int(y);
 
+    // compute fade curves for each of x,y
     u = noise_fade(x);
     v = noise_fade(y);
 
-    A = (p[X] + Y) & PERMUTATION_SIZE;
-    B = (p[(X + 1) & PERMUTATION_SIZE] + Y) & PERMUTATION_SIZE;
-    A1 = (A + 1) & PERMUTATION_SIZE;
-    B1 = (B + 1) & PERMUTATION_SIZE;
+    // hash coordinates of the 4 corners
+    A  = (p[X          ] + Y) & 255;
+    AA = (p[A          ]    ) & 255;
+    AB = (p[(A+1) & 255]    ) & 255;
+    B  = (p[(X+1) & 255] + Y) & 255;
+    BA = (p[B          ]    ) & 255;
+    BB = (p[(B+1) & 255]    ) & 255;
 
+    // add blended results from the 4 corners
     return noise_lerp(
         v,
         noise_lerp(
             u,
-            noise_grad(p[A ], x, y),
-            noise_grad(p[B ], x - 1.0, y)
+            noise_grad(p[AA], x  , y  , 0),
+            noise_grad(p[BA], x-1, y  , 0)
         ),
         noise_lerp(
             u,
-            noise_grad(p[A1], x, y - 1.0),
-            noise_grad(p[B1], x - 1.0, y - 1.0)
+            noise_grad(p[AA], x  , y-1, 0),
+            noise_grad(p[BB], x-1, y-1, 0)
         )
     );
 }
@@ -92,51 +112,55 @@ float noise_3d_permutation (float x, float y, float z, int *p) {
     int X, Y, Z;
     int A, AA, AB, B, BA, BB;
 
-    X = to_int(floor(x)) & PERMUTATION_SIZE;
-    Y = to_int(floor(y)) & PERMUTATION_SIZE;
-    Z = to_int(floor(z)) & PERMUTATION_SIZE;
+    // find unit cube that contains point
+    X = to_int(x) & 255;
+    Y = to_int(y) & 255;
+    Z = to_int(z) & 255;
+    // find relative x,y,z of point in cube
+    x -= to_int(x);
+    y -= to_int(y);
+    z -= to_int(z);
 
-    x -= floor(x);
-    y -= floor(y);
-    z -= floor(z);
-
+    // compute fade curves for each of x,y,z
     u = noise_fade(x);
     v = noise_fade(y);
     w = noise_fade(z);
 
-    A  = (p[X] + Y) & PERMUTATION_SIZE;
-    AA = (p[A] + Z) & PERMUTATION_SIZE;
-    AB = (p[(A+1) & PERMUTATION_SIZE] + Z) & PERMUTATION_SIZE;
-    B  = (p[(X + 1) & PERMUTATION_SIZE] + Y) & PERMUTATION_SIZE;
-    BA = (p[B] & PERMUTATION_SIZE + Z) & PERMUTATION_SIZE;
-    BB = (p[(B+1) & PERMUTATION_SIZE] + Z) & PERMUTATION_SIZE;
+    // hash coordinates of the 8 cube corners
+    A  = (p[X          ] + Y) & 255;
+    AA = (p[A          ] + Z) & 255;
+    AB = (p[(A+1) & 255] + Z) & 255;
+    B  = (p[(X+1) & 255] + Y) & 255;
+    BA = (p[B          ] + Z) & 255;
+    BB = (p[(B+1) & 255] + Z) & 255;
 
+    // add blended results from 8 corners of cube
     return noise_lerp(
         w,
         noise_lerp(
             v,
             noise_lerp(
                 u,
-                noise_grad(p[AA  ], x  , y  , z   ),
-                noise_grad(p[BA  ], x-1, y  , z   )
+                noise_grad(p[AA  ], x  , y  , z  ),
+                noise_grad(p[BA  ], x-1, y  , z  )
             ),
             noise_lerp(
                 u,
-                noise_grad(p[AB  ], x  , y-1, z   ),
-                noise_grad(p[BB  ], x-1, y-1, z   )
+                noise_grad(p[AB  ], x  , y-1, z  ),
+                noise_grad(p[BB  ], x-1, y-1, z  )
             )
         ),
         noise_lerp(
             v,
             noise_lerp(
                 u,
-                noise_grad(p[AA+1], x  , y  , z-1 ),
-                noise_grad(p[BA+1], x-1, y  , z-1 )
+                noise_grad(p[AA+1], x  , y  , z-1),
+                noise_grad(p[BA+1], x-1, y  , z-1)
             ),
             noise_lerp(
                 u,
-                noise_grad(p[AB+1], x  , y-1, z-1 ),
-                noise_grad(p[BB+1], x-1, y-1, z-1 )
+                noise_grad(p[AB+1], x  , y-1, z-1),
+                noise_grad(p[BB+1], x-1, y-1, z-1)
             )
         )
     );
@@ -212,20 +236,26 @@ float perlin_noise_3d (float x, float y, float z, int *p, int octaves, float sca
 int *perlin_generate_permutation (string seed) {
     int i, j, swap;
     mixed *p;
-    int state0, state1, s0, s1;
+    int state0 = 0, state1 = 0, s0, s1;
 
     if (!stringp(seed) || !sizeof(seed)) {
         return PERMUTATION;
     }
 
-    p = PERMUTATION;
-
     // Xorshift128+ PRNG initialize
-    // turn seed string into positive integer
-    state0 = SEFUN->reduce(explode(seed, ""), (: $1 + $2[0] :), 0) & 0x7fffffff;
+    // turn seed string into positive integer in state0
+    p = map(explode(seed, ""), (: $1[0] :));
+    j = sizeof(p);
+    for (i = 0; i < j; i ++) {
+        state0 += p[i];
+    }
+    state0 &= 0x7fffffff;
     state1 = state0 + 0x9E3779B9;
 
-    for (i = 0; i <= PERMUTATION_SIZE; i ++) {
+    // set default permutation
+    p = PERMUTATION;
+
+    for (i = 0; i <= 255; i ++) {
         // Xorshift128+ PRNG generate next integer
         s1 = state0;
         s0 = state1;
@@ -235,11 +265,11 @@ int *perlin_generate_permutation (string seed) {
         s1 ^= s0;
         s1 ^= s0 >> 5;
         state1 = s1;
-        j = state1 % (PERMUTATION_SIZE - i + 1);
+        j = state1 % (255 - i + 1);
 
-        // swap the random remaining position
-        swap = p[i];
-        p[i] = p[i+j];
+        // swap with randomly selected remaining permutation
+        swap   = p[i  ];
+        p[i  ] = p[i+j];
         p[i+j] = swap;
     }
 
