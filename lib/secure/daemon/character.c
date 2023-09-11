@@ -41,6 +41,21 @@ object query_whois_character (string name) {
     return char;
 }
 
+int query_immortal (string name) {
+    object char;
+    int immortal;
+
+    if (!query_exists(name)) return 0;
+
+    char = clone_object(STD_CHARACTER);
+    char->set_name(capitalize(name));
+    char->restore_data();
+    char->set_save_path(0);
+    immortal = char->query_immortal();
+    destruct(char);
+    return immortal;
+}
+
 /* ----- connected info ----- */
 
 int query_connected_concurrent () {
