@@ -167,7 +167,10 @@ private void display_account_menu () {
     }
 
     remove_call_out();
-    msg = "\nAccount Actions   : " + format_syntax("settings") + " " + format_syntax("password") + " " + format_syntax("exit") + "%^RESET%^\nCharacter Actions : " + format_syntax("new") + " " + format_syntax("delete") + "\n\n";
+    if (CONNECTION_LOCKED) {
+        msg += "\n\n%^ORANGE%^Attention!%^RESET%^\nConnection to " + mud_name() + " is currently limited to immortals only.%^RESET%^\n\n";
+    }
+    msg += "\nAccount Actions   : " + format_syntax("settings") + " " + format_syntax("password") + " " + format_syntax("exit") + "%^RESET%^\nCharacter Actions : " + format_syntax("new") + " " + format_syntax("delete") + "\n\n";
 
     // @TODO different format for screenreader here?
     foreach (string name in query_character_names()) {
@@ -325,10 +328,19 @@ protected nomask varargs void account_input (int state, mixed extra, string inpu
                 write("Changing password...\n");
                 input_next((: account_input, STATE_PASSWORD_NEW, 0 :), PROMPT_PASSWORD_CREATE, 1);
             } else if (input == "new") {
+                if (CONNECTION_LOCKED) {
+                    return display_account_menu();
+                }
                 account_input(STATE_CHARACTER_ENTER);
             } else if (input == "delete") {
+                if (CONNECTION_LOCKED) {
+                    return display_account_menu();
+                }
                 input_next((: account_input, STATE_CHARACTER_DELETE, 0 :), PROMPT_CHARACTER_DELETE);
             } else if (member_array(input, query_character_names()) > -1) {
+                if (CONNECTION_LOCKED && !D_CHARACTER->query_immortal(input)) {
+                    return display_account_menu();
+                }
                 // Check for existing character
                 if (extra = find_character(input)) {
                     if (extra->query_user() && interactive(extra->query_user())) {
@@ -475,7 +487,7 @@ protected nomask varargs void account_input (int state, mixed extra, string inpu
                 if (intp(query_setting(setting))) {
                     display = "" + query_setting(setting);
                 } else {
-                    display = query_setting(setting);  // @TODO ?
+                    display = query_setting(setting);
                 }
                 write("  " + sprintf("%-24s", setting) + "  " + display + "\n");
             }
