@@ -67,59 +67,59 @@ float noise_lerp (float t, float a, float b) {
 /* ----- noise permutation functions ----- */
 
 float noise_2d_permutation (float x, float y, int *p) {
-    float u, v;
     int X, Y;
-    int A, AA, AB, B, BA, BB;
+    float u, v;
+    int A, A1, B, B1;
 
     // find unit square that contains point
-    X = to_int(x) & 255;
-    Y = to_int(y) & 255;
+    X = to_int(floor(x)) & 255;
+    Y = to_int(floor(y)) & 255;
 
     // find relative x,y of point in square
-    x -= to_int(x);
-    y -= to_int(y);
+    x -= floor(x);
+    y -= floor(y);
 
     // compute fade curves for each of x,y
     u = noise_fade(x);
     v = noise_fade(y);
 
     // hash coordinates of the 4 corners
+    // https://saturncloud.io/blog/producing-2d-perlin-noise-with-numpy-a-comprehensive-guide-for-data-scientists
     A  = (p[X          ] + Y) & 255;
-    AA = (p[A          ]    ) & 255;
-    AB = (p[(A+1) & 255]    ) & 255;
+    A1 = (A + 1             ) & 255;
     B  = (p[(X+1) & 255] + Y) & 255;
-    BA = (p[B          ]    ) & 255;
-    BB = (p[(B+1) & 255]    ) & 255;
+    B1 = (B + 1             ) & 255;
 
     // add blended results from the 4 corners
     return noise_lerp(
         v,
         noise_lerp(
             u,
-            noise_grad(p[AA], x  , y  , 0),
-            noise_grad(p[BA], x-1, y  , 0)
+            noise_grad(p[A ], x  , y  , 0),
+            noise_grad(p[B ], x-1, y  , 0)
         ),
         noise_lerp(
             u,
-            noise_grad(p[AA], x  , y-1, 0),
-            noise_grad(p[BB], x-1, y-1, 0)
+            noise_grad(p[A1], x  , y-1, 0),
+            noise_grad(p[B1], x-1, y-1, 0)
         )
     );
 }
 
 float noise_3d_permutation (float x, float y, float z, int *p) {
-    float u, v, w;
     int X, Y, Z;
+    float u, v, w;
     int A, AA, AB, B, BA, BB;
 
     // find unit cube that contains point
-    X = to_int(x) & 255;
-    Y = to_int(y) & 255;
-    Z = to_int(z) & 255;
+    X = to_int(floor(x)) & 255;
+    Y = to_int(floor(y)) & 255;
+    Z = to_int(floor(z)) & 255;
+
     // find relative x,y,z of point in cube
-    x -= to_int(x);
-    y -= to_int(y);
-    z -= to_int(z);
+    x -= floor(x);
+    y -= floor(y);
+    z -= floor(z);
 
     // compute fade curves for each of x,y,z
     u = noise_fade(x);
@@ -141,26 +141,26 @@ float noise_3d_permutation (float x, float y, float z, int *p) {
             v,
             noise_lerp(
                 u,
-                noise_grad(p[AA  ], x  , y  , z  ),
-                noise_grad(p[BA  ], x-1, y  , z  )
+                noise_grad(p[AA        ], x  , y  , z  ),
+                noise_grad(p[BA        ], x-1, y  , z  )
             ),
             noise_lerp(
                 u,
-                noise_grad(p[AB  ], x  , y-1, z  ),
-                noise_grad(p[BB  ], x-1, y-1, z  )
+                noise_grad(p[AB        ], x  , y-1, z  ),
+                noise_grad(p[BB        ], x-1, y-1, z  )
             )
         ),
         noise_lerp(
             v,
             noise_lerp(
                 u,
-                noise_grad(p[AA+1], x  , y  , z-1),
-                noise_grad(p[BA+1], x-1, y  , z-1)
+                noise_grad(p[AA+1 & 255], x  , y  , z-1),
+                noise_grad(p[BA+1 & 255], x-1, y  , z-1)
             ),
             noise_lerp(
                 u,
-                noise_grad(p[AB+1], x  , y-1, z-1),
-                noise_grad(p[BB+1], x-1, y-1, z-1)
+                noise_grad(p[AB+1 & 255], x  , y-1, z-1),
+                noise_grad(p[BB+1 & 255], x-1, y-1, z-1)
             )
         )
     );
