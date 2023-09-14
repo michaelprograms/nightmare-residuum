@@ -8,21 +8,22 @@ object virtual_create (string arg) {
     string name, path;
     int x, y, xw, xe, yn, ys;
     object room;
-    int pSize, pTerrain;
+    int pSize;
+    float pTerrain;
     mapping planet, *overrides;
 
-    if (sscanf(arg, PLANET_V_ROOM + "terrain/%s/%d.%d", name, x, y) != 3) {
+    if (sscanf(arg, PLANET_V_ROOM + "surface/%s/%d.%d", name, x, y) != 3) {
         return 0;
     }
 
     // prepare for room
-    path = PLANET_V_ROOM + "terrain/" + name;
+    path = PLANET_V_ROOM + "surface/" + name;
     planet = D_PLANET->query_planet(name);
     pSize = planet["size"] || 100;
-    xw = x - 1 > -1     ? x - 1 : pSize - 1;
-    xe = x + 1 < pSize  ? x + 1 : 0;
-    yn = y - 1 >= 0     ? y - 1 : pSize - 1;
-    ys = y + 1 < pSize  ? y + 1 : 0;
+    xw = x - 1 > -1    ? x - 1 : pSize - 1;
+    xe = x + 1 < pSize ? x + 1 : 0;
+    yn = y - 1 >= 0    ? y - 1 : pSize - 1;
+    ys = y + 1 < pSize ? y + 1 : 0;
 
     // setup room
     room = new(PLANET_V_ROOM + "base/terrain.c");

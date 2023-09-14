@@ -1,51 +1,55 @@
 inherit STD_ROOM;
 
-nosave private int __Terrain;
+nosave private float __Terrain;
 
-int query_terrain () {
+float query_terrain () {
     return __Terrain;
 }
-void set_terrain (int t) {
+void set_terrain (float t) {
     __Terrain = t;
 
-    switch(__Terrain) {
-    case 0..2:
-        set_room_square_color("%^BLUE%^");
+    if (__Terrain <= 0.2) {
+        set_room_square_color("\e[38;5;4m");     // BLUE
         set_short("deep water");
         set_long("Surrounded by deep water.");
-        break;
-    case 3..4:
-        set_room_square_color("%^BLUE%^BOLD%^");
+    } else if (__Terrain <= 0.25) {
+        set_room_square_color("\e[38;5;12m");    // BOLD BLUE
+        set_short("water");
+        set_long("Surrounded by water.");
+    } else if (__Terrain <= 0.3) {
+        set_room_square_color("\e[38;5;6m");     // CYAN
         set_short("shallow water");
-        set_long("Surrounded by shallow water.");
-        break;
-    case 5:
-        set_room_square_color("%^YELLOW%^");
+        set_long("Wading through shallow water.");
+    } else if (__Terrain <= 0.4) {
+        set_room_square_color("\e[38;5;14m");    // BOLD CYAN
+        set_short("puddles");
+        set_long("Stomping through puddles.");
+    } else if (__Terrain <= 0.5) {
+        set_room_square_color("\e[38;5;11m");    // YELLOW
         set_short("arid sands");
         set_long("Surrounded by arid sands.");
-        break;
-    case 6:
-        set_room_square_color("%^GREEN%^BOLD%^");
+    } else if (__Terrain <= 0.6) {
+        set_room_square_color("\e[38;5;10m");    // BOLD GREEN
         set_short("grassy fields");
         set_long("Surrounded by grassy fields.");
-        break;
-    case 7:
-        set_room_square_color("%^GREEN%^");
+    } else if (__Terrain <= 0.7) {
+        set_room_square_color("\e[38;5;2m");     // GREEN
         set_short("forests");
         set_long("Surrounded by forests.");
-        break;
-    case 8..10:
-        set_room_square_color("%^ORANGE%^");
+    } else if (__Terrain <= 0.8) {
+        set_room_square_color("\e[38;5;3m");     // ORANGE
         set_short("mountainous terrain");
         set_long("Surrounded by mountainous terrain.");
-        break;
-    case 11..12:
-        set_room_square_color("%^BOLD%^");
+    } else if (__Terrain <= 0.9) {
+        set_room_square_color("\e[38;5;7m");     // WHITE
+        set_short("snow dusted hills");
+        set_long("Surrounded by snow dusted hills.");
+    } else if (__Terrain <= 1.0) {
+        set_room_square_color("\e[38;5;15m");    // BOLD WHITE
         set_short("snow covered hills");
         set_long("Surrounded by snow covered hills.");
-        break;
-    default:
-        set_room_square_color("%^RED%^");
+    } else {
+        set_room_square_color("\e[38;5;9m");
     }
 }
 
