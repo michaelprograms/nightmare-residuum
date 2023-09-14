@@ -72,8 +72,8 @@ float noise_2d_permutation (float x, float y, int *p) {
     int A, A1, B, B1;
 
     // find unit square that contains point
-    X = to_int(floor(x)) & 255;
-    Y = to_int(floor(y)) & 255;
+    X = to_int(x) & 255;
+    Y = to_int(y) & 255;
 
     // find relative x,y of point in square
     x -= floor(x);
@@ -112,9 +112,9 @@ float noise_3d_permutation (float x, float y, float z, int *p) {
     int A, AA, AB, B, BA, BB;
 
     // find unit cube that contains point
-    X = to_int(floor(x)) & 255;
-    Y = to_int(floor(y)) & 255;
-    Z = to_int(floor(z)) & 255;
+    X = to_int(x) & 255;
+    Y = to_int(y) & 255;
+    Z = to_int(z) & 255;
 
     // find relative x,y,z of point in cube
     x -= floor(x);
