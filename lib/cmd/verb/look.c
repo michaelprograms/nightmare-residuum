@@ -1,5 +1,7 @@
 inherit STD_VERB;
 
+varargs mixed do_look_at_obj (object ob, mixed arg);
+
 void create () {
     verb::create();
     add_rules(({ "", "STR", "at STR", "OBJ", "at OBJ", "LIV", "at LIV", }));
@@ -28,7 +30,7 @@ mixed can_look_str (string str, string verb) {
     return can_look_at_str(str, verb);
 }
 void do_look_at_str (mixed args...) {
-    object po = previous_object(), env = environment(po);
+    object po = previous_object(), env = environment(po), ob;
     string str, desc;
 
     if (sizeof(args)) str = args[0];
@@ -36,6 +38,9 @@ void do_look_at_str (mixed args...) {
 
     if (!env->query_property("indoors") && member_array(str, ({"sky", "sun"})) > -1) {
         desc = D_ASTRONOMY->query_localsky(D_ASTRONOMY->query_astronomy_from_room(env), str);
+    } else if (ob = present(str, env)) {
+        // work around for parser not recognizing 'object 2' syntax
+        return do_look_at_obj(ob);
     } else {
         desc = env->handle_look(str);
     }
