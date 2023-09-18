@@ -8,8 +8,7 @@ object virtual_create (string arg) {
     string name, path;
     int x, y, xw, xe, yn, ys;
     object room;
-    int pSize;
-    float pTerrain;
+    int size;
     mapping planet, *overrides;
 
     if (sscanf(arg, PLANET_V_ROOM + "surface/%s/%d.%d", name, x, y) != 3) {
@@ -19,11 +18,11 @@ object virtual_create (string arg) {
     // prepare for room
     path = PLANET_V_ROOM + "surface/" + name;
     planet = D_PLANET->query_planet(name);
-    pSize = planet["size"] || 100;
-    xw = x - 1 > -1    ? x - 1 : pSize - 1;
-    xe = x + 1 < pSize ? x + 1 : 0;
-    yn = y - 1 >= 0    ? y - 1 : pSize - 1;
-    ys = y + 1 < pSize ? y + 1 : 0;
+    size = planet["size"] || 100;
+    xw = x     > 0     ? x - 1 : size - 1;
+    xe = x + 1 < size ? x + 1 : 0;
+    yn = y     > 0     ? y - 1 : size - 1;
+    ys = y + 1 < size ? y + 1 : 0;
 
     // setup room
     room = new(PLANET_V_ROOM + "base/terrain.c");
@@ -49,9 +48,10 @@ object virtual_create (string arg) {
             }
         }
     }
+
     // setup terrain
-    pTerrain = D_PLANET->query_planet_terrain(name, x, y, pSize);
-    room->set_terrain(pTerrain);
+    // room->set_terrain(D_PLANET->query_planet_surface_terrain(name, x, y, size));
+    room->set_terrain(D_PLANET->query_planet_terrain(name, x, y, size));
 
     return room;
 }
