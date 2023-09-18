@@ -38,13 +38,13 @@ object virtual_create (string arg) {
     if (overrides = planet["overrides"]) {
         overrides = filter(overrides, (: $1["x"] == $(x) && $1["y"] == $(y) :));
         foreach (mapping override in overrides) {
-            if (override["enter"]) {
+            if (override["type"] == "enter") {
                 room->remove_exit(override["dir"]);
                 room->set_exit("enter " + override["dir"], override["room"]);
-            } else if (!override["room"]) {
+                room->add_terrain_override(replace_string(override["desc"], "$DIR", override["dir"]));
+            } else if (override["type"] == "blocked") {
                 room->remove_exit(override["dir"]);
-            } else {
-                room->set_exit(override["dir"], override["room"]);
+                room->add_terrain_override(replace_string(override["desc"], "$DIR", override["dir"]));
             }
         }
     }

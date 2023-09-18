@@ -1,6 +1,11 @@
 inherit STD_ROOM;
 
 nosave private float __Terrain;
+nosave private string *__TerrainOverride = ({ });
+
+void add_terrain_override (string text) {
+    __TerrainOverride += ({ text });
+}
 
 float query_terrain () {
     return __Terrain;
@@ -50,6 +55,10 @@ void set_terrain (float t) {
         set_long("Surrounded by snow covered hills.");
     } else {
         set_room_square_color("\e[38;5;9m");
+    }
+
+    if (sizeof(__TerrainOverride)) {
+        set_long(query_long() + " " + implode(__TerrainOverride, " "));
     }
 }
 
