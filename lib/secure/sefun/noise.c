@@ -232,7 +232,7 @@ float noise_perlin_3d_permutation (float x, float y, float z, int *p) {
 // generate noise at coordinates x,y using a permutation, octaves, and scale
 float noise_perlin_2d (float x, float y, int *p, int octaves, float scale) {
     float total = 0.0;
-    float amplitude = 1.0, divisor = 0.0;
+    float amplitude = 1.0;
 
     if (!floatp(x)) {
         error("Bad argument 1 to noise->noise_perlin_2d");
@@ -252,31 +252,29 @@ float noise_perlin_2d (float x, float y, int *p, int octaves, float scale) {
 
     for (int i = 0; i < octaves; i ++) {
         total += noise_perlin_2d_permutation(x * scale, y * scale, p) * amplitude;
-        divisor += amplitude;
         scale *= 2.0;
         amplitude *= 0.5;
     }
 
-    divisor = 1.0;
-    return total / (divisor ? divisor : 1.0);
+    return total;
 }
 
 // generate noise at coordinates x,y,z using a permutation, octaves, and scale
-float perlin_noise_3d (float x, float y, float z, int *p, int octaves, float scale) {
+float noise_perlin_3d (float x, float y, float z, int *p, int octaves, float scale) {
     float total = 0.0;
-    float amplitude = 1.0, divisor = 0.0;
+    float amplitude = 1.0;
 
     if (!floatp(x)) {
-        error("Bad argument 1 to noise->perlin_noise_3d");
+        error("Bad argument 1 to noise->noise_perlin_3d");
     }
     if (!floatp(y)) {
-        error("Bad argument 2 to noise->perlin_noise_3d");
+        error("Bad argument 2 to noise->noise_perlin_3d");
     }
     if (!floatp(z)) {
-        error("Bad argument 3 to noise->perlin_noise_3d");
+        error("Bad argument 3 to noise->noise_perlin_3d");
     }
     if (!arrayp(p)) {
-        error("Bad argument 4 to noise->perlin_noise_3d");
+        error("Bad argument 4 to noise->noise_perlin_3d");
     }
     if (!octaves) {
         octaves = 4;
@@ -287,13 +285,11 @@ float perlin_noise_3d (float x, float y, float z, int *p, int octaves, float sca
 
     for (int i = 0; i < octaves; i ++) {
         total += noise_perlin_3d_permutation(x * scale, y * scale, z * scale, p) * amplitude;
-        divisor += amplitude;
         scale *= 2.0;
         amplitude *= 0.5;
     }
 
-    divisor = 1.0;
-    return total / (divisor ? divisor : 1.0);
+    return total;
 }
 
 /* ----- simplex permutation functions ----- */
@@ -436,6 +432,9 @@ float noise_simplex_4d_permutation (float x, float y, float z, float w, mapping 
     // Sum up and scale the result to cover the range [-1,1]
     return 27.0 * (n0 + n1 + n2 + n3 + n4);
 }
+
+/* ----- noise_simplex functions ----- */
+
 float noise_simplex_4d (float x, float y, float z, float w, mapping p, int octaves, float scale) {
     float total = 0.0;
     float t = 0.0;

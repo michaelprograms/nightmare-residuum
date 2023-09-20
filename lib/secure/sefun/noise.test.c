@@ -148,18 +148,18 @@ void test_noise_perlin () {
         assert(testOb->noise_perlin_2d(3.14, 42.0, $(seedZero), 1, 1.0), "==", -0.018920),
         assert(testOb->noise_perlin_2d(3.14, 42.0, $(seedZero), 8, 15.0), "==", 0.211000),
     }) :));
-    expect("perlin_noise_3d returns non-seeded value", (: ({
-        assert(testOb->perlin_noise_3d(3.14, 42.0, 7.0, $(seedZero), 1, 1.0), "==", 0.136920),
-        assert(testOb->perlin_noise_3d(3.14, 42.0, 7.0, $(seedZero), 8, 15.0), "==", 0.133774),
+    expect("noise_perlin_3d returns non-seeded value", (: ({
+        assert(testOb->noise_perlin_3d(3.14, 42.0, 7.0, $(seedZero), 1, 1.0), "==", 0.136920),
+        assert(testOb->noise_perlin_3d(3.14, 42.0, 7.0, $(seedZero), 8, 15.0), "==", 0.133774),
     }) :));
 
     expect("noise_perlin_2d returns seeded value", (: ({
         assert(testOb->noise_perlin_2d(3.14, 42.0, $(seedTest), 1, 1.0), "==", 0.155840),
         assert(testOb->noise_perlin_2d(3.14, 42.0, $(seedTest), 8, 15.0), "==", -0.024632),
     }) :));
-    expect("perlin_noise_3d returns seeded value", (: ({
-        assert(testOb->perlin_noise_3d(3.14, 42.0, 7.0, $(seedTest), 1, 1.0), "==", -0.018920),
-        assert(testOb->perlin_noise_3d(3.14, 42.0, 7.0, $(seedTest), 8, 15.0), "==", -0.306174),
+    expect("noise_perlin_3d returns seeded value", (: ({
+        assert(testOb->noise_perlin_3d(3.14, 42.0, 7.0, $(seedTest), 1, 1.0), "==", -0.018920),
+        assert(testOb->noise_perlin_3d(3.14, 42.0, 7.0, $(seedTest), 8, 15.0), "==", -0.306174),
     }) :));
 }
 
