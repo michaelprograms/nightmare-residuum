@@ -165,7 +165,6 @@ float noise_perlin_2d_permutation (float x, float y, int *p) {
         )
     );
 }
-
 float noise_perlin_3d_permutation (float x, float y, float z, int *p) {
     int X, Y, Z;
     float u, v, w;
@@ -228,7 +227,7 @@ float noise_perlin_3d_permutation (float x, float y, float z, int *p) {
 
 // @TODO noise_perlin_4d_permutatation (float x, float y, float z, float w, int *p)
 
-/* ----- perlin_noise functions ----- */
+/* ----- noise_perlin functions ----- */
 
 // generate noise at coordinates x,y using a permutation, octaves, and scale
 float noise_perlin_2d (float x, float y, int *p, int octaves, float scale) {
@@ -297,7 +296,7 @@ float perlin_noise_3d (float x, float y, float z, int *p, int octaves, float sca
     return total / (divisor ? divisor : 1.0);
 }
 
-/* ----- simplex stuff ----- */
+/* ----- simplex permutation functions ----- */
 
 // https://github.com/jwagner/simplex-noise.js
 float noise_simplex_4d_permutation (float x, float y, float z, float w, mapping p) {
