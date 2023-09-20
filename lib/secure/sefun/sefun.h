@@ -62,9 +62,12 @@ string possessive (mixed value);
 string reflexive (mixed value);
 
 /* --- noise --- */
-float perlin_noise_2d (float x, float y, int *p, int octaves, float scale);
-float perlin_noise_3d (float x, float y, float z, int *p, int octaves, float scale);
-int *perlin_generate_permutation (string seed);
+int *noise_generate_permutation (string seed);
+float noise_perlin_2d (float x, float y, int *p, int octaves, float scale);
+float noise_perlin_3d (float x, float y, float z, int *p, int octaves, float scale);
+mapping noise_generate_permutation_simplex (string seed);
+float noise_simplex_4d (float x, float y, float z, float w, mapping p, int octaves, float scale);
+
 
 /* --- override --- */
 nomask varargs int input_to ();

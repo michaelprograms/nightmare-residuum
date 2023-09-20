@@ -62,7 +62,7 @@ int adjust_planet (string name, mapping config) {
 float query_planet_surface_terrain (string name, int x, int y, int size) {
     float nx, ny, nz, nw, dx, dy, t;
     int x1, x2, y1, y2;
-    mapping p = simplex_generate_permutation(name);
+    mapping p = noise_generate_permutation_simplex(name);
 
     x1 = 0;
     x2 = 2;
@@ -79,7 +79,7 @@ float query_planet_surface_terrain (string name, int x, int y, int size) {
     ny = y1 + cos((ny / size) * 2 * PI) * dy / (2 * PI);
     nz = x1 + sin((nz / size) * 2 * PI) * dx / (2 * PI);
     nw = y1 + sin((nw / size) * 2 * PI) * dy / (2 * PI);
-    t = (simplex_noise_4d(nx, ny, nz, nw, p, 8, 3.0) + 1) / 2;
+    t = (noise_simplex_4d(nx, ny, nz, nw, p, 8, 3.0) + 1) / 2;
 
     return t;
 }
@@ -92,13 +92,13 @@ float query_planet_terrain_by_p (int *p, int x, int y, int size) {
     nx = x / (size - 1.0);
     ny = y / (size - 1.0);
 
-    terrain = (1.0 + perlin_noise_2d(nx, ny, p, 8, 15.0)) * 0.5;
-    // terrain = (1.0 + perlin_noise_3d(nx, ny, 0.0, p, 8, 15.0)) * 0.5;
+    terrain = (1.0 + noise_perlin_2d(nx, ny, p, 8, 15.0)) * 0.5;
+    // terrain = (1.0 + noise_perlin_3d(nx, ny, 0.0, p, 8, 15.0)) * 0.5;
 
     return terrain;
 }
 float query_planet_terrain (string name, int x, int y, int size) {
-    int *p = perlin_generate_permutation(name);
+    int *p = noise_generate_permutation(name);
     return query_planet_terrain_by_p(p, x, y, size);
 }
 
@@ -111,7 +111,7 @@ string *query_planet_map (string name, int x, int y, int radius, int fog) {
     int *p;
 
     size = query_planet_size(name);
-    p = perlin_generate_permutation(name);
+    p = noise_generate_permutation(name);
 
     for (yy = -radius; yy <= radius; yy++) {
         for (xx = -radius; xx <= radius; xx++) {
@@ -171,7 +171,7 @@ string *query_planet_pixel_map (string name, int x, int y, int radius) {
 
     size = query_planet_size(name);
     // if (version == 4) {
-    //     perm = simplex_generate_permutation(name);
+    //     perm = noise_generate_permutation_simplex(name);
     //     x1 = 0;
     //     x2 = 2;
     //     y1 = 0;
@@ -179,7 +179,7 @@ string *query_planet_pixel_map (string name, int x, int y, int radius) {
     //     dx = x2 - x1;
     //     dy = y2 - y1;
     // } else {
-        p = perlin_generate_permutation(name);
+        p = noise_generate_permutation(name);
     // }
 
     for (yy = -radius; yy <= radius; yy += 2) {
@@ -200,7 +200,7 @@ string *query_planet_pixel_map (string name, int x, int y, int radius) {
             //     ny = y1 + cos((ny / size) * 2 * PI) * dy / (2 * PI);
             //     nz = x1 + sin((nz / size) * 2 * PI) * dx / (2 * PI);
             //     nw = y1 + sin((nw / size) * 2 * PI) * dy / (2 * PI);
-            //     terrain = (simplex_noise_4d(nx, ny, nz, nw, perm, 8, 3.0) + 1) / 2;
+            //     terrain = (noise_simplex_4d(nx, ny, nz, nw, perm, 8, 3.0) + 1) / 2;
             // } else {
                 terrain = query_planet_terrain_by_p(p, rx, ry, size);
             // }
@@ -243,7 +243,7 @@ string *query_planet_pixel_map (string name, int x, int y, int radius) {
             //     ny = y1 + cos((ny / size) * 2 * PI) * dy / (2 * PI);
             //     nz = x1 + sin((nz / size) * 2 * PI) * dx / (2 * PI);
             //     nw = y1 + sin((nw / size) * 2 * PI) * dy / (2 * PI);
-            //     terrain = (simplex_noise_4d(nx, ny, nz, nw, perm, 8, 3.0) + 1) / 2;
+            //     terrain = (noise_simplex_4d(nx, ny, nz, nw, perm, 8, 3.0) + 1) / 2;
             // } else {
                 terrain = query_planet_terrain_by_p(p, rx, ry, size);
             // }
@@ -279,104 +279,15 @@ string *query_planet_pixel_map (string name, int x, int y, int radius) {
     return msg;
 }
 
-void query_planet_simplex_map (string name, int x, int y, int radius) {
-    string /* *msg = ({ }), */pixelTop, pixelBot;
-    int xx, yy, size, rx, ry;
-    float terrain;
-    int *p;
-
-    size = query_planet_size(name);
-    p = perlin_generate_permutation(name);
-
-    for (yy = -radius; yy <= radius; yy += 2) {
-        // line = "";
-        for (xx = -radius; xx <= radius; xx ++) {
-            // top pixel
-            if (x + xx < 0) rx = size + (x + xx);
-            else rx = x + xx;
-            if (y + yy < 0) ry = size + (y + yy);
-            else ry = y + yy;
-            // terrain = query_planet_terrain_by_p(p, rx, ry, size);
-            if (rx < 5 && ry < 5) write("terrain "+rx+" "+ry+": "+terrain+"\n");
-            // write((x+xx)+" "+(y+yy)+" == "+terrain+"\n");
-            if (terrain <= 0.2) {
-                pixelTop = "\e[48;5;4";     // BLUE background
-            } else if (terrain <= 0.25) {
-                pixelTop = "\e[48;5;12";    // BOLD BLUE background
-            } else if (terrain <= 0.3) {
-                pixelTop = "\e[48;5;6";     // CYAN background
-            } else if (terrain <= 0.4) {
-                pixelTop = "\e[48;5;14";    // BOLD CYAN background
-            } else if (terrain <= 0.5) {
-                pixelTop = "\e[48;5;11";    // YELLOW background
-            } else if (terrain <= 0.6) {
-                pixelTop = "\e[48;5;10";    // BOLD GREEN background
-            } else if (terrain <= 0.7) {
-                pixelTop = "\e[48;5;2";     // GREEN background
-            } else if (terrain <= 0.8) {
-                pixelTop = "\e[48;5;3";     // ORANGE background
-            } else if (terrain <= 0.9) {
-                pixelTop = "\e[48;5;7";     // WHITE background
-            } else if (terrain <= 1.0) {
-                pixelTop = "\e[48;5;15";    // BOLD WHITE background
-            } else {
-                pixelTop = "\e[48;5;9";
-            }
-
-            if (yy < radius) {
-                // bottom pixel
-                if (x + xx < 0) rx = size + (x + xx);
-                else rx = x + xx;
-                if (y + yy + 1 < 0) ry = size + (y + yy + 1);
-                else ry = y + yy + 1;
-                // terrain = query_planet_terrain_by_p(p, rx, ry, size);
-                if (rx < 5 && ry < 5) write("terrain "+rx+" "+ry+": "+terrain+"\n");
-                // write((x+xx)+" "+(y+yy+1)+" == "+terrain+"\n");
-                if (terrain <= 0.2) {
-                    pixelBot = ";38;5;4";     // BLUE foreground
-                } else if (terrain <= 0.25) {
-                    pixelBot = ";38;5;12";    // BOLD BLUE foreground
-                } else if (terrain <= 0.3) {
-                    pixelBot = ";38;5;6";     // CYAN foreground
-                } else if (terrain <= 0.4) {
-                    pixelBot = ";38;5;14";    // BOLD CYAN foreground
-                } else if (terrain <= 0.5) {
-                    pixelBot = ";38;5;11";    // YELLOW foreground
-                } else if (terrain <= 0.6) {
-                    pixelBot = ";38;5;10";    // BOLD GREEN foreground
-                } else if (terrain <= 0.7) {
-                    pixelBot = ";38;5;2";     // GREEN foreground
-                } else if (terrain <= 0.8) {
-                    pixelBot = ";38;5;3";     // ORANGE foreground
-                } else if (terrain <= 0.9) {
-                    pixelBot = ";38;5;7";     // WHITE foreground
-                } else if (terrain <= 1.0) {
-                    pixelBot = ";38;5;15";    // BOLD WHITE foreground
-                } else {
-                    pixelBot = ";38;5;9";
-                }
-            } else {
-                pixelBot = ";38;5;16";
-            }
-            // line += pixelTop + pixelBot + "▄\e[0m";
-            write(pixelTop + pixelBot + "m▄\e[0m");
-            // write("\n");
-        }
-        // msg += ({ line });
-        write("\n");
-    }
-    // return msg;
-}
-
-void generate_canvas_map_4 (string name) {
+void generate_simplex_json (string name) {
     int x, y, size;
     mapping p;
-    // string line;
+    string line;
     float nx, ny, nz, nw, dx, dy, t;
     int x1, x2, y1, y2;
 
     size = query_planet_size(name);
-    p = simplex_generate_permutation(name);
+    p = noise_generate_permutation_simplex(name);
 
     x1 = 0;
     x2 = 2;
@@ -385,13 +296,9 @@ void generate_canvas_map_4 (string name) {
     dx = x2 - x1;
     dy = y2 - y1;
 
-    write(name+" "+size+"\n");
-    // write_file("/tmp/data.json", "{\n", 1);
-    // write_file("/tmp/data.json", "    \"name\":\""+name+"\",\n");
-    // write_file("/tmp/data.json", "    \"size\":\""+size+"\",\n");
-    // write_file("/tmp/data.json", "    \"data\":[\n");
+    write_file("/tmp/data.json", "{\n    \"name\":\""+name+"\",\n    \"size\":\""+size+"\",\n    \"data\":[\n", 1);
     for (y = 0; y < size; y ++) {
-        // line = "        [ ";
+        line = "        [ ";
         for (x = 0; x < size; x ++) {
             // Calculate our 4D coordinates
             nx = to_float(x);
@@ -402,56 +309,51 @@ void generate_canvas_map_4 (string name) {
             ny = y1 + cos((ny / size) * 2 * PI) * dy / (2 * PI);
             nz = x1 + sin((nz / size) * 2 * PI) * dx / (2 * PI);
             nw = y1 + sin((nw / size) * 2 * PI) * dy / (2 * PI);
-            t = (simplex_noise_4d(nx, ny, nz, nw, p, 8, 3.0) + 1) / 2;
+            t = (noise_simplex_4d(nx, ny, nz, nw, p, 8, 3.0) + 1) / 2;
 
-            // if (t <= 0.2) {
-            //     line += "\"#000080\"";          // BLUE
-            // } else if (t <= 0.25) {
-            //     line += "\"#0000FF\"";          // BOLD BLUE
-            // } else if (t <= 0.3) {
-            //     line += "\"#008080\"";          // CYAN
-            // } else if (t <= 0.4) {
-            //     line += "\"#00FFFF\"";          // BOLD CYAN
-            // } else if (t <= 0.5) {
-            //     line += "\"#FFFF00\"";          // YELLOW
-            // } else if (t <= 0.6) {
-            //     line += "\"#00FF00\"";          // BOLD GREEN
-            // } else if (t <= 0.7) {
-            //     line += "\"#008000\"";          // GREEN
-            // } else if (t <= 0.8) {
-            //     line += "\"#808000\"";          // ORANGE
-            // } else if (t <= 0.9) {
-            //     line += "\"#C0C0C0\"";          // WHITE
-            // } else if (t <= 1.0) {
-            //     line += "\"#FFFFFF\"";          // BOLD WHITE
-            // } else {
-            //     line += "\"#800000\"";
-            // }
-            // if (x < size-1) line += ",";
+            if (t <= 0.2) {
+                line += "\"#000080\"";          // BLUE
+            } else if (t <= 0.25) {
+                line += "\"#0000FF\"";          // BOLD BLUE
+            } else if (t <= 0.3) {
+                line += "\"#008080\"";          // CYAN
+            } else if (t <= 0.4) {
+                line += "\"#00FFFF\"";          // BOLD CYAN
+            } else if (t <= 0.5) {
+                line += "\"#FFFF00\"";          // YELLOW
+            } else if (t <= 0.6) {
+                line += "\"#00FF00\"";          // BOLD GREEN
+            } else if (t <= 0.7) {
+                line += "\"#008000\"";          // GREEN
+            } else if (t <= 0.8) {
+                line += "\"#808000\"";          // ORANGE
+            } else if (t <= 0.9) {
+                line += "\"#C0C0C0\"";          // WHITE
+            } else if (t <= 1.0) {
+                line += "\"#FFFFFF\"";          // BOLD WHITE
+            } else {
+                line += "\"#800000\"";
+            }
+            if (x < size-1) line += ",";
 
         }
-        // line += "]"+(y==size-1?"":",");
-        // write_file("/tmp/data.json", line + "\n");
+        line += "]"+(y==size-1?"":",");
+        write_file("/tmp/data.json", line + "\n");
     }
-
-    write("Done\n");
-    // write_file("/tmp/data.json", "    ]\n");
-    // write_file("/tmp/data.json", "}");
+    write_file("/tmp/data.json", "    ]\n}");
+    write(name+" "+size+" done\n");
 }
-void generate_canvas_map (string name) {
+
+void generate_perlin_json (string name) {
     int x, y, size;
     int *p;
     string line;
     float t;
 
     size = query_planet_size(name);
-    p = perlin_generate_permutation(name);
+    p = noise_generate_permutation(name);
 
-    // write(name+" "+size+"\n");
-    write_file("/tmp/data.json", "{\n", 1);
-    write_file("/tmp/data.json", "    \"name\":\""+name+"\",\n");
-    write_file("/tmp/data.json", "    \"size\":\""+size+"\",\n");
-    write_file("/tmp/data.json", "    \"data\":[\n");
+    write_file("/tmp/data.json", "{\n    \"name\":\""+name+"\",\n    \"size\":\""+size+"\",\n    \"data\":[\n", 1);
     for (y = 0; y < size; y ++) {
         line = "        [ ";
         for (x = 0; x < size; x ++) {
@@ -485,7 +387,6 @@ void generate_canvas_map (string name) {
         line += "]"+(y==size-1?"":",");
         write_file("/tmp/data.json", line + "\n");
     }
-
-    write_file("/tmp/data.json", "    ]\n");
-    write_file("/tmp/data.json", "}");
+    write_file("/tmp/data.json", "    ]\n}");
+    write(name+" "+size+" done\n");
 }
