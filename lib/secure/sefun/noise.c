@@ -67,26 +67,26 @@ int *noise_generate_permutation (string seed) {
     return p;
 }
 
+nosave private int *GRAD4 = ({
+    0,  1,  1,  1,  0,  1,  1,  -1,  0,  1,  -1, 1,  0,  1,  -1, -1,
+    0,  -1, 1,  1,  0,  -1, 1,  -1,  0,  -1, -1, 1,  0,  -1, -1, -1,
+    1,  0,  1,  1,  1,  0,  1,  -1,  1,  0,  -1, 1,  1,  0,  -1, -1,
+    -1, 0,  1,  1,  -1, 0,  1,  -1,  -1, 0,  -1, 1,  -1, 0,  -1, -1,
+    1,  1,  0,  1,  1,  1,  0,  -1,  1,  -1, 0,  1,  1,  -1, 0,  -1,
+    -1, 1,  0,  1,  -1, 1,  0,  -1,  -1, -1, 0,  1,  -1, -1, 0,  -1,
+    1,  1,  1,  0,  1,  1,  -1,  0,  1,  -1, 1,  0,  1,  -1, -1, 0,
+    -1, 1,  1,  0,  -1, 1,  -1,  0,  -1, -1, 1,  0,  -1, -1, -1, 0,
+});
 // include precalculated 4d gradient x,y,z,w arrays for optimization
 mapping noise_generate_permutation_simplex (string seed) {
-    int *GRAD4 = ({
-        0,  1,  1,  1,  0,  1,  1,  -1,  0,  1,  -1, 1,  0,  1,  -1, -1,
-        0,  -1, 1,  1,  0,  -1, 1,  -1,  0,  -1, -1, 1,  0,  -1, -1, -1,
-        1,  0,  1,  1,  1,  0,  1,  -1,  1,  0,  -1, 1,  1,  0,  -1, -1,
-        -1, 0,  1,  1,  -1, 0,  1,  -1,  -1, 0,  -1, 1,  -1, 0,  -1, -1,
-        1,  1,  0,  1,  1,  1,  0,  -1,  1,  -1, 0,  1,  1,  -1, 0,  -1,
-        -1, 1,  0,  1,  -1, 1,  0,  -1,  -1, -1, 0,  1,  -1, -1, 0,  -1,
-        1,  1,  1,  0,  1,  1,  -1,  0,  1,  -1, 1,  0,  1,  -1, -1, 0,
-        -1, 1,  1,  0,  -1, 1,  -1,  0,  -1, -1, 1,  0,  -1, -1, -1, 0,
-    });
-    mapping p = ([
-        "p": noise_generate_permutation(seed),
+    int *pArray = noise_generate_permutation(seed);
+    return ([
+        "x": map(pArray, (: GRAD4[($1 % 32) * 4    ] :)),
+        "y": map(pArray, (: GRAD4[($1 % 32) * 4 + 1] :)),
+        "z": map(pArray, (: GRAD4[($1 % 32) * 4 + 2] :)),
+        "w": map(pArray, (: GRAD4[($1 % 32) * 4 + 3] :)),
+        "p": pArray
     ]);
-    p["x"] = map(p["p"], (: $(GRAD4)[($1 % 32) * 4] :));
-    p["y"] = map(p["p"], (: $(GRAD4)[($1 % 32) * 4 + 1] :));
-    p["z"] = map(p["p"], (: $(GRAD4)[($1 % 32) * 4 + 2] :));
-    p["w"] = map(p["p"], (: $(GRAD4)[($1 % 32) * 4 + 3] :));
-    return p;
 }
 
 /* ----- noise helper functions ----- */
@@ -300,22 +300,15 @@ float noise_simplex_4d_permutation (float x, float y, float z, float w, mapping 
 
     // Skew the (x,y,z,w) space to determine which cell of 24 simplices we're in
     float s = (x + y + z + w) * 0.309017; // Factor for 4D skewing: (sqrt(5.0)-1)/4
-
     int i = to_int(floor(x + s));
     int j = to_int(floor(y + s));
     int k = to_int(floor(z + s));
     int l = to_int(floor(w + s));
-
     float t = (i + j + k + l) * 0.138197; // Factor for 4D unskewing: (5-sqrt(5.0))/20
-    float X0 = i - t; // Unskew the cell origin back to (x,y,z,w) space
-    float Y0 = j - t;
-    float Z0 = k - t;
-    float W0 = l - t;
-
-    float x0 = x - X0; // The x,y,z,w distances from the cell origin
-    float y0 = y - Y0;
-    float z0 = z - Z0;
-    float w0 = w - W0;
+    float x0 = x - (i - t); // The x,y,z,w distances from the cell origin
+    float y0 = y - (j - t);
+    float z0 = z - (k - t);
+    float w0 = w - (l - t);
 
     // For the 4D case, the simplex is a 4D shape I won't even try to describe.
     // To find out which of the 24 possible simplices we're in, we need to
