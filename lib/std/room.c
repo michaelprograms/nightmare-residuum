@@ -35,7 +35,7 @@ int clean_up (mixed *args...) {
             return ::clean_later();
         }
     }
-    return ::clean_up();
+    return ::clean_up(args);
 }
 
 /* ----- M_CONTAINER ----- */
