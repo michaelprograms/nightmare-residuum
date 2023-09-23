@@ -184,79 +184,147 @@ void test_noise_simplex () {
 }
 
 void test_gradient () {
-    expect("gradient_2d provides slopes", (: ({
-        // (1,1) to (1,0) - y axis up - x=0.0
-        assert(testOb->gradient_2d(1, 1, 1, 0, 0.0, 0.0), "==", 1.000000),
-        assert(testOb->gradient_2d(1, 1, 1, 0, 0.0, 0.2), "==", 0.800000),
-        assert(testOb->gradient_2d(1, 1, 1, 0, 0.0, 0.4), "==", 0.600000),
-        assert(testOb->gradient_2d(1, 1, 1, 0, 0.0, 0.6), "==", 0.400000),
-        assert(testOb->gradient_2d(1, 1, 1, 0, 0.0, 0.8), "==", 0.200000),
-        assert(testOb->gradient_2d(1, 1, 1, 0, 0.0, 1.0), "==", -0.000000),
-        // (0,1) to (0,0) - y axis up - x=0.0
-        assert(testOb->gradient_2d(0, 1, 0, 0, 0.0, 0.0), "==", 1.000000),
-        assert(testOb->gradient_2d(0, 1, 0, 0, 0.0, 0.2), "==", 0.800000),
-        assert(testOb->gradient_2d(0, 1, 0, 0, 0.0, 0.4), "==", 0.600000),
-        assert(testOb->gradient_2d(0, 1, 0, 0, 0.0, 0.6), "==", 0.400000),
-        assert(testOb->gradient_2d(0, 1, 0, 0, 0.0, 0.8), "==", 0.200000),
-        assert(testOb->gradient_2d(0, 1, 0, 0, 0.0, 1.0), "==", 0.000000),
-        // (1,1) to (1,0) - y axis up - x=1.0
-        assert(testOb->gradient_2d(1, 1, 1, 0, 1.0, 0.0), "==", 1.000000),
-        assert(testOb->gradient_2d(1, 1, 1, 0, 1.0, 0.2), "==", 0.800000),
-        assert(testOb->gradient_2d(1, 1, 1, 0, 1.0, 0.4), "==", 0.600000),
-        assert(testOb->gradient_2d(1, 1, 1, 0, 1.0, 0.6), "==", 0.400000),
-        assert(testOb->gradient_2d(1, 1, 1, 0, 1.0, 0.8), "==", 0.200000),
-        assert(testOb->gradient_2d(1, 1, 1, 0, 1.0, 1.0), "==", 0.000000),
-
-        // (1,1) to (0,1) - x axis left - y=0.0
-        assert(testOb->gradient_2d(1, 1, 0, 1, 0.0, 0.0), "==", 1.000000),
-        assert(testOb->gradient_2d(1, 1, 0, 1, 0.2, 0.0), "==", 0.800000),
-        assert(testOb->gradient_2d(1, 1, 0, 1, 0.4, 0.0), "==", 0.600000),
-        assert(testOb->gradient_2d(1, 1, 0, 1, 0.6, 0.0), "==", 0.400000),
-        assert(testOb->gradient_2d(1, 1, 0, 1, 0.8, 0.0), "==", 0.200000),
-        assert(testOb->gradient_2d(1, 1, 0, 1, 1.0, 0.0), "==", -0.000000),
-        // (1,1) to (0,1) - x axis left - y=1.0
-        assert(testOb->gradient_2d(1, 1, 0, 1, 0.0, 1.0), "==", 1.000000),
-        assert(testOb->gradient_2d(1, 1, 0, 1, 0.2, 1.0), "==", 0.800000),
-        assert(testOb->gradient_2d(1, 1, 0, 1, 0.4, 1.0), "==", 0.600000),
-        assert(testOb->gradient_2d(1, 1, 0, 1, 0.6, 1.0), "==", 0.400000),
-        assert(testOb->gradient_2d(1, 1, 0, 1, 0.8, 1.0), "==", 0.200000),
-        assert(testOb->gradient_2d(1, 1, 0, 1, 1.0, 1.0), "==", 0.000000),
-
-        // (0,1) to (1,1) - x axis right - y=0.0
-        assert(testOb->gradient_2d(0, 1, 1, 1, 0.0, 0.0), "==", 0.000000),
-        assert(testOb->gradient_2d(0, 1, 1, 1, 0.2, 0.0), "==", 0.200000),
-        assert(testOb->gradient_2d(0, 1, 1, 1, 0.4, 0.0), "==", 0.400000),
-        assert(testOb->gradient_2d(0, 1, 1, 1, 0.6, 0.0), "==", 0.600000),
-        assert(testOb->gradient_2d(0, 1, 1, 1, 0.8, 0.0), "==", 0.800000),
-        assert(testOb->gradient_2d(0, 1, 1, 1, 1.0, 0.0), "==", 1.000000),
-        // (0,1) to (1,1) - x axis right - y=1.0
-        assert(testOb->gradient_2d(0, 1, 1, 1, 0.0, 1.0), "==", 0.000000),
-        assert(testOb->gradient_2d(0, 1, 1, 1, 0.2, 1.0), "==", 0.200000),
-        assert(testOb->gradient_2d(0, 1, 1, 1, 0.4, 1.0), "==", 0.400000),
-        assert(testOb->gradient_2d(0, 1, 1, 1, 0.6, 1.0), "==", 0.600000),
-        assert(testOb->gradient_2d(0, 1, 1, 1, 0.8, 1.0), "==", 0.800000),
-        assert(testOb->gradient_2d(0, 1, 1, 1, 1.0, 1.0), "==", 1.000000),
-
-        // (1,0) to (1,1) - y axis down - y=0.0
-        assert(testOb->gradient_2d(0, 1, 1, 1, 0.0, 0.0), "==", 0.000000),
-        assert(testOb->gradient_2d(0, 1, 1, 1, 0.2, 0.0), "==", 0.200000),
-        assert(testOb->gradient_2d(0, 1, 1, 1, 0.4, 0.0), "==", 0.400000),
-        assert(testOb->gradient_2d(0, 1, 1, 1, 0.6, 0.0), "==", 0.600000),
-        assert(testOb->gradient_2d(0, 1, 1, 1, 0.8, 0.0), "==", 0.800000),
-        assert(testOb->gradient_2d(0, 1, 1, 1, 1.0, 0.0), "==", 1.000000),
-        // (0,0) to (0,1) - y axis down - y=0.0
-        assert(testOb->gradient_2d(0, 0, 1, 0, 0.0, 0.0), "==", 0.000000),
-        assert(testOb->gradient_2d(0, 0, 1, 0, 0.2, 0.0), "==", 0.200000),
-        assert(testOb->gradient_2d(0, 0, 1, 0, 0.4, 0.0), "==", 0.400000),
-        assert(testOb->gradient_2d(0, 0, 1, 0, 0.6, 0.0), "==", 0.600000),
-        assert(testOb->gradient_2d(0, 0, 1, 0, 0.8, 0.0), "==", 0.800000),
-        assert(testOb->gradient_2d(0, 0, 1, 0, 1.0, 0.0), "==", 1.000000),
-        // (0,1) to (1,1) - y axis down - y=1.0
-        assert(testOb->gradient_2d(0, 1, 1, 1, 0.0, 1.0), "==", 0.000000),
-        assert(testOb->gradient_2d(0, 1, 1, 1, 0.2, 1.0), "==", 0.200000),
-        assert(testOb->gradient_2d(0, 1, 1, 1, 0.4, 1.0), "==", 0.400000),
-        assert(testOb->gradient_2d(0, 1, 1, 1, 0.6, 1.0), "==", 0.600000),
-        assert(testOb->gradient_2d(0, 1, 1, 1, 0.8, 1.0), "==", 0.800000),
-        assert(testOb->gradient_2d(0, 1, 1, 1, 1.0, 1.0), "==", 1.000000),
+    expect("gradient_2d returns down gradients", (: ({
+        // (1,1) to (1,0) - x = 0.0, y down
+        assert(testOb->gradient_2d(1, 1, 1, 0, 0.0, 0.00), "==", 1.000000),
+        assert(testOb->gradient_2d(1, 1, 1, 0, 0.0, 0.25), "==", 0.750000),
+        assert(testOb->gradient_2d(1, 1, 1, 0, 0.0, 0.50), "==", 0.500000),
+        assert(testOb->gradient_2d(1, 1, 1, 0, 0.0, 0.75), "==", 0.250000),
+        assert(testOb->gradient_2d(1, 1, 1, 0, 0.0, 1.00), "==", 0.000000),
+        // (1,1) to (1,0) - x = 1.0, y down
+        assert(testOb->gradient_2d(1, 1, 1, 0, 1.0, 0.00), "==", 1.000000),
+        assert(testOb->gradient_2d(1, 1, 1, 0, 1.0, 0.25), "==", 0.750000),
+        assert(testOb->gradient_2d(1, 1, 1, 0, 1.0, 0.50), "==", 0.500000),
+        assert(testOb->gradient_2d(1, 1, 1, 0, 1.0, 0.75), "==", 0.250000),
+        assert(testOb->gradient_2d(1, 1, 1, 0, 1.0, 1.00), "==", 0.000000),
+        // (0,1) to (0,0) - x = 0.0, y down
+        assert(testOb->gradient_2d(0, 1, 0, 0, 0.0, 0.00), "==", 1.000000),
+        assert(testOb->gradient_2d(0, 1, 0, 0, 0.0, 0.25), "==", 0.750000),
+        assert(testOb->gradient_2d(0, 1, 0, 0, 0.0, 0.50), "==", 0.500000),
+        assert(testOb->gradient_2d(0, 1, 0, 0, 0.0, 0.75), "==", 0.250000),
+        assert(testOb->gradient_2d(0, 1, 0, 0, 0.0, 1.00), "==", 0.000000),
+        // (0,1) to (0,0) - x = 1.0, y down
+        assert(testOb->gradient_2d(0, 1, 0, 0, 0.0, 0.00), "==", 1.000000),
+        assert(testOb->gradient_2d(0, 1, 0, 0, 0.0, 0.25), "==", 0.750000),
+        assert(testOb->gradient_2d(0, 1, 0, 0, 0.0, 0.50), "==", 0.500000),
+        assert(testOb->gradient_2d(0, 1, 0, 0, 0.0, 0.75), "==", 0.250000),
+        assert(testOb->gradient_2d(0, 1, 0, 0, 0.0, 1.00), "==", 0.000000),
+        // (-1,1) to (-1,0) - x = 0.0, y down
+        assert(testOb->gradient_2d(-1, 1, -1, 0, 0.0, 0.00), "==", 1.000000),
+        assert(testOb->gradient_2d(-1, 1, -1, 0, 0.0, 0.25), "==", 0.750000),
+        assert(testOb->gradient_2d(-1, 1, -1, 0, 0.0, 0.50), "==", 0.500000),
+        assert(testOb->gradient_2d(-1, 1, -1, 0, 0.0, 0.75), "==", 0.250000),
+        assert(testOb->gradient_2d(-1, 1, -1, 0, 0.0, 1.00), "==", 0.000000),
+        // (-1,1) to (-1,0) - x = 1.0, y down
+        assert(testOb->gradient_2d(-1, 1, -1, 0, 0.0, 0.00), "==", 1.000000),
+        assert(testOb->gradient_2d(-1, 1, -1, 0, 0.0, 0.25), "==", 0.750000),
+        assert(testOb->gradient_2d(-1, 1, -1, 0, 0.0, 0.50), "==", 0.500000),
+        assert(testOb->gradient_2d(-1, 1, -1, 0, 0.0, 0.75), "==", 0.250000),
+        assert(testOb->gradient_2d(-1, 1, -1, 0, 0.0, 1.00), "==", 0.000000),
+    }) :));
+    expect("gradient_2d returns left gradients", (: ({
+        // (1,1) to (0,1) - x left, y=0.0
+        assert(testOb->gradient_2d(1, 1, 0, 1, 0.00, 0.0), "==", 1.000000),
+        assert(testOb->gradient_2d(1, 1, 0, 1, 0.25, 0.0), "==", 0.750000),
+        assert(testOb->gradient_2d(1, 1, 0, 1, 0.50, 0.0), "==", 0.500000),
+        assert(testOb->gradient_2d(1, 1, 0, 1, 0.75, 0.0), "==", 0.250000),
+        assert(testOb->gradient_2d(1, 1, 0, 1, 1.00, 0.0), "==", 0.000000),
+        // (1,1) to (0,1) - x left, y=1.0
+        assert(testOb->gradient_2d(1, 1, 0, 1, 0.00, 1.0), "==", 1.000000),
+        assert(testOb->gradient_2d(1, 1, 0, 1, 0.25, 1.0), "==", 0.750000),
+        assert(testOb->gradient_2d(1, 1, 0, 1, 0.50, 1.0), "==", 0.500000),
+        assert(testOb->gradient_2d(1, 1, 0, 1, 0.75, 1.0), "==", 0.250000),
+        assert(testOb->gradient_2d(1, 1, 0, 1, 1.00, 1.0), "==", 0.000000),
+    }) :));
+    expect("gradient_2d returns right gradients", (: ({
+        // (0,1) to (1,1) - x right, y=0.0
+        assert(testOb->gradient_2d(0, 1, 1, 1, 0.00, 0.0), "==", 0.000000),
+        assert(testOb->gradient_2d(0, 1, 1, 1, 0.25, 0.0), "==", 0.250000),
+        assert(testOb->gradient_2d(0, 1, 1, 1, 0.50, 0.0), "==", 0.500000),
+        assert(testOb->gradient_2d(0, 1, 1, 1, 0.75, 0.0), "==", 0.750000),
+        assert(testOb->gradient_2d(0, 1, 1, 1, 1.00, 0.0), "==", 1.000000),
+        // (0,1) to (1,1) - x right, y=1.0
+        assert(testOb->gradient_2d(0, 1, 1, 1, 0.00, 1.0), "==", 0.000000),
+        assert(testOb->gradient_2d(0, 1, 1, 1, 0.25, 1.0), "==", 0.250000),
+        assert(testOb->gradient_2d(0, 1, 1, 1, 0.50, 1.0), "==", 0.500000),
+        assert(testOb->gradient_2d(0, 1, 1, 1, 0.75, 1.0), "==", 0.750000),
+        assert(testOb->gradient_2d(0, 1, 1, 1, 1.00, 1.0), "==", 1.000000),
+    }) :));
+    expect("gradient_2d returns up gradients", (: ({
+        // UP GRADIENTS
+        // (1,0) to (1,1) - x = 0.0, y up
+        assert(testOb->gradient_2d(1, 1, 1, 0, 0.0, 0.00), "==", 1.000000),
+        assert(testOb->gradient_2d(1, 1, 1, 0, 0.0, 0.25), "==", 0.750000),
+        assert(testOb->gradient_2d(1, 1, 1, 0, 0.0, 0.50), "==", 0.500000),
+        assert(testOb->gradient_2d(1, 1, 1, 0, 0.0, 0.75), "==", 0.250000),
+        assert(testOb->gradient_2d(1, 1, 1, 0, 0.0, 1.00), "==", 0.000000),
+        // (1,0) to (1,1) - x = 1.0, y up
+        assert(testOb->gradient_2d(1, 1, 1, 0, 1.0, 0.00), "==", 1.000000),
+        assert(testOb->gradient_2d(1, 1, 1, 0, 1.0, 0.25), "==", 0.750000),
+        assert(testOb->gradient_2d(1, 1, 1, 0, 1.0, 0.50), "==", 0.500000),
+        assert(testOb->gradient_2d(1, 1, 1, 0, 1.0, 0.75), "==", 0.250000),
+        assert(testOb->gradient_2d(1, 1, 1, 0, 1.0, 1.00), "==", 0.000000),
+        // (0,0) to (0,1) - x = 0.0, y up
+        assert(testOb->gradient_2d(0, 1, 0, 0, 0.0, 0.00), "==", 1.000000),
+        assert(testOb->gradient_2d(0, 1, 0, 0, 0.0, 0.25), "==", 0.750000),
+        assert(testOb->gradient_2d(0, 1, 0, 0, 0.0, 0.50), "==", 0.500000),
+        assert(testOb->gradient_2d(0, 1, 0, 0, 0.0, 0.75), "==", 0.250000),
+        assert(testOb->gradient_2d(0, 1, 0, 0, 0.0, 1.00), "==", 0.000000),
+        // (0,0) to (0,1) - x = 1.0, y up
+        assert(testOb->gradient_2d(0, 1, 0, 0, 0.0, 0.00), "==", 1.000000),
+        assert(testOb->gradient_2d(0, 1, 0, 0, 0.0, 0.25), "==", 0.750000),
+        assert(testOb->gradient_2d(0, 1, 0, 0, 0.0, 0.50), "==", 0.500000),
+        assert(testOb->gradient_2d(0, 1, 0, 0, 0.0, 0.75), "==", 0.250000),
+        assert(testOb->gradient_2d(0, 1, 0, 0, 0.0, 1.00), "==", 0.000000),
+        // (-1,0) to (-1,1) - x = 0.0, y up
+        assert(testOb->gradient_2d(-1, 1, -1, 0, 0.0, 0.00), "==", 1.000000),
+        assert(testOb->gradient_2d(-1, 1, -1, 0, 0.0, 0.25), "==", 0.750000),
+        assert(testOb->gradient_2d(-1, 1, -1, 0, 0.0, 0.50), "==", 0.500000),
+        assert(testOb->gradient_2d(-1, 1, -1, 0, 0.0, 0.75), "==", 0.250000),
+        assert(testOb->gradient_2d(-1, 1, -1, 0, 0.0, 1.00), "==", 0.000000),
+        // (-1,0) to (-1,1) - x = 1.0, y up
+        assert(testOb->gradient_2d(-1, 1, -1, 0, 0.0, 0.00), "==", 1.000000),
+        assert(testOb->gradient_2d(-1, 1, -1, 0, 0.0, 0.25), "==", 0.750000),
+        assert(testOb->gradient_2d(-1, 1, -1, 0, 0.0, 0.50), "==", 0.500000),
+        assert(testOb->gradient_2d(-1, 1, -1, 0, 0.0, 0.75), "==", 0.250000),
+        assert(testOb->gradient_2d(-1, 1, -1, 0, 0.0, 1.00), "==", 0.000000),
+    }) :));
+    expect("gradient_2d returns diagonal gradients", (: ({
+        // (1,1) to (0,0) - x left, y down
+        assert(testOb->gradient_2d(1, 1, 0, 0, 0.00, 0.00), "==", 1.000000),
+        assert(testOb->gradient_2d(1, 1, 0, 0, 0.25, 0.25), "==", 0.750000),
+        assert(testOb->gradient_2d(1, 1, 0, 0, 0.50, 0.50), "==", 0.500000),
+        assert(testOb->gradient_2d(1, 1, 0, 0, 0.75, 0.75), "==", 0.250000),
+        assert(testOb->gradient_2d(1, 1, 0, 0, 1.00, 1.00), "==", 0.000000),
+        // (1,1) to (0,0) - x = 0.0, y down
+        assert(testOb->gradient_2d(1, 1, 0, 0, 0.00, 0.00), "==", 1.000000),
+        assert(testOb->gradient_2d(1, 1, 0, 0, 0.00, 0.25), "==", 0.875000),
+        assert(testOb->gradient_2d(1, 1, 0, 0, 0.00, 0.50), "==", 0.750000),
+        assert(testOb->gradient_2d(1, 1, 0, 0, 0.00, 0.75), "==", 0.625000),
+        assert(testOb->gradient_2d(1, 1, 0, 0, 0.00, 1.00), "==", 0.500000),
+        // (1,1) to (0,0) - x left, y = 0.0
+        assert(testOb->gradient_2d(1, 1, 0, 0, 0.00, 0.00), "==", 1.000000),
+        assert(testOb->gradient_2d(1, 1, 0, 0, 0.25, 0.00), "==", 0.875000),
+        assert(testOb->gradient_2d(1, 1, 0, 0, 0.50, 0.00), "==", 0.750000),
+        assert(testOb->gradient_2d(1, 1, 0, 0, 0.75, 0.00), "==", 0.625000),
+        assert(testOb->gradient_2d(1, 1, 0, 0, 1.00, 0.00), "==", 0.500000),
+        // (1,1) to (0,0) - x = 1.0, y
+        assert(testOb->gradient_2d(1, 1, 0, 0, 1.00, 0.00), "==", 0.500000),
+        assert(testOb->gradient_2d(1, 1, 0, 0, 1.00, 0.25), "==", 0.375000),
+        assert(testOb->gradient_2d(1, 1, 0, 0, 1.00, 0.50), "==", 0.250000),
+        assert(testOb->gradient_2d(1, 1, 0, 0, 1.00, 0.75), "==", 0.125000),
+        assert(testOb->gradient_2d(1, 1, 0, 0, 1.00, 1.00), "==", 0.000000),
+        // (1,1) to (0,0) - x left, y = 1.0
+        assert(testOb->gradient_2d(1, 1, 0, 0, 0.00, 1.00), "==", 0.500000),
+        assert(testOb->gradient_2d(1, 1, 0, 0, 0.25, 1.00), "==", 0.375000),
+        assert(testOb->gradient_2d(1, 1, 0, 0, 0.50, 1.00), "==", 0.250000),
+        assert(testOb->gradient_2d(1, 1, 0, 0, 0.75, 1.00), "==", 0.125000),
+        assert(testOb->gradient_2d(1, 1, 0, 0, 1.00, 1.00), "==", 0.000000),
+        // (1,1) to (0,0) - x right, y = down
+        assert(testOb->gradient_2d(1, 1, 0, 0, 0.00, 1.00), "==", 0.500000),
+        assert(testOb->gradient_2d(1, 1, 0, 0, 0.25, 0.75), "==", 0.500000),
+        assert(testOb->gradient_2d(1, 1, 0, 0, 0.50, 0.50), "==", 0.500000),
+        assert(testOb->gradient_2d(1, 1, 0, 0, 0.75, 0.25), "==", 0.500000),
+        assert(testOb->gradient_2d(1, 1, 0, 0, 1.00, 0.00), "==", 0.500000),
     }) :));
 }
