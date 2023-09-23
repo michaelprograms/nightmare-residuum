@@ -67,7 +67,7 @@ float noise_perlin_2d (float x, float y, int *p, int octaves, float scale);
 float noise_perlin_3d (float x, float y, float z, int *p, int octaves, float scale);
 mapping noise_generate_permutation_simplex (string seed);
 float noise_simplex_4d (float x, float y, float z, float w, mapping p, int octaves, float scale);
-
+float gradient_2d (int x1, int y1, int x2, int y2, float x, float y);
 
 /* --- override --- */
 nomask varargs int input_to ();

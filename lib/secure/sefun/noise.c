@@ -463,3 +463,11 @@ float noise_simplex_4d (float x, float y, float z, float w, mapping p, int octav
 
     return total / t;
 }
+
+/* ----- gradient functions ----- */
+
+float gradient_2d (int x1, int y1, int x2, int y2, float x, float y) {
+    float dX = to_float(x2 - x1);
+    float dY = to_float(y2 - y1);
+    return ((x - x1) * dX + (y - y1) * dY) / (dX * dX + dY * dY);
+}
