@@ -16,10 +16,11 @@ void setup_noise (object room, mapping planet, int x, int y) {
     float nx, ny, nz, nw;
     float nT, nG, nH, nM;
     int size, size2, size9_10;
-    string biome;
+    string name, biome;
 
-    if (!__PCache[planet["name"]]) {
-        __PCache[planet["name"]] = noise_generate_permutation_simplex(planet["name"]);
+    name = planet["name"];
+    if (!__PCache[name]) {
+        __PCache[name] = noise_generate_permutation_simplex(name);
     }
 
     size = planet["size"];
@@ -35,11 +36,11 @@ void setup_noise (object room, mapping planet, int x, int y) {
     nw = sin((nw / size) * PIx2) * 2 / PIx2;
 
     // noise Terrain
-    nT = (noise_simplex_4d(nx, ny, nz, nw, __PCache[planet["name"]], 5, 1.25) + 1) / 2;
+    nT = (noise_simplex_4d(nx, ny, nz, nw, __PCache[name], 5, 1.25) + 1) / 2;
     nT = (nT - 0.25) / (0.75 - 0.25); // normalize 0-1 from 0.25-0.75 (t - min) / (max - min)
 
     // noise Heat
-    nH = (noise_simplex_4d(nx, ny, nz, nw, __PCache[planet["name"]], 3, 2.0) + 1) / 2;
+    nH = (noise_simplex_4d(nx, ny, nz, nw, __PCache[name], 3, 2.0) + 1) / 2;
     nH = (nH - 0.25) / (0.75 - 0.25); // normalize 0-1 from 0.25-0.75 (t - min) / (max - min)
 
     // noise Gradient
@@ -64,7 +65,7 @@ void setup_noise (object room, mapping planet, int x, int y) {
     }
 
     // noise Moisture
-    nM = (noise_simplex_4d(nx, ny, nz, nw, __PCache[planet["name"]], 4, 3.0) + 1) / 2;
+    nM = (noise_simplex_4d(nx, ny, nz, nw, __PCache[name], 4, 3.0) + 1) / 2;
     nM = (nM - 0.25) / (0.75 - 0.25); // normalize 0-1 from 0.25-0.75 (t - min) / (max - min)
 
     // adjust noise Moisture based upon noise Terrain, lower is wetter
@@ -144,15 +145,23 @@ void setup_noise (object room, mapping planet, int x, int y) {
         }
     }
 
-    room->set_biome(biome, nT, nH, nM);
+    room->set_properties(([
+        "nT": nT,
+        "nH": nH,
+        "nM": nM,
+    ]));
+    room->set_biome(biome);
 }
 
 void setup_exits (object room, mapping planet, int x, int y) {
     string path;
-    int xw, xe, yn, ys, size;
+    string name;
+    int size, xw, xe, yn, ys;
 
-    path = PLANET_V_ROOM + "surface/" + planet["name"];
+    name = planet["name"];
     size = planet["size"];
+
+    path = PLANET_V_ROOM + "surface/" + name;
     xw = x     > 0    ? x - 1 : size - 1;
     xe = x + 1 < size ? x + 1 : 0;
     yn = y     > 0    ? y - 1 : size - 1;
@@ -196,10 +205,8 @@ object virtual_create (string arg) {
     planet = D_PLANET->query_planet(name);
     room = new(PLANET_V_ROOM + "base/terrain.c");
 
-    if (mapp(planet)) {
-        setup_noise(room, planet, x, y);
-        setup_exits(room, planet, x, y);
-    }
+    setup_noise(room, planet, x, y);
+    setup_exits(room, planet, x, y);
 
     return room;
 }

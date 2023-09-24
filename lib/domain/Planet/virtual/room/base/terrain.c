@@ -1,3 +1,5 @@
+#include <planet.h>
+
 inherit STD_ROOM;
 
 int is_virtual_room () { return 1; }
@@ -8,15 +10,12 @@ void create() {
     set_long("The terrain of a planet.");
 }
 
-/* ----- noise ----- */
+/* ----- biome ----- */
 
-void set_biome (string biome, float nT, float nH, float nM) {
+void set_biome (string biome) {
     set_property("biome", biome);
-    set_property("terrain", nT);
-    set_property("heat", nH);
-    set_property("moisture", nM);
 
-    switch(biome) {
+    switch (biome) {
     case "deep water":
         set_room_square_color("\e[38;2;0;0128m");           // #000080
         set_short("deep water");
@@ -92,4 +91,71 @@ void set_biome (string biome, float nT, float nH, float nM) {
 
 void add_terrain_override (string text) {
     set_long(query_long() + " " + text);
+}
+
+/* ----- map override ----- */
+
+string query_room_square_color () {
+    string name;
+    int x, y;
+    mapping planet;
+
+    if (sscanf(file_name(), PLANET_V_ROOM + "surface/%s/%d.%d", name, x, y) != 3) {
+        return 0;
+    }
+
+    planet = D_PLANET->query_planet(name);
+    if (arrayp(planet["overrides"])) {
+        foreach (mapping override in filter(planet["overrides"], (: $1["x"] == $(x) && $1["y"] == $(y) :))) {
+            if (override["type"] == "dome") {
+                return "%^AFF%^";
+            }
+        }
+    }
+
+    return ::query_room_square_color();
+}
+string *query_room_map () {
+    string *result = ({ });
+    mapping planet;
+    string name, path, line, symbol;
+    int size, radius = 2;
+    int x, y, xx, yy, wx, wy;
+    object room;
+
+    if (sscanf(file_name(), PLANET_V_ROOM + "surface/%s/%d.%d", name, x, y) != 3) {
+        return 0;
+    }
+
+    path = PLANET_V_ROOM + "surface/" + name;
+    planet = D_PLANET->query_planet(name);
+    size = D_PLANET->query_planet_size(name);
+
+    for (yy = -radius; yy <= radius; yy ++) {
+        line = "";
+        for (xx = -radius; xx <= radius; xx ++) {
+            // if (sqrt(xx * xx + yy * yy) - 0.5 > radius) {
+            //     line += "   ";
+            //     continue;
+            // }
+            if (xx == 0 && yy == 0) {
+                room = this_object();
+                symbol = "%^CYAN%^BOLD%^X%^RESET%^";
+            } else {
+                wx = (x + xx) > 0 ? (x + xx) : size - 1;
+                wy = (y + yy) > 0 ? (y + yy) : size - 1;
+                room = load_object(path + "/" + wx + "." + wy + ".c");
+                // @TODO check monster/resource?
+                symbol = " ";
+            }
+            if (room) {
+                line += room->query_room_square_color() + "[" + symbol + room->query_room_square_color() + "]%^RESET%^";
+            } else {
+                line += "   ";
+            }
+        }
+        result += ({ line });
+    }
+
+    return result;
 }
