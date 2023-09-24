@@ -150,7 +150,7 @@ int valid_exit (string path) {
         return file_size(path) > 0;
     }
 }
-string *query_room_exit_map() {
+string *query_room_map() {
     mapping blank, roomOb, exits, pics;
     string source;
 

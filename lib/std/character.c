@@ -174,7 +174,7 @@ void describe_environment_long () {
     string *long, result = "", line;
 
     if (__User->query_setting("screenreader") == "off") {
-        map = env->query_room_exit_map();
+        map = env->query_room_map();
     }
     if (!(sm = sizeof(map))) {
         message("room", "%^BOLD%^" + env->query_short() + "%^RESET%^", this_object());
