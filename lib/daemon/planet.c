@@ -48,7 +48,7 @@ int create_planet (string name, mapping config) {
 
 int adjust_planet (string name, mapping config) {
     string path = "/save/planet/" + lower_case(name[0..0]) + "/" + name + ".o";
-    if (file_size(path) > 0) {
+    if (file_size(path) == 0) {
         return 0;
     }
     __Planet = ([ ]);
@@ -63,7 +63,7 @@ int adjust_planet (string name, mapping config) {
 #define PI 3.141592653589793
 #define PIx2 6.283185307179586
 
-void generate_simplex_json (string name) { // , int type) {
+void generate_simplex_json (string name) {
     int x, y, size, size2, size9_10;
     mapping p;
     string line;
@@ -139,66 +139,64 @@ void generate_simplex_json (string name) { // , int type) {
             } else if (nT <= 0.5) {
                 // SHALLOW WATER
                 line += "\"#191996\"";
-            } else {
-                if (nH <= 0.05) {
-                    // COLDEST
-                    // DRYEST-WETTEST: ICE
-                    line += "\"#FFFFFF\"";
-                } else if (nH <= 0.2) {
-                    // COLDER
-                    // DRYEST-WETTEST: TUNDRA
-                    line += "\"#608370\"";
-                } else if (nH <= 0.4) {
-                    // COLD
-                    if (nM < 0.5) {
-                        // DRYEST-DRYER: GRASSLAND
-                        line += "\"#A4FF63\"";
-                    } else if (nM < 0.7) {
-                        // DRY: WOODLAND
-                        line += "\"#8BAF5A\"";
-                    } else {
-                        // WET-WETTEST: BOREAL FOREST
-                        line += "\"#5F733E\"";
-                    }
-                } else if (nH <= 0.5) {
-                    // HOT
-                    if (nM < 0.5) {
-                        // DRYEST-DRYER: DESERT
-                        line += "\"#EEDA82\"";
-                    } else if (nM < 0.8) {
-                        // DRY-WET: WOODLAND
-                        line += "\"#8BAF5A\"";
-                    } else if (nM < 0.9) {
-                        // WETTER: SEASONAL FOREST
-                        line += "\"#496423\"";
-                    } else {
-                        // WETTEST: TEMPERATE RAINFOREST
-                        line += "\"#1D4928\"";
-                    }
-                } else if (nH <= 0.7) {
-                    // HOTTER
-                    if (nM < 0.5) {
-                        // DRYEST-DRYER: DESERT
-                        line += "\"#EEDA82\"";
-                    } else if (nM < 0.8) {
-                        // DRY-WET: SAVANNA
-                        line += "\"#B1D16E\"";
-                    } else {
-                        // WETTER-WETTEST: TROPICAL RAINFOREST
-                        line += "\"#427B19\"";
-                    }
+            } else if (nH <= 0.05) {
+                // COLDEST
+                // DRYEST-WETTEST: ICE
+                line += "\"#FFFFFF\"";
+            } else if (nH <= 0.2) {
+                // COLDER
+                // DRYEST-WETTEST: TUNDRA
+                line += "\"#608370\"";
+            } else if (nH <= 0.4) {
+                // COLD
+                if (nM < 0.5) {
+                    // DRYEST-DRYER: GRASSLAND
+                    line += "\"#A4FF63\"";
+                } else if (nM < 0.7) {
+                    // DRY: WOODLAND
+                    line += "\"#8BAF5A\"";
                 } else {
-                    // HOTTEST
-                    if (nM < 0.5) {
-                        // DRYEST-DRYER: DESERT
-                        line += "\"#EEDA82\"";
-                    } else if (nM < 0.8) {
-                        // DRY-WET: SAVANNA
-                        line += "\"#B1D16E\"";
-                    } else {
-                        // WETTER-WETTEST: TROPICAL RAINFOREST
-                        line += "\"#427B19\"";
-                    }
+                    // WET-WETTEST: BOREAL FOREST
+                    line += "\"#5F733E\"";
+                }
+            } else if (nH <= 0.5) {
+                // HOT
+                if (nM < 0.5) {
+                    // DRYEST-DRYER: DESERT
+                    line += "\"#EEDA82\"";
+                } else if (nM < 0.8) {
+                    // DRY-WET: WOODLAND
+                    line += "\"#8BAF5A\"";
+                } else if (nM < 0.9) {
+                    // WETTER: SEASONAL FOREST
+                    line += "\"#496423\"";
+                } else {
+                    // WETTEST: TEMPERATE RAINFOREST
+                    line += "\"#1D4928\"";
+                }
+            } else if (nH <= 0.7) {
+                // HOTTER
+                if (nM < 0.5) {
+                    // DRYEST-DRYER: DESERT
+                    line += "\"#EEDA82\"";
+                } else if (nM < 0.8) {
+                    // DRY-WET: SAVANNA
+                    line += "\"#B1D16E\"";
+                } else {
+                    // WETTER-WETTEST: TROPICAL RAINFOREST
+                    line += "\"#427B19\"";
+                }
+            } else {
+                // HOTTEST
+                if (nM < 0.5) {
+                    // DRYEST-DRYER: DESERT
+                    line += "\"#EEDA82\"";
+                } else if (nM < 0.8) {
+                    // DRY-WET: SAVANNA
+                    line += "\"#B1D16E\"";
+                } else {
+                    // WETTER-WETTEST: TROPICAL RAINFOREST
+                    line += "\"#427B19\"";
                 }
             }
 
