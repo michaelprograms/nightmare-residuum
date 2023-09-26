@@ -67,7 +67,7 @@ void generate_simplex_json (string name) {
     int x, y, size, size2, size9_10;
     mapping p;
     string line;
-    float nx, ny, nz, nw, nT, nG, nH, nM;
+    float nx, ny, nz, nw, nT, nG, nH, nM, nR;
     float min = 1, max = -1;
 
     size = query_planet_size(name);
@@ -133,7 +133,23 @@ void generate_simplex_json (string name) {
                 nM += 0.25 * nT;
             }
 
+            // noise River
+            if (nH > 0.05) {
+                nR = (((noise_simplex_4d(nx, ny, nz, nw, p, 4, 1.25) + 1) / 2) - 0.25) / (0.75 - 0.25); // normalize 0-1 from 0.25-0.75 (t - min) / (max - min)
+                if (nR >= 0.72 && nR <= 0.78) {
+                    nT *= 0.5;
+                } else {
+                    nR = (((noise_simplex_4d(nw, nz, ny, nx, p, 5, 1.25) + 1) / 2) - 0.25) / (0.75 - 0.25); // normalize 0-1 from 0.25-0.75 (t - min) / (max - min)
+                    if (nR >= 0.575 && nR <= 0.625) {
+                        nT *= 0.7;
+                    }
+                }
+            }
+
             if (nT <= 0.3) {
+                // DEEPER WATER
+                line += "\"#000060\"";
+            } else if (nT <= 0.4) {
                 // DEEP WATER
                 line += "\"#000080\"";
             } else if (nT <= 0.5) {

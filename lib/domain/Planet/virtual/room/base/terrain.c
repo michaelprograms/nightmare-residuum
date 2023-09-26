@@ -16,8 +16,13 @@ void set_biome (string biome) {
     set_property("biome", biome);
 
     switch (biome) {
+    case "deeper water":
+        set_room_square_color("\e[38;2;0;96m");           // #000060
+        set_short("deeper water");
+        set_long("Surrounded by deeper water.");
+        break;
     case "deep water":
-        set_room_square_color("\e[38;2;0;0128m");           // #000080
+        set_room_square_color("\e[38;2;0;128m");           // #000080
         set_short("deep water");
         set_long("Surrounded by deep water.");
         break;
@@ -37,7 +42,7 @@ void set_biome (string biome) {
         set_long("Surrounded by tundra.");
         break;
     case "grassland":
-        set_room_square_color("\e[38;2;164;255;99m");   // #A4FF63
+        set_room_square_color("\e[38;2;164;255;99m");       // #A4FF63
         set_short("grassland");
         set_long("Surrounded by grassland.");
         break;

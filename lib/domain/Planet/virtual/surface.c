@@ -14,7 +14,7 @@ mapping __PCache = ([ ]);
 
 void setup_noise (object room, mapping planet, int x, int y) {
     float nx, ny, nz, nw;
-    float nT, nG, nH, nM;
+    float nT, nG, nH, nM, nR;
     int size, size2, size9_10;
     string name, biome;
 
@@ -77,8 +77,24 @@ void setup_noise (object room, mapping planet, int x, int y) {
         nM += 0.25 * nT;
     }
 
+    // noise River
+    if (nH > 0.05) {
+        nR = (((noise_simplex_4d(nx, ny, nz, nw, p, 4, 1.25) + 1) / 2) - 0.25) / (0.75 - 0.25); // normalize 0-1 from 0.25-0.75 (t - min) / (max - min)
+        if (nR >= 0.72 && nR <= 0.78) {
+            nT *= 0.5;
+        } else {
+            nR = (((noise_simplex_4d(nw, nz, ny, nx, p, 5, 1.25) + 1) / 2) - 0.25) / (0.75 - 0.25); // normalize 0-1 from 0.25-0.75 (t - min) / (max - min)
+            if (nR >= 0.575 && nR <= 0.625) {
+                nT *= 0.7;
+            }
+        }
+    }
+
     // determine biome
     if (nT <= 0.3) {
+        // DEEPER WATER
+        biome = "deeper water";
+    } else if (nT <= 0.4) {
         // DEEP WATER
         biome = "deep water";
     } else if (nT <= 0.5) {
