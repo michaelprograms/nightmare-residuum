@@ -27,7 +27,7 @@ int handle_remove () {
 }
 
 int clean_up (mixed *args...) {
-    if (origin() == "driver" || environment() || __NoClean) {
+    if (environment() || __NoClean) {
         return clean_never();
     }
     if (this_object()->query_parent()) {
