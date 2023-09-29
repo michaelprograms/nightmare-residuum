@@ -79,11 +79,11 @@ void setup_noise (object room, mapping planet, int x, int y) {
 
     // noise River
     if (nH > 0.05) {
-        nR = (((noise_simplex_4d(nx, ny, nz, nw, p, 4, 1.25) + 1) / 2) - 0.25) / (0.75 - 0.25); // normalize 0-1 from 0.25-0.75 (t - min) / (max - min)
+        nR = (((noise_simplex_4d(nx, ny, nz, nw, __PCache[name], 4, 1.25) + 1) / 2) - 0.25) / (0.75 - 0.25); // normalize 0-1 from 0.25-0.75 (t - min) / (max - min)
         if (nR >= 0.72 && nR <= 0.78) {
             nT *= 0.5;
         } else {
-            nR = (((noise_simplex_4d(nw, nz, ny, nx, p, 5, 1.25) + 1) / 2) - 0.25) / (0.75 - 0.25); // normalize 0-1 from 0.25-0.75 (t - min) / (max - min)
+            nR = (((noise_simplex_4d(nw, nz, ny, nx, __PCache[name], 5, 1.25) + 1) / 2) - 0.25) / (0.75 - 0.25); // normalize 0-1 from 0.25-0.75 (t - min) / (max - min)
             if (nR >= 0.575 && nR <= 0.625) {
                 nT *= 0.7;
             }
