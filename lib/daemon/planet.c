@@ -58,6 +58,121 @@ int adjust_planet (string name, mapping config) {
     return save_object(path);
 }
 
+/* ----- biome ----- */
+
+string query_biome (float height, float heat, float humidity) {
+    string biome;
+
+    if (height <= 0.3) {
+        // DEEPER WATER
+        biome = "deeper water";
+    } else if (height <= 0.4) {
+        // DEEP WATER
+        biome = "deep water";
+    } else if (height <= 0.5) {
+        // SHALLOW WATER
+        biome = "shallow water";
+    } else if (heat <= 0.05) {
+        // COLDEST
+        // DRYEST-WETTEST: ICE
+        biome = "ice";
+    } else if (heat <= 0.2) {
+        // COLDER
+        // DRYEST-WETTEST: TUNDRA
+        biome = "tundra";
+    } else if (heat <= 0.4) {
+        // COLD
+        if (humidity < 0.5) {
+            // DRYEST-DRYER: GRASSLAND
+            biome = "grassland";
+        } else if (humidity < 0.7) {
+            // DRY: WOODLAND
+            biome = "woodland";
+        } else {
+            // WET-WETTEST: BOREAL FOREST
+            biome = "boreal forest";
+        }
+    } else if (heat <= 0.5) {
+        // HOT
+        if (humidity < 0.5) {
+            // DRYEST-DRYER: DESERT
+            biome = "desert";
+        } else if (humidity < 0.8) {
+            // DRY-WET: WOODLAND
+            biome = "woodland";
+        } else if (humidity < 0.9) {
+            // WETTER: SEASONAL FOREST
+            biome = "seasonal forest";
+        } else {
+            // WETTEST: TEMPERATE RAINFOREST
+            biome = "temperate rainforest";
+        }
+    } else if (heat <= 0.7) {
+        // HOTTER
+        if (humidity < 0.5) {
+            // DRYEST-DRYER: DESERT
+            biome = "desert";
+        } else if (humidity < 0.8) {
+            // DRY-WET: SAVANNA
+            biome = "savanna";
+        } else {
+            // WETTER-WETTEST: TROPICAL RAINFOREST
+            biome = "tropical rainforest";
+        }
+    } else {
+        // HOTTEST
+        if (humidity < 0.5) {
+            // DRYEST-DRYER: DESERT
+            biome = "desert";
+        } else if (humidity < 0.8) {
+            // DRY-WET: SAVANNA
+            biome = "savanna";
+        } else {
+            // WETTER-WETTEST: TROPICAL RAINFOREST
+            biome = "tropical rainforest";
+        }
+    }
+
+    return biome;
+}
+string query_biome_color_ansi (string biome) {
+    switch (biome) {
+        case "deeper water":            return "\e[38;2;0;0;96m";
+        case "deep water":              return "\e[38;2;0;0;128m";
+        case "shallow water":           return "\e[38;2;25;25;150m";
+        case "ice":                     return "\e[38;2;0;0;0m";
+        case "tundra":                  return "\e[38;2;96;131;112m";
+        case "grassland":               return "\e[38;2;164;255;99m";
+        case "woodland":                return "\e[38;2;139;175;90m";
+        case "boreal forest":           return "\e[38;2;95;115;62m";
+        case "desert":                  return "\e[38;2;238;218;130m";
+        case "woodland":                return "\e[38;2;139;175;90m";
+        case "seasonal forest":         return "\e[38;2;73;100;35m";
+        case "temperate rainforest":    return "\e[38;2;29;73;40m";
+        case "savanna":                 return "\e[38;2;177;209;110m";
+        case "tropical rainforest":     return "\e[38;2;66;123;25m";
+        default:                        return "\e[38;2;128;0;0m;";
+        }
+}
+string query_biome_color_hex (string biome) {
+    switch (biome) {
+        case "deeper water":            return "#000060";
+        case "deep water":              return "#000080";
+        case "shallow water":           return "#191996";
+        case "ice":                     return "#FFFFFF";
+        case "tundra":                  return "#608370";
+        case "grassland":               return "#A4FF63";
+        case "woodland":                return "#8BAF5A";
+        case "boreal forest":           return "#5F733E";
+        case "desert":                  return "#EEDA82";
+        case "seasonal forest":         return "#496423";
+        case "temperate rainforest":    return "#1D4928";
+        case "savanna":                 return "#B1D16E";
+        case "tropical rainforest":     return "#427B19";
+        default:                        return "#800000";
+    }
+}
+
 /* ----- export /tmp/name.json ----- */
 
 #define PI 3.141592653589793
@@ -67,7 +182,8 @@ void generate_simplex_json (string name) {
     int x, y, size, size2, size9_10;
     mapping p;
     string line;
-    float nx, ny, nz, nw, nT, nG, nH, nM, nR;
+    float nx, ny, nz, nw;
+    float nHeight, nHeat, nHumidity, nTmp;
     float min = 1, max = -1;
 
     size = query_planet_size(name);
@@ -89,132 +205,64 @@ void generate_simplex_json (string name) {
             nz = sin((nz / size) * PIx2) * 2 / PIx2;
             nw = sin((nw / size) * PIx2) * 2 / PIx2;
 
-            // noise Terrain
-            nT = (noise_simplex_4d(nx, ny, nz, nw, p, 5, 1.25) + 1) / 2;
-            if (nT < min) min = nT;
-            if (nT > max) max = nT;
-            nT = (nT - 0.25) / (0.75 - 0.25); // normalize 0-1 from 0.25-0.75 (t - min) / (max - min)
+            // noise Height
+            nHeight = (noise_simplex_4d(nx, ny, nz, nw, p, 5, 1.25) + 1) / 2;
+            if (nHeight < min) min = nHeight;
+            if (nHeight > max) max = nHeight;
+            nHeight = (nHeight - 0.25) / (0.75 - 0.25); // normalize 0-1 from 0.25-0.75 (t - min) / (max - min)
 
             // noise Heat
-            nH = (noise_simplex_4d(nx, ny, nz, nw, p, 3, 2.0) + 1) / 2;
-            nH = (nH - 0.25) / (0.75 - 0.25); // normalize 0-1 from 0.25-0.75 (t - min) / (max - min)
+            nHeat = (noise_simplex_4d(nx, ny, nz, nw, p, 3, 2.0) + 1) / 2;
+            nHeat = (nHeat - 0.25) / (0.75 - 0.25); // normalize 0-1 from 0.25-0.75 (t - min) / (max - min)
 
             // noise Gradient
             if (y >= size9_10 && y <= size - size9_10) {  // center 20%
-                nG = 1.0;
+                nTmp = 1.0;
             } else if (y < size9_10) {    // north 40%
-                nG = 1.0 - (gradient_2d(1.0, 1.0, 1.0, 0.0, 0.0, (y * 1.0) / size9_10));
+                nTmp = 1.0 - (gradient_2d(1.0, 1.0, 1.0, 0.0, 0.0, (y * 1.0) / size9_10));
             } else {                        // south 40%
-                nG = 1.0 - (gradient_2d(1.0, 1.0, 1.0, 0.0, 0.0, (size - (y + 1.0)) / size9_10));
+                nTmp = 1.0 - (gradient_2d(1.0, 1.0, 1.0, 0.0, 0.0, (size - (y + 1.0)) / size9_10));
             }
-            nH = (nH * 0.8) * (nG * 1.5);   // TEMPERATURE_MULTIPLIER
+            nHeat = (nHeat * 0.8) * (nTmp * 1.5);   // TEMPERATURE_MULTIPLIER
 
-            // adjust noise Heat based upon noise Terrain, higher is colder
-            if (nT > 0.6 && nT <= 0.7) {        // Grass
-                nH -= 0.1 * nT;
-            } else if (nT > 0.7 && nT <= 0.8) { // Forest
-                nH -= 0.2 * nT;
-            } else if (nT > 0.8 && nT <= 0.9) { // Rock
-                nH -= 0.3 * nT;
-            } else if (nT > 0.9 && nT <= 1.0) { // Snow
-                nH -= 0.4 * nT;
+            // adjust noise Heat based upon noise Height, higher is colder
+            if (nHeight > 0.6 && nHeight <= 0.7) {        // Grass
+                nHeat -= 0.1 * nHeight;
+            } else if (nHeight > 0.7 && nHeight <= 0.8) { // Forest
+                nHeat -= 0.2 * nHeight;
+            } else if (nHeight > 0.8 && nHeight <= 0.9) { // Rock
+                nHeat -= 0.3 * nHeight;
+            } else if (nHeight > 0.9 && nHeight <= 1.0) { // Snow
+                nHeat -= 0.4 * nHeight;
             }
 
-            // noise Moisture
-            nM = (noise_simplex_4d(nx, ny, nz, nw, p, 4, 3.0) + 1) / 2;
-            nM = (nM - 0.25) / (0.75 - 0.25); // normalize 0-1 from 0.25-0.75 (t - min) / (max - min)
+            // noise Humidity
+            nHumidity = (noise_simplex_4d(nx, ny, nz, nw, p, 4, 3.0) + 1) / 2;
+            nHumidity = (nHumidity - 0.25) / (0.75 - 0.25); // normalize 0-1 from 0.25-0.75 (t - min) / (max - min)
 
-            // adjust noise Moisture based upon noise Terrain, lower is wetter
-            if (nT > 0 && nT <= 0.3) {                    // Deep Water
-                nM += 8.0 * nT;
-            } else if (nT > 0.3 && nT <= 0.5) { // Shallow Water
-                nM += 3.0 * nT;
-            } else if (nT > 0.5 && nT <= 0.6) { // Sand
-                nM += 0.25 * nT;
+            // adjust noise Humidity based upon noise Height, lower is wetter
+            if (nHeight > 0 && nHeight <= 0.3) {                    // Deep Water
+                nHumidity += 8.0 * nHeight;
+            } else if (nHeight > 0.3 && nHeight <= 0.5) { // Shallow Water
+                nHumidity += 3.0 * nHeight;
+            } else if (nHeight > 0.5 && nHeight <= 0.6) { // Sand
+                nHumidity += 0.25 * nHeight;
             }
 
             // noise River
-            if (nH > 0.05) {
-                nR = (((noise_simplex_4d(nx, ny, nz, nw, p, 4, 1.25) + 1) / 2) - 0.25) / (0.75 - 0.25); // normalize 0-1 from 0.25-0.75 (t - min) / (max - min)
-                if (nR >= 0.72 && nR <= 0.78) {
-                    nT *= 0.5;
+            if (nHeat > 0.05) {
+                nTmp = (((noise_simplex_4d(nx, ny, nz, nw, p, 4, 1.25) + 1) / 2) - 0.25) / (0.75 - 0.25); // normalize 0-1 from 0.25-0.75 (t - min) / (max - min)
+                if (nTmp >= 0.72 && nTmp <= 0.78) {
+                    nHeight *= 0.5;
                 } else {
-                    nR = (((noise_simplex_4d(nw, nz, ny, nx, p, 5, 1.25) + 1) / 2) - 0.25) / (0.75 - 0.25); // normalize 0-1 from 0.25-0.75 (t - min) / (max - min)
-                    if (nR >= 0.575 && nR <= 0.625) {
-                        nT *= 0.7;
+                    nTmp = (((noise_simplex_4d(nw, nz, ny, nx, p, 5, 1.25) + 1) / 2) - 0.25) / (0.75 - 0.25); // normalize 0-1 from 0.25-0.75 (t - min) / (max - min)
+                    if (nTmp >= 0.575 && nTmp <= 0.625) {
+                        nHeight *= 0.7;
                     }
                 }
             }
 
-            if (nT <= 0.3) {
-                // DEEPER WATER
-                line += "\"#000060\"";
-            } else if (nT <= 0.4) {
-                // DEEP WATER
-                line += "\"#000080\"";
-            } else if (nT <= 0.5) {
-                // SHALLOW WATER
-                line += "\"#191996\"";
-            } else if (nH <= 0.05) {
-                // COLDEST
-                // DRYEST-WETTEST: ICE
-                line += "\"#FFFFFF\"";
-            } else if (nH <= 0.2) {
-                // COLDER
-                // DRYEST-WETTEST: TUNDRA
-                line += "\"#608370\"";
-            } else if (nH <= 0.4) {
-                // COLD
-                if (nM < 0.5) {
-                    // DRYEST-DRYER: GRASSLAND
-                    line += "\"#A4FF63\"";
-                } else if (nM < 0.7) {
-                    // DRY: WOODLAND
-                    line += "\"#8BAF5A\"";
-                } else {
-                    // WET-WETTEST: BOREAL FOREST
-                    line += "\"#5F733E\"";
-                }
-            } else if (nH <= 0.5) {
-                // HOT
-                if (nM < 0.5) {
-                    // DRYEST-DRYER: DESERT
-                    line += "\"#EEDA82\"";
-                } else if (nM < 0.8) {
-                    // DRY-WET: WOODLAND
-                    line += "\"#8BAF5A\"";
-                } else if (nM < 0.9) {
-                    // WETTER: SEASONAL FOREST
-                    line += "\"#496423\"";
-                } else {
-                    // WETTEST: TEMPERATE RAINFOREST
-                    line += "\"#1D4928\"";
-                }
-            } else if (nH <= 0.7) {
-                // HOTTER
-                if (nM < 0.5) {
-                    // DRYEST-DRYER: DESERT
-                    line += "\"#EEDA82\"";
-                } else if (nM < 0.8) {
-                    // DRY-WET: SAVANNA
-                    line += "\"#B1D16E\"";
-                } else {
-                    // WETTER-WETTEST: TROPICAL RAINFOREST
-                    line += "\"#427B19\"";
-                }
-            } else {
-                // HOTTEST
-                if (nM < 0.5) {
-                    // DRYEST-DRYER: DESERT
-                    line += "\"#EEDA82\"";
-                } else if (nM < 0.8) {
-                    // DRY-WET: SAVANNA
-                    line += "\"#B1D16E\"";
-                } else {
-                    // WETTER-WETTEST: TROPICAL RAINFOREST
-                    line += "\"#427B19\"";
-                }
-            }
+            line += "\"" + query_biome_color_hex(query_biome(nHeight, nHeat, nHumidity)) + "\"";
 
             if (x < size-1) line += ",";
         }

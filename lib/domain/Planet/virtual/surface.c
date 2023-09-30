@@ -14,9 +14,9 @@ mapping __PCache = ([ ]);
 
 void setup_noise (object room, mapping planet, int x, int y) {
     float nx, ny, nz, nw;
-    float nT, nG, nH, nM, nR;
+    float nHeight, nHeat, nHumidity, nTmp;
     int size, size2, size9_10;
-    string name, biome;
+    string name;
 
     name = planet["name"];
     if (!__PCache[name]) {
@@ -36,137 +36,61 @@ void setup_noise (object room, mapping planet, int x, int y) {
     nw = sin((nw / size) * PIx2) * 2 / PIx2;
 
     // noise Terrain
-    nT = (noise_simplex_4d(nx, ny, nz, nw, __PCache[name], 5, 1.25) + 1) / 2;
-    nT = (nT - 0.25) / (0.75 - 0.25); // normalize 0-1 from 0.25-0.75 (t - min) / (max - min)
+    nHeight = (noise_simplex_4d(nx, ny, nz, nw, __PCache[name], 5, 1.25) + 1) / 2;
+    nHeight = (nHeight - 0.25) / (0.75 - 0.25); // normalize 0-1 from 0.25-0.75 (t - min) / (max - min)
 
     // noise Heat
-    nH = (noise_simplex_4d(nx, ny, nz, nw, __PCache[name], 3, 2.0) + 1) / 2;
-    nH = (nH - 0.25) / (0.75 - 0.25); // normalize 0-1 from 0.25-0.75 (t - min) / (max - min)
+    nHeat = (noise_simplex_4d(nx, ny, nz, nw, __PCache[name], 3, 2.0) + 1) / 2;
+    nHeat = (nHeat - 0.25) / (0.75 - 0.25); // normalize 0-1 from 0.25-0.75 (t - min) / (max - min)
 
     // noise Gradient
     if (y >= size9_10 && y <= size - size9_10) {  // center 20%
-        nG = 1.0;
-    } else if (y < size9_10) {    // north 40%
-        nG = 1.0 - (gradient_2d(1.0, 1.0, 1.0, 0.0, 0.0, (y * 1.0) / size9_10));
+        nTmp = 1.0;
+    } else if (y < size9_10) {      // north 40%
+        nTmp = 1.0 - (gradient_2d(1.0, 1.0, 1.0, 0.0, 0.0, (y * 1.0) / size9_10));
     } else {                        // south 40%
-        nG = 1.0 - (gradient_2d(1.0, 1.0, 1.0, 0.0, 0.0, (size - (y + 1.0)) / size9_10));
+        nTmp = 1.0 - (gradient_2d(1.0, 1.0, 1.0, 0.0, 0.0, (size - (y + 1.0)) / size9_10));
     }
-    nH = (nH * 0.8) * (nG * 1.5);   // TEMPERATURE_MULTIPLIER
+    nHeat = (nHeat * 0.8) * (nTmp * 1.5);   // TEMPERATURE_MULTIPLIER
 
-    // adjust noise Heat based upon noise Terrain, higher is colder
-    if (nT > 0.6 && nT <= 0.7) {        // Grass
-        nH -= 0.1 * nT;
-    } else if (nT > 0.7 && nT <= 0.8) { // Forest
-        nH -= 0.2 * nT;
-    } else if (nT > 0.8 && nT <= 0.9) { // Rock
-        nH -= 0.3 * nT;
-    } else if (nT > 0.9 && nT <= 1.0) { // Snow
-        nH -= 0.4 * nT;
+    // adjust noise Heat based upon noise Height, higher is colder
+    if (nHeight > 0.6 && nHeight <= 0.7) {        // Grass
+        nHeat -= 0.1 * nHeight;
+    } else if (nHeight > 0.7 && nHeight <= 0.8) { // Forest
+        nHeat -= 0.2 * nHeight;
+    } else if (nHeight > 0.8 && nHeight <= 0.9) { // Rock
+        nHeat -= 0.3 * nHeight;
+    } else if (nHeight > 0.9 && nHeight <= 1.0) { // Snow
+        nHeat -= 0.4 * nHeight;
     }
 
-    // noise Moisture
-    nM = (noise_simplex_4d(nx, ny, nz, nw, __PCache[name], 4, 3.0) + 1) / 2;
-    nM = (nM - 0.25) / (0.75 - 0.25); // normalize 0-1 from 0.25-0.75 (t - min) / (max - min)
+    // noise Humidity
+    nHumidity = (noise_simplex_4d(nx, ny, nz, nw, __PCache[name], 4, 3.0) + 1) / 2;
+    nHumidity = (nHumidity - 0.25) / (0.75 - 0.25); // normalize 0-1 from 0.25-0.75 (t - min) / (max - min)
 
-    // adjust noise Moisture based upon noise Terrain, lower is wetter
-    if (nT > 0 && nT <= 0.3) {                    // Deep Water
-        nM += 8.0 * nT;
-    } else if (nT > 0.3 && nT <= 0.5) { // Shallow Water
-        nM += 3.0 * nT;
-    } else if (nT > 0.5 && nT <= 0.6) { // Sand
-        nM += 0.25 * nT;
+    // adjust noise Humidity based upon noise Height, lower is wetter
+    if (nHeight > 0 && nHeight <= 0.3) {              // Deep Water
+        nHumidity += 8.0 * nHeight;
+    } else if (nHeight > 0.3 && nHeight <= 0.5) {     // Shallow Water
+        nHumidity += 3.0 * nHeight;
+    } else if (nHeight > 0.5 && nHeight <= 0.6) {     // Sand
+        nHumidity += 0.25 * nHeight;
     }
 
     // noise River
-    if (nH > 0.05) {
-        nR = (((noise_simplex_4d(nx, ny, nz, nw, __PCache[name], 4, 1.25) + 1) / 2) - 0.25) / (0.75 - 0.25); // normalize 0-1 from 0.25-0.75 (t - min) / (max - min)
-        if (nR >= 0.72 && nR <= 0.78) {
-            nT *= 0.5;
+    if (nHeat > 0.05) {
+        nTmp = (((noise_simplex_4d(nx, ny, nz, nw, __PCache[name], 4, 1.25) + 1) / 2) - 0.25) / (0.75 - 0.25); // normalize 0-1 from 0.25-0.75 (t - min) / (max - min)
+        if (nTmp >= 0.72 && nTmp <= 0.78) {
+            nHeight *= 0.5;
         } else {
-            nR = (((noise_simplex_4d(nw, nz, ny, nx, __PCache[name], 5, 1.25) + 1) / 2) - 0.25) / (0.75 - 0.25); // normalize 0-1 from 0.25-0.75 (t - min) / (max - min)
-            if (nR >= 0.575 && nR <= 0.625) {
-                nT *= 0.7;
+            nTmp = (((noise_simplex_4d(nw, nz, ny, nx, __PCache[name], 5, 1.25) + 1) / 2) - 0.25) / (0.75 - 0.25); // normalize 0-1 from 0.25-0.75 (t - min) / (max - min)
+            if (nTmp >= 0.575 && nTmp <= 0.625) {
+                nHeight *= 0.7;
             }
         }
     }
 
-    // determine biome
-    if (nT <= 0.3) {
-        // DEEPER WATER
-        biome = "deeper water";
-    } else if (nT <= 0.4) {
-        // DEEP WATER
-        biome = "deep water";
-    } else if (nT <= 0.5) {
-        // SHALLOW WATER
-        biome = "shallow water";
-    } else if (nH <= 0.05) {
-        // COLDEST
-        // DRYEST-WETTEST: ICE
-        biome = "ice";
-    } else if (nH <= 0.2) {
-        // COLDER
-        // DRYEST-WETTEST: TUNDRA
-        biome = "tundra";
-    } else if (nH <= 0.4) {
-        // COLD
-        if (nM < 0.5) {
-            // DRYEST-DRYER: GRASSLAND
-            biome = "grassland";
-        } else if (nM < 0.7) {
-            // DRY: WOODLAND
-            biome = "woodland";
-        } else {
-            // WET-WETTEST: BOREAL FOREST
-            biome = "boreal forest";
-        }
-    } else if (nH <= 0.5) {
-        // HOT
-        if (nM < 0.5) {
-            // DRYEST-DRYER: DESERT
-            biome = "desert";
-        } else if (nM < 0.8) {
-            // DRY-WET: WOODLAND
-            biome = "woodland";
-        } else if (nM < 0.9) {
-            // WETTER: SEASONAL FOREST
-            biome = "seasonal forest";
-        } else {
-            // WETTEST: TEMPERATE RAINFOREST
-            biome = "temperate rainforest";
-        }
-    } else if (nH <= 0.7) {
-        // HOTTER
-        if (nM < 0.5) {
-            // DRYEST-DRYER: DESERT
-            biome = "desert";
-        } else if (nM < 0.8) {
-            // DRY-WET: SAVANNA
-            biome = "savanna";
-        } else {
-            // WETTER-WETTEST: TROPICAL RAINFOREST
-            biome = "tropical rainforest";
-        }
-    } else {
-        // HOTTEST
-        if (nM < 0.5) {
-            // DRYEST-DRYER: DESERT
-            biome = "desert";
-        } else if (nM < 0.8) {
-            // DRY-WET: SAVANNA
-            biome = "savanna";
-        } else {
-            // WETTER-WETTEST: TROPICAL RAINFOREST
-            biome = "tropical rainforest";
-        }
-    }
-
-    room->set_properties(([
-        "nT": nT,
-        "nH": nH,
-        "nM": nM,
-    ]));
-    room->set_biome(biome);
+    room->set_biome(nHeight, nHeat, nHumidity);
 }
 
 void setup_exits (object room, mapping planet, int x, int y) {
