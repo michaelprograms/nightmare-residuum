@@ -146,7 +146,6 @@ string query_biome_color_ansi (string biome) {
         case "woodland":                return "\e[38;2;139;175;90m";
         case "boreal forest":           return "\e[38;2;95;115;62m";
         case "desert":                  return "\e[38;2;238;218;130m";
-        case "woodland":                return "\e[38;2;139;175;90m";
         case "seasonal forest":         return "\e[38;2;73;100;35m";
         case "temperate rainforest":    return "\e[38;2;29;73;40m";
         case "savanna":                 return "\e[38;2;177;209;110m";
