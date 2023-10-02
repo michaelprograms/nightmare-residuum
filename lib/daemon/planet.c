@@ -3,9 +3,9 @@ inherit M_CLEAN;
 #define PI                  3.141592653589793
 #define PIx2                6.283185307179586
 
-#define HEIGHT_DEEPER       0.280
-#define HEIGHT_DEEP         0.380
-#define HEIGHT_SHALLOW      0.480
+#define HEIGHT_DEEPER       0.325
+#define HEIGHT_DEEP         0.400
+#define HEIGHT_SHALLOW      0.475
 #define HEIGHT_SHORE        0.500
 
 #define HEAT_COLDEST        0.05
@@ -18,9 +18,9 @@ inherit M_CLEAN;
 #define HUMIDITY_DRYEST     0.20
 #define HUMIDITY_DRYER      0.45
 #define HUMIDITY_DRY        0.60
-#define HUMIDITY_WET        0.80
-#define HUMIDITY_WETTER     0.95
-// HUMIDITY_WETTEST > 0.95
+#define HUMIDITY_WET        0.75
+#define HUMIDITY_WETTER     0.90
+// HUMIDITY_WETTEST > 0.90
 
 private mapping __Planet = ([
 /*
@@ -102,16 +102,16 @@ mapping query_noise (mapping p, int size, int x, int y) {
     // noise River
     nTmp = (((noise_simplex_4d(nx, ny, nz, nw, p, 4, 1.25) + 1) / 2) - 0.25) / 0.5; // normalize 0.25-0.75 to 0-1
     if (nTmp >= 0.72 && nTmp <= 0.78) {
-        if (nHeight < 0.5) {
-            nHeight *= 0.75;
+        if (nHeight < HEIGHT_SHORE) {
+            nHeight *= 0.70;
         } else {
-            nHeight *= 0.65;
+            nHeight *= 0.60;
         }
     } else {
         nTmp = (((noise_simplex_4d(nw, nz, ny, nx, p, 5, 1.25) + 1) / 2) - 0.25) / 0.5; // normalize 0.25-0.75 to 0-1
         if (nTmp >= 0.575 && nTmp <= 0.625 || nTmp >= 0.275 && nTmp <= 0.325) {
-            if (nHeight < 0.5) {
-                nHeight *= 0.85;
+            if (nHeight < HEIGHT_SHORE) {
+                nHeight *= 0.80;
             } else {
                 nHeight *= 0.7;
             }
