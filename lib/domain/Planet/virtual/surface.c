@@ -20,6 +20,8 @@ void setup_noise (object room, mapping planet, int x, int y) {
     }
     noise = D_PLANET->query_noise(__PCache[planet["name"]], planet["size"], x, y);
     room->set_biome(noise);
+
+    room->set_property("resource", D_PLANET->query_noise_resource(__PCache[planet["name"]], planet["size"], x, y));
 }
 
 void setup_exits (object room, mapping planet, int x, int y) {
@@ -61,13 +63,13 @@ void setup_exits (object room, mapping planet, int x, int y) {
 
 /* ----- called by master::compile_object ----- */
 
-object virtual_create (string arg) {
+object virtual_create (string path) {
     string name;
     int x, y;
     mapping planet;
     object room;
 
-    if (sscanf(arg, PLANET_V_ROOM + "surface/%s/%d.%d", name, x, y) != 3) {
+    if (sscanf(path, PLANET_V_ROOM + "surface/%s/%d.%d", name, x, y) != 3) {
         return 0;
     }
 
@@ -78,4 +80,20 @@ object virtual_create (string arg) {
     setup_exits(room, planet, x, y);
 
     return room;
+}
+
+/* -----  ----- */
+
+void update_resource (object room) {
+    string name;
+    int x, y;
+    mapping planet;
+
+    name = file_name(room);
+
+    if (sscanf(name, PLANET_V_ROOM + "surface/%s/%d.%d", name, x, y) != 3) {
+        return 0;
+    }
+
+    room->set_property("resource", D_PLANET->query_noise_resource(__PCache[planet["name"]], planet["size"], x, y));
 }

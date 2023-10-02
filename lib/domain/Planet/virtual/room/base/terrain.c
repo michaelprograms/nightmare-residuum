@@ -4,10 +4,33 @@ inherit STD_ROOM;
 
 int is_virtual_room () { return 1; }
 
-void create() {
+void create () {
     ::create();
     set_short("a terrain somewhere");
     set_long("The terrain of a planet.");
+}
+
+void reset () {
+    object resource;
+    ::reset();
+
+    if (query_resets() > 1) {
+        PLANET_SURFACE->update_resource(this_object());
+    }
+
+    if (query_property("resource") && to_int(query_property("resource") * 100.0) % 10) {
+        if (!(resource = present("resource_node"))) {
+            // resource = new(/std/resource.c");
+            // resource->set_type("");
+            // resource->handle_move(this_object());
+        } else {
+            resource->reset();
+        }
+    } else {
+        if (resource = present("resource_node")) {
+            resource->handle_remove();
+        }
+    }
 }
 
 /* ----- biome ----- */

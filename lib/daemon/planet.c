@@ -82,6 +82,20 @@ int adjust_planet (string name, mapping config) {
 
 /* ----- noise ----- */
 
+float query_noise_resource (mapping p, int size, int x, int y) {
+    float nx, ny, nzw;
+    float nResource;
+
+    // Calculate our 4D coordinates but without wrapping
+    nx = x * 1.0 / size;
+    ny = y * 1.0 / size;
+    nzw = time() / 86400 % 100 / 100.0; // changes every 24 hours 0.00-0.99
+
+    nResource = (noise_simplex_4d(nx, ny, nzw, nzw, p, 4, 25.0, 3.0) + 1) / 2;
+
+    return nResource;
+}
+
 mapping query_noise (mapping p, int size, int x, int y) {
     int size2;
     float nx, ny, nz, nw;
@@ -390,21 +404,26 @@ void generate_simplex_json (string name) {
     write(sprintf("%-24s", "height min: "+height_min)+" "+sprintf("%-24s", "height_max: "+height_max)+"\n");
     write(sprintf("%-24s", "humidity min: "+humidity_min)+" "+sprintf("%-24s", "humidity_max: "+humidity_max)+"\n");
     write(sprintf("%-24s", "heat min: "+heat_min)+" "+sprintf("%-24s", "heat_max: "+heat_max)+"\n");
+    write(
+        sprintf(
+            "%-24s",
+            "land: "+(biomes["ice"]+biomes["tundra"]+biomes["grassland"]+biomes["woodland"]+biomes["boreal forest"]+biomes["desert"]+biomes["temperate rainforest"]+biomes["savanna"]+biomes["tropical rainforest"])*100.0/(size*size)
+        )+" "+
+        sprintf(
+            "%-24s",
+            "water: "+(biomes["shallow water"]+biomes["deep water"]+biomes["deeper water"]+biomes["icy water"]+biomes["frozen water"])*100.0/(size*size)
+        )+"\n"
+    );
 }
 
 void generate_simplex_json_resource (string name) {
-    int x, y, size, size2, size9_10;
+    int x, y, size;
     mapping p;
     string line;
-    float nResource;
-    float min = 1, max = -1;
-    float tZW = time() / 86400 % 100 / 100.0; // changes every 24 hours [0.00-0.99]
+    float nResource, min = 1, max = -1;
+    int n;
 
-    // size = query_planet_size(name);
-    size = 500;
-    size2 = size/2;
-    size9_10 = size2 * 9 / 10;
-
+    size = query_planet_size(name);
     p = noise_generate_permutation_simplex(name);
 
     write_file("/tmp/"+name+".json", "{\n    \"name\":\""+name+"\",\n    \"size\":\""+size+"\",\n    \"data\":[\n", 1);
@@ -412,13 +431,13 @@ void generate_simplex_json_resource (string name) {
         line = "        [ ";
         for (x = 0; x < size; x ++) {
 
-            nResource = (noise_simplex_4d(x*1.0/size, y*1.0/size, tZW, tZW, p, 4, 10.0, 3.0) + 1) / 2;
-            nResource = floor(nResource * 100.0);
+            nResource = query_noise_resource(p, size, x, y);
             if (nResource < min) min = nResource;
             if (nResource > max) max = nResource;
 
-            if (to_int(nResource) % 10 == 0) {
+            if (to_int(nResource * 100.0) % 10 == 0) {
                 nResource = 1.0;
+                n ++;
             } else {
                 nResource = 0.0;
             }
@@ -432,4 +451,5 @@ void generate_simplex_json_resource (string name) {
     }
     write_file("/tmp/"+name+".json", "    ],\n    \"min\":\""+min+"\",\n    \"max\":\""+max+"\"\n}");
     write("Seed '"+name+"' size "+size+" done\n");
+    write("Resources: " + n + " --- " + (n*100.0/(size*size)) + "\n");
 }
