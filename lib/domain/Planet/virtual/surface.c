@@ -13,84 +13,13 @@ int is_virtual_room () { return 1; }
 mapping __PCache = ([ ]);
 
 void setup_noise (object room, mapping planet, int x, int y) {
-    float nx, ny, nz, nw;
-    float nHeight, nHeat, nHumidity, nTmp;
-    int size, size2, size9_10;
-    string name;
+    mapping noise;
 
-    name = planet["name"];
-    if (!__PCache[name]) {
-        __PCache[name] = noise_generate_permutation_simplex(name);
+    if (!__PCache[planet["name"]]) {
+        __PCache[planet["name"]] = noise_generate_permutation_simplex(planet["name"]);
     }
-
-    size = planet["size"];
-    size2 = size/2;
-    size9_10 = size2 * 9 / 10;
-
-    nx = nz = to_float(x);
-    ny = nw = to_float(y);
-
-    nx = cos((nx / size) * PIx2) * 2 / PIx2;
-    ny = cos((ny / size) * PIx2) * 2 / PIx2;
-    nz = sin((nz / size) * PIx2) * 2 / PIx2;
-    nw = sin((nw / size) * PIx2) * 2 / PIx2;
-
-    // noise Terrain
-    nHeight = (noise_simplex_4d(nx, ny, nz, nw, __PCache[name], 5, 1.25) + 1) / 2;
-    nHeight = (nHeight - 0.25) / (0.75 - 0.25); // normalize 0-1 from 0.25-0.75 (t - min) / (max - min)
-
-    // noise Heat
-    nHeat = (noise_simplex_4d(nx, ny, nz, nw, __PCache[name], 3, 2.0) + 1) / 2;
-    nHeat = (nHeat - 0.25) / (0.75 - 0.25); // normalize 0-1 from 0.25-0.75 (t - min) / (max - min)
-
-    // noise Gradient
-    if (y >= size9_10 && y <= size - size9_10) {  // center 20%
-        nTmp = 1.0;
-    } else if (y < size9_10) {      // north 40%
-        nTmp = 1.0 - (gradient_2d(1.0, 1.0, 1.0, 0.0, 0.0, (y * 1.0) / size9_10));
-    } else {                        // south 40%
-        nTmp = 1.0 - (gradient_2d(1.0, 1.0, 1.0, 0.0, 0.0, (size - (y + 1.0)) / size9_10));
-    }
-    nHeat = (nHeat * 0.8) * (nTmp * 1.5);   // TEMPERATURE_MULTIPLIER
-
-    // adjust noise Heat based upon noise Height, higher is colder
-    if (nHeight > 0.6 && nHeight <= 0.7) {        // Grass
-        nHeat -= 0.1 * nHeight;
-    } else if (nHeight > 0.7 && nHeight <= 0.8) { // Forest
-        nHeat -= 0.2 * nHeight;
-    } else if (nHeight > 0.8 && nHeight <= 0.9) { // Rock
-        nHeat -= 0.3 * nHeight;
-    } else if (nHeight > 0.9 && nHeight <= 1.0) { // Snow
-        nHeat -= 0.4 * nHeight;
-    }
-
-    // noise Humidity
-    nHumidity = (noise_simplex_4d(nx, ny, nz, nw, __PCache[name], 4, 3.0) + 1) / 2;
-    nHumidity = (nHumidity - 0.25) / (0.75 - 0.25); // normalize 0-1 from 0.25-0.75 (t - min) / (max - min)
-
-    // adjust noise Humidity based upon noise Height, lower is wetter
-    if (nHeight > 0 && nHeight <= 0.3) {              // Deep Water
-        nHumidity += 8.0 * nHeight;
-    } else if (nHeight > 0.3 && nHeight <= 0.5) {     // Shallow Water
-        nHumidity += 3.0 * nHeight;
-    } else if (nHeight > 0.5 && nHeight <= 0.6) {     // Sand
-        nHumidity += 0.25 * nHeight;
-    }
-
-    // noise River
-    if (nHeat > 0.05) {
-        nTmp = (((noise_simplex_4d(nx, ny, nz, nw, __PCache[name], 4, 1.25) + 1) / 2) - 0.25) / (0.75 - 0.25); // normalize 0-1 from 0.25-0.75 (t - min) / (max - min)
-        if (nTmp >= 0.72 && nTmp <= 0.78) {
-            nHeight *= 0.5;
-        } else {
-            nTmp = (((noise_simplex_4d(nw, nz, ny, nx, __PCache[name], 5, 1.25) + 1) / 2) - 0.25) / (0.75 - 0.25); // normalize 0-1 from 0.25-0.75 (t - min) / (max - min)
-            if (nTmp >= 0.575 && nTmp <= 0.625) {
-                nHeight *= 0.7;
-            }
-        }
-    }
-
-    room->set_biome(nHeight, nHeat, nHumidity);
+    noise = D_PLANET->query_noise(__PCache[planet["name"]], planet["size"], x, y);
+    room->set_biome(noise);
 }
 
 void setup_exits (object room, mapping planet, int x, int y) {
