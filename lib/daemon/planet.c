@@ -104,8 +104,7 @@ mapping query_noise (mapping p, int size, int x, int y) {
     int size2;
     float nx, ny, nz, nw;
     float nHeight, nHumidity, nHeat, nTmp;
-
-    size2 = size * 45 / 100;
+    float now;
 
     // Calculate our 4D coordinates
     nx = nz = to_float(x);
@@ -115,34 +114,27 @@ mapping query_noise (mapping p, int size, int x, int y) {
     nz = sin((nz / size) * PIx2) * 2 / PIx2;
     nw = sin((nw / size) * PIx2) * 2 / PIx2;
 
-    // noise Height
-    nHeight = (((noise_simplex_4d(nx, ny, nz, nw, p, 5, 1.25) + 1) / 2) - 0.25) / 0.5; // normalize 0.25-0.75 to 0-1
+    now = time() / 86400 % 100 / 100.0; // changes every 24 hours, 0.00-0.99
 
     // noise Humidity
-    nHumidity = max(({ 0.0, (((noise_simplex_4d(nx, ny, nz, nw, p, 4, 3.0) + 1) / 2) - 0.25) / 0.5 })); // normalize 0.25-0.75 to 0-1
+    nHumidity = max(({ 0.0, (((noise_simplex_4d(nx + now, ny + now, nz + now, nw + now, p, 4, 3.0) + 1) / 2) - 0.25) / 0.5 })); // normalize 0.25-0.75 to 0-1
     // nHumidity *= 1.0; // @TODO HUMIDITY_FACTOR = 1.0
 
-    // noise River
-    nTmp = (((noise_simplex_4d(nx, ny, nz, nw, p, 4, 1.25) + 1) / 2) - 0.25) / 0.5; // normalize 0.25-0.75 to 0-1
-    if (nTmp >= WATER_LAKES-0.026 && nTmp <= WATER_LAKES+0.026) {
-        if (nTmp >= WATER_LAKES-0.025 && nTmp <= WATER_LAKES+0.025) {
-            if (nHeight <= HEIGHT_SHALLOW) {
-                nHeight = nHeight * 0.8;
-            } else {
-                nHeight = max(({ 0.0, nHeight - (abs(nHeight - HEIGHT_SHALLOW) + 0.05) }));
-            }
-        }
-        nHumidity += 0.1 * nHeight;
+    // noise Height
+    nHeight = (((noise_simplex_4d(nx, ny, nz, nw, p, 5, 1.25) + 1) / 2) - 0.25) / 0.5; // normalize 0.25-0.75 to 0-1
+    // ensure central land mass exists
+    size2 = size / 2;
+    if (
+        (nHeight <= HEIGHT_SHALLOW) &&
+        (x <= size2+3 && y <= size2+3 && x >= size2-3 && y >= size2-3) &&
+        (sqrt((size2-x) * (size2-x) + (size2-y) * (size2-y)) + 0.5 < 3)
+     ) {
+        nHeight += (HEIGHT_SHALLOW - nHeight) + 0.05;
     } else {
-        nTmp = (((noise_simplex_4d(nw, nz, ny, nx, p, 5, 1.25) + 1) / 2) - 0.25) / 0.5; // normalize 0.25-0.75 to 0-1
-        if (
-            (nTmp >= WATER_RIVER_1-0.026 && nTmp <= WATER_RIVER_1+0.026) ||
-            (nTmp >= WATER_RIVER_2-0.026 && nTmp <= WATER_RIVER_1+0.026)
-        ) {
-            if (
-                (nTmp >= WATER_RIVER_1-0.025 && nTmp <= WATER_RIVER_1+0.025) ||
-                (nTmp >= WATER_RIVER_2-0.025 && nTmp <= WATER_RIVER_2+0.025)
-            ) {
+        // noise River
+        nTmp = (((noise_simplex_4d(nx, ny, nz, nw, p, 4, 1.25) + 1) / 2) - 0.25) / 0.5; // normalize 0.25-0.75 to 0-1
+        if (nTmp >= WATER_LAKES-0.026 && nTmp <= WATER_LAKES+0.026) {
+            if (nTmp >= WATER_LAKES-0.025 && nTmp <= WATER_LAKES+0.025) {
                 if (nHeight <= HEIGHT_SHALLOW) {
                     nHeight = nHeight * 0.8;
                 } else {
@@ -150,24 +142,43 @@ mapping query_noise (mapping p, int size, int x, int y) {
                 }
             }
             nHumidity += 0.1 * nHeight;
+        } else {
+            nTmp = (((noise_simplex_4d(nw, nz, ny, nx, p, 5, 1.25) + 1) / 2) - 0.25) / 0.5; // normalize 0.25-0.75 to 0-1
+            if (
+                (nTmp >= WATER_RIVER_1-0.026 && nTmp <= WATER_RIVER_1+0.026) ||
+                (nTmp >= WATER_RIVER_2-0.026 && nTmp <= WATER_RIVER_1+0.026)
+            ) {
+                if (
+                    (nTmp >= WATER_RIVER_1-0.025 && nTmp <= WATER_RIVER_1+0.025) ||
+                    (nTmp >= WATER_RIVER_2-0.025 && nTmp <= WATER_RIVER_2+0.025)
+                ) {
+                    if (nHeight <= HEIGHT_SHALLOW) {
+                        nHeight = nHeight * 0.8;
+                    } else {
+                        nHeight = max(({ 0.0, nHeight - (abs(nHeight - HEIGHT_SHALLOW) + 0.05) }));
+                    }
+                }
+                nHumidity += 0.1 * nHeight;
+            }
         }
     }
 
     // adjust noise Humidity based upon noise Height, lower is wetter
-    if (nHeight <= HEIGHT_DEEPER) {         // Deeper water
+    if (nHeight <= HEIGHT_DEEPER) {
         nHumidity += 5.0 * nHeight;
-    } else if (nHeight <= HEIGHT_DEEP) {    // Deep water
+    } else if (nHeight <= HEIGHT_DEEP) {
         nHumidity += 4.0 * nHeight;
-    } else if (nHeight <= HEIGHT_SHALLOW) { // Shallow Water
+    } else if (nHeight <= HEIGHT_SHALLOW) {
         nHumidity += 3.0 * nHeight;
-    } else if (nHeight <= HEIGHT_SHORE) {   // Shore
+    } else if (nHeight <= HEIGHT_SHORE) {
         nHumidity += 0.2 * nHeight;
     }
 
     // noise Heat
-    nHeat = abs((noise_simplex_4d(nx, ny, nz, nw, p, 4, 2.0) + 1) / 2);
+    nHeat = abs((noise_simplex_4d(nx + now, ny + now, nz + now, nw + now, p, 4, 2.5) + 1) / 2);
     nHeat = abs((nHeat - 0.05) / (0.95 - 0.05));
     // noise Gradient
+    size2 = size * 45 / 100;
     if (y >= size2 && y <= size - size2) {  // center 20%
         nTmp = 1.0;
     } else if (y < size2) {                 // north 40%
@@ -382,11 +393,13 @@ void generate_simplex_json (string name) {
         "savanna": 0,
         "tropical rainforest": 0,
     ]);
+    string file;
 
     size = query_planet_size(name);
     p = noise_generate_permutation_simplex(name);
+    file = "/tmp/"+name+".json";
 
-    write_file("/tmp/"+name+".json", "{\n    \"name\":\""+name+"\",\n    \"size\":\""+size+"\",\n    \"data\":[\n", 1);
+    write_file(file, "{\n    \"name\":\""+name+"\",\n    \"size\":\""+size+"\",\n    \"data\":[\n", 1);
     for (y = 0; y < size; y ++) {
         line = "        [ ";
         for (x = 0; x < size; x ++) {
@@ -410,10 +423,11 @@ void generate_simplex_json (string name) {
             if (x < size-1) line += ",";
         }
         line += "]" + (y == size - 1 ? "" : ",");
-        write_file("/tmp/"+name+".json", line + "\n");
+        write_file(file, line + "\n");
     }
-    write_file("/tmp/"+name+".json", "    ],\n    \"height_min\":\""+height_min+"\",\n    \"height_max\":\""+height_max+"\",\n    \"humidity_min\":\""+humidity_min+"\",\n    \"humidity_max\":\""+humidity_max+"\",\n    \"heat_min\":\""+heat_min+"\",\n    \"heat_max\":\""+heat_max+"\"\n}");
-    write("Seed '"+name+"' size "+size+" done\n");
+    write_file(file, "    ],\n    \"height_min\":\""+height_min+"\",\n    \"height_max\":\""+height_max+"\",\n    \"humidity_min\":\""+humidity_min+"\",\n    \"humidity_max\":\""+humidity_max+"\",\n    \"heat_min\":\""+heat_min+"\",\n    \"heat_max\":\""+heat_max+"\"\n}");
+
+    write("Seed '"+name+"' size "+size+" "+file+" done\n");
     foreach (string key,int value in biomes) {
         write(sprintf("%20s : %10s", key, format_integer(value)) + " : " + sprintf("%2.2f", value * 100.0 / (size * size)) + "%\n");
     }
