@@ -3,10 +3,10 @@ inherit M_CLEAN;
 #define PI                  3.141592653589793
 #define PIx2                6.283185307179586
 
-#define HEIGHT_DEEPER       0.325
-#define HEIGHT_DEEP         0.400
-#define HEIGHT_SHALLOW      0.475
-#define HEIGHT_SHORE        0.500
+#define HEIGHT_DEEPER       0.35
+#define HEIGHT_DEEP         0.40
+#define HEIGHT_SHALLOW      0.45
+#define HEIGHT_SHORE        0.50
 
 #define HEAT_COLDEST        0.05
 #define HEAT_COLDER         0.20
@@ -21,6 +21,10 @@ inherit M_CLEAN;
 #define HUMIDITY_WET        0.75
 #define HUMIDITY_WETTER     0.90
 // HUMIDITY_WETTEST > 0.90
+
+#define WATER_LAKES         0.75
+#define WATER_RIVER_1       0.60
+#define WATER_RIVER_2       0.40
 
 private mapping __Planet = ([
 /*
@@ -113,30 +117,42 @@ mapping query_noise (mapping p, int size, int x, int y) {
 
     // noise Height
     nHeight = (((noise_simplex_4d(nx, ny, nz, nw, p, 5, 1.25) + 1) / 2) - 0.25) / 0.5; // normalize 0.25-0.75 to 0-1
+
+    // noise Humidity
+    nHumidity = max(({ 0.0, (((noise_simplex_4d(nx, ny, nz, nw, p, 4, 3.0) + 1) / 2) - 0.25) / 0.5 })); // normalize 0.25-0.75 to 0-1
+    // nHumidity *= 1.0; // @TODO HUMIDITY_FACTOR = 1.0
+
     // noise River
     nTmp = (((noise_simplex_4d(nx, ny, nz, nw, p, 4, 1.25) + 1) / 2) - 0.25) / 0.5; // normalize 0.25-0.75 to 0-1
-    if (nTmp >= 0.72 && nTmp <= 0.78) {
-        if (nHeight < HEIGHT_SHORE) {
-            nHeight *= 0.70;
-        } else {
-            nHeight *= 0.60;
+    if (nTmp >= WATER_LAKES-0.026 && nTmp <= WATER_LAKES+0.026) {
+        if (nTmp >= WATER_LAKES-0.025 && nTmp <= WATER_LAKES+0.025) {
+            if (nHeight <= HEIGHT_SHALLOW) {
+                nHeight = nHeight * 0.8;
+            } else {
+                nHeight = max(({ 0.0, nHeight - (abs(nHeight - HEIGHT_SHALLOW) + 0.05) }));
+            }
         }
+        nHumidity += 0.1 * nHeight;
     } else {
         nTmp = (((noise_simplex_4d(nw, nz, ny, nx, p, 5, 1.25) + 1) / 2) - 0.25) / 0.5; // normalize 0.25-0.75 to 0-1
-        if (nTmp >= 0.575 && nTmp <= 0.625 || nTmp >= 0.275 && nTmp <= 0.325) {
-            if (nHeight < HEIGHT_SHORE) {
-                nHeight *= 0.80;
-            } else {
-                nHeight *= 0.7;
+        if (
+            (nTmp >= WATER_RIVER_1-0.026 && nTmp <= WATER_RIVER_1+0.026) ||
+            (nTmp >= WATER_RIVER_2-0.026 && nTmp <= WATER_RIVER_1+0.026)
+        ) {
+            if (
+                (nTmp >= WATER_RIVER_1-0.025 && nTmp <= WATER_RIVER_1+0.025) ||
+                (nTmp >= WATER_RIVER_2-0.025 && nTmp <= WATER_RIVER_2+0.025)
+            ) {
+                if (nHeight <= HEIGHT_SHALLOW) {
+                    nHeight = nHeight * 0.8;
+                } else {
+                    nHeight = max(({ 0.0, nHeight - (abs(nHeight - HEIGHT_SHALLOW) + 0.05) }));
+                }
             }
+            nHumidity += 0.1 * nHeight;
         }
     }
 
-    // noise Humidity
-    nHumidity = max(({
-        (((noise_simplex_4d(nx, ny, nz, nw, p, 4, 3.0) + 1) / 2) - 0.25) / 0.5,
-        0.0
-    })); // normalize 0.25-0.75 to 0-1
     // adjust noise Humidity based upon noise Height, lower is wetter
     if (nHeight <= HEIGHT_DEEPER) {         // Deeper water
         nHumidity += 5.0 * nHeight;
@@ -145,7 +161,7 @@ mapping query_noise (mapping p, int size, int x, int y) {
     } else if (nHeight <= HEIGHT_SHALLOW) { // Shallow Water
         nHumidity += 3.0 * nHeight;
     } else if (nHeight <= HEIGHT_SHORE) {   // Shore
-        nHumidity += 0.25 * nHeight;
+        nHumidity += 0.2 * nHeight;
     }
 
     // noise Heat
@@ -154,9 +170,9 @@ mapping query_noise (mapping p, int size, int x, int y) {
     // noise Gradient
     if (y >= size2 && y <= size - size2) {  // center 20%
         nTmp = 1.0;
-    } else if (y < size2) {      // north 40%
+    } else if (y < size2) {                 // north 40%
         nTmp = 1.0 - (gradient_2d(1.0, 1.0, 1.0, 0.0, 0.0, (y * 1.0) / size2));
-    } else {                        // south 40%
+    } else {                                // south 40%
         nTmp = 1.0 - (gradient_2d(1.0, 1.0, 1.0, 0.0, 0.0, (size - (y + 1.0)) / size2));
     }
     nHeat = nHeat * nTmp * 1.5; // @TODO * HEAT_FACTOR; // HEAT_FACTOR = 1.0
@@ -387,7 +403,7 @@ void generate_simplex_json (string name) {
             biomes[biome] ++;
             line += "[ " +
                 "\"" + query_biome_color_hex(biome) + "\", " +
-                sprintf("%.1f", n["height"]) + ", " +
+                sprintf("%.2f", floor(n["height"]*20)/20.0) + ", " +
                 "\"" + query_humidity_color_hex(n["humidity"]) + "\", " +
                 "\"" + query_heat_color_hex(n["heat"]) + "\" ]";
 
