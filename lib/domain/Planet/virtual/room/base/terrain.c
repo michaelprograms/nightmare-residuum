@@ -41,7 +41,7 @@ void set_biome (mapping n) {
 
     // set_long_footer("height="+height+" heat="+heat+" humidity="+humidity);
 
-    set_room_square_color(color);
+    set_room_bracket_color(color);
     set_short(biome);
 
     switch (biome) {
@@ -102,7 +102,7 @@ void add_terrain_override (string text) {
 
 /* ----- map override ----- */
 
-string query_room_square_color () {
+string query_room_bracket_color () {
     string name;
     int x, y;
     mapping planet;
@@ -120,7 +120,7 @@ string query_room_square_color () {
         }
     }
 
-    return ::query_room_square_color();
+    return ::query_room_bracket_color();
 }
 string *query_room_map () {
     string *result = ({ });
@@ -156,7 +156,7 @@ string *query_room_map () {
                 symbol = " ";
             }
             if (room) {
-                line += room->query_room_square_color() + "[" + symbol + room->query_room_square_color() + "]%^RESET%^";
+                line += room->query_room_bracket_color() + room->query_room_brackets()[0] + symbol + room->query_room_bracket_color() + room->query_room_brackets()[1] + "%^RESET%^";
             } else {
                 line += "   ";
             }
