@@ -89,11 +89,21 @@ int handle_release (object ob) {
 /* ----- room map ----- */
 
 nosave private string roomSquareColor = "";
-void set_room_square_color (string color) {
+void set_room_bracket_color (string color) {
     roomSquareColor = color;
 }
-string query_room_square_color () {
+string query_room_bracket_color () {
     return roomSquareColor;
+}
+nosave private string *roomBrackets = ({ "[", "]" });
+void set_room_brackets (string *brackets) {
+    if (!arrayp(brackets) || sizeof(brackets) != 2) {
+        error("Bad argument 1 to room->set_room_brackets");
+    }
+    roomBrackets = brackets;
+}
+string *query_room_brackets () {
+    return roomBrackets;
 }
 
 string query_room_map_format () {
@@ -125,7 +135,7 @@ string query_room_map_format () {
         if (item) num = "%^MAGENTA%^BOLD%^" + (item > 10 ? "+" : ""+item) + "%^RESET%^";
     }
 
-    return roomSquareColor + "[%^RESET%^" + num + roomSquareColor + "]%^RESET%^";
+    return roomSquareColor + roomBrackets[0] + "%^RESET%^" + num + roomSquareColor + roomBrackets[1] + "%^RESET%^";
 }
 varargs mapping query_room_exits_picture (string source) {
     mapping exits = query_exits();
