@@ -57,9 +57,7 @@ void setup_exits (object room, mapping planet, int x, int y) {
                 room->remove_exit(override["dir"]);
                 room->add_terrain_override(replace_string(override["desc"], "$DIR", override["dir"]));
             } else if (override["type"] == "dome") {
-                printf("%O\n", override);
                 room->set_room_brackets(({ "(", ")" }));
-                printf("%O\n", room->query_room_brackets());
             }
         }
     }
