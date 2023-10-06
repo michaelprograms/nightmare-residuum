@@ -7,35 +7,39 @@ void create () {
 }
 
 void command (string input, mapping flags) {
-    mixed *results;
+    mixed *results, *subresults;
+    mapping planet;
     mixed *body = ({ });
     mapping item = ([ ]);
     int n;
 
+    item = ([
+        "header": ({ "Name", "Size", "Overrides", }),
+        "items": ({ }),
+        "columns": 3,
+    ]);
+
     if (input) {
-        if (n = sizeof(results = D_PLANET->query_planet_chunks(input))) {
-            foreach (mixed *chunk in results) {
-                item = ([
-                    "header": ({ chunk[0] }),
-                    "items": explode(chunk[4], ","),
-                    "columns": 1,
-                ]);
-                body += ({ item });
-            }
+        planet = D_PLANET->query_planet(input);
+
+        if (planet["name"]) {
+            item["items"] += ({ planet["name"], planet["size"], sizeof(planet["overrides"]) });
         }
     } else {
-        if (n = sizeof(results = D_PLANET->query_planets())) {
-            item = ([
-                "header": ({ "Name", "Seed", "Size", }),
-                "items": ({ }),
-                "columns": 3,
-            ]);
-            foreach (mixed *planet in results) {
-                item["items"] += ({ planet... });
+        results = filter(get_dir("/save/planet/", -1), (: $1[1] == -2 :));
+        if (n = sizeof(results)) {
+            foreach (string dir in results) {
+                subresults = get_dir("/save/planet/" + dir[0] + "/*.o");
+                foreach (mixed *file in subresults) {
+                    planet = D_PLANET->query_planet(file[0..<3]);
+                    item["items"] += ({ planet["name"], planet["size"], sizeof(planet["overrides"]) });
+                }
             }
-            body += ({ item });
         }
     }
+    body += ({ item });
+
+
 
     border(([
         "title": "PLANETS",
