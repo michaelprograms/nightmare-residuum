@@ -7,7 +7,6 @@ void create () {
 }
 
 void command (string input, mapping flags) {
-    mixed *results, *subresults;
     mapping planet;
     mixed *body = ({ });
     mapping item = ([ ]);
@@ -26,15 +25,9 @@ void command (string input, mapping flags) {
             item["items"] += ({ planet["name"], planet["size"], sizeof(planet["overrides"]) });
         }
     } else {
-        results = filter(get_dir("/save/planet/", -1), (: $1[1] == -2 :));
-        if (n = sizeof(results)) {
-            foreach (string dir in results) {
-                subresults = get_dir("/save/planet/" + dir[0] + "/*.o");
-                foreach (mixed *file in subresults) {
-                    planet = D_PLANET->query_planet(file[0..<3]);
-                    item["items"] += ({ planet["name"], planet["size"], sizeof(planet["overrides"]) });
-                }
-            }
+        foreach (string p in D_PLANET->query_all_planets()) {
+            planet = D_PLANET->query_planet(p);
+            item["items"] += ({ planet["name"], planet["size"], sizeof(planet["overrides"]) });
         }
     }
     body += ({ item });

@@ -48,6 +48,23 @@ private mapping __Planet = ([
 
 /* ----- data ----- */
 
+string *query_all_planets () {
+    mixed *results, *subresults;
+    string *planets = ({ });
+    int n;
+
+    results = filter(get_dir("/save/planet/", -1), (: $1[1] == -2 :));
+    if (n = sizeof(results)) {
+        foreach (string dir in results) {
+            subresults = get_dir("/save/planet/" + dir[0] + "/*.o");
+            foreach (mixed *file in subresults) {
+                planets += ({ file[0..<3] });
+            }
+        }
+    }
+    return planets;
+}
+
 mapping query_planet (string name) {
     string path = "/save/planet/" + lower_case(name[0..0]) + "/" + name + ".o";
     __Planet = ([ ]);
