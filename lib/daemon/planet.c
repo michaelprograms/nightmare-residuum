@@ -104,33 +104,7 @@ int adjust_planet (string name, mapping config) {
 /* ----- noise ----- */
 
 float query_noise_resource (mapping p, int size, int x, int y) {
-    float nx, ny, nz, nw;
-    float now = time() / 86400 % 100 / 100.0; // changes every 24 hours 0.00-0.99
-
-    // Calculate our 4D coordinates
-    nx = to_float(x) + now;
-    if (nx > 1.0) {
-        nx -= 1.0;
-    }
-    nz = nx;
-    ny = to_float(y) + now;
-    if (ny > 1.0) {
-        ny -= 1.0;
-    }
-    nw = ny;
-    nx = cos((nx / size) * PIx2) * 2 / PIx2;
-    ny = cos((ny / size) * PIx2) * 2 / PIx2;
-    nz = sin((nz / size) * PIx2) * 2 / PIx2;
-    nw = sin((nw / size) * PIx2) * 2 / PIx2;
-
-    return (noise_simplex_4d(nx, ny, nz, nw, p, 4, 25.0, 3.0) + 1) / 2;
-}
-
-mapping query_noise (mapping p, int size, int x, int y) {
-    int size2;
-    float nx, ny, nz, nw;
-    float nHeight, nHumidity, nHeat, nTmp;
-    float now;
+    float nx, ny, nz, nw, now;
 
     // Calculate our 4D coordinates
     nx = nz = to_float(x);
@@ -139,7 +113,23 @@ mapping query_noise (mapping p, int size, int x, int y) {
     ny = cos((ny / size) * PIx2) * 2 / PIx2;
     nz = sin((nz / size) * PIx2) * 2 / PIx2;
     nw = sin((nw / size) * PIx2) * 2 / PIx2;
+    now = time() / 86400 % 100 / 100.0; // changes every 24 hours 0.00-0.99
 
+    return (noise_simplex_4d(nx + now, ny + now, nz + now, nw + now, p, 4, 25.0, 3.0) + 1) / 2;
+}
+
+mapping query_noise (mapping p, int size, int x, int y) {
+    int size2;
+    float nx, ny, nz, nw, now;
+    float nHeight, nHumidity, nHeat, nTmp;
+
+    // Calculate our 4D coordinates
+    nx = nz = to_float(x);
+    ny = nw = to_float(y);
+    nx = cos((nx / size) * PIx2) * 2 / PIx2;
+    ny = cos((ny / size) * PIx2) * 2 / PIx2;
+    nz = sin((nz / size) * PIx2) * 2 / PIx2;
+    nw = sin((nw / size) * PIx2) * 2 / PIx2;
     now = time() / 86400 % 100 / 100.0; // changes every 24 hours, 0.00-0.99
 
     // noise Humidity
