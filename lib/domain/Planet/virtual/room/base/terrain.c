@@ -4,6 +4,8 @@ inherit STD_ROOM;
 
 int is_virtual_room () { return 1; }
 
+/* ----- applies ----- */
+
 void create () {
     ::create();
     set_short("a terrain somewhere");
@@ -39,7 +41,7 @@ void set_biome (mapping n) {
     string biome = D_PLANET->query_biome(n["height"], n["heat"], n["humidity"]);
     string color = D_PLANET->query_biome_color_ansi(biome);
 
-    // set_long_footer("height="+height+" heat="+heat+" humidity="+humidity);
+    // set_long_footer("level="+level+" height="+n["height"]+" heat="+n["heat"]+" humidity="+n["humidity"]);
 
     set_room_bracket_color(color);
     set_short(biome);

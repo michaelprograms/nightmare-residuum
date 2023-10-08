@@ -3,24 +3,34 @@
 #define PI 3.141592653589793
 #define PIx2 6.283185307179586
 
+#define LEVEL_RANGE 25.0
+
 inherit M_CLEAN;
 
 int is_virtual_room () { return 1; }
 
 /* ----- setup virtual room ----- */
 
-// Permutation Cache
-mapping __PCache = ([ ]);
+mapping __PCache = ([ ]);   // Permutation Cache
 
 void setup_noise (object room, mapping planet, int x, int y) {
     mapping noise;
+    int size2, level;
 
     if (!__PCache[planet["name"]]) {
         __PCache[planet["name"]] = noise_generate_permutation_simplex(planet["name"]);
     }
+
+    // Level
+    size2 = planet["size"] / 2;
+    level = to_int(sqrt((size2-x) * (size2-x) + (size2-y) * (size2-y)) / (size2 / LEVEL_RANGE));
+    room->set_property("level", level);
+
+    // Biome
     noise = D_PLANET->query_noise(__PCache[planet["name"]], planet["size"], x, y);
     room->set_biome(noise);
 
+    // Resource
     room->set_property("resource", D_PLANET->query_noise_resource(__PCache[planet["name"]], planet["size"], x, y));
 }
 
