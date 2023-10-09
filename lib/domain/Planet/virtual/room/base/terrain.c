@@ -4,102 +4,89 @@ inherit STD_ROOM;
 
 int is_virtual_room () { return 1; }
 
-/* ----- applies ----- */
-
-void create () {
-    ::create();
-    set_short("a terrain somewhere");
-    set_long("The terrain of a planet.");
-}
-
-void reset () {
-    object resource;
-    ::reset();
-
-    if (query_resets() > 1) {
-        PLANET_SURFACE->update_resource(this_object());
-    }
-
-    if (query_property("resource") && to_int(query_property("resource") * 100.0) % 10) {
-        if (!(resource = present("resource_node"))) {
-            // resource = new(/std/resource.c");
-            // resource->set_type("");
-            // resource->handle_move(this_object());
-        } else {
-            resource->reset();
-        }
-    } else {
-        if (resource = present("resource_node")) {
-            resource->handle_remove();
-        }
-    }
-}
-
 /* ----- biome ----- */
 
-void set_biome (mapping n) {
-    string biome = D_PLANET->query_biome(n["height"], n["heat"], n["humidity"]);
+void update_descriptions () {
+    string biome = query_property("biome");
     string color = D_PLANET->query_biome_color_ansi(biome);
-
-    // set_long_footer("level="+level+" height="+n["height"]+" heat="+n["heat"]+" humidity="+n["humidity"]);
 
     set_room_bracket_color(color);
     set_short(biome);
 
     switch (biome) {
-    case "icy water":
-        set_long("Surrounded by deeper water.");
-        break;
-    case "deeper water":
-        set_long("Surrounded by deeper water.");
-        break;
-    case "deep water":
-        set_long("Surrounded by deep water.");
-        break;
-    case "shallow water":
-        set_long("Surrounded by water.");
-        break;
-    case "ice":
-        set_long("Surrounded by ice.");
-        break;
-    case "tundra":
-        set_long("Surrounded by tundra.");
-        break;
-    case "grassland":
-        set_long("Surrounded by grassland.");
-        break;
-    case "woodland":
-        set_long("Surrounded by woodland.");
-        break;
-    case "boreal forest":
-        set_long("Surrounded by boreal forest.");
-        break;
-    case "desert":
-        set_long("Surrounded by desert.");
-        break;
-    case "woodland":
-        set_long("Surrounded by woodland.");
-        break;
-    case "seasonal forest":
-        set_long("Surrounded by seasonal forest.");
-        break;
-    case "temperate rainforest":
-        set_long("Surrounded by temperate rainforest.");
-        break;
-    case "savanna":
-        set_long("Surrounded by savanna.");
-        break;
-    case "tropical rainforest":
-        set_long("Surrounded by tropical rainforest.");
-        break;
-    default:
-        set_long("Error: unknown biome.");
-        break;
+        case "icy water":
+            set_long("Surrounded by deeper water.");
+            break;
+        case "deeper water":
+            set_long("Surrounded by deeper water.");
+            break;
+        case "deep water":
+            set_long("Surrounded by deep water.");
+            break;
+        case "shallow water":
+            set_long("Surrounded by water.");
+            break;
+        case "ice":
+            set_long("Surrounded by ice.");
+            break;
+        case "tundra":
+            set_long("Surrounded by tundra.");
+            break;
+        case "grassland":
+            set_long("Surrounded by grassland.");
+            break;
+        case "woodland":
+            set_long("Surrounded by woodland.");
+            break;
+        case "boreal forest":
+            set_long("Surrounded by boreal forest.");
+            break;
+        case "desert":
+            set_long("Surrounded by desert.");
+            break;
+        case "woodland":
+            set_long("Surrounded by woodland.");
+            break;
+        case "seasonal forest":
+            set_long("Surrounded by seasonal forest.");
+            break;
+        case "temperate rainforest":
+            set_long("Surrounded by temperate rainforest.");
+            break;
+        case "savanna":
+            set_long("Surrounded by savanna.");
+            break;
+        case "tropical rainforest":
+            set_long("Surrounded by tropical rainforest.");
+            break;
+        default:
+            set_long("Error: unknown biome.");
+            break;
     }
 }
 
 void add_terrain_override (string text) {
     set_long(query_long() + " " + text);
+}
+
+void update_resource () {
+    // int nLevel = query_property("level");
+    int nResource = query_property("resource");
+    object obResource = present("resource_node");
+
+    if (nResource % 10 == 0) {
+        if (!obResource) {
+            // obResource = new(/std/resource.c");
+            // obResource->set_type("");
+            // obResource->handle_move(this_object());
+        } else {
+            obResource->reset();
+        }
+    } else {
+        if (obResource = present("resource_node")) {
+            obResource->handle_remove();
+        }
+    }
 }
 
 /* ----- map override ----- */
@@ -167,4 +154,22 @@ string *query_room_map () {
     }
 
     return result;
+}
+
+/* ----- applies ----- */
+
+void create () {
+    ::create();
+    set_short("a planet somewhere");
+    set_long("The terrain of a planet.");
+}
+
+void reset () {
+    ::reset();
+
+    if (query_property("name") && query_property("x") && query_property("y")) {
+        "/domain/Planet/virtual/surface.c"->setup_room(this_object());
+        update_descriptions();
+        update_resource();
+    }
 }

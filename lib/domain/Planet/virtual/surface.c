@@ -3,8 +3,6 @@
 #define PI 3.141592653589793
 #define PIx2 6.283185307179586
 
-#define LEVEL_RANGE 25.0
-
 inherit M_CLEAN;
 
 int is_virtual_room () { return 1; }
@@ -13,25 +11,31 @@ int is_virtual_room () { return 1; }
 
 mapping __PCache = ([ ]);   // Permutation Cache
 
-void setup_noise (object room, mapping planet, int x, int y) {
-    mapping noise;
-    int size2, level;
+void setup_room (object room) {
+    string name;
+    int x, y;
+    mapping planet, noise;
+    string biome;
+
+    name = room->query_property("name");
+    x = room->query_property("x");
+    y = room->query_property("y");
+
+    planet = D_PLANET->query_planet(name);
 
     if (!__PCache[planet["name"]]) {
         __PCache[planet["name"]] = noise_generate_permutation_simplex(planet["name"]);
     }
 
-    // Level
-    size2 = planet["size"] / 2;
-    level = to_int(sqrt((size2-x) * (size2-x) + (size2-y) * (size2-y)) / (size2 / LEVEL_RANGE));
-    room->set_property("level", level);
-
-    // Biome
     noise = D_PLANET->query_noise(__PCache[planet["name"]], planet["size"], x, y);
-    room->set_biome(noise);
+    room->set_property("level", noise["level"]);
+    room->set_property("height", to_int(noise["height"] * 100));
+    room->set_property("heat", to_int(noise["heat"] * 100));
+    room->set_property("humidity", to_int(noise["humidity"] * 100));
+    room->set_property("resource", to_int(noise["resource"] * 100));
 
-    // Resource
-    room->set_property("resource", D_PLANET->query_noise_resource(__PCache[planet["name"]], planet["size"], x, y));
+    biome = D_PLANET->query_biome(noise["height"], noise["heat"], noise["humidity"]);
+    room->set_property("biome", biome);
 }
 
 void setup_exits (object room, mapping planet, int x, int y) {
@@ -87,25 +91,14 @@ object virtual_create (string path) {
 
     planet = D_PLANET->query_planet(name);
     room = new(PLANET_V_ROOM + "base/terrain.c");
+    room->set_property("name", name);
+    room->set_property("x", x);
+    room->set_property("y", y);
 
-    setup_noise(room, planet, x, y);
+    setup_room(room);
+    room->update_descriptions();
+    room->update_resource();
     setup_exits(room, planet, x, y);
 
     return room;
-}
-
-/* -----  ----- */
-
-void update_resource (object room) {
-    string name;
-    int x, y;
-    mapping planet;
-
-    name = file_name(room);
-
-    if (sscanf(name, PLANET_V_ROOM + "surface/%s/%d.%d", name, x, y) != 3) {
-        return 0;
-    }
-
-    room->set_property("resource", D_PLANET->query_noise_resource(__PCache[planet["name"]], planet["size"], x, y));
 }

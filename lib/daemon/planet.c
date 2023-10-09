@@ -26,6 +26,8 @@ inherit M_CLEAN;
 #define WATER_RIVER_1       0.60
 #define WATER_RIVER_2       0.40
 
+#define LEVEL_RANGE 25.0
+
 private mapping __Planet = ([
 /*
     Data Format:
@@ -103,25 +105,10 @@ int adjust_planet (string name, mapping config) {
 
 /* ----- noise ----- */
 
-float query_noise_resource (mapping p, int size, int x, int y) {
-    float nx, ny, nz, nw, now;
-
-    // Calculate our 4D coordinates
-    nx = nz = to_float(x);
-    ny = nw = to_float(y);
-    nx = cos((nx / size) * PIx2) * 2 / PIx2;
-    ny = cos((ny / size) * PIx2) * 2 / PIx2;
-    nz = sin((nz / size) * PIx2) * 2 / PIx2;
-    nw = sin((nw / size) * PIx2) * 2 / PIx2;
-    now = time() / 86400 % 100 / 100.0; // changes every 24 hours 0.00-0.99
-
-    return (noise_simplex_4d(nx + now, ny + now, nz + now, nw + now, p, 4, 25.0, 3.0) + 1) / 2;
-}
-
 mapping query_noise (mapping p, int size, int x, int y) {
-    int size2;
+    int size2, level;
     float nx, ny, nz, nw, now;
-    float nHeight, nHumidity, nHeat, nTmp;
+    float nHeight, nHumidity, nHeat, nTmp, nResource;
 
     // Calculate our 4D coordinates
     nx = nz = to_float(x);
@@ -132,6 +119,10 @@ mapping query_noise (mapping p, int size, int x, int y) {
     nw = sin((nw / size) * PIx2) * 2 / PIx2;
     now = time() / 86400 % 100 / 100.0; // changes every 24 hours, 0.00-0.99
 
+    // level
+    size2 = size / 2;
+    level = 1 + to_int(sqrt((size2-x) * (size2-x) + (size2-y) * (size2-y)) / (size2 / LEVEL_RANGE));
+
     // noise Humidity
     nHumidity = max(({ 0.0, (((noise_simplex_4d(nx + now, ny + now, nz + now, nw + now, p, 4, 3.0) + 1) / 2) - 0.25) / 0.5 })); // normalize 0.25-0.75 to 0-1
     // nHumidity *= 1.0; // @TODO HUMIDITY_FACTOR = 1.0
@@ -139,7 +130,6 @@ mapping query_noise (mapping p, int size, int x, int y) {
     // noise Height
     nHeight = (((noise_simplex_4d(nx, ny, nz, nw, p, 5, 1.25) + 1) / 2) - 0.25) / 0.5; // normalize 0.25-0.75 to 0-1
     // ensure central land mass exists
-    size2 = size / 2;
     if (
         (nHeight <= HEIGHT_SHALLOW) &&
         (x <= size2+3 && y <= size2+3 && x >= size2-3 && y >= size2-3) &&
@@ -209,10 +199,15 @@ mapping query_noise (mapping p, int size, int x, int y) {
     }
     nHeat = max(({ nHeat, 0.0 }));
 
+    // noise Resource
+    nResource = (noise_simplex_4d(nx + now, ny + now, nz + now, nw + now, p, 4, 25.0, 3.0) + 1) / 2;
+
     return ([
+        "level": level,
         "height": nHeight,
         "humidity": nHumidity,
         "heat": nHeat,
+        "resource": nResource,
     ]);
 }
 
@@ -434,7 +429,10 @@ void generate_simplex_json (string name) {
                 "\"" + query_biome_color_hex(biome) + "\", " +
                 sprintf("%.2f", floor(n["height"]*20)/20.0) + ", " +
                 "\"" + query_humidity_color_hex(n["humidity"]) + "\", " +
-                "\"" + query_heat_color_hex(n["heat"]) + "\" ]";
+                "\"" + query_heat_color_hex(n["heat"]) + "\", "+
+                "\"" + n["level"] + "\", "+
+                "\"" + n["resource"] + "\", "+
+                " ]";
 
             if (x < size-1) line += ",";
         }
@@ -460,42 +458,4 @@ void generate_simplex_json (string name) {
             "water: "+(biomes["shallow water"]+biomes["deep water"]+biomes["deeper water"]+biomes["icy water"]+biomes["frozen water"])*100.0/(size*size)
         )+"\n"
     );
-}
-
-void generate_simplex_json_resource (string name) {
-    int x, y, size;
-    mapping p;
-    string line;
-    float nResource, min = 1, max = -1;
-    int n;
-
-    size = query_planet_size(name);
-    p = noise_generate_permutation_simplex(name);
-
-    write_file("/tmp/"+name+".json", "{\n    \"name\":\""+name+"\",\n    \"size\":\""+size+"\",\n    \"data\":[\n", 1);
-    for (y = 0; y < size; y ++) {
-        line = "        [ ";
-        for (x = 0; x < size; x ++) {
-
-            nResource = query_noise_resource(p, size, x, y);
-            if (nResource < min) min = nResource;
-            if (nResource > max) max = nResource;
-
-            if (to_int(nResource * 100.0) % 10 == 0) {
-                nResource = 1.0;
-                n ++;
-            } else {
-                nResource = 0.0;
-            }
-
-            line += sprintf("%.2f", nResource);
-
-            if (x < size-1) line += ",";
-        }
-        line += "]" + (y == size - 1 ? "" : ",");
-        write_file("/tmp/"+name+".json", line + "\n");
-    }
-    write_file("/tmp/"+name+".json", "    ],\n    \"min\":\""+min+"\",\n    \"max\":\""+max+"\"\n}");
-    write("Seed '"+name+"' size "+size+" done\n");
-    write("Resources: " + n + " --- " + (n*100.0/(size*size)) + "\n");
 }
