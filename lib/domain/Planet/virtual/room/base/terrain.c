@@ -168,7 +168,7 @@ void reset () {
     ::reset();
 
     if (query_property("name") && query_property("x") && query_property("y")) {
-        "/domain/Planet/virtual/surface.c"->setup_room(this_object());
+        PLANET_SURFACE->setup_room(this_object());
         update_descriptions();
         update_resource();
     }
