@@ -43,6 +43,7 @@
 #define M_CLEAN         "/std/module/clean.c"
 #define M_DUSTABLE      "/std/module/dustable.c"
 #define M_EXIT          "/std/module/exit.c"
+#define M_LEVELABLE     "/std/module/levelable.c"
 #define M_LOOK          "/std/module/look.c"
 #define M_MOVE          "/std/module/move.c"
 #define M_PARENT        "/std/module/parent.c"
