@@ -76,9 +76,10 @@ void update_resource () {
 
     if (nResource % 10 == 0) {
         if (!obResource) {
-            // obResource = new(/std/resource.c");
-            // obResource->set_type("");
-            // obResource->handle_move(this_object());
+            obResource = new("/std/resource.c");
+            // obResource->set_type(""); // @TODO
+            // obResource->set_level(nLevel); // @TODO
+            obResource->handle_move(this_object());
         } else {
             obResource->reset();
         }
