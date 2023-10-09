@@ -1,4 +1,5 @@
 inherit STD_ITEM;
+inherit M_LEVELABLE;
 
 void create () {
     ::create();

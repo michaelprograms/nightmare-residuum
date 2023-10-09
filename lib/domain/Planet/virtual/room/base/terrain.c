@@ -70,7 +70,7 @@ void add_terrain_override (string text) {
 }
 
 void update_resource () {
-    // int nLevel = query_property("level");
+    int nLevel = query_property("level");
     int nResource = query_property("resource");
     object obResource = present("resource_node");
 
@@ -78,7 +78,7 @@ void update_resource () {
         if (!obResource) {
             obResource = new("/std/resource.c");
             // obResource->set_type(""); // @TODO
-            // obResource->set_level(nLevel); // @TODO
+            obResource->set_level(nLevel);
             obResource->handle_move(this_object());
         } else {
             obResource->reset();
