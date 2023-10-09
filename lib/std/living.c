@@ -3,6 +3,7 @@
 inherit STD_OBJECT;
 inherit M_CLEAN;
 inherit M_CONTAINER;
+inherit M_LEVELABLE;
 
 inherit "/std/living/attribute.c";
 inherit "/std/living/biography.c";
@@ -76,6 +77,12 @@ string query_living_long () {
 void set_name (string name) {
     object::set_name(name);
     set_long((: query_living_long :));
+}
+
+void set_level (int l) {
+    levelable::set_level(l);
+    vitals::update_vitals(1);
+    body::update_limbs(); // limbs require vitals
 }
 
 varargs int do_command (string command, int debug) {

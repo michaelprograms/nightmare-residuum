@@ -32,24 +32,6 @@ void test_gender () {
     }) :));
 }
 
-void test_level () {
-    expect_function("set_level", testOb);
-    expect_function("query_level", testOb);
-
-    expect("level settable and queryable", (: ({
-        assert(testOb->query_level(), "==", 1),
-
-        testOb->set_level(123),
-        assert(testOb->query_level(), "==", 123),
-
-        testOb->set_level(0),
-        assert(testOb->query_level(), "==", 0),
-
-        testOb->set_level(-123),
-        assert(testOb->query_level(), "==", 123),
-    }) :));
-}
-
 void test_species () {
     expect_function("set_species", testOb);
     expect_function("query_species", testOb);

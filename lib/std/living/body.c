@@ -2,7 +2,6 @@
 
 private string __Gender = "neither";
 private string __Species = "unknown";
-private int __Level = 1;
 mapping __Limbs = ([ ]);
 private nosave mapping __Wielded = ([ ]);
 private nosave mapping __Worn = ([ ]);
@@ -32,21 +31,6 @@ void set_species (string species) {
     __Species = species;
     this_object()->update_vitals(1);
     update_limbs();
-}
-
-/* ----- level and experience ----- */
-
-int query_level () {
-    return __Level;
-}
-void set_level (int l) {
-    if (l < 0) {
-        l = abs(l);
-    }
-    __Level = l;
-
-    this_object()->update_vitals(1);
-    update_limbs(); // limbs require vitals
 }
 
 /* ----- limbs ----- */
