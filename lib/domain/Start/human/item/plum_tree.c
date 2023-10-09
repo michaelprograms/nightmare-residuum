@@ -6,7 +6,7 @@ inherit M_PICKABLE;
 void create () {
     ::create();
     set_name("plum tree");
-    set_id(({"tree", "plum tree" }));
+    set_id(({ "tree", "plum tree" }));
     set_adjective(({ "bushy" }));
     set_short("a bushy plum tree");
     set_long("A plum tree.");
