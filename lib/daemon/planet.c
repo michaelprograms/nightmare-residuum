@@ -26,7 +26,7 @@ inherit M_CLEAN;
 #define WATER_RIVER_1       0.60
 #define WATER_RIVER_2       0.40
 
-#define LEVEL_RANGE 25.0
+#define LEVEL_RANGE 20.0
 
 private mapping __Planet = ([
 /*
@@ -122,6 +122,7 @@ mapping query_noise (mapping p, int size, int x, int y) {
     // level
     size2 = size / 2;
     level = 1 + to_int(sqrt((size2-x) * (size2-x) + (size2-y) * (size2-y)) / (size2 / LEVEL_RANGE));
+    level = min(({ to_int(LEVEL_RANGE), level }));
 
     // noise Humidity
     nHumidity = max(({ 0.0, (((noise_simplex_4d(nx + now, ny + now, nz + now, nw + now, p, 4, 3.0) + 1) / 2) - 0.25) / 0.5 })); // normalize 0.25-0.75 to 0-1
@@ -382,7 +383,7 @@ string query_heat_color_hex (float heat) {
 
 /* ----- export /tmp/name.json ----- */
 
-void generate_simplex_json (string name) {
+void generate_json (string name) {
     int x, y, size;
     mapping p;
     string line, biome;
@@ -425,14 +426,14 @@ void generate_simplex_json (string name) {
 
             biome = query_biome(n["height"], n["heat"], n["humidity"]);
             biomes[biome] ++;
-            line += "[ " +
-                "\"" + query_biome_color_hex(biome) + "\", " +
-                sprintf("%.2f", floor(n["height"]*20)/20.0) + ", " +
-                "\"" + query_humidity_color_hex(n["humidity"]) + "\", " +
-                "\"" + query_heat_color_hex(n["heat"]) + "\", "+
-                "\"" + n["level"] + "\", "+
-                "\"" + n["resource"] + "\", "+
-                " ]";
+            line += "[" +
+                "\"" + query_biome_color_hex(biome) + "\"," +
+                sprintf("%.2f", floor(n["height"]*20)/20.0) + "," +
+                "\"" + query_humidity_color_hex(n["humidity"]) + "\"," +
+                "\"" + query_heat_color_hex(n["heat"]) + "\"," +
+                sprintf("%.2f", (n["level"] / LEVEL_RANGE)) + "," +
+                (to_int(n["resource"] * 100) % 10 == 0 ? 1 : 0) +
+                "]";
 
             if (x < size-1) line += ",";
         }
