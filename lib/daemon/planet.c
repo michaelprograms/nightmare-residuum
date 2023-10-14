@@ -392,11 +392,11 @@ void generate_json (string name) {
     float height_min = 1, height_max = -1, heat_min = 1, heat_max = -1, humidity_min = 1, humidity_max = -1;
     mapping n;
     mapping biomes = ([
-        "frozen water": 0,
-        "icy water": 0,
-        "deeper water": 0,
-        "deep water": 0,
         "shallow water": 0,
+        "deep water": 0,
+        "deeper water": 0,
+        "icy water": 0,
+        "frozen water": 0,
         "ice": 0,
         "tundra": 0,
         "grassland": 0,
@@ -447,9 +447,22 @@ void generate_json (string name) {
     write_file(file, "    ],\n    \"height_min\":\""+height_min+"\",\n    \"height_max\":\""+height_max+"\",\n    \"humidity_min\":\""+humidity_min+"\",\n    \"humidity_max\":\""+humidity_max+"\",\n    \"heat_min\":\""+heat_min+"\",\n    \"heat_max\":\""+heat_max+"\"\n}");
 
     write("Seed '"+name+"' size "+size+" "+file+" done\n");
-    foreach (string key,int value in biomes) {
-        write(sprintf("%20s : %10s", key, format_integer(value)) + " : " + sprintf("%2.2f", value * 100.0 / (size * size)) + "%\n");
-    }
+
+    write(sprintf("%20s : %10s", "shallow water", format_integer(biomes["shallow water"])) + " : " + sprintf("%2.2f", biomes["shallow water"] * 100.0 / (size * size)) + "%\n");
+    write(sprintf("%20s : %10s", "deep water", format_integer(biomes["deep water"])) + " : " + sprintf("%2.2f", biomes["deep water"] * 100.0 / (size * size)) + "%\n");
+    write(sprintf("%20s : %10s", "deeper water", format_integer(biomes["deeper water"])) + " : " + sprintf("%2.2f", biomes["deeper water"] * 100.0 / (size * size)) + "%\n");
+    write(sprintf("%20s : %10s", "icy water", format_integer(biomes["icy water"])) + " : " + sprintf("%2.2f", biomes["icy water"] * 100.0 / (size * size)) + "%\n");
+    write(sprintf("%20s : %10s", "frozen water", format_integer(biomes["frozen water"])) + " : " + sprintf("%2.2f", biomes["frozen water"] * 100.0 / (size * size)) + "%\n");
+    write(sprintf("%20s : %10s", "ice", format_integer(biomes["ice"])) + " : " + sprintf("%2.2f", biomes["ice"] * 100.0 / (size * size)) + "%\n");
+    write(sprintf("%20s : %10s", "tundra", format_integer(biomes["tundra"])) + " : " + sprintf("%2.2f", biomes["tundra"] * 100.0 / (size * size)) + "%\n");
+    write(sprintf("%20s : %10s", "grassland", format_integer(biomes["grassland"])) + " : " + sprintf("%2.2f", biomes["grassland"] * 100.0 / (size * size)) + "%\n");
+    write(sprintf("%20s : %10s", "woodland", format_integer(biomes["woodland"])) + " : " + sprintf("%2.2f", biomes["woodland"] * 100.0 / (size * size)) + "%\n");
+    write(sprintf("%20s : %10s", "boreal forest", format_integer(biomes["boreal forest"])) + " : " + sprintf("%2.2f", biomes["boreal forest"] * 100.0 / (size * size)) + "%\n");
+    write(sprintf("%20s : %10s", "desert", format_integer(biomes["desert"])) + " : " + sprintf("%2.2f", biomes["desert"] * 100.0 / (size * size)) + "%\n");
+    write(sprintf("%20s : %10s", "temperate rainforest", format_integer(biomes["temperate rainforest"])) + " : " + sprintf("%2.2f", biomes["temperate rainforest"] * 100.0 / (size * size)) + "%\n");
+    write(sprintf("%20s : %10s", "savanna", format_integer(biomes["savanna"])) + " : " + sprintf("%2.2f", biomes["savanna"] * 100.0 / (size * size)) + "%\n");
+    write(sprintf("%20s : %10s", "tropical rainforest", format_integer(biomes["tropical rainforest"])) + " : " + sprintf("%2.2f", biomes["tropical rainforest"] * 100.0 / (size * size)) + "%\n");
+
     write(sprintf("%-24s", "height min: "+height_min)+" "+sprintf("%-24s", "height_max: "+height_max)+"\n");
     write(sprintf("%-24s", "humidity min: "+humidity_min)+" "+sprintf("%-24s", "humidity_max: "+humidity_max)+"\n");
     write(sprintf("%-24s", "heat min: "+heat_min)+" "+sprintf("%-24s", "heat_max: "+heat_max)+"\n");
