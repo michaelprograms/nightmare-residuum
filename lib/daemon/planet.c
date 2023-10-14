@@ -9,18 +9,18 @@ inherit M_CLEAN;
 #define HEIGHT_SHORE        0.50
 
 #define HEAT_COLDEST        0.05
-#define HEAT_COLDER         0.20
-#define HEAT_COLD           0.40
-#define HEAT_HOT            0.60
-#define HEAT_HOTTER         0.80
+#define HEAT_COLDER         0.15
+#define HEAT_COLD           0.35
+#define HEAT_HOT            0.50
+#define HEAT_HOTTER         0.70
 #define HEAT_HOTTEST        1.00
 
 #define HUMIDITY_DRYEST     0.20
 #define HUMIDITY_DRYER      0.45
-#define HUMIDITY_DRY        0.60
-#define HUMIDITY_WET        0.75
-#define HUMIDITY_WETTER     0.90
-// HUMIDITY_WETTEST > 0.90
+#define HUMIDITY_DRY        0.55
+#define HUMIDITY_WET        0.65
+#define HUMIDITY_WETTER     1.0
+// HUMIDITY_WETTEST > 1.0
 
 #define WATER_LAKES         0.75
 #define WATER_RIVER_1       0.60
