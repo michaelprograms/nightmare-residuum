@@ -435,8 +435,8 @@ void generate_json (string name) {
                 sprintf("%.2f", floor(n["height"]*20)/20.0) + "," +
                 "\"" + query_humidity_color_hex(n["humidity"]) + "\"," +
                 "\"" + query_heat_color_hex(n["heat"]) + "\"," +
-                sprintf("%.2f", (n["level"] / LEVEL_RANGE)) + "," +
-                (to_int(n["resource"] * 100) % 10 == 0 ? 1 : 0) +
+                sprintf("%.2f", (n["level"] * 1.0 / LEVEL_RANGE)) + "," +
+                (n["resource"] && to_int(n["resource"] * 100) % 10 == 0 ? 1 : 0) +
                 "]";
 
             if (x < size-1) line += ",";
