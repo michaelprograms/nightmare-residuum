@@ -107,8 +107,8 @@ int adjust_planet (string name, mapping config) {
 
 mapping query_noise (mapping p, int size, int x, int y) {
     int size2, level;
-    float nx, ny, nz, nw, now;
-    float nHeight, nHumidity, nHeat, nTmp, nResource;
+    float nx, ny, nz, nw, now, nowAdj;
+    float nHeight, nHumidity, nHeat, nTmp, nResource = -1.0;
 
     // Calculate our 4D coordinates
     nx = nz = to_float(x);
@@ -117,7 +117,10 @@ mapping query_noise (mapping p, int size, int x, int y) {
     ny = cos((ny / size) * PIx2) * 2 / PIx2;
     nz = sin((nz / size) * PIx2) * 2 / PIx2;
     nw = sin((nw / size) * PIx2) * 2 / PIx2;
-    now = time() / 86400 % 100 / 100.0; // changes every 24 hours, 0.00-0.99
+    now = nowAdj = time() / 86400 % 100 / 100.0; // changes every 24 hours, 0.00-0.99
+    if (nowAdj > 0.5) {
+        nowAdj -= 0.5;
+    }
 
     // level
     size2 = size / 2;
@@ -125,7 +128,7 @@ mapping query_noise (mapping p, int size, int x, int y) {
     level = max(({ 1, min(({ LEVEL_RANGE, level })) }));
 
     // noise Humidity
-    nHumidity = max(({ 0.0, (((noise_simplex_4d(nx + now, ny + now, nz + now, nw + now, p, 4, 3.0) + 1) / 2) - 0.25) / 0.5 })); // normalize 0.25-0.75 to 0-1
+    nHumidity = max(({ 0.0, (((noise_simplex_4d(nx + nowAdj, ny + nowAdj, nz + nowAdj, nw + nowAdj, p, 4, 3.0) + 1) / 2) - 0.25) / 0.5 })); // normalize 0.25-0.75 to 0-1
     // nHumidity *= 1.0; // @TODO HUMIDITY_FACTOR = 1.0
 
     // noise Height
@@ -182,7 +185,7 @@ mapping query_noise (mapping p, int size, int x, int y) {
     }
 
     // noise Heat
-    nHeat = abs((noise_simplex_4d(nx + now, ny + now, nz + now, nw + now, p, 4, 2.5) + 1) / 2);
+    nHeat = abs((noise_simplex_4d(nx + nowAdj, ny + nowAdj, nz + nowAdj, nw + nowAdj, p, 4, 2.5) + 1) / 2);
     nHeat = abs((nHeat - 0.05) / (0.95 - 0.05));
     // noise Gradient
     size2 = size * 45 / 100;
@@ -200,9 +203,9 @@ mapping query_noise (mapping p, int size, int x, int y) {
     }
     nHeat = max(({ nHeat, 0.0 }));
 
+    // noise Resource
     if (nHeight > HEIGHT_SHORE) {
-        // noise Resource
-        nResource = (noise_simplex_4d(nx + now, ny + now, nz + now, nw + now, p, 4, 25.0, 3.0) + 1) / 2;
+        nResource = ((noise_simplex_4d(nx + now, ny + now, nz + now, nw + now, p, 4, 25.0) + 1) / 2);
     }
 
     return ([
@@ -210,7 +213,7 @@ mapping query_noise (mapping p, int size, int x, int y) {
         "height": nHeight,
         "humidity": nHumidity,
         "heat": nHeat,
-        "resource": nResource,
+        "resource": to_int(nResource * 100.0) % 10,
     ]);
 }
 
@@ -382,6 +385,20 @@ string query_heat_color_hex (float heat) {
     else if (heat <= HEAT_HOTTER)   return "#FF6400"; // 255;100;0
     else                            return "#F10C00"; // 241;12;0
 }
+string query_resource_color_hex (int resource) {
+    switch (resource) {
+        // case 9:                         return "#FFFFFF";
+        // case 8:                         return "#FFFFFF";
+        // case 7:                         return "#FFFFFF";
+        // case 6:                         return "#FFFFFF";
+        // case 5:                         return "#FFFFFF";
+        // case 4:                         return "#FFFFFF";
+        // case 3:                         return "#FFFFFF";
+        case 2:                         return "#A47449"; // 164, 116, 73
+        case 1:                         return "#C0C0C0"; // 192, 192, 192
+        case 0: default:                return "#000000";
+    }
+}
 
 /* ----- export /tmp/name.json ----- */
 
@@ -408,6 +425,7 @@ void generate_json (string name) {
         "tropical rainforest": 0,
     ]);
     mapping levels = ([ ]);
+    mapping resources = ([ ]);
     string file;
 
     size = query_planet_size(name);
@@ -430,13 +448,14 @@ void generate_json (string name) {
             biome = query_biome(n["height"], n["heat"], n["humidity"]);
             biomes[biome] ++;
             levels[n["level"]] ++;
+            resources[n["resource"]] ++;
             line += "[" +
                 "\"" + query_biome_color_hex(biome) + "\"," +
                 sprintf("%.2f", floor(n["height"]*20)/20.0) + "," +
                 "\"" + query_humidity_color_hex(n["humidity"]) + "\"," +
                 "\"" + query_heat_color_hex(n["heat"]) + "\"," +
                 sprintf("%.2f", (n["level"] * 1.0 / LEVEL_RANGE)) + "," +
-                (n["resource"] && to_int(n["resource"] * 100) % 10 == 0 ? 1 : 0) +
+                "\"" + query_resource_color_hex(n["resource"]) + "\"" +
                 "]";
 
             if (x < size-1) line += ",";
@@ -476,7 +495,12 @@ void generate_json (string name) {
             "water: "+(biomes["shallow water"]+biomes["deep water"]+biomes["deeper water"]+biomes["icy water"]+biomes["frozen water"])*100.0/(size*size)
         )+"\n"
     );
+    write("level distribution:\n");
     foreach (int key,int value in levels) {
+        write(sprintf("%20s : %10s", ""+key, format_integer(value)) + " : " + sprintf("%2.2f", value * 100.0 / (size * size)) + "%\n");
+    }
+    write("resource distribution:\n");
+    foreach (int key,int value in resources) {
         write(sprintf("%20s : %10s", ""+key, format_integer(value)) + " : " + sprintf("%2.2f", value * 100.0 / (size * size)) + "%\n");
     }
 }

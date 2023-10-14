@@ -74,10 +74,9 @@ void update_resource () {
     int nResource = query_property("resource");
     object obResource = present("resource_node");
 
-    if (nResource % 10 == 0) {
+    if (nResource == 1) { // ore
         if (!obResource) {
             obResource = new("/std/resource.c");
-            // obResource->set_type(""); // @TODO
             obResource->set_level(nLevel);
             obResource->handle_move(this_object());
         } else {

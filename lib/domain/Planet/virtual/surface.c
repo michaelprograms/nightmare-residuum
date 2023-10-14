@@ -33,8 +33,7 @@ void setup_room (object room) {
     room->set_property("heat", to_int(noise["heat"] * 100));
     room->set_property("humidity", to_int(noise["humidity"] * 100));
     if (noise["resource"]) {
-        write("resource: "+(to_int(noise["resource"] * 100))+"\n");
-        room->set_property("resource", to_int(noise["resource"] * 100));
+        room->set_property("resource", noise["resource"]);
     }
 
     biome = D_PLANET->query_biome(noise["height"], noise["heat"], noise["humidity"]);
