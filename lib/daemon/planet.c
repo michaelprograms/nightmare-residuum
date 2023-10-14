@@ -200,8 +200,10 @@ mapping query_noise (mapping p, int size, int x, int y) {
     }
     nHeat = max(({ nHeat, 0.0 }));
 
-    // noise Resource
-    nResource = (noise_simplex_4d(nx + now, ny + now, nz + now, nw + now, p, 4, 25.0, 3.0) + 1) / 2;
+    if (nHeight > HEIGHT_SHORE) {
+        // noise Resource
+        nResource = (noise_simplex_4d(nx + now, ny + now, nz + now, nw + now, p, 4, 25.0, 3.0) + 1) / 2;
+    }
 
     return ([
         "level": level,
