@@ -407,6 +407,7 @@ void generate_json (string name) {
         "savanna": 0,
         "tropical rainforest": 0,
     ]);
+    mapping levels = ([ ]);
     string file;
 
     size = query_planet_size(name);
@@ -428,6 +429,7 @@ void generate_json (string name) {
 
             biome = query_biome(n["height"], n["heat"], n["humidity"]);
             biomes[biome] ++;
+            levels[n["level"]] ++;
             line += "[" +
                 "\"" + query_biome_color_hex(biome) + "\"," +
                 sprintf("%.2f", floor(n["height"]*20)/20.0) + "," +
@@ -461,4 +463,7 @@ void generate_json (string name) {
             "water: "+(biomes["shallow water"]+biomes["deep water"]+biomes["deeper water"]+biomes["icy water"]+biomes["frozen water"])*100.0/(size*size)
         )+"\n"
     );
+    foreach (int key,int value in levels) {
+        write(sprintf("%20s : %10s", ""+key, format_integer(value)) + " : " + sprintf("%2.2f", value * 100.0 / (size * size)) + "%\n");
+    }
 }
