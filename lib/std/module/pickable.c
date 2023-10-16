@@ -1,8 +1,10 @@
 nosave private int __Picks = 0, __MaxPicks = 0;
 nosave private string __Item, __Message;
 
-// called by STD_ITEM->reset
-void reset_pickable () {
+void reset () {
+    if (!clonep()) {
+        return;
+    }
     if (__Picks < __MaxPicks) {
         __Picks ++;
         if (environment()) {

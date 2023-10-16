@@ -17,7 +17,7 @@ void test_pickable () {
     expect_function("set_pickable", testOb);
     expect_function("query_pick_item", testOb);
     expect_function("handle_pick", testOb);
-    expect_function("reset_pickable", testOb);
+    expect_function("reset", testOb);
 
     expect("handles initializing with zeroes", (: ({
         assert(testOb->query_picks(), "==", 0),
@@ -50,7 +50,7 @@ void test_pickable () {
 
     expect("handles resetting pick", (: ({
         // reset pick
-        testOb->reset_pickable(),
+        testOb->reset(),
         assert(testOb->query_picks(), "==", 1),
     }) :));
 }

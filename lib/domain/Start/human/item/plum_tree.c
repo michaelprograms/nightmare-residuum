@@ -14,3 +14,8 @@ void create () {
 
     set_pickable(HUMAN_ITEM + "plum_fruit.c", 5, "A plum ripens on the tree.");
 }
+
+void reset () {
+    item::reset();
+    pickable::reset();
+}
