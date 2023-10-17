@@ -225,8 +225,6 @@ float noise_perlin_3d_permutation (float x, float y, float z, int *p) {
     );
 }
 
-// @TODO noise_perlin_4d_permutatation (float x, float y, float z, float w, int *p)
-
 /* ----- noise_perlin functions ----- */
 
 // generate noise at coordinates x,y using a permutation, octaves, and scale
