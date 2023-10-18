@@ -195,7 +195,7 @@ varargs void run (int callShutdown) {
     write("Scanning for test files...\n");
     update_test_data("/secure/", "/secure/cmd");
     update_test_data("/daemon/");
-    update_test_data("/std/", "/std/class");
+    update_test_data("/std/", "/std/struct");
 
     __TestFiles = keys(__Tests);
     __TestFiles = sort_array(__TestFiles, function(string a, string b) {
