@@ -7,22 +7,22 @@
 
 inherit S_USER_INPUT;
 
-nosave private struct Input *stack = ({ });
+nosave private StructUserInput *stack = ({ });
 
-private nomask struct Input get_top_handler (int require_handler);
-private nomask struct Input get_bottom_handler ();
+private nomask StructUserInput get_top_handler (int require_handler);
+private nomask StructUserInput get_bottom_handler ();
 
 nomask int query_input_stack_size () {
     return sizeof(stack);
 }
 
 private nomask void dispatch_to_bottom (mixed str) {
-    struct Input info;
+    StructUserInput info;
     if (!(info = get_bottom_handler())) return;
     evaluate(info.inputFn, str);
 }
 private nomask void dispatch_input (mixed str) {
-    struct Input info;
+    StructUserInput info;
     if (str[0] == '!' && !stack[<1]->lock) {
         dispatch_to_bottom(str[1..]); // override ! to shell
     } else {
@@ -42,7 +42,7 @@ private nomask string process_input (string str) {
 }
 
 private nomask void stack_push (function inputFn, mixed prompt, int secure, function callbackFn, int lock, int type) {
-    struct Input info = new(struct Input);
+    StructUserInput info = new(StructUserInput);
     info.inputFn = inputFn;
     if (prompt) info.prompt = prompt;
     info.secure = secure;
@@ -70,7 +70,7 @@ varargs nomask void input_next (function inputFn, mixed prompt, int secure, int 
     stack[<1].lock = lock;
 }
 nomask void input_pop () {
-    struct Input info;
+    StructUserInput info;
 
     stack = stack[0..<2]; // remove last element
 
@@ -79,7 +79,7 @@ nomask void input_pop () {
     }
 }
 nomask void input_focus () {
-    struct Input info;
+    StructUserInput info;
     string prompt;
 
     if (!(info = get_top_handler(1))) return;
@@ -108,11 +108,11 @@ private nomask int create_handler () {
     return 0;
 }
 
-private nomask struct Input get_top_handler (int require_handler) {
+private nomask StructUserInput get_top_handler (int require_handler) {
     int some_popped = 0;
 
     while (sizeof(stack)) {
-        struct Input info;
+        StructUserInput info;
 
         info = stack[<1];
         if (!(functionp(info.inputFn) & FP_OWNER_DESTED)) {
@@ -129,9 +129,9 @@ private nomask struct Input get_top_handler (int require_handler) {
     return stack[<1];
 }
 
-private nomask struct Input get_bottom_handler () {
+private nomask StructUserInput get_bottom_handler () {
     while (sizeof(stack)) {
-        struct Input info;
+        StructUserInput info;
         info = stack[0];
         if (!(functionp(info.inputFn) & FP_OWNER_DESTED)) return info;
         stack = stack[1..];
