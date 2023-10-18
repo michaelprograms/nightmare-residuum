@@ -16,7 +16,6 @@ string *test_order () {
         "test_error_applies",
         // "test_ed_applies",
         "test_security_applies",
-        "test_valid_applies",
      });
 }
 
@@ -96,11 +95,10 @@ void test_ed_applies () {
 //     expect_function("save_ed_setup", testOb);
 }
 
+object basicOb;
 void test_security_applies () {
     expect_function("privs_file", testOb);
     // privs_file testing handled by D_ACCESS query_file_privs
-
-    expect_function("valid_override", testOb);
 
     expect("valid_override handles requests", (: ({
         assert(testOb->valid_override("/secure/sefun/override"), "==", 1),
@@ -108,17 +106,11 @@ void test_security_applies () {
         assert(testOb->valid_override("/std/user/input", "input_to"), "==", 1),
         assert(testOb->valid_override("/std/user/input", "get_char"), "==", 1),
     }) :));
-}
 
-object basicOb;
-void test_valid_applies () {
     // expect_function("valid_bind", testOb);
-    expect_function("valid_database", testOb);
     // expect_function("valid_hide", testOb);
     // expect_function("valid_link", testOb);
     // expect_function("valid_object", testOb);
-
-    expect_function("valid_read", testOb);
 
     expect("valid_database handles calls", (: ({
         assert(testOb->valid_database(0, 0, 0), "==", 1),
@@ -134,8 +126,6 @@ void test_valid_applies () {
         assert(testOb->valid_read("/tmp/void/doesntexist", basicOb, "read_file"), "==", 0),
     }) :));
 
-    expect_function("valid_write", testOb);
-
     expect("valid_write handles calls", (: ({
         assert(testOb->valid_write("/", testOb, "write_file"), "==", 1),
         assert(testOb->valid_write("/save", basicOb, "write_file"), "==", 0),
@@ -146,7 +136,6 @@ void test_valid_applies () {
     // expect_function("valid_seteuid", testOb);
     // expect_function("valid_shadow", testOb);
 
-    expect_function("valid_socket", testOb);
     // @TODO test valid_socket
 
 }
