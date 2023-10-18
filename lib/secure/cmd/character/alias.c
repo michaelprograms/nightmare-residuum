@@ -1,14 +1,14 @@
-inherit "/std/class/shell_alias.c";
 inherit STD_COMMAND;
+inherit S_SHELL_ALIAS;
 
 void create () {
-    ::create();
+    command::create();
     set_syntax("alias ([name] [value])|(remove [name])");
     set_help_text("The alias command is used to view your current alias list, or if a name is produced, create a new alias if possible, or if remove and a name is provided, attempt to delete an alias.\n\nAliases can be used as shortcuts for longer commands. For example, " + format_syntax("alias bag put $* in bag") + " will allow you to type " + format_syntax("bag [item]") + " instead of " + format_syntax("put [item] in bag") + ".");
 }
 
 private void print_all_aliases (object shell) {
-    class ShellAlias alias;
+    StructShellAlias alias;
     string *aliasKeys;
     string *list = ({ });
 
@@ -56,7 +56,7 @@ void command (string input, mapping flags) {
         string name;
 
         if (sizeof(argv) == 1) {
-            class ShellAlias alias;
+            StructShellAlias alias;
             alias = this_user()->query_shell()->query_alias(argv[0]);
             if (!alias) {
                 message("action", "Alias '" + argv[0] + "': not found", this_user());
