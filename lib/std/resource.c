@@ -2,12 +2,16 @@ inherit STD_ITEM;
 inherit M_LEVELABLE;
 
 mapping __Resource = ([
-    1: "tin",
-    2: "copper",
-    3: "silver",
+    1: "aluminum",
+    2: "tin",
+    3: "copper",
     4: "iron",
-    5: "gold",
-    6: "platinum",
+    5: "lead",
+    6: "silver",
+    7: "tungsten",
+    8: "gold",
+    9: "platinum",
+    10: "titanium",
 ]);
 
 void create () {
