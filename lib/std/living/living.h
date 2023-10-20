@@ -65,15 +65,6 @@ object *query_hostiles ();
 object *query_present_hostiles ();
 object query_target_hostile ();
 
-/* ----- skills ----- */
-private mapping query_default_skills ();
-private int query_skill_next_points (string skill);
-string *query_all_skills ();
-string query_skill_progress (string skill);
-int query_skill (string skill);
-void set_skill (string skill, int level);
-varargs void train_skill (string skill, float multiplier);
-
 /* ----- stats ----- */
 int query_stat (string stat);
 int query_stat_base (string stat);

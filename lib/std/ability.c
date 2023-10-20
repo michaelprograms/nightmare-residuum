@@ -17,7 +17,6 @@ void set_ability_requirements (mapping reqs) {
     /* Data format:
     "anyone|class|species|NPC": ([
         "level" : 1,
-        "skills" : ([ "brawl attack": 1, ]),
         "stats" : ([ "strength": 1, ]),
     ]),
     */
@@ -41,11 +40,6 @@ int verify_ability_requirements (object source) {
         }
         if (intp(value["level"])) {
             if (source->query_level() < value["level"]) return 0;
-        }
-        if (mapp(value["skills"])) {
-            foreach (string skill,int num in value["skills"]) {
-                if (source->query_skill(skill) < num) return 0;
-            }
         }
         if (mapp(value["stats"])) {
             foreach (string stat,int num in value["stats"]) {
@@ -132,6 +126,7 @@ object query_best_weapon (object source) {
 
 /* ----- skill powers ----- */
 
+// @TODO rename this
 mapping query_skill_powers () {
     return __SkillPowers;
 }
@@ -197,9 +192,8 @@ int calculate_heal (object source, object target, string limb) {
                 break;
             break;
         }
-        damage += source->query_skill(key) * n / 4 + random(source->query_skill(key) * (4-n) / 4);
         sourceStat = source->query_stat("intelligence");
-        damage += (sourceStat * 50 / 100) + random(sourceStat * 50 / 100 + 1);
+        damage += sourceStat * n / 4 + random(sourceStat * (4-n) / 4);
     }
 
     targetStat = target->query_stat("charisma");
@@ -233,15 +227,6 @@ int calculate_damage (object source, object target, string limb) {
         // stat damage
         dice = max(({ 1, tmp / 10 }));
         damage += roll_die(dice, 6)[0];
-
-        // skill damage & mitigations
-        tmp = source->query_skill(key + " attack") * value / 100;
-        dice = max(({ 1, random(tmp + 1) / 20 }));
-        damage += roll_die(dice, 6)[0];
-
-        tmp = target->query_skill(key + " defense") * value / 100;
-        dice = max(({ 1, random(tmp + 1) / 20 }));
-        damage -= roll_die(dice, 6)[0];
     }
 
     // apply target mitigations
@@ -507,12 +492,6 @@ private void handle_ability_use (object source, object *targets) {
                 display_combat_message(source, target, limb, query_name(), (weapon ? weapon->query_type() : "blunt"), damage, 1);
                 target->handle_damage(damage, limb, source);
 
-                // train relevant skills
-                foreach (string key,int value in __SkillPowers) {
-                    source->train_skill(key + " attack", 1.0 + value / 100.0);
-                    if (target) target->train_skill(key + " defense", 1.0 + value / 100.0);
-                }
-
                 ability_debug_message(source, target, damage);
             } else if (__Type == "heal") {
                 // determine heal
@@ -521,17 +500,9 @@ private void handle_ability_use (object source, object *targets) {
                 // @TODO determine hp/sp/mp
                 target->add_hp(damage);
 
-                // train relevant skills
-                foreach (string key,int value in __SkillPowers) {
-                    source->train_skill(key, 1.0 + value / 100.0);
-                }
                 ability_debug_message(source, target, damage);
             } else if (__Type == "utility") {
                 this_object()->handle_utility(source, target, limb);
-
-                foreach (string key,int value in __SkillPowers) {
-                    source->train_skill(key, 1.0 + value / 100.0);
-                }
             }
         } else {
             this_object()->ability_message_fail(source, target, limb);

@@ -8,9 +8,6 @@ void create () {
     set_ability_requirements(([
         "psionist": ([
             "level": 5,
-            "skills": ([
-                "psionic defense": 25,
-            ]),
         ]),
     ]));
     set_skill_powers(([ // only used for cost in utility
@@ -22,8 +19,8 @@ void create () {
 void handle_utility (object source, object target, string limb) {
     int n, t;
 
-    n = 1 + source->query_skill("psionic defense") / 25;
-    t = (n * 5) + 30 + source->query_stat("intelligence");
+    n = 1 + source->query_stat("intelligence") / 25;
+    t = (n * 5) + 30;
 
     target->add_protection(n, t);
 }

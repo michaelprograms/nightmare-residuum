@@ -7,9 +7,7 @@ void create () {
     set_type("attack");
     set_ability_requirements(([
         "mystic": ([
-            "skills": ([
-                "brawl attack": 1,
-            ]),
+            "level": 1,
         ])
     ]));
     set_skill_powers(([

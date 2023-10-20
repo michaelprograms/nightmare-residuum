@@ -7,9 +7,7 @@ void create () {
     set_type("attack");
     set_ability_requirements(([
         "warrior": ([
-            "skills": ([
-                "blade attack": 10,
-            ]),
+            "level": 5,
         ])
     ]));
     set_skill_powers(([

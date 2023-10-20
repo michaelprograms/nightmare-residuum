@@ -18,17 +18,6 @@ void set_level (int l) {
     set_stat("agility", l + n * 5);
     set_stat("luck", to_int(l + n * 2.5) + random(n + 1));
 
-    set_skill("blade attack", l + n * 4);
-    set_skill("blade defense", l + n * 3);
-    set_skill("brawl attack", l + n * 4);
-    set_skill("brawl defense", l + n * 3);
-    set_skill("blunt attack", l + n * 4);
-    set_skill("blunt defense", l + n * 3);
-    set_skill("psionic attack", l + n * 4);
-    set_skill("psionic defense", l + n * 3);
-    set_skill("ranged attack", l + n * 4);
-    set_skill("ranged defense", l + n * 3);
-
     ::set_level(l);
 }
 

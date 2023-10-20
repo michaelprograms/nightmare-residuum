@@ -149,8 +149,6 @@ private void handle_combat_miss (object target, mixed weapon) {
     message("combat miss", "You miss " + target->query_cap_name() + " with your " + name + ".", this_object());
     message("combat miss", this_object()->query_cap_name() + " misses you with " + possessive + " " + name + ".", target);
     message("combat miss", this_object()->query_cap_name() + " misses " + target->query_cap_name() + " with " + possessive + " " + name + ".", environment(), ({ this_object(), target }));
-    train_skill(type + " attack", 0.5);
-    target->train_skill(type + " defense", 0.5);
 }
 private void handle_combat_block (object target) {
     string possessive = possessive(this_object());
@@ -212,9 +210,6 @@ private void handle_combat_hit (object target, mixed weapon, int crit) {
     dice = max(({ 1, random(query_stat("luck") + 1) * 5 / 100 }));
     damage += roll_die(dice, 6)[0];
 
-    dice = max(({ 1, random(query_skill(type + " attack") + 1) * 20 / 100 }));
-    damage += roll_die(dice, 6)[0];
-
     if (crit) {
         damage = damage * 3 / 2;
     }
@@ -226,17 +221,11 @@ private void handle_combat_hit (object target, mixed weapon, int crit) {
     dice = max(({ 1, random(target->query_stat("luck") + 1) * 10 / 100 }));
     damage -= roll_die(dice, 6)[0];
 
-    dice = max(({ 1, random(target->query_skill(type + " defense") + 1) * 20 / 100 }));
-    damage -= roll_die(dice, 6)[0];
-
     damage -= target->query_limb_armor(limb);
     damage -= target->query_protection();
 
     display_combat_message(this_object(), target, limb, weapon, type, damage, 0);
     if (damage > 0) target->handle_damage(damage, limb, this_object());
-
-    train_skill(type + " attack");
-    if (target) target->train_skill(type + " defense");
 }
 
 varargs void check_lifesigns (object source) {

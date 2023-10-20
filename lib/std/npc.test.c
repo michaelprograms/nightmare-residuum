@@ -22,19 +22,15 @@ void test_npc () {
 void test_set_level () {
     expect_function("set_level", testOb);
 
-    expect("set_level adjusts stats and skills", (: ({
+    expect("set_level adjusts stats", (: ({
         assert(testOb->query_level(), "==", 1),
         assert(testOb->query_stat("strength"), "==", 0),
         assert(testOb->query_stat("endurance"), "==", 0),
-        assert(testOb->query_skill("brawl attack"), "==", 0),
-        assert(testOb->query_skill("brawl defense"), "==", 0),
 
         testOb->set_level(10),
         assert(testOb->query_level(), "==", 10),
         assert(testOb->query_stat("strength"), ">", 0),
         assert(testOb->query_stat("endurance"), ">", 0),
-        assert(testOb->query_skill("brawl attack"), ">", 0),
-        assert(testOb->query_skill("brawl defense"), ">", 0),
     }) :));
 }
 

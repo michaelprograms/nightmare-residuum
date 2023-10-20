@@ -7,9 +7,7 @@ void create () {
     set_type("attack");
     set_ability_requirements(([
         "ranger": ([
-            "skills": ([
-                "ranged attack": 1,
-            ]),
+            "level": 1,
         ])
     ]));
     set_skill_powers(([
