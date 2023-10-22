@@ -22,6 +22,6 @@ void create () {
         "windows": "The long side of this corner building consists of several windows that swing open and open the building up to the street.",
     ]));
     set_reset(([
-        // HUMAN_NPC + "vendor_barkeep.c": 1,
+        HUMAN_NPC + "vendor_barkeep.c": 1,
     ]));
 }
