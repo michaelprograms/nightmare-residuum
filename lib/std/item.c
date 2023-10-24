@@ -93,14 +93,3 @@ mixed direct_sell_obj (mixed args...) {
     }
     return 1;
 }
-
-/* ----- object applies ----- */
-
-void reset () {
-    ::reset();
-
-    foreach (string file in inherit_list() - ({ STD_ITEM })) {
-        string name = split_path(file)[1][0..<3];
-        call_other(this_object(), "reset_" + name);
-    }
-}
