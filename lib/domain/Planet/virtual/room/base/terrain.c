@@ -77,6 +77,16 @@ void update_resource () {
     if (nResource == 1) { // ore
         if (!obResource) {
             obResource = new("/std/resource.c");
+            obResource->set_type("ore");
+            obResource->set_level(nLevel);
+            obResource->handle_move(this_object());
+        } else {
+            obResource->reset();
+        }
+    } else if (nResource == 2) { // wood
+        if (!obResource) {
+            obResource = new("/std/resource.c");
+            obResource->set_type("wood");
             obResource->set_level(nLevel);
             obResource->handle_move(this_object());
         } else {
