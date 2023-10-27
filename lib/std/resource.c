@@ -58,3 +58,7 @@ void set_level (int l) {
         }
     }
 }
+
+int direct_harvest_obj (mixed args...) {
+    return environment() && environment() == environment(previous_object());
+}
