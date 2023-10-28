@@ -56,9 +56,25 @@ void set_level (int l) {
             set_long("A log containing a strip of " + resource + " wood.");
             set_id(({ "wood", "log", resource + " wood", resource }));
         }
+        set_name(resource + " " + __ResourceType);
     }
 }
 
 int direct_harvest_obj (mixed args...) {
     return environment() && environment() == environment(previous_object());
+}
+
+void handle_harvest (object character) {
+    // object ob;
+
+    // @TODO check for valid tool type
+
+    message("action", "You harvest " + query_name() + ".", character);
+    message("action", character->query_cap_name() + " harvests " + query_name() + ".", environment(character), character);
+
+    // @TODO add harvested resource
+    // ob = new("/std/item.c");
+    // ob->set_type(__ResourceType);
+    // ob->set_level(query_level());
+    // ob->handle_move(character);
 }
