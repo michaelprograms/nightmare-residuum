@@ -451,7 +451,6 @@ protected nomask varargs void account_input (int state, mixed extra, string inpu
                 account_input(STATE_ACCOUNT_MENU);
                 return;
             } else {
-                write("extra: "+identify(extra)+"\n");
                 write("\n\nOverriding connection of " + extra->query_cap_name() + "...\n\n");
                 if (extra->query_user()) {
                     extra->query_user()->handle_character_override();
