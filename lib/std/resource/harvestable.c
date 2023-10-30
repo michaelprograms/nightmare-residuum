@@ -65,16 +65,15 @@ int direct_harvest_obj (mixed args...) {
 }
 
 void handle_harvest (object character) {
-    // object ob;
+    object ob;
 
     // @TODO check for valid tool type
 
     message("action", "You harvest " + query_name() + ".", character);
     message("action", character->query_cap_name() + " harvests " + query_name() + ".", environment(character), character);
 
-    // @TODO add harvested resource
-    // ob = new("/std/item.c");
-    // ob->set_type(__ResourceType);
-    // ob->set_level(query_level());
-    // ob->handle_move(character);
+    ob = new("/std/resource/resource.c");
+    ob->set_type(__ResourceType);
+    ob->set_level(query_level());
+    ob->handle_move(character);
 }
