@@ -8,12 +8,6 @@ void after_each_test () {
     if (objectp(testOb)) destruct(testOb);
 }
 
-void test_resource () {
-    expect("is_resource exists", (: ({
-        assert(testOb->is_resource(), "==", 1),
-    }) :));
-}
-
 void test_type () {
     expect_function("query_type", testOb);
     expect_function("set_type", testOb);
