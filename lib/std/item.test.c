@@ -40,20 +40,21 @@ void test_verb_look_applies () {
     expect_function("direct_look_obj", testOb);
 
     expect("item handles verb apply direct_look_at_obj", (: ({
+        // check mismatch environments
         assert(environment(testOb), "==", 0),
         assert(environment(), "==", find_object("/domain/Nowhere/room/void.c")),
+        assert(testOb->direct_look_at_obj(), "==", 0),  // failure
+        assert(testOb->direct_look_obj(), "==", 0),     // failure
 
-        assert(testOb->direct_look_at_obj(), "==", 0),
-        assert(testOb->direct_look_obj(), "==", 0),
-
+        // check matching environments
         assert(testOb->handle_move($(r)), "==", 1),
         assert(environment(testOb), "==", $(r)),
         assert(this_object()->handle_move($(r)), "==", 1),
         assert(environment(), "==", $(r)),
+        assert(testOb->direct_look_at_obj(), "==", 1),  // success
+        assert(testOb->direct_look_obj(), "==", 1),     // success
 
-        assert(testOb->direct_look_at_obj(), "==", 1),
-        assert(testOb->direct_look_obj(), "==", 1),
-
+        // cleanup
         assert(testOb->handle_move("/domain/Nowhere/room/void.c"), "==", 1),
         assert(this_object()->handle_move("/domain/Nowhere/room/void.c"), "==", 1),
     }) :));
