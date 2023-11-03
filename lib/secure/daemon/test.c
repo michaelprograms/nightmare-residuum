@@ -160,14 +160,15 @@ void process () {
     }
 }
 
-varargs void update_test_data (string path, string ignore) {
+varargs void update_test_data (string path, string ignoreRegex) {
     mixed *dir = get_dir(path, -1); // Assumes path has trailing / for dirs
     string *codeFiles = ({ }), tmp;
 
     foreach (mixed *file in dir) {
-        if (path + file[0] == ignore) continue;
-        if (file[1] == -2) {
-            update_test_data(path + file[0] + "/", ignore);
+        if (ignoreRegex && regexp(path + file[0], ignoreRegex)) {
+            continue;
+        } else if (file[1] == -2) {
+            update_test_data(path + file[0] + "/", ignoreRegex);
         } else if (regexp(file[0], "\\.test\\.c$")) {
             __Tests[path+file[0]] = ([ ]);
         } else if (regexp(file[0], "\\.c$")) {
@@ -195,7 +196,7 @@ varargs void run (int callShutdown) {
     write("Scanning for test files...\n");
     update_test_data("/secure/", "/secure/cmd");
     update_test_data("/daemon/");
-    update_test_data("/std/", "/std/struct");
+    update_test_data("/std/", "/std/mock|/std/struct");
 
     __TestFiles = keys(__Tests);
     __TestFiles = sort_array(__TestFiles, function(string a, string b) {
