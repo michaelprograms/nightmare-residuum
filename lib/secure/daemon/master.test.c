@@ -84,15 +84,29 @@ void test_error_applies () {
     expect_function("log_error", testOb);
 }
 
+// used for retrieve_ed_setup and save_ed_setup
+private int __EdConfig = 0;
+int query_ed_setup () {
+    return __EdConfig;
+}
+void set_ed_setup (int config) {
+    __EdConfig = config;
+}
+
 void test_ed_applies () {
-//     expect_function("get_save_file_name", testOb);
+    // expect_function("get_save_file_name", testOb);
 
     // make_absolute_path testing handled by sefun sanitize_path
     expect_function("make_path_absolute", testOb);
 
-//     expect_function("retrieve_ed_setup", testOb);
+    expect_function("retrieve_ed_setup", testOb);
+    expect_function("save_ed_setup", testOb);
 
-//     expect_function("save_ed_setup", testOb);
+    expect("retrieve_ed_setup", (: ({
+        assert(testOb->retrieve_ed_setup(this_object()), "==", 0),
+        assert(testOb->save_ed_setup(this_object(), 123), "==", 1),
+        assert(testOb->retrieve_ed_setup(this_object()), "==", 123),
+    }) :));
 }
 
 object basicOb;
