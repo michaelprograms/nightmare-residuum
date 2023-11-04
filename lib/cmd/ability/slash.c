@@ -10,7 +10,7 @@ void create () {
             "level": 5,
         ])
     ]));
-    set_skill_powers(([
+    set_powers(([
         "blade": 15,
     ]));
     set_weapons(([

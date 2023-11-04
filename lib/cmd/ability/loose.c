@@ -10,7 +10,7 @@ void create () {
             "level": 1,
         ])
     ]));
-    set_skill_powers(([
+    set_powers(([
         "ranged": 20,
     ]));
     set_help_text("Loose a ranged attack at your opponent.");

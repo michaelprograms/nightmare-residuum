@@ -10,7 +10,7 @@ void create () {
             "level": 5,
         ]),
     ]));
-    set_skill_powers(([ // only used for cost in utility
+    set_powers(([ // only used for cost in utility
         "psionic": 10,
     ]));
     set_help_text("Use psionic powers to shield a target with bonus armor.");

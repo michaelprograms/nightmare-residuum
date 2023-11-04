@@ -3,7 +3,7 @@
 inherit STD_VERB;
 
 nosave private mapping __Reqs;
-nosave private mapping __SkillPowers;
+nosave private mapping __Powers;
 nosave private mapping __Weapons = ([ ]);
 nosave private string __Type;
 nosave private int __NumTargets = 1;
@@ -126,18 +126,17 @@ object query_best_weapon (object source) {
 
 /* ----- skill powers ----- */
 
-// @TODO rename this
-mapping query_skill_powers () {
-    return __SkillPowers;
+mapping query_powers () {
+    return __Powers;
 }
-void set_skill_powers (mapping powers) {
-    if (undefinedp(powers) || !mapp(powers)) error("Bad argument 1 to ability->set_skill_powers");
+void set_powers (mapping powers) {
+    if (undefinedp(powers) || !mapp(powers)) error("Bad argument 1 to ability->set_powers");
 
-    __SkillPowers = powers;
+    __Powers = powers;
 }
 int query_total_skill_power () {
     int total = 0;
-    foreach (string key,int value in __SkillPowers) {
+    foreach (string key,int value in __Powers) {
         total += value;
     }
     return total;
@@ -152,7 +151,7 @@ mapping query_cost () {
         "mp": 0,
     ]);
 
-    foreach (string key,int value in __SkillPowers) {
+    foreach (string key,int value in __Powers) {
         switch (key) {
         case "psionic":
             vitalType = "mp";
@@ -179,7 +178,7 @@ int calculate_heal (object source, object target, string limb) {
     damage += random(source->query_stat("luck") * 5 / 100 + 1);
 
     // skill powers
-    foreach (string key,int value in __SkillPowers) {
+    foreach (string key,int value in __Powers) {
         switch (key) {
             case "anatomy":
                 n = 3;
@@ -212,7 +211,7 @@ int calculate_damage (object source, object target, string limb) {
     dice = max(({ 1, random(source->query_stat("luck") + 1) * 4 / 100 }));
     damage += roll_die(dice, 6)[0];
 
-    foreach (string key, int value in __SkillPowers) {
+    foreach (string key, int value in __Powers) {
         switch (key) {
             case "psionic":
                 tmp = source->query_stat("intelligence");
@@ -295,7 +294,7 @@ int is_ability_successful (object source, object target) {
     // @TODO if (target->query_paralyzed()) return 100;
 
     if (__Type == "attack") {
-        foreach (string key,int value in __SkillPowers) {
+        foreach (string key,int value in __Powers) {
             if (key == "psionic") {
                 sourceN += source->query_stat("intelligence") * value / powerTotal;
                 targetN += target->query_stat("perception") * value / powerTotal;
@@ -619,7 +618,7 @@ void do_verb_rule (mixed args...) {
 void create () {
     ::create();
     __Reqs = ([ ]);
-    __SkillPowers = ([ ]);
+    __Powers = ([ ]);
     __NumTargets = 1;
     if (query_name() != "ability") {
         add_rules(({ "", "LIV", "LVS", }));

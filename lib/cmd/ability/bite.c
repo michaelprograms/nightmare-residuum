@@ -10,7 +10,7 @@ void create () {
             "level": 1,
         ]),
     ]));
-    set_skill_powers(([
+    set_powers(([
         "brawl": 10,
     ]));
     set_help_text("Bite your opponent.");

@@ -10,7 +10,7 @@ void create () {
             "level": 1,
         ])
     ]));
-    set_skill_powers(([
+    set_powers(([
         "blunt": 20,
     ]));
     set_weapons(([

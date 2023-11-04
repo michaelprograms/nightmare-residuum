@@ -5,7 +5,7 @@ inherit STD_ABILITY;
 void create () {
     ::create();
     set_type("attack");
-    set_skill_powers(([
+    set_powers(([
         "brawl": 10,
     ]));
     set_help_text("Bonk your opponent with your forehead.");
