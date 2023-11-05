@@ -259,7 +259,10 @@ private void process (int t, string key, mapping a) {
     } else if (dayPhase == "dusk") {
         newPhase = "night";
     } else {
-        error("Bad dayPhase " + dayPhase);
+        // override to night
+        newPhase = "night";
+        // @TODO
+        // error("Bad dayPhase " + dayPhase);
     }
 
     // converting to real time
