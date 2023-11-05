@@ -252,10 +252,15 @@ private void process (int t, string key, mapping a) {
     if (dayPhase == "night") {
         newPhase = "dawn";
         update_almanac(t, a);
-    } else if (dayPhase == "dawn") newPhase = "day";
-    else if (dayPhase == "day") newPhase = "dusk";
-    else if (dayPhase == "dusk") newPhase = "night";
-    else error("Bad dayPhase " + dayPhase);
+    } else if (dayPhase == "dawn") {
+        newPhase = "day";
+    } else if (dayPhase == "day") {
+        newPhase = "dusk";
+    } else if (dayPhase == "dusk") {
+        newPhase = "night";
+    } else {
+        error("Bad dayPhase " + dayPhase);
+    }
 
     // converting to real time
     now = query_hour(t, a) * 60 + query_minute(t, a);
