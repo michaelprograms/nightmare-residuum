@@ -7,7 +7,7 @@ protected mapping ansiTerm, unknownTerm;
 
 void create () {
     ansiTerm = ([
-        "RESET":            ANSI("0;37;40"),
+        "RESET":            ANSI(0),
         "BOLD":             ANSI(1),
         "ITALIC":           ANSI(3),
         "UNDERLINE":        ANSI(4),

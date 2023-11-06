@@ -56,7 +56,7 @@ void test_keys () {
 
 void test_parse () {
     expect("parse parses all basic colors", (: ({
-        assert(testOb->parse("%^RESET%^"), "==", "\e[0;37;40m"),
+        assert(testOb->parse("%^RESET%^"), "==", "\e[0m"),
         assert(testOb->parse("%^BOLD%^"), "==", "\e[1m"),
         assert(testOb->parse("%^ITALIC%^"), "==", "\e[3m"),
         assert(testOb->parse("%^UNDERLINE%^"), "==", "\e[4m"),
