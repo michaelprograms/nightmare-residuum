@@ -343,12 +343,7 @@ int valid_shadow (object ob) {
 
 // This apply is called prior to every socket efun.
 int valid_socket (object caller, string fn, mixed *info) {
-    int valid = 0;
-    if (regexp(file_name(caller), "^/secure/daemon/ipc")) {
-        valid = 1;
-    }
-    // @TODO D_ACCESS->query_allowed(caller, fn, 0, "socket")
-    return valid;
+    return D_ACCESS->query_allowed(caller, fn, 0, "socket");
 }
 
 /*

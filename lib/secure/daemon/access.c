@@ -60,6 +60,11 @@ int query_allowed (object caller, string fn, string file, string mode) {
         error("Bad argument 4 to access->query_allowed");
     }
 
+    if (mode == "socket") {
+        // only D_IPC allowed to create sockets
+        return regexp(file_name(caller), "^/secure/daemon/ipc");
+    }
+
     // attempt to match the target file path to __Read path permissions
     pathPrivs = match_path(__Read, file);
 
