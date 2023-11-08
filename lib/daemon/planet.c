@@ -105,10 +105,28 @@ int adjust_planet (string name, mapping config) {
 
 /* ----- noise ----- */
 
-mapping query_noise (mapping p, int size, int x, int y) {
+varargs mapping query_noise (
+    mapping p,
+    int size,
+    int x,
+    int y,
+    float heightFactor,
+    float humidityFactor,
+    float heatFactor
+) {
     int size2, level;
     float nx, ny, nz, nw, now, nowAdj;
     float nHeight, nHumidity, nHeat, nTmp, nResource = -1.0;
+
+    if (undefinedp(heightFactor)) {
+        heightFactor = 1.0;
+    }
+    if (undefinedp(humidityFactor)) {
+        humidityFactor = 1.0;
+    }
+    if (undefinedp(heatFactor)) {
+        heatFactor = 1.0;
+    }
 
     // Calculate our 4D coordinates
     nx = nz = to_float(x);
@@ -129,10 +147,11 @@ mapping query_noise (mapping p, int size, int x, int y) {
 
     // noise Humidity
     nHumidity = max(({ 0.0, (((noise_simplex_4d(nx + nowAdj, ny + nowAdj, nz + nowAdj, nw + nowAdj, p, 4, 3.0) + 1) / 2) - 0.25) / 0.5 })); // normalize 0.25-0.75 to 0-1
-    // nHumidity *= 1.0; // @TODO HUMIDITY_FACTOR = 1.0
+    nHumidity *= humidityFactor;
 
     // noise Height
     nHeight = (((noise_simplex_4d(nx, ny, nz, nw, p, 5, 1.25) + 1) / 2) - 0.25) / 0.5; // normalize 0.25-0.75 to 0-1
+    nHeight *= heightFactor;
     // ensure central land mass exists
     if (
         (nHeight <= HEIGHT_SHALLOW) &&
@@ -196,7 +215,8 @@ mapping query_noise (mapping p, int size, int x, int y) {
     } else {                                // south 40%
         nTmp = 1.0 - (gradient_2d(1.0, 1.0, 1.0, 0.0, 0.0, (size - (y + 1.0)) / size2));
     }
-    nHeat = nHeat * nTmp * 1.5; // @TODO * HEAT_FACTOR; // HEAT_FACTOR = 1.0
+    nHeat = nHeat * nTmp * 1.5;
+    nHeat *= heatFactor;
     // adjust noise Heat based upon noise Height, higher is colder
     if (nHeight > HEIGHT_SHALLOW) {
         nHeat -= (nHeight - HEIGHT_SHALLOW) * nHeight;
