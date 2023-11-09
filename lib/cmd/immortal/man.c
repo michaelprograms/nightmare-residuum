@@ -14,6 +14,7 @@ void command (string input, mapping flags) {
         return;
     }
 
+    // @TODO need to recursively look through directories for appropriate doc
     foreach (string type in ({ "apply", "efun", "lpc" })) {
         if (file_size(path = "/doc/" + type + "/" + input) > 0) {
             this_user()->handle_pager(read_file(path));
