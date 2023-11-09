@@ -112,7 +112,7 @@ void test_identify () {
 }
 
 void test_wrap () {
-    string resetANSI = "\e[0;37;40m", linewrap = "\n";
+    string resetANSI = "\e[0m", linewrap = "\n";
 
     expect_function("wrap", testOb);
 
@@ -127,7 +127,7 @@ void test_wrap () {
         assert(testOb->wrap("", 80), "==", ""),
         assert(testOb->wrap("test", -10), "==", "test"),
         assert(testOb->wrap("%^BOLD_OFF%^test", 80), "==", "\e[22mtest"),
-        assert(testOb->wrap("%^RED%^test%^RESET%^", 80), "==", "\e[31mtest\e[0;37;40m"),
+        assert(testOb->wrap("%^RED%^test%^RESET%^", 80), "==", "\e[31mtest" + $(resetANSI)),
 
         assert(__ANSI = "off", "==", "off"),
 
