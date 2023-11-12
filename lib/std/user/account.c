@@ -218,7 +218,7 @@ protected nomask varargs void account_input (int state, mixed extra, string inpu
             if (!D_ACCOUNT->query_valid_name(input)) {
                 write("\nThe account '"+input+"' is not a valid account name.\n");
                 write(PROMPT_ACCOUNT_FORMAT + "\n");
-                input_next((: account_input, STATE_ACCOUNT_HANDLE, ++extra :), PROMPT_ACCOUNT_ENTER);
+                input_next((: account_input, STATE_ACCOUNT_HANDLE, ++ extra :), PROMPT_ACCOUNT_ENTER);
                 return;
             } else if (D_ACCOUNT->query_exists(input)) {
                 write("\nExisting account '"+input+"'...\n");
@@ -244,7 +244,7 @@ protected nomask varargs void account_input (int state, mixed extra, string inpu
                     return handle_remove("\nInvalid entry. Connection terminated.\n");
                 }
                 write("\nCanceled new account.\n");
-                input_next((: account_input, STATE_ACCOUNT_HANDLE, ++extra :), PROMPT_ACCOUNT_ENTER);
+                input_next((: account_input, STATE_ACCOUNT_HANDLE, ++ extra :), PROMPT_ACCOUNT_ENTER);
                 return;
             }
             reset_connect_timeout();
@@ -310,7 +310,7 @@ protected nomask varargs void account_input (int state, mixed extra, string inpu
                 if (extra >= 2) {
                     return handle_remove("\nInvalid entry. Connection terminated.\n");
                 }
-                input_next((: account_input, STATE_ACCOUNT_PASSWORD, ++extra :), PROMPT_PASSWORD_ENTER, 1);
+                input_next((: account_input, STATE_ACCOUNT_PASSWORD, ++ extra :), PROMPT_PASSWORD_ENTER, 1);
             }
             break;
         case STATE_ACCOUNT_MENU:
@@ -387,11 +387,11 @@ protected nomask varargs void account_input (int state, mixed extra, string inpu
                     reset_connect_timeout();
                     set_character_name(input);
                     write("\nNew character '" + input + "'!\n");
-                    input_next((: account_input, STATE_CHARACTER_CONFIRM_NAME, ++extra :), PROMPT_CHARACTER_CONFIRM_NAME);
+                    input_next((: account_input, STATE_CHARACTER_CONFIRM_NAME, ++ extra :), PROMPT_CHARACTER_CONFIRM_NAME);
                     return;
                 }
             }
-            input_next((: account_input, STATE_CHARACTER_HANDLE, ++extra :), PROMPT_CHARACTER_ENTER);
+            input_next((: account_input, STATE_CHARACTER_HANDLE, ++ extra :), PROMPT_CHARACTER_ENTER);
             break;
 
         case STATE_CHARACTER_CONFIRM_NAME:
@@ -401,7 +401,7 @@ protected nomask varargs void account_input (int state, mixed extra, string inpu
                     return handle_remove("\nInvalid entry. Connection terminated.\n");
                 }
                 write("\nCanceled new character.\n");
-                input_next((: account_input, STATE_CHARACTER_HANDLE, ++extra :), PROMPT_CHARACTER_ENTER);
+                input_next((: account_input, STATE_CHARACTER_HANDLE, ++ extra :), PROMPT_CHARACTER_ENTER);
                 return;
             }
             reset_connect_timeout();
