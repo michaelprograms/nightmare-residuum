@@ -8,6 +8,7 @@ inherit "/std/character/autoload.c";
 inherit "/std/character/channel.c";
 inherit "/std/character/history.c";
 
+private string __Account;
 private int __LastAction;
 private int __Created = time();
 private int __Immortal;
@@ -27,6 +28,15 @@ void set_immortal (int i) {
     if (__Immortal && file_size("/realm/" + query_key_name() + "/") == -1) {
         mkdir("/realm/" + query_key_name() + "/");
     }
+}
+
+/* ----- account ----- */
+
+void set_account (string account) {
+    __Account = account;
+}
+string query_account() {
+    return __Account;
 }
 
 /* ----- save ----- */

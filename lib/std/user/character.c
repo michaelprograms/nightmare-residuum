@@ -14,6 +14,7 @@ private void set_character_name (string name) {
     }
     if (name) {
         __Character->set_name(name);
+        __Character->set_account(this_object()->query_name());
     } else {
         destruct(__Character);
         __Character = clone_object(STD_CHARACTER);
