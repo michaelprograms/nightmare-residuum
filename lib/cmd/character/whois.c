@@ -26,7 +26,7 @@ void command (string input, mapping flags) {
         "subtitle": char->query_cap_name(),
         "header": ([
             "items": ({
-                sprintf("%12s", "Account") + ": " /* + char->query_user()->query_name() */, // @TODO
+                sprintf("%12s", "Account") + ": " + char->query_account(),
                 sprintf("%12s", "Created") + ": " + strftime("%Y/%m/%u", char->query_created()),
             }),
             "columns": 2,
