@@ -46,7 +46,7 @@ private void display_account_menu ();
 #define PROMPT_PASSWORD_CONFIRM             "Confirm password: "
 #define PROMPT_SCREENREADER_ENTER           "Do you use a screenreader? (y/N) "
 #define PROMPT_ACCOUNT_CHOICE               "Enter action: "
-#define PROMPT_CHARACTER_FORMAT             "Character names must be 4 to 64 characters and must contain capitalized alphabetic characters, \"'\", \"-\", or spaces.\n"
+#define PROMPT_CHARACTER_FORMAT             "Character names must be 4 to 64 characters and may contain capitalized alphabetic characters, \"'\", \"-\", or spaces.\n"
 #define PROMPT_CHARACTER_ENTER              "Enter new character name: "
 #define PROMPT_CHARACTER_CONFIRM_NAME       "Confirm character name? (y/N) "
 #define PROMPT_CHARACTER_DELETE             "Delete which character? "
