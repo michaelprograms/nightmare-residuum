@@ -9,6 +9,7 @@ void create () {
 void command (string input, mapping flags) {
     object tc = this_character();
     object char;
+    string *headerItems = ({ });
 
     if (!input || input == "") {
         message("action", "Whois which character name?", tc);
@@ -21,14 +22,16 @@ void command (string input, mapping flags) {
         return;
     }
 
+    if (tc->query_immortal()) {
+        headerItems += ({ sprintf("%12s", "Account") + ": " + char->query_account() });
+    }
+    headerItems += ({ sprintf("%12s", "Created") + ": " + strftime("%Y/%m/%u", char->query_created()) });
+
     border(([
         "title": "WHOIS",
         "subtitle": char->query_cap_name(),
         "header": ([
-            "items": ({
-                sprintf("%12s", "Account") + ": " + char->query_account(),
-                sprintf("%12s", "Created") + ": " + strftime("%Y/%m/%u", char->query_created()),
-            }),
+            "items": headerItems,
             "columns": 2,
         ]),
         "body": ({
