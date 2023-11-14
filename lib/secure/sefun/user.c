@@ -25,6 +25,7 @@ object this_character () {
 }
 object find_character (string name) {
     object *results = filter(children(STD_CHARACTER), (: $1 && $1->query_key_name() == $2:), sanitize_name(name));
+    // @TODO need to update this to not return results from D_CHARACTER->query_whois_character
     return sizeof(results) ? results[0] : 0;
 }
 
