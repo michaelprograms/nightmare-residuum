@@ -58,8 +58,11 @@ void execute_command (string command) {
         return D_CHANNEL->send(action, query_character(), input);
     }
 
-    if (__Owner->query_character() && !__Owner->query_character()->do_command(command)) {
-        write("Do what?\n");
+    if (__Owner->query_character()) {
+        __Owner->query_character()->set_last_action();
+        if (!__Owner->query_character()->do_command(command)) {
+            write("Do what?\n");
+        }
     }
 }
 
