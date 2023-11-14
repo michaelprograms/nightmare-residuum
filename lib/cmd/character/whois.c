@@ -8,7 +8,7 @@ void create () {
 
 void command (string input, mapping flags) {
     object tc = this_character();
-    object char;
+    object char, curChar;
     string *headerItems = ({ });
 
     if (!input || input == "") {
@@ -16,16 +16,28 @@ void command (string input, mapping flags) {
         return;
     }
 
+    curChar = find_character(input); // need to do this before query_whois_character
     char = D_CHARACTER->query_whois_character(input);
     if (!char) {
         message("action", "There is no character with that name on " + mud_name() + ".", tc);
         return;
     }
 
+    headerItems += ({
+        sprintf("%12s", "Created") + ": " + strftime("%Y/%m/%u", char->query_created()),
+    });
+    if (curChar) {
+        headerItems += ({
+            sprintf("%12s", "Idle") + ": " + time_from_seconds(time() - curChar->query_last_action()),
+        });
+    } else {
+        headerItems += ({
+            sprintf("%12s", "Last on") + ": " + time_from_seconds(time() - char->query_last_action()),
+        });
+    }
     if (tc->query_immortal()) {
         headerItems += ({ sprintf("%12s", "Account") + ": " + char->query_account() });
     }
-    headerItems += ({ sprintf("%12s", "Created") + ": " + strftime("%Y/%m/%u", char->query_created()) });
 
     border(([
         "title": "WHOIS",
