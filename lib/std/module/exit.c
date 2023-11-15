@@ -129,8 +129,15 @@ mixed handle_go (object ob, string method, string dir) {
 
 /* ----- climbs ----- */
 
-mapping query_climbs () { return copy(__Climbs); }
-string *query_climb_directions () { return keys(__Climbs); }
+mapping query_climbs () {
+    return copy(__Climbs);
+}
+string *query_climb_directions () {
+    return keys(__Climbs);
+}
+string *query_climb_destinations () {
+    return values(__Climbs);
+}
 string query_climb (string dir) {
     if (__Climbs[dir]) {
         return __Climbs[dir]["room"];

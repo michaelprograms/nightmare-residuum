@@ -10,7 +10,12 @@ void after_each_test () {
     if (objectp(testOb)) destruct(testOb);
 }
 string *test_order () {
-    return ({ "test_exits", "test_handle_go", "test_exits_before_after" });
+    return ({
+        "test_exits",
+        "test_climbs",
+        "test_handle_go",
+        "test_exits_before_after",
+    });
 }
 
 void test_exits () {
@@ -66,6 +71,41 @@ void test_exits () {
         ])),
         assert(testOb->query_exit_directions(), "==", ({ "north", "south", "east", "west" })),
         assert(testOb->query_exit_dirs(), "==", ({ "n", "s", "e", "w" })),
+    }) :));
+}
+
+void test_climbs () {
+    expect_function("set_climbs", testOb);
+    expect_function("set_climb", testOb);
+    expect_function("query_climbs", testOb);
+    expect_function("query_climb_directions", testOb);
+    expect_function("query_climb_destinations", testOb);
+
+    expect("climbs are addable and queryable", (: ({
+        assert(testOb->query_climbs(), "==", ([ ])),
+        assert(testOb->query_climb_directions(), "==", ({ })),
+        assert(testOb->query_climb_destinations(), "==", ({ })),
+
+        testOb->set_climb("up", "/uproom.c"),
+        assert(testOb->query_climbs(), "==", ([ "up": ([ "room": "/uproom.c" ]) ])),
+        assert(testOb->query_climb_directions(), "==", ({ "up" })),
+        assert(testOb->query_climb_destinations(), "==", ({ ([ "room": "/uproom.c" ]) })),
+
+        testOb->set_climb("down", "/downroom.c"),
+        assert(testOb->query_climbs(), "==", ([ "down": ([ "room": "/downroom.c"]), "up": ([ "room": "/uproom.c" ]) ])),
+        assert(testOb->query_climb_directions(), "==", ({ "down", "up" })),
+        assert(testOb->query_climb_destinations(), "==", ({ ([ "room": "/downroom.c" ]), ([ "room": "/uproom.c" ]) })),
+
+        // override climbs
+        testOb->set_climbs(([
+            "up": "/uproom2.c",
+            "down": "/downroom2.c",
+            "something": "/somethingroom.c",
+        ])),
+        assert(testOb->query_climbs(), "==", ([ "down": ([ "room": "/downroom2.c"]), "something": ([ "room": "/somethingroom.c" ]), "up": ([ "room": "/uproom2.c", ]) ])),
+        assert(testOb->query_climb_directions(), "==", ({ "something", "down", "up", })),
+        assert(testOb->query_climb_destinations(), "==", ({ ([ "room": "/somethingroom.c" ]), ([ "room": "/downroom2.c" ]), ([ "room": "/uproom2.c" ]), })),
+
     }) :));
 }
 
