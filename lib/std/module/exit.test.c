@@ -23,7 +23,7 @@ void test_exits () {
     expect_function("set_exits", testOb);
     expect_function("remove_exit", testOb);
 
-    expect("exits handles adding and removing", (: ({
+    expect("exits are addable, queryable, and removable", (: ({
         assert(testOb->query_exits(), "==", ([ ])),
         assert(testOb->query_exit_directions(), "==", ({ })),
         assert(testOb->query_exit_destinations(), "==", ({ })),
@@ -46,6 +46,7 @@ void test_exits () {
         assert(testOb->query_exit_dirs(), "==", ({ "s" })),
         assert(testOb->query_exit_destinations(), "==", ({ ([ "room": "/southroom.c" ]) })),
 
+        // add more exits
         testOb->set_exit("north", "/northroom.c"),
         testOb->set_exit("northeast", "/northeastroom.c"),
         testOb->set_exit("northwest", "/northwestroom.c"),
@@ -55,6 +56,16 @@ void test_exits () {
         testOb->set_exit("southwest", "/southwestroom.c"),
         assert(testOb->query_exit_directions(), "==", ({ "north", "south", "east", "southeast", "northeast", "west", "southwest", "northwest" })),
         assert(testOb->query_exit_dirs(), "==", ({ "n", "s", "e", "se", "ne", "w", "sw", "nw" })),
+
+        // overrides existing exits
+        testOb->set_exits(([
+            "north": "/northroom.c",
+            "east": "/eastroom.c",
+            "west": "/westroom.c",
+            "south": "/southroom.c",
+        ])),
+        assert(testOb->query_exit_directions(), "==", ({ "north", "south", "east", "west" })),
+        assert(testOb->query_exit_dirs(), "==", ({ "n", "s", "e", "w" })),
     }) :));
 }
 
