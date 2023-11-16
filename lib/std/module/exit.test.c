@@ -38,6 +38,7 @@ void test_exits () {
         assert(testOb->query_exit_directions(), "==", ({ "north" })),
         assert(testOb->query_exit_dirs(), "==", ({ "n" })),
         assert(testOb->query_exit_destinations(), "==", ({ ([ "room": "/northroom.c" ]) })),
+        assert(testOb->query_exit("north"), "==", "/northroom.c"),
 
         testOb->set_exit("south", "/southroom.c"),
         assert(testOb->query_exits(), "==", ([ "south": ([ "room": "/southroom.c"]), "north": ([ "room": "/northroom.c" ]) ])),
