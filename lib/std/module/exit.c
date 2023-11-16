@@ -169,6 +169,10 @@ void set_climbs (mapping climbs) {
         }
     }
 }
+void remove_climb (string dir) {
+    if (!stringp(dir)) error("Bad argument 1 to exit->remove_climb");
+    map_delete(__Climbs, dir);
+}
 
 mixed handle_climb (object ob, string method, string dir) {
     mapping exit;

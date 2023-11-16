@@ -76,11 +76,12 @@ void test_exits () {
 }
 
 void test_climbs () {
-    expect_function("set_climbs", testOb);
-    expect_function("set_climb", testOb);
     expect_function("query_climbs", testOb);
+    expect_function("query_climb", testOb);
     expect_function("query_climb_directions", testOb);
     expect_function("query_climb_destinations", testOb);
+    expect_function("set_climbs", testOb);
+    expect_function("set_climb", testOb);
 
     expect("climbs are addable and queryable", (: ({
         assert(testOb->query_climbs(), "==", ([ ])),
@@ -91,11 +92,17 @@ void test_climbs () {
         assert(testOb->query_climbs(), "==", ([ "up": ([ "room": "/uproom.c" ]) ])),
         assert(testOb->query_climb_directions(), "==", ({ "up" })),
         assert(testOb->query_climb_destinations(), "==", ({ ([ "room": "/uproom.c" ]) })),
+        assert(testOb->query_climb("up"), "==", "/uproom.c"),
 
         testOb->set_climb("down", "/downroom.c"),
         assert(testOb->query_climbs(), "==", ([ "down": ([ "room": "/downroom.c"]), "up": ([ "room": "/uproom.c" ]) ])),
         assert(testOb->query_climb_directions(), "==", ({ "down", "up" })),
         assert(testOb->query_climb_destinations(), "==", ({ ([ "room": "/downroom.c" ]), ([ "room": "/uproom.c" ]) })),
+
+        testOb->remove_climb("down"),
+        assert(testOb->query_climbs(), "==", ([ "up": ([ "room": "/uproom.c" ]) ])),
+        assert(testOb->query_climb_directions(), "==", ({ "up" })),
+        assert(testOb->query_climb_destinations(), "==", ({ ([ "room": "/uproom.c" ]) })),
 
         // override climbs
         testOb->set_climbs(([
