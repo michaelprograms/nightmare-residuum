@@ -184,3 +184,18 @@ void test_ensure_default_settings () {
         assert(testOb->query_setting("screenreader"), "==", "off"),
     }) :));
 }
+
+void test_ed_setup () {
+    expect_function("query_ed_setup", testOb);
+    expect_function("set_ed_setup", testOb);
+
+    expect("ed setup is settable and queryable", (: ({
+        assert(testOb->query_ed_setup(), "==", UNDEFINED),
+
+        testOb->set_ed_setup(123),
+        assert(testOb->query_ed_setup(), "==", 123),
+
+        testOb->set_ed_setup(321),
+        assert(testOb->query_ed_setup(), "==", 321),
+    }) :));
+}
