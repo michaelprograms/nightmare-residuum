@@ -195,6 +195,46 @@ void test_handle_go () {
     if (r2) destruct(r2);
 }
 
+void test_handle_climb () {
+    expect_function("handle_climb", testOb);
+
+    r1 = new(STD_ROOM);
+    r2 = new(STD_ROOM);
+    ob = new(STD_NPC);
+
+    r1->set_climb("up", file_name(r2));
+    r2->set_climb("down", file_name(r1));
+    r2->set_climb("bad", "/invalid/path.c");
+
+    expect("handle_climb moved object", (: ({
+        assert(regexp(r1->query_climb("up"), "/std/room#[0-9]+"), "==", 1),
+        assert(regexp(r2->query_climb("down"), "/std/room#[0-9]+"), "==", 1),
+        assert(sizeof(r1->query_living_contents()), "==", 0),
+        assert(sizeof(r2->query_living_contents()), "==", 0),
+        assert(ob->handle_move(r1), "==", 1),
+        assert(sizeof(r1->query_living_contents()), "==", 1),
+        assert(sizeof(r2->query_living_contents()), "==", 0),
+
+        assert(r1->handle_climb(ob, "climb", "up"), "==", 1),
+        assert(file_name(environment(ob)), "==", file_name(r2)),
+    }) :));
+
+    expect("handle_climb doesn't move objects it shouldn't", (: ({
+        ob->handle_move(r2),
+        assert(r1->handle_climb(ob, "climb", "up"), "==", 0),
+        assert(sizeof(r1->query_living_contents()), "==", 0),
+        assert(sizeof(r2->query_living_contents()), "==", 1),
+    }) :));
+
+    expect("handle_climb handles invalid path", (: ({
+        assert(r2->handle_climb(ob, "climb", "bad"), "==", 0),
+    }) :));
+
+    if (ob) destruct(ob);
+    if (r1) destruct(r1);
+    if (r2) destruct(r2);
+}
+
 void test_query_defaults () {
     expect_function("query_default_enter", testOb);
     expect_function("query_default_out", testOb);
