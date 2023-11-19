@@ -38,7 +38,13 @@ void create () {
     set_no_get(1);
 }
 
+string query_type () {
+    return __ResourceType;
+}
 void set_type (string type) {
+    if (member_array(type, keys(__Resource)) == -1) {
+        return;
+    }
     __ResourceType = type;
 }
 
