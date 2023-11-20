@@ -1,6 +1,6 @@
 #include "human.h"
 
-inherit ROOM_CLASS_HALL;
+inherit STD_ROOM;
 
 void create () {
     ::create();
@@ -21,5 +21,4 @@ void create () {
         "stairs": "The staircase lead back up to the first floor of the warehouse.",
         ({ "columns", "archways" }): "The columns are evenly spaced, with some connecting to form archways, providing support the warehouse floor above.",
     ]));
-    set_class("scoundrel");
 }

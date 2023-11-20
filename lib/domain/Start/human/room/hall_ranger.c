@@ -1,6 +1,6 @@
 #include "human.h"
 
-inherit ROOM_CLASS_HALL;
+inherit STD_ROOM;
 
 void create () {
     ::create();
@@ -21,5 +21,4 @@ void create () {
         ({ "archery", "targets" }): "Targets upon which archers can shoot arrows are setup in the field.",
         "fence": "The fence stretches out and boxes in the field from outside view.",
     ]));
-    set_class("ranger");
 }

@@ -1,6 +1,6 @@
 #include "human.h"
 
-inherit ROOM_CLASS_INTRO;
+inherit STD_ROOM;
 
 void create () {
     ::create();
@@ -14,12 +14,11 @@ void create () {
     set_smell("default", "A pleasantly neutral odor persists in the building.");
     set_exits(([
         "out east": HUMAN_ROOM + "second_st_n1.c",
+        "up": HUMAN_ROOM + "hall_psionist.c",
     ]));
-    set_exit("up", HUMAN_ROOM + "hall_psionist.c", (: handle_pre_exit :), 0);
     set_looks(([
         ({ "mats" }): "Small mats used by those attempting to meditate, despite your intrusion.",
         ({ "door", "window" }): "The front of the building consists of a door that swings open to the street and several wide and tall windows.",
         "stairs": "The staircase lead up to the second floor of the building, where the private training of psionists takes place.",
     ]));
-    set_class("psionist");
 }

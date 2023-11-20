@@ -1,6 +1,6 @@
 #include "human.h"
 
-inherit ROOM_CLASS_HALL;
+inherit STD_ROOM;
 
 void create () {
     ::create();
@@ -19,5 +19,4 @@ void create () {
         "mats": "Mats used to help a psionist meditate.",
         "stairs": "The staircase lead back down to the first floor of the building.",
     ]));
-    set_class("psionist");
 }

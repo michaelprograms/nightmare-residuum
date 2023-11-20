@@ -1,6 +1,6 @@
 #include "human.h"
 
-inherit ROOM_CLASS_INTRO;
+inherit STD_ROOM;
 
 void create () {
     ::create();
@@ -14,8 +14,8 @@ void create () {
     set_smell("default", "The fragrance of incense lightly hangs in the air.");
     set_exits(([
         "out east": HUMAN_ROOM + "fourth_st_n1.c",
+        "down": HUMAN_ROOM + "hall_paladin.c",
     ]));
-    set_exit("down", HUMAN_ROOM + "hall_paladin.c", (: handle_pre_exit :), 0);
     set_looks(([
         ({ "pews", "stations" }): "Wooden pews used by the paladins to conduct prayer, along with stations used by a paladin to lead others through prayer.",
         "ceiling": "The high ceilings arch above with strong wooden beams holding it the roof in place.",
@@ -23,5 +23,4 @@ void create () {
         "door": "The front of the building consists of a door that swings open to the street, but no window.",
         "stairs": "The wooden staircase leads down to the basement of the building, where the paladins like to dwell to remind them of their duty.",
     ]));
-    set_class("paladin");
 }

@@ -27,10 +27,6 @@
 #define STD_STORAGE     "/std/item/storage.c"
 #define STD_WEAPON      "/std/item/weapon.c"
 
-// std room inheritables
-#define ROOM_CLASS_INTRO "/std/room/class_intro.c"
-#define ROOM_CLASS_HALL "/std/room/class_hall.c"
-
 // std npc inheritables
 #define STD_VENDOR      "/std/npc/vendor.c"
 

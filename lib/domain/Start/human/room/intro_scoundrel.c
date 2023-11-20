@@ -1,6 +1,6 @@
 #include "human.h"
 
-inherit ROOM_CLASS_INTRO;
+inherit STD_ROOM;
 
 void create () {
     ::create();
@@ -14,13 +14,12 @@ void create () {
     set_smell("default", "A musty dust slowly floats in the air.");
     set_exits(([
         "out northwest": HUMAN_ROOM + "fourth_st_s6.c",
+        "down": HUMAN_ROOM + "hall_scoundrel.c",
     ]));
-    set_exit("down", HUMAN_ROOM + "hall_scoundrel.c", (: handle_pre_exit :), 0);
     set_looks(([
         ({ "crates", "goods" }): "Old crates positioned around the warehouse are either empty or filled with spoiled goods.",
         "door": "The front of the building consists of a double door that has been opened, providing a column of light to pour upon the dirty floor.",
         "stairs": "The wooden staircase leads down to the darkened basement of the warehouse, where the scoundrels practice their ways away from unwanted attention.",
         "dust": "The dust is an indication of a long passage of time.",
     ]));
-    set_class("scoundrel");
 }

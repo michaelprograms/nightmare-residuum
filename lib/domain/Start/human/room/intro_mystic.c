@@ -1,6 +1,6 @@
 #include "human.h"
 
-inherit ROOM_CLASS_INTRO;
+inherit STD_ROOM;
 
 void create () {
     ::create();
@@ -15,8 +15,8 @@ void create () {
     set_exits(([
         "out north": HUMAN_ROOM + "market_st_e5.c",
         "up": HUMAN_ROOM "bell_tower.c",
+        "down": HUMAN_ROOM + "hall_mystic.c",
     ]));
-    set_exit("down", HUMAN_ROOM + "hall_mystic.c", (: handle_pre_exit :), 0);
     set_looks(([
         ({ "pews", "altar" }): "Wooden pews used by the mystics in their prayers before an altar of which a senior mystic leads a group session of prayer.",
         ({ "ceiling", "beams" }): "The high ceilings vault overhead with thick exposed wooden beams.",
@@ -24,5 +24,4 @@ void create () {
         "doors": "The front of the building consists of a set of doors facing the street without any windows.",
         "stairs": "The wooden staircase leads down to the basement catacombs of the building, where the mystics like to meditate upon their history.",
     ]));
-    set_class("mystic");
 }
