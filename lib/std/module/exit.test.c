@@ -320,9 +320,9 @@ void test_doors () {
     expect_function("query_doors", testOb);
     expect_function("query_open", testOb);
     expect_function("query_locked", testOb);
-    // expect_function("set_open", testOb);
-    // expect_function("set_locked", testOb);
-    // expect_function("query_door_dir", testOb);
+    expect_function("set_open", testOb);
+    expect_function("set_locked", testOb);
+    expect_function("query_door_dir", testOb);
     // expect_function("handle_open", testOb);
     // expect_function("handle_close", testOb);
     // expect_function("handle_lock", testOb);
@@ -345,6 +345,8 @@ void test_doors () {
         assert(r2->query_doors(), "==", ({ "door", })),
         assert(r1->query_doors(1), "==", ({ "east", "door", })),
         assert(r2->query_doors(1), "==", ({ "west", "door", })),
+        assert(r1->query_door_dir("door"), "==", "east"),
+        assert(r2->query_door_dir("door"), "==", "west"),
         assert(r1->query_open("door"), "==", 0),
         assert(r2->query_open("door"), "==", 0),
         assert(r1->query_locked("door"), "==", 0),
@@ -362,11 +364,39 @@ void test_doors () {
         // setup unlocked door with key
         r1->set_exit("east", file_name(r2), 0, 0, 0, "door", "test key", 0),
         r2->set_exit("west", file_name(r1), 0, 0, 0, "door", 0, 0),
-        // doors are setup
+        // doors are setup and closed
         assert(r1->query_open("door"), "==", 0),
         assert(r2->query_open("door"), "==", 0),
         assert(r1->query_locked("door"), "==", 0),
         assert(r2->query_locked("door"), "==", 0),
+
+        // lock doors
+        r1->set_locked("east", 1),
+        r2->set_locked("west", 1),
+        assert(r1->query_locked("door"), "==", 1),
+        assert(r2->query_locked("door"), "==", 1),
+        assert(r1->query_open("door"), "==", 0),
+        assert(r2->query_open("door"), "==", 0),
+
+        // can't open doors
+        r1->set_open("east", 1),
+        r2->set_open("west", 1),
+        assert(r1->query_open("door"), "==", 0),
+        assert(r2->query_open("door"), "==", 0),
+
+        // unlock doors
+        r1->set_locked("east", 0),
+        r2->set_locked("west", 0),
+        assert(r1->query_locked("door"), "==", 0),
+        assert(r2->query_locked("door"), "==", 0),
+        assert(r1->query_open("door"), "==", 0),
+        assert(r2->query_open("door"), "==", 0),
+        // open previously locked doors
+        r1->set_open("east", 1),
+        r2->set_open("west", 1),
+        assert(r1->query_open("door"), "==", 1),
+        assert(r2->query_open("door"), "==", 1),
+
 
     }) :));
 

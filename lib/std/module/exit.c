@@ -254,11 +254,17 @@ int query_locked (string str) {
 
 void set_open (string str, int open) {
     mapping doors = map_mapping(filter_mapping(__Exits, (: $2["door"] :)), (: $2["door"] :));
+    string dir;
 
-    if (member_array(str, values(doors)) > -1) {        // doors
-        __Exits[query_door_dir(str)]["open"] = open;
-    } else if (member_array(str, keys(doors)) > -1) {   // exits
-        __Exits[str]["open"] = open;
+    if (member_array(str, values(doors)) > -1) {        // by door name
+        dir = query_door_dir(str);
+    } else if (member_array(str, keys(doors)) > -1) {   // by exit dir
+        dir = str;
+    } else {
+        return;
+    }
+    if (!__Exits[dir]["locked"]) {
+        __Exits[dir]["open"] = open;
     }
 }
 void set_locked (string str, int locked) {
