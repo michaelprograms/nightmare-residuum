@@ -24,7 +24,7 @@ string query_owner_name () {
 
 void set_following (int i) {
     if (!intp(i)) error("Bad argument 1 to follower->set_following");
-    __Following = 1;
+    __Following = i;
 }
 int query_following () {
     return __Following;

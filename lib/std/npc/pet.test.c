@@ -28,3 +28,20 @@ void test_owner () {
         assert(testOb->query_owner_name(), "==", "/std/npc/pet.test.c"),
     }) :));
 }
+
+void test_following () {
+    expect_function("set_following", testOb);
+    expect_function("query_following", testOb);
+
+    expect("following is settable and queryable", (: ({
+        // not following yet
+        assert(testOb->query_following(), "==", UNDEFINED),
+
+        // following
+        testOb->set_following(1),
+        assert(testOb->query_following(), "==", 1),
+
+        testOb->set_following(0),
+        assert(testOb->query_following(), "==", 0),
+    }) :));
+}
