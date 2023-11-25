@@ -31,8 +31,8 @@ void create () {
     parse_init();
     parse_add_rule("adopt", "");
     parse_add_rule("adopt", "STR");
-    parse_add_rule("recall", "");
-    parse_add_rule("recall", "STR");
+    parse_add_rule("reclaim", "");
+    parse_add_rule("reclaim", "STR");
 }
 
 /* ----- parser rule: adopt ----- */
@@ -85,18 +85,18 @@ void do_adopt_str (mixed args...) {
     pet->handle_move(environment(po));
 }
 
-/* ----- parser rule: recall ----- */
+/* ----- parser rule: reclaim ----- */
 
-mixed can_recall () {
+mixed can_reclaim () {
     return previous_object()->is_character() && environment(previous_object()) == environment();
 }
-void do_recall () {
-    message("action", "Recall what?", previous_object());
+void do_reclaim () {
+    message("action", "Reclaim what?", previous_object());
 }
-mixed can_recall_str (mixed args...) {
+mixed can_reclaim_str (mixed args...) {
     return previous_object()->is_character() && environment(previous_object()) == environment();
 }
-void do_recall_str (mixed args...) {
+void do_reclaim_str (mixed args...) {
     object po = previous_object(), pet;
     string str;
 
@@ -105,26 +105,26 @@ void do_recall_str (mixed args...) {
     }
 
     if (member_array(str, ({ "squirrel" })) == -1) {
-        return do_recall();
+        return do_reclaim();
     }
 
     if (!D_CHARACTER->query_exists(po->query_key_name(), "pet")) {
-        message("action", "You do not have a squirrel to recall.", po);
+        message("action", "You do not have a squirrel to reclaim.", po);
         return;
     }
 
     // setup existing squirrel
     pet = new("/std/npc/pet.c");
     pet->set_save_path(D_CHARACTER->query_save_path(po->query_key_name(), "pet"));
+    pet->restore_data();
     pet->set_owner(po);
     pet->set_id(({ "squirrel", "pet" }));
     pet->set_adjective(({ "tame" }));
     pet->set_name(possessive_noun(po->query_cap_name())+" squirrel");
     pet->set_short(pet->query_cap_name());
-    pet->set_long("A squirrel tamed by the Squirrel Person, "+subjective(pet)+" is very friendly.");
     pet->set_ability_list(({ "bite", "scratch", }));
     pet->set_ability_chance(25);
-    pet->restore_data();
+    pet->set_long("A squirrel tamed by the Squirrel Person, "+subjective(pet)+" is very friendly.");
 
     do_command("say Here "+subjective(pet)+" is, take good care of "+objective(pet)+".");
     message("action", "Your squirrel walks over to your side.", po);
