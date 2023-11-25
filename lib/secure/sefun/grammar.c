@@ -151,7 +151,7 @@ string possessive_noun (mixed value) {
         error("Bad argument 1 to grammar->possessive_noun\n");
     }
     switch (value[<1]) {
-    case 'x': case 'z': case 's': return sprintf("%s'", value);
+    case 'z': case 's': return sprintf("%s'", value);
     default: return sprintf("%s's", value);
     }
 }

@@ -174,7 +174,7 @@ void test_possessive_noun () {
         assert(testOb->possessive_noun(0), "==", "Its"),
         assert(testOb->possessive_noun("Name"), "==", "Name's"),
         assert(testOb->possessive_noun("Hermes"), "==", "Hermes'"),
-        assert(testOb->possessive_noun("Shax"), "==", "Shax'"),
+        assert(testOb->possessive_noun("Shax"), "==", "Shax's"),
         assert(testOb->possessive_noun("Chaz"), "==", "Chaz'"),
     }) :));
 
@@ -185,7 +185,7 @@ void test_possessive_noun () {
         assert($(ob)->set_name("Hermes"), "==", 0),
         assert(testOb->possessive_noun($(ob)), "==", "Hermes'"),
         assert($(ob)->set_name("Shax"), "==", 0),
-        assert(testOb->possessive_noun($(ob)), "==", "Shax'"),
+        assert(testOb->possessive_noun($(ob)), "==", "Shax's"),
         assert($(ob)->set_name("Chaz"), "==", 0),
         assert(testOb->possessive_noun($(ob)), "==", "Chaz'"),
     }) :));
