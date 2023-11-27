@@ -71,9 +71,26 @@ int direct_harvest_obj (mixed args...) {
 }
 
 void handle_harvest (object character) {
-    object ob;
+    object ob, tool;
+    string toolType, harvestableType;
 
-    // @TODO check for valid tool type
+    switch (__ResourceType) {
+        case "ore":
+            toolType = "pickaxe";
+            break;
+        case "wood":
+            toolType = "axe";
+            break;
+        default:
+            return;
+            break;
+    }
+
+    tool = present(toolType, character);
+    if (!tool) {
+        message("action", "You need a " + toolType + " to harvest " + query_name() + ".", character);
+        return;
+    }
 
     message("action", "You harvest " + query_name() + ".", character);
     message("action", character->query_cap_name() + " harvests " + query_name() + ".", environment(character), character);
@@ -81,5 +98,26 @@ void handle_harvest (object character) {
     ob = new("/std/resource/resource.c");
     ob->set_type(__ResourceType);
     ob->set_level(query_level());
+
+    harvestableType = __Resource[__ResourceType][query_level()];
+    switch (__ResourceType) {
+        case "ore":
+            ob->set_short("a chunk of " + harvestableType + " ore");
+            ob->set_long("A chunk containing a strip of " + harvestableType + " ore.");
+            ob->set_id(({ "ore", "chunk", harvestableType + " ore", harvestableType }));
+            ob->set_name(harvestableType + " ore");
+            break;
+        case "wood":
+            ob->set_short("a log of " + harvestableType + " wood");
+            ob->set_long("A log containing a strip of " + harvestableType + " wood.");
+            ob->set_id(({ "wood", "log", harvestableType + " wood", harvestableType }));
+            ob->set_name(harvestableType + " wood");
+            break;
+        default:
+            return;
+            break;
+    }
+
     ob->handle_move(character);
+    handle_remove();
 }
