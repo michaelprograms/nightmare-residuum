@@ -10,6 +10,7 @@ inherit "/secure/shell/variable.c";
 
 nosave private object __Owner;
 nosave private mapping __ShellCommands = ([ ]);
+nosave private string *__History = ({ });
 
 object query_character () {
     return __Owner && __Owner->query_character();
@@ -72,7 +73,10 @@ protected void shell_input (mixed input) {
     input = trim(input);
     if (input == "") return;
 
-    // @TODO history
+    __History += ({ input });
+    if (sizeof(__History) > 40) {
+        __History = __History[<40..];
+    }
 
     // bypass alias expand
     if (input[0] == '\\') {
@@ -125,6 +129,10 @@ protected mixed query_prompt () {
         }
     }
     return prompt + " ";
+}
+
+string *query_history () {
+    return __History;
 }
 
 void shell_start () {
