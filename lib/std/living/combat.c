@@ -248,7 +248,9 @@ varargs void check_lifesigns (object source) {
     if (dead) {
         message("defeat", "\nYou have been %^BOLD%^RED%^defeated%^RESET%^!\n", this_object());
         message("defeat", "\n" + this_object()->query_cap_name() + " has been %^BOLD%^RED%^defeated%^RESET%^!\n", environment(), this_object());
-        if (source) source->handle_victory(this_object());
+        if (source) {
+            source->handle_victory(this_object());
+        }
         handle_defeat(source);
     }
 }
