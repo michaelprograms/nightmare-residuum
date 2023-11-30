@@ -47,3 +47,12 @@ void heart_beat () {
         }
     }
 }
+
+mixed direct_lead_liv (mixed args...) {
+    object po = previous_object();
+    return environment() == environment(po) && po != this_object();
+}
+mixed direct_ditch_liv (mixed args...) {
+    object po = previous_object();
+    return environment() == environment(po) && po != this_object();
+}
