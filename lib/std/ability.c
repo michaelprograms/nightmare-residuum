@@ -224,7 +224,7 @@ int calculate_damage (object source, object target, string limb) {
                 break;
         }
         // stat damage
-        dice = max(({ 1, tmp / 10 }));
+        dice = max(({ 1, tmp * 10 / 100 }));
         damage += roll_die(dice, 6)[0];
     }
 
