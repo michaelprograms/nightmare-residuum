@@ -18,6 +18,7 @@ void display (object tc, object target, string type, string old, string now) {
 void command (string input, mapping flags) {
     object tc = this_character(), target = tc;
     string tmp;
+    int statMax;
 
     if (!input && !sizeof(flags)) {
         message("action", "Syntax: evolve (-l=[level]) (-c=[class]) ([target])", tc);
@@ -38,6 +39,11 @@ void command (string input, mapping flags) {
         tmp = target->query_level();
         target->set_level(to_int(flags["l"]));
         display(tc, target, "level", tmp, target->query_level());
+    }
+
+    foreach (string stat in ({ "strength", "perception", "endurance", "charisma", "intelligence", "agility", "luck", })) {
+        statMax = D_CLASS->query_max_stat(target->query_class(), stat, target->query_level());
+        target->set_stat(stat, statMax * 8 / 10);
     }
 
     message("action", "Evolution complete.", tc);
