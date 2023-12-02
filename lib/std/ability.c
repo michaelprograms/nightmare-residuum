@@ -204,8 +204,8 @@ int calculate_heal (object source, object target, string limb) {
 int calculate_damage (object source, object target, string limb) {
     int dice, damage, tmp;
 
-    // base damage
-    dice = max(({ 1, source->query_level() * 20 / 100 }));
+    // level damage
+    dice = max(({ 1, source->query_level() * 10 / 100 }));
     damage += roll_die(dice, 6)[0];
 
     dice = max(({ 1, random(source->query_stat("luck") + 1) * 4 / 100 }));
@@ -214,12 +214,15 @@ int calculate_damage (object source, object target, string limb) {
     foreach (string key, int value in __Powers) {
         switch (key) {
             case "psionic":
+                damage += roll_die(1, value)[0];
                 tmp = source->query_stat("intelligence");
                 break;
             case "ranged":
+                damage += roll_die(1, value)[0];
                 tmp = source->query_stat("agility");
                 break;
             case "brawl": default:
+                damage += roll_die(1, value)[0];
                 tmp = source->query_stat("strength");
                 break;
         }
