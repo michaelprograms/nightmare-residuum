@@ -129,7 +129,7 @@ protected void handle_combat () {
     }
     add_sp(-(random(hits) + 1));
     if (target) {
-        target->check_lifesigns();
+        target->check_lifesigns(this_object());
     }
 }
 
