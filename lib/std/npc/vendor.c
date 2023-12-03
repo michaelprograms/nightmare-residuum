@@ -79,7 +79,6 @@ void handle_buy (string str, object po) {
         return;
     }
 
-    // @TODO bargaining adjustment
     value = item->query_value();
 
     if (value > po->query_currency(__VendorCurrency)) {
@@ -109,8 +108,7 @@ void handle_sell (object item, object po) {
         return;
     }
 
-    // @TODO bargaining adjustment
-    value = item->query_value();
+    value = item->query_value() * 50 / 100;
 
     if (!item->handle_move(__VendorInventory)) {
         do_command("say My shop is full, I can't buy any more items.");
