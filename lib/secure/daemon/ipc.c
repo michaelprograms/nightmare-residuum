@@ -97,7 +97,7 @@ private void read_socket (int fd, mixed message) {
     }
 
 }
-void write_socket(int fd) {
+void write_socket (int fd) {
 
 }
 
