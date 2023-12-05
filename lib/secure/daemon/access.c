@@ -53,7 +53,7 @@ int query_allowed (object caller, string fn, string file, string mode) {
     if (!stringp(fn)) {
         error("Bad argument 2 to access->query_allowed");
     }
-    if (!stringp(file)) {
+    if (!stringp(file) && mode != "socket") {
         error("Bad argument 3 to access->query_allowed");
     }
     if (!stringp(mode)) {
