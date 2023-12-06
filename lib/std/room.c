@@ -138,7 +138,7 @@ string query_room_map_symbol () {
     return symbol;
 }
 
-string query_room_map_format () {
+string query_room_map_bracket () {
     return roomBracketColor + roomBrackets[0] + "%^RESET%^" + query_room_map_symbol() + roomBracketColor + roomBrackets[1] + "%^RESET%^";
 }
 varargs mapping query_room_exits_picture (string source) {
@@ -201,9 +201,9 @@ string *query_room_map() {
         pics["n"]["nw"]  + " " + pics["n"]["n"]  + pics["n"]["u"]  + pics["n"]["ne"]  +
         pics["ne"]["nw"] + " " + pics["ne"]["n"] + pics["ne"]["u"] + pics["ne"]["ne"],
 
-        pics["nw"]["w"] + (roomOb["nw"] ? roomOb["nw"]->query_room_map_format() : "   ") + pics["nw"]["e"] +
-        pics["n"]["w"]  + (roomOb["n"]  ? roomOb["n"]->query_room_map_format() : "   ") + pics["n"]["e"]  +
-        pics["ne"]["w"] + (roomOb["ne"] ? roomOb["ne"]->query_room_map_format() : "   ") + pics["ne"]["e"],
+        pics["nw"]["w"] + (roomOb["nw"] ? roomOb["nw"]->query_room_map_bracket() : "   ") + pics["nw"]["e"] +
+        pics["n"]["w"]  + (roomOb["n"]  ? roomOb["n"]->query_room_map_bracket() : "   ") + pics["n"]["e"]  +
+        pics["ne"]["w"] + (roomOb["ne"] ? roomOb["ne"]->query_room_map_bracket() : "   ") + pics["ne"]["e"],
 
         pics["nw"]["sw"] + pics["nw"]["d"] + pics["nw"]["s"] + " " + pics["nw"]["se"] +
         pics["n"]["sw"]  + pics["n"]["d"]  + pics["n"]["s"]  + " " + pics["n"]["se"]  +
@@ -215,9 +215,9 @@ string *query_room_map() {
         pics["x"]["nw"] + " " + pics["x"]["n"] + pics["x"]["u"] + pics["x"]["ne"] +
         pics["e"]["nw"] + " " + pics["e"]["n"] + pics["e"]["u"] + pics["e"]["ne"],
 
-        pics["w"]["w"] + (roomOb["w"] ? roomOb["w"]->query_room_map_format() : "   ") + pics["w"]["e"] +
+        pics["w"]["w"] + (roomOb["w"] ? roomOb["w"]->query_room_map_bracket() : "   ") + pics["w"]["e"] +
         pics["x"]["w"] + roomBracketColor + "[%^RESET%^CYAN%^BOLD%^X%^RESET%^" + roomBracketColor + "]%^RESET%^" + pics["x"]["e"] +
-        pics["e"]["w"] + (roomOb["e"] ? roomOb["e"]->query_room_map_format() : "   ") + pics["e"]["e"],
+        pics["e"]["w"] + (roomOb["e"] ? roomOb["e"]->query_room_map_bracket() : "   ") + pics["e"]["e"],
 
         pics["w"]["sw"] + pics["w"]["d"] + pics["w"]["s"] + " " + pics["w"]["se"] +
         pics["x"]["sw"] + pics["x"]["d"] + pics["x"]["s"] + " " + pics["x"]["se"] +
@@ -229,9 +229,9 @@ string *query_room_map() {
         pics["s"]["nw"]  + " " + pics["s"]["n"]  + pics["s"]["u"]  + pics["s"]["ne"]  +
         pics["se"]["nw"] + " " + pics["se"]["n"] + pics["se"]["u"] + pics["se"]["ne"],
 
-        pics["sw"]["w"] + (roomOb["sw"] ? roomOb["sw"]->query_room_map_format() : "   ") + pics["sw"]["e"] +
-        pics["s"]["w"]  + (roomOb["s"]  ? roomOb["s"]->query_room_map_format() : "   ") + pics["s"]["e"]  +
-        pics["se"]["w"] + (roomOb["se"] ? roomOb["se"]->query_room_map_format() : "   ") + pics["se"]["e"],
+        pics["sw"]["w"] + (roomOb["sw"] ? roomOb["sw"]->query_room_map_bracket() : "   ") + pics["sw"]["e"] +
+        pics["s"]["w"]  + (roomOb["s"]  ? roomOb["s"]->query_room_map_bracket() : "   ") + pics["s"]["e"]  +
+        pics["se"]["w"] + (roomOb["se"] ? roomOb["se"]->query_room_map_bracket() : "   ") + pics["se"]["e"],
 
         pics["sw"]["sw"] + pics["sw"]["d"] + pics["sw"]["s"] + " " + pics["sw"]["se"] +
         pics["s"]["sw"]  + pics["s"]["d"]  + pics["s"]["s"]  + " "  + pics["s"]["se"]  +
