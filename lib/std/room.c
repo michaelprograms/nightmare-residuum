@@ -88,12 +88,12 @@ int handle_release (object ob) {
 
 /* ----- room map ----- */
 
-nosave private string roomSquareColor = "";
+nosave private string roomBracketColor = "";
 void set_room_bracket_color (string color) {
-    roomSquareColor = color;
+    roomBracketColor = color;
 }
 string query_room_bracket_color () {
-    return roomSquareColor;
+    return roomBracketColor;
 }
 nosave private string *roomBrackets = ({ "[", "]" });
 void set_room_brackets (string *brackets) {
@@ -106,11 +106,11 @@ string *query_room_brackets () {
     return roomBrackets;
 }
 
-string query_room_map_format () {
+string query_room_map_symbol () {
     int aggressive = 0, passive = 0, item = 0;
     int cha;
     object *hostiles, char;
-    string num = " ";
+    string symbol = " ";
 
     char = this_character();
     cha = char->query_stat("charisma");
@@ -125,17 +125,21 @@ string query_room_map_format () {
     }
 
     if (aggressive || passive) {
-        if (aggressive && passive) num = "%^ORANGE%^";
-        if (aggressive && !passive) num = "%^BOLD%^RED%^";
-        if (!aggressive && passive) num = "%^BOLD%^GREEN%^";
+        if (aggressive && passive) symbol = "%^ORANGE%^";
+        if (aggressive && !passive) symbol = "%^BOLD%^RED%^";
+        if (!aggressive && passive) symbol = "%^BOLD%^GREEN%^";
 
-        num += (aggressive+passive > 10 ? "+" : ""+(aggressive+passive)) + "%^RESET%^";
+        symbol += (aggressive+passive > 10 ? "+" : ""+(aggressive+passive)) + "%^RESET%^";
     } else {
         item = sizeof(query_item_contents());
-        if (item) num = "%^MAGENTA%^BOLD%^" + (item > 10 ? "+" : ""+item) + "%^RESET%^";
+        if (item) symbol = "%^MAGENTA%^BOLD%^" + (item > 10 ? "+" : ""+item) + "%^RESET%^";
     }
 
-    return roomSquareColor + roomBrackets[0] + "%^RESET%^" + num + roomSquareColor + roomBrackets[1] + "%^RESET%^";
+    return symbol;
+}
+
+string query_room_map_format () {
+    return roomBracketColor + roomBrackets[0] + "%^RESET%^" + query_room_map_symbol() + roomBracketColor + roomBrackets[1] + "%^RESET%^";
 }
 varargs mapping query_room_exits_picture (string source) {
     mapping exits = query_exits();
@@ -212,7 +216,7 @@ string *query_room_map() {
         pics["e"]["nw"] + " " + pics["e"]["n"] + pics["e"]["u"] + pics["e"]["ne"],
 
         pics["w"]["w"] + (roomOb["w"] ? roomOb["w"]->query_room_map_format() : "   ") + pics["w"]["e"] +
-        pics["x"]["w"] + roomSquareColor + "[%^RESET%^CYAN%^BOLD%^X%^RESET%^" + roomSquareColor + "]%^RESET%^" + pics["x"]["e"] +
+        pics["x"]["w"] + roomBracketColor + "[%^RESET%^CYAN%^BOLD%^X%^RESET%^" + roomBracketColor + "]%^RESET%^" + pics["x"]["e"] +
         pics["e"]["w"] + (roomOb["e"] ? roomOb["e"]->query_room_map_format() : "   ") + pics["e"]["e"],
 
         pics["w"]["sw"] + pics["w"]["d"] + pics["w"]["s"] + " " + pics["w"]["se"] +
