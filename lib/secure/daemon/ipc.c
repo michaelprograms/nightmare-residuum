@@ -6,31 +6,10 @@
 
 inherit M_CLEAN;
 
-private void setup_ipc ();
-private void monitor_ipc ();
-private void authenticate_ipc (int socket);
-private void read_socket (int s, mixed message);
-private void listen_socket (int fd);
-private void close_socket (int fd);
-
-nosave private int *__Clients = ({ });
+nosave private int *__Sockets = ({ });
 nosave private int __Socket;
 
-// -----------------------------------------------------------------------------
-
-void create () {
-    set_no_clean(1);
-    setup_ipc();
-    call_out((: monitor_ipc :), IPC_INTERVAL);
-}
-
-void handle_remove () {
-    foreach (int client in __Clients) {
-        socket_close(client);
-    }
-}
-
-// -----------------------------------------------------------------------------
+/* ----- helpers ----- */
 
 private void setup_ipc () {
     int socket;
@@ -56,7 +35,7 @@ private void monitor_ipc () {
 
 private void authenticate_ipc (int socket) {
     string addr = socket_address(socket);
-    // 0.0.0.0 and 127.0.0.1 are only allowed connections
+    // 0.0.0.0 and 127.0.0.1 are the only allowed connections
     if (!regexp(addr, "0\\.0\\.0\\.0|127\\.0\\.0\\.1 [0-9]+")) {
         socket_close(socket);
         error("Bad socket request from " + addr);
@@ -64,15 +43,15 @@ private void authenticate_ipc (int socket) {
 }
 
 void send (string message) {
-    foreach (int client in __Clients) {
-        int socket = socket_write(client, message);
-        if (socket < 0) {
-            error("Bad response from socket_write: " + socket_error(socket));
+    foreach (int socket in __Sockets) {
+        int s = socket_write(socket, message);
+        if (s < 0) {
+            error("Bad response from socket_write: " + socket_error(s));
         }
     }
 }
 
-// -----------------------------------------------------------------------------
+/* ----- callbacks ----- */
 
 private void read_socket (int fd, mixed message) {
     if (!stringp(message)) {
@@ -85,7 +64,6 @@ private void read_socket (int fd, mixed message) {
     /*
     // Examples:
     // CHAT:channel:name:message
-    // GEN:name:/save/gen/Name/file.txt
     */
     if (message[0..4] == "CHAT:") {
         string chan, nick, msg;
@@ -109,9 +87,23 @@ private void listen_socket (int fd) {
     if (socket < 0) {
         error("Bad response to socket_accept: " + socket_error(socket));
     }
-    __Clients += ({ socket });
+    __Sockets += ({ socket });
 }
 
-private void close_socket (int fd) {
-    __Clients -= ({ fd });
+private void close_socket (int socket) {
+    __Sockets -= ({ socket });
+}
+
+/* ----- lifecycle ----- */
+
+void create () {
+    set_no_clean(1);
+    setup_ipc();
+    call_out((: monitor_ipc :), IPC_INTERVAL);
+}
+
+void handle_remove () {
+    foreach (int client in __Sockets) {
+        socket_close(client);
+    }
 }
