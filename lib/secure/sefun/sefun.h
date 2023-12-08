@@ -61,6 +61,9 @@ string objective (mixed value);
 string possessive (mixed value);
 string reflexive (mixed value);
 
+/* --- json --- */
+varargs string json_encode (mixed value, mixed *pointers);
+
 /* --- noise --- */
 int *noise_generate_permutation (string seed);
 float noise_perlin_2d (float x, float y, int *p, int octaves, float scale);
