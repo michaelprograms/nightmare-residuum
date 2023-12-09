@@ -62,7 +62,7 @@ string possessive (mixed value);
 string reflexive (mixed value);
 
 /* --- json --- */
-varargs string json_encode (mixed value, mixed *pointers);
+varargs string json_encode (mixed value, mixed *refs);
 
 /* --- noise --- */
 int *noise_generate_permutation (string seed);

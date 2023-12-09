@@ -1,29 +1,24 @@
-varargs string json_encode (mixed value, mixed *pointers) {
+varargs string json_encode (mixed value, mixed *refs) {
     string out = "";
     mixed *tmp;
     int i = 0, l = 0;
 
-    if (!pointers) {
-        pointers = ({ });
+    if (!refs) {
+        refs = ({ });
     }
-
     if (undefinedp(value)) {
         return "null";
     } else if (intp(value) || floatp(value)) {
         return "" + value;
     } else if (stringp(value)) {
         out = value;
-        if (strsrch(out, '"') > -1) {
-            out = replace_string(out, "\"", "\\\"");
-        }
-        out = "\"" + out + "\"";
-
         if (strsrch(out, '\\') > -1) {
             out = replace_string(out, "\\", "\\\\");
             if (strsrch(out, "\\\"") > -1) {
                 out = replace_string(out, "\\\"", "\"");
             }
         }
+        out = sprintf("\"%s\"", out);
         if (strsrch(out, '\b') > -1) {
             out = replace_string(out, "\b", "\\b");
         }
@@ -42,18 +37,17 @@ varargs string json_encode (mixed value, mixed *pointers) {
         if (member_array(0x1b, out) > -1) {
             out = replace_string(out, "\x1b", "\\u001b");
         }
-
         return out;
     }
 
-    if (member_array(value, pointers) > -1) {
+    if (member_array(value, refs) > -1) {
         return "null";
     }
     if (arrayp(value)) {
         if (l = sizeof(value)) {
-            pointers += ({ value });
+            refs += ({ value });
             for (i = 0; i < l; i ++) {
-                out += (!i ? "" : ",") + json_encode(value[i], pointers);
+                out += (!i ? "" : ",") + json_encode(value[i], refs);
             }
             return "[" + (sizeof(out) ? out : "") + "]";
         } else {
@@ -62,10 +56,10 @@ varargs string json_encode (mixed value, mixed *pointers) {
     } else if (mapp(value)) {
         tmp = keys(value);
         if (l = sizeof(tmp)) {
-            pointers += ({ value });
+            refs += ({ value });
             for (i = 0; i < l; i ++) {
                 if (!stringp(tmp[i])) continue;
-                out += (!i ? "" : ",") + json_encode(tmp[i], pointers) + ":" + json_encode(value[tmp[i]], pointers);
+                out += (!i ? "" : ",") + json_encode(tmp[i], refs) + ":" + json_encode(value[tmp[i]], refs);
             }
         }
         return "{" + (sizeof(out) ? out : "") + "}";
