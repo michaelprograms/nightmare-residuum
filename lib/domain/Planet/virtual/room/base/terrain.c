@@ -74,6 +74,9 @@ void update_resource () {
     int nResource = query_property("resource");
     object obResource = present("resource_node");
 
+    // clear existing reset
+    set_reset_data(([ ]));
+
     if (nResource == 1) { // ore
         if (!obResource) {
             obResource = new("/std/resource/harvestable.c");
@@ -92,6 +95,11 @@ void update_resource () {
         } else {
             obResource->reset();
         }
+    } else if (nResource == 3 || nResource == 4) { // NPC
+        set_reset_data(([
+            "/domain/Start/human/npc/plasma_snail.c": 1,
+        ]));
+        handle_reset();
     } else {
         if (obResource = present("resource_node")) {
             obResource->handle_remove();
@@ -173,11 +181,11 @@ void create () {
 }
 
 void reset () {
-    ::reset();
-
     if (query_property("name") && query_property("x") && query_property("y")) {
         PLANET_SURFACE->setup_room(this_object());
         update_descriptions();
         update_resource();
     }
+
+    room::reset();
 }
