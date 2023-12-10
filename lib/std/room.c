@@ -24,6 +24,7 @@ void create () {
 }
 
 void reset () {
+    object::reset();
     reset::reset();
 }
 
