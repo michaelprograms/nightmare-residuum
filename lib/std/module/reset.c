@@ -11,12 +11,7 @@ int query_resets () {
     return __Resets;
 }
 
-void create () {
-    __Reset = ([ ]);
-    __Objects = ([ ]);
-    __Resets = 0;
-}
-void reset () {
+void handle_reset () {
     mapping counts = ([ ]);
     int count;
     string name;
@@ -61,10 +56,24 @@ void reset () {
     __Resets ++;
 }
 
-void set_reset (mapping reset) {
+void create () {
     __Reset = ([ ]);
-    foreach (string key, mixed val in reset) {
+    __Objects = ([ ]);
+    __Resets = 0;
+}
+
+void reset () {
+    handle_reset();
+}
+
+void set_reset_data (mapping data) {
+    __Reset = ([ ]);
+    foreach (string key, mixed val in data) {
         __Reset[key] = val;
     }
+}
+
+void set_reset (mapping data) {
+    set_reset_data(data);
     reset();
 }
