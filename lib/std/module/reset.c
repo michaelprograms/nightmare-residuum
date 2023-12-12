@@ -13,7 +13,7 @@ int query_resets () {
 
 void handle_reset () {
     mapping counts = ([ ]);
-    int count;
+    int count, num;
     string name;
     object ob;
 
@@ -30,13 +30,22 @@ void handle_reset () {
     }
     foreach (string key, mixed val in __Reset) {
         if (functionp(val)) {
-            val = evaluate(val);
+            num = evaluate(val);
+        } else if (mapp(val)) {
+            if (functionp(val["number"])) {
+                num = evaluate(val["number"]);
+            } else if (intp(val["number"])) {
+                num = val["number"];
+            } else {
+                continue;
+            }
+        } else if (!intp(val)) {
+            continue;
         }
-        if (!intp(val)) continue;
 
         count = 0;
-        if (counts[key] && (count = counts[key]) >= val) continue;
-        for (; count < val; count ++) {
+        if (counts[key] && (count = counts[key]) >= num) continue;
+        for (; count < num; count ++) {
             if (__Objects[key + count]) continue;
 
             ob = clone_object(key);
@@ -50,6 +59,10 @@ void handle_reset () {
                 destruct(ob);
             } else {
                 ob->reset();
+            }
+
+            if (mapp(val) && functionp(val["setup"])) {
+                evaluate(val["setup"], ob);
             }
         }
     }
