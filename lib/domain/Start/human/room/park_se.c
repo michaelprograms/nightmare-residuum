@@ -21,14 +21,26 @@ void create () {
     set_reset(([
         HUMAN_ITEM + "bench.c": 1,
         HUMAN_ITEM + "fountain.c": 1,
-        HUMAN_NPC + "ant.c": !random(3),
-        HUMAN_NPC + "bee.c": !random(3),
-        HUMAN_NPC + "beetle.c": !random(3),
-        HUMAN_NPC + "fly.c": !random(3),
-        HUMAN_NPC + "hamster.c": 1,
-        HUMAN_NPC + "squirrel.c": !random(3),
-        HUMAN_NPC + "termite.c": !random(3),
-        HUMAN_NPC + "wasp.c": !random(3),
-        HUMAN_NPC + "pigeon.c": !random(2),
+        HUMAN_NPC + "ant.c": ([
+            "number": !random(3),
+        ]),
+        HUMAN_NPC + "bee.c": ([
+            "number": !random(3),
+        ]),
+        HUMAN_NPC + "beetle.c": ([
+            "number": !random(3),
+        ]),
+        HUMAN_NPC + "squirrel.c": ([
+            "number": !random(3),
+        ]),
+        HUMAN_NPC + "wasp.c": ([
+            "number": !random(3),
+        ]),
+        HUMAN_NPC + "pigeon.c": ([
+            "number": !random(2),
+        ]),
+        HUMAN_NPC + "sparrow.c": ([
+            "number": !random(2),
+        ]),
     ]));
 }

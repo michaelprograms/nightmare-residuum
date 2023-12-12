@@ -15,6 +15,8 @@ void create () {
         ({ "framework", "hexagons"}): "Far above, the hexagons form a geodesic dome.",
     ]));
     set_reset(([
-        HUMAN_NPC + "pigeon.c": !random(2),
+        HUMAN_NPC + "pigeon.c": ([
+            "number": (: !random(2) :),
+        ])
     ]));
 }
