@@ -36,22 +36,13 @@ void test_resets () {
         testOb->reset(),
         assert(testOb->query_resets(), "==", 2),
 
-        // set_reset will call reset for function argument
-        testOb->set_reset(([ "/std/item.c": $(resetFn)])),
-        assert(testOb->query_resets(), "==", 3),
-        assert(testOb->query_reset(), "==", ([ "/std/item.c": $(resetFn) ])),
-        assert(resetFnCalled, "==", 1),
-        testOb->reset(),
-        assert(testOb->query_resets(), "==", 4),
-        assert(resetFnCalled, "==", 2),
-
         // set_reset will call reset for map argument
         testOb->set_reset(([ "/std/item.c": ([ "number": 1, "setup": $(setupFn) ]) ])),
-        assert(testOb->query_resets(), "==", 5),
+        assert(testOb->query_resets(), "==", 3),
         assert(testOb->query_reset(), "==", ([ "/std/item.c": ([ "number": 1, "setup": $(setupFn) ]) ])),
         assert(setupFnCalled, "==", 1),
         testOb->reset(),
-        assert(testOb->query_resets(), "==", 6),
+        assert(testOb->query_resets(), "==", 4),
         assert(setupFnCalled, "==", 2),
     }) :));
 }

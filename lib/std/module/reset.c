@@ -29,9 +29,7 @@ void handle_reset () {
         counts[name] += 1;
     }
     foreach (string key, mixed val in __Reset) {
-        if (functionp(val)) {
-            num = evaluate(val);
-        } else if (mapp(val)) {
+        if (mapp(val)) {
             if (functionp(val["number"])) {
                 num = evaluate(val["number"]);
             } else if (intp(val["number"])) {
@@ -39,8 +37,8 @@ void handle_reset () {
             } else {
                 continue;
             }
-        } else if (!intp(val)) {
-            continue;
+        } else if (intp(val)) {
+            num = val;
         }
 
         count = 0;
@@ -82,6 +80,9 @@ void reset () {
 void set_reset_data (mapping data) {
     __Reset = ([ ]);
     foreach (string key, mixed val in data) {
+        if (!sizeof(key) || !mapp(val) && !intp(val)) {
+            error("Bad reset data to reset->set_reset_data");
+        }
         __Reset[key] = val;
     }
 }
