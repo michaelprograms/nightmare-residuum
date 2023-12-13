@@ -11,10 +11,6 @@ void after_each_test () {
 private int resetFnCalled = 0;
 private int setupFnCalled = 0;
 void test_resets () {
-    function resetFn = function () {
-        resetFnCalled ++;
-        return 0;
-    };
     function setupFn = function () {
         setupFnCalled ++;
         return 0;
@@ -23,6 +19,8 @@ void test_resets () {
     expect_function("query_reset", testOb);
     expect_function("query_resets", testOb);
     expect_function("set_reset", testOb);
+    expect_function("set_reset_data", testOb);
+    expect_function("handle_reset", testOb);
 
     expect("resets handle setting, querying, and resetting", (: ({
         // have not set_reset yet
@@ -44,5 +42,14 @@ void test_resets () {
         testOb->reset(),
         assert(testOb->query_resets(), "==", 4),
         assert(setupFnCalled, "==", 2),
+
+        // set_reset_data will not call reset for integer argument
+        testOb->set_reset_data(([ "/std/item.c": 1 ])),
+        assert(testOb->query_resets(), "==", 4),
+        assert(testOb->query_reset(), "==", ([ "/std/item.c": 1 ])),
+        // set_reset_data will not call reset for map argument
+        testOb->set_reset_data(([ "/std/item.c": ([ "number": 1, "setup": $(setupFn) ]) ])),
+        assert(testOb->query_resets(), "==", 4),
+        assert(testOb->query_reset(), "==", ([ "/std/item.c": ([ "number": 1, "setup": $(setupFn) ]) ])),
     }) :));
 }
