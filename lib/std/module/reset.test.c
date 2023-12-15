@@ -21,6 +21,7 @@ void test_resets () {
     expect_function("set_reset", testOb);
     expect_function("set_reset_data", testOb);
     expect_function("handle_reset", testOb);
+    // @TODO test query_objects with mockable wandering NPC
 
     expect("resets handle setting, querying, and resetting", (: ({
         // have not set_reset yet
