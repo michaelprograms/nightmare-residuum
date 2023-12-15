@@ -73,21 +73,40 @@ nosave private mapping __AbnormalOverride = ([
 ]);
 string pluralize (mixed single) {
     string str, last;
+    string ansiTail = "";
+    int n;
 
-    if (objectp(single)) str = single->query_name();
-    else str = single;
-    if (!stringp(str)) error("Bad argument 1 to grammar->pluralize");
-
-    if (__AbnormalOverride[str]) return __AbnormalOverride[str];
-    last = explode(str, " ")[<1];
-    if (__AbnormalOverride[last]) {
-        return str[0..<(sizeof(last)+1)] + __AbnormalOverride[last];
+    if (objectp(single)) {
+        str = single->query_name();
+    } else {
+        str = single;
+    }
+    if (!stringp(str)) {
+        error("Bad argument 1 to grammar->pluralize");
     }
 
-    if (str[<3..<1] == "uns") return str;
-    if (str[<5..<1] == "staff") return str[0..<3] + "ves";
-    else if (str[<2..<1] == "ff") return str + "s";
-    return efun::pluralize(str);
+    if (str[<2..<1] == "%^") {
+        n = strsrch(str[0..<3], "%^", -1);
+        ansiTail = str[n..];
+        str = str[0..n-1];
+    }
+    if (__AbnormalOverride[str]) {
+        return __AbnormalOverride[str];
+    }
+    last = explode(str, " ")[<1];
+    if (__AbnormalOverride[last]) {
+        return str[0..<(sizeof(last)+1)] + __AbnormalOverride[last] + ansiTail;
+    }
+
+    if (str[<3..<1] == "uns") {
+        return str + ansiTail;
+    } else if (str[<5..<1] == "staff") {
+        return str[0..<3] + "ves" + ansiTail;
+    } else if (str[<2..<1] == "ff") {
+        return str + "s" + ansiTail;
+    } else {
+        return efun::pluralize(str) + ansiTail;
+    }
 }
 
 string consolidate (int n, string str) {
