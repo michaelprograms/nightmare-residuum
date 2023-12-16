@@ -32,11 +32,3 @@ varargs void message (mixed type, string message, mixed target, mixed exclude) {
     }
     efun::message(type, message, target, exclude);
 }
-
-// say
-
-// shout
-
-// potential override:
-// userp
-// if (ob->query_user()) return ::userp(ob->query_user())
