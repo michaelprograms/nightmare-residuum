@@ -97,7 +97,7 @@ void update_resource () {
         }
     } else if (nResource == 3 || nResource == 4) { // NPC
         set_reset_data(([
-            "/domain/Start/human/npc/plasma_snail.c": ([
+            PLANET_NPC "plasma_snail.c": ([
                 "number": 1,
                 "setup": (: $1->set_level($(nLevel)) :),
             ]),
