@@ -99,7 +99,7 @@ void update_resource () {
         string npc;
         switch (random(2)) {
         case 0:
-            npc = "rabid_rat";
+            npc = element_of(({ "rabid_rat", "large_ant" }));
             break;
         case 1:
             npc = "plasma_snail.c";
