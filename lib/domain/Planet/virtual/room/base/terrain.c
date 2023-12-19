@@ -96,8 +96,17 @@ void update_resource () {
             obResource->reset();
         }
     } else if (nResource == 3 || nResource == 4) { // NPC
+        string npc;
+        switch (random(2)) {
+        case 0:
+            npc = "rabid_rat";
+            break;
+        case 1:
+            npc = "plasma_snail.c";
+            break;
+        }
         set_reset_data(([
-            PLANET_NPC "plasma_snail.c": ([
+            PLANET_NPC + npc + ".c": ([
                 "number": 1,
                 "setup": (: $1->set_level($(nLevel)) :),
             ]),
