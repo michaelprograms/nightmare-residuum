@@ -184,6 +184,7 @@ nosave private mapping __Species = ([
     "ant":          ([ "body": "hexapod" ]),
     "bee":          ([ "body": "hexapod-winged" ]),
     "beetle":       ([ "body": "hexapod" ]),
+    "crow":         ([ "body": "fowl" ]),
     "fly":          ([ "body": "hexapod-winged" ]),
     "hamster":      ([ "body": "quadruped" ]),
     "pigeon":       ([ "body": "fowl" ]),
