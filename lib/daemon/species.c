@@ -195,6 +195,7 @@ nosave private mapping __Species = ([
     "squirrel":     ([ "body": "quadruped-tail" ]),
     "custodian":    ([ "body": "quadruped-robot" ]),
     "termite":      ([ "body": "hexapod" ]),
+    "vulture":      ([ "body": "fowl" ]),
     "wasp":         ([ "body": "hexapod-winged" ]),
 ]);
 
