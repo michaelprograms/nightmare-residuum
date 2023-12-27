@@ -13,6 +13,9 @@ int handle_receive (object ob) {
     int result = ::handle_receive(ob);
     if (result && ob->is_character()) {
         story_start(ob);
+        if (ob->query_hp() < 1) {
+            ob->set_hp(1);
+        }
     }
     return result;
 }
