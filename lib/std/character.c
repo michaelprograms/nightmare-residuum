@@ -247,19 +247,21 @@ private void describe_environment_exits () {
     string *exits;
     int numExits;
 
-    if (!(numExits = sizeof(exits = environment()->query_exit_directions()))) {
-        message("room exits", "There are no exits.\n", this_object());
-    } else {
-        exits = map(exits, function (string dir) {
-            string door = environment()->query_dir_door(dir);
-            int open;
-            if (door) {
-                open = environment()->query_open(door);
-                door = " " + (!open ? "[" : "(") + door + (!open ? "]" : ")");
-            }
-            return "%^CYAN%^BOLD%^" + dir + "%^BOLD_OFF%^" + (door ? door : "") + "%^DEFAULT%^";
-        });
-        message("room exits", "There " + (numExits > 1 ? "are" : "is") + " " + cardinal(numExits) + " exit" + (numExits > 1 ? "s" : "") + ": " + conjunction(exits) + ".\n", this_object());
+    if (!environment()->query_hidden_exits()) {
+        if (!(numExits = sizeof(exits = environment()->query_exit_directions()))) {
+            message("room exits", "There are no exits.\n", this_object());
+        } else {
+            exits = map(exits, function (string dir) {
+                string door = environment()->query_dir_door(dir);
+                int open;
+                if (door) {
+                    open = environment()->query_open(door);
+                    door = " " + (!open ? "[" : "(") + door + (!open ? "]" : ")");
+                }
+                return "%^CYAN%^BOLD%^" + dir + "%^BOLD_OFF%^" + (door ? door : "") + "%^DEFAULT%^";
+            });
+            message("room exits", "There " + (numExits > 1 ? "are" : "is") + " " + cardinal(numExits) + " exit" + (numExits > 1 ? "s" : "") + ": " + conjunction(exits) + ".\n", this_object());
+        }
     }
 }
 
