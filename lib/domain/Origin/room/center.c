@@ -8,7 +8,7 @@ void create () {
         "no attack": 1,
     ]));
     set_short("Origin Point");
-    set_long("A central chamber with hallways branching from the corners of the room. The walls are a utility corridor white and lacking in any form of markers. A tank stands on the north side of the chamber.");
+    set_long("A central chamber with hallways branching from the corners of the room. The walls are utility corridor white and lacking in any form of markers. A tank stands on the north side of the chamber.");
     set_exits(([
         "northwest": ORIGIN_ROOM + "northwest.c",
         "northeast": ORIGIN_ROOM + "northeast.c",
