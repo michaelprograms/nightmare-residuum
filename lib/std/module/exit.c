@@ -14,11 +14,16 @@ nosave private mapping __Exits = ([
 */
 ]);
 nosave private mapping __Climbs = ([ ]);
+nosave private int __HiddenExits = 0;
 
 /* ----- exits ----- */
 
-mapping query_exits () { return copy(__Exits); }
-string *query_exit_directions () { return keys(__Exits); }
+mapping query_exits () {
+    return copy(__Exits);
+}
+string *query_exit_directions () {
+    return keys(__Exits);
+}
 string *query_exit_dirs () { // shorthand directions
     string *exits = keys(__Exits);
     for (int i = 0; i < sizeof(exits); i ++) {
@@ -85,6 +90,12 @@ void set_exits (mapping exits) {
 void remove_exit (string dir) {
     if (!stringp(dir)) error("Bad argument 1 to exit->remove_exit");
     map_delete(__Exits, dir);
+}
+void set_hidden_exits (int n) {
+    __HiddenExits = n;
+}
+int query_hidden_exits () {
+    return __HiddenExits;
 }
 
 mixed handle_go (object ob, string method, string dir) {

@@ -27,6 +27,8 @@ void test_exits () {
     expect_function("set_exit", testOb);
     expect_function("set_exits", testOb);
     expect_function("remove_exit", testOb);
+    expect_function("set_hidden_exits", testOb);
+    expect_function("query_hidden_exits", testOb);
 
     expect("exits are addable, queryable, and removable", (: ({
         assert(testOb->query_exits(), "==", ([ ])),
@@ -72,6 +74,14 @@ void test_exits () {
         ])),
         assert(testOb->query_exit_directions(), "==", ({ "north", "south", "east", "west" })),
         assert(testOb->query_exit_dirs(), "==", ({ "n", "s", "e", "w" })),
+    }) :));
+
+    expect("exits are able to set hidden flag", (: ({
+        assert(testOb->query_hidden_exits(), "==", 0),
+        testOb->set_hidden_exits(1),
+        assert(testOb->query_hidden_exits(), "==", 1),
+        testOb->set_hidden_exits(0),
+        assert(testOb->query_hidden_exits(), "==", 0),
     }) :));
 }
 
