@@ -29,5 +29,5 @@ void create () {
         "You begin to awaken from your incapacitated state.\n",
         "You recover from your defeat.\n",
     }));
-
+    set_hidden_exits(1);
 }
