@@ -325,6 +325,14 @@ private void describe_environment_item_contents () {
     }
 }
 
+void describe_environment_immortal (object env) {
+    string *props = ({ });
+    foreach (string key,mixed value in env->query_properties()) {
+        props += ({ key+": "+value });
+    }
+    message("room", "%^UNDERLINE%^" + file_name(env) + "%^RESET%^ " + implode(props, ", "), this_object());
+}
+
 void describe_environment () {
     object env;
 
@@ -334,7 +342,7 @@ void describe_environment () {
     }
 
     if (query_immortal()) {
-        message("room", "%^UNDERLINE%^" + file_name(env) + "%^RESET%^", this_object());
+        describe_environment_immortal(env);
     }
 
     describe_environment_long();
