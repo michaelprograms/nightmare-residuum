@@ -341,10 +341,7 @@ void describe_environment () {
         return;
     }
 
-    if (query_immortal()) {
-        describe_environment_immortal(env);
-    }
-
+    query_immortal() && describe_environment_immortal(env);
     describe_environment_long();
     describe_environment_senses();
     describe_environment_exits();
