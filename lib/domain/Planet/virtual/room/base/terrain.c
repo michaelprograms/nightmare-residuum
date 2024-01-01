@@ -16,19 +16,19 @@ void update_descriptions () {
     switch (biome) {
         case "icy water":
             set_long("Surrounded by icy water.");
-            set_property("water": 1);
+            set_property("water", 1);
             break;
         case "deeper water":
             set_long("Surrounded by deeper water.");
-            set_property("water": 3);
+            set_property("water", 3);
             break;
         case "deep water":
             set_long("Surrounded by deep water.");
-            set_property("water": 2);
+            set_property("water", 2);
             break;
         case "shallow water":
             set_long("Surrounded by water.");
-            set_property("water": 1);
+            set_property("water", 1);
             break;
         case "ice":
             set_long("Surrounded by ice.");
