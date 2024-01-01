@@ -104,6 +104,7 @@ void update_resource () {
         switch (random(2)) {
         case 0:
             npc = element_of(({
+                "curious_raccoon",
                 "rabid_rat",
                 "large_ant",
                 "lurking_vulture",
