@@ -30,26 +30,16 @@ int handle_remove () {
 }
 
 void heart_beat () {
-    if (!clonep()) return;
+    if (!clonep()) {
+        return;
+    }
 
     status::heart_beat();
     body::heart_beat();
 
     handle_combat();
 
-    if (environment()) {
-        int water;
-        if(water = environment()->query_property("water")) {
-            if (water > 1) {
-                switch (random(water + 2)) {
-                    case 0:
-                        message("action", "You struggle against the deep water.", this_object());
-                        handle_damage(query_max_hp() * 5 / 100, 0);
-                    default: break;
-                }
-            }
-        }
-    }
+    environment() && environment()->handle_environment_damage(this_object());
 }
 
 string query_living_long () {

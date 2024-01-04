@@ -239,3 +239,21 @@ string *query_room_map() {
         pics["se"]["sw"] + pics["se"]["d"] + pics["se"]["s"] + " " + pics["se"]["se"],
     });
 }
+
+/* ----- environment damage ----- */
+
+void handle_environment_damage (object living) {
+    int water;
+    if (water = query_property("water") && water > 1) {
+        switch (random(water + 2)) {
+            case 0:
+                message("action", "You struggle against the deep water.", living);
+                message("action", living->query_cap_name() + " struggles against the deep water.", this_object(), living);
+
+                living->handle_damage(living->query_max_hp() * 5 / 100, 0);
+                break;
+
+            default: break;
+        }
+    }
+}
