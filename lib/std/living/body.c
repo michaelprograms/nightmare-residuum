@@ -133,6 +133,7 @@ void handle_limb_heal (string limb, int n) {
 
 /* ----- damage ----- */
 
+// @TODO source is not used for anything
 varargs int handle_damage (int damage, string limb, object source) {
     int beforeHp = query_hp();
 
@@ -148,7 +149,7 @@ varargs int handle_damage (int damage, string limb, object source) {
         message("system", sprintf("hp: %d (%d) sp: %d    mp: %d\n", query_hp(), query_hp() - beforeHp, query_sp(), query_mp()), this_object());
     }
 
-    if (stringp(limb) && limb != "" && this_object()->query_limb(limb)) {
+    if (stringp(limb) && limb != "" && query_limb(limb)) {
         int limbDamagePct;
 
         __Limbs[limb]["damage"] += damage / 2;
