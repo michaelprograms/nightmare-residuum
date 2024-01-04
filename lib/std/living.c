@@ -40,8 +40,13 @@ void heart_beat () {
     if (environment()) {
         int water;
         if(water = environment()->query_property("water")) {
-            if (water > 1 && !random(3)) {
-                message("action", "You struggle against the deep water.", this_object());
+            if (water > 1) {
+                switch (random(water + 2)) {
+                    case 0:
+                        message("action", "You struggle against the deep water.", this_object());
+                        handle_damage(query_max_hp() * 5 / 100, 0);
+                    default: break;
+                }
             }
         }
     }
