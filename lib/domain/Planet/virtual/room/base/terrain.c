@@ -209,6 +209,9 @@ void create () {
 }
 
 void reset () {
+    if (query_property("no setup")) {
+        return;
+    }
     if (query_property("name") && query_property("x") && query_property("y")) {
         PLANET_SURFACE->setup_room(this_object());
         update_descriptions();

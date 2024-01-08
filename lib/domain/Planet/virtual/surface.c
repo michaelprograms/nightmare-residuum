@@ -75,6 +75,8 @@ void setup_exits (object room, mapping planet, int x, int y) {
             } else if (override["type"] == "dome") {
                 room->set_room_brackets(({ "(", ")" }));
                 room->set_room_bracket_color("%^CYAN%^BOLD%^");
+                room->set_property("no setup", 1);
+                // @TODO prevent can_receive
             }
         }
     }
