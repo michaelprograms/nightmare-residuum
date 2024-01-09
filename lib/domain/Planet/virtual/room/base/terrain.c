@@ -187,9 +187,10 @@ string *query_room_map () {
                 wx = (x + xx) > 0 ? (x + xx) : size - 1;
                 wy = (y + yy) > 0 ? (y + yy) : size - 1;
                 room = load_object(path + "/" + wx + "." + wy + ".c");
+                symbol = 0;
             }
             if (room) {
-                line += room->query_room_map_bracket();
+                line += room->query_room_map_bracket(symbol);
             } else {
                 line += "   ";
             }

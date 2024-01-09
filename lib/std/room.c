@@ -139,8 +139,10 @@ string query_room_map_symbol () {
     return symbol;
 }
 
-string query_room_map_bracket () {
-    return roomBracketColor + roomBrackets[0] + "%^RESET%^" + query_room_map_symbol() + roomBracketColor + roomBrackets[1] + "%^RESET%^";
+varargs string query_room_map_bracket (string symbol) {
+    return roomBracketColor + roomBrackets[0] + "%^RESET%^" +
+        (symbol ? symbol : query_room_map_symbol()) +
+        roomBracketColor + roomBrackets[1] + "%^RESET%^";
 }
 varargs mapping query_room_exits_picture (string source) {
     mapping exits = query_exits();
