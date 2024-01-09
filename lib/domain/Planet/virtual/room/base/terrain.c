@@ -220,3 +220,13 @@ void reset () {
 
     room::reset();
 }
+
+/* ----- container override ----- */
+
+int can_receive (object ob) {
+    if (query_property("no receive")) {
+        return 0;
+    } else {
+        return ::can_receive(ob);
+    }
+}
