@@ -110,7 +110,7 @@ void update_resource () {
         case 0:
             npc = element_of(({
                 "curious_raccoon",
-                "feral cat",
+                "feral_cat",
                 "large_ant",
                 "lurking_vulture",
                 "rabid_rat",
