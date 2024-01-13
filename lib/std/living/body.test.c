@@ -42,8 +42,8 @@ void test_species () {
         testOb->set_species("human"),
         assert(testOb->query_species(), "==", "human"),
 
-        testOb->set_species("robot"),
-        assert(testOb->query_species(), "==", "robot"),
+        testOb->set_species("custodian"),
+        assert(testOb->query_species(), "==", "custodian"),
     }) :));
 }
 

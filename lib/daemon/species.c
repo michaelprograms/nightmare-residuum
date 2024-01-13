@@ -256,13 +256,14 @@ mapping setup_body (object ob) {
     mapping limbs;
     string species, body;
 
+    // Setup of LIVING may trigger setup_body calls before species has been set
     if (!ob || !(species = ob->query_species()) || !mapp(__Species[species])) {
-        error("Invalid species passed to daemon/species.");
+        return 0;
     }
 
     body = __Species[species]["body"];
     if (!sizeof(body)) {
-        error("Invalid body found for species in daemon/species.");
+        error("Invalid body found for species " + species + " in daemon/species.");
     }
     limbs = __Bodies[body];
 
