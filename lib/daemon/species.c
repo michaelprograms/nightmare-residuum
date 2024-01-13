@@ -256,9 +256,14 @@ mapping setup_body (object ob) {
     mapping limbs;
     string species, body;
 
-    if (!ob || !(species = ob->query_species()) || !mapp(__Species[species])) return 0;
+    if (!ob || !(species = ob->query_species()) || !mapp(__Species[species])) {
+        error("Invalid species passed to daemon/species.");
+    }
 
     body = __Species[species]["body"];
+    if (!sizeof(body)) {
+        error("Invalid body found for species in daemon/species.");
+    }
     limbs = __Bodies[body];
 
     foreach (string limb in keys(limbs)) {
