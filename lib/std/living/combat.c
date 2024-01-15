@@ -54,10 +54,14 @@ protected void handle_combat () {
 
     target = query_target_hostile();
     this_object()->check_lifesigns(query_target_hostile());
-    if (!this_object() || this_object()->query_defeated() || this_object()->query_disable()) {
-        return;
-    }
-    if (!target || environment() != environment(target) || time() % 2) {
+    if (
+        !this_object() ||
+        this_object()->query_defeated() ||
+        this_object()->query_disable() ||
+        !target ||
+        environment() != environment(target) ||
+        time() % 2
+    ) {
         return;
     }
 
