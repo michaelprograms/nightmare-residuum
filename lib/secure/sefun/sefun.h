@@ -34,7 +34,7 @@ string apply_gradient (string text, string *gradient);
 string format_message_color (string type, string message);
 
 /* --- combat --- */
-void display_combat_message (object source, object target, string limb, mixed weapon, string type, int damage, int isAbility);
+void display_combat_message (object source, object target, string limb, mixed weapon, string type, int damage, int crit, int isAbility);
 void display_heal_message (object source, object target, string limb, int damage);
 
 /* --- format --- */

@@ -6,7 +6,16 @@
 
 string possessive (mixed value);
 
-void display_combat_message (object source, object target, string limb, mixed weapon, string type, int damage, int isAbility) {
+void display_combat_message (
+    object source,
+    object target,
+    string limb,
+    mixed weapon,
+    string type,
+    int damage,
+    int crit,
+    int isAbility
+) {
     string sourceMsg, targetMsg, envMsg;
     string weaponName;
     int percent;
@@ -47,11 +56,11 @@ void display_combat_message (object source, object target, string limb, mixed we
 
     sourcePossessive = possessive(source);
     verbs = pluralize(verb);
-    adverb = stringp(adverb) ? " " + adverb + " " : " ";
+    adverb = adverb ? " " + adverb + " " : " ";
 
-    sourceMsg = sprintf("You %s %s%sin the %s with your %s.", verb, target->query_cap_name(), adverb, limb, weaponName);
-    targetMsg = sprintf("%s %s you%sin the %s with %s %s.", source->query_cap_name(), verbs, adverb, limb, sourcePossessive, weaponName);
-    envMsg = sprintf("%s %s %s%sin the %s with %s %s.", source->query_cap_name(), verbs, target->query_cap_name(), adverb, limb, sourcePossessive, weaponName);
+    sourceMsg = sprintf("You %s%s %s%sin the %s with your %s.", crit ? "critically " : "", verb, target->query_cap_name(), adverb, limb, weaponName);
+    targetMsg = sprintf("%s %s%s you%sin the %s with %s %s.", source->query_cap_name(), crit ? "critically " : "", verbs, adverb, limb, sourcePossessive, weaponName);
+    envMsg = sprintf("%s %s%s %s%sin the %s with %s %s.", source->query_cap_name(), crit ? "critically " : "", verbs, target->query_cap_name(), adverb, limb, sourcePossessive, weaponName);
 
     if (isAbility) {
         message("ability hit", sourceMsg, source);
