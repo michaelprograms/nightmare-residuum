@@ -75,8 +75,6 @@ void setup_exits (object room, mapping planet, int x, int y) {
             } else if (override["type"] == "dome") {
                 room->set_room_brackets(({ "(", ")" }));
                 room->set_room_bracket_color("%^CYAN%^BOLD%^");
-                room->set_property("no setup", 1);
-                room->set_property("no receive", 1);
             }
         }
     }
@@ -101,6 +99,14 @@ object virtual_create (string path) {
     room->set_property("y", y);
 
     setup_room(room);
+    if (arrayp(planet["overrides"])) {
+        foreach (mapping override in filter(planet["overrides"], (: $1["x"] == $(x) && $1["y"] == $(y) :))) {
+            if (override["type"] == "dome") {
+                room->set_property("no resource", 1);
+                room->set_property("no receive", 1);
+            }
+        }
+    }
     room->update_descriptions();
     room->update_resource();
     setup_exits(room, planet, x, y);

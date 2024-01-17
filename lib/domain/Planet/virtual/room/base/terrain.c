@@ -81,6 +81,10 @@ void update_resource () {
     // clear existing reset
     set_reset_data(([ ]));
 
+    if (query_property("no resource")) {
+        return;
+    }
+
     if (nResource == 1) { // ore
         if (!obResource) {
             obResource = new("/std/resource/harvestable.c");
@@ -211,10 +215,12 @@ void create () {
 }
 
 void reset () {
-    if (query_property("no setup")) {
-        return;
-    }
-    if (query_property("name") && query_property("x") && query_property("y")) {
+    if (
+        !query_property("no resource") &&
+        query_property("name") &&
+        query_property("x") &&
+        query_property("y")
+    ) {
         PLANET_SURFACE->setup_room(this_object());
         update_descriptions();
         update_resource();
