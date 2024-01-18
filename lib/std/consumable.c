@@ -29,5 +29,6 @@ void handle_consume (object character) {
     character->add_sp(__Strength);
     character->add_mp(__Strength);
     character->set_disable(1);
+    // @TODO add empty container
     handle_remove();
 }

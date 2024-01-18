@@ -6,6 +6,7 @@ mapping __Limbs = ([ ]);
 private nosave mapping __Wielded = ([ ]);
 private nosave mapping __Worn = ([ ]);
 nosave private int __NextHeal;
+nosave private mapping __Injections = ([ ]);
 
 /* ----- gender and species ----- */
 
@@ -413,6 +414,21 @@ private void handle_passive_heal () {
     __NextHeal = time() + 10;
     amt = to_int(ceil((query_level() / 5.0) + (query_stat("endurance") / 10.0) + (query_stat("luck") / 20.0)));
     heal(amt);
+}
+
+/* ----- injectable ----- */
+
+mapping query_injections () {
+    return __Injections;
+}
+int query_injection (string type) {
+    return __Injections[type];
+}
+void add_injection (string type, int strength) {
+    if (undefinedp(__Injections[type])) {
+        __Injections[type] = 0;
+    }
+    __Injections[type] += strength;
 }
 
 /* ----- object applies ----- */

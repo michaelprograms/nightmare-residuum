@@ -46,6 +46,11 @@ object *query_wielded_weapons ();
 string *query_wielded_limbs (object ob);
 varargs mixed handle_wield (object weapon, string limb);
 varargs mixed handle_unwield (object weapon, string limb);
+void heal (int n);
+private void handle_passive_heal ();
+mapping query_injections ();
+int query_injection (string type);
+void add_injection (string type, int strength);
 
 /* ----- class ----- */
 void set_class (string c);

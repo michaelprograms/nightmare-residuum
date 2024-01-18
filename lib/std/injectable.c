@@ -22,9 +22,9 @@ void handle_inject (object character) {
     message("action", "You inject " + query_name() + " of " + __Type + ".", character);
     message("action", character->query_cap_name() + " injects " + query_name() + " of " + __Type + ".", environment(character), character);
 
-    // @TODO inject logic
-
+    character->add_injection(__Type, __Strength);
     character->set_disable(1);
+    // @TODO add empty container
     handle_remove();
 }
 
