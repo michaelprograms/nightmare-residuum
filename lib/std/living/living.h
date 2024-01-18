@@ -8,6 +8,11 @@ varargs int do_command (string str, int debug);
 int is_living ();
 private void handle_passive_heal ();
 
+/* ----- attribute ----- */
+mapping query_attributes ();
+string query_attribute (string key);
+void set_attribute (string key, string value);
+
 /* ----- biography ----- */
 int query_experience ();
 int query_total_experience ();
@@ -65,6 +70,13 @@ object *query_hostiles ();
 object *query_present_hostiles ();
 object query_target_hostile ();
 
+/* ----- protection ----- */
+int query_prorection ();
+int set_protection (int n);
+int clear_protection ();
+int add_protection (int n, int time);
+int remove_protection (int n);
+
 /* ----- stats ----- */
 int query_stat (string stat);
 int query_stat_base (string stat);
@@ -92,7 +104,5 @@ void set_hp (int n);
 void set_sp (int n);
 void set_mp (int n);
 void update_vitals (int heal);
-
-/*  -----  ----- */
 
 #endif /* __LIVING_H__ */
