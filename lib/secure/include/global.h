@@ -5,6 +5,7 @@
 #define STD_CHARACTER   "/std/character.c"
 #define STD_CONSUMABLE  "/std/consumable.c"
 #define STD_DATABASE    "/std/database.c"
+#define STD_INJECTABLE  "/std/injectable.c"
 #define STD_ITEM        "/std/item.c"
 #define STD_LIVING      "/std/living.c"
 #define STD_NPC         "/std/npc.c"

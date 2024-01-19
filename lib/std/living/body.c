@@ -430,9 +430,29 @@ void add_injection (string type, int strength) {
     }
     __Injections[type] += strength;
 }
+private void handle_injections () {
+    int n, amt;
+
+    if (random(3)) {
+        return;
+    }
+
+    if (
+        (amt = __Injections["healing nanites"]) > 0 &&
+        query_hp() * 100 / query_max_hp() < 100
+    ) {
+        n = (query_stat("endurance") / 10) + (amt / 10);
+        if (n < 5) n = 5;
+        if (n > amt) n = amt;
+        message("injection", "The healing nanites recover your health: +"+n+" hp.", this_object());
+        add_hp(n);
+        __Injections["healing nanites"] = max(({ 0, amt - n }));
+    }
+}
 
 /* ----- object applies ----- */
 
 void heart_beat () {
     handle_passive_heal();
+    handle_injections();
 }
