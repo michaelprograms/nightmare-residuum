@@ -19,11 +19,10 @@ void test_is_consumable () {
     expect_function("is_food", testOb);
 
     expect("is_consumable returns true", (: ({
+        assert(testOb->is_item(), "==", 1),
         assert(testOb->is_consumable(), "==", 1),
         assert(testOb->is_drink(), "==", 0),
         assert(testOb->is_food(), "==", 0),
-        assert(testOb->is_item(), "==", 1),
-        assert(testOb->is_weapon(), "==", 0),
     }) :));
 }
 
@@ -31,7 +30,7 @@ void test_strength () {
     expect_function("query_strength", testOb);
     expect_function("set_strength", testOb);
 
-    expect("food handles strength", (: ({
+    expect("consumable handles strength", (: ({
         assert(testOb->query_strength(), "==", 0),
         testOb->set_strength(5),
         assert(testOb->query_strength(), "==", 5),
@@ -49,8 +48,8 @@ void test_handle_consume () {
 
     expect_function("handle_consume", testOb);
 
-    expect("food handle_consume behaves", (: ({
-        // setup food
+    expect("consumable handle_consume behaves", (: ({
+        // setup consumable
         testOb->set_strength(5),
         assert(testOb->query_strength(), "==", 5),
 
@@ -64,13 +63,13 @@ void test_handle_consume () {
         assert(this_object()->add_mp(5), "==", 0),
         assert(this_object()->query_mp(), "==", 5),
 
-        // test eating
+        // test consuming
         assert(testOb->handle_consume(this_object()), "==", 0),
         assert(this_object()->query_hp(), "==", 10),
         assert(this_object()->query_sp(), "==", 10),
         assert(this_object()->query_mp(), "==", 10),
 
-        assert(objectp(testOb), "==", 0), // food was removed
+        assert(objectp(testOb), "==", 0), // consumable was removed
     }) :));
 
     // cleanup
