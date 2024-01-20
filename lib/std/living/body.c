@@ -437,7 +437,15 @@ private void handle_injections () {
         return;
     }
 
-    if (
+    if ((amt = __Injections["damaging nanites"]) > 0) {
+        n = (query_stat("endurance") / 10) + (amt / 10);
+        if (n < 5) n = 5;
+        if (n > amt) n = amt;
+        message("injection", "The damaging nanites diminish your health: -"+n+" hp.", this_object());
+        add_hp(-n);
+        __Injections["damaging nanites"] = max(({ 0, amt - n }));
+
+    } else if (
         (amt = __Injections["healing nanites"]) > 0 &&
         query_hp() * 100 / query_max_hp() < 100
     ) {
@@ -453,6 +461,9 @@ private void handle_injections () {
 /* ----- object applies ----- */
 
 void heart_beat () {
+    if (query_hp() < 1) {
+        return;
+    }
     handle_passive_heal();
     handle_injections();
 }
