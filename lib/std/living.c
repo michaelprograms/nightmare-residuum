@@ -193,3 +193,6 @@ mixed direct_give_wrd_wrd_to_liv (mixed args...) {
     if (previous_object() == liv) return "You already have that.";
     return 1;
 }
+mixed indirect_inject_obj_into_liv (mixed args...) {
+    return 1;
+}
