@@ -46,5 +46,9 @@ void do_inject_obj_into_liv (mixed args...) {
     message("action", "You inject " + ob->query_name() + " of " + ob->query_type() + " into " + target->query_cap_name() + ".", po);
     message("action", po->query_cap_name() + " injects " + ob->query_name() + " of " + ob->query_type() + " into you.", target);
     message("action", po->query_cap_name() + " injects " + ob->query_name() + " of " + ob->query_type() + " into " + target->query_cap_name() + ".", environment(po), ({ po, target }));
+    if (ob->query_type() == "damaging nanites") {
+        po->add_hostile(target);
+        target->add_hostile(po);
+    }
     ob->handle_inject(target);
 }
