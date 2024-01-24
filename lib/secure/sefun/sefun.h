@@ -36,6 +36,7 @@ string format_message_color (string type, string message);
 /* --- combat --- */
 void display_combat_message (object source, object target, string limb, mixed weapon, string type, int damage, int crit, int isAbility);
 void display_heal_message (object source, object target, string limb, int damage);
+void initiate_combat (object source, object target);
 
 /* --- format --- */
 varargs string format_page (string *items, mixed columns, int pad, int center, string ansi);

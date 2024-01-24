@@ -79,3 +79,12 @@ void display_heal_message (object source, object target, string limb, int damage
         message("action", "Your wounds heal slightly.", target);
     }
 }
+
+void initiate_combat (object source, object target) {
+    message("attack", "You attack " + target->query_cap_name() + "!", source);
+    message("attack", source->query_cap_name() + " attacks you!", target);
+    message("attack", source->query_cap_name() + " attacks " + target->query_cap_name() + "!", environment(source), ({ source, target }));
+
+    source->add_hostile(target);
+    target->add_hostile(source);
+}
