@@ -27,12 +27,7 @@ void do_aid_liv (object ob, string str) {
     }
 
     foreach (object target in ob->query_present_hostiles()) {
-        message("attack", "You attack " + target->query_cap_name() + "!", po);
-        message("attack", po->query_cap_name() + " attacks you!", target);
-        message("attack", po->query_cap_name() + " attacks " + target->query_cap_name() + "!", environment(po), ({ po, target }));
-
-        po->add_hostile(target);
-        target->add_hostile(po);
+        initiate_combat(po, target);
     }
 }
 

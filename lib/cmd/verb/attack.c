@@ -25,12 +25,7 @@ void do_attack_liv (object ob, string str) {
         message("action", "You cannot attack someone who is already defeated.", po);
         return;
     }
-    message("attack", "You attack " + ob->query_cap_name() + "!", po);
-    message("attack", po->query_cap_name() + " attacks you!", ob);
-    message("attack", po->query_cap_name() + " attacks " + ob->query_cap_name() + "!", environment(po), po);
-
-    po->add_hostile(ob);
-    ob->add_hostile(po);
+    initiate_combat(po, ob);
 }
 void do_attack_lvs (mixed *info, string str) {
     foreach (mixed item in info) {

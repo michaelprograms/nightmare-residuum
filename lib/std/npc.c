@@ -83,11 +83,7 @@ void handle_receive_living_in_env (object living) {
             living->query_stat("charisma") < __Aggressive &&
             !query_hostile(living)
         ) {
-            message("attack", "You attack " + living->query_cap_name() + "!", this_object());
-            message("attack", this_object()->query_cap_name() + " attacks you!", living);
-            message("attack", this_object()->query_cap_name() + " attacks " + living->query_cap_name() + "!", environment(), ({ this_object(), living }));
-            living->add_hostile(this_object());
-            add_hostile(living);
+            initiate_combat(this_object(), living);
         }
 
         // reset wander count

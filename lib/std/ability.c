@@ -480,8 +480,9 @@ private void handle_ability_use (object source, object *targets) {
 
     foreach (object target in targets) {
         if (__Type == "attack") {
-            source->add_hostile(target);
-            target->add_hostile(source);
+            if (!source->query_hostile(target)) {
+                initiate_combat(source, target);
+            }
         }
         limb = target->query_random_limb();
         // send success or fail messages
