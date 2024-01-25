@@ -7,11 +7,11 @@ void create () {
     set_type("attack");
     set_ability_requirements(([
         "psionist": ([
-            "level": 1,
+            "level": 3,
         ])
     ]));
     set_powers(([
-        "psionic": 20,
+        "psionic": 25,
     ]));
-    set_help_text("Missile your opponent with your psychic powers.");
+    set_help_text("Missile your opponent with psychic powers.");
 }
