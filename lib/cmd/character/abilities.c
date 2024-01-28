@@ -27,7 +27,6 @@ void command (string input, mapping flags) {
         }
     }
 
-    // @TODO handle cases for input == mine, input == [class]
     foreach (string action in D_COMMAND->query_abilities(ABILITY_DIR)) {
         if (mode == "mine") {
             object ability = load_object(ABILITY_DIR + "/" + action + ".c");
