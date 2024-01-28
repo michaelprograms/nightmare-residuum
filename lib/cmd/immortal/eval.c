@@ -88,9 +88,9 @@ void execute_file (string file, string input) {
     clear_file(file);
     create_tmp_file(file, input);
 
-    t = perf_counter_ns();
+    t = time_ns();
     ret = call_other(file, "eval");
-    t = perf_counter_ns() - t;
+    t = time_ns() - t;
 
     if (regexp(input, "return")) {
         write("Result (%^ORANGE%^" + sprintf("%.2f", t/1000000.0) + " ms%^RESET%^) = " + identify(ret)+"\n");

@@ -74,7 +74,7 @@ void command (string input, mapping flags) {
                 // string test = list[i][0..<2] + "test.c";
                 message("action", "update: " + list[i] + ": Ok", this_user());
                 // if (file_size(test) > 0) {
-                //     testStart = perf_counter_ns();
+                //     testStart = time_ns();
                 //     D_TEST->process_file(test, (: done :), 1);
                 // }
             } else {
@@ -111,7 +111,7 @@ void command (string input, mapping flags) {
         keep->describe_environment();
         keep = ({ });
         if (file_size(test) > 0) {
-            testStart = perf_counter_ns();
+            testStart = time_ns();
             D_TEST->process_file(test, (: done :), 1);
         }
     } else {

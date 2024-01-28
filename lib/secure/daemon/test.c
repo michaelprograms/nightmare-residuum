@@ -112,7 +112,7 @@ void display_results (mapping results, int timeStart) {
     int time;
 
     if (!undefinedp(timeStart)) {
-        time = perf_counter_ns() - timeStart;
+        time = time_ns() - timeStart;
     }
 
     write("\n");
@@ -211,6 +211,6 @@ varargs void run (int callShutdown) {
         else return strcmp(a, b);
     });
 
-    timeBefore = perf_counter_ns();
+    timeBefore = time_ns();
     call_out_walltime((: process :), 0);
 }

@@ -22,7 +22,7 @@ void command (string input, mapping flags) {
         }
         test = input + ".test.c";
         if (file_size(test) > 0) {
-            testStart = perf_counter_ns();
+            testStart = time_ns();
             D_TEST->process_file(test, (: done :), 1);
         } else {
             message("action", "Unable to find test file for " + input + ".", this_user());

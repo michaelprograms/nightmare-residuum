@@ -15,19 +15,19 @@ void measure_perlin () {
         y = random(1000) / 1000.0;
         z = random(1000) / 1000.0;
 
-        pre = perf_counter_ns();
+        pre = time_ns();
         p = noise_generate_permutation(seed);
-        post = perf_counter_ns();
+        post = time_ns();
         timeP += (post - pre);
 
-        pre = perf_counter_ns();
+        pre = time_ns();
         total2d += "/secure/sefun/noise"->noise_perlin_2d(x, y, p, 8, 15.0);
-        post = perf_counter_ns();
+        post = time_ns();
         time2d += (post - pre);
 
-        pre = perf_counter_ns();
+        pre = time_ns();
         total3d += "/secure/sefun/noise"->noise_perlin_3d(x, y, z, p, 8, 15.0);
-        post = perf_counter_ns();
+        post = time_ns();
         time3d += (post - pre);
     }
 
@@ -51,14 +51,14 @@ void measure_simplex () {
         z = random(1000) / 1000.0;
         w = random(1000) / 1000.0;
 
-        pre = perf_counter_ns();
+        pre = time_ns();
         p = noise_generate_permutation_simplex(seed);
-        post = perf_counter_ns();
+        post = time_ns();
         timeP += (post - pre);
 
-        pre = perf_counter_ns();
+        pre = time_ns();
         total4d += "/secure/sefun/noise"->noise_simplex_4d(x, y, z, w, p, 8, 3.0);
-        post = perf_counter_ns();
+        post = time_ns();
         time4d += (post - pre);
     }
 

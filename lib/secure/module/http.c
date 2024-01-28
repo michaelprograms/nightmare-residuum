@@ -151,7 +151,7 @@ void read_socket (int fd, string msg) {
     mapping res = ([ ]);
     int url_match = 0;
     string result;
-    int t = perf_counter_ns();
+    int t = time_ns();
 
     req = parse_request(msg);
 
@@ -196,7 +196,7 @@ void read_socket (int fd, string msg) {
     }
 
     result = format_response(res);
-    t = perf_counter_ns() - t;
+    t = time_ns() - t;
     D_LOG->log("http", ctime() + " response (" + sprintf("%.1f", (t / 1000000.0)) + " ms) " + identify(res));
 
     socket_write(fd, result);

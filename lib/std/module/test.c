@@ -156,7 +156,7 @@ public int execute_test (function done) {
 }
 
 private void done_current_test () {
-    timeAfter = perf_counter_ns();
+    timeAfter = time_ns();
     if (failingExpects == failingExpectsBefore && passingExpects == passingExpectsBefore) {
         currentTestLog += "\n" + ORANGE + "    -" + RESET + " Warning: no expects found.";
     }
@@ -198,7 +198,7 @@ private void process_test () {
         failingExpectsBefore = failingExpects;
         passingExpectsBefore = passingExpects;
 
-        timeBefore = perf_counter_ns();
+        timeBefore = time_ns();
         if (query_async_test_function(currentTestFn)) {
             call_other(this_object(), currentTestFn, (: done_current_test :));
         } else {
