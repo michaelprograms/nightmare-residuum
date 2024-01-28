@@ -25,7 +25,9 @@ void command (string input, mapping flags) {
 
     foreach (string path in D_COMMAND->query_paths()) {
         string type = split_path(path)[<1];
-        if (!actions[type]) actions[type] = ({ });
+        if (!actions[type]) {
+            actions[type] = ({ });
+        }
         if (type == "immortal" || type == "character") {
             foreach (string action in D_COMMAND->query_commands(path)) {
                 actions[type] += ({ action });
