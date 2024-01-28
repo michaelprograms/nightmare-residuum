@@ -83,19 +83,19 @@ void command (string input, mapping flags) {
 
 void execute_file (string file, string input) {
     mixed ret;
-    int timeBefore, timeAfter;
+    int t;
 
     clear_file(file);
     create_tmp_file(file, input);
 
-    timeBefore = perf_counter_ns();
+    t = perf_counter_ns();
     ret = call_other(file, "eval");
-    timeAfter = perf_counter_ns();
+    t = perf_counter_ns() - t;
 
     if (regexp(input, "return")) {
-        write("Result (%^ORANGE%^" + sprintf("%.2f", (timeAfter - timeBefore)/1000000.0) + " ms%^RESET%^) = " + identify(ret)+"\n");
+        write("Result (%^ORANGE%^" + sprintf("%.2f", t/1000000.0) + " ms%^RESET%^) = " + identify(ret)+"\n");
     } else {
-        write("Complete (%^ORANGE%^" + sprintf("%.2f", (timeAfter - timeBefore)/1000000.0) + " ms%^RESET%^)\n");
+        write("Complete (%^ORANGE%^" + sprintf("%.2f", t/1000000.0) + " ms%^RESET%^)\n");
     }
     if (ret = find_object(file)) destruct(ret);
 }
