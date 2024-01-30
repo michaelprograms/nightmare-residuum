@@ -203,13 +203,22 @@ int calculate_heal (object source, object target, string limb) {
 
 int calculate_damage (object source, object target, string limb) {
     int dice, damage, tmp;
+    int dieSides;
+
+    if (source->query_class() == "psionist") {
+        dieSides = 8;
+    } else if (source->query_class() == "mystic") {
+        dieSides = 7;
+    } else {
+        dieSides = 6;
+    }
 
     // level damage
     dice = max(({ 1, source->query_level() * 10 / 100 }));
-    damage += roll_die(dice, 6)[0];
+    damage += roll_die(dice, dieSides)[0];
 
     dice = max(({ 1, random(source->query_stat("luck") + 1) * 4 / 100 }));
-    damage += roll_die(dice, 6)[0];
+    damage += roll_die(dice, dieSides)[0];
 
     foreach (string key, int value in __Powers) {
         switch (key) {
@@ -228,18 +237,26 @@ int calculate_damage (object source, object target, string limb) {
         }
         // stat damage
         dice = max(({ 1, tmp * 10 / 100 }));
-        damage += roll_die(dice, 6)[0];
+        damage += roll_die(dice, dieSides)[0];
+    }
+
+    if (target->query_class() == "psionist") {
+        dieSides = 8;
+    } else if (target->query_class() == "mystic") {
+        dieSides = 7;
+    } else {
+        dieSides = 6;
     }
 
     // apply target mitigations
     dice = max(({ 1, target->query_level() / 5 }));
-    damage -= roll_die(dice, 6)[0];
+    damage -= roll_die(dice, dieSides)[0];
 
     dice = max(({ 1, target->query_stat("endurance") / 10 }));
-    damage -= roll_die(dice, 6)[0];
+    damage -= roll_die(dice, dieSides)[0];
 
     dice = max(({ 1, random(target->query_stat("luck") + 1) / 25 }));
-    damage -= roll_die(dice, 6)[0];
+    damage -= roll_die(dice, dieSides)[0];
 
     damage -= target->query_limb_armor(limb);
     damage -= target->query_protection();
