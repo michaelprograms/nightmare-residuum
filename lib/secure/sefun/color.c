@@ -1,4 +1,3 @@
-// This sefun is called by efun::terminal_colour
 string strip_colour (string str) {
     if (!str) return str;
     // parse blank ANSI color tags
