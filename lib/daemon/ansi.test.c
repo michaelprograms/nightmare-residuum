@@ -15,7 +15,7 @@ void test_ansi_terms () {
     term = testOb->query_ansi_term();
     expect("query_ansi_term has 541 items", (: ({
         assert(mapp(term), "==", 1),
-        assert(sizeof(term), "==", 541)
+        assert(sizeof(term), "==", 543)
     }) :));
 
     foreach (string key in keys(term)) {
@@ -34,7 +34,7 @@ void test_unknown_terms () {
     term = testOb->query_unknown_term();
     expect("query_unknown_term has 541 items", (: ({
         assert(mapp(term), "==", 1),
-        assert(sizeof(term), "==", 541),
+        assert(sizeof(term), "==", 543),
     }) :));
 
     foreach (string key in keys(term)) {

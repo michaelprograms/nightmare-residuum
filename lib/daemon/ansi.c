@@ -36,6 +36,8 @@ void create () {
         "B_MAGENTA":        ANSI(45),
         "B_CYAN":           ANSI(46),
         "B_WHITE":          ANSI(47),
+        "OVERLINE":         ANSI(53),
+        "OVERLINE_OFF":     ANSI(55),
 
         "C01":              ANSI_F(1),
         "C02":              ANSI_F(2),

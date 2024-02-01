@@ -9,7 +9,7 @@ void create () {
 void command (string input, mapping flags) {
     string *keys = D_ANSI->query_keys();
 
-    string *styles = ({ "BOLD", "BOLD_OFF", "ITALIC", "ITALIC_OFF", "UNDERLINE", "UNDERLINE_OFF", "STRIKE", "STRIKE_OFF", "INVERSE", "INVERSE_OFF", "RESET" });
+    string *styles = ({ "BOLD", "BOLD_OFF", "ITALIC", "ITALIC_OFF", "", "", "", "", "UNDERLINE", "UNDERLINE_OFF", "OVERLINE", "OVERLINE_OFF", "", "", "", "", "STRIKE", "STRIKE_OFF", "INVERSE", "INVERSE_OFF", "", "", "", "", "RESET" });
     string *basicColors = ({ "RED", "ORANGE", "YELLOW", "BLUE", "CYAN", "GREEN", "MAGENTA", "BLACK", "WHITE", " ", "B_RED", "B_ORANGE", "B_YELLOW", "B_BLUE", "B_CYAN", "B_GREEN", "B_MAGENTA", "B_BLACK", "B_WHITE", });
     string *xtermColors = keys - styles - basicColors;
 
@@ -32,7 +32,7 @@ void command (string input, mapping flags) {
             ([
                 "header": ({ "Styles" }),
                 "items": styles,
-                "columns": 5,
+                "columns": 4,
             ]),
             ([
                 "header": ({ "Colors" }),
