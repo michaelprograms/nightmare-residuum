@@ -30,10 +30,10 @@ void create () {
 }
 
 void clear_file (string file);
-void execute_file (string file, string input);
-void create_tmp_file (string file, string input);
+void execute_file (string file, string input, mapping flags);
+void create_tmp_file (string file, string input, mapping flags);
 
-void end_edit (string evalfile, string tmpfile) {
+void end_edit (string evalfile, string tmpfile, mapping flags) {
     string input;
     object ob;
 
@@ -41,7 +41,7 @@ void end_edit (string evalfile, string tmpfile) {
     if (ob = find_object(evalfile)) {
         ob->handle_remove();
     }
-    execute_file(evalfile, input);
+    execute_file(evalfile, input, flags);
 }
 
 void command (string input, mapping flags) {
@@ -68,7 +68,7 @@ void command (string input, mapping flags) {
         if (regexp(input, ";")) {
             input = replace_string(input, "; ", ";\n");
         }
-        execute_file(evalfile, input);
+        execute_file(evalfile, input, flags);
     } else {
         tmpfile = userpath + "/.eval.tmp";
         message("system", "Entering eval ed mode, standard ed commands apply:\n", user);
@@ -76,17 +76,17 @@ void command (string input, mapping flags) {
         if (tmp = read_file(tmpfile)) {
             message("system", tmp + "\n", user);
         }
-        new("/secure/std/editor.c")->editor_start(tmpfile, (: end_edit($(evalfile), $(tmpfile)) :));
+        new("/secure/std/editor.c")->editor_start(tmpfile, (: end_edit($(evalfile), $(tmpfile), $(flags)) :));
     }
     return;
 }
 
-void execute_file (string file, string input) {
+void execute_file (string file, string input, mapping flags) {
     mixed ret;
     int t;
 
     clear_file(file);
-    create_tmp_file(file, input);
+    create_tmp_file(file, input, flags);
 
     t = time_ns();
     ret = call_other(file, "eval");
@@ -106,8 +106,17 @@ void clear_file (string file) {
     if (ret = find_object(file)) destruct(ret);
 }
 
-void create_tmp_file (string file, string input) {
-    string lines = @EndCode
+void create_tmp_file (string file, string input, mapping flags) {
+    string lines = "";
+
+    if (flags["include"]) {
+        lines += implode(map(
+            explode(flags["include"], ","),
+            (: "#include \""+$1+"\";" :)
+        ), "\n") + "\n";
+    }
+
+    lines += @EndCode
 #define TU this_user()
 #define TC this_character()
 #define TO this_object()
