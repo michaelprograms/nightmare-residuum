@@ -44,6 +44,25 @@ void test_clean_up () {
     if (ob) destruct(ob);
 }
 
+void test_room_bracketing () {
+    expect_function("set_room_bracket_color", testOb);
+    expect_function("query_room_bracket_color", testOb);
+    expect_function("set_room_brackets", testOb);
+    expect_function("query_room_brackets", testOb);
+
+    expect("room bracket color is queryable and settable", (: ({
+        assert(testOb->query_room_bracket_color(), "==", ""),
+        testOb->set_room_bracket_color("%^TEST%^"),
+        assert(testOb->query_room_bracket_color(), "==", "%^TEST%^"),
+    }) :));
+
+    expect("room bracket is queryable and settable", (: ({
+        assert(testOb->query_room_brackets(), "==", ({ "[", "]" })),
+        testOb->set_room_brackets(({ "1", "2" })),
+        assert(testOb->query_room_brackets(), "==", ({ "1", "2" })),
+    }) :));
+}
+
 nosave private int __HandleFnsItem = 0, __HandleFnsLiving = 0;
 nosave object __Ob, __Living;
 
