@@ -63,6 +63,32 @@ void test_room_bracketing () {
     }) :));
 }
 
+void test_room_map_symbol () {
+    object item1, item2;
+
+    expect_function("query_room_map_symbol", testOb);
+
+    item1 = new(STD_ITEM);
+    item2 = new(STD_ITEM);
+    expect("room map symbol updates", (: ({
+        // nothing in room
+        assert(testOb->query_room_map_symbol(), "==", " "),
+
+        // test objects
+        assert($(item1)->handle_move(testOb), "==", 1),
+        assert(testOb->query_room_map_symbol(), "==", "%^MAGENTA%^BOLD%^1%^RESET%^"),
+        assert($(item2)->handle_move(testOb), "==", 1),
+        assert(testOb->query_room_map_symbol(), "==", "%^MAGENTA%^BOLD%^2%^RESET%^"),
+
+        // @TODO test passive NPC
+
+        // @TODO test aggressive NPC
+    }) :));
+
+    if (item1) destruct(item1);
+    if (item2) destruct(item2);
+}
+
 nosave private int __HandleFnsItem = 0, __HandleFnsLiving = 0;
 nosave object __Ob, __Living;
 
