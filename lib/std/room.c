@@ -110,15 +110,16 @@ string *query_room_brackets () {
 string query_room_map_symbol () {
     int aggressive = 0, passive = 0, item = 0;
     int cha;
-    object *hostiles, char;
+    object char;
+    object *hostiles;
     string symbol = " ";
 
     char = this_character();
-    cha = char->query_stat("charisma");
-    hostiles = char->query_hostiles();
+    cha = char ? char->query_stat("charisma") : 0;
+    hostiles = char ? char->query_hostiles() : ({ });
 
     foreach (object l in query_living_contents()) {
-        if (cha < l->query_aggressive() || l->query_hostile(char)) {
+        if (char && (cha < l->query_aggressive() || l->query_hostile(char))) {
             aggressive ++;
         } else {
             passive ++;
