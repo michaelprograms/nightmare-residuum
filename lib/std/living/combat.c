@@ -59,8 +59,7 @@ protected void handle_combat () {
         this_object()->query_defeated() ||
         this_object()->query_disable() ||
         !target ||
-        environment() != environment(target) ||
-        time() % 2
+        environment() != environment(target)
     ) {
         return;
     }

@@ -488,9 +488,9 @@ private void handle_ability_use (object source, object *targets) {
     }
 
     // update statuses
-    source->set_busy(2);
+    source->set_busy(1);
     // @TODO re-enable this when determing busy vs disable
-    // source->set_disable(2);
+    // source->set_disable(1);
 
     // send attempt messages
     this_object()->ability_message_attempt(source, targets);
