@@ -14,4 +14,7 @@ void create () {
         "south": ORIGIN_ROOM + "west.c",
         "southeast": ORIGIN_ROOM + "center.c",
     ]));
+    set_reset(([
+        ORIGIN_NPC "vendor_injectable": 1,
+    ]));
 }
