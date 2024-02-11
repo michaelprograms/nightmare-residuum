@@ -88,8 +88,7 @@ varargs string wrap (string str, int width, int indent, int rawANSI) {
     }
     str = terminal_colour(str, term, width, indent);
     // strip default ANSI reset color tag added by fluffos
-    str = replace_string(str, "\e[49;49m", "");
-    str = replace_string(str, "\e[0;10m", "");
+    str = replace_string(str, "\e[49;49m\e[0;10m", "");
     if (strlen(str) > __LARGEST_PRINTABLE_STRING__) {
         str = str[0..__LARGEST_PRINTABLE_STRING__-1];
     }

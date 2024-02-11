@@ -3,8 +3,7 @@ string strip_colour (string str) {
     // parse blank ANSI color tags
     str = terminal_colour(""+str, D_ANSI->query_unknown_term());
     // strip default ANSI reset color tag added by fluffos
-    str = replace_string(str, "\e[49;49m", "");
-    str = replace_string(str, "\e[0;10m", "");
+    str = replace_string(str, "\e[49;49m\e[0;10m", "");
     return str;
 }
 
@@ -15,11 +14,9 @@ string wrap_ansi (string str, int width) {
     int posANSI, posUnknown, i, n, diff;
 
     strUnknown = terminal_colour(str, D_ANSI->query_unknown_term(), width, 0);
-    strUnknown = replace_string(strUnknown, "\e[49;49m", "");
-    strUnknown = replace_string(strUnknown, "\e[0;10m", "");
+    strUnknown = replace_string(strUnknown, "\e[49;49m\e[0;10m", "");
     strANSI = terminal_colour(str, D_ANSI->query_ansi_term(), width, 0);
-    strANSI = replace_string(strANSI, "\e[49;49m", "");
-    strANSI = replace_string(strANSI, "\e[0;10m", "");
+    strANSI = replace_string(strANSI, "\e[49;49m\e[0;10m", "");
 
     linesUnknown = explode(strUnknown, "\n");
     linesANSI = explode(strANSI, "\n");
