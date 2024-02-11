@@ -9,5 +9,5 @@ void create () {
     set_long("A syringe of damaging nanites.");
     set_type("damaging nanites");
     set_strength(50);
-    set_value(10);
+    set_value(50);
 }
