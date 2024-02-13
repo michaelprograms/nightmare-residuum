@@ -16,6 +16,8 @@ varargs mixed can_go_str (string dir) {
     string exit, *split = explode(dir, " ");
 
     if (!(env = environment(po))) return "You are nowhere.";
+    if (po->query_disable()) return "You are unable to go anywhere at this moment.";
+
     if (dir == "enter") {
         if (exit = env->query_default_enter()) dir = exit;
         else return "Go enter which way?";
