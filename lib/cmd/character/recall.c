@@ -27,4 +27,5 @@ void command (string input, mapping flags) {
     message("go", "You begin to teleport...", tc);
     message("go", tc->query_cap_name() + " begins to teleport...", environment(tc), tc);
     call_out((: teleport :), 2, tc);
+    tc->set_disable(1);
 }
