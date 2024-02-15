@@ -441,7 +441,7 @@ private void handle_injections () {
         n = (query_stat("endurance") / 10) + (amt / 10);
         if (n < 5) n = 5;
         if (n > amt) n = amt;
-        message("injection", "The damaging nanites diminish your health: -"+n+" hp.", this_object());
+        message("status", "The damaging nanites diminish your health: -"+n+" hp.", this_object());
         add_hp(-n);
         __Injections["damaging nanites"] = max(({ 0, amt - n }));
 
@@ -452,7 +452,7 @@ private void handle_injections () {
         n = (query_stat("endurance") / 10) + (amt / 10);
         if (n < 5) n = 5;
         if (n > amt) n = amt;
-        message("injection", "The healing nanites recover your health: +"+n+" hp.", this_object());
+        message("status", "The healing nanites recover your health: +"+n+" hp.", this_object());
         add_hp(n);
         __Injections["healing nanites"] = max(({ 0, amt - n }));
     }
