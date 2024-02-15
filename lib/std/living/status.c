@@ -1,4 +1,6 @@
-private int __Busy = 0, __Disable = 0;
+private int __Busy = 0;
+private int __Disable = 0;
+private int __Immobile = 0;
 private string __Posture;
 
 // Disable prevents actions, combat hits, and movement until expired
@@ -7,7 +9,9 @@ void set_disable (int value) {
         __Disable = value;
     }
 }
-int query_disable () { return __Disable; }
+int query_disable () {
+    return __Disable;
+}
 
 // Busy prevents actions until expired
 void set_busy (int value) {
@@ -15,7 +19,19 @@ void set_busy (int value) {
         __Busy = value;
     }
 }
-int query_busy () { return __Busy; }
+int query_busy () {
+    return __Busy;
+}
+
+// Immobile prevents all commands until expired
+void set_immobile (int value) {
+    if (value > -1) {
+        __Immobile = value;
+    }
+}
+int query_immobile () {
+    return __Immobile;
+}
 
 void set_posture (string p) {
     if (!stringp(p) && !sizeof(p)) error("Bad argument 1 to status->set_posture");
@@ -34,6 +50,8 @@ string query_posture () {
 void heart_beat () {
     if (__Busy > 0) __Busy --;
     if (__Disable > 0) __Disable --;
+    if (__Immobile > 0) __Immobile --;
+
     if (__Posture == "sitting") this_object()->heal(1);
     else if (__Posture == "laying") this_object()->heal(2);
     else if (__Posture == "meditating") {

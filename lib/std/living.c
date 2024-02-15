@@ -98,6 +98,11 @@ varargs int do_command (string command, int debug) {
         return 0;
     }
 
+    if (query_immobile()) {
+        write("You are unable to take any actions right now.\n");
+        return 1;
+    }
+
     if (strsrch(command, "enter") == 0) {
         command = "go " + command;
     } else if (strsrch(command, "out") == 0) {
