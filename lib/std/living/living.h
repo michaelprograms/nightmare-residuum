@@ -30,7 +30,7 @@ string query_species ();
 void set_species (string species);
 int query_level ();
 void set_level (int l);
-private void update_limbs ();
+void update_limbs ();
 string *query_limbs ();
 mapping query_limb (string limb);
 string query_random_limb ();

@@ -36,7 +36,7 @@ void set_species (string species) {
 
 /* ----- limbs ----- */
 
-protected void update_limbs () {
+void update_limbs () {
     mapping newLimbs = D_SPECIES->setup_body(this_object());
 
     foreach (string limb,mapping value in newLimbs || ([ ])) {
