@@ -99,7 +99,7 @@ varargs int do_command (string command, int debug) {
     }
 
     if (query_immobile()) {
-        write("You are unable to take any actions right now.\n");
+        message("status", "You are unable to take any actions right now.", this_object());
         return 1;
     }
 
