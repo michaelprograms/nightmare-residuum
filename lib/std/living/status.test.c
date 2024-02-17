@@ -45,6 +45,8 @@ void test_disable () {
 }
 
 void test_immobile () {
+    object r1, r2;
+
     expect_function("set_immobile", testOb);
     expect_function("query_immobile", testOb);
 
@@ -60,6 +62,27 @@ void test_immobile () {
         testOb->heart_beat(),
         assert(testOb->query_immobile(), "==", 0), // still zero
     }) :));
+
+    destruct(testOb);
+    testOb = new(STD_LIVING);
+    r1 = new(STD_ROOM);
+    r2 = new(STD_ROOM);
+    r1->set_exit("east", file_name(r2));
+    r2->set_exit("west", file_name(r1));
+
+    expect("immobile should prevent do_command", (: ({
+        assert(testOb->handle_move($(r1)), "==", 1),
+        assert(testOb->query_immobile(), "==", 0),
+
+        testOb->set_immobile(2),
+        assert(testOb->query_immobile(), "==", 2),
+        assert(testOb->do_command("go east"), "==", 1), // command to move to r2
+        assert(environment(testOb), "==", $(r1)), // still r1
+    }) :));
+
+    destruct(testOb);
+    destruct(r1);
+    destruct(r2);
 }
 
 void test_posture () {
