@@ -44,6 +44,24 @@ void test_disable () {
     }) :));
 }
 
+void test_immobile () {
+    expect_function("set_immobile", testOb);
+    expect_function("query_immobile", testOb);
+
+    expect("immobile should be settable and queryable", (: ({
+        assert(testOb->query_immobile(), "==", 0),
+
+        testOb->set_immobile(2),
+        assert(testOb->query_immobile(), "==", 2),
+        testOb->heart_beat(),
+        assert(testOb->query_immobile(), "==", 1),
+        testOb->heart_beat(),
+        assert(testOb->query_immobile(), "==", 0),
+        testOb->heart_beat(),
+        assert(testOb->query_immobile(), "==", 0), // still zero
+    }) :));
+}
+
 void test_posture () {
     expect_function("set_posture", testOb);
     expect_function("query_posture", testOb);
@@ -59,6 +77,7 @@ void test_posture () {
         assert(testOb->query_posture(), "==", "standing"),
     }) :));
 
+    // @TODO
     // expect("postures should heal on heartbeat", (: ({
         // resting
 
