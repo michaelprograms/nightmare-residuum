@@ -32,6 +32,12 @@ void command (string input, mapping flags) {
             case "width": case "lines":
                 value = to_int(value);
                 break;
+            case "ansi": case "screenreader":
+                if (member_array(value, ({ "on", "off" })) == -1) {
+                    message("action", "Invalid value '" + value +"' for setting '" + key + "'.", user);
+                    return;
+                }
+                break;
         }
         header = ([
             "columns": 1,
