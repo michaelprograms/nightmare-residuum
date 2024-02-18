@@ -2,6 +2,7 @@
 
 inherit "/std/user/account.c";
 inherit "/std/user/character.c";
+inherit "/std/user/gmcp.c";
 inherit "/std/user/input.c";
 inherit "/std/user/output.c";
 inherit "/std/user/shell.c";

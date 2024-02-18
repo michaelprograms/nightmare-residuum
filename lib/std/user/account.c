@@ -53,6 +53,9 @@ void ensure_default_settings () {
     if (undefinedp(__Settings["screenreader"])) {
         __Settings["screenreader"] = "off";
     }
+    if (undefinedp(__Settings["gmcp"])) {
+        __Settings["gmcp"] = "off";
+    }
 }
 
 string query_name () {

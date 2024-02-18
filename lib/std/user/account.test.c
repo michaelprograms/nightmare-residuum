@@ -81,7 +81,7 @@ void test_account_settings () {
 
     expect("account settings handles setting and querying", (: ({
         assert(mapp(testOb->query_settings()), "==", 1),
-        assert(sizeof(testOb->query_settings()), "==", 4),
+        assert(sizeof(testOb->query_settings()), "==", 5),
 
         assert(testOb->query_setting("ansi"), "==", "on"),
         testOb->set_setting("ansi", "off"),
@@ -161,23 +161,27 @@ void test_ensure_default_settings () {
     settings = testOb->query_settings();
     expect("ensure_default_settings sets missing settings", (: ({
         // initial
-        assert(sizeof(testOb->query_settings()), "==", 4),
+        assert(sizeof(testOb->query_settings()), "==", 5),
         // remove width
         map_delete($(settings), "width"),
-        assert(testOb->query_setting("width"), "==", UNDEFINED),
+        assert(testOb->query_setting("width"), "==", 0),
         // remove lines
         map_delete($(settings), "lines"),
-        assert(testOb->query_setting("lines"), "==", UNDEFINED),
+        assert(testOb->query_setting("lines"), "==", 0),
         // remove ansi
         map_delete($(settings), "ansi"),
-        assert(testOb->query_setting("ansi"), "==", UNDEFINED),
+        assert(testOb->query_setting("ansi"), "==", 0),
         // remove screenreader
         map_delete($(settings), "screenreader"),
-        assert(testOb->query_setting("screenreader"), "==", UNDEFINED),
+        assert(testOb->query_setting("screenreader"), "==", 0),
+        // remove gmcp
+        map_delete($(settings), "gmcp"),
+        assert(testOb->query_setting("gmcp"), "==", 0),
+        // now empty
         assert(sizeof(testOb->query_settings()), "==", 0),
         // restore defaults
         testOb->ensure_default_settings(),
-        assert(sizeof(testOb->query_settings()), "==", 4),
+        assert(sizeof(testOb->query_settings()), "==", 5),
         assert(testOb->query_setting("width"), "==", 80),
         assert(testOb->query_setting("lines"), "==", 40),
         assert(testOb->query_setting("ansi"), "==", "on"),

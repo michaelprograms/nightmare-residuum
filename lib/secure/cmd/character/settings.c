@@ -8,6 +8,7 @@ void create () {
 
 void command (string input, mapping flags) {
     object tc = this_character(), target = tc, user;
+    mixed *settings = ({ });
     string *list = ({ });
     mapping header;
 
@@ -32,7 +33,7 @@ void command (string input, mapping flags) {
             case "width": case "lines":
                 value = to_int(value);
                 break;
-            case "ansi": case "screenreader":
+            case "ansi": case "gmcp": case "screenreader":
                 if (member_array(value, ({ "on", "off" })) == -1) {
                     message("action", "Invalid value '" + value +"' for setting '" + key + "'.", user);
                     return;
@@ -52,7 +53,11 @@ void command (string input, mapping flags) {
     }
 
     foreach (string key,mixed value in user->query_settings()) {
-        list += ({ sprintf("%16s : %s", key, ""+value) });
+        settings += ({ ({ key, value }) });
+    }
+    settings = sort_array(settings, (: strcmp($1[0], $2[0]) :));
+    foreach (string *setting in settings) {
+        list += ({ sprintf("%16s : %s", setting[0], ""+setting[1]) });
     }
 
     border(([
