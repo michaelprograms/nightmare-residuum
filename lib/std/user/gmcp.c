@@ -19,5 +19,6 @@ void gmcp_update_character (string module, mapping data) {
         __GMCPModuleData[module] = ([ ]);
     }
     __GMCPModuleData[module] += data;
-    send_gmcp(module + " " + json_encode(data));
+
+    send_gmcp("Char." + module + " " + json_encode(data));
 }

@@ -348,3 +348,85 @@ void describe_environment () {
     describe_environment_living_contents();
     describe_environment_item_contents();
 }
+
+/* ----- gmcp ----- */
+
+void add_hp (int n) {
+    living::add_hp(n);
+    if (__User) {
+        __User->gmcp_update_character("Vitals", ([
+            "hp": query_hp(),
+            "maxhp": query_max_hp(),
+            "sp": query_sp(),
+            "maxsp": query_max_sp(),
+            "mp": query_mp(),
+            "maxmp": query_max_mp(),
+        ]));
+    }
+}
+void add_sp (int n) {
+    living::add_sp(n);
+    if (__User) {
+        __User->gmcp_update_character("Vitals", ([
+            "hp": query_hp(),
+            "maxhp": query_max_hp(),
+            "sp": query_sp(),
+            "maxsp": query_max_sp(),
+            "mp": query_mp(),
+            "maxmp": query_max_mp(),
+        ]));
+    }
+}
+void add_mp (int n) {
+    living::add_mp(n);
+    if (__User) {
+        __User->gmcp_update_character("Vitals", ([
+            "hp": query_hp(),
+            "maxhp": query_max_hp(),
+            "sp": query_sp(),
+            "maxsp": query_max_sp(),
+            "mp": query_mp(),
+            "maxmp": query_max_mp(),
+        ]));
+    }
+}
+
+void set_hp (int n) {
+    living::set_hp(n);
+    if (__User) {
+        __User->gmcp_update_character("Vitals", ([
+            "hp": query_hp(),
+            "maxhp": query_max_hp(),
+            "sp": query_sp(),
+            "maxsp": query_max_sp(),
+            "mp": query_mp(),
+            "maxmp": query_max_mp(),
+        ]));
+    }
+}
+void set_sp (int n) {
+    living::set_sp(n);
+    if (__User) {
+        __User->gmcp_update_character("Vitals", ([
+            "hp": query_hp(),
+            "maxhp": query_max_hp(),
+            "sp": query_sp(),
+            "maxsp": query_max_sp(),
+            "mp": query_mp(),
+            "maxmp": query_max_mp(),
+        ]));
+    }
+}
+void set_mp (int n) {
+    living::set_mp(n);
+    if (__User) {
+        __User->gmcp_update_character("Vitals", ([
+            "hp": query_hp(),
+            "maxhp": query_max_hp(),
+            "sp": query_sp(),
+            "maxsp": query_max_sp(),
+            "mp": query_mp(),
+            "maxmp": query_max_mp(),
+        ]));
+    }
+}
