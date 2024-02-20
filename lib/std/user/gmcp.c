@@ -7,7 +7,7 @@ int gmcp_enabled() {
     return has_gmcp(this_object());
 }
 
-void gmcp_update_character (string module, mapping data) {
+void gmcp_send_update (string module, mapping data) {
     if (!gmcp_enabled()) {
         return;
     }
@@ -20,5 +20,5 @@ void gmcp_update_character (string module, mapping data) {
     }
     __GMCPModuleData[module] += data;
 
-    send_gmcp("Char." + module + " " + json_encode(data));
+    send_gmcp(module + " " + json_encode(data));
 }

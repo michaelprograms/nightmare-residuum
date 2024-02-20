@@ -30,6 +30,22 @@ void set_immortal (int i) {
     }
 }
 
+/* ----- gmcp ----- */
+
+void gmcp_update_vitals () {
+    if (!__User) {
+        return;
+    }
+    __User->gmcp_send_update("Char.Vitals", ([
+        "hp": query_hp(),
+        "maxhp": query_max_hp(),
+        "sp": query_sp(),
+        "maxsp": query_max_sp(),
+        "mp": query_mp(),
+        "maxmp": query_max_mp(),
+    ]));
+}
+
 /* ----- account ----- */
 
 void set_account (string account) {
@@ -97,7 +113,33 @@ void set_name (string name) {
     set_save_path(D_CHARACTER->query_save_path(query_key_name(), "character"));
 }
 
-// -----------------------------------------------------------------------------
+void add_hp (int n) {
+    living::add_hp(n);
+    gmcp_update_vitals();
+}
+void add_sp (int n) {
+    living::add_sp(n);
+    gmcp_update_vitals();
+}
+void add_mp (int n) {
+    living::add_mp(n);
+    gmcp_update_vitals();
+}
+
+void set_hp (int n) {
+    living::set_hp(n);
+    gmcp_update_vitals();
+}
+void set_sp (int n) {
+    living::set_sp(n);
+    gmcp_update_vitals();
+}
+void set_mp (int n) {
+    living::set_mp(n);
+    gmcp_update_vitals();
+}
+
+/* ----- user ----- */
 
 object query_user () {
     return __User;
@@ -105,6 +147,8 @@ object query_user () {
 void set_user (object user) {
     __User = user;
 }
+
+/* ----- character ----- */
 
 int query_created () {
     return __Created;
@@ -133,6 +177,8 @@ void setup_character () {
     living::update_limbs();
 }
 
+/* ----- connection ----- */
+
 varargs void enter_world (int override) {
     if (!override) {
         string err = catch (handle_move(query_environment_path()));
@@ -146,6 +192,7 @@ varargs void enter_world (int override) {
     }
     describe_environment();
     set_heart_beat(1);
+    gmcp_update_vitals();
 }
 
 void exit_world () {
@@ -172,6 +219,7 @@ void exit_freezer () {
     message("action", query_cap_name()+" suddenly appears into existence.", environment(), this_object());
     describe_environment();
     set_heart_beat(1);
+    gmcp_update_vitals();
 }
 
 /* ----- describe environments ---- */
@@ -347,86 +395,4 @@ void describe_environment () {
     describe_environment_exits();
     describe_environment_living_contents();
     describe_environment_item_contents();
-}
-
-/* ----- gmcp ----- */
-
-void add_hp (int n) {
-    living::add_hp(n);
-    if (__User) {
-        __User->gmcp_update_character("Vitals", ([
-            "hp": query_hp(),
-            "maxhp": query_max_hp(),
-            "sp": query_sp(),
-            "maxsp": query_max_sp(),
-            "mp": query_mp(),
-            "maxmp": query_max_mp(),
-        ]));
-    }
-}
-void add_sp (int n) {
-    living::add_sp(n);
-    if (__User) {
-        __User->gmcp_update_character("Vitals", ([
-            "hp": query_hp(),
-            "maxhp": query_max_hp(),
-            "sp": query_sp(),
-            "maxsp": query_max_sp(),
-            "mp": query_mp(),
-            "maxmp": query_max_mp(),
-        ]));
-    }
-}
-void add_mp (int n) {
-    living::add_mp(n);
-    if (__User) {
-        __User->gmcp_update_character("Vitals", ([
-            "hp": query_hp(),
-            "maxhp": query_max_hp(),
-            "sp": query_sp(),
-            "maxsp": query_max_sp(),
-            "mp": query_mp(),
-            "maxmp": query_max_mp(),
-        ]));
-    }
-}
-
-void set_hp (int n) {
-    living::set_hp(n);
-    if (__User) {
-        __User->gmcp_update_character("Vitals", ([
-            "hp": query_hp(),
-            "maxhp": query_max_hp(),
-            "sp": query_sp(),
-            "maxsp": query_max_sp(),
-            "mp": query_mp(),
-            "maxmp": query_max_mp(),
-        ]));
-    }
-}
-void set_sp (int n) {
-    living::set_sp(n);
-    if (__User) {
-        __User->gmcp_update_character("Vitals", ([
-            "hp": query_hp(),
-            "maxhp": query_max_hp(),
-            "sp": query_sp(),
-            "maxsp": query_max_sp(),
-            "mp": query_mp(),
-            "maxmp": query_max_mp(),
-        ]));
-    }
-}
-void set_mp (int n) {
-    living::set_mp(n);
-    if (__User) {
-        __User->gmcp_update_character("Vitals", ([
-            "hp": query_hp(),
-            "maxhp": query_max_hp(),
-            "sp": query_sp(),
-            "maxsp": query_max_sp(),
-            "mp": query_mp(),
-            "maxmp": query_max_mp(),
-        ]));
-    }
 }
