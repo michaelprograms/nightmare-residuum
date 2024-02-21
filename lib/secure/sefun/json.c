@@ -18,7 +18,7 @@ varargs string json_encode (mixed value, mixed *refs) {
                 out = replace_string(out, "\\\"", "\"");
             }
         }
-        out = sprintf("\"%s\"", out);
+        out = "\"" + out + "\"";
         if (strsrch(out, '\b') > -1) {
             out = replace_string(out, "\b", "\\b");
         }
