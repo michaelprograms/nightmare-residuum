@@ -156,6 +156,8 @@ void set_name (string name) {
     }
 
     ensure_default_settings();
+
+    this_object()->gmcp_send_update("Core.Hello", ([ "mud_name": mud_name() ]));
 }
 
 /* -----  ----- */
