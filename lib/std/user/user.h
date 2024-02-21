@@ -1,7 +1,7 @@
 #ifndef __USER_H__
 #define __USER_H__
 
-/* --- user --- */
+/* ----- user ----- */
 nomask void logon ();
 nomask void net_dead ();
 void receive_message (string type, string message);
@@ -13,7 +13,7 @@ nomask void quit_account ();
 nomask void reset_connect_timeout ();
 nomask varargs void handle_remove (string message);
 
-/* --- account --- */
+/* ----- account ----- */
 nomask void set_ed_setup (int config);
 nomask int query_ed_setup();
 protected nomask varargs void account_input (int state, mixed extra, string input);
@@ -56,7 +56,7 @@ private void display_account_menu ();
 #define PROMPT_PASSWORD_DELETE_CONFIRM      "Enter account password to confirm deletion: "
 #define PROMPT_SETTINGS_ENTER               "Enter settings action: "
 
-/* --- character --- */
+/* ----- character ----- */
 private void set_character_name (string name);
 private void set_character_species (string species);
 string query_character_species ();
@@ -69,21 +69,26 @@ nomask void handle_character_override ();
 nomask protected void character_exit ();
 nomask protected void character_linkdead ();
 
-/* --- input --- */
+/* ----- gmcp ----- */
+int gmcp_enabled();
+void gmcp_send_update (string module, mapping data);
+
+
+/* ----- input ----- */
 varargs nomask void input_push (function inputFn, mixed prompt, int secure, function callbackFn, int lock);
 varargs nomask void input_single (function inputFn, mixed prompt, int secure, int lock);
 varargs nomask void input_next (function inputFn, mixed prompt, int secure, int lock);
 nomask void input_pop ();
 nomask void input_focus ();
 
-/* --- output --- */
+/* ----- output ----- */
 void handle_pager (mixed arg);
 
-/* --- shell --- */
+/* ----- shell ----- */
 object query_shell ();
 protected nomask void shell_start ();
 protected nomask void shell_stop ();
 
-/*  --- */
+/* ----- */
 
 #endif /* __USER_H__ */
