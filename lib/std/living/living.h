@@ -75,6 +75,11 @@ object *query_hostiles ();
 object *query_present_hostiles ();
 object query_target_hostile ();
 
+/* ----- cooldown ----- */
+void set_cooldown (string name, int value);
+int query_cooldown (string name);
+mapping query_cooldowns ();
+
 /* ----- protection ----- */
 int query_prorection ();
 int set_protection (int n);

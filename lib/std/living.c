@@ -10,6 +10,7 @@ inherit "/std/living/biography.c";
 inherit "/std/living/body.c";
 inherit "/std/living/class.c";
 inherit "/std/living/combat.c";
+inherit "/std/living/cooldown.c";
 inherit "/std/living/protection.c";
 inherit "/std/living/stats.c";
 inherit "/std/living/status.c";
@@ -36,6 +37,7 @@ void heart_beat () {
 
     status::heart_beat();
     body::heart_beat();
+    cooldown::heart_beat();
 
     handle_combat();
 
