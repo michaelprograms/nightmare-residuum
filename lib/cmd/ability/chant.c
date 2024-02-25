@@ -15,5 +15,6 @@ void create () {
         "theurgy": 5,
     ]));
     set_targets(3);
+    set_cooldown(2);
     set_help_text("Chant soothing words towards a target to restore hit points.");
 }

@@ -10,4 +10,5 @@ void create () {
     ]));
     set_targets(3);
     set_help_text("Whirl at your opponents.");
+    set_cooldown(2);
 }
