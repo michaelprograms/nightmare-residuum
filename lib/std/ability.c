@@ -7,6 +7,7 @@ nosave private mapping __Powers;
 nosave private mapping __Weapons = ([ ]);
 nosave private string __Type;
 nosave private int __NumTargets = 1;
+nosave private int __Cooldown = 1;
 
 /* ----- ability requirements ----- */
 
@@ -73,6 +74,18 @@ void set_targets (int n) {
 }
 int query_targets () {
     return __NumTargets;
+}
+
+/* ----- ability cooldown ----- */
+
+void set_cooldown (int n) {
+    if (undefinedp(n) || !intp(n) || n < 0) {
+        error("Bad argument 1 to ability->set_cooldown");
+    }
+    __Cooldown = n;
+}
+int query_cooldown () {
+    return __Cooldown;
 }
 
 /* ----- ability weapons ----- */
@@ -444,7 +457,12 @@ private void handle_ability_use (object source, object *targets) {
 
     if (!verify_ability_requirements(source)) {
         message("action", "You cannot do that.", source);
-        return 0;
+        return;
+    }
+
+    if (source->query_cooldown(query_name()) > 0) {
+        message("action", "You are not yet ready to " + query_name() + " again.", source);
+        return;
     }
 
     if (!(targets = verify_targets(source, targets))) {
@@ -491,6 +509,10 @@ private void handle_ability_use (object source, object *targets) {
     source->set_busy(1);
     // @TODO re-enable this when determing busy vs disable
     // source->set_disable(1);
+
+    if (__Cooldown > 0) {
+        source->set_cooldown(query_name(), __Cooldown);
+    }
 
     // send attempt messages
     this_object()->ability_message_attempt(source, targets);
