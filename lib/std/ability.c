@@ -67,7 +67,7 @@ string query_type () {
 /* ----- ability targets ----- */
 
 void set_targets (int n) {
-    if (undefinedp(n) || !intp(n) || n < 0) {
+    if (undefinedp(n) || !intp(n) || n < 1) {
         error("Bad argument 1 to ability->set_targets");
     }
     __NumTargets = n;
