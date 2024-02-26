@@ -135,6 +135,25 @@ void test_targets () {
     }) :));
 }
 
+void test_cooldown () {
+    expect_function("query_cooldown", testOb);
+    expect_function("set_cooldown", testOb);
+
+    expect("handles setting and querying cooldown", (: ({
+        // default
+        assert(testOb->query_cooldown(), "==", 1),
+
+        testOb->set_cooldown(2),
+        assert(testOb->query_cooldown(), "==", 2),
+
+        testOb->set_cooldown(10),
+        assert(testOb->query_cooldown(), "==", 10),
+
+        testOb->set_cooldown(0),
+        assert(testOb->query_cooldown(), "==", 0),
+    }) :));
+}
+
 void test_difficulty_factor () {
     expect_function("query_difficulty_factor", testOb);
     expect_function("set_difficulty_factor", testOb);
