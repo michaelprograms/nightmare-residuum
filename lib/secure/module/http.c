@@ -22,12 +22,6 @@ private nosave int __AllowStatic;
 private nosave mixed *__URLPatterns;
 private nosave string server_root;
 
-struct connection_c {
-    int time;
-    int ttl;
-    string ip;
-}
-
 /* -----  ----- */
 
 void set_port (int p) {
