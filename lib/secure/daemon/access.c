@@ -61,8 +61,9 @@ int query_allowed (object caller, string fn, string file, string mode) {
     }
 
     if (mode == "socket") {
-        // only D_IPC allowed to create sockets
-        return regexp(file_name(caller), "^/secure/daemon/ipc");
+        // only D_IPC or HTTP module allowed to create sockets
+        return file_name(caller) == "/secure/daemon/ipc" ||
+            inherits("/secure/module/http.c", caller);
     }
 
     // attempt to match the target file path to __Read path permissions
