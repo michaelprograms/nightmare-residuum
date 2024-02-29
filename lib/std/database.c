@@ -46,8 +46,7 @@ mixed query (string sql) {
     if (stringp(response)) {
         close();
         error(response);
-    }
-    if (response) {
+    } else if (intp(response) && response > 0) {
         result = allocate(response);
         for (int i = 0; i < response; i ++) {
             result[i] = db_fetch(dbHandle, i+1);
