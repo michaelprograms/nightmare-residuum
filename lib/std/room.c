@@ -161,7 +161,7 @@ varargs mapping query_room_exits_picture (string source) {
     picture["se"] = sizeof(exits["southeast"]) && (!source || (source && source == exits["southeast"]["room"])) ? b["dd"] : " ";
     return picture;
 }
-int valid_exit (string path) {
+private int valid_exit (string path) {
     if (regexp(path, "/virtual/")) {
         return 1;
     } else {
