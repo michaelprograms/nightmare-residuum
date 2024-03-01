@@ -63,6 +63,29 @@ void test_query_adjust_stats () {
     }) :));
 }
 
+void test_query_max_stats () {
+    expect_function("query_max_stat", testOb);
+
+    expect("stat adjustments are queryable", (: ({
+        assert(testOb->query_max_stat("warrior", "strength", 1), "==", 5),
+        assert(testOb->query_max_stat("mystic", "strength", 1), "==", 4),
+        assert(testOb->query_max_stat("scoundrel", "strength", 1), "==", 3),
+        assert(testOb->query_max_stat("ranger", "strength", 1), "==", 3),
+        assert(testOb->query_max_stat("psionist", "strength", 1), "==", 2),
+        assert(testOb->query_max_stat("paladin", "strength", 1), "==", 4),
+
+        assert(testOb->query_max_stat("warrior", "strength", 10), "==", 50),
+        assert(testOb->query_max_stat("mystic", "strength", 10), "==", 40),
+        assert(testOb->query_max_stat("scoundrel", "strength", 10), "==", 30),
+        assert(testOb->query_max_stat("ranger", "strength", 10), "==", 30),
+        assert(testOb->query_max_stat("psionist", "strength", 10), "==", 20),
+        assert(testOb->query_max_stat("paladin", "strength", 10), "==", 40),
+
+        assert(testOb->query_max_stat("nonexistant", "strength"), "==", 0),
+        assert(testOb->query_max_stat("nonexistant", "nonexistant"), "==", 0),
+    }) :));
+}
+
 void test_query_adjust_skills () {
     expect_function("query_adjust_skill", testOb);
 
