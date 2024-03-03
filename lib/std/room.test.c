@@ -49,6 +49,7 @@ void test_room_bracketing () {
     expect_function("query_room_bracket_color", testOb);
     expect_function("set_room_brackets", testOb);
     expect_function("query_room_brackets", testOb);
+    expect_function("query_room_map_bracket", testOb);
 
     expect("room bracket color is queryable and settable", (: ({
         assert(testOb->query_room_bracket_color(), "==", ""),
@@ -60,6 +61,17 @@ void test_room_bracketing () {
         assert(testOb->query_room_brackets(), "==", ({ "[", "]" })),
         testOb->set_room_brackets(({ "1", "2" })),
         assert(testOb->query_room_brackets(), "==", ({ "1", "2" })),
+    }) :));
+
+    expect("room map bracket is queryable", (: ({
+        // default symbol
+        assert(testOb->query_room_map_bracket(), "==", "%^TEST%^1%^RESET%^ %^TEST%^2%^RESET%^"),
+
+        // @TODO test with items/living
+
+        // override symbol
+        assert(testOb->query_room_map_bracket("x"), "==", "%^TEST%^1%^RESET%^x%^TEST%^2%^RESET%^"),
+        assert(testOb->query_room_map_bracket("@"), "==", "%^TEST%^1%^RESET%^@%^TEST%^2%^RESET%^"),
     }) :));
 }
 
