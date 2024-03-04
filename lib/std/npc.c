@@ -1,7 +1,7 @@
 inherit STD_LIVING;
 
-nosave private string *__AbilityList;
-nosave private int __AbilityChance;
+nosave private string *__AbilityList = ({ });
+nosave private int __AbilityChance = 0;
 nosave private int __Aggressive;
 nosave private int __Wander = 0, __Wanders = 0, __NextWander = 0, __Wandering = 0;
 
@@ -31,7 +31,7 @@ int query_ability_chance () {
     return __AbilityChance;
 }
 void set_ability_chance (int chance) {
-    __AbilityChance = chance;
+    __AbilityChance = max(({ 0, min(({ chance, 100 })) }));
 }
 
 void handle_ability_attack () {

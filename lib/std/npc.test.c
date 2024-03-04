@@ -176,3 +176,33 @@ void test_wander () {
     destruct(r1);
     destruct(r2);
 }
+
+void test_abilities () {
+    expect_function("query_ability_list", testOb);
+    expect_function("set_ability_list", testOb);
+    expect_function("query_ability_chance", testOb);
+    expect_function("set_ability_chance", testOb);
+
+    expect("ability list is queryable and settable", (: ({
+        assert(testOb->query_ability_list(), "==", ({ })),
+
+        testOb->set_ability_list(({ "test1", "test2", })),
+        assert(testOb->query_ability_list(), "==", ({ "test1", "test2", })),
+
+        testOb->set_ability_list(({ "testA", "testB", })),
+        assert(testOb->query_ability_list(), "==", ({ "testA", "testB", })),
+    }) :));
+
+    expect("ability chance is queryable and settable", (: ({
+        assert(testOb->query_ability_chance(), "==", 0),
+
+        testOb->set_ability_chance(123),
+        assert(testOb->query_ability_chance(), "==", 100),
+
+        testOb->set_ability_chance(25),
+        assert(testOb->query_ability_chance(), "==", 25),
+
+        testOb->set_ability_chance(-123),
+        assert(testOb->query_ability_chance(), "==", 0),
+    }) :));
+}
