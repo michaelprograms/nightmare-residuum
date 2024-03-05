@@ -22,6 +22,8 @@ void test_remove_article () {
         assert(testOb->json_encode(({ 1, 2, 3, "a", "b", "c" })), "==", "[1,2,3,\"a\",\"b\",\"c\"]"),
 
         assert(testOb->json_encode(([ "key1": "value1", "keyA": "valueA", ])), "==", "{\"keyA\":\"valueA\",\"key1\":\"value1\"}"),
+        assert(testOb->json_encode(([ "key1": this_object() ])), "==", "{\"key1\":null}"),
+        assert(testOb->json_encode(([ "key1": 123, "key2": 1.23 ])), "==", "{\"key2\":1.230000,\"key1\":123}"),
 
         assert(testOb->json_encode(this_object()), "==", "null"),
         assert(testOb->json_encode(({ this_object() })), "==", "[null]"),
