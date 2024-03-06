@@ -99,6 +99,18 @@ void test_objects () {
         // still tracking wandering object
         assert(r1->query_objects(), "==", ([ "/std/npc.c:0": npc ])),
         assert(r2->query_objects(), "==", ([ ])),
+
+        // reset doesn't spawn another wandering NPC
+        r1->reset(),
+        assert(r1->query_objects(), "==", ([ "/std/npc.c:0": npc ])),
+        assert(r2->query_objects(), "==", ([ ])),
+
+        // remove wandering NPC
+        npc->handle_remove(),
+        // force a new NPC to spawn
+        r1->reset(),
+        assert(r1->query_objects(), "==", ([ "/std/npc.c:0": npc ])),
+        assert(r2->query_objects(), "==", ([ ])),
     }) :));
 
     if (r1) destruct(r1);
