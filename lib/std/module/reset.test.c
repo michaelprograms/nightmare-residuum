@@ -7,13 +7,15 @@ void before_each_test () {
 void after_each_test () {
     if (objectp(testOb)) destruct(testOb);
 }
+string *test_order () {
+    return ({ "test_resets", "test_objects", });
+}
 
 private int resetFnCalled = 0;
 private int setupFnCalled = 0;
 void test_resets () {
-    function setupFn = function () {
+    function setupFn = function (object ob) {
         setupFnCalled ++;
-        return 0;
     };
 
     expect_function("query_reset", testOb);
@@ -21,7 +23,6 @@ void test_resets () {
     expect_function("set_reset", testOb);
     expect_function("set_reset_data", testOb);
     expect_function("handle_reset", testOb);
-    // @TODO test query_objects with mockable wandering NPC
 
     expect("resets handle setting, querying, and resetting", (: ({
         // have not set_reset yet
@@ -53,4 +54,54 @@ void test_resets () {
         assert(testOb->query_resets(), "==", 4),
         assert(testOb->query_reset(), "==", ([ "/std/item.c": ([ "number": 1, "setup": $(setupFn) ]) ])),
     }) :));
+}
+
+nosave private object r1, r2, npc;
+void test_objects () {
+    function setupFn = function (object ob) {
+        npc = ob;
+        npc->set_wander(1);
+    };
+
+    expect_function("query_objects", testOb);
+
+    // setup test rooms
+    r1 = new(STD_ROOM);
+    r2 = new(STD_ROOM);
+    r1->set_exit("east", file_name(r2));
+    r2->set_exit("west", file_name(r1));
+
+    expect("reset tracks wandering NPCs", (: ({
+        // r1 will have initial reset from create
+        assert(r1->query_resets(), "==", 1),
+        assert(r1->query_reset(), "==", ([ ])),
+
+        // set wanderer
+        r1->set_reset(([ "/std/npc.c": ([
+            "number": 1,
+            "setup": $(setupFn),
+        ]) ])),
+        assert(r1->query_resets(), "==", 2),
+        assert(r1->query_reset(), "==", ([ "/std/npc.c": ([
+            "number": 1,
+            "setup": $(setupFn)
+        ]) ])),
+
+        // tracking wandering object
+        assert(r1->query_objects(), "==", ([ "/std/npc.c:0": npc ])),
+        assert(r2->query_objects(), "==", ([ ])),
+
+        // force NPC to wander to r2
+        assert(environment(npc), "==", r1),
+        npc->handle_wander(),
+        assert(environment(npc), "==", r2),
+
+        // still tracking wandering object
+        assert(r1->query_objects(), "==", ([ "/std/npc.c:0": npc ])),
+        assert(r2->query_objects(), "==", ([ ])),
+    }) :));
+
+    if (r1) destruct(r1);
+    if (r2) destruct(r2);
+    if (npc) destruct(npc);
 }

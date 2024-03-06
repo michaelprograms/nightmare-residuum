@@ -44,12 +44,17 @@ void handle_reset () {
         count = 0;
         if (counts[key] && (count = counts[key]) >= num) continue;
         for (; count < num; count ++) {
-            if (__Objects[key + count]) continue;
+            if (__Objects[key + ":" + count]) continue;
 
             ob = clone_object(key);
+
+            if (mapp(val) && functionp(val["setup"])) {
+                evaluate(val["setup"], ob);
+            }
+
             // track wandering objects
             if (ob->query_wander()) {
-                __Objects[key + count] = ob;
+                __Objects[key + ":" + count] = ob;
             }
 
             // prevent objects from leaking if can't move
@@ -57,10 +62,6 @@ void handle_reset () {
                 destruct(ob);
             } else {
                 ob->reset();
-            }
-
-            if (mapp(val) && functionp(val["setup"])) {
-                evaluate(val["setup"], ob);
             }
         }
     }
