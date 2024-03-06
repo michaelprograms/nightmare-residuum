@@ -4,6 +4,7 @@ inherit STD_OBJECT;
 inherit M_CLEAN;
 inherit M_CONTAINER;
 inherit M_LEVELABLE;
+inherit M_CURRENCY;
 
 inherit "/std/living/attribute.c";
 inherit "/std/living/biography.c";
@@ -16,7 +17,6 @@ inherit "/std/living/stats.c";
 inherit "/std/living/status.c";
 inherit "/std/living/vitals.c";
 
-inherit M_CURRENCY;
 
 int is_living () { return 1; }
 
