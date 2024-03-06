@@ -98,7 +98,7 @@ int query_hidden_exits () {
     return __HiddenExits;
 }
 
-mixed handle_go (object ob, string method, string dir) {
+mixed handle_go (object ob, string verb, string dir) {
     mapping exit;
 
     dir = format_exit_verbose(dir);
@@ -123,7 +123,7 @@ mixed handle_go (object ob, string method, string dir) {
                 message("action", "You bump into the " + exit["door"] + " blocking you from going " + dir + ".", ob);
                 return 0;
             }
-            ob->handle_go(exit["room"], method, dir, exit["reverse"]);
+            ob->handle_go(exit["room"], verb, dir, exit["reverse"]);
             ob->describe_environment();
             if (exit["after"]) {
                 evaluate(exit["after"], ob, dir);
@@ -185,7 +185,7 @@ void remove_climb (string dir) {
     map_delete(__Climbs, dir);
 }
 
-mixed handle_climb (object ob, string method, string dir) {
+mixed handle_climb (object ob, string verb, string dir) {
     mapping exit;
 
     dir = format_exit_verbose(dir);
@@ -206,7 +206,7 @@ mixed handle_climb (object ob, string method, string dir) {
         return 0;
     } else if (exit["room"]) {
         if ((regexp(exit["room"], "#[0-9]+") && find_object(exit["room"])) || (file_size(exit["room"]) > 0)) {
-            ob->handle_go(exit["room"], method, dir, exit["reverse"]);
+            ob->handle_go(exit["room"], verb, dir, exit["reverse"]);
             ob->describe_environment();
             if (exit["after"]) {
                 evaluate(exit["after"], ob, dir);
