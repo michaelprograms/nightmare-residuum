@@ -19,8 +19,8 @@ void test_cooldown () {
 
         // set a cooldown
         testOb->set_cooldown("test", 1),
-        assert(testOb->query_cooldowns(), "==", ([ "test": 1 ])),
-        assert(testOb->query_cooldown("test"), "==", 1),
+        assert(testOb->query_cooldowns(), "==", ([ "test": ([ "type": "heart_beat", "value": 1 ]) ])),
+        assert(testOb->query_cooldown("test"), "==", ([ "type": "heart_beat", "value": 1 ])),
         // cooldown expires after one heartbeat
         testOb->heart_beat(),
         assert(testOb->query_cooldowns(), "==", ([ ])),
@@ -28,12 +28,12 @@ void test_cooldown () {
 
         // set a cooldown
         testOb->set_cooldown("test", 2),
-        assert(testOb->query_cooldowns(), "==", ([ "test": 2 ])),
-        assert(testOb->query_cooldown("test"), "==", 2),
+        assert(testOb->query_cooldowns(), "==", ([ "test": ([ "type": "heart_beat", "value": 2 ]) ])),
+        assert(testOb->query_cooldown("test"), "==", ([ "type": "heart_beat", "value": 2 ])),
         // cooldown ticks down once after one heartbeat
         testOb->heart_beat(),
-        assert(testOb->query_cooldowns(), "==", ([ "test": 1 ])),
-        assert(testOb->query_cooldown("test"), "==", 1),
+        assert(testOb->query_cooldowns(), "==", ([ "test": ([ "type": "heart_beat", "value": 1 ]) ])),
+        assert(testOb->query_cooldown("test"), "==", ([ "type": "heart_beat", "value": 1 ])),
         // cooldown expires after second heartbeat
         testOb->heart_beat(),
         assert(testOb->query_cooldowns(), "==", ([ ])),

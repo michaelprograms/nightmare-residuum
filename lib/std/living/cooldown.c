@@ -1,6 +1,6 @@
 private mapping __Cooldown = ([ ]);
 
-void set_cooldown (string name, int value) {
+varargs void set_cooldown (string name, int value, string type) {
     if (!mapp(__Cooldown)) {
         __Cooldown = ([ ]);
     }
@@ -10,8 +10,14 @@ void set_cooldown (string name, int value) {
     if (!intp(value)) {
         error("Bad argument 2 to cooldown->set_cooldown");
     }
+    if (!stringp(type)) {
+        type = "heart_beat";
+    }
     if (value > -1) {
-        __Cooldown[name] = value;
+        __Cooldown[name] = ([
+            "type": type,
+            "value": value,
+        ]);
     }
 }
 int query_cooldown (string name) {
@@ -30,11 +36,13 @@ mapping query_cooldowns () {
 /* ----- applies ----- */
 
 void heart_beat () {
-    foreach (string name, int value in __Cooldown) {
-        if (__Cooldown[name] > 0) {
-            __Cooldown[name] --;
-            if (__Cooldown[name] == 0) {
-                map_delete(__Cooldown, name);
+    foreach (string name, mapping data in __Cooldown) {
+        if (data["type"] == "heart_beat") {
+            if (data["value"] > 0) {
+                data["value"] --;
+                if (data["value"] == 0) {
+                    map_delete(__Cooldown, name);
+                }
             }
         }
     }
