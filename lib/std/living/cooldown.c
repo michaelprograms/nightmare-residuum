@@ -1,6 +1,5 @@
 private mapping __Cooldown = ([ ]);
 
-// Disable prevents actions, combat hits, and movement until expired
 void set_cooldown (string name, int value) {
     if (!mapp(__Cooldown)) {
         __Cooldown = ([ ]);
