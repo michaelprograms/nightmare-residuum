@@ -8,12 +8,12 @@ void after_each_test () {
     if (objectp(testOb)) destruct(testOb);
 }
 
-void test_cooldown () {
+void test_cooldown_heart_beats () {
     expect_function("set_cooldown", testOb);
     expect_function("query_cooldown", testOb);
     expect_function("query_cooldowns", testOb);
 
-    expect("cooldowns are settable and queryable", (: ({
+    expect("heart_beat cooldowns are settable and queryable", (: ({
         // no cooldowns set
         assert(testOb->query_cooldowns(), "==", ([ ])),
 
@@ -39,4 +39,25 @@ void test_cooldown () {
         assert(testOb->query_cooldowns(), "==", ([ ])),
         assert(testOb->query_cooldown("test"), "==", 0),
      }) :));
+}
+
+void test_cooldown_timed (function done) {
+    expect("timed cooldowns are settable and queryable", (: ({
+        // no cooldowns set
+        assert(testOb->query_cooldowns(), "==", ([ ])),
+
+        // set a cooldown
+        testOb->set_cooldown("test", 0.001, "timed"),
+        assert(testOb->query_cooldowns(), "==", ([ "test": ([ "type": "timed", "value": 0.001 ]) ])),
+        assert(testOb->query_cooldown("test"), "==", ([ "type": "timed", "value": 0.001 ])),
+    }) :));
+
+    call_out_walltime(function (function done) {
+        expect("timed cooldowns expire", (: ({
+            // cooldown expires after one heartbeat
+            assert(testOb->query_cooldowns(), "==", ([ ])),
+            assert(testOb->query_cooldown("test"), "==", 0),
+        }) :));
+        evaluate(done);
+    }, 0.002, done);
 }
