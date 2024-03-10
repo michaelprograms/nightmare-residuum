@@ -32,7 +32,6 @@ void test_species () {
 void test_level () {
     expect_function("set_level", testOb);
 
-    // @TODO check limbs max damage
     expect("level updates vitals", (: ({
         testOb->set_species("human"),
         assert(testOb->query_species(), "==", "human"),
@@ -43,6 +42,7 @@ void test_level () {
         assert(testOb->query_max_hp(), "==", 22),
         assert(testOb->query_max_sp(), "==", 12),
         assert(testOb->query_max_mp(), "==", 12),
+        assert(testOb->query_limb("torso"), "==", ([ "damage": 0, "maxdamage": 23, "pct": 100, "status": 0, "type": "FATAL" ])),
 
         // adjust HP
         testOb->set_hp(1),
@@ -51,6 +51,8 @@ void test_level () {
         assert(testOb->query_hp(), "==", 1),
         assert(testOb->query_sp(), "==", 1),
         assert(testOb->query_mp(), "==", 1),
+        testOb->handle_limb_heal("torso", -10),
+        assert(testOb->query_limb("torso"), "==", ([ "damage": 10, "maxdamage": 23, "pct": 100, "status": 0, "type": "FATAL" ])),
 
         // advance level
         testOb->set_level(2),
@@ -61,5 +63,7 @@ void test_level () {
         assert(testOb->query_max_hp(), "==", 33),
         assert(testOb->query_max_sp(), "==", 18),
         assert(testOb->query_max_mp(), "==", 18),
+        // damage to limb remains, but maxdamage updated
+        assert(testOb->query_limb("torso"), "==", ([ "damage": 10, "maxdamage": 34, "pct": 100, "status": 0, "type": "FATAL" ])),
     }) :));
 }
