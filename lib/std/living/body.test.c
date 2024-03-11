@@ -102,3 +102,30 @@ void test_limbs_and_level () {
 
     destruct(testOb);
 }
+
+void test_injections () {
+    expect_function("query_injections", testOb);
+    expect_function("query_injection", testOb);
+    expect_function("add_injection", testOb);
+    // @TODO handle_injections
+
+    expect("injections are addable and queryable", (: ({
+        assert(testOb->query_injections(), "==", ([ ])),
+
+        testOb->add_injection("healing nanites", 5),
+        assert(testOb->query_injection("healing nanites"), "==", 5),
+        assert(testOb->query_injections(), "==", ([ "healing nanites": 5, ])),
+
+        testOb->add_injection("healing nanites", 5),
+        assert(testOb->query_injections(), "==", ([ "healing nanites": 10, ])),
+        assert(testOb->query_injection("healing nanites"), "==", 10),
+
+        testOb->add_injection("damaging nanites", 5),
+        assert(testOb->query_injections(), "==", ([ "healing nanites": 10, "damaging nanites": 5, ])),
+        assert(testOb->query_injection("damaging nanites"), "==", 5),
+
+        testOb->add_injection("damaging nanites", 5),
+        assert(testOb->query_injections(), "==", ([ "healing nanites": 10, "damaging nanites": 10, ])),
+        assert(testOb->query_injection("damaging nanites"), "==", 10),
+    }) :));
+}
