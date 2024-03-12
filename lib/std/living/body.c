@@ -433,27 +433,29 @@ void add_injection (string type, int strength) {
 private void handle_injections () {
     int n, amt;
 
-    if (random(3)) {
-        return;
+    // remove any injections that are zero
+    foreach (string key, int value in __Injections) {
+        if (value == 0) {
+            map_delete(__Injections, key);
+        }
     }
 
     if ((amt = __Injections["damaging nanites"]) > 0) {
-        n = (query_stat("endurance") / 10) + (amt / 10);
-        if (n < 5) n = 5;
+        n = (this_object()->query_stat("endurance") / 10) + (amt / 10);
+        if (n < 2) n = 2;
         if (n > amt) n = amt;
         message("status", "The damaging nanites diminish your health: -"+n+" hp.", this_object());
-        add_hp(-n);
+        this_object()->add_hp(-n);
         __Injections["damaging nanites"] = max(({ 0, amt - n }));
-
     } else if (
         (amt = __Injections["healing nanites"]) > 0 &&
-        query_hp() * 100 / query_max_hp() < 100
+        this_object()->query_hp() * 100 / this_object()->query_max_hp() < 100
     ) {
-        n = (query_stat("endurance") / 10) + (amt / 10);
-        if (n < 5) n = 5;
+        n = (this_object()->query_stat("endurance") / 10) + (amt / 10);
+        if (n < 2) n = 2;
         if (n > amt) n = amt;
         message("status", "The healing nanites recover your health: +"+n+" hp.", this_object());
-        add_hp(n);
+        this_object()->add_hp(n);
         __Injections["healing nanites"] = max(({ 0, amt - n }));
     }
 }
@@ -461,9 +463,6 @@ private void handle_injections () {
 /* ----- object applies ----- */
 
 void heart_beat () {
-    if (query_hp() < 1) {
-        return;
-    }
     handle_passive_heal();
     handle_injections();
 }

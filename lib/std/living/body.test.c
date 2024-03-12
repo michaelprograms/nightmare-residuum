@@ -107,7 +107,6 @@ void test_injections () {
     expect_function("query_injections", testOb);
     expect_function("query_injection", testOb);
     expect_function("add_injection", testOb);
-    // @TODO handle_injections
 
     expect("injections are addable and queryable", (: ({
         assert(testOb->query_injections(), "==", ([ ])),
@@ -127,5 +126,48 @@ void test_injections () {
         testOb->add_injection("damaging nanites", 5),
         assert(testOb->query_injections(), "==", ([ "healing nanites": 10, "damaging nanites": 10, ])),
         assert(testOb->query_injection("damaging nanites"), "==", 10),
+    }) :));
+
+    destruct(testOb);
+    testOb = new(STD_LIVING);
+    expect("injections are handled by heart_beat", (: ({
+        testOb->set_race("human"),
+        testOb->set_level(1),
+        testOb->add_injection("healing nanites", 10),
+        testOb->add_injection("damaging nanites", 10),
+
+        // heart_beat for handle_injections
+        testOb->heart_beat(),
+
+        // damaging nanites work before healing nanites
+        assert(testOb->query_injections(), "==", ([ "healing nanites": 10, "damaging nanites": 8, ])),
+        assert(testOb->query_injection("healing nanites"), "==", 10),
+        assert(testOb->query_injection("damaging nanites"), "==", 8),
+
+        // heart_beat for handle_injections
+        testOb->heart_beat(),
+
+        // damaging nanites work before healing nanites again
+        assert(testOb->query_injections(), "==", ([ "healing nanites": 10, "damaging nanites": 6, ])),
+        assert(testOb->query_injection("healing nanites"), "==", 10),
+        assert(testOb->query_injection("damaging nanites"), "==", 6),
+
+        // remove damaging nanites for healing nanites test
+        testOb->add_injection("damaging nanites", -6),
+        assert(testOb->query_injection("damaging nanites"), "==", 0),
+
+        // heart_beat for handle_injections
+        testOb->heart_beat(),
+
+        // damaging nanites work before healing nanites again
+        assert(testOb->query_injections(), "==", ([ "healing nanites": 8, ])),
+        assert(testOb->query_injection("healing nanites"), "==", 8),
+
+        // heart_beat for handle_injections
+        testOb->heart_beat(),
+
+        // damaging nanites work before healing nanites again
+        assert(testOb->query_injections(), "==", ([ "healing nanites": 6, ])),
+        assert(testOb->query_injection("healing nanites"), "==", 6),
     }) :));
 }
