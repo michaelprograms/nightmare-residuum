@@ -171,3 +171,37 @@ void test_injections () {
         assert(testOb->query_injection("healing nanites"), "==", 6),
     }) :));
 }
+
+void test_heal () {
+    expect_function("heal", testOb);
+
+    destruct(testOb);
+    testOb = new(STD_LIVING);
+
+    expect("heal restores hp", (: ({
+        testOb->set_species("human"),
+        // verify initial state
+        assert(testOb->query_hp(), "==", 22),
+        assert(testOb->query_sp(), "==", 12),
+        assert(testOb->query_mp(), "==", 12),
+        assert(testOb->query_limb("torso"), "==", ([ "damage": 0, "maxdamage": 23, "pct": 100, "status": 0, "type": "FATAL" ])),
+
+        // reduce vitals/limbs
+        testOb->set_hp(1),
+        testOb->set_sp(1),
+        testOb->set_mp(1),
+        testOb->handle_limb_heal("torso", -20),
+        // verify reduced vitals/limbs
+        assert(testOb->query_hp(), "==", 1),
+        assert(testOb->query_sp(), "==", 1),
+        assert(testOb->query_mp(), "==", 1),
+        assert(testOb->query_limb("torso"), "==", ([ "damage": 20, "maxdamage": 23, "pct": 100, "status": 0, "type": "FATAL" ])),
+
+        // test heal vitals/limbs
+        testOb->heal(10),
+        assert(testOb->query_hp(), "==", 11),
+        assert(testOb->query_sp(), "==", 11),
+        assert(testOb->query_mp(), "==", 11),
+        assert(testOb->query_limb("torso"), "==", ([ "damage": 15, "maxdamage": 23, "pct": 100, "status": 0, "type": "FATAL" ])),
+    }) :));
+}

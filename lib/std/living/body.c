@@ -386,9 +386,9 @@ void heal (int n) {
         return;
     }
 
-    add_hp(n);
-    add_sp(n);
-    add_mp(n);
+    this_object()->add_hp(n);
+    this_object()->add_sp(n);
+    this_object()->add_mp(n);
 
     n = n / 2;
     foreach (string limb in query_limbs()) {
