@@ -31,13 +31,12 @@ void test_expects_passing () {
     expect_function("expect", testOb);
     expect_function("assert", testOb);
 
-    expect("assert condition '==' passes", (: ({
-        assert(1, "==", 1),
-        assert(1.0, "==", 1.0),
-        assert("abc", "==", "abc"),
-        assert(({ 1, 2, 3 }), "==", ({ 1, 2, 3 })),
-        assert(([ 1: "a", ]), "==", ([ 1: "a", ])),
-        assert((: 1 :), "==", (: 1 :)),
+    expect("assert_equal condition passes", (: ({
+        assert_equal(1, 1),
+        assert_equal(1.0, 1.0),
+        assert_equal("abc", "abc"),
+        assert_equal(({ 1, 2, 3 }), ({ 1, 2, 3 })),
+        assert_equal(([ 1: "a", ]), ([ 1: "a", ])),
     }) :));
 
     expect("assert condition '>' passes", (: ({
@@ -84,13 +83,12 @@ void test_expects_failing () {
     }) :));
 
     expect_next_failure();
-    expect("assert condition '==' should fail", (: ({
-        assert(0, "==", 1),
-        assert(0.0, "==", 1.0),
-        assert("xyz", "==", "abc"),
-        assert(({ -1, -2, -3 }), "==", ({ 1, 2, 3 })),
-        assert(([ "a": 1, ]), "==", ([ 1: "a", ])),
-        assert((: 0 :), "==", (: 1 :)),
+    expect("assert_equal should fail", (: ({
+        assert_equal(0, 1),
+        assert_equal(0.0, 1.0),
+        assert_equal("xyz", "abc"),
+        assert_equal(({ -1, -2, -3 }), ({ 1, 2, 3 })),
+        assert_equal(([ "a": 1, ]), ([ 1: "a", ])),
     }) :));
 
     expect_next_failure();

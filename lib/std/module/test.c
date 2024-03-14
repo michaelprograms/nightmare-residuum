@@ -328,6 +328,38 @@ void expect (string message, function fn) {
     leftResults = 0;
     rightResults = 0;
 }
+void assert_equal (mixed left, mixed right) {
+    if (!stringp(currentTestMsg)) {
+        error("test->assert outside of test->expect");
+    }
+
+    if (arrayp(left) || mapp(left) || objectp(left)) {
+        left = identify(left);
+    }
+    if (arrayp(right) || mapp(right) || objectp(right)) {
+        right = identify(right);
+    }
+
+    if (currentTestPassed) {
+        if (typeof(left) == "float" && typeof(right) == "float") {
+            left = to_float("" + left);
+            right = to_float("" + right);
+        }
+        currentTestPassed = left == right;
+    }
+
+    leftResults += ({ left });
+    rightResults += ({ right });
+
+    if (currentTestPassed || failingExpects == -1) {
+        passingAsserts ++;
+        totalPassingAsserts ++;
+    } else {
+        failingAsserts ++;
+    }
+}
+
+// @TODO deprecate assert
 void assert (mixed left, string condition, mixed right) {
     mixed leftErr, rightErr, leftResult, rightResult;
 
