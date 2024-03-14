@@ -21,30 +21,30 @@ void test_set_variables () {
     expect_function("unset_variable", testOb);
 
     expect("variables handles set/query", (: ({
-        assert(testOb->query_variable("testkey1"), "==", UNDEFINED),
+        assert_equal(testOb->query_variable("testkey1"), UNDEFINED),
 
-        assert(testOb->set_variable("testkey1", 123), "==", 123),
-        assert(testOb->query_variable("testkey1"), "==", 123),
+        assert_equal(testOb->set_variable("testkey1", 123), 123),
+        assert_equal(testOb->query_variable("testkey1"), 123),
 
-        assert(testOb->unset_variable("testkey1"), "==", 1),
-        assert(testOb->query_variable("testkey1"), "==", UNDEFINED),
+        assert_equal(testOb->unset_variable("testkey1"), 1),
+        assert_equal(testOb->query_variable("testkey1"), UNDEFINED),
 
-        assert(testOb->set_variable("testkey1", "xyz"), "==", "xyz"),
-        assert(testOb->query_variable("testkey1"), "==", "xyz"),
+        assert_equal(testOb->set_variable("testkey1", "xyz"), "xyz"),
+        assert_equal(testOb->query_variable("testkey1"), "xyz"),
     }) :));
 
     expect("variable_if_undefined handled", (: ({
-        assert(testOb->query_variable("testkey2"), "==", UNDEFINED),
+        assert_equal(testOb->query_variable("testkey2"), UNDEFINED),
 
-        assert(testOb->set_variable("testkey2", 123, 1), "==", 123),
-        assert(testOb->query_variable("testkey2"), "==", 123),
+        assert_equal(testOb->set_variable("testkey2", 123, 1), 123),
+        assert_equal(testOb->query_variable("testkey2"), 123),
 
-        assert(testOb->set_variable("testkey2", 987, 1), "==", 123), // didn't set
+        assert_equal(testOb->set_variable("testkey2", 987, 1), 123), // didn't set
 
-        assert(testOb->unset_variable("testkey2"), "==", 1),
-        assert(testOb->query_variable("testkey2"), "==", UNDEFINED),
+        assert_equal(testOb->unset_variable("testkey2"), 1),
+        assert_equal(testOb->query_variable("testkey2"), UNDEFINED),
 
-        assert(testOb->set_variable("testkey2", 987, 1), "==", 987), // did set
+        assert_equal(testOb->set_variable("testkey2", 987, 1), 987), // did set
     }) :));
 }
 
@@ -57,12 +57,12 @@ void test_set_variable_hooks () {
     });
 
     expect("set_variable_hook handles hook", (: ({
-        assert(action, "==", 0),
+        assert_equal(action, 0),
 
-        assert(testOb->set_variable("testkey", 123), "==", 123),
-        assert(action, "==", 1),
+        assert_equal(testOb->set_variable("testkey", 123), 123),
+        assert_equal(action, 1),
 
-        assert(testOb->set_variable("testkey", "xyz"), "==", "xyz"),
-        assert(action, "==", 2),
+        assert_equal(testOb->set_variable("testkey", "xyz"), "xyz"),
+        assert_equal(action, 2),
     }) :));
 }
