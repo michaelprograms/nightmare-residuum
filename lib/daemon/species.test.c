@@ -13,17 +13,17 @@ void test_species_bodies () {
     expect_function("query_species", testOb);
 
     expect("bodies exist", (: ({
-        assert(mapp(testOb->query_bodies()), "==", 1),
-        assert(sizeof(testOb->query_bodies()), ">", 0),
+        assert_equal(mapp(testOb->query_bodies()), 1),
+        assert_equal(sizeof(testOb->query_bodies()) > 0, 1),
         // verify common bodytype
-        assert(mapp(testOb->query_bodies()["quadruped"]), "==", 1),
+        assert_equal(mapp(testOb->query_bodies()["quadruped"]), 1),
     }) :));
 
     expect("species exist", (: ({
-        assert(mapp(testOb->query_species()), "==", 1),
-        assert(sizeof(testOb->query_species()), ">", 0),
+        assert_equal(mapp(testOb->query_species()), 1),
+        assert_equal(sizeof(testOb->query_species()) > 0, 1),
         // verify common species
-        assert(mapp(testOb->query_species()["human"]), "==", 1),
+        assert_equal(mapp(testOb->query_species()["human"]), 1),
     }) :));
 }
 
@@ -43,9 +43,9 @@ void test_setup_body () {
 
     expect("species bodies exist", (: ({
         // verify limbs exist
-        assert(sizeof(keys($(limbs))), ">", 0),
+        assert_equal(sizeof(keys($(limbs))) > 0, 1),
         // compare body to limbs
-        assert(testOb->setup_body($(ob)), "==", $(limbs)),
+        assert_equal(testOb->setup_body($(ob)), $(limbs)),
     }) :));
 
     destruct(ob);
@@ -55,11 +55,11 @@ void test_adjust_stat () {
     expect_function("query_adjust_stat", testOb);
 
     expect("stats adjustments are queryable", (: ({
-        assert(testOb->query_adjust_stat("human", "strength"), "==", 2),
+        assert_equal(testOb->query_adjust_stat("human", "strength"), 2),
 
-        assert(testOb->query_adjust_stat("unknown species", "strength"), "==", 0),
+        assert_equal(testOb->query_adjust_stat("unknown species", "strength"), 0),
 
-        assert(testOb->query_adjust_stat("human", "unknown stat"), "==", 0),
+        assert_equal(testOb->query_adjust_stat("human", "unknown stat"), 0),
     }) :));
 }
 
@@ -69,21 +69,21 @@ void test_adjust_vitals () {
     expect_function("query_adjust_mp", testOb);
 
     expect("hp adjustments are queryable", (: ({
-        assert(testOb->query_adjust_hp("human"), "==", 1),
+        assert_equal(testOb->query_adjust_hp("human"), 1),
 
-        assert(testOb->query_adjust_hp("nonexistant"), "==", 0),
+        assert_equal(testOb->query_adjust_hp("nonexistant"), 0),
     }) :));
 
     expect("sp adjustments are queryable", (: ({
-        assert(testOb->query_adjust_sp("human"), "==", 1),
+        assert_equal(testOb->query_adjust_sp("human"), 1),
 
-        assert(testOb->query_adjust_sp("nonexistant"), "==", 0),
+        assert_equal(testOb->query_adjust_sp("nonexistant"), 0),
     }) :));
 
     expect("mp adjustments are queryable", (: ({
-        assert(testOb->query_adjust_mp("human"), "==", 1),
+        assert_equal(testOb->query_adjust_mp("human"), 1),
 
-        assert(testOb->query_adjust_mp("nonexistant"), "==", 0),
+        assert_equal(testOb->query_adjust_mp("nonexistant"), 0),
     }) :));
 }
 
@@ -95,13 +95,13 @@ void test_setup_stats () {
     ob = new(STD_LIVING);
     ob->set_species("human");
     expect("stats are setup", (: ({
-        assert($(ob)->query_stat("strength"), "==", 0),
-        assert($(ob)->query_stat("perception"), "==", 0),
-        assert($(ob)->query_stat("endurance"), "==", 0),
-        assert($(ob)->query_stat("charisma"), "==", 0),
-        assert($(ob)->query_stat("intelligence"), "==", 0),
-        assert($(ob)->query_stat("agility"), "==", 0),
-        assert($(ob)->query_stat("luck"), "==", 0),
+        assert_equal($(ob)->query_stat("strength"), 0),
+        assert_equal($(ob)->query_stat("perception"), 0),
+        assert_equal($(ob)->query_stat("endurance"), 0),
+        assert_equal($(ob)->query_stat("charisma"), 0),
+        assert_equal($(ob)->query_stat("intelligence"), 0),
+        assert_equal($(ob)->query_stat("agility"), 0),
+        assert_equal($(ob)->query_stat("luck"), 0),
 
         testOb->setup_stats($(ob)),
 
@@ -113,6 +113,6 @@ void test_setup_stats () {
         assert($(ob)->query_stat("agility"), ">=", 5),
         assert($(ob)->query_stat("luck"), ">=", 5),
 
-        assert($(ob)->handle_remove(), "==", 1),
+        assert_equal($(ob)->handle_remove(), 1),
     }) :));
 }
