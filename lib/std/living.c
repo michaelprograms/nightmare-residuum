@@ -36,7 +36,9 @@ void heart_beat () {
     }
 
     status::heart_beat();
-    body::heart_beat();
+    if (query_hp() > 0) {
+        body::heart_beat();
+    }
     cooldown::heart_beat();
 
     handle_combat();
