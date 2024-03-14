@@ -67,8 +67,8 @@ void test_now () {
     expect_function("query_now", testOb);
 
     expect("handles now", (: ({
-        assert(testOb->query_now(__Time), "==", 0),
-        assert(testOb->query_now(time()), ">", 1),
+        assert_equal(testOb->query_now(__Time), 0),
+        assert_equal(testOb->query_now(time()) > 1, 1),
     }) :));
 }
 
@@ -82,45 +82,45 @@ void test_time_intervals () {
     expect_function("query_year", testOb);
 
     expect("handles the beginning", (: ({
-        assert(testOb->query_now(__Time), "==", 0),
-        assert(testOb->query_minutes(__Time, __Almanac), "==", 0),
-        assert(testOb->query_day(__Time, __Almanac), "==", 0),
-        assert(testOb->query_hour(__Time, __Almanac), "==", 0),
-        assert(testOb->query_week(__Time, __Almanac), "==", 0),
-        assert(testOb->query_month(__Time, __Almanac), "==", 0),
-        assert(testOb->query_year(__Time, __Almanac), "==", 0),
+        assert_equal(testOb->query_now(__Time), 0),
+        assert_equal(testOb->query_minutes(__Time, __Almanac), 0),
+        assert_equal(testOb->query_day(__Time, __Almanac), 0),
+        assert_equal(testOb->query_hour(__Time, __Almanac), 0),
+        assert_equal(testOb->query_week(__Time, __Almanac), 0),
+        assert_equal(testOb->query_month(__Time, __Almanac), 0),
+        assert_equal(testOb->query_year(__Time, __Almanac), 0),
     }) :));
 
     expect("handles minute rolling to hour", (: ({
         __Time += MINUTE,
-        assert(testOb->query_minute(__Time, __Almanac), "==", 1),
+        assert_equal(testOb->query_minute(__Time, __Almanac), 1),
         __Time += MINUTE * 59,
-        assert(testOb->query_minute(__Time, __Almanac), "==", 0),
-        assert(testOb->query_hour(__Time, __Almanac), "==", 1),
+        assert_equal(testOb->query_minute(__Time, __Almanac), 0),
+        assert_equal(testOb->query_hour(__Time, __Almanac), 1),
     }) :));
 
     expect("handles hour rolling to day", (: ({
         __Time += (MINUTE * 60) * 19,
-        assert(testOb->query_hour(__Time, __Almanac), "==", 0),
-        assert(testOb->query_day(__Time, __Almanac), "==", 1),
+        assert_equal(testOb->query_hour(__Time, __Almanac), 0),
+        assert_equal(testOb->query_day(__Time, __Almanac), 1),
     }) :));
 
     expect("handles day rolling to week", (: ({
         __Time += ((MINUTE * 60) * 20) * 4,
-        assert(testOb->query_day(__Time, __Almanac), "==", 0),
-        assert(testOb->query_week(__Time, __Almanac), "==", 1),
+        assert_equal(testOb->query_day(__Time, __Almanac), 0),
+        assert_equal(testOb->query_week(__Time, __Almanac), 1),
     }) :));
 
     expect("handles week rolling to month", (: ({
         __Time += (((MINUTE * 60) * 20) * 5) * 3,
-        assert(testOb->query_week(__Time, __Almanac), "==", 0),
-        assert(testOb->query_month(__Time, __Almanac), "==", 1),
+        assert_equal(testOb->query_week(__Time, __Almanac), 0),
+        assert_equal(testOb->query_month(__Time, __Almanac), 1),
     }) :));
 
     expect("handles month rolling to year", (: ({
         __Time += ((((MINUTE * 60) * 20) * 5) * 4) * 9,
-        assert(testOb->query_month(__Time, __Almanac), "==", 0),
-        assert(testOb->query_year(__Time, __Almanac), "==", 1),
+        assert_equal(testOb->query_month(__Time, __Almanac), 0),
+        assert_equal(testOb->query_year(__Time, __Almanac), 1),
     }) :));
 }
 
@@ -128,30 +128,30 @@ void test_localtime () {
     expect_function("query_localtime", testOb);
 
     expect("handles localtime of an almanac", (: ({
-        assert(testOb->query_now(__Time), "==", 0),
-        assert(testOb->query_localtime(__Almanac, __Time), "==", "0:00"),
+        assert_equal(testOb->query_now(__Time), 0),
+        assert_equal(testOb->query_localtime(__Almanac, __Time), "0:00"),
         __Time += MINUTE,
-        assert(testOb->query_localtime(__Almanac, __Time), "==", "0:01"),
+        assert_equal(testOb->query_localtime(__Almanac, __Time), "0:01"),
         __Time += MINUTE,
-        assert(testOb->query_localtime(__Almanac, __Time), "==", "0:02"),
+        assert_equal(testOb->query_localtime(__Almanac, __Time), "0:02"),
         __Time += MINUTE,
-        assert(testOb->query_localtime(__Almanac, __Time), "==", "0:03"),
+        assert_equal(testOb->query_localtime(__Almanac, __Time), "0:03"),
         __Time += MINUTE * 7,
-        assert(testOb->query_localtime(__Almanac, __Time), "==", "0:10"),
+        assert_equal(testOb->query_localtime(__Almanac, __Time), "0:10"),
         __Time += MINUTE * 50,
-        assert(testOb->query_localtime(__Almanac, __Time), "==", "1:00"),
+        assert_equal(testOb->query_localtime(__Almanac, __Time), "1:00"),
         __Time += (MINUTE * 60),
-        assert(testOb->query_localtime(__Almanac, __Time), "==", "2:00"),
+        assert_equal(testOb->query_localtime(__Almanac, __Time), "2:00"),
         __Time += (MINUTE * 60) * 7,
-        assert(testOb->query_localtime(__Almanac, __Time), "==", "9:00"),
+        assert_equal(testOb->query_localtime(__Almanac, __Time), "9:00"),
         __Time += (MINUTE * 60),
-        assert(testOb->query_localtime(__Almanac, __Time), "==", "10:00"),
+        assert_equal(testOb->query_localtime(__Almanac, __Time), "10:00"),
         __Time += (MINUTE * 60) * 9,
-        assert(testOb->query_localtime(__Almanac, __Time), "==", "19:00"),
+        assert_equal(testOb->query_localtime(__Almanac, __Time), "19:00"),
         __Time += (MINUTE * 59),
-        assert(testOb->query_localtime(__Almanac, __Time), "==", "19:59"),
+        assert_equal(testOb->query_localtime(__Almanac, __Time), "19:59"),
         __Time += (MINUTE * 1),
-        assert(testOb->query_localtime(__Almanac, __Time), "==", "0:00"),
+        assert_equal(testOb->query_localtime(__Almanac, __Time), "0:00"),
     }) :));
 }
 
@@ -159,12 +159,12 @@ void test_localdate () {
     expect_function("query_localdate", testOb);
 
     expect("handles localdate of an almanac", (: ({
-        assert(testOb->query_localdate(__Almanac, __Time+(DAY*0)), "==", "1 of Roki 1"),
-        assert(testOb->query_localdate(__Almanac, __Time+(DAY*19)), "==", "20 of Roki 1"),
-        assert(testOb->query_localdate(__Almanac, __Time+(DAY*20)), "==", "1 of Praxi 1"),
-        assert(testOb->query_localdate(__Almanac, __Time+(DAY*100)), "==", "1 of Kepki 1"),
-        assert(testOb->query_localdate(__Almanac, __Time+(DAY*200)), "==", "1 of Roki 2"),
-        assert(testOb->query_localdate(__Almanac, __Time+(DAY*12345)), "==", "6 of Kantki 62"),
+        assert_equal(testOb->query_localdate(__Almanac, __Time+(DAY*0)), "1 of Roki 1"),
+        assert_equal(testOb->query_localdate(__Almanac, __Time+(DAY*19)), "20 of Roki 1"),
+        assert_equal(testOb->query_localdate(__Almanac, __Time+(DAY*20)), "1 of Praxi 1"),
+        assert_equal(testOb->query_localdate(__Almanac, __Time+(DAY*100)), "1 of Kepki 1"),
+        assert_equal(testOb->query_localdate(__Almanac, __Time+(DAY*200)), "1 of Roki 2"),
+        assert_equal(testOb->query_localdate(__Almanac, __Time+(DAY*12345)), "6 of Kantki 62"),
     }) :));
 }
 
@@ -172,14 +172,14 @@ void test_day_of_year () {
     expect_function("query_day_of_year", testOb);
 
     expect("day of year stays within bounds", (: ({
-        assert(testOb->query_day_of_year(__Time+(DAY*0), __Almanac), "==", 0),
-        assert(testOb->query_day_of_year(__Time+(DAY*1), __Almanac), "==", 1),
-        assert(testOb->query_day_of_year(__Time+(DAY*25), __Almanac), "==", 25),
-        assert(testOb->query_day_of_year(__Time+(DAY*50), __Almanac), "==", 50),
-        assert(testOb->query_day_of_year(__Time+(DAY*75), __Almanac), "==", 75),
-        assert(testOb->query_day_of_year(__Time+(DAY*100), __Almanac), "==", 100),
-        assert(testOb->query_day_of_year(__Time+(DAY*199), __Almanac), "==", 199),
-        assert(testOb->query_day_of_year(__Time+(DAY*200), __Almanac), "==", 0),
+        assert_equal(testOb->query_day_of_year(__Time+(DAY*0), __Almanac), 0),
+        assert_equal(testOb->query_day_of_year(__Time+(DAY*1), __Almanac), 1),
+        assert_equal(testOb->query_day_of_year(__Time+(DAY*25), __Almanac), 25),
+        assert_equal(testOb->query_day_of_year(__Time+(DAY*50), __Almanac), 50),
+        assert_equal(testOb->query_day_of_year(__Time+(DAY*75), __Almanac), 75),
+        assert_equal(testOb->query_day_of_year(__Time+(DAY*100), __Almanac), 100),
+        assert_equal(testOb->query_day_of_year(__Time+(DAY*199), __Almanac), 199),
+        assert_equal(testOb->query_day_of_year(__Time+(DAY*200), __Almanac), 0),
     }) :));
 }
 
@@ -187,14 +187,14 @@ void test_almanac () {
     expect_function("query_calculate_almanac", testOb);
 
     expect("handles dawn and dusk throughout year", (: ({
-        assert(testOb->query_calculate_almanac(__Time+(DAY*0), __Almanac), "==", ([ "dawn": ({ 4, 0 }), "day": ({ 5, 0 }), "dusk": ({ 16, 0 }), "night": ({ 17, 0 }), "equinox": "fall" ])),
-        assert(testOb->query_calculate_almanac(__Time+(DAY*25), __Almanac), "==", ([ "dawn": ({ 4, 30 }), "day": ({ 5, 30 }), "dusk": ({ 15, 30 }), "night": ({ 16, 30 }) ])),
-        assert(testOb->query_calculate_almanac(__Time+(DAY*50), __Almanac), "==", ([ "dawn": ({ 5, 0 }), "day": ({ 6, 0 }), "dusk": ({ 15, 0 }), "night": ({ 16, 0 }), "solstice": "summer" ])),
-        assert(testOb->query_calculate_almanac(__Time+(DAY*75), __Almanac), "==", ([ "dawn": ({ 5, 30 }), "day": ({ 6, 30 }), "dusk": ({ 14, 30 }), "night": ({ 15, 30 }) ])),
-        assert(testOb->query_calculate_almanac(__Time+(DAY*100), __Almanac), "==", ([ "dawn": ({ 6, 0 }), "day": ({ 7, 0 }), "dusk": ({ 14, 0 }), "night": ({ 15, 0 }), "equinox": "spring" ])),
-        assert(testOb->query_calculate_almanac(__Time+(DAY*125), __Almanac), "==", ([ "dawn": ({ 5, 30 }), "day": ({ 6, 30 }), "dusk": ({ 14, 30 }), "night": ({ 15, 30 }) ])),
-        assert(testOb->query_calculate_almanac(__Time+(DAY*150), __Almanac), "==", ([ "dawn": ({ 5, 0 }), "day": ({ 6, 0 }), "dusk": ({ 15, 0 }), "night": ({ 16, 0 }), "solstice": "winter" ])),
-        assert(testOb->query_calculate_almanac(__Time+(DAY*175), __Almanac), "==", ([ "dawn": ({ 4, 30 }), "day": ({ 5, 30 }), "dusk": ({ 15, 30 }), "night": ({ 16, 30 }) ])),
-        assert(testOb->query_calculate_almanac(__Time+(DAY*200), __Almanac), "==", ([ "dawn": ({ 4, 0 }), "day": ({ 5, 0 }), "dusk": ({ 16, 0 }), "night": ({ 17, 0 }), "equinox": "fall" ])),
+        assert_equal(testOb->query_calculate_almanac(__Time+(DAY*0), __Almanac), ([ "dawn": ({ 4, 0 }), "day": ({ 5, 0 }), "dusk": ({ 16, 0 }), "night": ({ 17, 0 }), "equinox": "fall" ])),
+        assert_equal(testOb->query_calculate_almanac(__Time+(DAY*25), __Almanac), ([ "dawn": ({ 4, 30 }), "day": ({ 5, 30 }), "dusk": ({ 15, 30 }), "night": ({ 16, 30 }) ])),
+        assert_equal(testOb->query_calculate_almanac(__Time+(DAY*50), __Almanac), ([ "dawn": ({ 5, 0 }), "day": ({ 6, 0 }), "dusk": ({ 15, 0 }), "night": ({ 16, 0 }), "solstice": "summer" ])),
+        assert_equal(testOb->query_calculate_almanac(__Time+(DAY*75), __Almanac), ([ "dawn": ({ 5, 30 }), "day": ({ 6, 30 }), "dusk": ({ 14, 30 }), "night": ({ 15, 30 }) ])),
+        assert_equal(testOb->query_calculate_almanac(__Time+(DAY*100), __Almanac), ([ "dawn": ({ 6, 0 }), "day": ({ 7, 0 }), "dusk": ({ 14, 0 }), "night": ({ 15, 0 }), "equinox": "spring" ])),
+        assert_equal(testOb->query_calculate_almanac(__Time+(DAY*125), __Almanac), ([ "dawn": ({ 5, 30 }), "day": ({ 6, 30 }), "dusk": ({ 14, 30 }), "night": ({ 15, 30 }) ])),
+        assert_equal(testOb->query_calculate_almanac(__Time+(DAY*150), __Almanac), ([ "dawn": ({ 5, 0 }), "day": ({ 6, 0 }), "dusk": ({ 15, 0 }), "night": ({ 16, 0 }), "solstice": "winter" ])),
+        assert_equal(testOb->query_calculate_almanac(__Time+(DAY*175), __Almanac), ([ "dawn": ({ 4, 30 }), "day": ({ 5, 30 }), "dusk": ({ 15, 30 }), "night": ({ 16, 30 }) ])),
+        assert_equal(testOb->query_calculate_almanac(__Time+(DAY*200), __Almanac), ([ "dawn": ({ 4, 0 }), "day": ({ 5, 0 }), "dusk": ({ 16, 0 }), "night": ({ 17, 0 }), "equinox": "fall" ])),
     }) :));
 }
