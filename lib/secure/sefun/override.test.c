@@ -24,6 +24,6 @@ void test_efuns () {
     expect_function("users", testOb);
 
     expect("users returns an array", (: ({
-        assert(arrayp(testOb->users()), "==", 1),
+        assert_equal(arrayp(testOb->users()), 1),
     }) :));
 }

@@ -14,15 +14,15 @@ void test_roll_die () {
 
     expect("roll_die returns valid values", (: ({
         rollData = testOb->roll_die(1, 2),
-        assert(sizeof(rollData), "==", 2), // sum and rolls
-        assert(sizeof(rollData[1]), "==", 1), // 1 die roll
-        assert(rollData[0], ">=", 1), // sum
-        assert(rollData[0], "<=", 2), // sum
+        assert_equal(sizeof(rollData), 2), // sum and rolls
+        assert_equal(sizeof(rollData[1]), 1), // 1 die roll
+        assert_equal(rollData[0] >= 1, 1), // sum
+        assert_equal(rollData[0] <= 2, 1), // sum
 
         rollData = testOb->roll_die(10, 10),
-        assert(sizeof(rollData), "==", 2), // sum and rolls
-        assert(sizeof(rollData[1]), "==", 10), // 1 die roll
-        assert(rollData[0], ">=", 1), // sum
-        assert(rollData[0], "<=", 100), // sum
+        assert_equal(sizeof(rollData), 2), // sum and rolls
+        assert_equal(sizeof(rollData[1]), 10), // 1 die roll
+        assert_equal(rollData[0] >= 1, 1), // sum
+        assert_equal(rollData[0] <= 100, 1), // sum
     }) :));
 }

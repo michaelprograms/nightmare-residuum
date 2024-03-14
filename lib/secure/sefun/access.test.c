@@ -12,7 +12,7 @@ void test_access () {
     expect_function("unguarded", testOb);
 
     expect("unguarded evaluates function", (: ({
-        assert(testOb->unguarded((: MAX_INT :)), "==", MAX_INT),
-        assert(testOb->unguarded(function () { return MAX_INT; }), "==", MAX_INT),
+        assert_equal(testOb->unguarded((: MAX_INT :)), MAX_INT),
+        assert_equal(testOb->unguarded(function () { return MAX_INT; }), MAX_INT),
     }) :));
 }
