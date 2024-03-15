@@ -22,8 +22,8 @@ void test_receive () {
     item = new(STD_ITEM);
 
     expect("inventory receives only items", (: ({
-        assert(testOb->handle_receive($(living)), "==", 0),
-        assert(testOb->handle_receive($(item)), "==", 1),
+        assert_equal(testOb->handle_receive($(living)), 0),
+        assert_equal(testOb->handle_receive($(item)), 1),
     }) :));
 
     if (living) destruct(living);
@@ -43,18 +43,18 @@ void test_max_items () {
     expect("max items prevents receiving items", (: ({
         // set max items to 1
         testOb->set_max_items(1),
-        assert(testOb->query_max_items(), "==", 1),
+        assert_equal(testOb->query_max_items(), 1),
         // 0 of 1 items, receive passes
-        assert(testOb->handle_receive($(item1)), "==", 1),
+        assert_equal(testOb->handle_receive($(item1)), 1),
         // move item to inventory to count
-        assert($(item1)->handle_move(testOb), "==", 1),
+        assert_equal($(item1)->handle_move(testOb), 1),
         // 1 of 1 items, receive fails
-        assert(testOb->handle_receive($(item2)), "==", 0),
+        assert_equal(testOb->handle_receive($(item2)), 0),
         // set max items to 2
         testOb->set_max_items(2),
-        assert(testOb->query_max_items(), "==", 2),
+        assert_equal(testOb->query_max_items(), 2),
         // 1 of 2 items, receive passes
-        assert(testOb->handle_receive($(item2)), "==", 1),
+        assert_equal(testOb->handle_receive($(item2)), 1),
     }) :));
 
     if (item1) destruct(item1);

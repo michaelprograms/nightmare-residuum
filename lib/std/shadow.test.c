@@ -14,9 +14,9 @@ void test_shadow () {
     expect_function("query_shadow", testOb);
 
     expect("shadow handled starting and stopping", (: ({
-        assert(testOb->query_shadow(), "==", UNDEFINED),
-        assert(testOb->start_shadow(this_object()), "==", 1),
-        assert(testOb->query_shadow(), "==", this_object()),
-        assert(testOb->stop_shadow(), "==", 1),
+        assert_equal(testOb->query_shadow(), UNDEFINED),
+        assert_equal(testOb->start_shadow(this_object()), 1),
+        assert_equal(testOb->query_shadow(), this_object()),
+        assert_equal(testOb->stop_shadow(), 1),
     }) :));
 }

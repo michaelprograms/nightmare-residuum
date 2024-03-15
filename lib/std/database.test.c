@@ -19,38 +19,38 @@ void test_connect () {
     expect("connect returns a handle", (: ({
         // connect
         db = testOb->connect(([ "db": "/save/test/database.db", ])),
-        assert(objectp(db), "==", 1),
-        assert(testOb->query_handle(), ">", 0),
+        assert_equal(objectp(db), 1),
+        assert_equal(testOb->query_handle() > 0, 1),
     }) :));
     expect("handle is queryable", (: ({
         // query non-existant
-        assert(db->query("SELECT * FROM `Test`"), "==", UNDEFINED),
+        assert_equal(db->query("SELECT * FROM `Test`"), UNDEFINED),
 
         // create
         db->query("CREATE TABLE `Test` ( `id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `thing` TEXT NOT NULL )"),
 
         // table is empty
-        assert(db->query("SELECT * FROM `Test`"), "==", UNDEFINED),
+        assert_equal(db->query("SELECT * FROM `Test`"), UNDEFINED),
 
         // insert into table
         db->query("INSERT INTO `Test` (thing) VALUES ('some thing')"),
         db->query("INSERT INTO `Test` (thing) VALUES ('another thing')"),
 
         // table has records
-        assert(db->query("SELECT * FROM `Test`"), "==", ({ ({ 1, "some thing" }), ({ 2, "another thing" }) })),
+        assert_equal(db->query("SELECT * FROM `Test`"), ({ ({ 1, "some thing" }), ({ 2, "another thing" }) })),
 
         // delete table records
-        assert(db->query("DELETE FROM `Test`"), "==", UNDEFINED),
+        assert_equal(db->query("DELETE FROM `Test`"), UNDEFINED),
 
         // table is empty
-        assert(db->query("SELECT * FROM `Test`"), "==", UNDEFINED),
+        assert_equal(db->query("SELECT * FROM `Test`"), UNDEFINED),
 
         // drop table
-        assert(db->query("DROP TABLE `Test`"), "==", UNDEFINED),
+        assert_equal(db->query("DROP TABLE `Test`"), UNDEFINED),
     }) :));
     expect("close stops a handle", (: ({
         // close
-        assert(testOb->close(), "==", 1),
-        assert(testOb->query_handle(), "==", 0),
+        assert_equal(testOb->close(), 1),
+        assert_equal(testOb->query_handle(), 0),
     }) :));
 }
