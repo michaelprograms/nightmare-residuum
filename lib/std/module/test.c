@@ -405,16 +405,6 @@ void assert (mixed left, string condition, mixed right) {
                 rightResult = to_float("" + rightResult);
             }
             currentTestPassed = leftResult == rightResult;
-        } else if (condition == "!=") {
-            currentTestPassed = leftResult != rightResult;
-        } else if (condition == ">") {
-            currentTestPassed = leftResult > rightResult;
-        } else if (condition == ">=") {
-            currentTestPassed = leftResult >= rightResult;
-        } else if (condition == "<") {
-            currentTestPassed = leftResult < rightResult;
-        } else if (condition == "<=") {
-            currentTestPassed = leftResult <= rightResult;
         } else if (condition == "regex") {
             currentTestPassed = regexp(leftResult, rightResult) > 0;
         } else if (condition == "catch") {

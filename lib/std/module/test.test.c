@@ -39,26 +39,6 @@ void test_expects_passing () {
         assert_equal(([ 1: "a", ]), ([ 1: "a", ])),
     }) :));
 
-    expect("assert condition '>' passes", (: ({
-        assert(1, ">", 0),
-        assert(321, ">", 123),
-    }) :));
-
-    expect("assert condition '>=' passes", (: ({
-        assert(1, ">=", 1),
-        assert(123, ">=", 123),
-    }) :));
-
-    expect("assert condition '<' passes", (: ({
-        assert(0, "<", 1),
-        assert(123, "<", 321),
-    }) :));
-
-    expect("assert condition '<=' passes", (: ({
-        assert(0, "<=", 1),
-        assert(123, "<=", 321),
-    }) :));
-
     expect("assert condition 'regex' passes", (: ({
         assert("bat", "regex", "b[a-z]t"),
         assert("cat", "regex", "c[a-z]t"),
@@ -89,30 +69,6 @@ void test_expects_failing () {
         assert_equal("xyz", "abc"),
         assert_equal(({ -1, -2, -3 }), ({ 1, 2, 3 })),
         assert_equal(([ "a": 1, ]), ([ 1: "a", ])),
-    }) :));
-
-    expect_next_failure();
-    expect("assert condition '>' should fail", (: ({
-        assert(0, ">", 1),
-        assert(123, ">", 321),
-    }) :));
-
-    expect_next_failure();
-    expect("assert condition '>=' should fail", (: ({
-        assert(0, ">=", 1),
-        assert(123, ">=", 321),
-    }) :));
-
-    expect_next_failure();
-    expect("assert condition '<' should fail", (: ({
-        assert(1, "<", 0),
-        assert(321, "<", 123),
-    }) :));
-
-    expect_next_failure();
-    expect("assert condition '<=' should fail", (: ({
-        assert(1, "<=", 0),
-        assert(321, "<=", 123),
     }) :));
 
     expect_next_failure();
