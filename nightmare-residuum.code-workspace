@@ -14,5 +14,8 @@
         "cSpell.enableFiletypes": [
             "lpc"
         ],
+        "files.exclude": {
+            "driver/src/thirdparty/**": true,
+        }
     }
 }
