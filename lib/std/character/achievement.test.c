@@ -15,21 +15,21 @@ void test_achievements () {
     expect_function("remove_achievement", testOb);
 
     expect("achievements are settable and queryable", (: ({
-        assert(testOb->query_achievements(), "==", ({ })),
+        assert_equal(testOb->query_achievements(), ({ })),
 
-        assert(testOb->set_achievement("test1"), "==", 1),
-        assert(testOb->query_achievement("test1"), "==", 1),
-        assert(testOb->set_achievement("test1"), "==", 0), // already set
-        assert(testOb->query_achievement("test1"), "==", 1),
+        assert_equal(testOb->set_achievement("test1"), 1),
+        assert_equal(testOb->query_achievement("test1"), 1),
+        assert_equal(testOb->set_achievement("test1"), 0), // already set
+        assert_equal(testOb->query_achievement("test1"), 1),
 
-        assert(testOb->set_achievement("test2"), "==", 1),
-        assert(testOb->query_achievement("test2"), "==", 1),
-        assert(testOb->set_achievement("test2"), "==", 0), // already set
-        assert(testOb->query_achievement("test2"), "==", 1),
+        assert_equal(testOb->set_achievement("test2"), 1),
+        assert_equal(testOb->query_achievement("test2"), 1),
+        assert_equal(testOb->set_achievement("test2"), 0), // already set
+        assert_equal(testOb->query_achievement("test2"), 1),
 
-        assert(testOb->query_achievements(), "==", ({ "test2", "test1", })),
+        assert_equal(testOb->query_achievements(), ({ "test2", "test1", })),
 
         testOb->remove_achievement("test2"),
-        assert(testOb->query_achievements(), "==", ({ "test1", })),
+        assert_equal(testOb->query_achievements(), ({ "test1", })),
     }) :));
 }
