@@ -24,10 +24,10 @@ object *query_wielded_weapons () {
 void test_is_weapon () {
     expect_function("is_weapon", testOb);
     expect("is_weapon returns true", (: ({
-        assert(testOb->is_weapon(), "==", 1),
-        assert(testOb->is_item(), "==", 1),
-        assert(testOb->is_armor(), "==", UNDEFINED),
-        assert(testOb->is_food(), "==", UNDEFINED),
+        assert_equal(testOb->is_weapon(), 1),
+        assert_equal(testOb->is_item(), 1),
+        assert_equal(testOb->is_armor(), UNDEFINED),
+        assert_equal(testOb->is_food(), UNDEFINED),
     }) :));
 }
 
@@ -36,22 +36,22 @@ void test_type () {
     expect_function("set_type", testOb);
 
     expect("weapon handles type", (: ({
-        assert(testOb->query_type(), "==", 0),
+        assert_equal(testOb->query_type(), 0),
 
         testOb->set_type("blade"),
-        assert(testOb->query_type(), "==", "blade"),
+        assert_equal(testOb->query_type(), "blade"),
 
         testOb->set_type("blunt"),
-        assert(testOb->query_type(), "==", "blunt"),
+        assert_equal(testOb->query_type(), "blunt"),
 
         testOb->set_type("brawl"),
-        assert(testOb->query_type(), "==", "brawl"),
+        assert_equal(testOb->query_type(), "brawl"),
 
         testOb->set_type("psionic"),
-        assert(testOb->query_type(), "==", "psionic"),
+        assert_equal(testOb->query_type(), "psionic"),
 
         testOb->set_type("ranged"),
-        assert(testOb->query_type(), "==", "ranged"),
+        assert_equal(testOb->query_type(), "ranged"),
     }) :));
 }
 
@@ -60,13 +60,13 @@ void test_hands () {
     expect_function("set_hands", testOb);
 
     expect("weapon handles hands", (: ({
-        assert(testOb->query_hands(), "==", 1),
+        assert_equal(testOb->query_hands(), 1),
 
         testOb->set_hands(2),
-        assert(testOb->query_hands(), "==", 2),
+        assert_equal(testOb->query_hands(), 2),
 
         testOb->set_hands(1),
-        assert(testOb->query_hands(), "==", 1),
+        assert_equal(testOb->query_hands(), 1),
     }) :));
 }
 
@@ -75,16 +75,16 @@ void test_wc () {
     expect_function("set_wc", testOb);
 
     expect("weapon handles wc", (: ({
-        assert(testOb->query_wc(), "==", 0),
+        assert_equal(testOb->query_wc(), 0),
 
         testOb->set_wc(1),
-        assert(testOb->query_wc(), "==", 1),
+        assert_equal(testOb->query_wc(), 1),
 
         testOb->set_wc(5),
-        assert(testOb->query_wc(), "==", 5),
+        assert_equal(testOb->query_wc(), 5),
 
         testOb->set_wc(10),
-        assert(testOb->query_wc(), "==", 10),
+        assert_equal(testOb->query_wc(), 10),
     }) :));
 }
 
@@ -95,12 +95,12 @@ void test_wielded () {
 
     testOb->set_short("weapon");
     expect("weapon handles wielded", (: ({
-        assert(testOb->query_wielded(), "==", 0),
-        assert(testOb->query_short(), "==", "weapon"),
+        assert_equal(testOb->query_wielded(), 0),
+        assert_equal(testOb->query_short(), "weapon"),
 
         testOb->set_wielded(this_object()),
-        assert(testOb->query_wielded(), "==", this_object()),
-        assert(testOb->query_short(), "==", "weapon (wielded)"),
+        assert_equal(testOb->query_wielded(), this_object()),
+        assert_equal(testOb->query_short(), "weapon (wielded)"),
     }) :));
 }
 
@@ -112,20 +112,20 @@ void test_item_verb_wield_applies () {
     __WieldedWeapons = ({ });
 
     expect("weapon handles verb applies direct_wield_obj and direct_unwield_obj", (: ({
-        assert(environment(testOb), "==", 0),
-        assert(testOb->direct_wield_obj(), "==", 0),
-        assert(testOb->direct_unwield_obj(), "==", 0),
+        assert_equal(environment(testOb), 0),
+        assert_equal(testOb->direct_wield_obj(), 0),
+        assert_equal(testOb->direct_unwield_obj(), 0),
 
-        assert(testOb->handle_move(this_object()), "==", 1),
-        assert(environment(testOb), "==", this_object()),
+        assert_equal(testOb->handle_move(this_object()), 1),
+        assert_equal(environment(testOb), this_object()),
 
-        assert(testOb->direct_wield_obj(), "==", 1),
-        assert(testOb->direct_unwield_obj(), "==", 0),
+        assert_equal(testOb->direct_wield_obj(), 1),
+        assert_equal(testOb->direct_unwield_obj(), 0),
 
         __WieldedWeapons += ({ testOb }),
         testOb->set_wielded(this_object()),
-        assert(testOb->direct_wield_obj(), "==", 0),
-        assert(testOb->direct_unwield_obj(), "==", 1),
+        assert_equal(testOb->direct_wield_obj(), 0),
+        assert_equal(testOb->direct_unwield_obj(), 1),
     }) :));
 
     __WieldableLimbs = 0;

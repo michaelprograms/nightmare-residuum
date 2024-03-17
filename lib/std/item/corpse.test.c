@@ -22,9 +22,9 @@ void test_received () {
 
         // grab callout tied to the test corpse
         calloutInfo = filter(call_out_info(), (: $1 && $1[0] == testOb :)),
-        assert(sizeof(calloutInfo), "==", 1),
-        assert(sizeof(calloutInfo[0]), "==", 3),
-        assert(calloutInfo[0][0], "==", testOb),
+        assert_equal(sizeof(calloutInfo), 1),
+        assert_equal(sizeof(calloutInfo[0]), 3),
+        assert_equal(calloutInfo[0][0], testOb),
     }) :));
 }
 
@@ -32,10 +32,10 @@ void test_corpse () {
     expect_function("is_corpse", testOb);
 
     expect("is_corpse behaves", (: ({
-        assert(testOb->is_item(), "==", 1),
-        assert(testOb->is_corpse(), "==", 1),
-        assert(testOb->is_character(), "==", UNDEFINED),
-        assert(testOb->is_npc(), "==", UNDEFINED),
+        assert_equal(testOb->is_item(), 1),
+        assert_equal(testOb->is_corpse(), 1),
+        assert_equal(testOb->is_character(), UNDEFINED),
+        assert_equal(testOb->is_npc(), UNDEFINED),
     }) :));
 }
 
@@ -50,30 +50,30 @@ void test_body () {
     expect("body is setup to match", (: ({
         testOb->setup_body($(liv)),
         // verify we set corpse information
-        assert(testOb->query_name(), "==", "corpse of tester"),
-        assert(testOb->query_id(), "==", ({ "corpse", "corpseoftester", "corpse of a tester", "corpse of tester", })),
-        assert(testOb->query_short(), "==", "corpse of a tester"),
+        assert_equal(testOb->query_name(), "corpse of tester"),
+        assert_equal(testOb->query_id(), ({ "corpse", "corpseoftester", "corpse of a tester", "corpse of tester", })),
+        assert_equal(testOb->query_short(), "corpse of a tester"),
     }) :));
 
     liv->set_short("a %^BOLD%^tester%^DEFAULT%^");
     expect("body handles short with DEFAULT", (: ({
         testOb->setup_body($(liv)),
         // verify %^DEFAULT%^ turns to %^RESET%^
-        assert(testOb->query_short(), "==", "corpse of a %^BOLD%^tester%^RESET%^"),
+        assert_equal(testOb->query_short(), "corpse of a %^BOLD%^tester%^RESET%^"),
         // verify we keep %^DEFAULT%^ instead of replacing to %^RESET%^
-        assert(testOb->query_short("%^DEFAULT%^"), "==", "corpse of a %^BOLD%^tester%^DEFAULT%^"),
+        assert_equal(testOb->query_short("%^DEFAULT%^"), "corpse of a %^BOLD%^tester%^DEFAULT%^"),
         // verify we override %^DEFAULT%^ with %^RESET%^
-        assert(testOb->query_short("%^RED%^"), "==", "corpse of a %^BOLD%^tester%^RED%^"),
+        assert_equal(testOb->query_short("%^RED%^"), "corpse of a %^BOLD%^tester%^RED%^"),
     }) :));
 
     liv->add_currency("copper", 12345);
     expect("body transfers currency", (: ({
-        assert(present("coins", testOb), "==", 0),
-        assert($(liv)->query_currency("copper"), "==", 12345),
+        assert_equal(present("coins", testOb), 0),
+        assert_equal($(liv)->query_currency("copper"), 12345),
         testOb->setup_body($(liv)),
         // verify coins moved to corpse
-        assert(present("coins", testOb)->query_currency("copper"), "==", 12345),
-        assert($(liv)->query_currency("copper"), "==", 0),
+        assert_equal(present("coins", testOb)->query_currency("copper"), 12345),
+        assert_equal($(liv)->query_currency("copper"), 0),
     }) :));
 
     destruct(liv);
