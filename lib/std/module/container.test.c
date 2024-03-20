@@ -17,13 +17,13 @@ void test_receive () {
     expect_function("handle_release", testOb);
 
     expect("receive and release behaves", (: ({
-        assert(testOb->can_receive($(ob)), "==", 1),
-        assert(testOb->can_release($(ob)), "==", 0),
-        assert(testOb->handle_receive($(ob)), "==", 1),
-        assert($(ob)->handle_move(testOb), "==", 1),
-        assert(testOb->can_receive($(ob)), "==", 0),
-        assert(testOb->can_release($(ob)), "==", 1),
-        assert(testOb->handle_release($(ob)), "==", 1),
+        assert_equal(testOb->can_receive($(ob)), 1),
+        assert_equal(testOb->can_release($(ob)), 0),
+        assert_equal(testOb->handle_receive($(ob)), 1),
+        assert_equal($(ob)->handle_move(testOb), 1),
+        assert_equal(testOb->can_receive($(ob)), 0),
+        assert_equal(testOb->can_release($(ob)), 1),
+        assert_equal(testOb->handle_release($(ob)), 1),
     }) :));
 }
 
@@ -32,8 +32,8 @@ void test_inventory () {
     expect_function("inventory_accessible", testOb);
 
     expect("inventory behaves", (: ({
-        assert(testOb->inventory_visible(), "==", 1),
-        assert(testOb->inventory_accessible(), "==", 1),
+        assert_equal(testOb->inventory_visible(), 1),
+        assert_equal(testOb->inventory_accessible(), 1),
     }) :));
 }
 
@@ -50,16 +50,16 @@ void test_query_contents () {
 
     expect("query filtered contents behave", (: ({
         // verify empty
-        assert(sizeof(testOb->query_living_contents()), "==", 0),
-        assert(sizeof(testOb->query_item_contents()), "==", 0),
-        assert(sizeof(testOb->query_contents()), "==", 0),
+        assert_equal(sizeof(testOb->query_living_contents()), 0),
+        assert_equal(sizeof(testOb->query_item_contents()), 0),
+        assert_equal(sizeof(testOb->query_contents()), 0),
         // move test items
-        assert($(living)->handle_move(testOb), "==", 1),
-        assert($(item)->handle_move(testOb), "==", 1),
+        assert_equal($(living)->handle_move(testOb), 1),
+        assert_equal($(item)->handle_move(testOb), 1),
         // verify contents
-        assert(sizeof(testOb->query_living_contents()), "==", 1),
-        assert(sizeof(testOb->query_item_contents()), "==", 1),
-        assert(sizeof(testOb->query_contents()), "==", 2),
+        assert_equal(sizeof(testOb->query_living_contents()), 1),
+        assert_equal(sizeof(testOb->query_item_contents()), 1),
+        assert_equal(sizeof(testOb->query_contents()), 2),
     }) :));
 
     if (living) destruct(living);

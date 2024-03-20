@@ -89,7 +89,7 @@ void test_expects_failing () {
 void test_async_test (function done) {
     call_out_walltime(function (function done) {
         expect("async function completes", (: ({
-            assert(1, "==", 1),
+            assert_equal(1, 1),
         }) :));
         evaluate(done);
     }, 0.01, done);
@@ -99,23 +99,23 @@ void test_lifecycle_events () {
     expect_function("query_expect_catch", testOb);
 
     expect("lifecycle events execute in order", (: ({
-        assert(nBeforeAll, "==", 1), // before_all_tests
-        assert(nBeforeEach, "==", sizeof(testOrder)), // before_each_test
+        assert_equal(nBeforeAll, 1), // before_all_tests
+        assert_equal(nBeforeEach, sizeof(testOrder)), // before_each_test
 
-        assert(nAfterEach, "==", sizeof(testOrder) - 1), // after_each_test not called for this test
+        assert_equal(nAfterEach, sizeof(testOrder) - 1), // after_each_test not called for this test
 
-        assert(nTestOrder, "==", 1), // test_order
+        assert_equal(nTestOrder, 1), // test_order
     }) :));
 
     expect("query_expect_catch is enabled during assert 'catch'", (: ({
-        assert(query_expect_catch(), "==", 0),
+        assert_equal(query_expect_catch(), 0),
         assert((: query_expect_catch() && error("Catch") :), "catch", "*Catch\n"),
-        assert(query_expect_catch(), "==", 0),
+        assert_equal(query_expect_catch(), 0),
     }) :));
 }
 
 void test_should_be_ignored () {
     expect("this test should be ignored", (: ({
-        assert(0, "==", 1),
+        assert_equal(0, 1),
     }) :));
 }

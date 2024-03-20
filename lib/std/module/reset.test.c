@@ -26,33 +26,33 @@ void test_resets () {
 
     expect("resets handle setting, querying, and resetting", (: ({
         // have not set_reset yet
-        assert(testOb->query_resets(), "==", 0),
-        assert(testOb->query_reset(), "==", ([ ])),
+        assert_equal(testOb->query_resets(), 0),
+        assert_equal(testOb->query_reset(), ([ ])),
 
         // set_reset will call reset for integer argument
         testOb->set_reset(([ "/std/item.c": 1 ])),
-        assert(testOb->query_resets(), "==", 1),
-        assert(testOb->query_reset(), "==", ([ "/std/item.c": 1 ])),
+        assert_equal(testOb->query_resets(), 1),
+        assert_equal(testOb->query_reset(), ([ "/std/item.c": 1 ])),
         testOb->reset(),
-        assert(testOb->query_resets(), "==", 2),
+        assert_equal(testOb->query_resets(), 2),
 
         // set_reset will call reset for map argument
         testOb->set_reset(([ "/std/item.c": ([ "number": 1, "setup": $(setupFn) ]) ])),
-        assert(testOb->query_resets(), "==", 3),
-        assert(testOb->query_reset(), "==", ([ "/std/item.c": ([ "number": 1, "setup": $(setupFn) ]) ])),
-        assert(setupFnCalled, "==", 1),
+        assert_equal(testOb->query_resets(), 3),
+        assert_equal(testOb->query_reset(), ([ "/std/item.c": ([ "number": 1, "setup": $(setupFn) ]) ])),
+        assert_equal(setupFnCalled, 1),
         testOb->reset(),
-        assert(testOb->query_resets(), "==", 4),
-        assert(setupFnCalled, "==", 2),
+        assert_equal(testOb->query_resets(), 4),
+        assert_equal(setupFnCalled, 2),
 
         // set_reset_data will not call reset for integer argument
         testOb->set_reset_data(([ "/std/item.c": 1 ])),
-        assert(testOb->query_resets(), "==", 4),
-        assert(testOb->query_reset(), "==", ([ "/std/item.c": 1 ])),
+        assert_equal(testOb->query_resets(), 4),
+        assert_equal(testOb->query_reset(), ([ "/std/item.c": 1 ])),
         // set_reset_data will not call reset for map argument
         testOb->set_reset_data(([ "/std/item.c": ([ "number": 1, "setup": $(setupFn) ]) ])),
-        assert(testOb->query_resets(), "==", 4),
-        assert(testOb->query_reset(), "==", ([ "/std/item.c": ([ "number": 1, "setup": $(setupFn) ]) ])),
+        assert_equal(testOb->query_resets(), 4),
+        assert_equal(testOb->query_reset(), ([ "/std/item.c": ([ "number": 1, "setup": $(setupFn) ]) ])),
     }) :));
 }
 
@@ -73,44 +73,44 @@ void test_objects () {
 
     expect("reset tracks wandering NPCs", (: ({
         // r1 will have initial reset from create
-        assert(r1->query_resets(), "==", 1),
-        assert(r1->query_reset(), "==", ([ ])),
+        assert_equal(r1->query_resets(), 1),
+        assert_equal(r1->query_reset(), ([ ])),
 
         // set wanderer
         r1->set_reset(([ "/std/npc.c": ([
             "number": 1,
             "setup": $(setupFn),
         ]) ])),
-        assert(r1->query_resets(), "==", 2),
-        assert(r1->query_reset(), "==", ([ "/std/npc.c": ([
+        assert_equal(r1->query_resets(), 2),
+        assert_equal(r1->query_reset(), ([ "/std/npc.c": ([
             "number": 1,
             "setup": $(setupFn)
         ]) ])),
 
         // tracking wandering object
-        assert(r1->query_objects(), "==", ([ "/std/npc.c:0": npc ])),
-        assert(r2->query_objects(), "==", ([ ])),
+        assert_equal(r1->query_objects(), ([ "/std/npc.c:0": npc ])),
+        assert_equal(r2->query_objects(), ([ ])),
 
         // force NPC to wander to r2
-        assert(environment(npc), "==", r1),
+        assert_equal(environment(npc), r1),
         npc->handle_wander(),
-        assert(environment(npc), "==", r2),
+        assert_equal(environment(npc), r2),
 
         // still tracking wandering object
-        assert(r1->query_objects(), "==", ([ "/std/npc.c:0": npc ])),
-        assert(r2->query_objects(), "==", ([ ])),
+        assert_equal(r1->query_objects(), ([ "/std/npc.c:0": npc ])),
+        assert_equal(r2->query_objects(), ([ ])),
 
         // reset doesn't spawn another wandering NPC
         r1->reset(),
-        assert(r1->query_objects(), "==", ([ "/std/npc.c:0": npc ])),
-        assert(r2->query_objects(), "==", ([ ])),
+        assert_equal(r1->query_objects(), ([ "/std/npc.c:0": npc ])),
+        assert_equal(r2->query_objects(), ([ ])),
 
         // remove wandering NPC
         npc->handle_remove(),
         // force a new NPC to spawn
         r1->reset(),
-        assert(r1->query_objects(), "==", ([ "/std/npc.c:0": npc ])),
-        assert(r2->query_objects(), "==", ([ ])),
+        assert_equal(r1->query_objects(), ([ "/std/npc.c:0": npc ])),
+        assert_equal(r2->query_objects(), ([ ])),
     }) :));
 
     if (r1) destruct(r1);

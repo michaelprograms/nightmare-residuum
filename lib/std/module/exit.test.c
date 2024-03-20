@@ -31,28 +31,28 @@ void test_exits () {
     expect_function("query_hidden_exits", testOb);
 
     expect("exits are addable, queryable, and removable", (: ({
-        assert(testOb->query_exits(), "==", ([ ])),
-        assert(testOb->query_exit_directions(), "==", ({ })),
-        assert(testOb->query_exit_destinations(), "==", ({ })),
+        assert_equal(testOb->query_exits(), ([ ])),
+        assert_equal(testOb->query_exit_directions(), ({ })),
+        assert_equal(testOb->query_exit_destinations(), ({ })),
 
         testOb->set_exit("north", "/northroom.c"),
-        assert(testOb->query_exits(), "==", ([ "north": ([ "room": "/northroom.c" ]) ])),
-        assert(testOb->query_exit_directions(), "==", ({ "north" })),
-        assert(testOb->query_exit_dirs(), "==", ({ "n" })),
-        assert(testOb->query_exit_destinations(), "==", ({ ([ "room": "/northroom.c" ]) })),
-        assert(testOb->query_exit("north"), "==", "/northroom.c"),
+        assert_equal(testOb->query_exits(), ([ "north": ([ "room": "/northroom.c" ]) ])),
+        assert_equal(testOb->query_exit_directions(), ({ "north" })),
+        assert_equal(testOb->query_exit_dirs(), ({ "n" })),
+        assert_equal(testOb->query_exit_destinations(), ({ ([ "room": "/northroom.c" ]) })),
+        assert_equal(testOb->query_exit("north"), "/northroom.c"),
 
         testOb->set_exit("south", "/southroom.c"),
-        assert(testOb->query_exits(), "==", ([ "south": ([ "room": "/southroom.c"]), "north": ([ "room": "/northroom.c" ]) ])),
-        assert(testOb->query_exit_directions(), "==", ({ "south", "north" })),
-        assert(testOb->query_exit_dirs(), "==", ({ "s", "n" })),
-        assert(testOb->query_exit_destinations(), "==", ({ ([ "room": "/southroom.c" ]), ([ "room": "/northroom.c" ]) })),
+        assert_equal(testOb->query_exits(), ([ "south": ([ "room": "/southroom.c"]), "north": ([ "room": "/northroom.c" ]) ])),
+        assert_equal(testOb->query_exit_directions(), ({ "south", "north" })),
+        assert_equal(testOb->query_exit_dirs(), ({ "s", "n" })),
+        assert_equal(testOb->query_exit_destinations(), ({ ([ "room": "/southroom.c" ]), ([ "room": "/northroom.c" ]) })),
 
         testOb->remove_exit("north"),
-        assert(testOb->query_exits(), "==", ([ "south": ([ "room": "/southroom.c" ]) ])),
-        assert(testOb->query_exit_directions(), "==", ({ "south" })),
-        assert(testOb->query_exit_dirs(), "==", ({ "s" })),
-        assert(testOb->query_exit_destinations(), "==", ({ ([ "room": "/southroom.c" ]) })),
+        assert_equal(testOb->query_exits(), ([ "south": ([ "room": "/southroom.c" ]) ])),
+        assert_equal(testOb->query_exit_directions(), ({ "south" })),
+        assert_equal(testOb->query_exit_dirs(), ({ "s" })),
+        assert_equal(testOb->query_exit_destinations(), ({ ([ "room": "/southroom.c" ]) })),
 
         // add more exits
         testOb->set_exit("north", "/northroom.c"),
@@ -62,8 +62,8 @@ void test_exits () {
         testOb->set_exit("west", "/westroom.c"),
         testOb->set_exit("southeast", "/southeastroom.c"),
         testOb->set_exit("southwest", "/southwestroom.c"),
-        assert(testOb->query_exit_directions(), "==", ({ "north", "south", "east", "southeast", "northeast", "west", "southwest", "northwest" })),
-        assert(testOb->query_exit_dirs(), "==", ({ "n", "s", "e", "se", "ne", "w", "sw", "nw" })),
+        assert_equal(testOb->query_exit_directions(), ({ "north", "south", "east", "southeast", "northeast", "west", "southwest", "northwest" })),
+        assert_equal(testOb->query_exit_dirs(), ({ "n", "s", "e", "se", "ne", "w", "sw", "nw" })),
 
         // overrides existing exits
         testOb->set_exits(([
@@ -72,16 +72,16 @@ void test_exits () {
             "west": "/westroom.c",
             "south": "/southroom.c",
         ])),
-        assert(testOb->query_exit_directions(), "==", ({ "north", "south", "east", "west" })),
-        assert(testOb->query_exit_dirs(), "==", ({ "n", "s", "e", "w" })),
+        assert_equal(testOb->query_exit_directions(), ({ "north", "south", "east", "west" })),
+        assert_equal(testOb->query_exit_dirs(), ({ "n", "s", "e", "w" })),
     }) :));
 
     expect("exits are able to set hidden flag", (: ({
-        assert(testOb->query_hidden_exits(), "==", 0),
+        assert_equal(testOb->query_hidden_exits(), 0),
         testOb->set_hidden_exits(1),
-        assert(testOb->query_hidden_exits(), "==", 1),
+        assert_equal(testOb->query_hidden_exits(), 1),
         testOb->set_hidden_exits(0),
-        assert(testOb->query_hidden_exits(), "==", 0),
+        assert_equal(testOb->query_hidden_exits(), 0),
     }) :));
 }
 
@@ -94,25 +94,25 @@ void test_climbs () {
     expect_function("set_climb", testOb);
 
     expect("climbs are addable and queryable", (: ({
-        assert(testOb->query_climbs(), "==", ([ ])),
-        assert(testOb->query_climb_directions(), "==", ({ })),
-        assert(testOb->query_climb_destinations(), "==", ({ })),
+        assert_equal(testOb->query_climbs(), ([ ])),
+        assert_equal(testOb->query_climb_directions(), ({ })),
+        assert_equal(testOb->query_climb_destinations(), ({ })),
 
         testOb->set_climb("up", "/uproom.c"),
-        assert(testOb->query_climbs(), "==", ([ "up": ([ "room": "/uproom.c" ]) ])),
-        assert(testOb->query_climb_directions(), "==", ({ "up" })),
-        assert(testOb->query_climb_destinations(), "==", ({ ([ "room": "/uproom.c" ]) })),
-        assert(testOb->query_climb("up"), "==", "/uproom.c"),
+        assert_equal(testOb->query_climbs(), ([ "up": ([ "room": "/uproom.c" ]) ])),
+        assert_equal(testOb->query_climb_directions(), ({ "up" })),
+        assert_equal(testOb->query_climb_destinations(), ({ ([ "room": "/uproom.c" ]) })),
+        assert_equal(testOb->query_climb("up"), "/uproom.c"),
 
         testOb->set_climb("down", "/downroom.c"),
-        assert(testOb->query_climbs(), "==", ([ "down": ([ "room": "/downroom.c"]), "up": ([ "room": "/uproom.c" ]) ])),
-        assert(testOb->query_climb_directions(), "==", ({ "down", "up" })),
-        assert(testOb->query_climb_destinations(), "==", ({ ([ "room": "/downroom.c" ]), ([ "room": "/uproom.c" ]) })),
+        assert_equal(testOb->query_climbs(), ([ "down": ([ "room": "/downroom.c"]), "up": ([ "room": "/uproom.c" ]) ])),
+        assert_equal(testOb->query_climb_directions(), ({ "down", "up" })),
+        assert_equal(testOb->query_climb_destinations(), ({ ([ "room": "/downroom.c" ]), ([ "room": "/uproom.c" ]) })),
 
         testOb->remove_climb("down"),
-        assert(testOb->query_climbs(), "==", ([ "up": ([ "room": "/uproom.c" ]) ])),
-        assert(testOb->query_climb_directions(), "==", ({ "up" })),
-        assert(testOb->query_climb_destinations(), "==", ({ ([ "room": "/uproom.c" ]) })),
+        assert_equal(testOb->query_climbs(), ([ "up": ([ "room": "/uproom.c" ]) ])),
+        assert_equal(testOb->query_climb_directions(), ({ "up" })),
+        assert_equal(testOb->query_climb_destinations(), ({ ([ "room": "/uproom.c" ]) })),
 
         // override climbs
         testOb->set_climbs(([
@@ -120,9 +120,9 @@ void test_climbs () {
             "down": "/downroom2.c",
             "something": "/somethingroom.c",
         ])),
-        assert(testOb->query_climbs(), "==", ([ "down": ([ "room": "/downroom2.c"]), "something": ([ "room": "/somethingroom.c" ]), "up": ([ "room": "/uproom2.c", ]) ])),
-        assert(testOb->query_climb_directions(), "==", ({ "something", "down", "up", })),
-        assert(testOb->query_climb_destinations(), "==", ({ ([ "room": "/somethingroom.c" ]), ([ "room": "/downroom2.c" ]), ([ "room": "/uproom2.c" ]), })),
+        assert_equal(testOb->query_climbs(), ([ "down": ([ "room": "/downroom2.c"]), "something": ([ "room": "/somethingroom.c" ]), "up": ([ "room": "/uproom2.c", ]) ])),
+        assert_equal(testOb->query_climb_directions(), ({ "something", "down", "up", })),
+        assert_equal(testOb->query_climb_destinations(), ({ ([ "room": "/somethingroom.c" ]), ([ "room": "/downroom2.c" ]), ([ "room": "/uproom2.c" ]), })),
 
     }) :));
 }
@@ -147,17 +147,17 @@ void test_exits_before_after () {
     r2->set_exit("west", file_name(r1));
 
     expect("exits handles before and after functions", (: ({
-        assert(ob->handle_move(r1), "==", 1),
-        assert(r1->handle_go(ob, "walk", "east"), "==", 1),
-        assert(checkBefore, "==", 1),
-        assert(checkAfter, "==", 1),
+        assert_equal(ob->handle_move(r1), 1),
+        assert_equal(r1->handle_go(ob, "walk", "east"), 1),
+        assert_equal(checkBefore, 1),
+        assert_equal(checkAfter, 1),
 
         r1->set_exit("east", file_name(r2), function (object ob, string dir) {
             return 0;
         }),
 
-        assert(ob->handle_move(r1), "==", 1),
-        assert(r1->handle_go(ob, "walk", "east"), "==", 0),
+        assert_equal(ob->handle_move(r1), 1),
+        assert_equal(r1->handle_go(ob, "walk", "east"), 0),
     }) :));
 
     destruct(ob);
@@ -177,27 +177,27 @@ void test_handle_go () {
     r2->set_exit("east", "/invalid/path.c");
 
     expect("handle_go moved object", (: ({
-        assert(regexp(r1->query_exit("east"), "/std/room#[0-9]+"), "==", 1),
-        assert(regexp(r2->query_exit("west"), "/std/room#[0-9]+"), "==", 1),
-        assert(sizeof(r1->query_living_contents()), "==", 0),
-        assert(sizeof(r2->query_living_contents()), "==", 0),
-        assert(ob->handle_move(r1), "==", 1),
-        assert(sizeof(r1->query_living_contents()), "==", 1),
-        assert(sizeof(r2->query_living_contents()), "==", 0),
+        assert_equal(regexp(r1->query_exit("east"), "/std/room#[0-9]+"), 1),
+        assert_equal(regexp(r2->query_exit("west"), "/std/room#[0-9]+"), 1),
+        assert_equal(sizeof(r1->query_living_contents()), 0),
+        assert_equal(sizeof(r2->query_living_contents()), 0),
+        assert_equal(ob->handle_move(r1), 1),
+        assert_equal(sizeof(r1->query_living_contents()), 1),
+        assert_equal(sizeof(r2->query_living_contents()), 0),
 
-        assert(r1->handle_go(ob, "walk", "east"), "==", 1),
-        assert(file_name(environment(ob)), "==", file_name(r2)),
+        assert_equal(r1->handle_go(ob, "walk", "east"), 1),
+        assert_equal(file_name(environment(ob)), file_name(r2)),
     }) :));
 
     expect("handle_go doesn't move objects it shouldn't", (: ({
         ob->handle_move(r2),
-        assert(r1->handle_go(ob, "walk", "east"), "==", 0),
-        assert(sizeof(r1->query_living_contents()), "==", 0),
-        assert(sizeof(r2->query_living_contents()), "==", 1),
+        assert_equal(r1->handle_go(ob, "walk", "east"), 0),
+        assert_equal(sizeof(r1->query_living_contents()), 0),
+        assert_equal(sizeof(r2->query_living_contents()), 1),
     }) :));
 
     expect("handle_go handles invalid path", (: ({
-        assert(r2->handle_go(ob, "walk", "east"), "==", 0),
+        assert_equal(r2->handle_go(ob, "walk", "east"), 0),
     }) :));
 
     if (ob) destruct(ob);
@@ -217,27 +217,27 @@ void test_handle_climb () {
     r2->set_climb("bad", "/invalid/path.c");
 
     expect("handle_climb moved object", (: ({
-        assert(regexp(r1->query_climb("up"), "/std/room#[0-9]+"), "==", 1),
-        assert(regexp(r2->query_climb("down"), "/std/room#[0-9]+"), "==", 1),
-        assert(sizeof(r1->query_living_contents()), "==", 0),
-        assert(sizeof(r2->query_living_contents()), "==", 0),
-        assert(ob->handle_move(r1), "==", 1),
-        assert(sizeof(r1->query_living_contents()), "==", 1),
-        assert(sizeof(r2->query_living_contents()), "==", 0),
+        assert_equal(regexp(r1->query_climb("up"), "/std/room#[0-9]+"), 1),
+        assert_equal(regexp(r2->query_climb("down"), "/std/room#[0-9]+"), 1),
+        assert_equal(sizeof(r1->query_living_contents()), 0),
+        assert_equal(sizeof(r2->query_living_contents()), 0),
+        assert_equal(ob->handle_move(r1), 1),
+        assert_equal(sizeof(r1->query_living_contents()), 1),
+        assert_equal(sizeof(r2->query_living_contents()), 0),
 
-        assert(r1->handle_climb(ob, "climb", "up"), "==", 1),
-        assert(file_name(environment(ob)), "==", file_name(r2)),
+        assert_equal(r1->handle_climb(ob, "climb", "up"), 1),
+        assert_equal(file_name(environment(ob)), file_name(r2)),
     }) :));
 
     expect("handle_climb doesn't move objects it shouldn't", (: ({
         ob->handle_move(r2),
-        assert(r1->handle_climb(ob, "climb", "up"), "==", 0),
-        assert(sizeof(r1->query_living_contents()), "==", 0),
-        assert(sizeof(r2->query_living_contents()), "==", 1),
+        assert_equal(r1->handle_climb(ob, "climb", "up"), 0),
+        assert_equal(sizeof(r1->query_living_contents()), 0),
+        assert_equal(sizeof(r2->query_living_contents()), 1),
     }) :));
 
     expect("handle_climb handles invalid path", (: ({
-        assert(r2->handle_climb(ob, "climb", "bad"), "==", 0),
+        assert_equal(r2->handle_climb(ob, "climb", "bad"), 0),
     }) :));
 
     if (ob) destruct(ob);
@@ -253,18 +253,18 @@ void test_query_defaults () {
     r2 = new(STD_ROOM);
 
     expect("handles default enter and out", (: ({
-        assert(r1->query_default_enter(), "==", 0),
-        assert(r2->query_default_out(), "==", 0),
+        assert_equal(r1->query_default_enter(), 0),
+        assert_equal(r2->query_default_out(), 0),
 
         r1->set_exits(([ "enter": file_name(r2) ])),
         r2->set_exits(([ "out": file_name(r1) ])),
-        assert(r1->query_default_enter(), "==", "enter"),
-        assert(r2->query_default_out(), "==", "out"),
+        assert_equal(r1->query_default_enter(), "enter"),
+        assert_equal(r2->query_default_out(), "out"),
 
         r1->set_exits(([ "enter east": file_name(r2) ])),
         r2->set_exits(([ "out west": file_name(r1) ])),
-        assert(r1->query_default_enter(), "==", "enter east"),
-        assert(r2->query_default_out(), "==", "out west"),
+        assert_equal(r1->query_default_enter(), "enter east"),
+        assert_equal(r2->query_default_out(), "out west"),
 
         r1->set_exits(([
             "enter east": file_name(r2),
@@ -274,13 +274,13 @@ void test_query_defaults () {
             "out west": file_name(r1),
             "out east": file_name(r1),
         ])),
-        assert(r1->query_default_enter(), "==", 0),
-        assert(r2->query_default_out(), "==", 0),
+        assert_equal(r1->query_default_enter(), 0),
+        assert_equal(r2->query_default_out(), 0),
 
         r1->remove_exit("enter east"),
         r2->remove_exit("out west"),
-        assert(r1->query_default_enter(), "==", "enter west"),
-        assert(r2->query_default_out(), "==", "out east"),
+        assert_equal(r1->query_default_enter(), "enter west"),
+        assert_equal(r2->query_default_out(), "out east"),
     }) :));
 
     if (r1) destruct(r1);
@@ -303,20 +303,20 @@ void test_exit_reverse_override () {
         r1->set_exit("east", file_name(r2), 0, 0, "reverse"),
         r1->set_exit("west", file_name(r2), 0, 0, "override"),
         // move test to room test ob
-        assert(this_object()->handle_move(r1), "==", 1),
+        assert_equal(this_object()->handle_move(r1), 1),
 
         // verify no reverse overrides seen yet
-        assert(__Reverse, "==", 0),
+        assert_equal(__Reverse, 0),
 
         // try first override
-        assert(r1->handle_go(this_object(), "method", "east"), "==", 1),
-        assert(__Reverse, "==", "reverse"),
+        assert_equal(r1->handle_go(this_object(), "method", "east"), 1),
+        assert_equal(__Reverse, "reverse"),
 
         // try second override
-        assert(r1->handle_go(this_object(), "method", "west"), "==", 1),
-        assert(__Reverse, "==", "override"),
+        assert_equal(r1->handle_go(this_object(), "method", "west"), 1),
+        assert_equal(__Reverse, "override"),
 
-        assert(this_object()->handle_move("/domain/Nowhere/room/void.c"), "==", 1),
+        assert_equal(this_object()->handle_move("/domain/Nowhere/room/void.c"), 1),
     }) :));
 
     if (r1) destruct(r1);
@@ -340,72 +340,72 @@ void test_doors () {
 
     expect("doors behave", (: ({
         // no doors are setup
-        assert(r1->query_doors(), "==", ({ })),
-        assert(r2->query_doors(), "==", ({ })),
-        assert(r1->query_open("door"), "==", -1),
-        assert(r2->query_open("door"), "==", -1),
-        assert(r1->query_locked("door"), "==", -1),
-        assert(r2->query_locked("door"), "==", -1),
+        assert_equal(r1->query_doors(), ({ })),
+        assert_equal(r2->query_doors(), ({ })),
+        assert_equal(r1->query_open("door"), -1),
+        assert_equal(r2->query_open("door"), -1),
+        assert_equal(r1->query_locked("door"), -1),
+        assert_equal(r2->query_locked("door"), -1),
 
         // setup door without key
         r1->set_exit("east", file_name(r2), 0, 0, 0, "door", 0, 0),
         r2->set_exit("west", file_name(r1), 0, 0, 0, "door", 0, 0),
         // doors are setup
-        assert(r1->query_doors(), "==", ({ "door", })),
-        assert(r2->query_doors(), "==", ({ "door", })),
-        assert(r1->query_doors(1), "==", ({ "east", "door", })),
-        assert(r2->query_doors(1), "==", ({ "west", "door", })),
-        assert(r1->query_door_dir("door"), "==", "east"),
-        assert(r2->query_door_dir("door"), "==", "west"),
-        assert(r1->query_open("door"), "==", 0),
-        assert(r2->query_open("door"), "==", 0),
-        assert(r1->query_locked("door"), "==", 0),
-        assert(r2->query_locked("door"), "==", 0),
+        assert_equal(r1->query_doors(), ({ "door", })),
+        assert_equal(r2->query_doors(), ({ "door", })),
+        assert_equal(r1->query_doors(1), ({ "east", "door", })),
+        assert_equal(r2->query_doors(1), ({ "west", "door", })),
+        assert_equal(r1->query_door_dir("door"), "east"),
+        assert_equal(r2->query_door_dir("door"), "west"),
+        assert_equal(r1->query_open("door"), 0),
+        assert_equal(r2->query_open("door"), 0),
+        assert_equal(r1->query_locked("door"), 0),
+        assert_equal(r2->query_locked("door"), 0),
 
         // setup locked door with key
         r1->set_exit("east", file_name(r2), 0, 0, 0, "door", "test key", 1),
         r2->set_exit("west", file_name(r1), 0, 0, 0, "door", 0, 1),
         // doors are setup
-        assert(r1->query_open("door"), "==", 0),
-        assert(r2->query_open("door"), "==", 0),
-        assert(r1->query_locked("door"), "==", 1),
-        assert(r2->query_locked("door"), "==", 1),
+        assert_equal(r1->query_open("door"), 0),
+        assert_equal(r2->query_open("door"), 0),
+        assert_equal(r1->query_locked("door"), 1),
+        assert_equal(r2->query_locked("door"), 1),
 
         // setup unlocked door with key
         r1->set_exit("east", file_name(r2), 0, 0, 0, "door", "test key", 0),
         r2->set_exit("west", file_name(r1), 0, 0, 0, "door", 0, 0),
         // doors are setup and closed
-        assert(r1->query_open("door"), "==", 0),
-        assert(r2->query_open("door"), "==", 0),
-        assert(r1->query_locked("door"), "==", 0),
-        assert(r2->query_locked("door"), "==", 0),
+        assert_equal(r1->query_open("door"), 0),
+        assert_equal(r2->query_open("door"), 0),
+        assert_equal(r1->query_locked("door"), 0),
+        assert_equal(r2->query_locked("door"), 0),
 
         // lock doors
         r1->set_locked("east", 1),
         r2->set_locked("west", 1),
-        assert(r1->query_locked("door"), "==", 1),
-        assert(r2->query_locked("door"), "==", 1),
-        assert(r1->query_open("door"), "==", 0),
-        assert(r2->query_open("door"), "==", 0),
+        assert_equal(r1->query_locked("door"), 1),
+        assert_equal(r2->query_locked("door"), 1),
+        assert_equal(r1->query_open("door"), 0),
+        assert_equal(r2->query_open("door"), 0),
 
         // can't open doors
         r1->set_open("east", 1),
         r2->set_open("west", 1),
-        assert(r1->query_open("door"), "==", 0),
-        assert(r2->query_open("door"), "==", 0),
+        assert_equal(r1->query_open("door"), 0),
+        assert_equal(r2->query_open("door"), 0),
 
         // unlock doors
         r1->set_locked("east", 0),
         r2->set_locked("west", 0),
-        assert(r1->query_locked("door"), "==", 0),
-        assert(r2->query_locked("door"), "==", 0),
-        assert(r1->query_open("door"), "==", 0),
-        assert(r2->query_open("door"), "==", 0),
+        assert_equal(r1->query_locked("door"), 0),
+        assert_equal(r2->query_locked("door"), 0),
+        assert_equal(r1->query_open("door"), 0),
+        assert_equal(r2->query_open("door"), 0),
         // open previously locked doors
         r1->set_open("east", 1),
         r2->set_open("west", 1),
-        assert(r1->query_open("door"), "==", 1),
-        assert(r2->query_open("door"), "==", 1),
+        assert_equal(r1->query_open("door"), 1),
+        assert_equal(r2->query_open("door"), 1),
 
 
     }) :));

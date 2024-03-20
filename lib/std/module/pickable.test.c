@@ -20,38 +20,38 @@ void test_pickable () {
     expect_function("reset", testOb);
 
     expect("handles initializing with zeroes", (: ({
-        assert(testOb->query_picks(), "==", 0),
-        assert(testOb->query_max_picks(), "==", 0),
-        assert(testOb->query_pick_message(), "==", UNDEFINED),
+        assert_equal(testOb->query_picks(), 0),
+        assert_equal(testOb->query_max_picks(), 0),
+        assert_equal(testOb->query_pick_message(), UNDEFINED),
     }) :));
 
     expect("handles setting item, picks, and message", (: ({
         // set at 2 picks
         testOb->set_pickable(STD_ITEM, 2, "An item is pickable."),
-        assert(testOb->query_pick_item(), "==", STD_ITEM),
-        assert(testOb->query_picks(), "==", 2),
-        assert(testOb->query_max_picks(), "==", 2),
-        assert(testOb->query_pick_message(), "==", "An item is pickable."),
+        assert_equal(testOb->query_pick_item(), STD_ITEM),
+        assert_equal(testOb->query_picks(), 2),
+        assert_equal(testOb->query_max_picks(), 2),
+        assert_equal(testOb->query_pick_message(), "An item is pickable."),
     }) :));
 
     expect("handles pick and limits", (: ({
         // pick 1st
-        assert(testOb->handle_pick(), "==", 1),
-        assert(testOb->query_picks(), "==", 1),
+        assert_equal(testOb->handle_pick(), 1),
+        assert_equal(testOb->query_picks(), 1),
 
         // pick 2nd
-        assert(testOb->handle_pick(), "==", 1),
-        assert(testOb->query_picks(), "==", 0),
+        assert_equal(testOb->handle_pick(), 1),
+        assert_equal(testOb->query_picks(), 0),
 
         // can't pick
-        assert(testOb->handle_pick(), "==", 0),
-        assert(testOb->query_picks(), "==", 0),
+        assert_equal(testOb->handle_pick(), 0),
+        assert_equal(testOb->query_picks(), 0),
     }) :));
 
     expect("handles resetting pick", (: ({
         // reset pick
         testOb->reset(),
-        assert(testOb->query_picks(), "==", 1),
+        assert_equal(testOb->query_picks(), 1),
     }) :));
 }
 
@@ -60,11 +60,11 @@ void test_apply_pick_obj () {
 
     expect("direct_pick_obj returns true when same environment", (: ({
         // true with same environment (no env)
-        assert(testOb->direct_pick_obj(this_object()), "==", 1),
+        assert_equal(testOb->direct_pick_obj(this_object()), 1),
         // false with different environments (one env)
-        assert(this_object()->handle_move("/domain/Nowhere/room/void.c"), "==", 1),
-        assert(testOb->direct_pick_obj(this_object()), "==", 0),
+        assert_equal(this_object()->handle_move("/domain/Nowhere/room/void.c"), 1),
+        assert_equal(testOb->direct_pick_obj(this_object()), 0),
         // false with no object sent
-        assert(testOb->direct_pick_obj(), "==", 0),
+        assert_equal(testOb->direct_pick_obj(), 0),
     }) :));
 }

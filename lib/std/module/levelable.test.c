@@ -13,15 +13,15 @@ void test_level () {
     expect_function("query_level", testOb);
 
     expect("level settable and queryable", (: ({
-        assert(testOb->query_level(), "==", 1),
+        assert_equal(testOb->query_level(), 1),
 
         testOb->set_level(123),
-        assert(testOb->query_level(), "==", 123),
+        assert_equal(testOb->query_level(), 123),
 
         testOb->set_level(0),
-        assert(testOb->query_level(), "==", 0),
+        assert_equal(testOb->query_level(), 0),
 
         testOb->set_level(-123),
-        assert(testOb->query_level(), "==", 123),
+        assert_equal(testOb->query_level(), 123),
     }) :));
 }

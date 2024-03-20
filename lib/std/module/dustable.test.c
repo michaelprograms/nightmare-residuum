@@ -17,9 +17,9 @@ void test_expire () {
     testOb = new("/std/item/corpse.c");
 
     expect("expire to remove dustable", (: ({
-        assert(undefinedp(testOb), "==", 0),
+        assert_equal(undefinedp(testOb), 0),
         testOb->handle_expire(),
-        assert(undefinedp(testOb), "==", 1),
+        assert_equal(undefinedp(testOb), 1),
     }) :));
 }
 
@@ -36,8 +36,8 @@ void test_received () {
 
         // grab callout tied to the test dustable
         calloutInfo = filter(call_out_info(), (: $1 && $1[0] == testOb :)),
-        assert(sizeof(calloutInfo), "==", 1),
-        assert(sizeof(calloutInfo[0]), "==", 3),
-        assert(calloutInfo[0][0], "==", testOb),
+        assert_equal(sizeof(calloutInfo), 1),
+        assert_equal(sizeof(calloutInfo[0]), 3),
+        assert_equal(calloutInfo[0][0], testOb),
     }) :));
 }
