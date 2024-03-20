@@ -24,24 +24,24 @@ void test_experience () {
     expect_function("query_total_experience", testOb);
 
     expect("handles adding and spending experience", (: ({
-        assert(testOb->query_experience(), "==", 0),
-        assert(testOb->query_total_experience(), "==", 0),
+        assert_equal(testOb->query_experience(), 0),
+        assert_equal(testOb->query_total_experience(), 0),
 
-        assert(testOb->add_experience(123), "==", 0),
-        assert(testOb->query_experience(), "==", 123),
-        assert(testOb->query_total_experience(), "==", 0),
+        assert_equal(testOb->add_experience(123), 0),
+        assert_equal(testOb->query_experience(), 123),
+        assert_equal(testOb->query_total_experience(), 0),
 
-        assert(testOb->add_experience(9000), "==", 0),
-        assert(testOb->query_experience(), "==", 9123),
-        assert(testOb->query_total_experience(), "==", 0),
+        assert_equal(testOb->add_experience(9000), 0),
+        assert_equal(testOb->query_experience(), 9123),
+        assert_equal(testOb->query_total_experience(), 0),
 
-        assert(testOb->spend_experience(1000), "==", 0),
-        assert(testOb->query_experience(), "==", 8123),
-        assert(testOb->query_total_experience(), "==", 1000),
+        assert_equal(testOb->spend_experience(1000), 0),
+        assert_equal(testOb->query_experience(), 8123),
+        assert_equal(testOb->query_total_experience(), 1000),
 
-        assert(testOb->spend_experience(2000), "==", 0),
-        assert(testOb->query_experience(), "==", 6123),
-        assert(testOb->query_total_experience(), "==", 3000),
+        assert_equal(testOb->spend_experience(2000), 0),
+        assert_equal(testOb->query_experience(), 6123),
+        assert_equal(testOb->query_total_experience(), 3000),
     }) :));
 }
 
@@ -55,18 +55,18 @@ void test_handle_victory () {
     __MockLevel = 1;
 
     expect("handle_victory behaves", (: ({
-        assert(testOb->query_experience(), "==", 0),
-        assert(testOb->query_victory(), "==", 0),
-        assert(testOb->query_victory_average(), "==", 0),
-        assert(testOb->handle_victory(this_object()), "==", 0),
-        assert(testOb->query_experience() > 0, "==", 1),
-        assert(testOb->query_victory(), "==", 1),
-        assert(testOb->query_victory_average(), "==", 1),
+        assert_equal(testOb->query_experience(), 0),
+        assert_equal(testOb->query_victory(), 0),
+        assert_equal(testOb->query_victory_average(), 0),
+        assert_equal(testOb->handle_victory(this_object()), 0),
+        assert_equal(testOb->query_experience() > 0, 1),
+        assert_equal(testOb->query_victory(), 1),
+        assert_equal(testOb->query_victory_average(), 1),
 
         __MockLevel = 3,
-        assert(testOb->handle_victory(this_object()), "==", 0),
-        assert(testOb->query_victory(), "==", 2),
-        assert(testOb->query_victory_average(), "==", 2),
+        assert_equal(testOb->handle_victory(this_object()), 0),
+        assert_equal(testOb->query_victory(), 2),
+        assert_equal(testOb->query_victory_average(), 2),
     }) :));
 
     // cleanup
@@ -88,40 +88,40 @@ void test_handle_defeat () {
     testOb = new(STD_LIVING); // need biography's parent inherit living for handle_move
 
     expect("handle_defeat behaved", (: ({
-        assert(testOb->query_experience(), "==", 0),
-        assert(testOb->query_defeat(), "==", ({ })),
-        assert(testOb->handle_move($(r)), "==", 1),
-        assert(sizeof($(r)->query_living_contents()), "==", 1),
-        assert(sizeof($(r)->query_item_contents()), "==", 0),
+        assert_equal(testOb->query_experience(), 0),
+        assert_equal(testOb->query_defeat(), ({ })),
+        assert_equal(testOb->handle_move($(r)), 1),
+        assert_equal(sizeof($(r)->query_living_contents()), 1),
+        assert_equal(sizeof($(r)->query_item_contents()), 0),
 
         // test defeat with keep
-        assert($(mockCharacter)->start_shadow(testOb), "==", 1),
-        assert(testOb->is_character(), "==", 1),
-        assert(testOb->query_defeated(), "==", 0),
-        assert(testOb->handle_defeat(this_object()), "==", 0),
-        assert(objectp(testOb), "==", 1),
-        assert(testOb->query_defeated(), "==", 1),
-        assert(testOb->query_defeat(), "==", ({ ({ "Biography Test", time() }) })),
-        assert(sizeof($(r)->query_living_contents()), "==", 0),
-        assert(sizeof($(r)->query_item_contents()), "==", 1),
-        assert(!!present("corpse", $(r)), "==", 1),
-        assert(present("corpse", $(r))->handle_remove(), "==", 1),
+        assert_equal($(mockCharacter)->start_shadow(testOb), 1),
+        assert_equal(testOb->is_character(), 1),
+        assert_equal(testOb->query_defeated(), 0),
+        assert_equal(testOb->handle_defeat(this_object()), 0),
+        assert_equal(objectp(testOb), 1),
+        assert_equal(testOb->query_defeated(), 1),
+        assert_equal(testOb->query_defeat(), ({ ({ "Biography Test", time() }) })),
+        assert_equal(sizeof($(r)->query_living_contents()), 0),
+        assert_equal(sizeof($(r)->query_item_contents()), 1),
+        assert_equal(!!present("corpse", $(r)), 1),
+        assert_equal(present("corpse", $(r))->handle_remove(), 1),
         testOb->set_defeated(0),
-        assert(testOb->query_defeated(), "==", 0),
+        assert_equal(testOb->query_defeated(), 0),
 
         // move test object back
-        assert(testOb->handle_move($(r)), "==", 1),
-        assert(sizeof($(r)->query_living_contents()), "==", 1),
-        assert(sizeof($(r)->query_item_contents()), "==", 0),
+        assert_equal(testOb->handle_move($(r)), 1),
+        assert_equal(sizeof($(r)->query_living_contents()), 1),
+        assert_equal(sizeof($(r)->query_item_contents()), 0),
 
         // test defeat with keep
-        assert($(mockCharacter)->stop_shadow(), "==", 1),
-        assert(testOb->handle_defeat(this_object()), "==", 0),
-        assert(objectp(testOb), "==", 0),
-        assert(sizeof($(r)->query_living_contents()), "==", 0),
-        assert(sizeof($(r)->query_item_contents()), "==", 1),
-        assert(!!present("corpse", $(r)), "==", 1),
-        assert(present("corpse", $(r))->handle_remove(), "==", 1),
+        assert_equal($(mockCharacter)->stop_shadow(), 1),
+        assert_equal(testOb->handle_defeat(this_object()), 0),
+        assert_equal(objectp(testOb), 0),
+        assert_equal(sizeof($(r)->query_living_contents()), 0),
+        assert_equal(sizeof($(r)->query_item_contents()), 1),
+        assert_equal(!!present("corpse", $(r)), 1),
+        assert_equal(present("corpse", $(r))->handle_remove(), 1),
     }) :));
 
     // cleanup

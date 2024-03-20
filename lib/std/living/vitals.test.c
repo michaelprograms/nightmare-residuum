@@ -16,28 +16,28 @@ void test_update_vitals () {
 
     expect("update_vitals handles base and max hp/sp/mp", (: ({
         // initial values
-        assert(testOb->query_hp(), "==", 0),
-        assert(testOb->query_max_hp(), "==", 0),
-        assert(testOb->query_sp(), "==", 0),
-        assert(testOb->query_max_sp(), "==", 0),
-        assert(testOb->query_mp(), "==", 0),
-        assert(testOb->query_max_mp(), "==", 0),
+        assert_equal(testOb->query_hp(), 0),
+        assert_equal(testOb->query_max_hp(), 0),
+        assert_equal(testOb->query_sp(), 0),
+        assert_equal(testOb->query_max_sp(), 0),
+        assert_equal(testOb->query_mp(), 0),
+        assert_equal(testOb->query_max_mp(), 0),
 
         testOb->update_vitals(0),   // don't heal
-        assert(testOb->query_hp(), "==", 0),
-        assert(testOb->query_max_hp(), "==", 20),
-        assert(testOb->query_sp(), "==", 0),
-        assert(testOb->query_max_sp(), "==", 10),
-        assert(testOb->query_mp(), "==", 0),
-        assert(testOb->query_max_mp(), "==", 10),
+        assert_equal(testOb->query_hp(), 0),
+        assert_equal(testOb->query_max_hp(), 20),
+        assert_equal(testOb->query_sp(), 0),
+        assert_equal(testOb->query_max_sp(), 10),
+        assert_equal(testOb->query_mp(), 0),
+        assert_equal(testOb->query_max_mp(), 10),
 
         testOb->update_vitals(1),   // heal
-        assert(testOb->query_hp(), "==", 20),
-        assert(testOb->query_hp() == testOb->query_max_hp(), "==", 1),
-        assert(testOb->query_sp(), "==", 10),
-        assert(testOb->query_sp() == testOb->query_max_sp(), "==", 1),
-        assert(testOb->query_mp(), "==", 10),
-        assert(testOb->query_mp() == testOb->query_max_mp(), "==", 1),
+        assert_equal(testOb->query_hp(), 20),
+        assert_equal(testOb->query_hp() == testOb->query_max_hp(), 1),
+        assert_equal(testOb->query_sp(), 10),
+        assert_equal(testOb->query_sp() == testOb->query_max_sp(), 1),
+        assert_equal(testOb->query_mp(), 10),
+        assert_equal(testOb->query_mp() == testOb->query_max_mp(), 1),
     }) :));
 }
 
@@ -49,22 +49,22 @@ void test_hp () {
 
     expect("hp handles set/query/query_max", (: ({
         testOb->add_hp(1),  // already max
-        assert(testOb->query_hp(), "==", 20),
+        assert_equal(testOb->query_hp(), 20),
 
         testOb->add_hp(-10),
-        assert(testOb->query_hp(), "==", 10),
+        assert_equal(testOb->query_hp(), 10),
         testOb->add_hp(5),
-        assert(testOb->query_hp(), "==", 15),
+        assert_equal(testOb->query_hp(), 15),
         testOb->add_hp(0),
-        assert(testOb->query_hp(), "==", 15),
+        assert_equal(testOb->query_hp(), 15),
         testOb->add_hp(10), // attempt to go over max
-        assert(testOb->query_hp(), "==", 20),
+        assert_equal(testOb->query_hp(), 20),
 
         testOb->set_hp(5),
-        assert(testOb->query_hp(), "==", 5),
+        assert_equal(testOb->query_hp(), 5),
 
         testOb->set_hp(0),
-        assert(testOb->query_hp(), "==", 0),
+        assert_equal(testOb->query_hp(), 0),
     }) :));
 }
 
@@ -76,22 +76,22 @@ void test_sp () {
 
     expect("sp handles set/query/query_max", (: ({
         testOb->add_sp(1),  // already max
-        assert(testOb->query_sp(), "==", 10),
+        assert_equal(testOb->query_sp(), 10),
 
         testOb->add_sp(-5),
-        assert(testOb->query_sp(), "==", 5),
+        assert_equal(testOb->query_sp(), 5),
         testOb->add_sp(2),
-        assert(testOb->query_sp(), "==", 7),
+        assert_equal(testOb->query_sp(), 7),
         testOb->add_sp(0),
-        assert(testOb->query_sp(), "==", 7),
+        assert_equal(testOb->query_sp(), 7),
         testOb->add_sp(5), // attespt to go over max
-        assert(testOb->query_sp(), "==", 10),
+        assert_equal(testOb->query_sp(), 10),
 
         testOb->set_sp(5),
-        assert(testOb->query_sp(), "==", 5),
+        assert_equal(testOb->query_sp(), 5),
 
         testOb->set_sp(0),
-        assert(testOb->query_sp(), "==", 0),
+        assert_equal(testOb->query_sp(), 0),
     }) :));
 }
 
@@ -103,21 +103,21 @@ void test_mp () {
 
     expect("mp handles set/query/query_max", (: ({
         testOb->add_mp(1),  // already max
-        assert(testOb->query_mp(), "==", 10),
+        assert_equal(testOb->query_mp(), 10),
 
         testOb->add_mp(-5),
-        assert(testOb->query_mp(), "==", 5),
+        assert_equal(testOb->query_mp(), 5),
         testOb->add_mp(2),
-        assert(testOb->query_mp(), "==", 7),
+        assert_equal(testOb->query_mp(), 7),
         testOb->add_mp(0),
-        assert(testOb->query_mp(), "==", 7),
+        assert_equal(testOb->query_mp(), 7),
         testOb->add_mp(5), // attempt to go over max
-        assert(testOb->query_mp(), "==", 10),
+        assert_equal(testOb->query_mp(), 10),
 
         testOb->set_mp(5),
-        assert(testOb->query_mp(), "==", 5),
+        assert_equal(testOb->query_mp(), 5),
 
         testOb->set_mp(0),
-        assert(testOb->query_mp(), "==", 0),
+        assert_equal(testOb->query_mp(), 0),
     }) :));
 }
