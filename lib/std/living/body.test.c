@@ -178,7 +178,7 @@ void test_heal () {
     destruct(testOb);
     testOb = new(STD_LIVING);
 
-    expect("heal restores hp", (: ({
+    expect("heal restores hp/sp/mp and limb damage", (: ({
         testOb->set_species("human"),
         // verify initial state
         assert_equal(testOb->query_hp(), 22),
