@@ -25,7 +25,7 @@ void test_applies () {
     expect_function("connect", testOb);
 
     expect("connect returns a valid user object", (: ({
-        assert(file_name(userOb = testOb->connect(0)), "regex", STD_USER[0..<3]+"#[0-9]+"),
+        assert_regex(file_name(userOb = testOb->connect(0)), STD_USER[0..<3]+"#[0-9]+"),
         assert_equal(userOb->query_character(), 0),
         assert_equal(userOb->query_shell(), 0),
         assert_equal(destruct(userOb), 0),
@@ -131,7 +131,7 @@ void test_security_applies () {
     }) :));
 
     expect("valid_read handles calls", (: ({
-        assert(file_name(basicOb = new(STD_OBJECT)), "regex", STD_OBJECT[0..<3]+"#[0-9]+"),
+        assert_regex(file_name(basicOb = new(STD_OBJECT)), STD_OBJECT[0..<3]+"#[0-9]+"),
 
         assert_equal(testOb->valid_read(0, 0, 0), 0),
         assert_equal(testOb->valid_read(0, testOb, "read_file"), 0),

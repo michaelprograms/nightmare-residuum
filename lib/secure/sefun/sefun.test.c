@@ -39,6 +39,6 @@ void test_driver_port () {
 void test_call_trace () {
     expect_function("call_trace", testOb);
     expect("call_trace returns a stack trace", (: ({
-        assert(testOb->call_trace(), "regex", "/secure/sefun/sefun.test#[0-9]+"),
+        assert_regex(testOb->call_trace(), "/secure/sefun/sefun.test#[0-9]+"),
     }) :));
 }

@@ -29,7 +29,7 @@ void test_check_empty () {
         testOb->add_currency("copper", 123),
         assert_equal(testOb->query_currencies(), ({ "copper", })),
         testOb->check_empty(),
-        assert(testOb, "regex", "/std/item/coins#[0-9]+"),
+        assert_regex(testOb, "/std/item/coins#[0-9]+"),
         testOb->add_currency("copper", -123),
 
         // check without currency

@@ -14,7 +14,7 @@ void test_received () {
     function_exists("handle_received", testOb);
 
     expect("handle_received sets expire timer", (: ({
-        assert(testObFile = file_name(testOb), "regex", "/std/item/bodypart#[0-9]+"),
+        assert_regex(testObFile = file_name(testOb), "/std/item/bodypart#[0-9]+"),
 
         // start the expire call_out
         testOb->handle_received(this_object()),

@@ -26,11 +26,11 @@ void test_format_page () {
 
     expect("format_page handled width=80", (: ({
         assert_equal(__Width, 80),
-        assert(testOb->format_page(({ "a", "b" }), 2), "regex", "^a +b +$"),
-        assert(testOb->format_page(({ "a", "b", "c" }), 2), "regex", "^a +b +\nc +$"),
-        assert(testOb->format_page(({ "a", "b", "c" }), 1), "regex", "^a +\nb +\nc +$"),
-        assert(testOb->format_page(({ "a", "b", "c" }), 2), "regex", "^a +b +\nc +$"),
-        assert(testOb->format_page(({ "a", "b", "c" }), 3), "regex", "^a +b +c +$"),
+        assert_regex(testOb->format_page(({ "a", "b" }), 2), "^a +b +$"),
+        assert_regex(testOb->format_page(({ "a", "b", "c" }), 2), "^a +b +\nc +$"),
+        assert_regex(testOb->format_page(({ "a", "b", "c" }), 1), "^a +\nb +\nc +$"),
+        assert_regex(testOb->format_page(({ "a", "b", "c" }), 2), "^a +b +\nc +$"),
+        assert_regex(testOb->format_page(({ "a", "b", "c" }), 3), "^a +b +c +$"),
         assert_equal(strlen(explode(testOb->format_page(({ "a", }), 2), "\n")[0]), 80),
         assert_equal(strlen(explode(testOb->format_page(({ "a", }), 2, 1), "\n")[0]), 78),
         assert_equal(strlen(explode(testOb->format_page(({ "a", }), 2, -1), "\n")[0]), 82),
@@ -41,11 +41,11 @@ void test_format_page () {
 
     expect("format_page handled width=60", (: ({
         assert_equal(__Width = 60, 60),
-        assert(testOb->format_page(({ "a", "b" }), 2), "regex", "^a +b +$"),
-        assert(testOb->format_page(({ "a", "b", "c" }), 2), "regex", "^a +b +\nc +$"),
-        assert(testOb->format_page(({ "a", "b", "c" }), 1), "regex", "^a +\nb +\nc +$"),
-        assert(testOb->format_page(({ "a", "b", "c" }), 3), "regex", "^a +b +c +$"),
-        assert(testOb->format_page(({ "a", "b", "c" }), 2), "regex", "^a +b +\nc +$"),
+        assert_regex(testOb->format_page(({ "a", "b" }), 2), "^a +b +$"),
+        assert_regex(testOb->format_page(({ "a", "b", "c" }), 2), "^a +b +\nc +$"),
+        assert_regex(testOb->format_page(({ "a", "b", "c" }), 1), "^a +\nb +\nc +$"),
+        assert_regex(testOb->format_page(({ "a", "b", "c" }), 3), "^a +b +c +$"),
+        assert_regex(testOb->format_page(({ "a", "b", "c" }), 2), "^a +b +\nc +$"),
         assert_equal(strlen(explode(testOb->format_page(({ "a", }), 2), "\n")[0]), 60),
         assert_equal(strlen(explode(testOb->format_page(({ "a", }), 2, 1), "\n")[0]), 58),
         assert_equal(strlen(explode(testOb->format_page(({ "a", }), 2, -1), "\n")[0]), 62),

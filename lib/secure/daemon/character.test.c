@@ -29,6 +29,6 @@ void test_save_path () {
     expect_function("query_save_path", testOb);
 
     expect("query_save_path handles valid names", (: ({
-        assert(testOb->query_save_path("name", "type"), "regex", "^/save/character/n/name/type"),
+        assert_regex(testOb->query_save_path("name", "type"), "^/save/character/n/name/type"),
     }) :));
 }

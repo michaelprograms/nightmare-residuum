@@ -46,8 +46,8 @@ void test_requirements () {
         assert_equal(testOb->can_verb_rule("verb", "rule"), 1),
 
         __Busy = 1,
-        assert(testOb->check_busy(), "regex", "^You are too busy"),
-        assert(testOb->can_verb_rule("verb", "rule"), "regex", "^You are too busy"),
+        assert_regex(testOb->check_busy(), "^You are too busy"),
+        assert_regex(testOb->can_verb_rule("verb", "rule"), "^You are too busy"),
 
         testOb->set_requirements(REQUIREMENT_DISABLE),
         assert_equal(testOb->query_requirements(), REQUIREMENT_DISABLE),
@@ -55,8 +55,8 @@ void test_requirements () {
         assert_equal(testOb->can_verb_rule("verb", "rule"), 1),
 
         __Disable = 1,
-        assert(testOb->check_disable(), "regex", "^You are not able"),
-        assert(testOb->can_verb_rule("verb", "rule"), "regex", "^You are not able"),
+        assert_regex(testOb->check_disable(), "^You are not able"),
+        assert_regex(testOb->can_verb_rule("verb", "rule"), "^You are not able"),
 
         // test multiple requirements
         testOb->set_requirements(REQUIREMENT_BUSY | REQUIREMENT_DISABLE),
@@ -65,12 +65,12 @@ void test_requirements () {
         assert_equal(testOb->can_verb_rule("verb", "rule"), 1),
         // busy
         __Busy = 1,
-        assert(testOb->can_verb_rule("verb", "rule"), "regex", "^You are too busy"),
+        assert_regex(testOb->can_verb_rule("verb", "rule"), "^You are too busy"),
         // both
         __Disable = 1,
-        assert(testOb->can_verb_rule("verb", "rule"), "regex", "^You are too busy"),
+        assert_regex(testOb->can_verb_rule("verb", "rule"), "^You are too busy"),
         // disable
         __Busy = 0,
-        assert(testOb->can_verb_rule("verb", "rule"), "regex", "^You are not able"),
+        assert_regex(testOb->can_verb_rule("verb", "rule"), "^You are not able"),
     }) :));
 }

@@ -65,7 +65,7 @@ void test_identify () {
 
     tOb = new(STD_OBJECT);
     expect("identify handles object", (: ({
-        assert(testOb->identify($(tOb)), "regex", "OBJ\\("+replace_string(STD_OBJECT[0..<3], "/", "\\/")+"#(.+)\\)"),
+        assert_regex(testOb->identify($(tOb)), "OBJ\\("+replace_string(STD_OBJECT[0..<3], "/", "\\/")+"#(.+)\\)"),
     }) :));
     destruct(tOb);
 
