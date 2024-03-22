@@ -13,12 +13,12 @@ void test_type () {
     expect_function("set_type", testOb);
 
     expect("type is settable and queryable", (: ({
-        assert(testOb->query_type(), "==", UNDEFINED),
+        assert_equal(testOb->query_type(), UNDEFINED),
 
         testOb->set_type("test"),
-        assert(testOb->query_type(), "==", "test"),
+        assert_equal(testOb->query_type(), "test"),
 
         testOb->set_type("test2"),
-        assert(testOb->query_type(), "==", "test2"),
+        assert_equal(testOb->query_type(), "test2"),
     }) :));
 }
