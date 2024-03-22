@@ -31,7 +31,7 @@ void test_expects_passing () {
     expect_function("expect", testOb);
     expect_function("assert", testOb);
 
-    expect("assert_equal condition passes", (: ({
+    expect("assert_equal should pass", (: ({
         assert_equal(1, 1),
         assert_equal(1.0, 1.0),
         assert_equal("abc", "abc"),
@@ -39,10 +39,10 @@ void test_expects_passing () {
         assert_equal(([ 1: "a", ]), ([ 1: "a", ])),
     }) :));
 
-    expect("assert condition 'regex' passes", (: ({
-        assert("bat", "regex", "b[a-z]t"),
-        assert("cat", "regex", "c[a-z]t"),
-        assert("/std/item/corpse#5135", "regex", "^/std/item/corpse#[0-9]+$"),
+    expect("assert_regex should pass", (: ({
+        assert_regex("bat", "b[a-z]t"),
+        assert_regex("cat", "c[a-z]t"),
+        assert_regex("/std/item/corpse#5135", "^/std/item/corpse#[0-9]+$"),
     }) :));
 
     expect("assert condition 'catch' passes", (: ({
@@ -72,10 +72,10 @@ void test_expects_failing () {
     }) :));
 
     expect_next_failure();
-    expect("assert condition 'regex' should fail", (: ({
-        assert("bar", "regex", "b[a-z]t"),
-        assert("car", "regex", "c[a-z]t"),
-        assert("/std/item/coins#3155", "regex", "/std/item/corpse#[0-9]+"),
+    expect("assert_regex should fail", (: ({
+        assert_regex("bar", "b[a-z]t"),
+        assert_regex("car", "c[a-z]t"),
+        assert_regex("/std/item/coins#3155", "/std/item/corpse#[0-9]+"),
     }) :));
 
     expect_next_failure();

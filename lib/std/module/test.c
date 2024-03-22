@@ -358,6 +358,29 @@ void assert_equal (mixed left, mixed right) {
         failingAsserts ++;
     }
 }
+void assert_regex (mixed left, string right) {
+    if (!stringp(currentTestMsg)) {
+        error("test->assert outside of test->expect");
+    }
+
+    if (arrayp(left) || mapp(left) || objectp(left)) {
+        left = identify(left);
+    }
+
+    if (currentTestPassed) {
+        currentTestPassed = regexp(left, right) > 0;
+    }
+
+    leftResults += ({ left });
+    rightResults += ({ right });
+
+    if (currentTestPassed || failingExpects == -1) {
+        passingAsserts ++;
+        totalPassingAsserts ++;
+    } else {
+        failingAsserts ++;
+    }
+}
 
 // @TODO deprecate assert
 void assert (mixed left, string condition, mixed right) {
@@ -386,7 +409,7 @@ void assert (mixed left, string condition, mixed right) {
     }
     if (condition == "catch") expectCatch = 0;
 
-    if (arrayp(leftResult) || mapp(leftResult) || (condition == "regex" && objectp(leftResult))) {
+    if (arrayp(leftResult) || mapp(leftResult)) {
         leftResult = identify(leftResult);
     }
     if (arrayp(rightResult) || mapp(rightResult)) {
@@ -394,20 +417,10 @@ void assert (mixed left, string condition, mixed right) {
     }
 
     leftResults += ({ leftResult });
-    rightResults += ({
-        (condition == "regex" ? "/" + rightResult + "/" : rightResult)
-    });
+    rightResults += ({ rightResult });
 
     if (currentTestPassed) {
-        if (condition == "==") {
-            if (typeof(leftResult) == "float" && typeof(rightResult) == "float") {
-                leftResult = to_float("" + leftResult);
-                rightResult = to_float("" + rightResult);
-            }
-            currentTestPassed = leftResult == rightResult;
-        } else if (condition == "regex") {
-            currentTestPassed = regexp(leftResult, rightResult) > 0;
-        } else if (condition == "catch") {
+        if (condition == "catch") {
             currentTestPassed = !!leftErr && leftErr == rightResult;
         } else {
             currentTestPassed = 0;
