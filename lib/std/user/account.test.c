@@ -36,7 +36,7 @@ void test_account_password () {
     expect_function("query_password", testOb);
 
     expect("account password is not settable", (: ({
-        assert((: testOb->set_password("test") :), "catch", "*Illegal attempt to account->set_password\n"),
+        assert_catch((: testOb->set_password("test") :), "*Illegal attempt to account->set_password\n"),
     }) :));
     expect("account test password is blank", (: ({
         assert_equal(testOb->query_password(), 0),

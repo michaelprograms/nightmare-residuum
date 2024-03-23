@@ -13,10 +13,10 @@ void test_disabled_efuns () {
     expect_function("this_player", testOb);
 
     expect("input_to throws error", (: ({
-        assert((: input_to() :), "catch", "*efun::input_to disabled\n"),
+        assert_catch((: input_to() :), "*efun::input_to disabled\n"),
     }) :));
     expect("this_player throws error", (: ({
-        assert((: this_player() :), "catch", "*efun::this_player disabled\n"),
+        assert_catch((: this_player() :), "*efun::this_player disabled\n"),
     }) :));
 }
 
