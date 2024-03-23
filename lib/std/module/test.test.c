@@ -29,7 +29,6 @@ string *test_ignore () { return ({ "test_should_be_ignored" }); }
 void test_expects_passing () {
     expect_function("expect_function", testOb);
     expect_function("expect", testOb);
-    expect_function("assert", testOb);
 
     expect("assert_equal should pass", (: ({
         assert_equal(1, 1),
@@ -45,10 +44,10 @@ void test_expects_passing () {
         assert_regex("/std/item/corpse#5135", "^/std/item/corpse#[0-9]+$"),
     }) :));
 
-    expect("assert condition 'catch' passes", (: ({
-        assert((: error("Test catch") :), "catch", "*Test catch\n"),
-        assert((: error("Test catch 2") :), "catch", "*Test catch 2\n"),
-        assert((: error("Different error") :), "catch", "*Different error\n"),
+    expect("assert_catch should pass", (: ({
+        assert_catch((: error("Test catch") :), "*Test catch\n"),
+        assert_catch((: error("Test catch 2") :), "*Test catch 2\n"),
+        assert_catch((: error("Different error") :), "*Different error\n"),
     }) :));
 
 }
@@ -79,10 +78,10 @@ void test_expects_failing () {
     }) :));
 
     expect_next_failure();
-    expect("assert condition 'catch' should fail", (: ({
-        assert((: sprintf("%s", "No error") :), "catch", "*Test Error\n"),
-        assert((: sprintf("%s", "Not an error") :), "catch", "*Test Error\n"),
-        assert((: sprintf("%s", "Success") :), "catch", "*Test Error\n"),
+    expect("assert_catch should fail", (: ({
+        assert_catch((: sprintf("%s", "No error") :), "*Test Error\n"),
+        assert_catch((: sprintf("%s", "Not an error") :), "*Test Error\n"),
+        assert_catch((: sprintf("%s", "Success") :), "*Test Error\n"),
     }) :));
 }
 
@@ -109,7 +108,7 @@ void test_lifecycle_events () {
 
     expect("query_expect_catch is enabled during assert 'catch'", (: ({
         assert_equal(query_expect_catch(), 0),
-        assert((: query_expect_catch() && error("Catch") :), "catch", "*Catch\n"),
+        assert_catch((: query_expect_catch() && error("Catch") :), "*Catch\n"),
         assert_equal(query_expect_catch(), 0),
     }) :));
 }

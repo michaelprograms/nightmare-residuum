@@ -15,11 +15,11 @@
 
 nosave protected mixed UNDEFINED = (([ ])[0]); // equivalent of UNDEFINED
 
-/* -----  ----- */
+/* ----- function prototypes ----- */
 
 private void process_test ();
 
-/* -----  ----- */
+/* ----- variable definitions ----- */
 
 nosave private int currentTestNum = 0, currentTestPassed = 0;
 nosave private int failingExpects = 0, passingExpects = 0;
@@ -330,7 +330,7 @@ void expect (string message, function fn) {
 }
 void assert_equal (mixed left, mixed right) {
     if (!stringp(currentTestMsg)) {
-        error("test->assert outside of test->expect");
+        error("test->assert_equal outside of test->expect");
     }
 
     if (arrayp(left) || mapp(left) || objectp(left)) {
@@ -360,7 +360,7 @@ void assert_equal (mixed left, mixed right) {
 }
 void assert_regex (mixed left, string right) {
     if (!stringp(currentTestMsg)) {
-        error("test->assert outside of test->expect");
+        error("test->assert_regex outside of test->expect");
     }
 
     if (arrayp(left) || mapp(left) || objectp(left)) {
@@ -381,50 +381,27 @@ void assert_regex (mixed left, string right) {
         failingAsserts ++;
     }
 }
+void assert_catch (function left, string right) {
+    mixed leftResult, leftError;
 
-// @TODO deprecate assert
-void assert (mixed left, string condition, mixed right) {
-    mixed leftErr, rightErr, leftResult, rightResult;
-
-    if (!stringp(currentTestMsg)) error("test->assert outside of test->expect");
-    if (!stringp(condition)) error("Bad argument 2 to test->assert");
-
-    if (condition == "catch") expectCatch = 1;
-
-    if (functionp(left)) {
-        if (leftErr = catch (leftResult = evaluate(left))) {
-            leftResult = leftErr;
-            currentTestPassed = currentTestPassed && condition == "catch";
-        }
-    } else {
-        leftResult = left;
+    if (!stringp(currentTestMsg)) {
+        error("test->assert_catch outside of test->expect");
     }
-    if (functionp(right)) {
-        if (rightErr = catch (rightResult = evaluate(right))) {
-            rightResult = rightErr;
-            currentTestPassed = currentTestPassed && condition == "catch";
-        }
-    } else {
-        rightResult = right;
+
+    expectCatch = 1;
+    if (leftError = catch(leftResult = evaluate(left))) {
+        leftResult = leftError;
     }
-    if (condition == "catch") expectCatch = 0;
+    expectCatch = 0;
 
     if (arrayp(leftResult) || mapp(leftResult)) {
         leftResult = identify(leftResult);
     }
-    if (arrayp(rightResult) || mapp(rightResult)) {
-        rightResult = identify(rightResult);
-    }
-
     leftResults += ({ leftResult });
-    rightResults += ({ rightResult });
+    rightResults += ({ right });
 
     if (currentTestPassed) {
-        if (condition == "catch") {
-            currentTestPassed = !!leftErr && leftErr == rightResult;
-        } else {
-            currentTestPassed = 0;
-        }
+        currentTestPassed = !!leftError && leftError == right;
     }
 
     if (currentTestPassed || failingExpects == -1) {
