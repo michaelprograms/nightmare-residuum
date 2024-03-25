@@ -50,6 +50,8 @@ void set_wc (int wc) {
     __WC = wc;
 }
 
+/* ----- parser applies ----- */
+
 mixed direct_wield_obj (mixed args...) {
     object po = previous_object();
     return environment() == po && !__Wielder && member_array(this_object(), po->query_wielded_weapons()) == -1;

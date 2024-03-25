@@ -9,7 +9,13 @@ void after_each_test () {
     if (objectp(testOb)) destruct(testOb);
 }
 string *test_order () {
-    return ({ "test_is_weapon", "test_type", "test_wielded", "test_item_verb_wield_applies", });
+    return ({
+        "test_is_weapon",
+        "test_type",
+        "test_wielded",
+        "test_item_verb_wield_applies",
+        "text_item_verb_drop_applies",
+    });
 }
 
 nosave private string *__WieldableLimbs;
@@ -126,6 +132,30 @@ void test_item_verb_wield_applies () {
         testOb->set_wielded(this_object()),
         assert_equal(testOb->direct_wield_obj(), 0),
         assert_equal(testOb->direct_unwield_obj(), 1),
+    }) :));
+
+    __WieldableLimbs = 0;
+    __WieldedWeapons = 0;
+}
+
+void text_item_verb_drop_applies () {
+    expect_function("direct_drop_obj", testOb);
+
+    __WieldableLimbs = ({ "left hand", "right hand" });
+    __WieldedWeapons = ({ });
+
+    expect("weapon handles verb applies direct_drop_obj", (: ({
+        assert_equal(environment(testOb), 0),
+        assert_equal(testOb->direct_drop_obj(), 0),
+
+        assert_equal(testOb->handle_move(this_object()), 1),
+        assert_equal(environment(testOb), this_object()),
+
+        assert_equal(testOb->direct_drop_obj(), 1),
+
+        __WieldedWeapons += ({ testOb }),
+        testOb->set_wielded(this_object()),
+        assert_equal(testOb->direct_drop_obj(), 0),
     }) :));
 
     __WieldableLimbs = 0;
