@@ -81,8 +81,10 @@ void test_query_max_stats () {
         assert_equal(testOb->query_max_stat("psionist", "strength", 10), 20),
         assert_equal(testOb->query_max_stat("paladin", "strength", 10), 40),
 
-        assert_equal(testOb->query_max_stat("nonexistant", "strength"), 0),
-        assert_equal(testOb->query_max_stat("nonexistant", "nonexistant"), 0),
+        assert_equal(testOb->query_max_stat("nonexistant", "strength", 0), 0),
+        assert_equal(testOb->query_max_stat("nonexistant", "nonexistant", 0), 0),
+        assert_equal(testOb->query_max_stat("nonexistant", "strength", 1), 2),
+        assert_equal(testOb->query_max_stat("nonexistant", "nonexistant", 1), 2),
     }) :));
 }
 
