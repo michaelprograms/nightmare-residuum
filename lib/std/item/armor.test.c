@@ -137,3 +137,25 @@ void test_item_verb_wear_applies () {
 
     __AllArmor = 0;
 }
+
+void test_item_verb_drop_applies () {
+    expect_function("direct_drop_obj", testOb);
+
+    __AllArmor = ({ });
+
+    expect("armor handles verb apply direct_drop_obj", (: ({
+        assert_equal(environment(testOb), 0),
+        assert_equal(testOb->direct_drop_obj(), 0),
+
+        assert_equal(testOb->handle_move(this_object()), 1),
+        assert_equal(environment(testOb), this_object()),
+
+        assert_equal(testOb->direct_drop_obj(), 1),
+
+        __AllArmor += ({ testOb }),
+        testOb->set_worn(this_object()),
+        assert_equal(testOb->direct_drop_obj(), 0),
+    }) :));
+
+    __AllArmor = 0;
+}
