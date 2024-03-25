@@ -14,7 +14,7 @@ string *test_order () {
         "test_type",
         "test_wielded",
         "test_item_verb_wield_applies",
-        "text_item_verb_drop_applies",
+        "test_item_verb_drop_applies",
     });
 }
 
@@ -138,7 +138,7 @@ void test_item_verb_wield_applies () {
     __WieldedWeapons = 0;
 }
 
-void text_item_verb_drop_applies () {
+void test_item_verb_drop_applies () {
     expect_function("direct_drop_obj", testOb);
 
     __WieldableLimbs = ({ "left hand", "right hand" });
