@@ -144,7 +144,7 @@ void test_item_verb_drop_applies () {
     __WieldableLimbs = ({ "left hand", "right hand" });
     __WieldedWeapons = ({ });
 
-    expect("weapon handles verb applies direct_drop_obj", (: ({
+    expect("weapon handles verb apply direct_drop_obj", (: ({
         assert_equal(environment(testOb), 0),
         assert_equal(testOb->direct_drop_obj(), 0),
 
