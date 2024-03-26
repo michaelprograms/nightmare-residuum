@@ -30,30 +30,30 @@ void command (string input, mapping flags) {
                     "Species",
                     "Class",
                     "Level",
+                    "Experience",
                 }),
                 "items": ({
                     capitalize(target->query_gender()) + " " + capitalize(target->query_species()),
                     capitalize(target->query_class()),
                     target->query_level(),
+                    format_integer(target->query_experience()),
                 }),
-                "columns": 3,
-                "align": "center",
+                "columns": 4,
+                "align": "left",
             ]),
             ([
                 "header": ({
-                    "Experience",
                     "Victories",
                     "Victory Average",
                     "Defeats",
                 }),
                 "items": ({
-                    format_integer(target->query_experience()),
                     target->query_victory(),
                     target->query_victory_average(),
                     sizeof(target->query_defeat()),
                 }),
-                "columns": 4,
-                "align": "center",
+                "columns": 3,
+                "align": "left",
             ]),
             ([
                 "header": ({
