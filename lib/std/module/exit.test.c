@@ -92,6 +92,7 @@ void test_climbs () {
     expect_function("query_climb_destinations", testOb);
     expect_function("set_climbs", testOb);
     expect_function("set_climb", testOb);
+    expect_function("remove_climb", testOb);
 
     expect("climbs are addable and queryable", (: ({
         assert_equal(testOb->query_climbs(), ([ ])),
