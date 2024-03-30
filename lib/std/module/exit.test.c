@@ -334,6 +334,7 @@ void test_doors () {
     expect_function("set_open", testOb);
     expect_function("set_locked", testOb);
     expect_function("query_door_dir", testOb);
+    expect_function("query_dir_door", testOb);
     // expect_function("handle_open", testOb);
     // expect_function("handle_close", testOb);
     // expect_function("handle_lock", testOb);
@@ -347,6 +348,8 @@ void test_doors () {
         assert_equal(r2->query_open("door"), -1),
         assert_equal(r1->query_locked("door"), -1),
         assert_equal(r2->query_locked("door"), -1),
+        assert_equal(r1->query_dir_door("east"), 0),
+        assert_equal(r2->query_dir_door("west"), 0),
 
         // setup door without key
         r1->set_exit("east", file_name(r2), 0, 0, 0, "door", 0, 0),
@@ -356,6 +359,8 @@ void test_doors () {
         assert_equal(r2->query_doors(), ({ "door", })),
         assert_equal(r1->query_doors(1), ({ "east", "door", })),
         assert_equal(r2->query_doors(1), ({ "west", "door", })),
+        assert_equal(r1->query_dir_door("east"), "door"),
+        assert_equal(r2->query_dir_door("west"), "door"),
         assert_equal(r1->query_door_dir("door"), "east"),
         assert_equal(r2->query_door_dir("door"), "west"),
         assert_equal(r1->query_open("door"), 0),
@@ -407,8 +412,6 @@ void test_doors () {
         r2->set_open("west", 1),
         assert_equal(r1->query_open("door"), 1),
         assert_equal(r2->query_open("door"), 1),
-
-
     }) :));
 
     if (r1) destruct(r1);
