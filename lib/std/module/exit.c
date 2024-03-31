@@ -305,16 +305,18 @@ int handle_open (object ob, string str) {
     if (__Exits[dir]["locked"]) {
         message("action", "The " + door + " to the " + dir + " is locked.", ob);
         message("action", ob->query_cap_name() + " attempts to open the " + door + " to the " + dir + ".", environment(ob), ob);
+        return 0;
     } else if (__Exits[dir]["open"]) {
         message("action", "The " + door + " to the " + dir + " is already open.", ob);
+        return 0;
     } else {
         message("action", "You open the " + door + " to the " + dir + ".", ob);
         message("action", ob->query_cap_name() + " opens the " + door + " to the " + dir + ".", environment(ob), ob);
         __Exits[dir]["open"] = 1;
         __Exits[dir]["room"]->set_open(door, 1);
         message("action", "The " + door + " to the " + format_exit_reverse(dir) + " opens.", load_object(__Exits[dir]["room"]));
+        return 1;
     }
-    return 1;
 }
 
 int handle_close (object ob, string str) {
@@ -333,14 +335,15 @@ int handle_close (object ob, string str) {
 
     if (!__Exits[dir]["open"]) {
         message("action", "The " + door + " to the " + dir + " is already closed.", ob);
+        return 0;
     } else {
         message("action", "You close the " + door + " to the " + dir + ".", ob);
         message("action", ob->query_cap_name() + " closes the " + door + " to the " + dir + ".", environment(ob), ob);
         __Exits[dir]["open"] = 0;
         __Exits[dir]["room"]->set_open(door, 0);
         message("action", "The " + door + " to the " + format_exit_reverse(dir) + " closes.", load_object(__Exits[dir]["room"]));
+        return 1;
     }
-    return 1;
 }
 
 int handle_lock (object ob, string str, object key) {

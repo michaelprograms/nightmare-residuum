@@ -85,6 +85,9 @@ void test_exits () {
     }) :));
 }
 
+// Necessary for handle_open, handle_close, handle_lock, handle_unlock
+string query_cap_name () { return "Test"; }
+
 void test_climbs () {
     expect_function("query_climbs", testOb);
     expect_function("query_climb", testOb);
@@ -335,10 +338,10 @@ void test_doors () {
     expect_function("set_locked", testOb);
     expect_function("query_door_dir", testOb);
     expect_function("query_dir_door", testOb);
-    // expect_function("handle_open", testOb);
-    // expect_function("handle_close", testOb);
-    // expect_function("handle_lock", testOb);
-    // expect_function("handle_unlock", testOb);
+    expect_function("handle_open", testOb);
+    expect_function("handle_close", testOb);
+    expect_function("handle_lock", testOb);
+    expect_function("handle_unlock", testOb);
 
     expect("doors behave", (: ({
         // no doors are setup
@@ -367,6 +370,20 @@ void test_doors () {
         assert_equal(r2->query_open("door"), 0),
         assert_equal(r1->query_locked("door"), 0),
         assert_equal(r2->query_locked("door"), 0),
+
+        // doors can open and close
+        assert_equal(r1->handle_open(this_object(), "door"), 1),
+        assert_equal(r1->handle_open(this_object(), "door"), 0),    // already open
+        assert_equal(r2->handle_open(this_object(), "door"), 0),    // already open
+        assert_equal(r1->handle_close(this_object(), "door"), 1),
+        assert_equal(r1->handle_close(this_object(), "door"), 0),   // already closed
+        assert_equal(r2->handle_close(this_object(), "door"), 0),   // already closed
+        assert_equal(r2->handle_open(this_object(), "door"), 1),
+        assert_equal(r2->handle_open(this_object(), "door"), 0),    // already open
+        assert_equal(r1->handle_open(this_object(), "door"), 0),    // already open
+        assert_equal(r2->handle_close(this_object(), "door"), 1),
+        assert_equal(r2->handle_close(this_object(), "door"), 0),   // already closed
+        assert_equal(r1->handle_close(this_object(), "door"), 0),   // already closed
 
         // setup locked door with key
         r1->set_exit("east", file_name(r2), 0, 0, 0, "door", "test key", 1),
@@ -412,6 +429,20 @@ void test_doors () {
         r2->set_open("west", 1),
         assert_equal(r1->query_open("door"), 1),
         assert_equal(r2->query_open("door"), 1),
+
+        // doors can lock and unlock
+        assert_equal(r1->handle_lock(this_object(), "door"), 1),
+        assert_equal(r1->handle_lock(this_object(), "door"), 0),    // already locked
+        assert_equal(r2->handle_lock(this_object(), "door"), 0),    // already locked
+        assert_equal(r1->handle_unlock(this_object(), "door"), 1),
+        assert_equal(r1->handle_unlock(this_object(), "door"), 0),   // already unlocked
+        assert_equal(r2->handle_unlock(this_object(), "door"), 0),   // already unlocked
+        assert_equal(r2->handle_lock(this_object(), "door"), 1),
+        assert_equal(r2->handle_lock(this_object(), "door"), 0),    // already locked
+        assert_equal(r1->handle_lock(this_object(), "door"), 0),    // already locked
+        assert_equal(r2->handle_unlock(this_object(), "door"), 1),
+        assert_equal(r2->handle_unlock(this_object(), "door"), 0),   // already unlocked
+        assert_equal(r1->handle_unlock(this_object(), "door"), 0),   // already unlocked
     }) :));
 
     if (r1) destruct(r1);
