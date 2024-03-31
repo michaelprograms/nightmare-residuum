@@ -20,6 +20,16 @@ void test_is_key () {
     }) :));
 }
 
+void test_direct_lock_str_with_obj () {
+    expect_function("direct_lock_str_with_obj", testOb);
+
+    expect("direct_lock_str_with_obj returns true", (: ({
+        assert_equal(testOb->direct_unlock_str_with_obj(), 0),
+        assert_equal(testOb->direct_unlock_str_with_obj("direction"), 0),
+        assert_equal(testOb->direct_unlock_str_with_obj("direction", "bad key"), 0),
+        assert_equal(testOb->direct_unlock_str_with_obj("direction", testOb), 1),
+    }) :));
+}
 void test_direct_unlock_str_with_obj () {
     expect_function("direct_unlock_str_with_obj", testOb);
 
