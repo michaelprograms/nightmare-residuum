@@ -29,7 +29,7 @@ mixed do_unlock_str_with_obj (mixed args...) {
         key = args[1];
     }
 
-    if (env->handle_unlock(po, str, key)) {
+    if (env->handle_unlock(po, str, key->query_name())) {
         return 1;
     }
 
