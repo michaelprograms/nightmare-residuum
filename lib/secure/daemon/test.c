@@ -13,6 +13,8 @@ nosave private int totalFiles = 0;
 
 nosave private int timeBefore;
 
+nosave private object __User;
+
 // -----------------------------------------------------------------------------
 
 void reset_data ();
@@ -151,6 +153,10 @@ void display_results (mapping results, int timeStart) {
         }
         write("\n");
     }
+
+    if (__User) {
+        __User->input_prompt();
+    }
 }
 
 void process () {
@@ -194,6 +200,11 @@ varargs void update_test_data (string path, string ignoreRegex) {
 varargs void run (int callShutdown) {
 
     shutdownAfterTests = callShutdown;
+
+    __User = 0;
+    if (!shutdownAfterTests) {
+        __User = this_user();
+    }
 
     remove_call_out();
     reset_data();
