@@ -78,16 +78,26 @@ nomask void input_pop () {
         evaluate(info.callbackFn);
     }
 }
-nomask void input_focus () {
-    StructUserInput info;
+nomask varargs void input_prompt (StructUserInput info) {
     string prompt;
+    int go_ahead;
 
-    if (!(info = get_top_handler(1))) return;
+    if (!info) {
+        if (!(info = get_top_handler(1))) return;
+        go_ahead = 1;
+    }
     if (info.type != STATE_INPUT_CHARACTER && info.prompt) {
         if (functionp(info.prompt)) prompt = evaluate(info.prompt);
         else prompt = info.prompt;
         if (prompt) message("prompt", prompt, this_object());
+        if (go_ahead) telnet_ga();
     }
+}
+nomask void input_focus () {
+    StructUserInput info;
+
+    if (!(info = get_top_handler(1))) return;
+    input_prompt(info);
     if (info.type == STATE_INPUT_CHARACTER) {
         efun::get_char((: dispatch_input :), info.secure | 2);
     } else {
