@@ -1,5 +1,3 @@
-#include "living.h"
-
 private int __Experience = 0, __TotalExperience = 0;
 private int __Victory = 0, __VictoryLevel;
 private mixed *__Defeat = ({ });
