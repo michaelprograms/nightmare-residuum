@@ -61,7 +61,4 @@ void test_query_contents () {
         assert_equal(sizeof(testOb->query_item_contents()), 1),
         assert_equal(sizeof(testOb->query_contents()), 2),
     }) :));
-
-    if (living) destruct(living);
-    if (item) destruct(item);
 }
