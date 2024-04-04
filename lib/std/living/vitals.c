@@ -1,5 +1,3 @@
-#include "living.h"
-
 private mapping __Vitals = ([
     "hp": 0,
     "hpMax": 0,
