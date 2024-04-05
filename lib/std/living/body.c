@@ -1,5 +1,3 @@
-#include "living.h"
-
 private string __Gender = "neither";
 private string __Species = "unknown";
 mapping __Limbs = ([ ]);
@@ -7,6 +5,12 @@ private nosave mapping __Wielded = ([ ]);
 private nosave mapping __Worn = ([ ]);
 nosave private int __NextHeal;
 nosave private mapping __Injections = ([ ]);
+
+/* ----- function prototypes ----- */
+
+void update_limbs ();
+varargs mixed handle_unwear (object ob);
+varargs mixed handle_unwield (object ob);
 
 /* ----- gender and species ----- */
 
@@ -136,18 +140,20 @@ void handle_limb_heal (string limb, int n) {
 
 // @TODO source is not used for anything
 varargs int handle_damage (int damage, string limb, object source) {
-    int beforeHp = query_hp();
+    int beforeHp;
 
     if (!this_object()) {
         return 0;
     }
 
-    add_hp(-damage);
-    if (query_max_hp() < query_hp()) {
-        set_hp(query_max_hp());
+    beforeHp = this_object()->query_hp();
+    this_object()->add_hp(-damage);
+    if (this_object()->query_max_hp() < this_object()->query_hp()) {
+        this_object()->set_hp(this_object()->query_max_hp());
     }
     if (this_object()->is_character()) {
-        message("system", sprintf("hp: %d (%d) sp: %d    mp: %d\n", query_hp(), query_hp() - beforeHp, query_sp(), query_mp()), this_object());
+        // @TODO move to vitals
+        message("system", sprintf("hp: %d (%d) sp: %d    mp: %d\n", this_object()->query_hp(), this_object()->query_hp() - beforeHp, this_object()->query_sp(), this_object()->query_mp()), this_object());
     }
 
     if (stringp(limb) && limb != "" && query_limb(limb)) {
@@ -157,7 +163,7 @@ varargs int handle_damage (int damage, string limb, object source) {
         if (__Limbs[limb]["damage"] < 0) {
             __Limbs[limb]["damage"] = 0;
         }
-        limbDamagePct = __Limbs[limb]["damage"]*100/__Limbs[limb]["maxdamage"];
+        limbDamagePct = __Limbs[limb]["damage"] * 100 / __Limbs[limb]["maxdamage"];
 
         if (limbDamagePct >= 100) {
             handle_limb_sever(limb);
@@ -412,7 +418,7 @@ private void handle_passive_heal () {
     }
 
     __NextHeal = time() + 10;
-    amt = to_int(ceil((query_level() / 5.0) + (query_stat("endurance") / 10.0) + (query_stat("luck") / 20.0)));
+    amt = to_int(ceil((this_object()->query_level() / 5.0) + (this_object()->query_stat("endurance") / 10.0) + (this_object()->query_stat("luck") / 20.0)));
     heal(amt);
 }
 
