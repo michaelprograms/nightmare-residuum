@@ -33,12 +33,24 @@ private function doneTestFn;
 
 /* ----- overrideable functions ----- */
 
-void before_all_tests () { }
-void before_each_test () { }
-void after_each_test () { }
-void after_all_tests () { }
-string *test_order () { return 0; }
-string *test_ignore () { return ({ }); }
+void before_all_tests () {
+
+}
+void before_each_test () {
+
+}
+void after_each_test () {
+
+}
+void after_all_tests () {
+
+}
+string *test_order () {
+    return 0;
+}
+string *test_ignore () {
+    return ({ });
+}
 
 /* ----- test functions ----- */
 
@@ -104,6 +116,7 @@ private string *query_test_functions () {
 /* -----  ----- */
 
 private void finish_test () {
+    // @TODO remove this condition for automatic coverage detection
     // Attempt to populate testObjectUntestedFns if no tests have run
     if (!sizeof(testFunctions) || (passingExpects + failingExpects == 0)) {
         before_each_test();
@@ -134,7 +147,6 @@ private void finish_test () {
 }
 
 public int execute_test (function done) {
-
     doneTestFn = done;
 
     // reset test metrics
@@ -299,6 +311,7 @@ private void validate_expect (mixed value1, mixed value2, string message) {
         }
     }
 }
+// @TODO deprecate expect_function
 // Assert that testOb contains a public function matching fn
 void expect_function (string fn, object testOb) {
     currentTestPassed = !!function_exists(fn, testOb);
