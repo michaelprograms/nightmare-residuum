@@ -15,7 +15,7 @@ nosave private int timeBefore;
 
 nosave private object __User;
 
-// -----------------------------------------------------------------------------
+/* ----- function prototypes ----- */
 
 void reset_data ();
 varargs void process_file (string file, function done, int reset);
@@ -23,8 +23,9 @@ private string format_total_line (string name, int current, int total);
 void process ();
 varargs void update_test_data (string path, string ignore);
 varargs void run (int callShutdown);
+void display_results (mapping results);
 
-// -----------------------------------------------------------------------------
+/* -----  ----- */
 
 void reset_data () {
     currentTest = 0;
@@ -45,7 +46,7 @@ void reset_data () {
     __TestsMissing = ({ });
 }
 
-// -----------------------------------------------------------------------------
+/* -----  ----- */
 
 void done_test (mapping results) {
     if (results) {
@@ -64,13 +65,20 @@ void done_test (mapping results) {
     process();
 }
 
-varargs void process_file (string file, function done, int reset) {
+private nosave int testStartTime;
+varargs void process_file (string file, int reset) {
     object t;
     string tmp;
+    function fnDone;
 
     if (reset) {
         reset_data();
         update_test_data(file);
+        testStartTime = time_ns();
+        fnDone = (: display_results :);
+    } else {
+        fnDone = (: done_test :);
+        testStartTime = 0;
     }
     if (t = find_object(file)) {
         destruct(t);
@@ -81,7 +89,7 @@ varargs void process_file (string file, function done, int reset) {
         return;
     }
     if (!inherits(M_TEST, load_object(file))) {
-        evaluate(done);
+        evaluate(fnDone);
         return;
     }
     // call out clears the call stack, call other will chain the tests
@@ -97,7 +105,7 @@ varargs void process_file (string file, function done, int reset) {
                 if (ob) destruct(ob);
             }, 5, testFile);
         }
-    }, 0, file, done);
+    }, 0, file, fnDone);
 }
 
 private string format_total_line (string name, int current, int total) {
@@ -112,14 +120,14 @@ private string format_total_line (string name, int current, int total) {
     return tmp;
 }
 
-void display_results (mapping results, int timeStart) {
+void display_results (mapping results) {
     int totalExpects = results["passingExpects"] + results["failingExpects"];
     int totalAsserts = results["passingAsserts"] + results["failingAsserts"];
     int totalFns = results["testedFns"] + results["untestedFns"];
     int time;
 
-    if (!undefinedp(timeStart)) {
-        time = time_ns() - timeStart;
+    if (!undefinedp(testStartTime) && testStartTime > 0) {
+        time = time_ns() - testStartTime;
     }
 
     write("\n");
@@ -138,7 +146,7 @@ void display_results (mapping results, int timeStart) {
         write("No tests were found.\n");
     }
 
-    if (!undefinedp(timeStart)) {
+    if (!undefinedp(testStartTime)) {
         write("\n" + sprintf("%-20s", results["numTests"]+" tests:") + (this_character()?"%^ORANGE%^":"\e[33m") + sprintf("%7.2f", time/1000000.0) + " ms" + (this_character()?"%^RESET%^":"\e[0m") + "\n\n");
     }
 
@@ -161,7 +169,7 @@ void display_results (mapping results, int timeStart) {
 
 void process () {
     if (currentTest < sizeof(__TestFiles)) {
-        process_file(__TestFiles[currentTest], (: done_test :), 0);
+        process_file(__TestFiles[currentTest], 0);
     } else {
         display_results(__Results, timeBefore);
 
@@ -208,6 +216,7 @@ varargs void run (int callShutdown) {
 
     remove_call_out();
     reset_data();
+    testStartTime = time_ns();
 
     write("Scanning for test files...\n");
     update_test_data("/secure/", "/secure/cmd");

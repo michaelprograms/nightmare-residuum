@@ -6,11 +6,6 @@ void create () {
     set_help_text("The update command is used to destruct and reload a file to the latest copy, and run tests of the file, if they exist.");
 }
 
-nosave private int testStart;
-void done (mapping results) {
-    D_TEST->display_results(results, testStart);
-}
-
 void command (string input, mapping flags) {
     string tmp;
     object ob;
@@ -111,8 +106,7 @@ void command (string input, mapping flags) {
         keep->describe_environment();
         keep = ({ });
         if (file_size(test) > 0) {
-            testStart = time_ns();
-            D_TEST->process_file(test, (: done :), 1);
+            D_TEST->process_file(test, 1);
         }
     } else {
         message("action", "update failed: " + input, this_user());
