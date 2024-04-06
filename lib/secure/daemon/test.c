@@ -11,8 +11,6 @@ nosave private mapping __Results = ([ ]);
 nosave private int currentTest = 0, shutdownAfterTests = 0;
 nosave private int totalFiles = 0;
 
-nosave private int timeBefore;
-
 nosave private object __User;
 
 /* ----- function prototypes ----- */
@@ -78,7 +76,6 @@ varargs void process_file (string file, int reset) {
         fnDone = (: display_results :);
     } else {
         fnDone = (: done_test :);
-        testStartTime = 0;
     }
     if (t = find_object(file)) {
         destruct(t);
@@ -126,7 +123,7 @@ void display_results (mapping results) {
     int totalFns = results["testedFns"] + results["untestedFns"];
     int time;
 
-    if (!undefinedp(testStartTime) && testStartTime > 0) {
+    if (testStartTime > 0) {
         time = time_ns() - testStartTime;
     }
 
@@ -146,7 +143,7 @@ void display_results (mapping results) {
         write("No tests were found.\n");
     }
 
-    if (!undefinedp(testStartTime)) {
+    if (testStartTime > 0) {
         write("\n" + sprintf("%-20s", results["numTests"]+" tests:") + (this_character()?"%^ORANGE%^":"\e[33m") + sprintf("%7.2f", time/1000000.0) + " ms" + (this_character()?"%^RESET%^":"\e[0m") + "\n\n");
     }
 
@@ -171,7 +168,7 @@ void process () {
     if (currentTest < sizeof(__TestFiles)) {
         process_file(__TestFiles[currentTest], 0);
     } else {
-        display_results(__Results, timeBefore);
+        display_results(__Results);
 
         if (shutdownAfterTests) {
             shutdown(__Results["failingExpects"] > 0 ? -1 : 0);
@@ -205,9 +202,9 @@ varargs void update_test_data (string path, string ignoreRegex) {
     }
 }
 
-varargs void run (int callShutdown) {
+varargs void run (int shutdown) {
 
-    shutdownAfterTests = callShutdown;
+    shutdownAfterTests = shutdown;
 
     __User = 0;
     if (!shutdownAfterTests) {
@@ -236,6 +233,5 @@ varargs void run (int callShutdown) {
         else return strcmp(a, b);
     });
 
-    timeBefore = time_ns();
     call_out_walltime((: process :), 0);
 }
