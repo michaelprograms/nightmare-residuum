@@ -17,51 +17,62 @@ void update_descriptions () {
         case "icy water":
             set_long("Surrounded by icy water.");
             set_property("water", 1);
+            set_property("go", 4);
             break;
         case "deeper water":
             set_long("Surrounded by deeper water.");
             set_property("water", 3);
+            set_property("go", 5);
             break;
         case "deep water":
             set_long("Surrounded by deep water.");
             set_property("water", 2);
+            set_property("go", 4);
             break;
         case "shallow water":
             set_long("Surrounded by water.");
             set_property("water", 1);
+            set_property("go", 3);
             break;
         case "ice":
             set_long("Surrounded by ice.");
+            set_property("go", 3);
             break;
         case "tundra":
             set_long("Surrounded by tundra.");
+            set_property("go", 2);
             break;
         case "grassland":
             set_long("Surrounded by grassland.");
+            set_property("go", 1);
             break;
         case "woodland":
             set_long("Surrounded by woodland.");
+            set_property("go", 1);
             break;
         case "boreal forest":
             set_long("Surrounded by boreal forest.");
+            set_property("go", 2);
             break;
         case "desert":
             set_long("Surrounded by desert.");
-            break;
-        case "woodland":
-            set_long("Surrounded by woodland.");
+            set_property("go", 2);
             break;
         case "seasonal forest":
             set_long("Surrounded by seasonal forest.");
+            set_property("go", 1);
             break;
         case "temperate rainforest":
             set_long("Surrounded by temperate rainforest.");
+            set_property("go", 4);
             break;
         case "savanna":
             set_long("Surrounded by savanna.");
+            set_property("go", 2);
             break;
         case "tropical rainforest":
             set_long("Surrounded by tropical rainforest.");
+            set_property("go", 4);
             break;
         default:
             set_long("Error: unknown biome.");
@@ -137,6 +148,17 @@ void update_resource () {
         if (obResource = present("resource_node")) {
             obResource->handle_remove();
         }
+    }
+}
+
+/* ----- exit override ----- */
+
+mixed handle_go (object ob, string verb, string dir) {
+    if (ob->query_cooldown("go")) {
+        message("action", "You cannot go anywhere yet.", ob);
+    } else {
+        ob->set_cooldown("go", 0.2 * query_property("go"), "timed");
+        ::handle_go(ob, verb, dir);
     }
 }
 
