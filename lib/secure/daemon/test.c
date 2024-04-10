@@ -296,16 +296,19 @@ string create_coverage (string path) {
         } else if (pcre_match(__RawLines[i], "^}$")) {
             // End of Function
             line = __RawLines[i] + " }";
-        } else if (sizeof(reMatches = pcre_extract(__RawLines[i], "^\\s+(for|if|return|switch|while)")) > 0) {
+        } else if (sizeof(reMatches = pcre_extract(__RawLines[i], "^\\s+(break|for|if|return|switch|while)")) > 0) {
             // Construct
             line = replace_string(__RawLines[i], reMatches[0], "D_TEST->line_hit(" + (i+1) + "); " + reMatches[0]);
             __Lines[i+1] = ({ 0 });
-        } else if (sizeof(reMatches = pcre_extract(__RawLines[i], "^\\s+(.+) (?:=|\\+\\+|--|\\+=|-=)")) > 0) {
+        } else if (sizeof(reMatches = pcre_extract(__RawLines[i], "^\\s+(.+ =|\\+\\+|--|\\+=|-=)")) > 0) {
             // Variable Operator
             line = replace_string(__RawLines[i], reMatches[0], "D_TEST->line_hit(" + (i+1) + "); " + reMatches[0]);
             __Lines[i+1] = ({ 0 });
-        } else if (sizeof(reMatches = pcre_extract(__RawLines[i], "^\\s+(.+)(?:\\(.?\\))")) > 0) {
-            // Function Call
+        } else if (
+            sizeof(reMatches = pcre_extract(__RawLines[i], "^\\s+([\\:]*[a-zA-Z_]\\w*)\\s*\\((.*)\\)\\s*;")) > 0 ||
+            sizeof(reMatches = pcre_extract(__RawLines[i], "^\\s+([a-zA-Z_]\\w*)\\s*->\\s*([a-zA-Z_]\\w*)\\s*\\((.*)\\)\\s*;")) > 0
+        ) {
+            // Function Call or Call Other pointer
             line = replace_string(__RawLines[i], reMatches[0], "D_TEST->line_hit(" + (i+1) + "); " + reMatches[0]);
             __Lines[i+1] = ({ 0 });
         } else {
