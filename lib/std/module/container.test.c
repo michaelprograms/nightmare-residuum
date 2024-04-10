@@ -1,20 +1,22 @@
 inherit M_TEST;
 
 private nosave object testOb;
+private nosave string testFile;
+void before_all_tests () {
+    testFile = D_TEST->create_coverage("/std/module/container.c");
+}
 void before_each_test () {
-    testOb = clone_object("/std/module/container.c");
+    testOb = clone_object(testFile);
 }
 void after_each_test () {
     if (objectp(testOb)) destruct(testOb);
 }
+void after_all_tests () {
+    rm(testFile);
+}
 
 void test_receive () {
     object ob = new(STD_OBJECT);
-
-    expect_function("can_receive", testOb);
-    expect_function("can_release", testOb);
-    expect_function("handle_receive", testOb);
-    expect_function("handle_release", testOb);
 
     expect("receive and release behaves", (: ({
         assert_equal(testOb->can_receive($(ob)), 1),
@@ -28,9 +30,6 @@ void test_receive () {
 }
 
 void test_inventory () {
-    expect_function("inventory_visible", testOb);
-    expect_function("inventory_accessible", testOb);
-
     expect("inventory behaves", (: ({
         assert_equal(testOb->inventory_visible(), 1),
         assert_equal(testOb->inventory_accessible(), 1),
@@ -39,10 +38,6 @@ void test_inventory () {
 
 void test_query_contents () {
     object living, item;
-
-    expect_function("query_living_contents", testOb);
-    expect_function("query_item_contents", testOb);
-    expect_function("query_contents", testOb);
 
     // create test items
     living = new(STD_LIVING);

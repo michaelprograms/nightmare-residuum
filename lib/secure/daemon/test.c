@@ -13,15 +13,19 @@ nosave private int totalFiles = 0;
 
 nosave private object __User;
 
+mapping __Lines = ([ ]);
+string *__RawLines = ({ });
+
 /* ----- function prototypes ----- */
 
-void reset_data ();
 varargs void process_file (string file, function done, int reset);
 private string format_total_line (string name, int current, int total);
 void process ();
 varargs void update_test_data (string path, string ignore);
 varargs void run (int callShutdown);
 void display_results (mapping results);
+int *query_hit_lines ();
+int *query_unhit_lines ();
 
 /* -----  ----- */
 
@@ -47,6 +51,8 @@ void reset_data () {
 /* -----  ----- */
 
 void done_test (mapping results) {
+    int hitLines, unhitLines;
+
     if (results) {
         __Results["numTests"] += results["numTests"];
         __Results["passingExpects"] += results["passingExpects"];
@@ -58,6 +64,12 @@ void done_test (mapping results) {
         if (strlen(results["failLog"]) > 0) {
             __Results["failLog"] += ({ results["failLog"] });
         }
+        hitLines = sizeof(query_hit_lines());
+        unhitLines = sizeof(query_unhit_lines());
+        if (hitLines + unhitLines > 0) {
+            __Results["hitLines"] += hitLines;
+            __Results["unhitLines"] += unhitLines;
+        }
     }
     currentTest ++;
     process();
@@ -68,6 +80,9 @@ varargs void process_file (string file, int reset) {
     object t;
     string tmp;
     function fnDone;
+
+    __Lines = ([ ]);
+    __RawLines = ({ });
 
     if (reset) {
         reset_data();
@@ -133,6 +148,9 @@ void display_results (mapping results) {
     }
     if (totalFns > 0) {
         write(format_total_line("Functions", results["testedFns"], totalFns) + "\n");
+    }
+    if (results["hitLines"] + results["unhitLines"] > 0) {
+        write(format_total_line("Lines", results["hitLines"], results["hitLines"] + results["unhitLines"]) + "\n");
     }
     if (totalExpects > 0) {
         write(format_total_line("Expects Passed", results["passingExpects"], totalExpects) + "\n");
@@ -234,4 +252,67 @@ varargs void run (int shutdown) {
     });
 
     call_out_walltime((: process :), 0);
+}
+
+/* ----- code coverage ----- */
+
+mapping query_lines () {
+    return __Lines;
+}
+void line_hit (int n) {
+    __Lines[n][0] ++;
+}
+string *query_functions () {
+    return values(map(__Lines, (: sizeof($2) > 1 ? $2[1] : 0 :))) - ({ 0 });
+}
+int *query_hit_lines () {
+    return keys(filter(__Lines, (: sizeof($2) == 1 && $2[0] > 0 :)));
+}
+int *query_unhit_lines () {
+    return keys(filter(__Lines, (: sizeof($2) == 1 && $2[0] == 0 :)));
+}
+
+string create_coverage (string path) {
+    string *newLines = ({ }), *reMatches;
+    string line, cPath;
+    object cOb;
+    int i, l;
+
+    __Lines = ([ ]);
+
+    cPath = path[0..<2] + "coverage.c";
+    cp(path, cPath);
+    cOb = load_object(cPath);
+    destruct(cOb);
+
+    __RawLines = explode(read_file(path), "\n");
+
+    l = sizeof(__RawLines);
+    for (i = 0; i < l; i ++) {
+        if (sizeof(reMatches = pcre_extract(__RawLines[i], "^(?:public |private |protected |nosave |nomask |varargs )*(?:float|int|object|mapping|mixed|string|void) *\\**([a-zA-Z0-9_]{1,}) \\(.*\\) {")) > 0) {
+            // Start of Function
+            line = __RawLines[i] + " D_TEST->line_hit(" + (i+1) + "); {";
+            __Lines[i+1] = ({ 0, reMatches[0] });
+        } else if (pcre_match(__RawLines[i], "^}$")) {
+            // End of Function
+            line = __RawLines[i] + " }";
+        } else if (sizeof(reMatches = pcre_extract(__RawLines[i], "^\\s+(for|if|return|switch|while)")) > 0) {
+            // Construct
+            line = replace_string(__RawLines[i], reMatches[0], "D_TEST->line_hit(" + (i+1) + "); " + reMatches[0]);
+            __Lines[i+1] = ({ 0 });
+        } else if (sizeof(reMatches = pcre_extract(__RawLines[i], "^\\s+(.+) (?:=|\\+\\+|--|\\+=|-=)")) > 0) {
+            // Variable Operator
+            line = replace_string(__RawLines[i], reMatches[0], "D_TEST->line_hit(" + (i+1) + "); " + reMatches[0]);
+            __Lines[i+1] = ({ 0 });
+        } else if (sizeof(reMatches = pcre_extract(__RawLines[i], "^\\s+(.+)(?:\\(.?\\))")) > 0) {
+            // Function Call
+            line = replace_string(__RawLines[i], reMatches[0], "D_TEST->line_hit(" + (i+1) + "); " + reMatches[0]);
+            __Lines[i+1] = ({ 0 });
+        } else {
+            line = __RawLines[i];
+        }
+        newLines += ({ line });
+    }
+    write_file(cPath, implode(newLines, "\n"), 1);
+    return cPath;
 }

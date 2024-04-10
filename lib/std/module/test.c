@@ -75,16 +75,23 @@ protected object clone_object (string path) {
         error("Invalid path passed to test->clone_object");
     }
     ob = efun::clone_object(path);
-    // get list of functions from the test object
-    fns = filter(functions(ob, 2), (: function_exists($1, $2) :), ob);
-    // remove ignored functions
-    fns = fns - TEST_IGNORE_DEFAULTS - test_ignore();
-    foreach (string fn in fns) {
-        if (member_array(fn, testObjectFns) == -1) {
-            testObjectFns += ({ fn });
-            testObjectUntestedFns += ({ fn });
+
+    if (sizeof(fns = D_TEST->query_functions())) {
+        testObjectFns = fns - TEST_IGNORE_DEFAULTS - test_ignore();
+    } else {
+        // @TODO deprecate
+        // get list of functions from the test object
+        fns = filter(functions(ob, 2), (: function_exists($1, $2) :), ob);
+        // remove ignored functions
+        fns = fns - TEST_IGNORE_DEFAULTS - test_ignore();
+        foreach (string fn in fns) {
+            if (member_array(fn, testObjectFns) == -1) {
+                testObjectFns += ({ fn });
+                testObjectUntestedFns += ({ fn });
+            }
         }
     }
+
     return ob;
 }
 
@@ -116,7 +123,7 @@ private string *query_test_functions () {
 /* -----  ----- */
 
 private void finish_test () {
-    // @TODO remove this condition for automatic coverage detection
+    // @TODO D_TEST->coverage_file() && D_TEST->query_functions() for automatic coverage detection
     // Attempt to populate testObjectUntestedFns if no tests have run
     if (!sizeof(testFunctions) || (passingExpects + failingExpects == 0)) {
         before_each_test();
@@ -141,6 +148,8 @@ private void finish_test () {
         "passingAsserts": totalPassingAsserts,
         "failingAsserts": failingAsserts,
         "failLog": totalFailLog,
+        "hitLines": sizeof(D_TEST->query_hit_lines()),
+        "unhitLines": sizeof(D_TEST->query_unhit_lines()),
     ]));
 
     destruct();
@@ -277,6 +286,7 @@ varargs private string format_array_differences (mixed *actual, mixed *expect) {
 // -----------------------------------------------------------------------------
 
 private void validate_expect (mixed value1, mixed value2, string message) {
+    // @TODO deprecate this
     // message can start with the function being tested to count as tested
     foreach (string fn in testObjectUntestedFns) {
         if (regexp(message, fn + "[ :(]") > 0) {
