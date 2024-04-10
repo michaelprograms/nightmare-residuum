@@ -1,19 +1,21 @@
 inherit M_TEST;
 
 private nosave object testOb;
+private nosave string testFile;
+void before_all_tests () {
+    testFile = D_TEST->create_coverage("/std/living/attribute.c");
+}
 void before_each_test () {
-    if (objectp(testOb)) destruct(testOb);
-    testOb = clone_object("/std/living/attribute.c");
+    testOb = clone_object(testFile);
 }
 void after_each_test () {
     if (objectp(testOb)) destruct(testOb);
 }
+void after_all_tests () {
+    rm(testFile);
+}
 
 void test_attributes () {
-    expect_function("query_attributes", testOb);
-    expect_function("query_attribute", testOb);
-    expect_function("set_attribute", testOb);
-
     expect("setting and querying attributes are handled", (: ({
         assert_equal(testOb->query_attribute("build"), UNDEFINED),
         assert_equal(testOb->query_attribute("complexion"), UNDEFINED),
@@ -44,5 +46,10 @@ void test_attributes () {
         assert_equal(testOb->query_attribute("bad attribute"), UNDEFINED),
         testOb->set_attribute("bad attribute", "bad test attribute"),
         assert_equal(testOb->query_attribute("bad attribute"), UNDEFINED),
+    }) :));
+
+    expect("null attributes are initialized", (: ({
+        store_variable("__Attribute", UNDEFINED, testOb),
+        assert_equal(testOb->query_attributes(), ([ ])),
     }) :));
 }
