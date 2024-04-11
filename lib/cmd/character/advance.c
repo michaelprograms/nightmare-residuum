@@ -26,5 +26,6 @@ void command (string input, mapping flags) {
     tc->add_experience(-cost);
     tc->set_level(tc->query_level() + 1);
     message("action", "You advance your level to " + tc->query_level() + ".", tc);
-    D_LOG->log("character/advance", ctime()+" "+tc->query_key_name()+" to "+tc->query_level());
+    message("action", tc->query_cap_name() + " advances " + possessive(tc) + " level.", tc);
+    D_LOG->log("character/advance", ctime() + " " + tc->query_key_name() + " to " + tc->query_level());
 }
