@@ -167,7 +167,7 @@ varargs string parse_emote (object target, string msg, object *who, mixed *args)
                 break;
             }
             if (has[who[num]]) {
-                tmp = who[num]->query_possessive();
+                tmp = possessive(who[num]);
                 break;
             }
             tmp = possessive_noun(who[num]);
