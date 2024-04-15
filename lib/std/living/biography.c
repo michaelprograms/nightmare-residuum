@@ -4,34 +4,48 @@ private mixed *__Defeat = ({ });
 private int __Defeated = 0;
 
 int query_experience () {
-    if (undefinedp(__Experience)) __Experience = 0;
+    if (undefinedp(__Experience)) {
+        __Experience = 0;
+    }
     return __Experience;
 }
 int query_total_experience () {
-    if (undefinedp(__TotalExperience)) __TotalExperience = 0;
+    if (undefinedp(__TotalExperience)) {
+        __TotalExperience = 0;
+    }
     return __TotalExperience;
 }
 void add_experience (int exp) {
-    if (!intp(exp)) error("Bad argument 1 to body->add_experience");
+    if (!intp(exp)) {
+        error("Bad argument 1 to body->add_experience");
+    }
     __Experience = __Experience + exp;
     // @TODO if (__Experience > ExpMax) __Experience = ExpMax
 }
 void spend_experience (int exp) {
-    if (!intp(exp) || __Experience < exp || exp < 1) error("Bad argument 1 to body->spend_experience");
+    if (!intp(exp) || __Experience < exp || exp < 1) {
+        error("Bad argument 1 to body->spend_experience");
+    }
     __Experience = __Experience - exp;
     __TotalExperience = __TotalExperience + exp;
 }
 
 int query_victory () {
-    if (undefinedp(__Victory)) __Victory = 0;
+    if (undefinedp(__Victory)) {
+        __Victory = 0;
+    }
     return __Victory;
 }
 int query_victory_average () {
-    if (!__Victory) return 0;
+    if (!__Victory) {
+        return 0;
+    }
     return __VictoryLevel / __Victory;
 }
 mixed *query_defeat () {
-    if (!arrayp(__Defeat)) __Defeat = ({ });
+    if (!arrayp(__Defeat)) {
+        __Defeat = ({ });
+    }
     return __Defeat;
 }
 int query_defeated () {
@@ -84,6 +98,9 @@ void handle_defeat (object source) {
         })
     });
 
-    if (this_object()->is_character()) this_object()->handle_move("/domain/Nowhere/room/defeat.c");
-    else this_object()->handle_remove();
+    if (this_object()->is_character()) {
+        this_object()->handle_move("/domain/Nowhere/room/defeat.c");
+    } else {
+        this_object()->handle_remove();
+    }
 }
