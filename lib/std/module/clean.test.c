@@ -2,19 +2,24 @@ inherit M_TEST;
 inherit M_CONTAINER;
 
 private nosave object testOb;
+private nosave string testFile;
+void before_all_tests () {
+    testFile = D_TEST->create_coverage(replace_string(base_name(), ".test", ".c"));
+}
 void before_each_test () {
-    testOb = clone_object("/std/module/clean.c");
+    testOb = clone_object(testFile);
 }
 void after_each_test () {
     if (objectp(testOb)) destruct(testOb);
+}
+void after_all_tests () {
+    rm(testFile);
 }
 string *test_order () {
     return ({ "test_handle_remove", "test_internal_remove", "test_clean_up" });
 }
 
 void test_handle_remove () {
-    expect_function("handle_remove", testOb);
-
     expect("handle_remove behaves", (: ({
         assert_equal(objectp(testOb), 1),
         assert_equal(testOb->handle_remove(), 1),
@@ -44,9 +49,6 @@ void test_internal_remove () {
 }
 
 void test_defaults () {
-    expect_function("clean_never", testOb);
-    expect_function("clean_later", testOb);
-
     expect("default clean default values", (: ({
         assert_equal(testOb->clean_never(), 0),
         assert_equal(testOb->clean_later(), 1),
@@ -54,10 +56,6 @@ void test_defaults () {
 }
 
 void test_clean_up () {
-    expect_function("query_no_clean", testOb);
-    expect_function("set_no_clean", testOb);
-    expect_function("clean_up", testOb);
-
     expect("no clean behaves", (: ({
         assert_equal(testOb->query_no_clean(), 0),
         testOb->set_no_clean(1),

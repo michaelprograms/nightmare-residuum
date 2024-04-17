@@ -16,9 +16,6 @@ void after_all_tests () {
 }
 
 void test_class () {
-    expect_function("set_class", testOb);
-    expect_function("query_class", testOb);
-
     expect("class settable and queryable", (: ({
         assert_equal(testOb->query_class(), "adventurer"),
 
@@ -37,9 +34,6 @@ void test_class () {
 }
 
 void test_subclass () {
-    expect_function("set_subclass", testOb);
-    expect_function("query_subclass", testOb);
-
     expect("subclass settable and queryable", (: ({
         assert_equal(testOb->query_subclass(), "none"),
 

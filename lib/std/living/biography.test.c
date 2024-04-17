@@ -24,11 +24,6 @@ int is_living () { return __MockLiving; }
 string query_cap_name () { return "Biography Test"; }
 
 void test_experience () {
-    expect_function("add_experience", testOb);
-    expect_function("spend_experience", testOb);
-    expect_function("query_experience", testOb);
-    expect_function("query_total_experience", testOb);
-
     expect("handles adding and spending experience", (: ({
         assert_equal(testOb->query_experience(), 0),
         assert_equal(testOb->query_total_experience(), 0),
@@ -52,10 +47,6 @@ void test_experience () {
 }
 
 void test_handle_victory () {
-    expect_function("handle_victory", testOb);
-    expect_function("query_victory", testOb);
-    expect_function("query_victory_average", testOb);
-
     // setup test object
     __MockLiving = 1;
     __MockLevel = 1;
@@ -83,11 +74,6 @@ void test_handle_victory () {
 void test_handle_defeat () {
     object r = new(STD_ROOM);
     object mockCharacter = new("/std/mock/character.c");
-
-    expect_function("handle_defeat", testOb);
-    expect_function("query_defeat", testOb);
-    expect_function("set_defeated", testOb);
-    expect_function("query_defeated", testOb);
 
     // setup test object
     if (testOb) destruct(testOb);

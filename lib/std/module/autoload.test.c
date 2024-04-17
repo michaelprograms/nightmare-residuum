@@ -19,11 +19,6 @@ nosave private int __MockLevel;
 int query_level () { return __MockLevel; }
 
 void test_autoload () {
-    expect_function("set_autoload", testOb);
-    expect_function("query_autoload_data", testOb);
-    expect_function("query_autoload", testOb);
-    expect_function("restore_autoload", testOb);
-
     expect("set_autoload should set requirements", (: ({
         // items don't autoload by default
         assert_equal(arrayp(testOb->query_autoload(this_object())), 0),

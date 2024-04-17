@@ -16,9 +16,6 @@ void after_all_tests () {
 }
 
 void test_type () {
-    expect_function("query_type", testOb);
-    expect_function("set_type", testOb);
-
     expect("type is settable and queryable", (: ({
         assert_equal(testOb->query_type(), UNDEFINED),
 

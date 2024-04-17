@@ -16,9 +16,6 @@ void after_all_tests () {
 }
 
 void test_singular_bonus () {
-    expect_function("query_bonus", testOb);
-    expect_function("set_bonus", testOb);
-
     expect("handles setting and querying bonus", (: ({
         assert_equal(testOb->query_bonus("strength"), 0),
         assert_equal(testOb->query_bonus("luck"), 0),
@@ -35,9 +32,6 @@ void test_singular_bonus () {
 }
 
 void test_multiple_bonuses () {
-    expect_function("query_bonuses", testOb);
-    expect_function("set_bonuses", testOb);
-
     expect("handles setting and querying bonuses", (: ({
         assert_equal(testOb->query_bonuses(), ([ ])),
 
@@ -60,9 +54,6 @@ void add_stat_bonus (string stat, int n) {
 }
 
 void test_apply_and_remove_bonuses () {
-    expect_function("apply_bonus", testOb);
-    expect_function("remove_bonus", testOb);
-
     expect("bonuses are applied and removed ", (: ({
         // set bonuses
         assert_equal(testOb->set_bonuses(([ "strength": 123, "charisma": 123, ])), ([ "strength": 123, "charisma": 123, ])),
@@ -77,6 +68,5 @@ void test_apply_and_remove_bonuses () {
         testOb->remove_bonus(this_object()),
         // verify bonuses were reversed
         assert_equal(__BonusesApplied, ([ "strength": -123, "charisma": -123, ])),
-
     }) :));
 }
