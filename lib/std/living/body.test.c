@@ -1,17 +1,21 @@
 inherit M_TEST;
 
 private nosave object testOb;
+private nosave string testFile;
+void before_all_tests () {
+    testFile = D_TEST->create_coverage(replace_string(base_name(), ".test", ".c"));
+}
 void before_each_test () {
-    testOb = clone_object("/std/living/body.c");
+    testOb = clone_object(testFile);
 }
 void after_each_test () {
     if (objectp(testOb)) destruct(testOb);
 }
+void after_all_tests () {
+    rm(testFile);
+}
 
 void test_gender () {
-    expect_function("set_gender", testOb);
-    expect_function("query_gender", testOb);
-
     expect("gender settable and queryable", (: ({
         assert_equal(testOb->query_gender(), "neither"),
 
@@ -33,9 +37,6 @@ void test_gender () {
 }
 
 void test_species () {
-    expect_function("set_species", testOb);
-    expect_function("query_species", testOb);
-
     expect("species settable and queryable", (: ({
         assert_equal(testOb->query_species(), "unknown"),
 
@@ -48,10 +49,6 @@ void test_species () {
 }
 
 void test_limbs () {
-    expect_function("query_limbs", testOb);
-    expect_function("query_limb", testOb);
-    expect_function("query_random_limb", testOb);
-
     expect("species limbs are queryable", (: ({
         assert_equal(testOb->query_limbs(), ({ })),
 
@@ -104,10 +101,6 @@ void test_limbs_and_level () {
 }
 
 void test_injections () {
-    expect_function("query_injections", testOb);
-    expect_function("query_injection", testOb);
-    expect_function("add_injection", testOb);
-
     expect("injections are addable and queryable", (: ({
         assert_equal(testOb->query_injections(), ([ ])),
 
@@ -173,8 +166,6 @@ void test_injections () {
 }
 
 void test_heal () {
-    expect_function("heal", testOb);
-
     destruct(testOb);
     testOb = new(STD_LIVING);
 
