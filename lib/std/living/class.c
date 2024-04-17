@@ -13,6 +13,6 @@ string query_class () {
 void set_subclass (string c) {
     __Subclass = c;
 }
-string query_subclass() {
+string query_subclass () {
     return __Subclass || "none";
 }
