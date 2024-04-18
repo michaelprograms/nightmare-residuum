@@ -1,20 +1,21 @@
 inherit M_TEST;
 
 private nosave object testOb;
+private nosave string testFile;
+void before_all_tests () {
+    testFile = D_TEST->create_coverage(replace_string(base_name(), ".test", ".c"));
+}
 void before_each_test () {
-    if (objectp(testOb)) destruct(testOb);
-    testOb = clone_object("/std/module/description.c");
+    testOb = clone_object(testFile);
 }
 void after_each_test () {
     if (objectp(testOb)) destruct(testOb);
 }
+void after_all_tests () {
+    rm(testFile);
+}
 
 void test_long_and_long_footer () {
-    expect_function("set_long", testOb);
-    expect_function("query_long", testOb);
-    expect_function("set_long_footer", testOb);
-    expect_function("query_long_footer", testOb);
-
     expect("long is settable and queryable", (: ({
         assert_equal(testOb->query_long(), ""),
 
@@ -43,9 +44,6 @@ void test_long_and_long_footer () {
 }
 
 void test_short () {
-    expect_function("set_short", testOb);
-    expect_function("query_short", testOb);
-
     expect("short is settable and queryable", (: ({
         assert_equal(testOb->query_short(), ""),
 
