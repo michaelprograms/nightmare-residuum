@@ -1,26 +1,31 @@
 inherit M_TEST;
 
 private nosave object testOb;
+private nosave string testFile;
+void before_all_tests () {
+    testFile = D_TEST->create_coverage(replace_string(base_name(), ".test", ".c"));
+}
 void before_each_test () {
-    testOb = clone_object("/std/module/dustable.c");
+    testOb = clone_object(testFile);
 }
 void after_each_test () {
     if (objectp(testOb)) destruct(testOb);
 }
-
+void after_all_tests () {
+    rm(testFile);
+}
 
 void test_expire () {
-    expect_function("handle_expire", testOb);
-
-    // change testOb to an item which inherits M_CLEAN
-    destruct(testOb);
-    testOb = new("/std/item/corpse.c");
+    object mockItem = new("/std/mock/item.c");
 
     expect("expire to remove dustable", (: ({
-        assert_equal(undefinedp(testOb), 0),
+        assert_equal($(mockItem)->start_shadow(testOb), 1),
+        assert_equal(testOb->query_destructed(), 0), // /std/mock/item method
         testOb->handle_expire(),
-        assert_equal(undefinedp(testOb), 1),
+        assert_equal(testOb->query_destructed(), 1), // /std/mock/item method
+        assert_equal($(mockItem)->stop_shadow(), 1),
     }) :));
+    if (mockItem) destruct(mockItem);
 }
 
 private string testObFile;
@@ -29,7 +34,7 @@ void test_received () {
     function_exists("handle_received", testOb);
 
     expect("handle_received sets expire timer", (: ({
-        assert_regex(testObFile = file_name(testOb), "/std/module/dustable#[0-9]+"),
+        assert_regex(testObFile = file_name(testOb), "/std/module/dustable\\.coverage#[0-9]+"),
 
         // start the expire call_out
         testOb->handle_received(this_object()),
