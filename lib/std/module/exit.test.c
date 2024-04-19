@@ -2,12 +2,18 @@ inherit M_TEST;
 inherit M_MOVE;
 
 private nosave object testOb;
+private nosave string testFile;
+void before_all_tests () {
+    testFile = D_TEST->create_coverage(replace_string(base_name(), ".test", ".c"));
+}
 void before_each_test () {
-    if (objectp(testOb)) destruct(testOb);
-    testOb = clone_object("/std/module/exit.c");
+    testOb = clone_object(testFile);
 }
 void after_each_test () {
     if (objectp(testOb)) destruct(testOb);
+}
+void after_all_tests () {
+    rm(testFile);
 }
 string *test_order () {
     return ({
@@ -19,17 +25,6 @@ string *test_order () {
 }
 
 void test_exits () {
-    expect_function("query_exits", testOb);
-    expect_function("query_exit", testOb);
-    expect_function("query_exit_directions", testOb);
-    expect_function("query_exit_dirs", testOb);
-    expect_function("query_exit_destinations", testOb);
-    expect_function("set_exit", testOb);
-    expect_function("set_exits", testOb);
-    expect_function("remove_exit", testOb);
-    expect_function("set_hidden_exits", testOb);
-    expect_function("query_hidden_exits", testOb);
-
     expect("exits are addable, queryable, and removable", (: ({
         assert_equal(testOb->query_exits(), ([ ])),
         assert_equal(testOb->query_exit_directions(), ({ })),
@@ -89,14 +84,6 @@ void test_exits () {
 string query_cap_name () { return "Test"; }
 
 void test_climbs () {
-    expect_function("query_climbs", testOb);
-    expect_function("query_climb", testOb);
-    expect_function("query_climb_directions", testOb);
-    expect_function("query_climb_destinations", testOb);
-    expect_function("set_climbs", testOb);
-    expect_function("set_climb", testOb);
-    expect_function("remove_climb", testOb);
-
     expect("climbs are addable and queryable", (: ({
         assert_equal(testOb->query_climbs(), ([ ])),
         assert_equal(testOb->query_climb_directions(), ({ })),
@@ -170,8 +157,6 @@ void test_exits_before_after () {
 }
 
 void test_handle_go () {
-    expect_function("handle_go", testOb);
-
     r1 = new(STD_ROOM);
     r2 = new(STD_ROOM);
     ob = new(STD_NPC);
@@ -210,8 +195,6 @@ void test_handle_go () {
 }
 
 void test_handle_climb () {
-    expect_function("handle_climb", testOb);
-
     r1 = new(STD_ROOM);
     r2 = new(STD_ROOM);
     ob = new(STD_NPC);
@@ -250,9 +233,6 @@ void test_handle_climb () {
 }
 
 void test_query_defaults () {
-    expect_function("query_default_enter", testOb);
-    expect_function("query_default_out", testOb);
-
     r1 = new(STD_ROOM);
     r2 = new(STD_ROOM);
 
@@ -330,18 +310,6 @@ void test_exit_reverse_override () {
 void test_doors () {
     r1 = new(STD_ROOM);
     r2 = new(STD_ROOM);
-
-    expect_function("query_doors", testOb);
-    expect_function("query_open", testOb);
-    expect_function("query_locked", testOb);
-    expect_function("set_open", testOb);
-    expect_function("set_locked", testOb);
-    expect_function("query_door_dir", testOb);
-    expect_function("query_dir_door", testOb);
-    expect_function("handle_open", testOb);
-    expect_function("handle_close", testOb);
-    expect_function("handle_lock", testOb);
-    expect_function("handle_unlock", testOb);
 
     expect("regular doors behave", (: ({
         // no doors are setup

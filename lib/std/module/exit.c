@@ -21,10 +21,12 @@ nosave private int __HiddenExits = 0;
 mapping query_exits () {
     return copy(__Exits);
 }
+// longhand directions
 string *query_exit_directions () {
     return keys(__Exits);
 }
-string *query_exit_dirs () { // shorthand directions
+// shorthand directions
+string *query_exit_dirs () {
     string *exits = keys(__Exits);
     for (int i = 0; i < sizeof(exits); i ++) {
         exits[i] = format_exit_brief(exits[i]);
