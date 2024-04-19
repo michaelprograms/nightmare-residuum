@@ -2,12 +2,18 @@ inherit M_TEST;
 inherit M_MOVE;
 
 private nosave object testOb;
+private nosave string testFile;
+void before_all_tests () {
+    testFile = D_TEST->create_coverage(replace_string(base_name(), ".test", ".c"));
+}
 void before_each_test () {
-    if (objectp(testOb)) destruct(testOb);
-    testOb = clone_object("/std/module/look.c");
+    testOb = clone_object(testFile);
 }
 void after_each_test () {
     if (objectp(testOb)) destruct(testOb);
+}
+void after_all_tests () {
+    rm(testFile);
 }
 string *test_order () {
     return ({ "test_looks", "test_handle_look" });
