@@ -5,7 +5,7 @@ int query_level () {
 }
 void set_level (int l) {
     if (l < 0) {
-        l = abs(l);
+        l *= -1;
     }
     __Level = l;
 }
