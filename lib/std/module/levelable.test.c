@@ -16,9 +16,6 @@ void after_all_tests () {
 }
 
 void test_level () {
-    expect_function("set_level", testOb);
-    expect_function("query_level", testOb);
-
     expect("level settable and queryable", (: ({
         assert_equal(testOb->query_level(), 1),
 

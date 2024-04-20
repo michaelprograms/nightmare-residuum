@@ -41,10 +41,6 @@ int handle_release (object ob) {
 void test_move () {
     object ob = new(M_CONTAINER), ob2 = new(M_CONTAINER);
 
-    expect_function("handle_move", testOb);
-    expect_function("handle_received", testOb);
-    expect_function("handle_released", testOb);
-
     expect("handle_move relocates objects", (: ({
         assert_equal(sizeof(all_inventory($(ob))), 0),
         assert_equal(testOb->handle_move($(ob)), 1),
@@ -105,10 +101,6 @@ void test_move () {
 }
 
 void test_environment () {
-    expect_function("query_environment_path", testOb);
-    expect_function("query_environment_short", testOb);
-    expect_function("set_environment_path", testOb);
-
     expect("handles setting and querying environment path and short", (: ({
         assert_equal(testOb->query_environment_path(), "/domain/Nowhere/room/void.c"), // defaults to void
         assert_equal(testOb->query_environment_short(), "no where"),

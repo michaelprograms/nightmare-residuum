@@ -20,12 +20,6 @@ string *test_order () {
 }
 
 void test_looks () {
-    expect_function("query_looks", testOb);
-    expect_function("query_look", testOb);
-    expect_function("set_look", testOb);
-    expect_function("set_looks", testOb);
-    expect_function("remove_look", testOb);
-
     expect("look handles setting, querying, and removing", (: ({
         assert_equal(testOb->query_looks(), ({ })),
         testOb->set_look("test", "Test."),
@@ -63,8 +57,6 @@ void test_looks () {
 
 nosave private int LookCounter = 0;
 void test_handle_look () {
-    expect_function("handle_look", testOb);
-
     expect("handle_look returns description", (: ({
         testOb->set_look("test", function (object character) {
             LookCounter ++;

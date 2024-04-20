@@ -290,10 +290,6 @@ private void validate_expect (mixed value1, mixed value2, string message) {
         }
     }
 }
-// @TODO deprecate expect_function
-// Assert that testOb contains a public function matching fn
-void expect_function (string fn, object testOb) {
-}
 
 void expect (string message, function fn) {
     if (!stringp(message)) error("Bad argument 1 to test->expect");

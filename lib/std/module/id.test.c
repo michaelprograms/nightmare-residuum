@@ -16,27 +16,6 @@ void after_all_tests () {
 }
 
 void test_id () {
-    expect_function("query_name", testOb);
-    expect_function("query_cap_name", testOb);
-    expect_function("query_key_name", testOb);
-    expect_function("set_name", testOb);
-    expect_function("set_key_name", testOb);
-    expect_function("query_id", testOb);
-    expect_function("query_key_id", testOb);
-    expect_function("set_id", testOb);
-    expect_function("remove_id", testOb);
-    expect_function("query_adjective", testOb);
-    expect_function("query_key_adjective", testOb);
-    expect_function("set_adjective", testOb);
-    expect_function("add_adjective", testOb);
-    expect_function("remove_adjective", testOb);
-    expect_function("query_plural", testOb);
-    expect_function("add_plural", testOb);
-    expect_function("remove_plural", testOb);
-    expect_function("parse_command_id_list", testOb);
-    expect_function("parse_command_adjectiv_id_list", testOb);
-    expect_function("parse_command_plural_id_list", testOb);
-
     expect("id handles adding names", (: ({
         assert_equal(testOb->query_name(), UNDEFINED),
         assert_equal(testOb->query_cap_name(), UNDEFINED),
