@@ -1,7 +1,9 @@
 inherit STD_STORAGE;
 inherit M_DUSTABLE;
 
-int is_corpse () { return 1; }
+int is_corpse () {
+    return 1;
+}
 
 void create () {
     storage::create();
@@ -19,7 +21,9 @@ void handle_received (object env) {
 void setup_body (object ob) {
     string *currencies;
 
-    if (!ob) error("Bad argument 1 to corpse->setup_body");
+    if (!ob) {
+        error("Bad argument 1 to corpse->setup_body");
+    }
 
     set_name("corpse of " + ob->query_name());
     set_id(({ "corpse", "corpse of " + ob->query_short(), "corpse of " + ob->query_name() }));

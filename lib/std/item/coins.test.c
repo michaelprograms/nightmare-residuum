@@ -3,16 +3,21 @@ inherit M_CURRENCY;
 inherit M_CONTAINER;
 
 private nosave object testOb;
+private nosave string testFile;
+void before_all_tests () {
+    testFile = D_TEST->create_coverage(replace_string(base_name(), ".test", ".c"));
+}
 void before_each_test () {
-    testOb = clone_object("/std/item/coins.c");
+    testOb = clone_object(testFile);
 }
 void after_each_test () {
     if (objectp(testOb)) destruct(testOb);
 }
+void after_all_tests () {
+    rm(testFile);
+}
 
 void test_currency () {
-    expect_function("is_currency", testOb);
-
     expect("is_currency behaves", (: ({
         assert_equal(testOb->is_item(), 1),
         assert_equal(testOb->is_currency(), 1),
@@ -22,14 +27,12 @@ void test_currency () {
 }
 
 void test_check_empty () {
-    expect_function("check_empty", testOb);
-
     expect("check_empty removes empty coins", (: ({
         // check with currency
         testOb->add_currency("copper", 123),
         assert_equal(testOb->query_currencies(), ({ "copper", })),
         testOb->check_empty(),
-        assert_regex(testOb, "/std/item/coins#[0-9]+"),
+        assert_regex(testOb, "/std/item/coins.coverage#[0-9]+"),
         testOb->add_currency("copper", -123),
 
         // check without currency
@@ -40,8 +43,6 @@ void test_check_empty () {
 }
 
 void test_coin_long () {
-    expect_function("query_long_coin", testOb);
-
     expect("query_long_coin/query_long returns currency contents", (: ({
         assert_equal(testOb->query_currencies(), ({ })),
         assert_equal(testOb->query_long_coin(), "A pile of coins consisting of coins of no value."),
@@ -55,8 +56,6 @@ void test_coin_long () {
 }
 
 void test_received () {
-    expect_function("handle_received", testOb);
-
     expect("handle_receive gives coins to env and removes", (: ({
         // no currency on container
         assert_equal(this_object()->query_currencies(), ({ })),

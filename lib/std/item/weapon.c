@@ -7,12 +7,16 @@ nosave private int __WC;
 
 object query_wielded ();
 
-int is_weapon () { return 1; }
+int is_weapon () {
+    return 1;
+}
 
 varargs string query_short (string defaultANSI) {
     string short = ::query_short(defaultANSI);
 
-    if (query_wielded()) short += " (wielded)";
+    if (query_wielded()) {
+        short += " (wielded)";
+    }
 
     return short;
 }
@@ -38,8 +42,12 @@ int query_hands () {
     return __Hands;
 }
 void set_hands (int hands) {
-    if (!intp(hands)) error("Bad argument 1 to weapon->set_hands");
-    if (hands < 1 || hands > 2) error("Bad argument 1 to weapon->set_hands");
+    if (!intp(hands)) {
+        error("Bad argument 1 to weapon->set_hands");
+    }
+    if (hands < 1 || hands > 2) {
+        error("Bad argument 1 to weapon->set_hands");
+    }
     __Hands = hands;
 }
 

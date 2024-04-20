@@ -1,7 +1,9 @@
 inherit STD_ITEM;
 inherit M_CURRENCY;
 
-int is_currency () { return 1; }
+int is_currency () {
+    return 1;
+}
 
 string query_long_coin () {
     string *coins = ({ });
@@ -30,7 +32,9 @@ void create () {
 
 void check_empty () {
     foreach (string currency in query_currencies()) {
-        if (query_currency(currency)) return;
+        if (query_currency(currency)) {
+            return;
+        }
     }
     handle_remove();
 }
@@ -40,7 +44,9 @@ void handle_received (object env) {
 
     ::handle_received(env);
 
-    if (!env || !inherits(M_CURRENCY, env)) return;
+    if (!env || !inherits(M_CURRENCY, env)) {
+        return;
+    }
     foreach (string c in query_currencies()) {
         int n = query_currency(c);
         env->add_currency(c, n);

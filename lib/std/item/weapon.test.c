@@ -2,20 +2,21 @@ inherit M_TEST;
 inherit STD_STORAGE;
 
 private nosave object testOb;
+private nosave string testFile;
+void before_all_tests () {
+    testFile = D_TEST->create_coverage(replace_string(base_name(), ".test", ".c"));
+}
 void before_each_test () {
-    if (!testOb) testOb = clone_object("/std/item/weapon.c");
+    testOb = clone_object(testFile);
 }
 void after_each_test () {
     if (objectp(testOb)) destruct(testOb);
 }
+void after_all_tests () {
+    rm(testFile);
+}
 string *test_order () {
-    return ({
-        "test_is_weapon",
-        "test_type",
-        "test_wielded",
-        "test_item_verb_wield_applies",
-        "test_item_verb_drop_applies",
-    });
+    return ({ "test_is_weapon", "test_type", "test_wielded", "test_item_verb_wield_applies", "test_item_verb_drop_applies", });
 }
 
 nosave private string *__WieldableLimbs;
@@ -28,7 +29,6 @@ object *query_wielded_weapons () {
 }
 
 void test_is_weapon () {
-    expect_function("is_weapon", testOb);
     expect("is_weapon returns true", (: ({
         assert_equal(testOb->is_weapon(), 1),
         assert_equal(testOb->is_item(), 1),
@@ -38,9 +38,6 @@ void test_is_weapon () {
 }
 
 void test_type () {
-    expect_function("query_type", testOb);
-    expect_function("set_type", testOb);
-
     expect("weapon handles type", (: ({
         assert_equal(testOb->query_type(), 0),
 
@@ -62,9 +59,6 @@ void test_type () {
 }
 
 void test_hands () {
-    expect_function("query_hands", testOb);
-    expect_function("set_hands", testOb);
-
     expect("weapon handles hands", (: ({
         assert_equal(testOb->query_hands(), 1),
 
@@ -77,9 +71,6 @@ void test_hands () {
 }
 
 void test_wc () {
-    expect_function("query_wc", testOb);
-    expect_function("set_wc", testOb);
-
     expect("weapon handles wc", (: ({
         assert_equal(testOb->query_wc(), 0),
 
@@ -95,10 +86,6 @@ void test_wc () {
 }
 
 void test_wielded () {
-    expect_function("query_wielded", testOb);
-    expect_function("set_wielded", testOb);
-    expect_function("query_short", testOb);
-
     testOb->set_short("weapon");
     expect("weapon handles wielded", (: ({
         assert_equal(testOb->query_wielded(), 0),
@@ -111,9 +98,6 @@ void test_wielded () {
 }
 
 void test_item_verb_wield_applies () {
-    expect_function("direct_wield_obj", testOb);
-    expect_function("direct_unwield_obj", testOb);
-
     __WieldableLimbs = ({ "left hand", "right hand" });
     __WieldedWeapons = ({ });
 
@@ -139,8 +123,6 @@ void test_item_verb_wield_applies () {
 }
 
 void test_item_verb_drop_applies () {
-    expect_function("direct_drop_obj", testOb);
-
     __WieldableLimbs = ({ "left hand", "right hand" });
     __WieldedWeapons = ({ });
 

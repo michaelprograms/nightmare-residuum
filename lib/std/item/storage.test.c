@@ -3,20 +3,24 @@ inherit M_MOVE;
 inherit M_CONTAINER;
 
 private nosave object testOb;
+private nosave string testFile;
+void before_all_tests () {
+    testFile = D_TEST->create_coverage(replace_string(base_name(), ".test", ".c"));
+}
 void before_each_test () {
-    if (objectp(testOb)) destruct(testOb);
-    testOb = clone_object("/std/item/storage.c");
+    testOb = clone_object(testFile);
 }
 void after_each_test () {
     if (objectp(testOb)) destruct(testOb);
+}
+void after_all_tests () {
+    rm(testFile);
 }
 
 void test_long () {
     object ob1 = new(STD_ITEM);
     object ob2 = new(STD_ITEM);
     object ob3 = new(STD_ITEM);
-
-    expect_function("query_long", testOb);
 
     testOb->set_long("Storage.");
     ob1->set_short("a rock");
@@ -51,8 +55,6 @@ void test_long () {
 void test_apply_get_obj_from_obj () {
     object storage1, storage2;
 
-    expect_function("indirect_get_obj_from_obj", testOb);
-
     storage1 = new(STD_STORAGE);
     storage2 = new(STD_STORAGE);
     expect("indirect_get_obj_from_obj should behave", (: ({
@@ -77,8 +79,6 @@ void test_apply_get_obj_from_obj () {
 
 void test_apply_put_obj_in_obj () {
     object ob;
-
-    expect_function("indirect_put_obj_in_obj", testOb);
 
     ob = new(STD_ITEM);
 

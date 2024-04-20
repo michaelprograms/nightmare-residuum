@@ -2,11 +2,18 @@ inherit M_TEST;
 inherit STD_STORAGE;
 
 private nosave object testOb;
+private nosave string testFile;
+void before_all_tests () {
+    testFile = D_TEST->create_coverage(replace_string(base_name(), ".test", ".c"));
+}
 void before_each_test () {
-    if (!testOb) testOb = clone_object("/std/item/armor.c");
+    testOb = clone_object(testFile);
 }
 void after_each_test () {
     if (objectp(testOb)) destruct(testOb);
+}
+void after_all_tests () {
+    rm(testFile);
 }
 string *test_order () {
     return ({ "test_is_armor", "test_type", "test_limbs", "test_worn", "test_ac", "test_item_verb_wear_applies", });
@@ -21,7 +28,6 @@ object *query_all_armor () {
 }
 
 void test_is_armor () {
-    expect_function("is_armor", testOb);
     expect("is_armor returns true", (: ({
         assert_equal(testOb->is_armor(), 1),
         assert_equal(testOb->is_item(), 1),
@@ -31,9 +37,6 @@ void test_is_armor () {
 }
 
 void test_type () {
-    expect_function("query_type", testOb);
-    expect_function("set_type", testOb);
-
     expect("armor handles type", (: ({
         assert_equal(testOb->query_type(), 0),
 
@@ -55,9 +58,6 @@ void test_type () {
 }
 
 void test_limbs () {
-    expect_function("query_limbs", testOb);
-    expect_function("set_limbs", testOb);
-
     expect("armor handles limbs", (: ({
         assert_equal(testOb->query_limbs(), 0),
 
@@ -79,10 +79,6 @@ void test_limbs () {
 }
 
 void test_worn () {
-    expect_function("query_worn", testOb);
-    expect_function("set_worn", testOb);
-    expect_function("query_short", testOb);
-
     testOb->set_short("armor");
     expect("armor handles worn", (: ({
         assert_equal(testOb->query_worn(), 0),
@@ -95,9 +91,6 @@ void test_worn () {
 }
 
 void test_ac () {
-    expect_function("query_ac", testOb);
-    expect_function("set_ac", testOb);
-
     expect("armor handles ac", (: ({
         assert_equal(testOb->query_ac(), 0),
 
@@ -113,9 +106,6 @@ void test_ac () {
 }
 
 void test_item_verb_wear_applies () {
-    expect_function("direct_wear_obj", testOb);
-    expect_function("direct_unwear_obj", testOb);
-
     __AllArmor = ({ });
 
     expect("armor handles verb applies direct_wear_obj and direct_unwear_obj", (: ({
@@ -139,8 +129,6 @@ void test_item_verb_wear_applies () {
 }
 
 void test_item_verb_drop_applies () {
-    expect_function("direct_drop_obj", testOb);
-
     __AllArmor = ({ });
 
     expect("armor handles verb apply direct_drop_obj", (: ({

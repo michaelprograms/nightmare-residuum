@@ -7,12 +7,16 @@ nosave int __AC;
 
 object query_worn ();
 
-int is_armor () { return 1; }
+int is_armor () {
+    return 1;
+}
 
 varargs string query_short (string defaultANSI) {
     string short = ::query_short(defaultANSI);
 
-    if (query_worn()) short += " (worn)";
+    if (query_worn()) {
+        short += " (worn)";
+    }
 
     return short;
 }
@@ -36,10 +40,14 @@ object query_worn () {
 }
 void set_worn (object wearer) {
     if (!wearer) {
-        if (__Worn) remove_bonus(__Worn);
+        if (__Worn) {
+            remove_bonus(__Worn);
+        }
     }
     __Worn = wearer;
-    if (__Worn) apply_bonus(__Worn);
+    if (__Worn) {
+        apply_bonus(__Worn);
+    }
 }
 
 int query_ac () {

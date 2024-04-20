@@ -1,20 +1,25 @@
 inherit M_TEST;
 
 private nosave object testOb;
+private nosave string testFile;
+void before_all_tests () {
+    testFile = D_TEST->create_coverage(replace_string(base_name(), ".test", ".c"));
+}
 void before_each_test () {
-    testOb = clone_object("/std/item/bodypart.c");
+    testOb = clone_object(testFile);
 }
 void after_each_test () {
     if (objectp(testOb)) destruct(testOb);
+}
+void after_all_tests () {
+    rm(testFile);
 }
 
 private string testObFile;
 private mixed *calloutInfo;
 void test_received () {
-    function_exists("handle_received", testOb);
-
     expect("handle_received sets expire timer", (: ({
-        assert_regex(testObFile = file_name(testOb), "/std/item/bodypart#[0-9]+"),
+        assert_regex(testObFile = file_name(testOb), "/std/item/bodypart.coverage#[0-9]+"),
 
         // start the expire call_out
         testOb->handle_received(this_object()),
@@ -28,8 +33,6 @@ void test_received () {
 }
 
 void test_bodypart () {
-    expect_function("setup_bodypart", testOb);
-
     expect("bodypart is setup to match", (: ({
         testOb->setup_bodypart("Someone", "some limb"),
         // verify we set bodypart information
