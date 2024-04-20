@@ -1,19 +1,21 @@
 inherit M_TEST;
 
 private nosave object testOb;
+private nosave string testFile;
+void before_all_tests () {
+    testFile = D_TEST->create_coverage(replace_string(base_name(), ".test", ".c"));
+}
 void before_each_test () {
-    if (objectp(testOb)) destruct(testOb);
-    testOb = clone_object("/secure/daemon/bank.c");
+    testOb = clone_object(testFile);
 }
 void after_each_test () {
     if (objectp(testOb)) destruct(testOb);
 }
+void after_all_tests () {
+    rm(testFile);
+}
 
 void test_balance () {
-    expect_function("query_balance", testOb);
-    expect_function("update_balance", testOb);
-    expect_function("query_banks", testOb);
-
     expect("balance handles querying and updating", (: ({
         // test query_balance and update_balance
         assert_equal(testOb->query_balance("testcharacter", "somewhere"), ([ ])),

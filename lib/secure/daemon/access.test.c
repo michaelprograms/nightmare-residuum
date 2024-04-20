@@ -3,17 +3,21 @@
 inherit M_TEST;
 
 private nosave object testOb;
+private nosave string testFile;
+void before_all_tests () {
+    testFile = D_TEST->create_coverage(replace_string(base_name(), ".test", ".c"));
+}
 void before_each_test () {
-    if (objectp(testOb)) destruct(testOb);
-    testOb = clone_object("/secure/daemon/access.c");
+    testOb = clone_object(testFile);
 }
 void after_each_test () {
     if (objectp(testOb)) destruct(testOb);
 }
+void after_all_tests () {
+    rm(testFile);
+}
 
 void test_query_file_privs () {
-    expect_function("query_file_privs", testOb);
-
     expect("query_file_privs handles files", (: ({
         assert_equal(testOb->query_file_privs("/etc/welcome"), ACCESS_ALL),
         assert_equal(testOb->query_file_privs("/daemon/ansi.c"), ACCESS_MUDLIB),
@@ -34,8 +38,6 @@ void test_query_file_privs () {
 }
 
 void test_unguarded () {
-    expect_function("unguarded", testOb);
-
     expect("unguarded handles bad arguments", (: ({
         assert_catch((: testOb->unguarded((: MAX_INT :)) :), "*Bad previous_object to access->unguarded\n"),
         assert_catch((: testOb->unguarded(function () { return MAX_INT; }) :), "*Bad previous_object to access->unguarded\n"),
@@ -44,8 +46,6 @@ void test_unguarded () {
 
 void test_query_allowed () {
     object basicOb;
-
-    expect_function("query_allowed", testOb);
 
     basicOb = new(STD_OBJECT);
     expect("query_allowed handles valid requests", (: ({
