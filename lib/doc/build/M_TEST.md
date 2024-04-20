@@ -39,30 +39,20 @@ If overridden, can be used instruct D_TEST runner to ignore additional local pub
 ## Expect Functionality
 
 ```c
-void expect_function (string fn, object testOb)
-```
-Assert that testOb contains a public function matching fn. Due to limited ability of the test runner to determine if a function has been called, `expect_function(fn, testOb)` is used in a way that marks off the function as tested. Another way this can be done is by formatting the `message` of `expect` statements starts with the name of the function tested, but this is not always ideal.
-
-```c
 void expect (string message, function fn)
 ```
 Start an `expect`ation of `assert`ions in function `fn`, while string `message` contains a human-readable description of what is being tested. `fn` should consist of a function that returns an array of `assert` evaluations.
 
 ```c
-void assert (mixed left, string condition, mixed right)
+void assert (mixed left, mixed right)
 ```
-Evaluate an `assert`ion inside of an `expect`ation. `left` should contain a queried value or result while `right` should contain the expected answer. `condition` changes how the comparison should evaluate.
+Evaluate an `assert`ion inside of an `expect`ation. `left` should contain a queried value or result while `right` should contain the expected answer.
 
 Examples of conditions:
 ```c
     expect("conditions all pass", (: ({
-        assert(1, "==", 1),
-        assert(0, "!=", 1),
-        assert(1, ">", 0),
-        assert(1, ">=", 0),
-        assert(0, "<", 1),
-        assert(0, "<=", 1),
-        assert("cat", "regex", "^.+at"),
-        assert((: error("Error") :), "catch", "*Error\n"),
+        assert(1, 1),
+        assert_regex("cat", "^.+at"),
+        assert_catch((: error("Error") :), "*Error\n"),
     }) :));
 ```
