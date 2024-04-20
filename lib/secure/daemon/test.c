@@ -276,14 +276,12 @@ int *query_unhit_lines () {
 // #define __D_TEST_DEBUG_COVERAGE__
 
 #if __D_TEST_DEBUG_COVERAGE__
-#define LINE_HIT_START_FN "/* start function */ "
-#define LINE_HIT_END_FN "/* end function */ "
+#define LINE_HIT_START_FN " /* start function */"
 #define LINE_HIT_CONSTRUCT "/* construct */ "
 #define LINE_HIT_VAR_OPERATOR "/* variable operator */ "
 #define LINE_HIT_FN_CALL_OTHER "/* fn/call other */ "
 #else
 #define LINE_HIT_START_FN ""
-#define LINE_HIT_END_FN ""
 #define LINE_HIT_CONSTRUCT ""
 #define LINE_HIT_VAR_OPERATOR ""
 #define LINE_HIT_FN_CALL_OTHER ""
@@ -308,25 +306,25 @@ string create_coverage (string path) {
     for (i = 0; i < l; i ++) {
         if (sizeof(reMatches = pcre_extract(__RawLines[i], "^(?:public |private |protected |nosave |nomask |varargs )*(?:float|int|object|mapping|mixed|string|void) *\\**([a-zA-Z0-9_]{1,}) \\(.*\\) {")) > 0) {
             // Start of Function
-            line = __RawLines[i] + " D_TEST->line_hit(" + (i+1) + "); " + LINE_HIT_START_FN + "{";
+            line = __RawLines[i] + " D_TEST->line_hit(" + (i+1) + ");" + LINE_HIT_START_FN + "{";
             __Lines[i+1] = ({ 0, reMatches[0] });
         } else if (pcre_match(__RawLines[i], "^}$")) {
             // End of Function
-            line = __RawLines[i] + " " + LINE_HIT_END_FN + "}";
+            line = "} " + __RawLines[i];
         } else if (sizeof(reMatches = pcre_extract(__RawLines[i], "^\\s+(break|for \\(|if \\(|return|switch \\(|while \\()")) > 0) {
             // Construct
-            line = replace_string(__RawLines[i], reMatches[0], "D_TEST->line_hit(" + (i+1) + "); " + LINE_HIT_CONSTRUCT + reMatches[0]);
+            line = "D_TEST->line_hit(" + (i+1) + "); " + LINE_HIT_CONSTRUCT + __RawLines[i];
             __Lines[i+1] = ({ 0 });
         } else if (sizeof(reMatches = pcre_extract(__RawLines[i], "^\\s+([^ \\(]+ (=|\\+\\+|--|\\+=|-=|\\*=|\\\\=).*;)")) > 0) {
             // Variable Operator
-            line = replace_string(__RawLines[i], reMatches[0], "D_TEST->line_hit(" + (i+1) + "); " + LINE_HIT_VAR_OPERATOR + reMatches[0]);
+            line = "D_TEST->line_hit(" + (i+1) + "); " + LINE_HIT_VAR_OPERATOR + __RawLines[i];
             __Lines[i+1] = ({ 0 });
         } else if (
             sizeof(reMatches = pcre_extract(__RawLines[i], "^\\s+([\\:]*[a-zA-Z_]\\w*\\s*\\((.*)\\)\\s*;)")) > 0 ||
             sizeof(reMatches = pcre_extract(__RawLines[i], "^\\s+([a-zA-Z_]\\w*\\s*->\\s*([a-zA-Z_]\\w*)\\s*\\((.*)\\)\\s*;)")) > 0
         ) {
             // Function Call or Call Other pointer
-            line = replace_string(__RawLines[i], reMatches[0], "D_TEST->line_hit(" + (i+1) + "); " + LINE_HIT_FN_CALL_OTHER + reMatches[0]);
+            line = "D_TEST->line_hit(" + (i+1) + "); " + LINE_HIT_FN_CALL_OTHER + __RawLines[i];
             __Lines[i+1] = ({ 0 });
         } else {
             line = __RawLines[i];
