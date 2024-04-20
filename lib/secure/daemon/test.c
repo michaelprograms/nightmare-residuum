@@ -282,7 +282,7 @@ int *query_unhit_lines () {
 // #define __D_TEST_DEBUG_COVERAGE__
 
 #if __D_TEST_DEBUG_COVERAGE__
-#define LINE_HIT_START_FN " /* start function */"
+#define LINE_HIT_START_FN "/* start function */ "
 #define LINE_HIT_CONSTRUCT "/* construct */ "
 #define LINE_HIT_VAR_OPERATOR "/* variable operator */ "
 #define LINE_HIT_FN_CALL_OTHER "/* fn/call other */ "
@@ -312,7 +312,7 @@ string create_coverage (string path) {
     for (i = 0; i < l; i ++) {
         if (sizeof(reMatches = pcre_extract(__RawLines[i], "^(?:public |private |protected |nosave |nomask |varargs )*(?:float|int|object|mapping|mixed|string|void) *\\**([a-zA-Z0-9_]{1,}) \\(.*\\) {")) > 0) {
             // Start of Function
-            line = __RawLines[i] + " D_TEST->line_hit(" + (i+1) + ");" + LINE_HIT_START_FN + "{";
+            line = __RawLines[i] + " D_TEST->line_hit(" + (i+1) + "); " + LINE_HIT_START_FN + "{";
             __Lines[i+1] = ({ 0, reMatches[0] });
         } else if (pcre_match(__RawLines[i], "^}$")) {
             // End of Function
