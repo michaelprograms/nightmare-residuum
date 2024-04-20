@@ -1,8 +1,6 @@
 #include <socket.h>
 #include <driver/socket_err.h>
 
-inherit "/std/json.c";
-
 // https://github.dev/NFA/LPC-httpd
 
 #define UNDEF_REQUEST   -1
