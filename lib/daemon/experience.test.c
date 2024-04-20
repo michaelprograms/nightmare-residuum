@@ -1,21 +1,33 @@
 inherit M_TEST;
 
 private nosave object testOb;
+private nosave string testFile;
+void before_all_tests () {
+    testFile = D_TEST->create_coverage(replace_string(base_name(), ".test", ".c"));
+}
 void before_each_test () {
-    testOb = clone_object("/daemon/experience.c");
+    testOb = clone_object(testFile);
 }
 void after_each_test () {
     if (objectp(testOb)) destruct(testOb);
 }
+void after_all_tests () {
+    rm(testFile);
+}
 
 nosave private int __MockLevel, __MockLiving;
-int query_level () { return __MockLevel; }
-int set_mock_level (int l) { __MockLevel = l; return 1; }
-int is_living () { return __MockLiving; }
+int query_level () {
+    return __MockLevel;
+}
+int set_mock_level (int l) {
+    __MockLevel = l;
+    return 1;
+}
+int is_living () {
+    return __MockLiving;
+}
 
 void test_query_stat_cost () {
-    expect_function("query_stat_cost", testOb);
-
     expect("query_stat_cost returns ascending values", (: ({
         assert_equal(testOb->query_stat_cost("luck", 0, 0, 0), 1),
         assert_equal(testOb->query_stat_cost("luck", -1, 0, 0), 1),
@@ -42,8 +54,6 @@ void test_query_stat_cost () {
 }
 
 void test_query_level_cost () {
-    expect_function("query_level_cost", testOb);
-
     expect("query_level_cost returns ascending values", (: ({
         assert_equal(testOb->query_level_cost(0), 1),
         assert_equal(testOb->query_level_cost(-1), 1),
@@ -56,8 +66,6 @@ void test_query_level_cost () {
 }
 
 void test_query_value () {
-    expect_function("query_value", testOb);
-
     expect("query_value returns ascending values", (: ({
         assert_equal(testOb->query_value(0), 1),
         assert_equal(testOb->query_value(-1), 1),

@@ -9,9 +9,6 @@ void after_each_test () {
 }
 
 void test_species_bodies () {
-    expect_function("query_bodies", testOb);
-    expect_function("query_species", testOb);
-
     expect("bodies exist", (: ({
         assert_equal(mapp(testOb->query_bodies()), 1),
         assert_equal(sizeof(testOb->query_bodies()) > 0, 1),
@@ -30,8 +27,6 @@ void test_species_bodies () {
 void test_setup_body () {
     object ob;
     mapping limbs = ([ ]);
-
-    expect_function("setup_body", testOb);
 
     // setting a species will setup the body
     ob = new(STD_LIVING);
@@ -52,8 +47,6 @@ void test_setup_body () {
 }
 
 void test_adjust_stat () {
-    expect_function("query_adjust_stat", testOb);
-
     expect("stats adjustments are queryable", (: ({
         assert_equal(testOb->query_adjust_stat("human", "strength"), 2),
 
@@ -64,10 +57,6 @@ void test_adjust_stat () {
 }
 
 void test_adjust_vitals () {
-    expect_function("query_adjust_hp", testOb);
-    expect_function("query_adjust_sp", testOb);
-    expect_function("query_adjust_mp", testOb);
-
     expect("hp adjustments are queryable", (: ({
         assert_equal(testOb->query_adjust_hp("human"), 1),
 
@@ -89,8 +78,6 @@ void test_adjust_vitals () {
 
 void test_setup_stats () {
     object ob;
-
-    expect_function("setup_stats", testOb);
 
     ob = new(STD_LIVING);
     ob->set_species("human");

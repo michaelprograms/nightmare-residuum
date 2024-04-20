@@ -1,17 +1,21 @@
 inherit M_TEST;
 
 private nosave object testOb;
+private nosave string testFile;
+void before_all_tests () {
+    testFile = D_TEST->create_coverage(replace_string(base_name(), ".test", ".c"));
+}
 void before_each_test () {
-    testOb = clone_object("/daemon/soul.c");
+    testOb = clone_object(testFile);
 }
 void after_each_test () {
     if (objectp(testOb)) destruct(testOb);
 }
+void after_all_tests () {
+    rm(testFile);
+}
 
 void test_query_emote () {
-    expect_function("query_emote", testOb);
-    expect_function("query_emotes", testOb);
-
     expect("default emotes are queryable", (: ({
         assert_equal(sizeof(testOb->query_emotes()) > 0, 1),
         assert_equal(mapp(testOb->query_emote("smile")), 1),
@@ -20,9 +24,6 @@ void test_query_emote () {
 }
 
 void test_add_and_remove () {
-    expect_function("add_emote", testOb);
-    expect_function("remove_emote", testOb);
-
     expect("emotes are addable and removable", (: ({
         // disable save
         testOb->set_save_path(0),
@@ -42,8 +43,6 @@ void test_add_and_remove () {
 }
 
 void test_apply_can_verb_rule () {
-    expect_function("can_verb_rule", testOb);
-
     expect("can_verb_rule is true for valid emotes", (: ({
         assert_equal(testOb->can_verb_rule("smile", ""), 1),
         assert_equal(testOb->can_verb_rule("smile", "LIV"), 1),

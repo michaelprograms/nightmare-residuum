@@ -1,18 +1,21 @@
 inherit M_TEST;
 
 private nosave object testOb;
+private nosave string testFile;
+void before_all_tests () {
+    testFile = D_TEST->create_coverage(replace_string(base_name(), ".test", ".c"));
+}
 void before_each_test () {
-    testOb = clone_object("/daemon/class.c");
+    testOb = clone_object(testFile);
 }
 void after_each_test () {
     if (objectp(testOb)) destruct(testOb);
 }
+void after_all_tests () {
+    rm(testFile);
+}
 
 void test_query_adjust_vitals () {
-    expect_function("query_adjust_hp", testOb);
-    expect_function("query_adjust_sp", testOb);
-    expect_function("query_adjust_mp", testOb);
-
     expect("hp adjustments are queryable", (: ({
         assert_equal(testOb->query_adjust_hp("warrior"), 3),
         assert_equal(testOb->query_adjust_hp("mystic"), 2),
@@ -48,8 +51,6 @@ void test_query_adjust_vitals () {
 }
 
 void test_query_adjust_stats () {
-    expect_function("query_adjust_stat", testOb);
-
     expect("stat adjustments are queryable", (: ({
         assert_equal(testOb->query_adjust_stat("warrior", "strength"), 3),
         assert_equal(testOb->query_adjust_stat("mystic", "strength"), 2),
@@ -64,8 +65,6 @@ void test_query_adjust_stats () {
 }
 
 void test_query_max_stats () {
-    expect_function("query_max_stat", testOb);
-
     expect("stat adjustments are queryable", (: ({
         assert_equal(testOb->query_max_stat("warrior", "strength", 1), 5),
         assert_equal(testOb->query_max_stat("mystic", "strength", 1), 4),
@@ -89,8 +88,6 @@ void test_query_max_stats () {
 }
 
 void test_query_adjust_skills () {
-    expect_function("query_adjust_skill", testOb);
-
     expect("skill adjustments are queryable", (: ({
         assert_equal(testOb->query_adjust_skill("warrior", "blade attack"), 3),
         assert_equal(testOb->query_adjust_skill("mystic", "blade attack"), 1),

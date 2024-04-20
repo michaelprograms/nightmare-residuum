@@ -149,8 +149,9 @@ varargs string parse_emote (object target, string msg, object *who, mixed *args)
             names = who[num]->query_cap_name();
             break;
         case 'R': case 'r': // R/r: Reflexive   your/him/her/them/it + self
-            if (target == who[num])
-            tmp = "yourself";
+            if (target == who[num]) {
+                tmp = "yourself";
+            }
         else
             tmp = who[num]->query_reflexive();
             break;
