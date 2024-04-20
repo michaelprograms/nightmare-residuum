@@ -23,10 +23,18 @@ void set_pickable (string item, int max, string message) {
     __Message = message;
 }
 
-string query_pick_item () { return __Item; }
-string query_pick_message () { return __Message; }
-int query_max_picks () { return __MaxPicks; }
-int query_picks () { return __Picks; }
+string query_pick_item () {
+    return __Item;
+}
+string query_pick_message () {
+    return __Message;
+}
+int query_max_picks () {
+    return __MaxPicks;
+}
+int query_picks () {
+    return __Picks;
+}
 
 int handle_pick () {
     if (__Picks > 0) {

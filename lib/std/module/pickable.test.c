@@ -2,23 +2,21 @@ inherit M_TEST;
 inherit M_MOVE;
 
 private nosave object testOb;
+private nosave string testFile;
+void before_all_tests () {
+    testFile = D_TEST->create_coverage(replace_string(base_name(), ".test", ".c"));
+}
 void before_each_test () {
-    if (objectp(testOb)) destruct(testOb);
-    testOb = clone_object("/std/module/pickable.c");
+    testOb = clone_object(testFile);
 }
 void after_each_test () {
     if (objectp(testOb)) destruct(testOb);
 }
+void after_all_tests () {
+    rm(testFile);
+}
 
 void test_pickable () {
-    expect_function("query_picks", testOb);
-    expect_function("query_max_picks", testOb);
-    expect_function("query_pick_message", testOb);
-    expect_function("set_pickable", testOb);
-    expect_function("query_pick_item", testOb);
-    expect_function("handle_pick", testOb);
-    expect_function("reset", testOb);
-
     expect("handles initializing with zeroes", (: ({
         assert_equal(testOb->query_picks(), 0),
         assert_equal(testOb->query_max_picks(), 0),
@@ -56,8 +54,6 @@ void test_pickable () {
 }
 
 void test_apply_pick_obj () {
-    expect_function("direct_pick_obj", testOb);
-
     expect("direct_pick_obj returns true when same environment", (: ({
         // true with same environment (no env)
         assert_equal(testOb->direct_pick_obj(this_object()), 1),
