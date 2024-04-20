@@ -3,17 +3,18 @@
 inherit M_TEST;
 
 private nosave object testOb;
+private nosave string testFile;
 void before_all_tests () {
-    unguarded((: mkdirs, PATH_TEST_SAVE :));
-    unguarded((: rm, PATH_TEST_SAVE :));
+    testFile = D_TEST->create_coverage(replace_string(base_name(), ".test", ".c"));
 }
 void before_each_test () {
-    if (objectp(testOb)) destruct(testOb);
-    testOb = clone_object("/secure/module/save.c");
+    testOb = clone_object(testFile);
 }
 void after_each_test () {
     if (objectp(testOb)) destruct(testOb);
-    unguarded((: rm, PATH_TEST_SAVE :));
+}
+void after_all_tests () {
+    rm(testFile);
 }
 
 string *test_order () {
@@ -21,9 +22,6 @@ string *test_order () {
 }
 
 void test_save_path () {
-    expect_function("query_save_path", testOb);
-    expect_function("set_save_path", testOb);
-
     expect("save handles paths", (: ({
         unguarded((: rm, PATH_TEST_SAVE :)),
         assert_equal(testOb->query_save_path(), 0),
@@ -38,9 +36,6 @@ void test_save_path () {
 }
 
 void test_save_data () {
-    expect_function("restore_data", testOb);
-    expect_function("save_data", testOb);
-
     expect("save handles data", (: ({
         unguarded((: rm, PATH_TEST_SAVE :)),
         assert_equal(file_size(PATH_TEST_SAVE), -1),
