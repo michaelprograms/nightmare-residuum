@@ -16,7 +16,9 @@ inherit "/std/living/status.c";
 inherit "/std/living/vitals.c";
 
 
-int is_living () { return 1; }
+int is_living () {
+    return 1;
+}
 
 void create () {
     combat::create();
@@ -41,7 +43,9 @@ void heart_beat () {
 
     handle_combat();
 
-    environment() && environment()->handle_environment_damage(this_object());
+    if (environment()) {
+        environment()->handle_environment_damage(this_object());
+    }
 }
 
 string query_living_long () {

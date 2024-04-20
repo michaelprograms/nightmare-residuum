@@ -2,9 +2,15 @@ inherit STD_ITEM;
 
 nosave private int __Strength = 0;
 
-int is_consumable () { return 1; }
-int is_drink () { return 0; }
-int is_food () { return 0; }
+int is_consumable () {
+    return 1;
+}
+int is_drink () {
+    return 0;
+}
+int is_food () {
+    return 0;
+}
 
 void set_strength (int s) {
     __Strength = s;

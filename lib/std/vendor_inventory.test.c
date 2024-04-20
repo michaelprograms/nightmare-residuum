@@ -3,19 +3,22 @@
 inherit M_TEST;
 
 private nosave object testOb;
+private nosave string testFile;
+void before_all_tests () {
+    testFile = D_TEST->create_coverage(replace_string(base_name(), ".test", ".c"));
+}
 void before_each_test () {
-    testOb = clone_object("/std/vendor_inventory.c");
+    testOb = clone_object(testFile);
 }
 void after_each_test () {
     if (objectp(testOb)) destruct(testOb);
 }
-string *test_ignore () { return ({ "clean_up" });
+void after_all_tests () {
+    rm(testFile);
 }
 
 void test_receive () {
     object living, item;
-
-    expect_function("handle_receive", testOb);
 
     // create test items
     living = new(STD_LIVING);
@@ -32,9 +35,6 @@ void test_receive () {
 
 void test_max_items () {
     object item1, item2;
-
-    expect_function("query_max_items", testOb);
-    expect_function("set_max_items", testOb);
 
     // create test items
     item1 = new(STD_ITEM);

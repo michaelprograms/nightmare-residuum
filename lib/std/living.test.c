@@ -1,16 +1,21 @@
 inherit M_TEST;
 
 private nosave object testOb;
+private nosave string testFile;
+void before_all_tests () {
+    testFile = D_TEST->create_coverage(replace_string(base_name(), ".test", ".c"));
+}
 void before_each_test () {
-    testOb = clone_object("/std/living.c");
+    testOb = clone_object(testFile);
 }
 void after_each_test () {
     if (objectp(testOb)) destruct(testOb);
 }
+void after_all_tests () {
+    rm(testFile);
+}
 
 void test_living () {
-    expect_function("is_living", testOb);
-
     expect("is_living returns true", (: ({
         assert_equal(testOb->is_living(), 1),
         assert_equal(testOb->is_npc(), 0),
@@ -19,9 +24,6 @@ void test_living () {
 }
 
 void test_species () {
-    expect_function("query_species", testOb);
-    expect_function("set_species", testOb);
-
     expect("living handles species", (: ({
         assert_equal(testOb->query_species(), "unknown"),
         assert_equal(testOb->set_species("human"), 0),
@@ -30,8 +32,6 @@ void test_species () {
 }
 
 void test_level () {
-    expect_function("set_level", testOb);
-
     expect("level updates vitals", (: ({
         testOb->set_species("human"),
         assert_equal(testOb->query_species(), "human"),

@@ -21,7 +21,9 @@ nosave private mapping __Terminal = ([
     "client": "unknown",
 ]);
 
-int is_user () { return 1; }
+int is_user () {
+    return 1;
+}
 
 nomask void logon_banner () {
     receive_message("system", D_WELCOME->query_banner() + "\n");
@@ -145,13 +147,19 @@ nomask void quit_account () {
 }
 
 nomask void reset_connect_timeout () {
-    if (!undefinedp(calloutConnect)) remove_call_out(calloutConnect);
+    if (!undefinedp(calloutConnect)) {
+        remove_call_out(calloutConnect);
+    }
     calloutConnect = call_out((: handle_remove, "\nTime exceeded. Connection terminated.\n" :), CONNECT_TIMEOUT);
 }
 
 nomask varargs void handle_remove (string message) {
-    if (!undefinedp(calloutConnect)) remove_call_out(calloutConnect);
-    if (message) message("system", message, this_object());
+    if (!undefinedp(calloutConnect)) {
+        remove_call_out(calloutConnect);
+    }
+    if (message) {
+        message("system", message, this_object());
+    }
 
     if (query_shell()) {
         shell_stop();

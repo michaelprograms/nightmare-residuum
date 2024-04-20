@@ -7,7 +7,9 @@ nosave private int __Value;
 
 /* -----  ----- */
 
-int is_item () { return 1; }
+int is_item () {
+    return 1;
+}
 
 /* ----- value ----- */
 
@@ -40,10 +42,10 @@ mixed direct_look_obj (mixed args...) {
     return direct_look_at_obj(args);
 }
 mixed direct_drop_obj (mixed args...) {
-    return (environment() == previous_object());
+    return environment() == previous_object();
 }
 mixed direct_give_obj_to_liv (mixed args...) {
-    return (environment() == previous_object());
+    return environment() == previous_object();
 }
 mixed direct_get_obj (mixed args...) {
     object env = environment();
@@ -80,14 +82,18 @@ mixed direct_get_obj_from_obj (mixed args...) {
     return 1;
 }
 mixed direct_put_obj_in_obj (mixed args...) {
-    if (!sizeof(args) || !args[0]) return 0;
+    if (!sizeof(args) || !args[0]) {
+        return 0;
+    }
     if (environment(args[0]) != previous_object()) {
         return "You can't put what you don't have.";
     }
     return 1;
 }
 mixed direct_sell_obj (mixed args...) {
-    if (!sizeof(args) || !args[0]) return 0;
+    if (!sizeof(args) || !args[0]) {
+        return 0;
+    }
     if (environment(args[0]) != previous_object()) {
         return "You can't sell what you don't have.";
     }

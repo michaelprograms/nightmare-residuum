@@ -3,24 +3,29 @@
 inherit M_TEST;
 
 private nosave object testOb;
+private nosave string testFile;
+void before_all_tests () {
+    testFile = D_TEST->create_coverage(replace_string(base_name(), ".test", ".c"));
+}
 void before_each_test () {
-    testOb = clone_object("/std/verb.c");
+    testOb = clone_object(testFile);
 }
 void after_each_test () {
     if (objectp(testOb)) destruct(testOb);
 }
+void after_all_tests () {
+    rm(testFile);
+}
 
 nosave private int __Disable, __Busy;
-int query_disable () { return __Disable; }
-int query_busy () { return __Busy; }
+int query_disable () {
+    return __Disable;
+}
+int query_busy () {
+    return __Busy;
+}
 
 void test_requirements () {
-    expect_function("set_requirements", testOb);
-    expect_function("query_requirements", testOb);
-    expect_function("can_verb_rule", testOb);
-    expect_function("check_busy", testOb);
-    expect_function("check_disable", testOb);
-
     expect("requirements should be settable and queryable", (: ({
         assert_equal(testOb->query_requirements(), REQUIREMENT_NONE),
 

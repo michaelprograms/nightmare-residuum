@@ -2,18 +2,23 @@ inherit M_TEST;
 inherit M_MOVE;
 
 private nosave object testOb;
+private nosave string testFile;
+void before_all_tests () {
+    testFile = D_TEST->create_coverage(replace_string(base_name(), ".test", ".c"));
+}
 void before_each_test () {
-    if (!testOb) testOb = clone_object("/std/room.c");
+    testOb = clone_object(testFile);
 }
 void after_each_test () {
     if (objectp(testOb)) destruct(testOb);
+}
+void after_all_tests () {
+    rm(testFile);
 }
 
 int is_item () { return 1; } // need to fake being an item for room contents
 
 void test_is_room () {
-    expect_function("is_room", testOb);
-
     expect("is_room returns true", (: ({
         assert_equal(testOb->is_room(), 1),
     }) :));
@@ -21,8 +26,6 @@ void test_is_room () {
 
 void test_clean_up () {
     object ob;
-
-    expect_function("clean_up", testOb);
 
     ob = new(STD_ITEM);
 
@@ -45,12 +48,6 @@ void test_clean_up () {
 }
 
 void test_room_bracketing () {
-    expect_function("set_room_bracket_color", testOb);
-    expect_function("query_room_bracket_color", testOb);
-    expect_function("set_room_brackets", testOb);
-    expect_function("query_room_brackets", testOb);
-    expect_function("query_room_map_bracket", testOb);
-
     expect("room bracket color is queryable and settable", (: ({
         assert_equal(testOb->query_room_bracket_color(), ""),
         testOb->set_room_bracket_color("%^TEST%^"),
@@ -77,8 +74,6 @@ void test_room_bracketing () {
 
 void test_room_map_symbol () {
     object item1, item2;
-
-    expect_function("query_room_map_symbol", testOb);
 
     item1 = new(STD_ITEM);
     item2 = new(STD_ITEM);
@@ -126,9 +121,6 @@ void handle_release_item_in_env (object ob) {
     }
 }
 void test_handle_receive_and_release (function done) {
-    expect_function("handle_receive", testOb);
-    expect_function("handle_release", testOb);
-
     __Ob = new(STD_ITEM);
     __Living = new(STD_LIVING);
 

@@ -16,7 +16,9 @@ int id (string id) {
 
 // int move_or_destruct (object parent) { }
 
-void reset () { }
+void reset () {
+
+}
 
 // void virtual_start () { }
 

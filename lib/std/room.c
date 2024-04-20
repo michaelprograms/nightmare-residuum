@@ -8,7 +8,9 @@ inherit M_PROPERTY;
 inherit M_RESET;
 inherit M_SENSES;
 
-int is_room () { return 1; }
+int is_room () {
+    return 1;
+}
 
 /* ----- applies ----- */
 
@@ -110,13 +112,15 @@ string *query_room_brackets () {
 string query_room_map_symbol () {
     int aggressive = 0, passive = 0, item = 0;
     int cha;
-    object char;
-    object *hostiles;
+    object char = 0;
+    object *hostiles = ({ });
     string symbol = " ";
 
     char = this_character();
-    cha = char ? char->query_stat("charisma") : 0;
-    hostiles = char ? char->query_hostiles() : ({ });
+    if (char) {
+        cha = char->query_stat("charisma");
+        hostiles = char->query_hostiles();
+    }
 
     foreach (object l in query_living_contents()) {
         if (char && (cha < l->query_aggressive() || l->query_hostile(char))) {
@@ -127,14 +131,22 @@ string query_room_map_symbol () {
     }
 
     if (aggressive || passive) {
-        if (aggressive && passive) symbol = "%^ORANGE%^";
-        if (aggressive && !passive) symbol = "%^BOLD%^RED%^";
-        if (!aggressive && passive) symbol = "%^BOLD%^GREEN%^";
+        if (aggressive && passive) {
+            symbol = "%^ORANGE%^";
+        }
+        if (aggressive && !passive) {
+            symbol = "%^BOLD%^RED%^";
+        }
+        if (!aggressive && passive) {
+            symbol = "%^BOLD%^GREEN%^";
+        }
 
         symbol += (aggressive+passive > 10 ? "+" : ""+(aggressive+passive)) + "%^RESET%^";
     } else {
         item = sizeof(query_item_contents());
-        if (item) symbol = "%^MAGENTA%^BOLD%^" + (item > 10 ? "+" : ""+item) + "%^RESET%^";
+        if (item) {
+            symbol = "%^MAGENTA%^BOLD%^" + (item > 10 ? "+" : ""+item) + "%^RESET%^";
+        }
     }
 
     return symbol;
@@ -168,7 +180,7 @@ private int valid_exit (string path) {
         return file_size(path) > 0;
     }
 }
-string *query_room_map() {
+string *query_room_map () {
     mapping blank, roomOb, exits, pics;
     string source;
 
@@ -256,7 +268,8 @@ void handle_environment_damage (object living) {
                 living->handle_damage(living->query_max_hp() * 5 / 100, 0);
                 break;
 
-            default: break;
+            default:
+                break;
         }
     }
 }

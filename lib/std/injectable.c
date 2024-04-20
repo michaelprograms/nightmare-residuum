@@ -3,7 +3,9 @@ inherit STD_ITEM;
 nosave private string __Type = "";
 nosave private int __Strength = 0;
 
-int is_injectable () { return 1; }
+int is_injectable () {
+    return 1;
+}
 
 void set_type (string t) {
     __Type = t;

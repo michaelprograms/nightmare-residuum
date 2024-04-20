@@ -48,7 +48,11 @@ void create () {
 
 mixed can_verb_rule (mixed args...) {
     mixed tmp;
-    if ((__Requirements & REQUIREMENT_BUSY) && (tmp = check_busy()) != 1) return tmp;
-    if ((__Requirements & REQUIREMENT_DISABLE) && (tmp = check_disable()) != 1) return tmp;
+    if ((__Requirements & REQUIREMENT_BUSY) && (tmp = check_busy()) != 1) {
+        return tmp;
+    }
+    if ((__Requirements & REQUIREMENT_DISABLE) && (tmp = check_disable()) != 1) {
+        return tmp;
+    }
     return 1;
 }

@@ -19,7 +19,9 @@ nosave private object __User;
 void describe_environment ();
 int query_immortal ();
 
-int is_character () { return 1; }
+int is_character () {
+    return 1;
+}
 int query_immortal () {
     return __Immortal;
 }
@@ -51,7 +53,7 @@ void gmcp_update_vitals () {
 void set_account (string account) {
     __Account = account;
 }
-string query_account() {
+string query_account () {
     return __Account;
 }
 

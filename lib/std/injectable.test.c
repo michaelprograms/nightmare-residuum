@@ -2,16 +2,21 @@ inherit M_TEST;
 inherit STD_STORAGE;
 
 private nosave object testOb;
+private nosave string testFile;
+void before_all_tests () {
+    testFile = D_TEST->create_coverage(replace_string(base_name(), ".test", ".c"));
+}
 void before_each_test () {
-    if (!testOb) testOb = clone_object("/std/injectable.c");
+    testOb = clone_object(testFile);
 }
 void after_each_test () {
     if (objectp(testOb)) destruct(testOb);
 }
+void after_all_tests () {
+    rm(testFile);
+}
 
 void test_is_injectable () {
-    expect_function("is_injectable", testOb);
-
     expect("is_injectable returns true", (: ({
         assert_equal(testOb->is_item(), 1),
         assert_equal(testOb->is_injectable(), 1),
@@ -22,9 +27,6 @@ void test_is_injectable () {
 }
 
 void test_strength () {
-    expect_function("query_strength", testOb);
-    expect_function("set_strength", testOb);
-
     expect("injectable handles strength", (: ({
         assert_equal(testOb->query_strength(), 0),
         testOb->set_strength(5),
@@ -39,9 +41,6 @@ void test_strength () {
 }
 
 void test_type () {
-    expect_function("query_type", testOb);
-    expect_function("set_type", testOb);
-
     expect("injectable handles type", (: ({
         assert_equal(testOb->query_type(), ""),
         testOb->set_type("healing nanites"),
@@ -50,8 +49,6 @@ void test_type () {
 }
 
 void test_item_verb_inject_applies () {
-    expect_function("direct_inject_obj", testOb);
-
     expect("inject handles verb apply direct_inject_obj", (: ({
         assert_equal(environment(testOb), 0),
         assert_equal(testOb->direct_inject_obj(), 0),
@@ -63,8 +60,6 @@ void test_item_verb_inject_applies () {
 
 void test_handle_inject () {
     object character;
-
-    expect_function("handle_inject", testOb);
 
     // create test items
     character = new(STD_CHARACTER);

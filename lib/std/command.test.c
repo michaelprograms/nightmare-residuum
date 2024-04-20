@@ -1,11 +1,18 @@
 inherit M_TEST;
 
 private nosave object testOb;
+private nosave string testFile;
+void before_all_tests () {
+    testFile = D_TEST->create_coverage(replace_string(base_name(), ".test", ".c"));
+}
 void before_each_test () {
-    testOb = clone_object("/std/command.c");
+    testOb = clone_object(testFile);
 }
 void after_each_test () {
     if (objectp(testOb)) destruct(testOb);
+}
+void after_all_tests () {
+    rm(testFile);
 }
 string *test_order () {
     return ({
@@ -18,17 +25,12 @@ string *test_order () {
 }
 
 void test_name () {
-    expect_function("query_name", testOb);
-
     expect("handles command name", (: ({
-        assert_equal(testOb->query_name(), "command"),
+        assert_equal(testOb->query_name(), "command.coverage"),
     }) :));
 }
 
 void test_syntax () {
-    expect_function("query_syntax", testOb);
-    expect_function("set_syntax", testOb);
-
     expect("handles setting and querying syntax", (: ({
         assert_equal(testOb->query_syntax(), UNDEFINED),
 
@@ -41,9 +43,6 @@ void test_syntax () {
 }
 
 void test_help_text () {
-    expect_function("query_help_text", testOb);
-    expect_function("set_help_text", testOb);
-
     expect("handles help text", (: ({
         assert_equal(testOb->query_help_text(), UNDEFINED),
 
@@ -56,9 +55,6 @@ void test_help_text () {
 }
 
 void test_help_similar () {
-    expect_function("query_help_similar", testOb);
-    expect_function("set_help_similar", testOb);
-
     expect("handles help similar", (: ({
         assert_equal(testOb->query_help_similar(), UNDEFINED),
 
@@ -71,8 +67,6 @@ void test_help_similar () {
 }
 
 void test_handle_help () {
-    expect_function("handle_help", testOb);
-
     expect("handles formatting help file", (: ({
         // should contain Syntax section always
         assert_equal(regexp(testOb->handle_help(this_object()), "Syntax"), 1),

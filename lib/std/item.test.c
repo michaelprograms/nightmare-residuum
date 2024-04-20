@@ -2,17 +2,22 @@ inherit M_TEST;
 inherit STD_STORAGE;
 
 private nosave object testOb;
+private nosave string testFile;
+void before_all_tests () {
+    testFile = D_TEST->create_coverage(replace_string(base_name(), ".test", ".c"));
+}
 void before_each_test () {
-    if (!testOb) testOb = clone_object("/std/item.c");
+    testOb = clone_object(testFile);
     this_object()->handle_move("/domain/Nowhere/room/void.c");
 }
 void after_each_test () {
     if (objectp(testOb)) destruct(testOb);
 }
+void after_all_tests () {
+    rm(testFile);
+}
 
 void test_is_item () {
-    expect_function("is_item", testOb);
-
     expect("is_item returns true", (: ({
         assert_equal(testOb->is_item(), 1),
         assert_equal(testOb->is_weapon(), 0),
@@ -21,9 +26,6 @@ void test_is_item () {
 }
 
 void test_value () {
-    expect_function("query_value", testOb);
-    expect_function("set_value", testOb);
-
     expect("value is queryable and settable", (: ({
         assert_equal(testOb->query_value(), 0),
         testOb->set_value(123),
@@ -35,9 +37,6 @@ void test_value () {
 
 void test_verb_look_applies () {
     object r = new(STD_ROOM);
-
-    expect_function("direct_look_at_obj", testOb);
-    expect_function("direct_look_obj", testOb);
 
     expect("item handles verb apply direct_look_at_obj", (: ({
         // check mismatch environments
@@ -63,8 +62,6 @@ void test_verb_look_applies () {
 }
 
 void test_verb_drop_applies () {
-    expect_function("direct_drop_obj", testOb);
-
     expect("item handles verb apply direct_drop_obj", (: ({
         assert_equal(environment(testOb), 0),
         assert_equal(environment(), find_object("/domain/Nowhere/room/void.c")),
@@ -77,8 +74,6 @@ void test_verb_drop_applies () {
 }
 
 void test_verb_give_applies () {
-    expect_function("direct_give_obj_to_liv", testOb);
-
     expect("item handles verb apply direct_give_obj_to_liv", (: ({
         assert_equal(environment(testOb), 0),
         assert_equal(testOb->direct_give_obj_to_liv(), 0), // can't give item yet
@@ -89,8 +84,6 @@ void test_verb_give_applies () {
 }
 
 void test_verb_get_obj_applies () {
-    expect_function("direct_get_obj", testOb);
-
     expect("item handles verb apply direct_get_obj", (: ({
         assert_equal(environment(testOb), 0),
         assert_equal(environment(), find_object("/domain/Nowhere/room/void.c")),
@@ -105,9 +98,6 @@ void test_verb_get_obj_applies () {
 
 nosave private int GetCounter = 0;
 void test_no_get () {
-    expect_function("query_no_get", testOb);
-    expect_function("set_no_get", testOb);
-
     testOb->set_name("test item");
 
     expect("set_no_get and direct_get_obj behave", (: ({
@@ -140,8 +130,6 @@ void test_no_get () {
 }
 
 void test_verb_get_obj_from_obj_applies () {
-    expect_function("direct_get_obj_from_obj", testOb);
-
     expect("item handles verb apply direct_get_obj_from_obj", (: ({
         // fails without env
         assert_equal(environment(testOb), 0),
@@ -155,8 +143,6 @@ void test_verb_get_obj_from_obj_applies () {
 }
 
 void test_verb_put_obj_in_obj_applies () {
-    expect_function("direct_put_obj_in_obj", testOb);
-
     expect("item handles verb apply direct_put_obj_in_obj", (: ({
         // fails without input
         assert_equal(testOb->direct_put_obj_in_obj(), 0),
@@ -173,8 +159,6 @@ void test_verb_put_obj_in_obj_applies () {
 }
 
 void test_verb_sell_obj_applies () {
-    expect_function("direct_sell_obj", testOb);
-
     expect("item handles verb apply direct_sell_obj", (: ({
         // fails without input
         assert_equal(testOb->direct_sell_obj(), 0),

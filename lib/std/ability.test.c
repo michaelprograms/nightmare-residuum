@@ -1,11 +1,18 @@
 inherit M_TEST;
 
 private nosave object testOb;
+private nosave string testFile;
+void before_all_tests () {
+    testFile = D_TEST->create_coverage(replace_string(base_name(), ".test", ".c"));
+}
 void before_each_test () {
-    if (!testOb) testOb = clone_object("/std/ability.c");
+    testOb = clone_object(testFile);
 }
 void after_each_test () {
     if (objectp(testOb)) destruct(testOb);
+}
+void after_all_tests () {
+    rm(testFile);
 }
 string *test_ignore () {
     return ({
@@ -18,17 +25,12 @@ nosave private int __MockLiving;
 int is_living () { return __MockLiving; }
 
 void test_name () {
-    expect_function("query_name", testOb);
-
     expect("handles ability name", (: ({
-        assert_equal(testOb->query_name(), "ability"),
+        assert_equal(testOb->query_name(), "ability.coverage"),
     }) :));
 }
 
 void test_type () {
-    expect_function("query_type", testOb);
-    expect_function("set_type", testOb);
-
     expect("handles setting and querying type", (: ({
         assert_equal(testOb->query_type(), UNDEFINED),
 
@@ -44,9 +46,6 @@ void test_type () {
 }
 
 void test_powers () {
-    expect_function("query_powers", testOb);
-    expect_function("set_powers", testOb);
-
     expect("handles setting and querying skill powers", (: ({
         assert_equal(testOb->query_powers(), ([ ])),
 
@@ -60,10 +59,6 @@ void test_powers () {
 
 void test_weapons () {
     object liv, weaponBlade, weaponBlunt;
-
-    expect_function("query_weapons", testOb);
-    expect_function("set_weapons", testOb);
-    expect_function("query_best_weapon", testOb);
 
     expect("handles setting and querying weapons", (: ({
         assert_equal(testOb->query_weapons(), ([ ])),
@@ -120,9 +115,6 @@ void test_weapons () {
 }
 
 void test_targets () {
-    expect_function("query_targets", testOb);
-    expect_function("set_targets", testOb);
-
     expect("handles setting and querying targets", (: ({
         // default
         assert_equal(testOb->query_targets(), 1),
@@ -136,9 +128,6 @@ void test_targets () {
 }
 
 void test_cooldown () {
-    expect_function("query_cooldown", testOb);
-    expect_function("set_cooldown", testOb);
-
     expect("handles setting and querying cooldown", (: ({
         // default
         assert_equal(testOb->query_cooldown(), 1),
@@ -155,9 +144,6 @@ void test_cooldown () {
 }
 
 void test_difficulty_factor () {
-    expect_function("query_difficulty_factor", testOb);
-    expect_function("set_difficulty_factor", testOb);
-
     expect("handles difficulty factor", (: ({
         // defaults to 100
         assert_equal(testOb->query_difficulty_factor(), 100),
@@ -174,8 +160,6 @@ void test_difficulty_factor () {
 
 void test_direct_verb_lib () {
     object ob;
-
-    expect_function("direct_verb_liv", testOb);
 
     // setuip test living object
     ob = new(STD_LIVING);
@@ -227,9 +211,6 @@ void test_direct_verb_lib () {
 }
 
 void test_ability_requirements () {
-    expect_function("query_ability_requirements", testOb);
-    expect_function("set_ability_requirements", testOb);
-
     expect("handles setting and querying requirements", (: ({
         // default value
         assert_equal(testOb->query_ability_type(), UNDEFINED),
@@ -245,8 +226,6 @@ void test_ability_requirements () {
 }
 
 void test_handle_help () {
-    expect_function("handle_help", testOb);
-
     expect("handles additional formatting help file", (: ({
         // command.test.c tests basic formatting
 

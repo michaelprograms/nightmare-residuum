@@ -5,7 +5,9 @@ nosave private int __AbilityChance = 0;
 nosave private int __Aggressive;
 nosave private int __Wander = 0, __Wanders = 0, __NextWander = 0, __Wandering = 0;
 
-int is_npc () { return 1; }
+int is_npc () {
+    return 1;
+}
 
 void set_level (int l) {
     int n = l + 1;
@@ -54,7 +56,9 @@ void set_aggressive (int n) {
 
 nosave private mapping __Inventory = ([ ]);
 void set_inventory (mapping inventory) {
-    if (!mapp(inventory)) error("Bad argument 1 to npc->set_inventory");
+    if (!mapp(inventory)) {
+        error("Bad argument 1 to npc->set_inventory");
+    }
 
     __Inventory = inventory;
 }

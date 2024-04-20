@@ -1,17 +1,21 @@
 inherit M_TEST;
 
 private nosave object testOb;
+private nosave string testFile;
+void before_all_tests () {
+    testFile = D_TEST->create_coverage(replace_string(base_name(), ".test", ".c"));
+}
 void before_each_test () {
-    if (objectp(testOb)) destruct(testOb);
-    testOb = clone_object("/std/character.c");
+    testOb = clone_object(testFile);
 }
 void after_each_test () {
     if (objectp(testOb)) destruct(testOb);
 }
+void after_all_tests () {
+    rm(testFile);
+}
 
 void test_npc () {
-    expect_function("is_character", testOb);
-
     expect("is_character behaves", (: ({
         assert_equal(testOb->is_living(), 1),
         assert_equal(testOb->is_character(), 1),
@@ -20,10 +24,6 @@ void test_npc () {
 }
 
 void test_user () {
-    expect_function("set_user", testOb);
-    expect_function("query_user", testOb);
-    expect_function("set_last_action", testOb);
-
     expect("user is settable and queryable", (: ({
         assert_equal(testOb->query_user(), UNDEFINED),
         testOb->set_user(this_object()),
@@ -34,9 +34,6 @@ void test_user () {
 }
 
 void test_times () {
-    expect_function("query_created", testOb);
-    expect_function("query_last_action", testOb);
-
     expect("user has a created time", (: ({
         // creation time is now
         assert_equal(testOb->query_created(), time()),
@@ -54,9 +51,6 @@ void test_times () {
 }
 
 void test_name () {
-    expect_function("set_name", testOb);
-    expect_function("query_character_short", testOb);
-
     expect("name handles character setup", (: ({
         assert_equal(testOb->query_name(), UNDEFINED),
 
@@ -71,9 +65,6 @@ void test_name () {
 }
 
 void test_immortal () {
-    expect_function("query_immortal", testOb);
-    expect_function("set_immortal", testOb);
-
     expect("immortal is settable and queryable", (: ({
         assert_equal(testOb->query_immortal(), UNDEFINED),
 

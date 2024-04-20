@@ -1,21 +1,25 @@
 inherit M_TEST;
 
 private nosave object testOb;
+private nosave string testFile;
+void before_all_tests () {
+    testFile = D_TEST->create_coverage(replace_string(base_name(), ".test", ".c"));
+}
 void before_each_test () {
-    testOb = clone_object("/std/database.c");
+    testOb = clone_object(testFile);
 }
 void after_each_test () {
     if (objectp(testOb)) destruct(testOb);
 }
-string *test_ignore () { return ({ "handle_remove" }); }
+void after_all_tests () {
+    rm(testFile);
+}
+string *test_ignore () {
+    return ({ "handle_remove" });
+}
 
 nosave private object db;
 void test_connect () {
-    expect_function("connect", testOb);
-    expect_function("close", testOb);
-    expect_function("query_handle", testOb);
-    expect_function("query", testOb);
-
     expect("connect returns a handle", (: ({
         // connect
         db = testOb->connect(([ "db": "/save/test/database.db", ])),

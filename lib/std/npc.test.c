@@ -1,17 +1,21 @@
 inherit M_TEST;
 
 private nosave object testOb;
+private nosave string testFile;
+void before_all_tests () {
+    testFile = D_TEST->create_coverage(replace_string(base_name(), ".test", ".c"));
+}
 void before_each_test () {
-    if (objectp(testOb)) destruct(testOb);
-    testOb = clone_object("/std/npc.c");
+    testOb = clone_object(testFile);
 }
 void after_each_test () {
     if (objectp(testOb)) destruct(testOb);
 }
+void after_all_tests () {
+    rm(testFile);
+}
 
 void test_npc () {
-    expect_function("is_npc", testOb);
-
     expect("is_npc behaves", (: ({
         assert_equal(testOb->is_living(), 1),
         assert_equal(testOb->is_npc(), 1),
@@ -20,8 +24,6 @@ void test_npc () {
 }
 
 void test_set_level () {
-    expect_function("set_level", testOb);
-
     expect("set_level adjusts stats", (: ({
         assert_equal(testOb->query_level(), 1),
         assert_equal(testOb->query_stat("strength"), 0),
@@ -36,10 +38,6 @@ void test_set_level () {
 
 nosave object __Room, __Character;
 void test_aggressive (function done) {
-    expect_function("set_aggressive", testOb);
-    expect_function("query_aggressive", testOb);
-    expect_function("handle_receive_living_in_env", testOb);
-
     expect("aggressive is settable and queryable", (: ({
         assert_equal(testOb->query_aggressive(), 0),
 
@@ -82,14 +80,6 @@ void test_aggressive (function done) {
 nosave private object r1, r2;
 
 void test_wander () {
-    expect_function("set_wander", testOb);
-    expect_function("query_wander", testOb);
-    expect_function("query_wanders", testOb);
-    expect_function("set_next_wander", testOb);
-    expect_function("query_next_wander", testOb);
-    expect_function("attempt_wander", testOb);
-    expect_function("handle_wander", testOb);
-
     expect("wander is queryable and settable", (: ({
         assert_equal(testOb->query_wander(), 0),
 
@@ -178,11 +168,6 @@ void test_wander () {
 }
 
 void test_abilities () {
-    expect_function("query_ability_list", testOb);
-    expect_function("set_ability_list", testOb);
-    expect_function("query_ability_chance", testOb);
-    expect_function("set_ability_chance", testOb);
-
     expect("ability list is queryable and settable", (: ({
         assert_equal(testOb->query_ability_list(), ({ })),
 
