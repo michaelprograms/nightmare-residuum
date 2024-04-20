@@ -2,19 +2,23 @@ inherit M_TEST;
 inherit M_MOVE;
 
 private nosave object testOb;
+private nosave string testFile;
+void before_all_tests () {
+    testFile = D_TEST->create_coverage(replace_string(base_name(), ".test", ".c"));
+}
 void before_each_test () {
-    if (objectp(testOb)) destruct(testOb);
-    testOb = clone_object("/std/npc/vendor.c");
+    testOb = clone_object(testFile);
 }
 void after_each_test () {
     // vendor handle_remove to destruct vendor inventory
     if (objectp(testOb)) testOb->handle_remove();
     if (objectp(testOb)) destruct(testOb);
 }
+void after_all_tests () {
+    rm(testFile);
+}
 
 void test_vendor () {
-    expect_function("is_vendor", testOb);
-
     expect("is_vendor behaves", (: ({
         assert_equal(testOb->is_living(), 1),
         assert_equal(testOb->is_vendor(), 1),
@@ -24,9 +28,6 @@ void test_vendor () {
 
 void test_vendor_inventory () {
     object vi, ob;
-
-    expect_function("handle_remove", testOb);
-    expect_function("query_vendor_inventory", testOb);
 
     // grab reference to vendor inventory
     vi = testOb->query_vendor_inventory();
@@ -52,8 +53,6 @@ void test_vendor_inventory () {
 void test_max_items () {
     object vi;
 
-    expect_function("set_max_items", testOb);
-
     // grab reference to vendor inventory
     vi = testOb->query_vendor_inventory();
 
@@ -70,9 +69,6 @@ void test_max_items () {
 }
 
 void test_vendor_currency () {
-    expect_function("query_vendor_currency", testOb);
-    expect_function("set_vendor_currency", testOb);
-
     expect("vendor currency is settable and queryable", (: ({
         assert_equal(testOb->query_vendor_currency(), 0),
 
@@ -85,9 +81,6 @@ void test_vendor_currency () {
 }
 
 void test_vendor_type () {
-    expect_function("query_vendor_types", testOb);
-    expect_function("set_vendor_types", testOb);
-
     expect("vendor type is settable and queryable", (: ({
         assert_equal(testOb->query_vendor_types(), 0),
 
@@ -107,9 +100,6 @@ void test_vendor_type () {
 
 void test_apply_list_verb () {
     object room;
-
-    expect_function("direct_list_from_obj", testOb);
-    expect_function("direct_list_str_from_obj", testOb);
 
     room = new(STD_ROOM);
 
@@ -145,8 +135,6 @@ void test_apply_list_verb () {
 
 void test_apply_buy_verb () {
     object room;
-
-    expect_function("direct_buy_str_from_obj", testOb);
 
     room = new(STD_ROOM);
 

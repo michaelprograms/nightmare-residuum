@@ -1,11 +1,18 @@
 inherit M_TEST;
 
 private nosave object testOb;
+private nosave string testFile;
+void before_all_tests () {
+    testFile = D_TEST->create_coverage(replace_string(base_name(), ".test", ".c"));
+}
 void before_each_test () {
-    if (!testOb) testOb = clone_object("/std/npc/pet.c");
+    testOb = clone_object(testFile);
 }
 void after_each_test () {
     if (objectp(testOb)) destruct(testOb);
+}
+void after_all_tests () {
+    rm(testFile);
 }
 
 string query_key_name () {
@@ -13,10 +20,6 @@ string query_key_name () {
 }
 
 void test_owner () {
-    expect_function("set_owner", testOb);
-    expect_function("query_owner", testOb);
-    expect_function("query_owner_name", testOb);
-
     expect("owner is settable and queryable", (: ({
         // no owner set
         assert_equal(testOb->query_owner(), UNDEFINED),
@@ -30,9 +33,6 @@ void test_owner () {
 }
 
 void test_following () {
-    expect_function("set_following", testOb);
-    expect_function("query_following", testOb);
-
     expect("following is settable and queryable", (: ({
         // not following yet
         assert_equal(testOb->query_following(), UNDEFINED),

@@ -4,9 +4,13 @@ nosave private object __VendorInventory;
 nosave private string __VendorCurrency;
 nosave private string *__VendorTypes;
 
-int is_vendor () { return 1; }
+int is_vendor () {
+    return 1;
+}
 
-object query_vendor_inventory () { return __VendorInventory; }
+object query_vendor_inventory () {
+    return __VendorInventory;
+}
 
 void set_max_items (int n) {
     if (__VendorInventory) {
@@ -18,7 +22,9 @@ string query_vendor_currency () {
     return __VendorCurrency;
 }
 void set_vendor_currency (string c) {
-    if (!stringp(c)) error("Bad argument 1 to vendor->set_vendor_currency");
+    if (!stringp(c)) {
+        error("Bad argument 1 to vendor->set_vendor_currency");
+    }
     __VendorCurrency = c;
 }
 
@@ -26,7 +32,9 @@ string *query_vendor_types () {
     return __VendorTypes;
 }
 void set_vendor_types (string *types) {
-    if (!arrayp(types) || !sizeof(types)) error("Bad argument 1 to vendor->set_vendor_types");
+    if (!arrayp(types) || !sizeof(types)) {
+        error("Bad argument 1 to vendor->set_vendor_types");
+    }
     __VendorTypes = types;
 }
 
@@ -137,7 +145,9 @@ mixed direct_list_from_obj (mixed args...) {
     if (sizeof(args)) {
         ob = args[0];
         return environment(ob) == environment(po);
-    } else return 0;
+    } else {
+        return 0;
+    }
 }
 mixed direct_list_str_from_obj (mixed args...) {
     object po = previous_object();
@@ -145,7 +155,9 @@ mixed direct_list_str_from_obj (mixed args...) {
     if (sizeof(args) > 1) {
         ob = args[1];
         return environment(ob) == environment(po);
-    } else return 0;
+    } else {
+        return 0;
+    }
 }
 mixed direct_buy_str_from_obj (mixed args...) {
     object po = previous_object();
@@ -153,5 +165,7 @@ mixed direct_buy_str_from_obj (mixed args...) {
     if (sizeof(args) > 1) {
         ob = args[1];
         return environment(ob) == environment(po);
-    } else return 0;
+    } else {
+        return 0;
+    }
 }
