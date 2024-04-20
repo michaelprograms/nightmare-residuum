@@ -1,17 +1,21 @@
 inherit M_TEST;
 
 private nosave object testOb;
+private nosave string testFile;
+void before_all_tests () {
+    testFile = D_TEST->create_coverage(replace_string(base_name(), ".test", ".c"));
+}
 void before_each_test () {
-    testOb = clone_object("/std/living/status.c");
+    testOb = clone_object(testFile);
 }
 void after_each_test () {
     if (objectp(testOb)) destruct(testOb);
 }
+void after_all_tests () {
+    rm(testFile);
+}
 
 void test_busy () {
-    expect_function("set_busy", testOb);
-    expect_function("query_busy", testOb);
-
     expect("busy should be settable and queryable", (: ({
         assert_equal(testOb->query_busy(), 0),
 
@@ -27,9 +31,6 @@ void test_busy () {
 }
 
 void test_disable () {
-    expect_function("set_disable", testOb);
-    expect_function("query_disable", testOb);
-
     expect("disable should be settable and queryable", (: ({
         assert_equal(testOb->query_disable(), 0),
 
@@ -46,9 +47,6 @@ void test_disable () {
 
 void test_immobile () {
     object r1, r2;
-
-    expect_function("set_immobile", testOb);
-    expect_function("query_immobile", testOb);
 
     expect("immobile should be settable and queryable", (: ({
         assert_equal(testOb->query_immobile(), 0),
@@ -86,9 +84,6 @@ void test_immobile () {
 }
 
 void test_posture () {
-    expect_function("set_posture", testOb);
-    expect_function("query_posture", testOb);
-
     expect("posture should be settable and queryable", (: ({
         assert_equal(testOb->query_posture(), "standing"),
 

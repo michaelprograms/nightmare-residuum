@@ -1,19 +1,24 @@
 inherit M_TEST;
 
 private nosave object testOb;
+private nosave string testFile;
 void before_all_tests () {
-    testOb = clone_object("/std/living/vitals.c");
+    testFile = D_TEST->create_coverage(replace_string(base_name(), ".test", ".c"));
+}
+void before_each_test () {
+    testOb = clone_object(testFile);
+}
+void after_each_test () {
+    if (objectp(testOb)) destruct(testOb);
 }
 void after_all_tests () {
-    if (objectp(testOb)) destruct(testOb);
+    rm(testFile);
 }
 string *test_order () {
     return ({ "test_update_vitals", "test_hp", "test_sp", "test_mp" });
 }
 
 void test_update_vitals () {
-    expect_function("update_vitals", testOb);
-
     expect("update_vitals handles base and max hp/sp/mp", (: ({
         // initial values
         assert_equal(testOb->query_hp(), 0),
@@ -42,12 +47,9 @@ void test_update_vitals () {
 }
 
 void test_hp () {
-    expect_function("set_hp", testOb);
-    expect_function("add_hp", testOb);
-    expect_function("query_hp", testOb);
-    expect_function("query_max_hp", testOb);
-
     expect("hp handles set/query/query_max", (: ({
+        testOb->update_vitals(1),
+
         testOb->add_hp(1),  // already max
         assert_equal(testOb->query_hp(), 20),
 
@@ -69,12 +71,9 @@ void test_hp () {
 }
 
 void test_sp () {
-    expect_function("set_sp", testOb);
-    expect_function("add_sp", testOb);
-    expect_function("query_sp", testOb);
-    expect_function("query_max_sp", testOb);
-
     expect("sp handles set/query/query_max", (: ({
+        testOb->update_vitals(1),
+
         testOb->add_sp(1),  // already max
         assert_equal(testOb->query_sp(), 10),
 
@@ -96,12 +95,9 @@ void test_sp () {
 }
 
 void test_mp () {
-    expect_function("set_mp", testOb);
-    expect_function("add_mp", testOb);
-    expect_function("query_mp", testOb);
-    expect_function("query_max_mp", testOb);
-
     expect("mp handles set/query/query_max", (: ({
+        testOb->update_vitals(1),
+
         testOb->add_mp(1),  // already max
         assert_equal(testOb->query_mp(), 10),
 

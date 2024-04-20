@@ -1,22 +1,23 @@
 inherit M_TEST;
 
 private nosave object testOb;
+private nosave string testFile;
+void before_all_tests () {
+    testFile = D_TEST->create_coverage(replace_string(base_name(), ".test", ".c"));
+}
 void before_each_test () {
-    if (objectp(testOb)) destruct(testOb);
-    testOb = clone_object("/std/living/combat.c");
+    testOb = clone_object(testFile);
 }
 void after_each_test () {
     if (objectp(testOb)) destruct(testOb);
+}
+void after_all_tests () {
+    rm(testFile);
 }
 
 void test_hostiles () {
     object ob1 = new(STD_LIVING), ob2 = new(STD_LIVING);
     object mockCharacter = new("/std/mock/character.c");
-
-    expect_function("add_hostile", testOb);
-    expect_function("remove_hostile", testOb);
-    expect_function("query_hostile", testOb);
-    expect_function("query_hostiles", testOb);
 
     expect("handles adding, querying, and removing hostiles", (: ({
         assert_equal($(mockCharacter)->start_shadow(testOb), 1),

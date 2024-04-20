@@ -1,17 +1,21 @@
 inherit M_TEST;
 
 private nosave object testOb;
+private nosave string testFile;
+void before_all_tests () {
+    testFile = D_TEST->create_coverage(replace_string(base_name(), ".test", ".c"));
+}
 void before_each_test () {
-    testOb = clone_object("/std/living/protection.c");
+    testOb = clone_object(testFile);
 }
 void after_each_test () {
     if (objectp(testOb)) destruct(testOb);
 }
+void after_all_tests () {
+    rm(testFile);
+}
 
 void test_query_and_set_protection () {
-    expect_function("query_protection", testOb);
-    expect_function("set_protection", testOb);
-
     expect("protection is queryable", (: ({
         // initial values
         assert_equal(testOb->query_protection(), 0),
@@ -24,8 +28,6 @@ void test_query_and_set_protection () {
     }) :));
 }
 void test_add_protection () {
-    expect_function("add_protection", testOb);
-
     expect("protection is addable", (: ({
         // initial value
         assert_equal(testOb->query_protection(), 0),
@@ -39,8 +41,6 @@ void test_add_protection () {
 }
 
 void test_remove_protection () {
-    expect_function("remove_protection", testOb);
-
     expect("protection is removable", (: ({
         // initial value
         assert_equal(testOb->add_protection(10, 0), 10),
@@ -55,8 +55,6 @@ void test_remove_protection () {
 }
 
 void test_clear_protection () {
-    expect_function("clear_protection", testOb);
-
     expect("protection is clearable", (: ({
         assert_equal(testOb->add_protection(10, 0), 10),
         assert_equal(testOb->query_protection(), 10),
@@ -66,8 +64,6 @@ void test_clear_protection () {
 }
 
 void test_handle_remove () {
-    expect_function("handle_remove", testOb);
-
     expect("protection is cleared upon handle_remove", (: ({
         assert_equal(testOb->add_protection(10, 0), 10),
         assert_equal(testOb->query_protection(), 10),

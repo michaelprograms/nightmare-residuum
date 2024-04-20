@@ -1,18 +1,21 @@
 inherit M_TEST;
 
 private nosave object testOb;
+private nosave string testFile;
+void before_all_tests () {
+    testFile = D_TEST->create_coverage(replace_string(base_name(), ".test", ".c"));
+}
 void before_each_test () {
-    testOb = clone_object("/std/living/stats.c");
+    testOb = clone_object(testFile);
 }
 void after_each_test () {
     if (objectp(testOb)) destruct(testOb);
 }
+void after_all_tests () {
+    rm(testFile);
+}
 
 void test_query_and_set_stat () {
-    expect_function("query_stat", testOb);
-    expect_function("query_stat_base", testOb);
-    expect_function("set_stat", testOb);
-
     expect("handles setting and querying stats", (: ({
         testOb->set_stat("strength", 12345),
         testOb->set_stat("perception", 12345),
@@ -61,9 +64,6 @@ void test_query_and_set_stat () {
 }
 
 void test_stat_bonus () {
-    expect_function("query_stat_bonus", testOb);
-    expect_function("add_stat_bonus", testOb);
-
     expect("handles setting and querying stats", (: ({
         testOb->set_stat("strength", 100),
         testOb->set_stat("perception", 100),
