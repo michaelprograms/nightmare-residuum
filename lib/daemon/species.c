@@ -202,8 +202,12 @@ nosave private mapping __Species = ([
     "wasp":         ([ "body": "hexapod-winged" ]),
 ]);
 
-mapping query_bodies () { return __Bodies; }
-mapping query_species () { return __Species; }
+mapping query_bodies () {
+    return __Bodies;
+}
+mapping query_species () {
+    return __Species;
+}
 
 /* ----- species adjustments ----- */
 

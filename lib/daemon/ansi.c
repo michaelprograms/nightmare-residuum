@@ -556,10 +556,16 @@ void create () {
     unknownTerm = map(ansiTerm, function () { return ""; });
 }
 
-string *query_keys () { return keys(unknownTerm); }
+string *query_keys () {
+    return keys(unknownTerm);
+}
 
-mapping query_ansi_term () { return ansiTerm; }
-mapping query_unknown_term () { return unknownTerm; }
+mapping query_ansi_term () {
+    return ansiTerm;
+}
+mapping query_unknown_term () {
+    return unknownTerm;
+}
 string parse (string str) {
     return terminal_colour(str, ansiTerm);
 }
