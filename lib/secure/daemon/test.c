@@ -265,6 +265,12 @@ void line_hit (int n) {
 string *query_functions () {
     return values(map(__Lines, (: sizeof($2) > 1 ? $2[1] : 0 :))) - ({ 0 });
 }
+string *query_hit_functions () {
+    return values(map(__Lines, (: sizeof($2) > 1 && $2[0] > 0 ? $2[1] : 0 :))) - ({ 0 });
+}
+string *query_unhit_functions () {
+    return values(map(__Lines, (: sizeof($2) > 1 && $2[0] == 0 ? $2[1] : 0 :))) - ({ 0 });
+}
 int *query_hit_lines () {
     return keys(filter(__Lines, (: sizeof($2) == 1 && $2[0] > 0 :)));
 }

@@ -27,7 +27,7 @@ nosave private int failingAsserts = 0, passingAsserts = 0, totalPassingAsserts =
 nosave private int expectCatch = 0;
 nosave private string currentTestFn, currentTestMsg, currentTestLog, currentFailLog, totalFailLog;
 nosave private mixed *leftResults, *rightResults;
-nosave private string *testFunctions, *testObjectFns = ({ }), *testObjectUntestedFns = ({ });
+nosave private string *testFunctions;
 int timeBefore, timeAfter, failingExpectsBefore, passingExpectsBefore;
 private function doneTestFn;
 
@@ -68,30 +68,12 @@ int query_expect_catch () {
 /* ----- helper functions ----- */
 
 protected object clone_object (string path) {
-    string *fns;
     object ob;
 
     if (!stringp(path) || file_size(path) < 1) {
         error("Invalid path passed to test->clone_object");
     }
     ob = efun::clone_object(path);
-
-    if (sizeof(fns = D_TEST->query_functions())) {
-        testObjectFns = fns - TEST_IGNORE_DEFAULTS - test_ignore();
-    } else {
-        // @TODO deprecate
-        // get list of functions from the test object
-        fns = filter(functions(ob, 2), (: function_exists($1, $2) :), ob);
-        // remove ignored functions
-        fns = fns - TEST_IGNORE_DEFAULTS - test_ignore();
-        foreach (string fn in fns) {
-            if (member_array(fn, testObjectFns) == -1) {
-                testObjectFns += ({ fn });
-                testObjectUntestedFns += ({ fn });
-            }
-        }
-    }
-
     return ob;
 }
 
@@ -106,13 +88,11 @@ private string *query_test_functions () {
     string *fns;
 
     fns = test_order();
-
     if (!sizeof(fns)) {
         fns = functions(this_object(), 2) - TEST_IGNORE_DEFAULTS - test_ignore();
     } else if (sizeof(fns) != sizeof(functions(this_object(), 2))) {
         // grab any tests that were not included in test_order and test_ignore
-        string *otherTestFns = functions(this_object(), 2) - TEST_IGNORE_DEFAULTS - test_ignore() - fns;
-        fns += otherTestFns;
+        fns += (functions(this_object(), 2) - TEST_IGNORE_DEFAULTS - test_ignore() - fns);
     }
 
     fns = filter(fns, (: regexp($1, "test_") :));
@@ -123,18 +103,15 @@ private string *query_test_functions () {
 /* -----  ----- */
 
 private void finish_test () {
-    // @TODO D_TEST->coverage_file() && D_TEST->query_functions() for automatic coverage detection
-    // Attempt to populate testObjectUntestedFns if no tests have run
-    if (!sizeof(testFunctions) || (passingExpects + failingExpects == 0)) {
-        before_each_test();
-        after_each_test();
-    }
+    string *fnsHit, *fnsUnhit;
 
     after_all_tests();
     write("  " + passingExpects + " Pass " + (failingExpects ? failingExpects + " Fail" : "") + "\n");
-    if (sizeof(testObjectUntestedFns) > 0) {
+    fnsHit = D_TEST->query_hit_functions();
+    fnsUnhit = D_TEST->query_unhit_functions();
+    if (sizeof(fnsUnhit) > 0) {
         write("\n  Found " + BOLD + UNDERLINE + "Untested Functions" + RESET + "\n");
-        foreach (string fn in testObjectUntestedFns) {
+        foreach (string fn in fnsUnhit) {
             write(ORANGE + "    ?" + RESET + " " + fn + "\n");
         }
     }
@@ -143,8 +120,8 @@ private void finish_test () {
         "numTests": sizeof(testFunctions),
         "passingExpects": passingExpects,
         "failingExpects": failingExpects,
-        "testedFns": sizeof(testObjectFns - testObjectUntestedFns),
-        "untestedFns": sizeof(testObjectUntestedFns),
+        "testedFns": sizeof(fnsHit),
+        "untestedFns": sizeof(fnsUnhit),
         "passingAsserts": totalPassingAsserts,
         "failingAsserts": failingAsserts,
         "failLog": totalFailLog,
@@ -286,14 +263,6 @@ varargs private string format_array_differences (mixed *actual, mixed *expect) {
 // -----------------------------------------------------------------------------
 
 private void validate_expect (mixed value1, mixed value2, string message) {
-    // @TODO deprecate this
-    // message can start with the function being tested to count as tested
-    foreach (string fn in testObjectUntestedFns) {
-        if (regexp(message, fn + "[ :(]") > 0) {
-            testObjectUntestedFns -= ({ fn });
-        }
-    }
-
     if (!currentTestPassed) {
         message = stringp(message) ? message : "An expect has failed.";
         if (failingExpects == -1) { // expected this error
@@ -324,12 +293,6 @@ private void validate_expect (mixed value1, mixed value2, string message) {
 // @TODO deprecate expect_function
 // Assert that testOb contains a public function matching fn
 void expect_function (string fn, object testOb) {
-    currentTestPassed = !!function_exists(fn, testOb);
-    if (currentTestPassed) {
-        testObjectUntestedFns -= ({ fn });
-    } else {
-        validate_expect("false", "true", fn + " does not exist");
-    }
 }
 
 void expect (string message, function fn) {

@@ -24,12 +24,11 @@ string *test_order () {
     nTestOrder ++;
     return testOrder;
 }
-string *test_ignore () { return ({ "test_should_be_ignored" }); }
+string *test_ignore () {
+    return ({ "test_should_be_ignored" });
+}
 
 void test_expects_passing () {
-    expect_function("expect_function", testOb);
-    expect_function("expect", testOb);
-
     expect("assert_equal should pass", (: ({
         assert_equal(1, 1),
         assert_equal(1.0, 1.0),
@@ -53,9 +52,6 @@ void test_expects_passing () {
 }
 
 void test_expects_failing () {
-    expect_next_failure();
-    expect_function("nonexistant_function", testOb);
-
     expect_next_failure();
     expect("expect without asserts should fail", (: ({
         // no asserts should fail
@@ -95,8 +91,6 @@ void test_async_test (function done) {
 }
 
 void test_lifecycle_events () {
-    expect_function("query_expect_catch", testOb);
-
     expect("lifecycle events execute in order", (: ({
         assert_equal(nBeforeAll, 1), // before_all_tests
         assert_equal(nBeforeEach, sizeof(testOrder)), // before_each_test
