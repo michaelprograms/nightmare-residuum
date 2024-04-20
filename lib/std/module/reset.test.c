@@ -1,11 +1,18 @@
 inherit M_TEST;
 
 private nosave object testOb;
+private nosave string testFile;
+void before_all_tests () {
+    testFile = D_TEST->create_coverage(replace_string(base_name(), ".test", ".c"));
+}
 void before_each_test () {
-    testOb = clone_object("/std/module/reset.c");
+    testOb = clone_object(testFile);
 }
 void after_each_test () {
     if (objectp(testOb)) destruct(testOb);
+}
+void after_all_tests () {
+    rm(testFile);
 }
 string *test_order () {
     return ({ "test_resets", "test_objects", });
@@ -17,12 +24,6 @@ void test_resets () {
     function setupFn = function (object ob) {
         setupFnCalled ++;
     };
-
-    expect_function("query_reset", testOb);
-    expect_function("query_resets", testOb);
-    expect_function("set_reset", testOb);
-    expect_function("set_reset_data", testOb);
-    expect_function("handle_reset", testOb);
 
     expect("resets handle setting, querying, and resetting", (: ({
         // have not set_reset yet
@@ -62,8 +63,6 @@ void test_objects () {
         npc = ob;
         npc->set_wander(1);
     };
-
-    expect_function("query_objects", testOb);
 
     // setup test rooms
     r1 = new(STD_ROOM);

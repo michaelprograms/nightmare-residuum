@@ -1,18 +1,22 @@
 inherit M_TEST;
 
 private nosave object testOb;
+private nosave string testFile;
+void before_all_tests () {
+    testFile = D_TEST->create_coverage(replace_string(base_name(), ".test", ".c"));
+}
 void before_each_test () {
-    testOb = clone_object("/std/module/senses.c");
+    testOb = clone_object(testFile);
 }
 void after_each_test () {
     if (objectp(testOb)) destruct(testOb);
 }
+void after_all_tests () {
+    rm(testFile);
+}
 
 void test_listen () {
     function fn = function () { return "Function sound."; };
-
-    expect_function("set_listen", testOb);
-    expect_function("query_listen", testOb);
 
     expect("listens are settable and queryable", (: ({
         // verify initial default
@@ -31,9 +35,6 @@ void test_listen () {
 
 void test_smell () {
     function fn = function () { return "Function scent."; };
-
-    expect_function("set_smell", testOb);
-    expect_function("query_smell", testOb);
 
     expect("smells are settable and queryable", (: ({
         // verify initial default

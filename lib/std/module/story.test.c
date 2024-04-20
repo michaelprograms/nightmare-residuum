@@ -1,17 +1,21 @@
 inherit M_TEST;
 
 private nosave object testOb;
+private nosave string testFile;
+void before_all_tests () {
+    testFile = D_TEST->create_coverage(replace_string(base_name(), ".test", ".c"));
+}
 void before_each_test () {
-    testOb = clone_object("/std/module/story.c");
+    testOb = clone_object(testFile);
 }
 void after_each_test () {
     if (objectp(testOb)) destruct(testOb);
 }
+void after_all_tests () {
+    rm(testFile);
+}
 
 void test_lines () {
-    expect_function("query_story_lines", testOb);
-    expect_function("set_story_lines", testOb);
-
     expect("lines are settable and queryable", (: ({
         assert_equal(testOb->query_story_lines(), ({ })),
 
@@ -24,9 +28,6 @@ void test_lines () {
 }
 
 void test_delay () {
-    expect_function("query_story_delay", testOb);
-    expect_function("set_story_delay", testOb);
-
     expect("delay is settable and queryable", (: ({
         assert_equal(testOb->query_story_delay(), 3),
 
