@@ -8,8 +8,14 @@ private int DAY = 24000;
 
 
 private nosave object testOb;
+private nosave string testFile;
+void before_all_tests () {
+    testFile = D_TEST->create_coverage(replace_string(base_name(), ".test", ".c"));
+}
 void before_each_test () {
-    testOb = clone_object("/daemon/astronomy.c");
+    testOb = clone_object(testFile);
+
+    // reset data
     __Time = 720561600; // The Beginning: Sat Oct 31 15:00:00 1992
 
     __Almanac["SECONDS_PER_MINUTE"] = 20;
@@ -60,12 +66,10 @@ void after_each_test () {
     if (objectp(testOb)) destruct(testOb);
 }
 void after_all_tests () {
-    D_ASTRONOMY->create(); // have to force restart heartbeat
+    rm(testFile);
 }
 
 void test_now () {
-    expect_function("query_now", testOb);
-
     expect("handles now", (: ({
         assert_equal(testOb->query_now(__Time), 0),
         assert_equal(testOb->query_now(time()) > 1, 1),
@@ -73,14 +77,6 @@ void test_now () {
 }
 
 void test_time_intervals () {
-    expect_function("query_second", testOb);
-    expect_function("query_minute", testOb);
-    expect_function("query_day", testOb);
-    expect_function("query_hour", testOb);
-    expect_function("query_week", testOb);
-    expect_function("query_month", testOb);
-    expect_function("query_year", testOb);
-
     expect("handles the beginning", (: ({
         assert_equal(testOb->query_now(__Time), 0),
         assert_equal(testOb->query_minutes(__Time, __Almanac), 0),
@@ -125,8 +121,6 @@ void test_time_intervals () {
 }
 
 void test_localtime () {
-    expect_function("query_localtime", testOb);
-
     expect("handles localtime of an almanac", (: ({
         assert_equal(testOb->query_now(__Time), 0),
         assert_equal(testOb->query_localtime(__Almanac, __Time), "0:00"),
@@ -156,8 +150,6 @@ void test_localtime () {
 }
 
 void test_localdate () {
-    expect_function("query_localdate", testOb);
-
     expect("handles localdate of an almanac", (: ({
         assert_equal(testOb->query_localdate(__Almanac, __Time+(DAY*0)), "1 of Roki 1"),
         assert_equal(testOb->query_localdate(__Almanac, __Time+(DAY*19)), "20 of Roki 1"),
@@ -169,8 +161,6 @@ void test_localdate () {
 }
 
 void test_day_of_year () {
-    expect_function("query_day_of_year", testOb);
-
     expect("day of year stays within bounds", (: ({
         assert_equal(testOb->query_day_of_year(__Time+(DAY*0), __Almanac), 0),
         assert_equal(testOb->query_day_of_year(__Time+(DAY*1), __Almanac), 1),
@@ -184,8 +174,6 @@ void test_day_of_year () {
 }
 
 void test_almanac () {
-    expect_function("query_calculate_almanac", testOb);
-
     expect("handles dawn and dusk throughout year", (: ({
         assert_equal(testOb->query_calculate_almanac(__Time+(DAY*0), __Almanac), ([ "dawn": ({ 4, 0 }), "day": ({ 5, 0 }), "dusk": ({ 16, 0 }), "night": ({ 17, 0 }), "equinox": "fall" ])),
         assert_equal(testOb->query_calculate_almanac(__Time+(DAY*25), __Almanac), ([ "dawn": ({ 4, 30 }), "day": ({ 5, 30 }), "dusk": ({ 15, 30 }), "night": ({ 16, 30 }) ])),

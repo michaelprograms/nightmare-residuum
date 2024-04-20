@@ -31,7 +31,10 @@ mapping __Astronomy = ([
 
 mapping query_astronomy_from_room (mixed dest);
 
-mapping query_astronomy () { return __Astronomy; } // for debug
+// for debug
+mapping query_astronomy () {
+    return __Astronomy;
+}
 
 /* -----  ----- */
 
@@ -41,18 +44,38 @@ string format_minute (int m) {
 
 /* -----  ----- */
 
-int query_now (int t) { return NOW(t); }
+int query_now (int t) {
+    return NOW(t);
+}
 
-int query_second (int t, mapping a) { return NOW(t) % a["MINUTE"]; }
-int query_minute (int t, mapping a) { return NOW(t) % a["HOUR"] / a["MINUTE"]; }
-int query_hour (int t, mapping a) { return NOW(t) % a["DAY"] / a["HOUR"]; }
-int query_day (int t, mapping a) { return NOW(t) % a["WEEK"] / a["DAY"]; }
-int query_week (int t, mapping a) { return NOW(t) % a["MONTH"] / a["WEEK"]; }
-int query_month (int t, mapping a) { return NOW(t) % a["YEAR"] / a["MONTH"]; }
-int query_year (int t, mapping a) { return NOW(t) / a["YEAR"]; }
+int query_second (int t, mapping a) {
+    return NOW(t) % a["MINUTE"];
+}
+int query_minute (int t, mapping a) {
+    return NOW(t) % a["HOUR"] / a["MINUTE"];
+}
+int query_hour (int t, mapping a) {
+    return NOW(t) % a["DAY"] / a["HOUR"];
+}
+int query_day (int t, mapping a) {
+    return NOW(t) % a["WEEK"] / a["DAY"];
+}
+int query_week (int t, mapping a) {
+    return NOW(t) % a["MONTH"] / a["WEEK"];
+}
+int query_month (int t, mapping a) {
+    return NOW(t) % a["YEAR"] / a["MONTH"];
+}
+int query_year (int t, mapping a) {
+    return NOW(t) / a["YEAR"];
+}
 
-string query_day_name (int t, mapping a) { return a["DAY_NAMES"][query_day(t, a)]; }
-string query_month_name (int t, mapping a) { return a["MONTH_NAMES"][query_month(t, a)]; }
+string query_day_name (int t, mapping a) {
+    return a["DAY_NAMES"][query_day(t, a)];
+}
+string query_month_name (int t, mapping a) {
+    return a["MONTH_NAMES"][query_month(t, a)];
+}
 
 /* -----  ----- */
 
