@@ -3,8 +3,12 @@ inherit M_TEST;
 #define ACCOUNT_PATH "/save/account/a/accounttest.o"
 
 private nosave object testOb;
+private nosave string testFile;
+void before_all_tests () {
+    testFile = D_TEST->create_coverage(replace_string(base_name(), ".test", ".c"));
+}
 void before_each_test () {
-    testOb = clone_object("/std/user/account.c");
+    testOb = clone_object(testFile);
 }
 void after_each_test () {
     if (objectp(testOb)) destruct(testOb);
@@ -12,12 +16,11 @@ void after_each_test () {
         unguarded((: rm(ACCOUNT_PATH) :));
     }
 }
+void after_all_tests () {
+    rm(testFile);
+}
 
 void test_account_name () {
-    expect_function("query_name", testOb);
-    expect_function("query_key_name", testOb);
-    expect_function("set_name", testOb);
-
     expect("account name is settable and queryable", (: ({
         assert_equal(testOb->query_name(), UNDEFINED),
         testOb->set_name("accounttest"),
@@ -32,9 +35,6 @@ void test_account_name () {
 }
 
 void test_account_password () {
-    expect_function("set_password", testOb);
-    expect_function("query_password", testOb);
-
     expect("account password is not settable", (: ({
         assert_catch((: testOb->set_password("test") :), "*Illegal attempt to account->set_password\n"),
     }) :));
@@ -46,10 +46,6 @@ void test_account_password () {
 nosave private int now = time();
 
 void test_account_times () {
-    expect_function("query_created", testOb);
-    expect_function("query_last_on", testOb);
-    expect_function("set_last_on", testOb);
-
     expect("account times are valid", (: ({
         testOb->set_name("accounttest"),
         assert_equal(testOb->query_save_path(), ACCOUNT_PATH),
@@ -75,10 +71,6 @@ void test_account_times () {
 }
 
 void test_account_settings () {
-    expect_function("query_setting", testOb);
-    expect_function("query_settings", testOb);
-    expect_function("set_setting", testOb);
-
     expect("account settings handles setting and querying", (: ({
         assert_equal(mapp(testOb->query_settings()), 1),
         assert_equal(sizeof(testOb->query_settings()), 5),
@@ -107,13 +99,6 @@ nosave private string __LastEnvShort;
 string query_environment_short () { return __LastEnvShort; }
 
 void test_account_characters () {
-    expect_function("query_character_names", testOb);
-    expect_function("query_playable_characters", testOb);
-    expect_function("query_character_by_name", testOb);
-    expect_function("add_character", testOb);
-    expect_function("update_character_data", testOb);
-    expect_function("set_deleted", testOb);
-
     __KeyName = "tester";
     __LastEnvShort = "somewhere";
 
@@ -156,7 +141,6 @@ void test_account_characters () {
 
 void test_ensure_default_settings () {
     mapping settings;
-    expect_function("ensure_default_settings", testOb);
 
     settings = testOb->query_settings();
     expect("ensure_default_settings sets missing settings", (: ({
@@ -190,9 +174,6 @@ void test_ensure_default_settings () {
 }
 
 void test_ed_setup () {
-    expect_function("query_ed_setup", testOb);
-    expect_function("set_ed_setup", testOb);
-
     expect("ed setup is settable and queryable", (: ({
         assert_equal(testOb->query_ed_setup(), UNDEFINED),
 

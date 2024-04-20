@@ -18,7 +18,9 @@ nomask int query_input_stack_size () {
 
 private nomask void dispatch_to_bottom (mixed str) {
     StructUserInput info;
-    if (!(info = get_bottom_handler())) return;
+    if (!(info = get_bottom_handler())) {
+        return;
+    }
     evaluate(info.inputFn, str);
 }
 private nomask void dispatch_input (mixed str) {
@@ -26,11 +28,17 @@ private nomask void dispatch_input (mixed str) {
     if (str[0] == '!' && !stack[<1]->lock) {
         dispatch_to_bottom(str[1..]); // override ! to shell
     } else {
-        if (!(info = get_top_handler(1))) return;
-        if (info.type == STATE_INPUT_SINGLE) input_pop();
+        if (!(info = get_top_handler(1))) {
+            return;
+        }
+        if (info.type == STATE_INPUT_SINGLE) {
+            input_pop();
+        }
         evaluate(info.inputFn, str);
     }
-    if (this_object()) input_focus();
+    if (this_object()) {
+        input_focus();
+    }
 }
 
 private nomask string process_input (string str) {
@@ -44,7 +52,9 @@ private nomask string process_input (string str) {
 private nomask void stack_push (function inputFn, mixed prompt, int secure, function callbackFn, int lock, int type) {
     StructUserInput info = new(StructUserInput);
     info.inputFn = inputFn;
-    if (prompt) info.prompt = prompt;
+    if (prompt) {
+        info.prompt = prompt;
+    }
     info.secure = secure;
     info.callbackFn = callbackFn;
     info.lock = lock;
@@ -65,7 +75,9 @@ varargs nomask void input_single (function inputFn, mixed prompt, int secure, in
 }
 varargs nomask void input_next (function inputFn, mixed prompt, int secure, int lock) {
     stack[<1].inputFn = inputFn;
-    if (prompt) stack[<1].prompt = prompt;
+    if (prompt) {
+        stack[<1].prompt = prompt;
+    }
     stack[<1].secure = secure;
     stack[<1].lock = lock;
 }
@@ -83,20 +95,31 @@ nomask varargs void input_prompt (StructUserInput info) {
     int go_ahead;
 
     if (!info) {
-        if (!(info = get_top_handler(1))) return;
+        if (!(info = get_top_handler(1))) {
+            return;
+        }
         go_ahead = 1;
     }
     if (info.type != STATE_INPUT_CHARACTER && info.prompt) {
-        if (functionp(info.prompt)) prompt = evaluate(info.prompt);
-        else prompt = info.prompt;
-        if (prompt) message("prompt", prompt, this_object());
-        if (go_ahead) telnet_ga();
+        if (functionp(info.prompt)) {
+            prompt = evaluate(info.prompt);
+        } else {
+            prompt = info.prompt;
+        }
+        if (prompt) {
+            message("prompt", prompt, this_object());
+        }
+        if (go_ahead) {
+            telnet_ga();
+        }
     }
 }
 nomask void input_focus () {
     StructUserInput info;
 
-    if (!(info = get_top_handler(1))) return;
+    if (!(info = get_top_handler(1))) {
+        return;
+    }
     input_prompt(info);
     if (info.type == STATE_INPUT_CHARACTER) {
         efun::get_char((: dispatch_input :), info.secure | 2);
@@ -106,7 +129,9 @@ nomask void input_focus () {
 }
 
 private nomask int create_handler () {
-    if (!this_object()) return 0;
+    if (!this_object()) {
+        return 0;
+    }
 
     this_object()->shell_start();
 
@@ -126,8 +151,9 @@ private nomask StructUserInput get_top_handler (int require_handler) {
 
         info = stack[<1];
         if (!(functionp(info.inputFn) & FP_OWNER_DESTED)) {
-            if (some_popped && info.callbackFn)
-            evaluate(info.callbackFn);
+            if (some_popped && info.callbackFn) {
+                evaluate(info.callbackFn);
+            }
             return info;
         }
 
@@ -135,7 +161,9 @@ private nomask StructUserInput get_top_handler (int require_handler) {
         some_popped = 1;
     }
 
-    if (!require_handler || create_handler() || !sizeof(stack)) return 0;
+    if (!require_handler || create_handler() || !sizeof(stack)) {
+        return 0;
+    }
     return stack[<1];
 }
 
@@ -143,10 +171,14 @@ private nomask StructUserInput get_bottom_handler () {
     while (sizeof(stack)) {
         StructUserInput info;
         info = stack[0];
-        if (!(functionp(info.inputFn) & FP_OWNER_DESTED)) return info;
+        if (!(functionp(info.inputFn) & FP_OWNER_DESTED)) {
+            return info;
+        }
         stack = stack[1..];
     }
 
-    if (create_handler()) return 0;
+    if (create_handler()) {
+        return 0;
+    }
     return stack[0];
 }
