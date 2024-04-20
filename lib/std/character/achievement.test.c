@@ -1,19 +1,21 @@
 inherit M_TEST;
 
 private nosave object testOb;
+private nosave string testFile;
+void before_all_tests () {
+    testFile = D_TEST->create_coverage(replace_string(base_name(), ".test", ".c"));
+}
 void before_each_test () {
-    testOb = clone_object("/std/character/achievement.c");
+    testOb = clone_object(testFile);
 }
 void after_each_test () {
     if (objectp(testOb)) destruct(testOb);
 }
+void after_all_tests () {
+    rm(testFile);
+}
 
 void test_achievements () {
-    expect_function("set_achievement", testOb);
-    expect_function("query_achievement", testOb);
-    expect_function("query_achievements", testOb);
-    expect_function("remove_achievement", testOb);
-
     expect("achievements are settable and queryable", (: ({
         assert_equal(testOb->query_achievements(), ({ })),
 

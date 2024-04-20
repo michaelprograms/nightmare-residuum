@@ -2,8 +2,7 @@ inherit M_TEST;
 
 private nosave object testOb;
 void before_each_test () {
-    testOb = clone_object("/std/character/autoload.c");
-    destruct(testOb);
+    // @TODO test coverage
     testOb = new(STD_CHARACTER); // need inventory and levels
 }
 void after_each_test () {
@@ -12,10 +11,6 @@ void after_each_test () {
 
 void test_autoload () {
     object ob1, ob2;
-
-    expect_function("update_autoload", testOb);
-    expect_function("query_autoload_items", testOb);
-    expect_function("restore_autoload", testOb);
 
     // set need set_level
     destruct(testOb);

@@ -1,19 +1,21 @@
 inherit M_TEST;
 
 private nosave object testOb;
+private nosave string testFile;
+void before_all_tests () {
+    testFile = D_TEST->create_coverage(replace_string(base_name(), ".test", ".c"));
+}
 void before_each_test () {
-    testOb = clone_object("/std/character/channel.c");
+    testOb = clone_object(testFile);
 }
 void after_each_test () {
     if (objectp(testOb)) destruct(testOb);
 }
+void after_all_tests () {
+    rm(testFile);
+}
 
 void test_channels () {
-    expect_function("query_channels_available", testOb);
-    expect_function("query_channels_blocked", testOb);
-    expect_function("query_channel_blocked", testOb);
-    expect_function("toggle_channel_blocked", testOb);
-
     expect("channels handles available and toggling blocked", (: ({
         // default channel status
         assert_equal(testOb->query_channels_available(), ({ "chat", "newbie" })),
