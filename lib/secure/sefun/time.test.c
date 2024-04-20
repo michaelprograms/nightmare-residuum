@@ -3,17 +3,22 @@
 inherit M_TEST;
 
 private nosave object testOb;
+private nosave string testFile;
+void before_all_tests () {
+    testFile = D_TEST->create_coverage(replace_string(base_name(), ".test", ".c"));
+}
 void before_each_test () {
-    testOb = clone_object("/secure/sefun/time.c");
+    testOb = clone_object(testFile);
 }
 void after_each_test () {
     if (objectp(testOb)) destruct(testOb);
 }
+void after_all_tests () {
+    rm(testFile);
+}
 
 void test_time_ago () {
     int now = time();
-
-    expect_function("time_ago", testOb);
 
     expect("time_ago handles time inputs", (: ({
         assert_equal(testOb->time_ago($(now) - 1), "very recently"),
@@ -62,8 +67,6 @@ void test_time_ago () {
 }
 
 void test_time_from_seconds () {
-    expect_function("time_from_seconds", testOb);
-
     expect("time_from_seconds handled times", (: ({
         assert_equal(testOb->time_from_seconds(0), "0s"),
         assert_equal(testOb->time_from_seconds(1), "1s"),

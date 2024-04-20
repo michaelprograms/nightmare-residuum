@@ -1,11 +1,18 @@
 inherit M_TEST;
 
 private nosave object testOb;
+private nosave string testFile;
+void before_all_tests () {
+    testFile = D_TEST->create_coverage(replace_string(base_name(), ".test", ".c"));
+}
 void before_each_test () {
-    testOb = clone_object("/secure/sefun/format.c");
+    testOb = clone_object(testFile);
 }
 void after_each_test () {
     if (objectp(testOb)) destruct(testOb);
+}
+void after_all_tests () {
+    rm(testFile);
 }
 
 private nosave string __ANSI = "on";
@@ -21,8 +28,6 @@ mixed query_setting (string setting) {
 
 void test_format_page () {
     string row;
-
-    expect_function("format_page", testOb);
 
     expect("format_page handled width=80", (: ({
         assert_equal(__Width, 80),
@@ -117,8 +122,6 @@ void test_format_page () {
 }
 
 void test_format_syntax () {
-    expect_function("format_syntax", testOb);
-
     expect("format_syntax handles syntaxes with ANSI off", (: ({
         assert_equal(__ANSI = "off", "off"),
         assert_equal(testOb->format_syntax("syntax"), "<syntax>"),
@@ -133,8 +136,6 @@ void test_format_syntax () {
 }
 
 void test_format_exit_brief () {
-    expect_function("format_exit_brief", testOb);
-
     expect("format_exit_brief handled exits", (: ({
         assert_equal(testOb->format_exit_brief("north"), "n"),
         assert_equal(testOb->format_exit_brief("northeast"), "ne"),
@@ -154,8 +155,6 @@ void test_format_exit_brief () {
     }) :));
 }
 void test_format_exit_verbose () {
-    expect_function("format_exit_verbose", testOb);
-
     expect("format_exit_verbose handled exits", (: ({
         assert_equal(testOb->format_exit_verbose("n"), "north"),
         assert_equal(testOb->format_exit_verbose("ne"), "northeast"),
@@ -175,8 +174,6 @@ void test_format_exit_verbose () {
     }) :));
 }
 void test_format_exit_reverse () {
-    expect_function("format_exit_reverse", testOb);
-
     expect("format_exit_reverse handled exits", (: ({
         assert_equal(testOb->format_exit_reverse("south"), "north"),
         assert_equal(testOb->format_exit_reverse("southwest"), "northeast"),
@@ -197,8 +194,6 @@ void test_format_exit_reverse () {
 }
 
 void test_format_stat_brief () {
-    expect_function("format_stat_brief", testOb);
-
     expect("format_stat_brief handled exits", (: ({
         assert_equal(testOb->format_stat_brief("strength"), "str"),
         assert_equal(testOb->format_stat_brief("perception"), "per"),
@@ -218,8 +213,6 @@ void test_format_stat_brief () {
     }) :));
 }
 void test_format_stat_verbose () {
-    expect_function("format_stat_verbose", testOb);
-
     expect("format_stat_brief handled exits", (: ({
         assert_equal(testOb->format_stat_verbose("str"), "strength"),
         assert_equal(testOb->format_stat_verbose("per"), "perception"),
@@ -240,8 +233,6 @@ void test_format_stat_verbose () {
 }
 
 void test_format_integer () {
-    expect_function("format_integer", testOb);
-
     expect("format_integer handled integers", (: ({
         // positives
         assert_equal(testOb->format_integer(0), "0"),

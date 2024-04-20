@@ -1,17 +1,22 @@
 inherit M_TEST;
 
 private nosave object testOb;
+private nosave string testFile;
+void before_all_tests () {
+    testFile = D_TEST->create_coverage(replace_string(base_name(), ".test", ".c"));
+}
 void before_each_test () {
-    testOb = clone_object("/secure/sefun/roll.c");
+    testOb = clone_object(testFile);
 }
 void after_each_test () {
     if (objectp(testOb)) destruct(testOb);
 }
+void after_all_tests () {
+    rm(testFile);
+}
 
 mixed *rollData;
 void test_roll_die () {
-    expect_function("roll_die", testOb);
-
     expect("roll_die returns valid values", (: ({
         rollData = testOb->roll_die(1, 2),
         assert_equal(sizeof(rollData), 2), // sum and rolls

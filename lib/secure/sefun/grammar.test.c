@@ -1,16 +1,21 @@
 inherit M_TEST;
 
 private nosave object testOb;
+private nosave string testFile;
+void before_all_tests () {
+    testFile = D_TEST->create_coverage(replace_string(base_name(), ".test", ".c"));
+}
 void before_each_test () {
-    testOb = clone_object("/secure/sefun/grammar.c");
+    testOb = clone_object(testFile);
 }
 void after_each_test () {
     if (objectp(testOb)) destruct(testOb);
 }
+void after_all_tests () {
+    rm(testFile);
+}
 
 void test_remove_article () {
-    expect_function("remove_article", testOb);
-
     expect("articles are trimmed", (: ({
         assert_equal(testOb->remove_article(""), ""),
 
@@ -22,8 +27,6 @@ void test_remove_article () {
     }) :));
 }
 void test_add_article () {
-    expect_function("add_article", testOb);
-
     expect("articles are prepended", (: ({
         assert_equal(testOb->add_article(""), ""),
 
@@ -36,8 +39,6 @@ void test_add_article () {
 }
 
 void test_conjunction () {
-    expect_function("conjunction", testOb);
-
     expect("conjunction handles list", (: ({
         assert_equal(testOb->conjunction(({ "1" })), "1"),
         assert_equal(testOb->conjunction(({ "1", "2" })), "1 and 2"),
@@ -47,8 +48,6 @@ void test_conjunction () {
 }
 
 void test_cardinal () {
-    expect_function("cardinal", testOb);
-
     expect("cardinal handles numbers", (: ({
         assert_equal(testOb->cardinal(0), "zero"),
         assert_equal(testOb->cardinal(1), "one"),
@@ -66,8 +65,6 @@ void test_cardinal () {
 }
 
 void test_ordinal () {
-    expect_function("ordinal", testOb);
-
     expect("ordinal handles words for 0..9 range", (: ({
         assert_equal(testOb->ordinal(0), "zeroth"),
         assert_equal(testOb->ordinal(1), "first"),
@@ -98,8 +95,6 @@ void test_ordinal () {
 
 void test_pluralize () {
     object ob;
-
-    expect_function("pluralize", testOb);
 
     expect("pluralize handles strings", (: ({
         assert_equal(testOb->pluralize("elf"), "elves"),
@@ -148,8 +143,6 @@ void test_pluralize () {
 }
 
 void test_consolidate () {
-    expect_function("consolidate", testOb);
-
     expect("consolidate handles basic words", (: ({
         assert_equal(testOb->consolidate(5, "elf"), "five elves"),
         assert_equal(testOb->consolidate(0, "giraffe"), "zero giraffes"),
@@ -167,8 +160,6 @@ void test_consolidate () {
 
 void test_possessive_noun () {
     object ob;
-
-    expect_function("possessive_noun", testOb);
 
     expect("possessive_noun handles names", (: ({
         assert_equal(testOb->possessive_noun(0), "Its"),
@@ -195,8 +186,6 @@ void test_possessive_noun () {
 void test_subjective () {
     object ob;
 
-    expect_function("subjective", testOb);
-
     expect("subjective handles names", (: ({
         assert_equal(testOb->subjective(0), "it"),
         assert_equal(testOb->subjective("male"), "he"),
@@ -221,8 +210,6 @@ void test_subjective () {
 
 void test_objective () {
     object ob;
-
-    expect_function("objective", testOb);
 
     expect("objective handles names", (: ({
         assert_equal(testOb->objective(0), "it"),
@@ -249,8 +236,6 @@ void test_objective () {
 void test_possessive () {
     object ob;
 
-    expect_function("possessive", testOb);
-
     expect("possessive handles names", (: ({
         assert_equal(testOb->possessive(0), "its"),
         assert_equal(testOb->possessive("male"), "his"),
@@ -275,8 +260,6 @@ void test_possessive () {
 
 void test_reflexive () {
     object ob;
-
-    expect_function("reflexive", testOb);
 
     expect("reflexive handles names", (: ({
         assert_equal(testOb->reflexive(0), "itself"),

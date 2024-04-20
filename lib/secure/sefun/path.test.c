@@ -3,12 +3,18 @@
 inherit M_TEST;
 
 private nosave object testOb;
+private nosave string testFile;
+void before_all_tests () {
+    testFile = D_TEST->create_coverage(replace_string(base_name(), ".test", ".c"));
+}
 void before_each_test () {
-    if (objectp(testOb)) destruct(testOb);
-    testOb = clone_object("/secure/sefun/path.c");
+    testOb = clone_object(testFile);
 }
 void after_each_test () {
     if (objectp(testOb)) destruct(testOb);
+}
+void after_all_tests () {
+    rm(testFile);
 }
 
 // -----------------------------------------------------------------------------
@@ -26,8 +32,6 @@ object query_shell () {
 // -----------------------------------------------------------------------------
 
 void test_user_path () {
-    expect_function("user_path", testOb);
-
     expect("user_path handles names", (: ({
         assert_equal(testOb->user_path("username"), "/realm/username"),
         assert_equal(testOb->user_path("somebody"), "/realm/somebody"),
@@ -40,8 +44,6 @@ void test_user_path () {
 }
 
 void test_split_path () {
-    expect_function("split_path", testOb);
-
     expect("split_path handles paths", (: ({
         assert_equal(testOb->split_path("/domain/area"), ({ "/domain/", "area" })),
         assert_equal(testOb->split_path("/domain/area/"), ({ "/domain/", "area" })),
@@ -52,8 +54,6 @@ void test_split_path () {
 }
 
 void test_base_path() {
-    expect_function("base_path", testOb);
-
     expect("get_include_path handles paths", (: ({
         assert_equal(testOb->base_path("/domain/area"), "/domain/"),
         assert_equal(testOb->base_path("/domain/area/"), "/domain/"),
@@ -61,8 +61,6 @@ void test_base_path() {
 }
 
 void test_sanitize_path () {
-    expect_function("sanitize_path", testOb);
-
     expect("sanitize_path handles //", (: ({
         assert_equal(testOb->sanitize_path("dir/"), "/dir/"),
         assert_equal(testOb->sanitize_path("/dir/"), "/dir/"),
@@ -128,8 +126,6 @@ void test_sanitize_path () {
 }
 
 void test_absolute_path () {
-    expect_function("absolute_path", testOb);
-
     expect("absolute_path handles relative_to", (: ({
         assert_equal(testOb->absolute_path("file.c", "/realm/username"), "/realm/username/file.c"),
         assert_equal(testOb->absolute_path("dir/file.c", "/realm/username"), "/realm/username/dir/file.c"),
@@ -161,8 +157,6 @@ void test_absolute_path () {
 }
 
 void test_mkdirs () {
-    expect_function("mkdirs", testOb);
-
     expect("mkdirs creates dirs if missing", (: ({
         assert_equal(testOb->mkDirs(""), 0), // no errors for empty string
 
@@ -181,17 +175,15 @@ void test_mkdirs () {
 }
 
 void test_wild_card () {
-    expect_function("wild_card", testOb);
-
     expect("wild_card matches paths", (: ({
         assert_equal(wild_card(0, 0), "({ })"),
         assert_equal(wild_card("", ""), "({ })"),
 
         assert_equal(wild_card("/", "/"), "({ \"/\" })"),
 
-        assert_equal(wild_card("/secure/sefun/path*.c", ""), "({ \"/secure/sefun/path.c\", \"/secure/sefun/path.test.c\" })"),
-        assert_equal(wild_card("/secure/sefun/path*.c", "/"), "({ \"/secure/sefun/path.c\", \"/secure/sefun/path.test.c\" })"),
-        assert_equal(wild_card("/secure/sefun/path*.c", "/domain"), "({ \"/secure/sefun/path.c\", \"/secure/sefun/path.test.c\" })"),
-        assert_equal(wild_card("../secure/sefun/path*.c", "/realm"), "({ \"/secure/sefun/path.c\", \"/secure/sefun/path.test.c\" })"),
+        assert_equal(wild_card("/secure/sefun/path*.c", ""), "({ \"/secure/sefun/path.c\", \"/secure/sefun/path.coverage.c\", \"/secure/sefun/path.test.c\" })"),
+        assert_equal(wild_card("/secure/sefun/path*.c", "/"), "({ \"/secure/sefun/path.c\", \"/secure/sefun/path.coverage.c\", \"/secure/sefun/path.test.c\" })"),
+        assert_equal(wild_card("/secure/sefun/path*.c", "/domain"), "({ \"/secure/sefun/path.c\", \"/secure/sefun/path.coverage.c\", \"/secure/sefun/path.test.c\" })"),
+        assert_equal(wild_card("../secure/sefun/path*.c", "/realm"), "({ \"/secure/sefun/path.c\", \"/secure/sefun/path.coverage.c\", \"/secure/sefun/path.test.c\" })"),
     }) :));
 }

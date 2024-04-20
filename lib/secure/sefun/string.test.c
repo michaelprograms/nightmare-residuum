@@ -1,11 +1,18 @@
 inherit M_TEST;
 
 private nosave object testOb;
+private nosave string testFile;
+void before_all_tests () {
+    testFile = D_TEST->create_coverage(replace_string(base_name(), ".test", ".c"));
+}
 void before_each_test () {
-    testOb = clone_object("/secure/sefun/string.c");
+    testOb = clone_object(testFile);
 }
 void after_each_test () {
     if (objectp(testOb)) destruct(testOb);
+}
+void after_all_tests () {
+    rm(testFile);
 }
 
 private nosave string __ANSI = "on";
@@ -32,8 +39,6 @@ void test_identify () {
     string tString = "Here it is: \"abc123\".", undefStr;
     mapping tMap = ([ "test1": "abc", "test2": 123 ]), undefMap;
     function tFn = function(int a, int b) { return a + b; }, undefFn;
-
-    expect_function("identify", testOb);
 
     expect("identify handles undefined", (: ({
         assert_equal(testOb->identify(), "UNDEFINED"),
@@ -114,8 +119,6 @@ void test_identify () {
 void test_wrap () {
     string resetANSI = "\e[0m", linewrap = "\n";
 
-    expect_function("wrap", testOb);
-
     expect("wrap handles wrapping text", (: ({
         assert_equal(this_object()->query_setting("ansi"), "on"),
 
@@ -144,8 +147,6 @@ void test_wrap () {
 }
 
 void test_string_compare_same_until () {
-    expect_function("string_compare_same_until", testOb);
-
     expect("string_compare_same_until handles comparing strings", (: ({
         assert_equal(testOb->string_compare_same_until("abc", "abc"), 3),
         assert_equal(testOb->string_compare_same_until("abc", "ab"), 2),
@@ -160,8 +161,6 @@ void test_string_compare_same_until () {
 }
 
 void test_sanitize_name () {
-    expect_function("sanitize_name", testOb);
-
     expect("sanitize_name handles names", (: ({
         assert_equal(testOb->sanitize_name("test"), "test"),
         assert_equal(testOb->sanitize_name("t'e's't"), "test"),
@@ -173,8 +172,6 @@ void test_sanitize_name () {
 }
 
 void test_parse_command_flags () {
-    expect_function("parse_command_flags", testOb);
-
     expect("parse_command_flags parses valid flags", (: ({
         // check no flags
         assert_equal(testOb->parse_command_flags("something"), ({ "something", ([ ]) })),

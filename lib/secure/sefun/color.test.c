@@ -11,8 +11,6 @@ void after_each_test () {
 void test_strip_colour () {
     string text = "%^BOLD%^Text%^RESET%^";
 
-    expect_function("strip_colour", testOb);
-
     expect("strip_colour removes ANSI resets", (: ({
         assert_equal(strlen($(text)), 21),
         assert_equal(testOb->strip_colour($(text)), "Text"),
@@ -22,8 +20,6 @@ void test_strip_colour () {
 }
 
 void test_hex_to_int () {
-    expect_function("hex_to_int", testOb);
-
     expect("hex_to_int handled base 16 to base 10", (: ({
         assert_equal(testOb->hex_to_int("00"), 0),
         assert_equal(testOb->hex_to_int("0A"), 10),
@@ -56,8 +52,6 @@ void test_hex_to_int () {
 
 private int *Color;
 void test_random_color () {
-    expect_function("query_random_color", testOb);
-
     Color = testOb->query_random_color();
     expect("query_random_color returns random triplets", (: ({
         assert_equal(sizeof(Color), 3),
@@ -68,9 +62,6 @@ void test_random_color () {
 }
 
 void test_sRGB () {
-    expect_function("color_to_sRGB", testOb);
-    expect_function("color_from_sRGB", testOb);
-
     expect("converting to sRGB behaves", (: ({
         assert_equal(testOb->color_to_sRGB(0.0), 0),
         assert_equal(testOb->color_to_sRGB(0.25), 137),
@@ -89,8 +80,6 @@ void test_sRGB () {
 }
 
 void test_lerp () {
-    expect_function("color_lerp", testOb);
-
     expect("color_lerp behaves", (: ({
         assert_equal(testOb->color_lerp(0.0, 255.0, 0.0), 0.0),
         assert_equal(testOb->color_lerp(0.0, 255.0, 0.5), 127.5),
