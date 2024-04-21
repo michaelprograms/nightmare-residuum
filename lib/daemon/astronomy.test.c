@@ -6,15 +6,7 @@ private mapping __Almanac = ([ ]);
 private int MINUTE = 20;
 private int DAY = 24000;
 
-
-private nosave object testOb;
-private nosave string testFile;
-void before_all_tests () {
-    testFile = D_TEST->create_coverage(replace_string(base_name(), ".test", ".c"));
-}
 void before_each_test () {
-    testOb = clone_object(testFile);
-
     // reset data
     __Time = 720561600; // The Beginning: Sat Oct 31 15:00:00 1992
 
@@ -61,12 +53,6 @@ void before_each_test () {
         "spyefel": ([ "orbit": __Almanac["TOTAL_DAYS"]/2, "color": "green" ]),
         "slayar": ([ "orbit": __Almanac["TOTAL_DAYS"], "color": "blue" ]),
     ]);
-}
-void after_each_test () {
-    if (objectp(testOb)) destruct(testOb);
-}
-void after_all_tests () {
-    rm(testFile);
 }
 
 void test_now () {
