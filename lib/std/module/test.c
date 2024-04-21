@@ -21,6 +21,9 @@ private void process_test ();
 
 /* ----- variable definitions ----- */
 
+nosave object testOb;
+nosave string testFile;
+
 nosave private int currentTestNum = 0, currentTestPassed = 0;
 nosave private int failingExpects = 0, passingExpects = 0;
 nosave private int failingAsserts = 0, passingAsserts = 0, totalPassingAsserts = 0;
@@ -31,7 +34,7 @@ nosave private string *testFunctions;
 int timeBefore, timeAfter, failingExpectsBefore, passingExpectsBefore;
 private function doneTestFn;
 
-/* ----- overrideable functions ----- */
+/* ----- override functions ----- */
 
 void before_all_tests () {
 
@@ -71,7 +74,7 @@ protected object clone_object (string path) {
     object ob;
 
     if (!stringp(path) || file_size(path) < 1) {
-        error("Invalid path passed to test->clone_object");
+        error("Invalid path '"+path+"' passed to test->clone_object");
     }
     ob = efun::clone_object(path);
     return ob;
@@ -105,6 +108,9 @@ private string *query_test_functions () {
 private void finish_test () {
     string *fnsHit, *fnsUnhit;
 
+    if (!this_object()->query_skip_coverage() && regexp(testFile, "\\.coverage\\.")) {
+        rm(testFile);
+    }
     after_all_tests();
     write("  " + passingExpects + " Pass " + (failingExpects ? failingExpects + " Fail" : "") + "\n");
     fnsHit = D_TEST->query_hit_functions();
@@ -144,6 +150,11 @@ public int execute_test (function done) {
 
     write("\nEvaluating " + CYAN + UNDERLINE + base_name() + RESET + "\n");
 
+    if (this_object()->query_skip_coverage()) {
+        testFile = replace_string(base_name(), ".test", ".c");
+    } else {
+        testFile = D_TEST->create_coverage(replace_string(base_name(), ".test", ".c"));
+    }
     before_all_tests();
 
     if (currentTestNum < sizeof(testFunctions)) {
@@ -157,6 +168,12 @@ private void done_current_test () {
     timeAfter = time_ns();
     if (failingExpects == failingExpectsBefore && passingExpects == passingExpectsBefore) {
         currentTestLog += "\n" + ORANGE + "    -" + RESET + " Warning: no expects found.";
+    }
+    if (objectp(testOb)) {
+        testOb->handle_remove();
+        if (testOb) {
+            destruct(testOb);
+        }
     }
     after_each_test();
 
@@ -192,6 +209,7 @@ private void process_test () {
         currentTestLog = "";
         currentFailLog = "";
 
+        testOb = clone_object(testFile);
         before_each_test();
         failingExpectsBefore = failingExpects;
         passingExpectsBefore = passingExpects;

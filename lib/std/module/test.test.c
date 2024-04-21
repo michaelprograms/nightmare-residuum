@@ -10,16 +10,22 @@ private string *testOrder = ({
     "test_lifecycle_events",
 });
 
-private nosave object testOb;
+int query_skip_coverage() {
+    return 1;
+}
+
 void before_all_tests () {
-    testOb = clone_object("/std/module/test.c");
     nBeforeAll ++;
 }
-void after_all_tests () {
-    if (objectp(testOb)) destruct(testOb);
+// void after_all_tests () {
+
+// }
+void before_each_test () {
+    nBeforeEach ++;
 }
-void before_each_test () { nBeforeEach ++; }
-void after_each_test () { nAfterEach ++; }
+void after_each_test () {
+    nAfterEach ++;
+}
 string *test_order () {
     nTestOrder ++;
     return testOrder;
@@ -48,7 +54,6 @@ void test_expects_passing () {
         assert_catch((: error("Test catch 2") :), "*Test catch 2\n"),
         assert_catch((: error("Different error") :), "*Different error\n"),
     }) :));
-
 }
 
 void test_expects_failing () {
