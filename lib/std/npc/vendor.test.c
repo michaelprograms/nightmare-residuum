@@ -1,21 +1,9 @@
 inherit M_TEST;
 inherit M_MOVE;
 
-private nosave object testOb;
-private nosave string testFile;
-void before_all_tests () {
-    testFile = D_TEST->create_coverage(replace_string(base_name(), ".test", ".c"));
-}
-void before_each_test () {
-    testOb = clone_object(testFile);
-}
 void after_each_test () {
     // vendor handle_remove to destruct vendor inventory
     if (objectp(testOb)) testOb->handle_remove();
-    if (objectp(testOb)) destruct(testOb);
-}
-void after_all_tests () {
-    rm(testFile);
 }
 
 void test_vendor () {

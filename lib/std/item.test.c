@@ -1,20 +1,8 @@
 inherit M_TEST;
 inherit STD_STORAGE;
 
-private nosave object testOb;
-private nosave string testFile;
-void before_all_tests () {
-    testFile = D_TEST->create_coverage(replace_string(base_name(), ".test", ".c"));
-}
 void before_each_test () {
-    testOb = clone_object(testFile);
     this_object()->handle_move("/domain/Nowhere/room/void.c");
-}
-void after_each_test () {
-    if (objectp(testOb)) destruct(testOb);
-}
-void after_all_tests () {
-    rm(testFile);
 }
 
 void test_is_item () {
