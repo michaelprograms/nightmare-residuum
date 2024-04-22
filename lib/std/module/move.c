@@ -28,19 +28,25 @@ void handle_released (object env) {
 }
 
 int handle_move (mixed dest) {
-    object destOb;
+    object destOb, env;
 
-    if (!this_object()) return 0;
-    if (environment()) {
-        int release = environment()->can_release(this_object());
-        if (!release && !this_object()->query_immortal()) return 0;
+    if (!this_object()) {
+        return 0;
+    }
+    env = environment();
+    if (env && !env->can_release(this_object()) && !this_object()->query_immortal()) {
+        return 0;
     }
     if (!(destOb = query_dest_ob(dest))) {
         error("Bad argument 1 to move->handle_move");
     }
-    if (!destOb || destOb == this_object()) return 0;
-    if (!destOb->can_receive(this_object())) return 0;
-    if (__LastEnv = environment()) {
+    if (!destOb || destOb == this_object()) {
+        return 0;
+    }
+    if (!destOb->can_receive(this_object())) {
+        return 0;
+    }
+    if (__LastEnv = env) {
         handle_released(__LastEnv);
     }
     move_object(destOb);
