@@ -203,7 +203,7 @@ varargs void update_test_data (string path, string ignoreRegex) {
             continue;
         } else if (file[1] == -2) {
             update_test_data(path + file[0] + "/", ignoreRegex);
-        } else if (regexp(file[0], "\\.test\\.c$")) {
+        } else if (regexp(file[0], "\\.test\\.c$") && !regexp(file[0], "\\.coverage\\.")) {
             __Tests[path+file[0]] = ([ ]);
         } else if (regexp(file[0], "\\.c$")) {
             totalFiles ++;
