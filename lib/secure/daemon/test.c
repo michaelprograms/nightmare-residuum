@@ -8,12 +8,12 @@ nosave private mapping __Tests = ([
 nosave private string *__TestFiles = ({ }), *__TestsMissing = ({ });
 nosave private mapping __Results = ([ ]);
 
-nosave private int currentTest = 0, shutdownAfterTests = 0;
-nosave private int totalFiles = 0;
+nosave private int currentTest = 0, totalFiles = 0;
+nosave private int shutdownAfterTests = 0, coverageAfterTests = 0;
 
 nosave private object __User;
 
-mapping __Lines = ([ ]);
+mapping __Lines = ([ ]), __TotalLines = ([ ]);
 string *__RawLines = ({ });
 
 /* ----- function prototypes ----- */
@@ -26,11 +26,15 @@ varargs void run (int callShutdown);
 void display_results (mapping results);
 int *query_hit_lines ();
 int *query_unhit_lines ();
+string *query_hit_functions ();
+string *query_unhit_functions ();
 
 /* -----  ----- */
 
 void reset_data () {
     currentTest = 0;
+    coverageAfterTests = 0;
+    __TotalLines = ([ ]);
 
     __Results = ([ ]);
     __Results["numTests"] = 0;
@@ -50,8 +54,27 @@ void reset_data () {
 
 /* -----  ----- */
 
+string convert_to_ranges (int *lines) {
+    int start, end, i, l = sizeof(lines);
+    string *ranges = ({ });
+
+    lines = sort_array(lines, 1);
+
+    for (i = 0; i < l; i ++) {
+        start = lines[i];
+        end = start;
+        while (i + 1 < l && lines[i + 1] - lines[i] == 1) {
+            end = lines[i + 1];
+            i ++;
+        }
+        ranges += ({ start == end ? start + "" : start + "-" + end });
+    }
+    return implode(ranges, ",");
+}
+
 void done_test (mapping results) {
-    int hitLines, unhitLines;
+    int hitLines, unhitLines, totalLines;
+    int *uncoveredLines;
 
     if (results) {
         __Results["numTests"] += results["numTests"];
@@ -65,10 +88,21 @@ void done_test (mapping results) {
             __Results["failLog"] += ({ results["failLog"] });
         }
         hitLines = sizeof(query_hit_lines());
-        unhitLines = sizeof(query_unhit_lines());
+        unhitLines = sizeof(uncoveredLines = query_unhit_lines());
+        totalLines = hitLines + unhitLines;
         if (hitLines + unhitLines > 0) {
             __Results["hitLines"] += hitLines;
             __Results["unhitLines"] += unhitLines;
+        }
+        if (coverageAfterTests) {
+            string file = __TestFiles[currentTest][0..<8];
+            int hitFns = sizeof(query_hit_functions());
+            int unhitFns = sizeof(query_unhit_functions());
+            __TotalLines[file] = ([
+                "fns": hitFns + unhitFns > 0 ? hitFns * 100.0 / (hitFns + unhitFns) : 0.0,
+                "lines": totalLines > 0 ? hitLines * 100.0 / totalLines : 0.0,
+                "uncovered": convert_to_ranges(uncoveredLines),
+            ]);
         }
     }
     currentTest ++;
@@ -177,6 +211,17 @@ void display_results (mapping results) {
         write("\n");
     }
 
+    if (sizeof(__TotalLines)) {
+        string *keys = sort_array(keys(__TotalLines), 1);
+        foreach (string key in keys) {
+            string uncovered = __TotalLines[key]["uncovered"];
+            if (sizeof(uncovered) > 25) {
+                uncovered = uncovered[0..25] + "...";
+            }
+            write(sprintf("%-30s", key) + sprintf("%10.2f%%", __TotalLines[key]["fns"]) + sprintf("%10.2f%%", __TotalLines[key]["lines"]) + sprintf("  %-28s", uncovered) + "\n");
+        }
+    }
+
     if (__User) {
         __User->input_prompt();
     }
@@ -220,17 +265,19 @@ varargs void update_test_data (string path, string ignoreRegex) {
     }
 }
 
-varargs void run (int shutdown) {
+void run (int shutdown) {
+
+    remove_call_out();
+    reset_data();
 
     shutdownAfterTests = shutdown;
+    coverageAfterTests = 1;
 
     __User = 0;
     if (!shutdownAfterTests) {
         __User = this_user();
     }
 
-    remove_call_out();
-    reset_data();
     testStartTime = time_ns();
 
     write("Scanning for test files...\n");
@@ -262,9 +309,6 @@ mapping query_lines () {
 void line_hit (int n) {
     __Lines[n][0] ++;
 }
-string *query_functions () {
-    return values(map(__Lines, (: sizeof($2) > 1 ? $2[1] : 0 :))) - ({ 0 });
-}
 string *query_hit_functions () {
     return values(map(__Lines, (: sizeof($2) > 1 && $2[0] > 0 ? $2[1] : 0 :))) - ({ 0 });
 }
@@ -272,10 +316,10 @@ string *query_unhit_functions () {
     return values(map(__Lines, (: sizeof($2) > 1 && $2[0] == 0 ? $2[1] : 0 :))) - ({ 0 });
 }
 int *query_hit_lines () {
-    return keys(filter(__Lines, (: sizeof($2) == 1 && $2[0] > 0 :)));
+    return sort_array(keys(filter(__Lines, (: sizeof($2) == 1 && $2[0] > 0 :))), 1);
 }
 int *query_unhit_lines () {
-    return keys(filter(__Lines, (: sizeof($2) == 1 && $2[0] == 0 :)));
+    return sort_array(keys(filter(__Lines, (: sizeof($2) == 1 && $2[0] == 0 :))), 1);
 }
 
 // Enable to insert debug statements into coverage files
