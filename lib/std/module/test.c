@@ -112,13 +112,13 @@ private void finish_test () {
         rm(testFile);
     }
     after_all_tests();
-    write("  " + passingExpects + " Pass " + (failingExpects ? failingExpects + " Fail" : "") + "\n");
+
     fnsHit = D_TEST->query_hit_functions();
     fnsUnhit = D_TEST->query_unhit_functions();
     if (sizeof(fnsUnhit) > 0) {
         write("\n  Found " + BOLD + UNDERLINE + "Untested Functions" + RESET + "\n");
         foreach (string fn in fnsUnhit) {
-            write(ORANGE + "    ?" + RESET + " " + fn + "\n");
+            write("    " + ORANGE + "?" + RESET + " " + fn + "\n");
         }
     }
 
