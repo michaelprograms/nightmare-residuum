@@ -73,10 +73,11 @@ string convert_to_ranges (int *lines) {
 }
 
 void done_test (mapping results) {
-    int hitLines, unhitLines, totalLines;
-    int *uncoveredLines;
-
     if (results) {
+        int hitLines, unhitLines, totalLines;
+        int hitFns, unhitFns, totalFns;
+        int *uncoveredLines;
+
         __Results["numTests"] += results["numTests"];
         __Results["passingExpects"] += results["passingExpects"];
         __Results["failingExpects"] += results["failingExpects"];
@@ -90,14 +91,15 @@ void done_test (mapping results) {
         hitLines = sizeof(query_hit_lines());
         unhitLines = sizeof(uncoveredLines = query_unhit_lines());
         totalLines = hitLines + unhitLines;
+        hitFns = sizeof(query_hit_functions());
+        unhitFns = sizeof(query_unhit_functions());
+        totalFns = hitFns + unhitFns;
         if (hitLines + unhitLines > 0) {
             __Results["hitLines"] += hitLines;
             __Results["unhitLines"] += unhitLines;
         }
         if (coverageAfterTests) {
-            string file = __TestFiles[currentTest][0..<8];
-            int hitFns = sizeof(query_hit_functions());
-            int unhitFns = sizeof(query_unhit_functions());
+            string file = __TestFiles[currentTest][0..<8] + ".c";
             __TotalLines[file] = ([
                 "fns": hitFns + unhitFns > 0 ? hitFns * 100.0 / (hitFns + unhitFns) : 0.0,
                 "lines": totalLines > 0 ? hitLines * 100.0 / totalLines : 0.0,
@@ -213,13 +215,15 @@ void display_results (mapping results) {
 
     if (sizeof(__TotalLines)) {
         string *keys = sort_array(keys(__TotalLines), 1);
+        write(sprintf("%-30s %-7s %-7s  %-30s", "File", "Fns", "Lines", "Uncovered Lines") + "\n");
         foreach (string key in keys) {
             string uncovered = __TotalLines[key]["uncovered"];
             if (sizeof(uncovered) > 25) {
                 uncovered = uncovered[0..25] + "...";
             }
-            write(sprintf("%-30s", key) + sprintf("%10.2f%%", __TotalLines[key]["fns"]) + sprintf("%10.2f%%", __TotalLines[key]["lines"]) + sprintf("  %-28s", uncovered) + "\n");
+            write(sprintf("%-30s%7.2f%%%7.2f%%  %-30s", key, __TotalLines[key]["fns"], __TotalLines[key]["lines"], uncovered) + "\n");
         }
+        write("\n");
     }
 
     if (__User) {
