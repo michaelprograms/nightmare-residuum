@@ -93,6 +93,7 @@ void test_no_get () {
         assert_equal(environment(), find_object("/domain/Nowhere/room/void.c")),
         assert_equal(testOb->handle_move("/domain/Nowhere/room/void.c"), 1),
         assert_equal(testOb->query_no_get(), UNDEFINED),
+        assert_catch((: testOb->set_no_get(([ ])) :), "*Bad argument 1 to item->set_no_get\n"),
 
         // test int
         testOb->set_no_get(1),
