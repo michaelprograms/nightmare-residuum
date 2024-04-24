@@ -215,13 +215,13 @@ void display_results (mapping results) {
 
     if (sizeof(__TotalLines)) {
         string *keys = sort_array(keys(__TotalLines), 1);
-        write(sprintf("%-30s %-7s %-7s  %-30s", "File", "Fns", "Lines", "Uncovered Lines") + "\n");
+        write(sprintf("%-30s %-7s %-7s  %-32s", "File", "Fns", "Lines", "Uncovered Lines") + "\n");
         foreach (string key in keys) {
             string uncovered = __TotalLines[key]["uncovered"];
             if (sizeof(uncovered) > 25) {
-                uncovered = uncovered[0..25] + "...";
+                uncovered = uncovered[0..28] + "...";
             }
-            write(sprintf("%-30s%7.2f%%%7.2f%%  %-30s", key, __TotalLines[key]["fns"], __TotalLines[key]["lines"], uncovered) + "\n");
+            write(sprintf("%-30s%7.2f%%%7.2f%%  %-32s", key, __TotalLines[key]["fns"], __TotalLines[key]["lines"], uncovered) + "\n");
         }
         write("\n");
     }
