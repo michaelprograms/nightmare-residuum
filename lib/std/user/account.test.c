@@ -31,10 +31,13 @@ void test_account_password () {
     }) :));
 }
 
-nosave private int now = time();
+nosave private int now;
 
 void test_account_times () {
     expect("account times are valid", (: ({
+        // verify current time exists
+        assert_equal((now = time()) > 0, 1),
+
         testOb->set_name("accounttest"),
         assert_equal(testOb->query_save_path(), ACCOUNT_PATH),
         testOb->save_data(),
