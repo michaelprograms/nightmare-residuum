@@ -206,13 +206,6 @@ void display_results (mapping results) {
         results["failLog"] = ({ });
     }
 
-    if (sizeof(__TestsMissing)) {
-        foreach (string file in __TestsMissing) {
-            write("Missing " + file + "\n");
-        }
-        write("\n");
-    }
-
     if (sizeof(__TotalLines)) {
         string *keys = sort_array(keys(__TotalLines), 1);
         write(sprintf("%-30s %-7s %-7s  %-32s", "File", "Fns", "Lines", "Uncovered Lines") + "\n");
@@ -222,6 +215,13 @@ void display_results (mapping results) {
                 uncovered = uncovered[0..28] + "...";
             }
             write(sprintf("%-30s%7.2f%%%7.2f%%  %-32s", key, __TotalLines[key]["fns"], __TotalLines[key]["lines"], uncovered) + "\n");
+        }
+        write("\n");
+    }
+
+    if (sizeof(__TestsMissing)) {
+        foreach (string file in __TestsMissing) {
+            write("Missing " + file + "\n");
         }
         write("\n");
     }
