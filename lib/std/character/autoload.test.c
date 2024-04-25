@@ -1,6 +1,5 @@
 inherit M_TEST;
 
-private nosave object testOb;
 void before_each_test () {
     // @TODO test coverage
     testOb = new(STD_CHARACTER); // need inventory and levels
