@@ -1,6 +1,11 @@
 inherit M_TEST;
 
 void test_attributes () {
+    expect("null attributes are initialized", (: ({
+        store_variable("__Attribute", UNDEFINED, testOb),
+        assert_equal(testOb->query_attributes(), ([ ])),
+    }) :));
+
     expect("setting and querying attributes are handled", (: ({
         assert_equal(testOb->query_attribute("build"), UNDEFINED),
         assert_equal(testOb->query_attribute("complexion"), UNDEFINED),
@@ -31,10 +36,5 @@ void test_attributes () {
         assert_equal(testOb->query_attribute("bad attribute"), UNDEFINED),
         testOb->set_attribute("bad attribute", "bad test attribute"),
         assert_equal(testOb->query_attribute("bad attribute"), UNDEFINED),
-    }) :));
-
-    expect("null attributes are initialized", (: ({
-        store_variable("__Attribute", UNDEFINED, testOb),
-        assert_equal(testOb->query_attributes(), ([ ])),
     }) :));
 }

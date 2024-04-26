@@ -1,12 +1,16 @@
-private mapping __Cooldown = ([ ]);
+mapping __Cooldown = ([ ]);
+
+private void initialize_cooldowns () {
+    if (!mapp(__Cooldown)) {
+        __Cooldown = ([ ]);
+    }
+}
 
 /*
     type == "heart_beat" || "timed"
 */
 varargs void set_cooldown (string name, mixed value, string type) {
-    if (!mapp(__Cooldown)) {
-        __Cooldown = ([ ]);
-    }
+    initialize_cooldowns();
     if (!stringp(name)) {
         error("Bad argument 1 to cooldown->set_cooldown");
     }
@@ -30,15 +34,11 @@ varargs void set_cooldown (string name, mixed value, string type) {
     }
 }
 int query_cooldown (string name) {
-    if (!mapp(__Cooldown)) {
-        __Cooldown = ([ ]);
-    }
+    initialize_cooldowns();
     return __Cooldown[name] && __Cooldown[name]["value"] || 0;
 }
 mapping query_cooldowns () {
-    if (!mapp(__Cooldown)) {
-        __Cooldown = ([ ]);
-    }
+    initialize_cooldowns();
     return __Cooldown;
 }
 
