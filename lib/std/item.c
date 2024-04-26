@@ -68,16 +68,11 @@ mixed direct_get_obj (mixed args...) {
     return 1;
 }
 mixed direct_get_obj_from_obj (mixed args...) {
-    object env;
-    if (environment()) {
-        env = environment(environment());
-    }
-    if (env != environment(previous_object())) {
-        if (env == previous_object()) {
-            return 0;
-        } else {
-            return "You can't get what isn't here.";
-        }
+    object env = environment();
+    if (env == previous_object()) {
+        return 0;
+    } else if (env && environment(env) != environment(previous_object())) {
+        return "You can't get what isn't there.";
     }
     return 1;
 }

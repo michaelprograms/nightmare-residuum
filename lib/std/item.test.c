@@ -119,16 +119,23 @@ void test_no_get () {
 }
 
 void test_verb_get_obj_from_obj_applies () {
-    expect("item handles verb apply direct_get_obj_from_obj", (: ({
-        // fails without env
-        assert_equal(environment(testOb), 0),
-        assert_equal(testOb->direct_get_obj_from_obj(), "You can't get what isn't here."),
+    object storage = new(STD_STORAGE);
 
-        // passes with env
+    expect("item handles verb apply direct_get_obj_from_obj", (: ({
         assert_equal(environment(), find_object("/domain/Nowhere/room/void.c")),
         assert_equal(testOb->handle_move(this_object()), 1),
+        // fails when in this inventory
+        assert_equal(testOb->direct_get_obj_from_obj(), 0),
+        // fails when in environment
+        assert_equal(testOb->handle_move(environment(this_object())), 1),
+        assert_equal(testOb->direct_get_obj_from_obj(), "You can't get what isn't there."),
+        // passes when in container in environment
+        assert_equal($(storage)->handle_move("/domain/Nowhere/room/void.c"), 1),
+        assert_equal(testOb->handle_move($(storage)), 1),
         assert_equal(testOb->direct_get_obj_from_obj(), 1),
     }) :));
+
+    if (storage) destruct(storage);
 }
 
 void test_verb_put_obj_in_obj_applies () {
