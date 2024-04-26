@@ -1,7 +1,5 @@
 void handle_expire () {
-    if (environment()) {
-        message("system", "The " + this_object()->query_short() + " flakes into dust.\n", environment());
-    }
+    message("action", "The " + this_object()->query_short() + " flakes into dust.", environment());
     remove_call_out();
     this_object()->handle_remove();
 }
