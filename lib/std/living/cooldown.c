@@ -21,6 +21,8 @@ varargs void set_cooldown (string name, mixed value, string type) {
         error("Bad argument 2 to cooldown->set_cooldown");
     } else if (type == "timed" && !floatp(value)) {
         error("Bad argument 2 to cooldown->set_cooldown");
+    } else if (type != "heart_beat" && type != "timed") {
+        error("Bad argument 3 to cooldown->set_cooldown");
     }
     if (value > -1) {
         __Cooldown[name] = ([
