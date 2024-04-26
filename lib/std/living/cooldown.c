@@ -33,7 +33,7 @@ int query_cooldown (string name) {
     if (!mapp(__Cooldown)) {
         __Cooldown = ([ ]);
     }
-    return __Cooldown[name] || 0;
+    return __Cooldown[name] && __Cooldown[name]["value"] || 0;
 }
 mapping query_cooldowns () {
     if (!mapp(__Cooldown)) {
