@@ -8,18 +8,16 @@ string identify (mixed args...) {
         a = args[0];
     }
 
-    if (undefinedp(a)) {
-        return "UNDEFINED";
-    }
-    if (intp(a) || floatp(a)) {
+    if ((!undefinedp(a) && intp(a)) || floatp(a)) {
         return "" + a;
-    }
-    if (objectp(a)) {
-        if (ret = a->query_key_name()) ret += " ";
-        else ret = "";
+    } else if (objectp(a)) {
+        if (ret = a->query_key_name()) {
+            ret += " ";
+        } else {
+            ret = "";
+        }
         return "OBJ(" + ret + file_name(a) + ")";
-    }
-    if (stringp(a)) {
+    } else if (stringp(a)) {
         a = replace_string(a, "\"", "\\\"");
         a = "\"" + a + "\"";
         a = replace_string(a, "\\", "\\\\");
@@ -27,45 +25,46 @@ string identify (mixed args...) {
         a = replace_string(a, "\n", "\\n");
         a = replace_string(a, "\t", "\\t");
         return a;
-    }
-    if (mapp(a)) {
+    } else if (mapp(a)) {
         ret = "([ ";
         RealMap = a;
         a = sort_array(keys(RealMap), 1);
         l = sizeof(a);
         for (i = 0 ; i < l ; i ++) {
-            if (i) ret += ", ";
+            if (i) {
+                ret += ", ";
+            }
             ret += identify(a[i]) + ": " + identify(RealMap[a[i]]);
         }
         return ret + (l ? " " : "") + "])";
-    }
-    if (functionp(a)) {
+    } else if (functionp(a)) {
         return sprintf("%O", a);
-    }
-    if (classp(a)) {
+    } else if (classp(a)) {
         return replace_string(sprintf("%O", a), "\n", "");
-    }
-    if (arrayp(a)) {
+    } else if (arrayp(a)) {
         ret = "({ ";
         l = sizeof(a);
         for (i = 0; i < l; i ++) {
-            if (i) ret += ", ";
+            if (i) {
+                ret += ", ";
+            }
             ret += identify(a[i]);
         }
         return ret + (l ? " " : "") + "})";
-    }
-    if (bufferp(a)) {
+    } else if (bufferp(a)) {
         l = sizeof(a);
         ret = "BUFFER (";
         for (i = 0; i < l; i ++) {
             ret += "0x" + sprintf("%X", a[i]);
-            if (i < l-1) ret += ", ";
+            if (i < l-1) {
+                ret += ", ";
+            }
         }
         ret += ")";
         return ret;
+    } else {
+        return "UNDEFINED";
     }
-    // UNKNOWN should never be returned
-    return "UNKNOWN";
 }
 
 varargs string wrap (string str, int width, int indent, int rawANSI) {
@@ -99,18 +98,26 @@ int string_compare_same_until (string a, string b) {
     // Returns n where a[0..n] == b[0..n]
     int n = 0, l;
 
-    if ((l = strlen(a)) == strlen(b) && a == b) return l;
-    if (strlen(a) > strlen(b)) l = strlen(b);
+    if ((l = strlen(a)) == strlen(b) && a == b) {
+        return l;
+    }
+    if (strlen(a) > strlen(b)) {
+        l = strlen(b);
+    }
 
     for (int i = 0; i < l; i ++) {
-        if (a[i] != b[i]) break;
+        if (a[i] != b[i]) {
+            break;
+        }
         n ++;
     }
     return n;
 }
 
 string sanitize_name (string name) {
-    if (undefinedp(name) || !stringp(name)) error("Bad argument 1 to string->sanitize_name");
+    if (undefinedp(name) || !stringp(name)) {
+        error("Bad argument 1 to string->sanitize_name");
+    }
     name = replace_string(name, " ", "");
     name = replace_string(name, "'", "");
     name = replace_string(name, "-", "");
