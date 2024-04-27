@@ -82,6 +82,9 @@ void command (string input, mapping flags) {
     }
 
     file = absolute_path(input, this_user()->query_shell()->query_variable("cwd"));
+    if (file[<1] == '/') {
+        file = file[0..<2];
+    }
     switch (file_size(file)) {
     case -2:
         if (tmp = flags["file"]) {
