@@ -7,7 +7,7 @@ private void initialize_cooldowns () {
 }
 
 /*
-    type == "heart_beat" || "timed"
+    type can be "heart_beat" or "timed"
 */
 varargs void set_cooldown (string name, mixed value, string type) {
     initialize_cooldowns();

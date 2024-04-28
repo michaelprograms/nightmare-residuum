@@ -362,7 +362,7 @@ string create_coverage (string path) {
             // Construct
             line = "D_TEST->line_hit(" + (i+1) + "); " + __RawLines[i];
             __Lines[i+1] = ({ 0 });
-        } else if (pcre_match(__RawLines[i], "^\\s+([^ \\(]+ (=|\\+\\+|--|\\+=|-=|\\*=|\\\\=).*;)")) {
+        } else if (pcre_match(__RawLines[i], "^\\s+([^ \\((\\/*|\\/\\/)]+ (=|\\+\\+|--|\\+=|-=|\\*=|\\\\=).*;?)")) {
             // Variable Operator
             line = "D_TEST->line_hit(" + (i+1) + "); " + __RawLines[i];
             __Lines[i+1] = ({ 0 });
