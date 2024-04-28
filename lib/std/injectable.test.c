@@ -37,9 +37,11 @@ void test_item_verb_inject_applies () {
     expect("inject handles verb apply direct_inject_obj", (: ({
         assert_equal(environment(testOb), 0),
         assert_equal(testOb->direct_inject_obj(), 0),
+        assert_equal(testOb->direct_inject_obj_into_liv(), 0),
         assert_equal(testOb->handle_move(this_object()), 1),
         assert_equal(environment(testOb), this_object()),
         assert_equal(testOb->direct_inject_obj(), 1),
+        assert_equal(testOb->direct_inject_obj_into_liv(), 1),
     }) :));
 }
 
