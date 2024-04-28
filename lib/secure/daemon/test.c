@@ -320,10 +320,10 @@ string *query_unhit_functions () {
     return values(map(__Lines, (: sizeof($2) > 1 && $2[0] == 0 ? $2[1] : 0 :))) - ({ 0 });
 }
 int *query_hit_lines () {
-    return sort_array(keys(filter(__Lines, (: sizeof($2) == 1 && $2[0] > 0 :))), 1);
+    return sort_array(keys(filter(__Lines, (: $2[0] > 0 :))), 1);
 }
 int *query_unhit_lines () {
-    return sort_array(keys(filter(__Lines, (: sizeof($2) == 1 && $2[0] == 0 :))), 1);
+    return sort_array(keys(filter(__Lines, (: $2[0] == 0 :))), 1);
 }
 
 string create_coverage (string path) {
