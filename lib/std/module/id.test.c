@@ -12,6 +12,9 @@ void test_id () {
         assert_equal(testOb->query_cap_name(), "Testee"),
         assert_equal(testOb->query_key_name(), "testee"),
     }) :));
+    expect("id handles bad name inputs", (: ({
+        assert_catch((: testOb->set_name("") :), "*Bad argument 1 to id->set_name\n"),
+    }) :));
 
     expect("id handles adding id and plural", (: ({
         assert_equal(testOb->set_id(({"testee", "man"})), 0),
@@ -50,5 +53,19 @@ void test_id () {
         assert_equal(testOb->remove_adjective("large"), 0),
         assert_equal(implode(testOb->query_adjective(), ","), "big"),
         assert_equal(testOb->query_key_adjective(), "big"),
+    }) :));
+}
+
+void test_key_name () {
+    expect("key_name handles setting key_name and id", (: ({
+        assert_equal(testOb->query_key_name(), UNDEFINED),
+        assert_equal(testOb->query_id(), ({ })),
+
+        testOb->set_key_name("tester"),
+        assert_equal(testOb->query_key_name(), "tester"),
+        assert_equal(testOb->query_id(), ({ "tester" })),
+    }) :));
+    expect("key_name handles bad name inputs", (: ({
+        assert_catch((: testOb->set_key_name("") :), "*Bad argument 1 to id->set_key_name\n"),
     }) :));
 }
