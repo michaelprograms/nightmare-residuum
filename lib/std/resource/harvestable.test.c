@@ -52,10 +52,16 @@ void test_level () {
         assert_equal(testOb->query_short(), "a resource node"),
         assert_equal(testOb->query_long(), "A resource node."),
 
-        // type set
+        // ore type
         testOb->set_type("ore"),
         testOb->set_level(1),
         assert_equal(testOb->query_short(), "a rock containing aluminum ore"),
         assert_equal(testOb->query_long(), "A rock containing a strip of aluminum ore."),
+
+        // wood type
+        testOb->set_type("wood"),
+        testOb->set_level(1),
+        assert_equal(testOb->query_short(), "a log containing balsa wood"),
+        assert_equal(testOb->query_long(), "A log containing a strip of balsa wood."),
     }) :));
 }
