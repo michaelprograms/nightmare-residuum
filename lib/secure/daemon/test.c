@@ -167,6 +167,44 @@ private string format_total_line (string name, int current, int total) {
     tmp += "  " + sprintf("%6.2f", current * 100.0 / total) + "%";
     return tmp;
 }
+string format_coverage_line (int n, mapping coverage) {
+    float fns = coverage["fns"];
+    float lines = coverage["lines"];
+    string uncovered = coverage["uncovered"];
+    string cFns = "", cLines = "", cReset = "%^RESET%^";
+
+    if (fns == 100.0) {
+        cFns = "%^C10%^";
+    } else if (fns >= 80.0) {
+        cFns = "%^C02%^";
+    } else if (fns >= 60.0) {
+        cFns = "%^C11%^";
+    } else if (fns >= 40.0) {
+        cFns = "%^C03%^";
+    } else if (fns >= 20.0) {
+        cFns = "%^C01%^";
+    } else {
+        cFns = "%^C09%^";
+    }
+    if(lines == 100.0) {
+        cLines = "%^C10%^";
+    } else if (lines >= 80.0) {
+        cLines = "%^C02%^";
+    } else if (lines >= 60.0) {
+        cLines = "%^C11%^";
+    } else if (lines >= 40.0) {
+        cLines = "%^C03%^";
+    } else if (lines >= 20.0) {
+        cLines = "%^C01%^";
+    } else {
+        cLines = "%^C09%^";
+    }
+    if (sizeof(uncovered) > 36) {
+        uncovered = uncovered[0..36] + "…";
+    }
+
+    return sprintf("%-*' 's%s%6.2f%%%s %s%6.2f%%%s %-s", 23 - n, "", cFns, fns, cReset, cLines, lines, cReset, uncovered);
+}
 
 void display_results (mapping results) {
     int totalExpects = results["passingExpects"] + results["failingExpects"];
@@ -207,16 +245,23 @@ void display_results (mapping results) {
     }
 
     if (sizeof(__TotalLines)) {
+        mapping tree = ([ "/": ([ ]) ]), treeRef;
         string *keys = sort_array(keys(__TotalLines), 1);
-        write(sprintf("%-30s %-7s %-7s  %-32s", "File", "Fns", "Lines", "Uncovered Lines") + "\n");
-        foreach (string key in keys) {
-            string uncovered = __TotalLines[key]["uncovered"];
-            if (sizeof(uncovered) > 25) {
-                uncovered = uncovered[0..28] + "...";
+
+        for (int k = 0; k < sizeof(keys); k ++) {
+            string *split = explode(keys[k], "/");
+            treeRef = tree["/"];
+
+            for (int i = 0; i < sizeof(split) - 1; i ++) {
+                string s = split[i] + "/";
+                if (!treeRef[s]) {
+                    treeRef[s] = ([ ]);
+                }
+                treeRef = treeRef[s];
             }
-            write(sprintf("%-30s%7.2f%%%7.2f%%  %-32s", key, __TotalLines[key]["fns"], __TotalLines[key]["lines"], uncovered) + "\n");
+            treeRef[split[<1]] = format_coverage_line(sizeof(split[<1]) + (sizeof(treeRef) > 9 ? 1 : 0) + sizeof(split) * 2, __TotalLines[keys[k]]);
         }
-        write("\n");
+        write(implode(tree(tree), "\n")+"\n\n");
     }
 
     if (sizeof(__TestsMissing)) {
