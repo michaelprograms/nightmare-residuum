@@ -171,33 +171,33 @@ string format_coverage_line (int n, mapping coverage) {
     float fns = coverage["fns"];
     float lines = coverage["lines"];
     string uncovered = coverage["uncovered"];
-    string cFns = "", cLines = "", cReset = "%^RESET%^";
+    string cFns = "", cLines = "", cReset = "\e[0m";
 
     if (fns == 100.0) {
-        cFns = "%^C10%^";
+        cFns = "\e[38;5;10m";
     } else if (fns >= 80.0) {
-        cFns = "%^C02%^";
+        cFns = "\e[38;5;2m";
     } else if (fns >= 60.0) {
-        cFns = "%^C11%^";
+        cFns = "\e[38;5;11m";
     } else if (fns >= 40.0) {
-        cFns = "%^C03%^";
+        cFns = "\e[38;5;3m";
     } else if (fns >= 20.0) {
-        cFns = "%^C01%^";
+        cFns = "\e[38;5;1m";
     } else {
-        cFns = "%^C09%^";
+        cFns = "\e[38;5;9m";
     }
     if(lines == 100.0) {
-        cLines = "%^C10%^";
+        cLines = "\e[38;5;10m";
     } else if (lines >= 80.0) {
-        cLines = "%^C02%^";
+        cLines = "\e[38;5;2m";
     } else if (lines >= 60.0) {
-        cLines = "%^C11%^";
+        cLines = "\e[38;5;11m";
     } else if (lines >= 40.0) {
-        cLines = "%^C03%^";
+        cLines = "\e[38;5;3m";
     } else if (lines >= 20.0) {
-        cLines = "%^C01%^";
+        cLines = "\e[38;5;1m";
     } else {
-        cLines = "%^C09%^";
+        cLines = "\e[38;5;9m";
     }
     if (sizeof(uncovered) > 36) {
         uncovered = uncovered[0..36] + "…";
