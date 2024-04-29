@@ -26,9 +26,9 @@ mapping tree_file (string file, string fn, int index, int maxIndex) {
     searchFlag = (stringp(fn) && function_exists(fn, ob) + ".c" == file);
 
     if (searchFlag) {
-        key = index + ". %^CYAN%^" + file + "%^RESET%^ <- " + fn;
+        key = "%^CYAN%^" + file + "%^RESET%^ <- " + fn;
     } else {
-        key = index + ". " + file;
+        key = file;
     }
 
     if (!mapp(result[key])) {
@@ -55,9 +55,9 @@ mapping tree_directory (string file, string search, int index, int maxIndex) {
     searchFlag = stringp(search) && regexp(file, search);
 
     if (searchFlag) {
-        key = index + ". %^CYAN%^" + file + "%^RESET%^ <- " + search;
+        key = "%^CYAN%^" + file + "%^RESET%^ <- " + search;
     } else {
-        key = index + ". " + file;
+        key = file;
     }
 
     if (!mapp(result[key])) {

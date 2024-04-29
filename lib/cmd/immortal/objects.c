@@ -19,7 +19,6 @@ private void set_data (mapping result, object ob, int index) {
     if (sizeof(tmp)) {
         key = "%^UNDERLINE%^" + key + "%^RESET%^";
     }
-    key = index + ". " + key;
     result[key] = tmp;
 }
 private mapping format_data (object ob) {
@@ -61,7 +60,6 @@ private void format_type (mapping data, object *obs) {
         if (sizeof(tmp)) {
             key = "%^UNDERLINE%^" + key + "%^RESET%^";
         }
-        key = i + ". " + key;
         data[key] = tmp;
     }
 }

@@ -383,7 +383,7 @@ void border (mapping data) {
     SEFUN->this_user()->handle_pager(result);
 }
 
-private varargs string *format_tree (string key, mapping value, mapping b, int indent, int index, int maxIndex, mapping prefix) {
+private varargs string *format_tree (string key, mixed value, mapping b, int indent, int index, int maxIndex, mapping prefix) {
     string *result = ({ }), tmp = "";
     string *ids;
     int i, l;
@@ -407,14 +407,20 @@ private varargs string *format_tree (string key, mapping value, mapping b, int i
         tmp += b["h"];
     }
 
-    ids = sort_array(keys(value), (: to_int(explode($1," ")[0]) < to_int(explode($2," ")[0]) ? 0 : 1 :));
-    l = sizeof(ids);
     tmp += key;
     indent ++;
+    if (stringp(value)) {
+        tmp += value;
+    }
     result += ({ tmp });
-    for (i = 0; i < l; i ++) {
-        result += format_tree(ids[i], value[ids[i]], b, indent, i, l-1, prefix);
-        prefix[indent] = 0;
+
+    if (mapp(value)) {
+        ids = sort_array(keys(value), 1);
+        l = sizeof(ids);
+        for (i = 0; i < l; i ++) {
+            result += format_tree(i + ". " + ids[i], value[ids[i]], b, indent, i, l-1, prefix);
+            prefix[indent] = 0;
+        }
     }
 
     return result;
@@ -430,7 +436,7 @@ string *tree (mapping value) {
     ids = sort_array(keys(value), (: to_int(explode($1," ")[0]) < to_int(explode($2," ")[0]) ? 0 : 1 :));
     l = sizeof(ids);
     for (i = 0; i < l; i ++) {
-        result += format_tree(ids[i], value[ids[i]], b, 0, i, l-1, ([ ]));
+        result += format_tree(i + ". " + ids[i], value[ids[i]], b, 0, i, l-1, ([ ]));
     }
 
     return result;
