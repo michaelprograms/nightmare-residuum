@@ -115,11 +115,8 @@ private void finish_test () {
 
     fnsHit = D_TEST->query_hit_functions();
     fnsUnhit = D_TEST->query_unhit_functions();
-    if (sizeof(fnsUnhit) > 0) {
-        write("\n  Found " + BOLD + UNDERLINE + "Untested Functions" + RESET + "\n");
-        foreach (string fn in fnsUnhit) {
-            write("    " + ORANGE + "?" + RESET + " " + fn + "\n");
-        }
+    if (passingExpects + failingExpects == 0) {
+        write("  No Tests\n");
     }
 
     evaluate(doneTestFn, ([

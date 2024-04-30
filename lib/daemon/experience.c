@@ -20,8 +20,12 @@ varargs int query_stat_cost (string stat, int level, string c, string s) {
 
     if (level < 1) return 1;
 
-    if (stringp(c)) bonus += D_CLASS->query_adjust_stat(c, stat);
-    if (stringp(s)) bonus += D_SPECIES->query_adjust_stat(s, stat);
+    if (stringp(c)) {
+        bonus += D_CLASS->query_adjust_stat(c, stat);
+    }
+    if (stringp(s)) {
+        bonus += D_SPECIES->query_adjust_stat(s, stat);
+    }
 
     // (Level * Base) + X1 * (Level ^ (Y1-(Bonus*Adj)) + X2 * (Level ^ (Y2-(Bonus*Adj)))
     return to_int(

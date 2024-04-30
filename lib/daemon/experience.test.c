@@ -96,4 +96,9 @@ void test_query_value () {
 
     }) :));
     __MockLiving = 0;
+
+    expect("query_value handles invalid input", (: ({
+        assert_catch((: testOb->query_value("bad") :), "*Bad argument 1 to experience->query_value\n"),
+        assert_catch((: testOb->query_value(0.0) :), "*Bad argument 1 to experience->query_value\n"),
+    }) :));
 }
