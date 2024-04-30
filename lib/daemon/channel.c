@@ -62,13 +62,12 @@ private void handle_send (string name, string channel, string msg, int emote, in
 
 /* ----- send to channel ----- */
 
-void send_ipc (string channel, string name, string msg) {
-    if (!channel || !name || !msg) {
-        return;
-    }
-
-    handle_send(name, channel, msg, 0, 1);
-}
+// void send_ipc (string channel, string name, string msg) {
+//     if (!channel || !name || !msg) {
+//         return;
+//     }
+//     handle_send(name, channel, msg, 0, 1);
+// }
 
 void send (string channel, object source, string msg) {
     int emote;

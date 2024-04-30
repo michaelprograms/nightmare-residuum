@@ -65,14 +65,14 @@ private void read_socket (int fd, mixed message) {
     // Examples:
     // CHAT:channel:name:message
     */
-    if (message[0..4] == "CHAT:") {
-        string chan, nick, msg;
-        if (sscanf(message, "CHAT:%s:%s:%s", chan, nick, msg) != 3) {
-            error("Malformed IPC chat message from " + socket_address(fd) + ":" + message);
-            return;
-        }
-        D_CHANNEL->send_ipc(chan, nick, msg);
-    }
+    // if (message[0..4] == "CHAT:") {
+    //     string chan, nick, msg;
+    //     if (sscanf(message, "CHAT:%s:%s:%s", chan, nick, msg) != 3) {
+    //         error("Malformed IPC chat message from " + socket_address(fd) + ":" + message);
+    //         return;
+    //     }
+    //     D_CHANNEL->send_ipc(chan, nick, msg);
+    // }
 
 }
 void write_socket (int fd) {
