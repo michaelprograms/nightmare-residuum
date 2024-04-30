@@ -72,7 +72,7 @@ private void handle_send (string name, string channel, string msg, int emote, in
 void send (string channel, object source, string msg) {
     int emote;
 
-    if (!channel) {
+    if (!channel || channel == "") {
         return;
     }
 
@@ -83,12 +83,17 @@ void send (string channel, object source, string msg) {
         channel = channel[0..<6];
         emote = 1;
     }
-    if (msg && msg[0] == ':') {
-        msg = msg[1..];
-        emote = 1;
-    }
     if (member_array(channel, __Channels + __SystemChannels) == -1) {
         return;
+    }
+    if (msg && msg[0] == ':') {
+        emote = 1;
+        if (msg[1] == ' ') {
+            // trim leading space
+            msg = msg[2..];
+        } else {
+            msg = msg[1..];
+        }
     }
 
     if (!msg) {

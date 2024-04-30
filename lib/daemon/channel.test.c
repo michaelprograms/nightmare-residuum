@@ -1,5 +1,9 @@
 inherit M_TEST;
 
+string query_cap_name () {
+    return "ChannelTest";
+}
+
 void test_channels () {
     expect("channels exist", (: ({
         assert_equal(testOb->query_channels(), ({ "chat", "newbie" })),
@@ -19,6 +23,12 @@ void test_channels () {
         assert_equal(testOb->query_valid_channel("invalid"), 0),
         assert_equal(testOb->query_valid_channel("invalid:"), 0),
         assert_equal(testOb->query_valid_channel("invalidemote"), 0),
+    }) :));
+}
+
+void test_listeners () {
+    expect("listeners is an array", (: ({
+        assert_equal(arrayp(testOb->query_listeners("newbie")), 1),
     }) :));
 }
 
@@ -56,17 +66,59 @@ void test_history () {
     }) :));
 }
 
+void test_send () {
+    object mockListeners = new("/std/mock/listeners.c");
+
+    expect("system channels can send", (: ({
+        assert_equal($(mockListeners)->start_shadow(testOb), 1),
+
+        // bad attempt
+        testOb->send("", this_object(), "bad."),
+        assert_equal(testOb->query_history(""), UNDEFINED),
+
+        // invalid attempt
+        testOb->send("invalid", this_object(), "invalid."),
+        assert_equal(testOb->query_history("invalid"), UNDEFINED),
+
+        testOb->send("chat", this_object(), "Test chat."),
+        assert_equal(testOb->query_history("chat"), ({ "ChannelTest [[chat]] Test chat." })),
+
+        testOb->send("chat:", this_object(), "chat emotes."),
+        assert_equal(testOb->query_history("chat"), ({ "ChannelTest [[chat]] Test chat.", "[[chat]] ChannelTest chat emotes." })),
+
+        testOb->send("chatemote", this_object(), "again."),
+        assert_equal(testOb->query_history("chat"), ({ "ChannelTest [[chat]] Test chat.", "[[chat]] ChannelTest chat emotes.", "[[chat]] ChannelTest again." })),
+
+        testOb->send("chat", this_object(), ":again!"),
+        assert_equal(testOb->query_history("chat"), ({ "ChannelTest [[chat]] Test chat.", "[[chat]] ChannelTest chat emotes.", "[[chat]] ChannelTest again.", "[[chat]] ChannelTest again!" })),
+
+        testOb->send("chat", this_object(), ": again!"),
+        assert_equal(testOb->query_history("chat"), ({ "ChannelTest [[chat]] Test chat.", "[[chat]] ChannelTest chat emotes.", "[[chat]] ChannelTest again.", "[[chat]] ChannelTest again!", "[[chat]] ChannelTest again!" })),
+
+        // @TODO listen for these messages?
+
+        assert_equal($(mockListeners)->stop_shadow(), 1),
+    }) :));
+
+    if (mockListeners) destruct(mockListeners);
+}
+
 void test_send_system () {
     object mockListeners = new("/std/mock/listeners.c");
 
     expect("system channels can send", (: ({
         assert_equal($(mockListeners)->start_shadow(testOb), 1),
 
+        testOb->send_system("invalid", "Test invalid."),
+        assert_equal(testOb->query_history("invalid"), UNDEFINED),
+
         testOb->send_system("error", "Test error."),
         assert_equal(testOb->query_history("error"), ({ "((error)) Test error." })),
 
         testOb->send_system("connection", "Player status change."),
         assert_equal(testOb->query_history("connection"), ({ "((connection)) Player status change." })),
+
+        // @TODO listen for these messages?
 
         assert_equal($(mockListeners)->stop_shadow(), 1),
     }) :));
