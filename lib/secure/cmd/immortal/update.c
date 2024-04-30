@@ -70,7 +70,7 @@ void command (string input, mapping flags) {
                 message("action", "update: " + list[i] + ": Ok", this_user());
                 // if (file_size(test) > 0) {
                 //     testStart = time_ns();
-                //     D_TEST->process_file(test, (: done :), 1);
+                //     D_TEST->process_file(test, ([ "reset": 1 ]));
                 // }
             } else {
                 message("action", "update failed: " + list[i] + ":\n" + tmp, this_user());
@@ -106,7 +106,7 @@ void command (string input, mapping flags) {
         keep->describe_environment();
         keep = ({ });
         if (file_size(test) > 0) {
-            D_TEST->process_file(test, 1);
+            D_TEST->process_file(test, ([ "reset": 1 ]));
         }
     } else {
         message("action", "update failed: " + input, this_user());

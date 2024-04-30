@@ -19,7 +19,7 @@ string *__RawLines = ({ });
 
 /* ----- function prototypes ----- */
 
-varargs void process_file (string file, function done, int reset);
+void process_file (string file, mapping options);
 private string format_total_line (string name, int current, int total);
 void process ();
 varargs void update_test_data (string path, string ignore);
@@ -112,7 +112,7 @@ void done_test (mapping results) {
     process();
 }
 
-varargs void process_file (string file, int reset) {
+void process_file (string file, mapping options) {
     object t;
     string tmp;
     function fnDone;
@@ -120,7 +120,13 @@ varargs void process_file (string file, int reset) {
     __Lines = ([ ]);
     __RawLines = ({ });
 
-    if (reset) {
+    if(!mapp(options)) {
+        options = ([
+            // "reset"
+        ]);
+    }
+
+    if (options["reset"]) {
         reset_data();
         update_test_data(file);
         testStartTime = time_ns();
