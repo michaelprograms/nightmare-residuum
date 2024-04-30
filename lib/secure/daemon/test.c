@@ -10,6 +10,7 @@ nosave private mapping __Results = ([ ]);
 
 nosave private int currentTest = 0, totalFiles = 0;
 nosave private int shutdownAfterTests = 0, coverageAfterTests = 0;
+private nosave int testStartTime;
 
 nosave private object __User;
 
@@ -111,7 +112,6 @@ void done_test (mapping results) {
     process();
 }
 
-private nosave int testStartTime;
 varargs void process_file (string file, int reset) {
     object t;
     string tmp;
