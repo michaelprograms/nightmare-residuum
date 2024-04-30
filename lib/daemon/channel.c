@@ -76,9 +76,6 @@ void send (string channel, object source, string msg) {
     if (!channel) {
         return;
     }
-    if (member_array(channel, __Channels + __SystemChannels) == -1) {
-        return;
-    }
 
     if (channel[<1] == ':') {
         channel = channel[0..<2];
@@ -90,6 +87,9 @@ void send (string channel, object source, string msg) {
     if (msg && msg[0] == ':') {
         msg = msg[1..];
         emote = 1;
+    }
+    if (member_array(channel, __Channels + __SystemChannels) == -1) {
+        return;
     }
 
     if (!msg) {
