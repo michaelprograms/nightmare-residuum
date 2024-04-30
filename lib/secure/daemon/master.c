@@ -141,7 +141,7 @@ string object_name (object ob) {
 
 // This apply is called to determine directory relative header file paths.
 string *get_include_path (string file) {
-    string *path = explode(file, "/"), *paths = ({ ":DEFAULT:" });
+    string *path = explode(file, "/") - ({ "" }), *paths = ({ ":DEFAULT:" });
     switch (path[0]) {
         case "domain":
             paths += ({ "/domain/" + path[1] + "/include" });
