@@ -38,7 +38,6 @@ private string format_channel_name (string channel) {
 }
 
 object *query_listeners (string channel) {
-    write("D_CHANNEL->query_listeners\n");
     return filter(characters(), (: !$1->query_channel_blocked($(channel)) :));
 }
 
