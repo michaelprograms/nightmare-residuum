@@ -28,12 +28,13 @@ void add_history (string channel, string msg) {
     }
     __History[channel] += ({ msg });
     if (sizeof(__History[channel]) > 20) {
-        __History[channel] = __History[channel][0..19];
+        __History[channel] = __History[channel][<20..];
     }
 }
 
 private string format_channel_name (string channel) {
-    return (member_array(channel, query_channels()) > -1 ? "[[" : "((") + channel + (member_array(channel, query_channels()) > -1 ? "]]" : "))" );
+    int flag = member_array(channel, query_channels()) > -1;
+    return flag ? "[[" : "((" + channel + flag ? "]]" : "))";
 }
 
 private void handle_send (string name, string channel, string msg, int emote, int ipc) {
