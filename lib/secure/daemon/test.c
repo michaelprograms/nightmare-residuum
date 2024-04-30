@@ -112,6 +112,14 @@ void done_test (mapping results) {
     process();
 }
 
+mapping __Options = ([
+    "brief": 0,
+    "reset": 0,
+]);
+int query_option (string key) {
+    return __Options[key];
+}
+
 void process_file (string file, mapping options) {
     object t;
     string tmp;
@@ -120,13 +128,11 @@ void process_file (string file, mapping options) {
     __Lines = ([ ]);
     __RawLines = ({ });
 
-    if(!mapp(options)) {
-        options = ([
-            // "reset"
-        ]);
+    if(mapp(options)) {
+        __Options += options;
     }
 
-    if (options["reset"]) {
+    if (__Options["reset"]) {
         reset_data();
         update_test_data(file);
         testStartTime = time_ns();
@@ -320,12 +326,15 @@ varargs void update_test_data (string path, string ignoreRegex) {
     }
 }
 
-void run (int shutdown) {
+void run (mapping options) {
 
     remove_call_out();
     reset_data();
 
-    shutdownAfterTests = shutdown;
+    if (mapp(options)) {
+        __Options += options;
+    }
+    shutdownAfterTests = __Options["shutdown"];
     coverageAfterTests = 1;
 
     __User = 0;

@@ -2,14 +2,14 @@ inherit STD_COMMAND;
 
 void create () {
     ::create();
-    set_syntax("test [file]");
+    set_syntax("test -b(rief) [file]");
     set_help_text("The test command is used to run the tests of a file, if they exist.");
 }
 
 void command (string input, mapping flags) {
     if (input == "all") {
         message("action", "Running all tests...", this_user());
-        D_TEST->run(0);
+        D_TEST->run(([ "brief": flags["brief"] || flags["b"] ]));
     } else if (input) {
         string test = input;
 
@@ -25,7 +25,7 @@ void command (string input, mapping flags) {
         }
         test = input + ".test.c";
         if (file_size(test) > 0) {
-            D_TEST->process_file(test, ([ "reset": 1 ]));
+            D_TEST->process_file(test, ([ "brief": flags["brief"] || flags["b"], "reset": 1 ]));
         } else {
             message("action", "Unable to find test file for " + input + ".", this_user());
         }

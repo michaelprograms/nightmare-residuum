@@ -1,8 +1,8 @@
 inherit M_TEST;
 
-void test_lifecycle_functions () {
-    // @TODO test these better
-}
+// void test_lifecycle_functions () {
+//     // @TODO test these better
+// }
 
 void test_parser_applies () {
     expect("object handles parser applies", (: ({

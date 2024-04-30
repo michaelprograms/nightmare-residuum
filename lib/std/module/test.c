@@ -115,7 +115,7 @@ private void finish_test () {
 
     fnsHit = D_TEST->query_hit_functions();
     fnsUnhit = D_TEST->query_unhit_functions();
-    if (passingExpects + failingExpects == 0) {
+    if (!D_TEST->query_option("brief") && passingExpects + failingExpects == 0) {
         write("  No Tests\n");
     }
 
@@ -162,8 +162,10 @@ public int execute_test (function done) {
 }
 
 private void done_current_test () {
+    string status = "";
+
     timeAfter = time_ns();
-    if (failingExpects == failingExpectsBefore && passingExpects == passingExpectsBefore) {
+    if (!D_TEST->query_option("brief") && failingExpects == failingExpectsBefore && passingExpects == passingExpectsBefore) {
         currentTestLog += "\n" + ORANGE + "    -" + RESET + " Warning: no expects found.";
     }
     if (objectp(testOb)) {
@@ -174,7 +176,18 @@ private void done_current_test () {
     }
     after_each_test();
 
-    currentTestLog = "  Testing " + BOLD + UNDERLINE + currentTestFn + RESET + " (" + ORANGE + sprintf("%.2f", (timeAfter-timeBefore)/1000000.0) + " ms" + RESET + "):" + currentTestLog;
+    if (passingExpects > 0 && !failingExpects) {
+        status += "\e[32m\u2713 \e[0m";
+    } else {
+        status += "\e[31m\u2715 \e[0m";
+    }
+    if (totalPassingAsserts > 0 && !failingAsserts) {
+        status += "\e[32m\u2713 \e[0m";
+    } else {
+        status += "\e[31m\u2715 \e[0m";
+    }
+
+    currentTestLog = "  " + status + "Testing " + BOLD + UNDERLINE + currentTestFn + RESET + " (" + ORANGE + sprintf("%.2f", (timeAfter-timeBefore)/1000000.0) + " ms" + RESET + ")" + currentTestLog;
     write(currentTestLog + "\n");
 
     if (strlen(currentFailLog) > 0) {
@@ -282,16 +295,20 @@ private void validate_expect (mixed value1, mixed value2, string message) {
         message = stringp(message) ? message : "An expect has failed.";
         if (failingExpects == -1) { // expected this error
             passingExpects ++;
-            currentTestLog += "\n" + GREEN + "    +" + RESET + RED + " x" + RESET + " " + message;
-        } else {
+            if (!D_TEST->query_option("brief")) {
+                currentTestLog += "\n" + GREEN + "    +" + RESET + RED + " x" + RESET + " " + message;
+            }
+        } else if (!D_TEST->query_option("brief")) {
             currentTestLog += "\n" + RED + "    x" + RESET + " " + message;
             currentFailLog += "\n" + RED + "    x" + RESET + " " + message;
         }
         failingExpects ++;
     } else {
         passingExpects ++;
-        message = stringp(message) ? message : "An expect passed.";
-        currentTestLog += "\n" + GREEN + "    +" + RESET + " " + message;
+        if (!D_TEST->query_option("brief")) {
+            message = stringp(message) ? message : "An expect passed.";
+            currentTestLog += "\n" + GREEN + "    +" + RESET + " " + message;
+        }
     }
 
     if (!currentTestPassed) { // @TODO || displayExpects) {

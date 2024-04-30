@@ -41,7 +41,7 @@ varargs string *epilog (int load_empty) {
 // This apply is called for each driver command line option passed via -f.
 void flag (string flag) {
     if (flag == "test") {
-        call_out((: D_TEST->run(1) :), 0);
+        call_out((: D_TEST->run(([ "shutdown": 1 ])) :), 0);
     } else {
         debug_message("master()->flag: received unknown flag.");
     }
