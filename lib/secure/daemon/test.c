@@ -334,6 +334,7 @@ void run (mapping options) {
     if (mapp(options)) {
         __Options += options;
     }
+    __Options["reset"] = 0;
     shutdownAfterTests = __Options["shutdown"];
     coverageAfterTests = 1;
 
