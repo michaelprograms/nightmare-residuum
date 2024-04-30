@@ -34,25 +34,31 @@ void add_history (string channel, string msg) {
 
 private string format_channel_name (string channel) {
     int flag = member_array(channel, query_channels()) > -1;
-    return flag ? "[[" : "((" + channel + flag ? "]]" : "))";
+    return (flag ? "[[" : "((") + channel + (flag ? "]]" : "))");
+}
+
+object *query_listeners (string channel) {
+    write("D_CHANNEL->query_listeners\n");
+    return filter(characters(), (: !$1->query_channel_blocked($(channel)) :));
 }
 
 private void handle_send (string name, string channel, string msg, int emote, int ipc) {
-    string *listeners = filter(characters(), (: !$1->query_channel_blocked($(channel)) :));
-    string type, m;
+    string type = "channel", m;
 
-    type = (channel == "error" ? "channel error" : "channel");
+    if (channel == "error") {
+        type = "channel error";
+    }
     if (emote) {
         m = format_channel_name(channel) + " " + (name ? name + " " : "") + msg;
     } else {
         m = (name ? name + " " : "") + format_channel_name(channel) + " " + msg;
     }
 
-    message(type, m, listeners);
+    message(type, m, this_object()->query_listeners(channel));
     add_history(channel, m);
-    if (channel != "error" && !ipc) {
-        D_IPC->send("CHAT:" + channel + ":" + (name ? name + ":" : "") + msg);
-    }
+    // if (channel != "error" && !ipc) {
+    //     D_IPC->send("CHAT:" + channel + ":" + (name ? name + ":" : "") + msg);
+    // }
 }
 
 /* ----- send to channel ----- */
@@ -107,7 +113,9 @@ void send (string channel, object source, string msg) {
 }
 
 void send_system (string channel, string msg) {
-    if (member_array(channel, __SystemChannels) == -1) return;
+    if (member_array(channel, __SystemChannels) == -1) {
+        return;
+    }
     handle_send(0, channel, msg, 0, 0);
 }
 
