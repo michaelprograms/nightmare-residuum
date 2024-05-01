@@ -176,11 +176,6 @@ private void done_current_test () {
     }
     after_each_test();
 
-    if (passingExpects > 0 && !failingExpects) {
-        status += "\e[32m\u2713 \e[0m";
-    } else {
-        status += "\e[31m\u2715 \e[0m";
-    }
     if (totalPassingAsserts > 0 && !failingAsserts) {
         status += "\e[32m\u2713 \e[0m";
     } else {
