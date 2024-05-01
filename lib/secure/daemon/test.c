@@ -114,6 +114,7 @@ void done_test (mapping results) {
 
 mapping __Options = ([
     "brief": 0,
+    "coverage": 0,
     "reset": 0,
 ]);
 int query_option (string key) {
@@ -256,7 +257,7 @@ void display_results (mapping results) {
         results["failLog"] = ({ });
     }
 
-    if (sizeof(__TotalLines)) {
+    if (__Options["coverage"] && sizeof(__TotalLines)) {
         mapping tree = ([ "/": ([ ]) ]), treeRef;
         string *keys = sort_array(keys(__TotalLines), 1);
 
@@ -273,6 +274,8 @@ void display_results (mapping results) {
             }
             treeRef[split[<1]] = format_coverage_line(sizeof(split[<1]) + (sizeof(treeRef) > 9 ? 1 : 0) + sizeof(split) * 2, __TotalLines[keys[k]]);
         }
+        tree["/                      Fns     Lines   Uncovered Lines"] = tree["/"];
+        map_delete(tree, "/");
         write(implode(tree(tree), "\n")+"\n\n");
     }
 

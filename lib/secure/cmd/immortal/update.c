@@ -2,7 +2,7 @@ inherit STD_COMMAND;
 
 void create () {
     ::create();
-    set_syntax("update -b(rief) [file]");
+    set_syntax("update -b(rief) -c(overage) [file]");
     set_help_text("The update command is used to destruct and reload a file to the latest copy, and run tests of the file, if they exist.");
 }
 
@@ -106,7 +106,11 @@ void command (string input, mapping flags) {
         keep->describe_environment();
         keep = ({ });
         if (file_size(test) > 0) {
-            D_TEST->process_file(test, ([ "brief": flags["brief"] || flags["b"], "reset": 1 ]));
+            D_TEST->process_file(test, ([
+                "brief": flags["brief"] || flags["b"],
+                "coverage": flags["coverage"] || flags["c"],
+                "reset": 1
+            ]));
         }
     } else {
         message("action", "update failed: " + input, this_user());
