@@ -31,7 +31,7 @@ nosave private int expectCatch = 0;
 nosave private string currentTestFn, currentTestMsg, currentTestLog, currentFailLog, totalFailLog;
 nosave private mixed *leftResults, *rightResults;
 nosave private string *testFunctions;
-int timeBefore, timeAfter, failingExpectsBefore, passingExpectsBefore;
+int timeBefore, timeAfter, timeTotalBefore, timeTotalAfter, failingExpectsBefore, passingExpectsBefore;
 private function doneTestFn;
 
 /* ----- override functions ----- */
@@ -87,44 +87,33 @@ private int query_async_test_function (string fn) {
     return sizeof(fns) == 1 && fns[0][1] == 1 && fns[0][3] == "function";
 }
 
-private string *query_test_functions () {
-    string *fns;
-
-    fns = test_order();
-    if (!sizeof(fns)) {
-        fns = functions(this_object(), 2) - TEST_IGNORE_DEFAULTS - test_ignore();
-    } else if (sizeof(fns) != sizeof(functions(this_object(), 2))) {
-        // grab any tests that were not included in test_order and test_ignore
-        fns += (functions(this_object(), 2) - TEST_IGNORE_DEFAULTS - test_ignore() - fns);
-    }
-
-    fns = filter(fns, (: regexp($1, "test_") :));
-
-    return fns;
-}
-
 /* -----  ----- */
 
 private void finish_test () {
-    string *fnsHit, *fnsUnhit;
-
     if (!this_object()->query_skip_coverage() && regexp(testFile, "\\.coverage\\.")) {
         rm(testFile);
     }
     after_all_tests();
+    timeTotalAfter = time_ns();
 
-    fnsHit = D_TEST->query_hit_functions();
-    fnsUnhit = D_TEST->query_unhit_functions();
-    if (!D_TEST->query_option("brief") && passingExpects + failingExpects == 0) {
-        write("  No Tests\n");
+    if (D_TEST->query_option("brief")) {
+        string status = "";
+        if (totalPassingAsserts > 0 && !failingAsserts) {
+            status += "\e[32m\u2713 \e[0m";
+        } else if (!totalPassingAsserts) {
+            status += "\e[33m\u203C \e[0m";
+        } else {
+            status += "\e[31m\u2715 \e[0m";
+        }
+        write(status + " Evaluated " + CYAN + UNDERLINE + base_name() + RESET + " (" + ORANGE + sprintf("%.2f", (timeTotalAfter-timeTotalBefore)/1000000.0) + " ms" + RESET ")\n");
     }
 
     evaluate(doneTestFn, ([
         "numTests": sizeof(testFunctions),
         "passingExpects": passingExpects,
         "failingExpects": failingExpects,
-        "testedFns": sizeof(fnsHit),
-        "untestedFns": sizeof(fnsUnhit),
+        "testedFns": sizeof(D_TEST->query_hit_functions()),
+        "untestedFns": sizeof(D_TEST->query_unhit_functions()),
         "passingAsserts": totalPassingAsserts,
         "failingAsserts": failingAsserts,
         "failLog": totalFailLog,
@@ -132,10 +121,12 @@ private void finish_test () {
         "unhitLines": sizeof(D_TEST->query_unhit_lines()),
     ]));
 
+
     destruct();
 }
 
 public int execute_test (function done) {
+    timeTotalBefore = time_ns();
     doneTestFn = done;
 
     // reset test metrics
@@ -143,9 +134,19 @@ public int execute_test (function done) {
     passingExpects = 0;
     totalFailLog = "";
 
-    testFunctions = query_test_functions();
+    // @TODO simplify this
+    testFunctions = test_order();
+    if (!sizeof(testFunctions)) {
+        testFunctions = functions(this_object(), 2) - TEST_IGNORE_DEFAULTS - test_ignore();
+    } else if (sizeof(testFunctions) != sizeof(functions(this_object(), 2))) {
+        // grab any tests that were not included in test_order and test_ignore
+        testFunctions += (functions(this_object(), 2) - TEST_IGNORE_DEFAULTS - test_ignore() - testFunctions);
+    }
+    testFunctions = filter(testFunctions, (: regexp($1, "test_") :));
 
-    write("\nEvaluating " + CYAN + UNDERLINE + base_name() + RESET + "\n");
+    if (!D_TEST->query_option("brief")) {
+        write("\nEvaluating " + CYAN + UNDERLINE + base_name() + RESET + "\n");
+    }
 
     if (this_object()->query_skip_coverage()) {
         testFile = replace_string(base_name(), ".test", ".c");
@@ -165,9 +166,6 @@ private void done_current_test () {
     string status = "";
 
     timeAfter = time_ns();
-    if (!D_TEST->query_option("brief") && failingExpects == failingExpectsBefore && passingExpects == passingExpectsBefore) {
-        currentTestLog += "\n" + ORANGE + "    -" + RESET + " Warning: no expects found.";
-    }
     if (objectp(testOb)) {
         testOb->handle_remove();
         if (testOb) {
@@ -181,11 +179,14 @@ private void done_current_test () {
     } else {
         status += "\e[31m\u2715 \e[0m";
     }
+    if (!D_TEST->query_option("brief")) {
+        currentTestLog = "  " + status + "Testing " + BOLD + UNDERLINE + currentTestFn + RESET + " (" + ORANGE + sprintf("%.2f", (timeAfter-timeBefore)/1000000.0) + " ms" + RESET + ")" + currentTestLog;
+        write(currentTestLog + "\n");
+    }
 
-    currentTestLog = "  " + status + "Testing " + BOLD + UNDERLINE + currentTestFn + RESET + " (" + ORANGE + sprintf("%.2f", (timeAfter-timeBefore)/1000000.0) + " ms" + RESET + ")" + currentTestLog;
-    write(currentTestLog + "\n");
-
-    if (strlen(currentFailLog) > 0) {
+    if (passingExpects + failingExpects == 0) {
+        write("  No Tests "+identify(this_object())+"\n");
+    } else if (strlen(currentFailLog) > 0) {
         totalFailLog += (sizeof(totalFailLog) > 0 ? "\n" : "") + CYAN + UNDERLINE + base_name() + RESET + ": " + UNDERLINE + BOLD + currentTestFn + RESET + " (" + ORANGE + sprintf("%.2f", (timeAfter-timeBefore)/1000000.0) + " ms" + RESET + "):" + currentFailLog;
     }
 
@@ -283,7 +284,7 @@ varargs private string format_array_differences (mixed *actual, mixed *expect) {
     return result;
 }
 
-// -----------------------------------------------------------------------------
+/* ----- expect and assert ----- */
 
 private void validate_expect (mixed value1, mixed value2, string message) {
     if (!currentTestPassed) {
