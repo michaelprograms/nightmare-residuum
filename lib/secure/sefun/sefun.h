@@ -83,7 +83,6 @@ varargs void message (mixed type, string message, mixed target, mixed exclude);
 /* --- path --- */
 string user_path (string name);
 string *split_path (string path);
-string base_path (string path);
 string sanitize_path (string path);
 varargs string absolute_path (string relative_path, mixed relative_to);
 int mkdirs (string path);

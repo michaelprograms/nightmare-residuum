@@ -6,13 +6,11 @@ string user_path (mixed *args...) {
 
 string *split_path (string path) {
     int pos;
-    while (path[<1] == '/' && strlen(path) > 1) path = path[0..<2];
+    while (path[<1] == '/' && strlen(path) > 1) {
+        path = path[0..<2];
+    }
     pos = strsrch(path, '/', -1);
     return ({ path[0..pos], path[pos+1..] });
-}
-
-string base_path (string path) {
-    return split_path(path)[0];
 }
 
 // Evaluate . and .. and enforce leading /
@@ -64,14 +62,14 @@ string sanitize_path (string path) {
 }
 
 varargs string absolute_path (string relative_path, mixed relative_to) {
-    if (!relative_to) relative_to = previous_object();
-    if (relative_path && relative_path[0] != '/' && relative_path[0] != '^' && relative_path[0] != '~') {
+    if (!relative_to || !(objectp(relative_to) || stringp(relative_to))) {
+        relative_to = previous_object();
+    }
+    if (relative_path && member_array(relative_path[0], ({ '/', '^', '~' })) == -1) {
         if (objectp(relative_to)) {
-            relative_path = base_path(file_name(relative_to)) + "/" + relative_path;
-        } else if (stringp(relative_to)) {
-            relative_path = relative_to + "/" + relative_path;
+            relative_path = split_path(file_name(relative_to))[0] + "/" + relative_path;
         } else {
-            return "";
+            relative_path = relative_to + "/" + relative_path;
         }
     }
     relative_path = sanitize_path(relative_path);
@@ -88,16 +86,21 @@ int mkdirs (string path) {
     if (!stringp(path) || !sizeof(path)) {
         return 0;
     }
+
     dirs = explode(path, "/") - ({ "" });
     // dirs[<1] potentially contains a filename with extension
     dirs = dirs[0..<2] + (!regexp(dirs[<1], "\\.") ? ({ dirs[<1] }) : ({ }));
+    path = "/" + implode(dirs, "/");
+    if (file_size(path) == -2) {
+        return 1;
+    }
+
     l = sizeof(dirs);
     for (i = 0; check && i < l; i ++) {
         dir += "/" + dirs[i];
-        switch(file_size(dir)) {
+        switch (file_size(dir)) {
         case -2:
             continue;
-            break;
         case -1:
             check = mkdir(dir);
             break;

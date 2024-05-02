@@ -35,13 +35,9 @@ void test_split_path () {
 
         assert_equal(testOb->split_path("/domain/area/dir"), ({ "/domain/area/", "dir" })),
         assert_equal(testOb->split_path("/domain/area/dir/"), ({ "/domain/area/", "dir" })),
-    }) :));
-}
 
-void test_base_path() {
-    expect("get_include_path handles paths", (: ({
-        assert_equal(testOb->base_path("/domain/area"), "/domain/"),
-        assert_equal(testOb->base_path("/domain/area/"), "/domain/"),
+        assert_equal(testOb->split_path("/domain/area/file.c"), ({ "/domain/area/", "file.c" })),
+        assert_equal(testOb->split_path("/domain/area/dir/file.txt"), ({ "/domain/area/dir/", "file.txt" })),
     }) :));
 }
 
@@ -58,6 +54,7 @@ void test_sanitize_path () {
         assert_equal(testOb->sanitize_path("."), "/"),
         assert_equal(testOb->sanitize_path("/"), "/"),
         assert_equal(testOb->sanitize_path("/."), "/"),
+        assert_equal(testOb->sanitize_path("/.././../."), "/"),
         assert_equal(testOb->sanitize_path("/dir/.."), "/"),
         assert_equal(testOb->sanitize_path("/dir/../."), "/"),
         assert_equal(testOb->sanitize_path("/dir/dir/../.."), "/"),
@@ -108,6 +105,10 @@ void test_sanitize_path () {
 
     destruct(__MockCharacter);
     destruct(__MockShell);
+
+    expect("santitize_path handles invalid input", (: ({
+        assert_catch((: testOb->sanitize_path("") :), "*Bad argument 1 to path->sanitize_path\n"),
+    }) :));
 }
 
 void test_absolute_path () {
@@ -115,6 +116,13 @@ void test_absolute_path () {
         assert_equal(testOb->absolute_path("file.c", "/realm/username"), "/realm/username/file.c"),
         assert_equal(testOb->absolute_path("dir/file.c", "/realm/username"), "/realm/username/dir/file.c"),
         assert_equal(testOb->absolute_path("dir/file.c", this_object()), "/secure/sefun/dir/file.c"),
+    }) :));
+    expect("absolute_path handles invalid relative_to", (: ({
+        assert_equal(testOb->absolute_path("file.c", 1.0), "/secure/sefun/file.c"),
+        assert_equal(testOb->absolute_path("file.c", 123), "/secure/sefun/file.c"),
+    }) :));
+    expect("absolute_path defaults relative_to", (: ({
+        assert_equal(testOb->absolute_path("file.c"), "/secure/sefun/file.c"),
     }) :));
 
     expect("absolute_path handles ^ alias for /domain", (: ({
@@ -143,19 +151,28 @@ void test_absolute_path () {
 
 void test_mkdirs () {
     expect("mkdirs creates dirs if missing", (: ({
-        assert_equal(testOb->mkDirs(""), 0), // no errors for empty string
+        // no errors for empty string
+        assert_equal(testOb->mkdirs(""), 0),
 
-        assert_equal(testOb->mkdirs("/save/test"), 1), // test should exist already
-
-        rmdir(PATH_TEST_DIR),
-        assert_equal(file_size(PATH_TEST_DIR), -1), // verify testdir doesn't exist
-
-        assert_equal(testOb->mkdirs(PATH_TEST_DIR), 1), // testdir has been created
-        assert_equal(file_size(PATH_TEST_DIR), -2), // verify testdir exists
+        // test should exist already
+        assert_equal(testOb->mkdirs("/save/test"), 1),
 
         rmdir(PATH_TEST_DIR),
-        assert_equal(file_size(PATH_TEST_DIR), -1), // verify testdir doesn't exist
+        // verify testdir doesn't exist
+        assert_equal(file_size(PATH_TEST_DIR), -1),
 
+        assert_equal(testOb->mkdirs(PATH_TEST_DIR), 1),
+        // verify testdir exists
+        assert_equal(file_size(PATH_TEST_DIR), -2),
+
+        rmdir(PATH_TEST_DIR),
+        // verify testdir doesn't exist
+        assert_equal(file_size(PATH_TEST_DIR), -1),
+
+        assert_equal(write_file(PATH_TEST_DIR + ".txt", "Test file."), 1),
+        // verify can't create when file exists in path
+        assert_equal(testOb->mkdirs(PATH_TEST_DIR + ".txt/test"), 0),
+        assert_equal(rm(PATH_TEST_DIR + ".txt"), 1),
     }) :));
 }
 
