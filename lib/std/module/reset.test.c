@@ -28,7 +28,7 @@ void test_resets () {
         assert_equal(testOb->query_resets(), 3),
         assert_equal(testOb->query_reset(), ([ "/std/item.c": ([ "number": 1, "setup": $(setupFn) ]) ])),
         assert_equal(setupFnCalled, 1),
-        testOb->reset(),
+        testOb->handle_reset(),
         assert_equal(testOb->query_resets(), 4),
         assert_equal(setupFnCalled, 2),
 

@@ -23,8 +23,12 @@ void handle_reset () {
     // count objects in this container
     foreach (ob in all_inventory()) {
         name = base_name(ob) + ".c";
-        if (!__Reset[name]) continue;
-        if (sizeof(__Objects[name]) > 0) continue;
+        if (!__Reset[name]) {
+            continue;
+        }
+        if (sizeof(__Objects[name]) > 0) {
+            continue;
+        }
         if (!counts[name]) counts[name] = 0;
         counts[name] += 1;
     }
@@ -42,9 +46,13 @@ void handle_reset () {
         }
 
         count = 0;
-        if (counts[key] && (count = counts[key]) >= num) continue;
+        if (counts[key] && (count = counts[key]) >= num) {
+            continue;
+        }
         for (; count < num; count ++) {
-            if (__Objects[key + ":" + count]) continue;
+            if (__Objects[key + ":" + count]) {
+                continue;
+            }
 
             ob = clone_object(key);
 
