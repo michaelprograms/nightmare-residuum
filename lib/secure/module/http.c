@@ -206,7 +206,7 @@ void listen_socket (int fd) {
     int socket = socket_accept(fd, "read_socket", "write_socket");
 
     if (socket < 0) {
-        error("http: Couldn't perform socket_accept.\n");
+        error("http: Couldn't perform socket_accept.");
     }
 
     __Sockets += ({ socket });
@@ -228,7 +228,7 @@ void start () {
     int socket;
 
     if (!port) {
-        return error("http: No port configured.\n");
+        return error("http: No port configured.");
     }
 
     socket = socket_create(SOCKET_STREAM, "read_socket", "close_socket");
