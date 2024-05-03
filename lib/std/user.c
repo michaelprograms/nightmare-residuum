@@ -89,7 +89,6 @@ nomask void net_dead () {
 }
 
 void receive_message (string type, string message) {
-    D_LOG->log_unique("message_types", type);
     type = lower_case(type);
     if (type == "raw ansi") {
         message = replace_string(message, "%^", "%%^^");
