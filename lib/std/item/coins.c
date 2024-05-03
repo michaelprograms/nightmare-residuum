@@ -44,17 +44,16 @@ void handle_received (object env) {
 
     ::handle_received(env);
 
-    if (!env || !inherits(M_CURRENCY, env)) {
-        return;
+    if (env && inherits(M_CURRENCY, env)) {
+        foreach (string c in query_currencies()) {
+            int n = query_currency(c);
+            env->add_currency(c, n);
+            add_currency(c, -n);
+            list += ({ n + " " + c });
+        }
+        if (sizeof(list)) {
+            message("action", "You receive " + conjunction(list) + ".", env);
+        }
+        check_empty();
     }
-    foreach (string c in query_currencies()) {
-        int n = query_currency(c);
-        env->add_currency(c, n);
-        add_currency(c, -n);
-        list += ({ n + " " + c });
-    }
-    if (sizeof(list)) {
-        message("action", "You receive " + conjunction(list) + ".", env);
-    }
-    check_empty();
 }
