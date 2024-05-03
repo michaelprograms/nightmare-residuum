@@ -167,7 +167,7 @@ string possessive_noun (mixed value) {
             value = "It";
         }
     } else if (!stringp(value)) {
-        error("Bad argument 1 to grammar->possessive_noun\n");
+        error("Bad argument 1 to grammar->possessive_noun");
     }
     switch (value[<1]) {
     case 'z': case 's': return sprintf("%s'", value);

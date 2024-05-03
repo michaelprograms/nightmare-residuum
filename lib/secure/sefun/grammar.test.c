@@ -2,6 +2,7 @@ inherit M_TEST;
 
 void test_remove_article () {
     expect("articles are trimmed", (: ({
+        assert_equal(testOb->remove_article(0), ""),
         assert_equal(testOb->remove_article(""), ""),
 
         assert_equal(testOb->remove_article("thing"), "thing"),
@@ -101,6 +102,11 @@ void test_pluralize () {
         assert_equal(testOb->pluralize("gooblebox"), "goobleboxes"),
         assert_equal(testOb->pluralize("flooblecrank"), "flooblecranks"),
         assert_equal(testOb->pluralize("bloobleyank"), "bloobleyanks"),
+
+        assert_equal(testOb->pluralize("an %^RED%^apple%^DEFAULT%^"), "%^RED%^apples%^DEFAULT%^"),
+    }) :));
+    expect("pluralize handles bad input", (: ({
+        assert_catch((: testOb->pluralize(0) :), "*Bad argument 1 to grammar->pluralize\n"),
     }) :));
 
     ob = new(STD_OBJECT);
@@ -129,6 +135,9 @@ void test_pluralize () {
 
 void test_consolidate () {
     expect("consolidate handles basic words", (: ({
+        assert_equal(testOb->consolidate(1, "elf"), "elf"),
+        assert_equal(testOb->consolidate(1, "a bronze dagger (wielded)"), "a bronze dagger (wielded)"),
+
         assert_equal(testOb->consolidate(5, "elf"), "five elves"),
         assert_equal(testOb->consolidate(0, "giraffe"), "zero giraffes"),
         assert_equal(testOb->consolidate(25, "cat"), "twenty-five cats"),
@@ -143,9 +152,12 @@ void test_consolidate () {
     }) :));
 }
 
-void test_possessive_noun () {
-    object ob;
+string __TestName;
+string query_cap_name() {
+    return __TestName;
+}
 
+void test_possessive_noun () {
     expect("possessive_noun handles names", (: ({
         assert_equal(testOb->possessive_noun(0), "Its"),
         assert_equal(testOb->possessive_noun("Name"), "Name's"),
@@ -154,18 +166,21 @@ void test_possessive_noun () {
         assert_equal(testOb->possessive_noun("Chaz"), "Chaz'"),
     }) :));
 
-    ob = new(STD_OBJECT);
     expect("possessive_noun handles objects", (: ({
-        assert_equal($(ob)->set_name("Name"), 0),
-        assert_equal(testOb->possessive_noun($(ob)), "Name's"),
-        assert_equal($(ob)->set_name("Hermes"), 0),
-        assert_equal(testOb->possessive_noun($(ob)), "Hermes'"),
-        assert_equal($(ob)->set_name("Shax"), 0),
-        assert_equal(testOb->possessive_noun($(ob)), "Shax's"),
-        assert_equal($(ob)->set_name("Chaz"), 0),
-        assert_equal(testOb->possessive_noun($(ob)), "Chaz'"),
+        __TestName = "Name",
+        assert_equal(testOb->possessive_noun(this_object()), "Name's"),
+        __TestName = "Hermes",
+        assert_equal(testOb->possessive_noun(this_object()), "Hermes'"),
+        __TestName = "Shax",
+        assert_equal(testOb->possessive_noun(this_object()), "Shax's"),
+        __TestName = "Chaz",
+        assert_equal(testOb->possessive_noun(this_object()), "Chaz'"),
+        __TestName = 0,
+        assert_equal(testOb->possessive_noun(this_object()), "It's"),
     }) :));
-    destruct(ob);
+    expect("possessive_noun handles bad input", (: ({
+        assert_catch((: testOb->possessive_noun(1) :), "*Bad argument 1 to grammar->possessive_noun\n"),
+    }) :));
 }
 
 void test_subjective () {
