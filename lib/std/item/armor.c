@@ -39,15 +39,16 @@ object query_worn () {
     return __Worn;
 }
 void set_worn (object wearer) {
-    if (!wearer) {
-        if (__Worn) {
-            remove_bonus(__Worn);
-        }
-    }
     __Worn = wearer;
     if (__Worn) {
         apply_bonus(__Worn);
     }
+}
+void remove_worn (object wearer) {
+    if (__Worn && wearer && wearer == __Worn) {
+        remove_bonus(__Worn);
+    }
+    __Worn = 0;
 }
 
 int query_ac () {

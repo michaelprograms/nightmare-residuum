@@ -1,10 +1,6 @@
 inherit M_TEST;
 inherit STD_STORAGE;
 
-string *test_order () {
-    return ({ "test_is_armor", "test_type", "test_limbs", "test_worn", "test_ac", "test_item_verb_wear_applies", });
-}
-
 int query_can_wear_armor (object ob) {
     return 1;
 }
@@ -109,6 +105,10 @@ void test_item_verb_wear_applies () {
         testOb->set_worn(this_object()),
         assert_equal(testOb->direct_wear_obj(), 0),
         assert_equal(testOb->direct_unwear_obj(), 1),
+
+        testOb->remove_worn(this_object()),
+        assert_equal(testOb->query_worn(), 0),
+        __AllArmor -= ({ testOb }),
     }) :));
 
     __AllArmor = 0;

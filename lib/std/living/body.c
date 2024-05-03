@@ -289,7 +289,7 @@ varargs mixed handle_unwear (object ob) {
             __Worn[limb] -= ({ ob });
         }
     }
-    ob->set_worn(0);
+    ob->remove_worn(this_object());
 
     limbConj = conjunction(ob->query_limbs());
     message("action", "You remove " + ob->query_name() + " from your " + limbConj + ".", this_object());
