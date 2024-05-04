@@ -105,15 +105,7 @@ int adjust_planet (string name, mapping config) {
 
 /* ----- noise ----- */
 
-varargs mapping query_noise (
-    mapping p,
-    int size,
-    int x,
-    int y,
-    float heightFactor,
-    float humidityFactor,
-    float heatFactor
-) {
+varargs mapping query_noise (mapping p, int size, int x, int y, float heightFactor, float humidityFactor, float heatFactor) {
     int size2, level;
     float nx, ny, nz, nw, now, nowAdj;
     float nHeight, nHumidity, nHeat, nTmp, nResource = -1.0;
@@ -157,7 +149,7 @@ varargs mapping query_noise (
         (nHeight <= HEIGHT_SHALLOW) &&
         (x <= size2+3 && y <= size2+3 && x >= size2-3 && y >= size2-3) &&
         (sqrt((size2-x) * (size2-x) + (size2-y) * (size2-y)) + 0.5 < 3)
-     ) {
+    ) {
         nHeight += (HEIGHT_SHALLOW - nHeight) + 0.05;
     } else {
         // noise River
@@ -351,42 +343,53 @@ string query_biome (float height, float heat, float humidity) {
 
     return biome;
 }
+
+nosave private mapping __BiomeColorANSI = ([
+    "deeper water":         "\e[38;2;0;0;96m",
+    "deep water":           "\e[38;2;0;0;128m",
+    "shallow water":        "\e[38;2;25;25;150m",
+    "icy water":            "\e[38;2;105;189;230m",
+    "frozen water":         "\e[38;2;189;219;246m",
+    "ice":                  "\e[38;2;255;255;255m",
+    "tundra":               "\e[38;2;96;131;112m",
+    "grassland":            "\e[38;2;164;255;99m",
+    "woodland":             "\e[38;2;139;175;90m",
+    "boreal forest":        "\e[38;2;95;115;62m",
+    "desert":               "\e[38;2;238;218;130m",
+    "temperate rainforest": "\e[38;2;29;73;40m",
+    "savanna":              "\e[38;2;177;209;110m",
+    "tropical rainforest":  "\e[38;2;66;123;25m",
+    "default":              "\e[38;2;128;0;0m",
+]);
 string query_biome_color_ansi (string biome) {
-    switch (biome) {
-        case "deeper water":            return "\e[38;2;0;0;96m";
-        case "deep water":              return "\e[38;2;0;0;128m";
-        case "shallow water":           return "\e[38;2;25;25;150m";
-        case "icy water":               return "\e[38;2;105;189;230m";
-        case "frozen water":            return "\e[38;2;189;219;246m";
-        case "ice":                     return "\e[38;2;255;255;255m";
-        case "tundra":                  return "\e[38;2;96;131;112m";
-        case "grassland":               return "\e[38;2;164;255;99m";
-        case "woodland":                return "\e[38;2;139;175;90m";
-        case "boreal forest":           return "\e[38;2;95;115;62m";
-        case "desert":                  return "\e[38;2;238;218;130m";
-        case "temperate rainforest":    return "\e[38;2;29;73;40m";
-        case "savanna":                 return "\e[38;2;177;209;110m";
-        case "tropical rainforest":     return "\e[38;2;66;123;25m";
-        default:                        return "\e[38;2;128;0;0m;";
+    if (biome && __BiomeColorANSI[biome]) {
+        return __BiomeColorANSI[biome];
+    } else {
+        return __BiomeColorANSI["default"];
     }
 }
+nosave private mapping __BiomeColorHex = ([
+    "deeper water":            "#000060",
+    "deep water":              "#000080",
+    "shallow water":           "#191996",
+    "icy water":               "#69BDE6",
+    "frozen water":            "#BDDBF6",
+    "ice":                     "#FFFFFF",
+    "tundra":                  "#608370",
+    "grassland":               "#A4FF63",
+    "woodland":                "#8BAF5A",
+    "boreal forest":           "#5F733E",
+    "desert":                  "#EEDA82",
+    "temperate rainforest":    "#1D4928",
+    "savanna":                 "#B1D16E",
+    "tropical rainforest":     "#427B19",
+    "default":                 "#800000",
+]);
 string query_biome_color_hex (string biome) {
-    switch (biome) {
-        case "deeper water":            return "#000060";
-        case "deep water":              return "#000080";
-        case "shallow water":           return "#191996";
-        case "icy water":               return "#69BDE6";
-        case "frozen water":            return "#BDDBF6";
-        case "ice":                     return "#FFFFFF";
-        case "tundra":                  return "#608370";
-        case "grassland":               return "#A4FF63";
-        case "woodland":                return "#8BAF5A";
-        case "boreal forest":           return "#5F733E";
-        case "desert":                  return "#EEDA82";
-        case "temperate rainforest":    return "#1D4928";
-        case "savanna":                 return "#B1D16E";
-        case "tropical rainforest":     return "#427B19";
-        default:                        return "#800000";
+    if (biome && __BiomeColorHex[biome]) {
+        return __BiomeColorHex[biome];
+    } else {
+        return __BiomeColorHex["default"];
     }
 }
 string query_humidity_color_hex (float humidity) {
