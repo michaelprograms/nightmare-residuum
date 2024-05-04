@@ -1,35 +1,24 @@
 #include <config.h>
 
-private mixed *query_character_border_colors () {
+private mapping __ClassColors = ([
+    "warrior": ({ ({ 220, 20, 60 }), ({ 192, 192, 192 }) }), // Crimson
+    "mystic": ({ ({ 255, 215, 0 }), ({ 192, 192, 192 }) }), // Gold
+    "scoundrel": ({ ({ 255, 99, 71 }), ({ 192, 192, 192 }) }), // Tomato
+    "ranger": ({ ({ 34, 139, 34 }), ({ 192, 192, 192 }) }), // Forest Green
+    "psionist": ({ ({ 65, 105, 225 }), ({ 192, 192, 192 }) }), // Royal Blue
+    "paladin": ({ ({ 148, 0, 211 }), ({ 192, 192, 192 }) }), // Dark Violet
+    "default": ({ ({ 191, 63, 191 }), ({ 63, 191, 191 }) }),
+]);
+
+mixed *query_character_border_colors () {
     object po = SEFUN->this_character();
-    int *arr1, *arr2 = ({ 192, 192, 192 });
+    string c;
 
-    switch (po->query_class()) {
-        case "warrior":
-            arr1 = ({ 220, 20, 60 });   // Crimson
-            break;
-        case "mystic":
-            arr1 = ({ 255, 215, 0 });   // Gold
-            break;
-        case "scoundrel":
-            arr1 = ({ 255, 99, 71 });  // Tomato
-            break;
-        case "ranger":
-            arr1 = ({ 34, 139, 34 });   // Forest Green
-            break;
-        case "psionist":
-            arr1 = ({ 65, 105, 225 });  // Royal Blue
-            break;
-        case "paladin":
-            arr1 = ({ 148, 0, 211 });   // Dark Violet
-            break;
-        default:
-            arr1 = ({ 191, 63, 191 });
-            arr2 = ({ 63, 191, 191 });
-            break;
+    if ((c = po->query_class()) && __ClassColors[c]) {
+        return __ClassColors[c];
+    } else {
+        return __ClassColors["default"];
     }
-
-    return ({ arr1, arr2 });
 }
 
 nosave private mapping __BorderCharset = ([
