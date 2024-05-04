@@ -178,14 +178,24 @@ void test_mkdirs () {
 
 void test_wild_card () {
     expect("wild_card matches paths", (: ({
-        assert_equal(wild_card(0, 0), "({ })"),
-        assert_equal(wild_card("", ""), "({ })"),
+        assert_equal(testOb->wild_card(0), ({ })),
+        assert_equal(testOb->wild_card(""), ({ })),
 
-        assert_equal(wild_card("/", "/"), "({ \"/\" })"),
+        assert_equal(testOb->wild_card("/"), ({ "/cmd", "/daemon", "/doc", "/domain", "/etc", "/include", "/log", "/realm", "/save", "/secure", "/std", "/tmp"  })),
+        assert_equal(testOb->wild_card("/r*"), ({ "/realm" })),
+        assert_equal(testOb->wild_card("/d*"), ({ "/daemon", "/doc", "/domain" })),
 
-        assert_equal(wild_card("/secure/sefun/path*.c", ""), "({ \"/secure/sefun/path.c\", \"/secure/sefun/path.coverage.c\", \"/secure/sefun/path.test.c\" })"),
-        assert_equal(wild_card("/secure/sefun/path*.c", "/"), "({ \"/secure/sefun/path.c\", \"/secure/sefun/path.coverage.c\", \"/secure/sefun/path.test.c\" })"),
-        assert_equal(wild_card("/secure/sefun/path*.c", "/domain"), "({ \"/secure/sefun/path.c\", \"/secure/sefun/path.coverage.c\", \"/secure/sefun/path.test.c\" })"),
-        assert_equal(wild_card("../secure/sefun/path*.c", "/realm"), "({ \"/secure/sefun/path.c\", \"/secure/sefun/path.coverage.c\", \"/secure/sefun/path.test.c\" })"),
+        assert_equal(testOb->wild_card("/doesntexist"), ({ })),
+        assert_equal(testOb->wild_card("/doesntexist/*"), ({ })),
+        assert_equal(testOb->wild_card("/doesntexist*"), ({ })),
+
+        assert_equal(testOb->wild_card("/doc"), ({ "/doc" })),
+        assert_equal(testOb->wild_card("/doc/"), ({ "/doc/apply", "/doc/build", "/doc/efun", "/doc/help", "/doc/lpc" })),
+        assert_equal(testOb->wild_card("/doc/*"), ({ "/doc/apply", "/doc/build", "/doc/efun", "/doc/help", "/doc/lpc" })),
+
+        assert_equal(testOb->wild_card("/secure/sefun/path*.c"), ({ "/secure/sefun/path.c", "/secure/sefun/path.coverage.c", "/secure/sefun/path.test.c" })),
+        assert_equal(testOb->wild_card("/secure/sefun/path*.c"), ({ "/secure/sefun/path.c", "/secure/sefun/path.coverage.c", "/secure/sefun/path.test.c" })),
+        assert_equal(testOb->wild_card("/secure/sefun/path*.c"), ({ "/secure/sefun/path.c", "/secure/sefun/path.coverage.c", "/secure/sefun/path.test.c" })),
+        assert_equal(testOb->wild_card("../secure/sefun/path*.c"), ({ "/secure/sefun/path.c", "/secure/sefun/path.coverage.c", "/secure/sefun/path.test.c" })),
     }) :));
 }

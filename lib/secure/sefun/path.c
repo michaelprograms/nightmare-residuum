@@ -6,7 +6,7 @@ string user_path (mixed *args...) {
 
 string *split_path (string path) {
     int pos;
-    while (path[<1] == '/' && strlen(path) > 1) {
+    while (path[<1] == '/' && sizeof(path) > 1) {
         path = path[0..<2];
     }
     pos = strsrch(path, '/', -1);
@@ -29,7 +29,7 @@ string sanitize_path (string path) {
         }
     }
 
-    trailingSlash = (strlen(path) > 0 && (path[<1] == '/' || path[<2..] == "/." || path[<3..] == "/.."));
+    trailingSlash = (sizeof(path) > 0 && (path[<1] == '/' || path[<2..] == "/." || path[<3..] == "/.."));
     if (path[0] == '^') {
         path = replace_string(path, "^", "domain/");
     } else if (path[0] == '~') {
@@ -112,38 +112,27 @@ int mkdirs (string path) {
     return check;
 }
 
-string *wild_card (string path, string relative_to) {
-    string cwd, *split, *match;
+string *wild_card (string path) {
+    string *match;
 
-    if (!path || sizeof(path) < 1) {
+    if (!path || path == "") {
         return ({ });
     }
-    cwd = absolute_path(path, relative_to);
-    if (cwd == "/") {
-        return ({ "/" });
+
+    path = absolute_path(path, "/");
+    match = filter(get_dir(path) || ({ }), (: $1 != "." && $1 != ".." :));
+    if (path[<1] != '/') {
+        path = split_path(path)[0];
     }
-    split = split_path(cwd);
-    if (split[0] == "/") {
-        split[0] = "";
-    }
-    match = get_dir(cwd);
-    if (!match) {
-        match = ({ });
-    } else {
-        match -= ({ "." });
-        match -= ({ ".." });
-    }
-    if (!path || path[0] != '.') {
-        match = filter(match, (: $1[0] != '.' :));
-    }
+
     for (int i = 0; i < sizeof(match); i ++) {
-        if (file_size(split[0] + split[1]) == -2) {
-            match[i] = split[0];
-        } else {
-            match[i] = split[0] + match[i];
-        }
-        if (strlen(match[i]) > 1 && match[i][0..1] == "//") {
-            match[i] = match[i][1..<1];
+        switch (file_size(path + match[i])) {
+        case -2:
+            match[i] = path + match[i];
+            break;
+        default:
+            match[i] = path + match[i];
+            break;
         }
     }
     return match;

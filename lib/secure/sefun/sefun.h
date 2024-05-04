@@ -86,7 +86,7 @@ string *split_path (string path);
 string sanitize_path (string path);
 varargs string absolute_path (string relative_path, mixed relative_to);
 int mkdirs (string path);
-string *wild_card (string path, string relative_to);
+string *wild_card (string path);
 
 /* --- roll --- */
 mixed *roll_die (int times, int sides);
