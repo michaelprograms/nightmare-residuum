@@ -6,16 +6,7 @@
 
 string possessive (mixed value);
 
-void display_combat_message (
-    object source,
-    object target,
-    string limb,
-    mixed weapon,
-    string type,
-    int damage,
-    int crit,
-    int isAbility
-) {
+void display_combat_message (object source, object target, string limb, mixed weapon, string type, int damage, int crit, int isAbility) {
     string sourceMsg, targetMsg, envMsg;
     string weaponName;
     int percent;
