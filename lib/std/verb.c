@@ -2,19 +2,9 @@
 
 inherit STD_COMMAND;
 inherit M_CLEAN;
+inherit M_PARSE;
 
 nosave private int __Requirements = REQUIREMENT_NONE;
-
-protected varargs void add_rules (string *rules, string *syns) {
-    foreach (string rule in rules) {
-        parse_add_rule(query_name(), rule);
-        if (arrayp(syns)) {
-            foreach (string syn in syns) {
-                parse_add_synonym(syn, query_name(), rule);
-            }
-        }
-    }
-}
 
 void set_requirements (int requirements) {
     __Requirements = requirements;
@@ -42,8 +32,8 @@ mixed check_disable () {;
 
 void create () {
     command::create();
+    parse::create();
     set_no_clean(1);
-    parse_init();
 }
 
 mixed can_verb_rule (mixed args...) {

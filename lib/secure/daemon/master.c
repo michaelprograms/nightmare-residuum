@@ -320,6 +320,10 @@ varargs int valid_override (string file, string efun_name, string main_file) {
             return regexp(file, "^/std/user/input");
         case "clone_object":
             return file == "/std/module/test";
+        case "parse_add_rule":
+        case "parse_add_synonym":
+        case "parse_init":
+            return regexp(file, "^/std/module/parse");
     }
     return regexp(file, "^/secure/(sefun|daemon/master)");
 }
