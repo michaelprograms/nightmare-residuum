@@ -9,12 +9,12 @@ string query_banner () {
 
     lines = explode(read_file("/etc/welcome"), "\n");
     tmp = "  " + mud_name() + "  ";
-    pad = 40 - strlen(tmp) / 2;
+    pad = 40 - sizeof(tmp) / 2;
     lines[<2] = lines[<2][0..pad-1] + tmp + lines[<2][80-pad..79];
 
     tmp = "  " + version() + "   " + mudlib_version() + "  ";
-    pad = 40 - strlen(tmp) / 2;
-    lines[<1] = lines[<1][0..pad-1] + tmp + lines[<1][80-pad+strlen(tmp)%2..79];
+    pad = 40 - sizeof(tmp) / 2;
+    lines[<1] = lines[<1][0..pad-1] + tmp + lines[<1][80-pad+sizeof(tmp)%2..79];
 
     if (this_user() && this_user()->query_terminal_color() == "256") {
         int *c1 = query_random_color();
@@ -30,7 +30,7 @@ string query_banner () {
 
     for (int i = 0; i < sizeof(lines); i ++) {
         for (int j = 0; j < sizeof(lines[i]); j ++) {
-            if (i == sizeof(lines) - 1 && j >= pad && j <= strlen(lines[i])-pad-1) {
+            if (i == sizeof(lines) - 1 && j >= pad && j <= sizeof(lines[i])-pad-1) {
                 text += lines[i][j..j]; // preserve dots in driver/mudlib versions
             } else if (lines[i][j..j] == ".") {
                 if (this_user() && this_user()->query_terminal_color() == "256") {
@@ -52,9 +52,13 @@ string query_banner () {
                 }
                 text += "\e[0;37;40m" + dot;
             } else if (lines[i][j..j] != " ") {
-                if (i > 0 && i < 8) text += colors[j];
+                if (i > 0 && i < 8) {
+                    text += colors[j];
+                }
                 text += lines[i][j..j] + "\e[0;37;40m";
-            } else text += " ";
+            } else {
+                text += " ";
+            }
         }
         text += "\n";
     }
