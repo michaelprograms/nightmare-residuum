@@ -10,7 +10,6 @@ inherit "/std/character/history.c";
 
 private string __Account;
 private int __LastAction;
-private int __Created = time();
 private int __Immortal;
 private int __ConnectionTime = 0;
 
@@ -152,9 +151,6 @@ void set_user (object user) {
 
 /* ----- character ----- */
 
-int query_created () {
-    return __Created;
-}
 void set_last_action () {
     __LastAction = time();
 }

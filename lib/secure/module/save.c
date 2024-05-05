@@ -1,5 +1,9 @@
 nosave private string __SavePath = 0;
 
+private int __Created = time();
+
+/* -----  ----- */
+
 string query_save_path () {
     return __SavePath;
 }
@@ -10,6 +14,14 @@ void set_save_path (string path) {
         __SavePath = 0;
     }
 }
+
+/* -----  ----- */
+
+int query_created () {
+    return __Created;
+}
+
+/* -----  ----- */
 
 void restore_data () {
     if (stringp(__SavePath) && unguarded((: file_size, __SavePath :)) > 0) {
