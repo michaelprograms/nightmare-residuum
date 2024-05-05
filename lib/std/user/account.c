@@ -6,7 +6,6 @@ inherit M_SAVE;
 
 private string __Name;
 private string __Password;
-private int __Created = time();
 private int __LastOn = time();
 private mapping __Characters = ([
     /* Data Format:
@@ -76,9 +75,6 @@ nomask string query_password () {
     return __Password;
 }
 
-int query_created () {
-    return __Created;
-}
 int query_last_on () {
     return __LastOn;
 }
