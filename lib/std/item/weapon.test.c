@@ -51,8 +51,18 @@ void test_hands () {
         testOb->set_hands(2),
         assert_equal(testOb->query_hands(), 2),
 
+        testOb->set_hands(-1),
+        assert_equal(testOb->query_hands(), 1),
+
+        testOb->set_hands(123),
+        assert_equal(testOb->query_hands(), 1),
+
+        testOb->set_hands(2),
+        assert_equal(testOb->query_hands(), 2),
+
         testOb->set_hands(1),
         assert_equal(testOb->query_hands(), 1),
+
     }) :));
 }
 

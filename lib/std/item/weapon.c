@@ -36,17 +36,11 @@ void set_wielded (object wielder) {
 }
 
 int query_hands () {
-    if (!__Hands) {
-        __Hands = 1;
-    }
     return __Hands;
 }
 void set_hands (int hands) {
-    if (!intp(hands)) {
-        error("Bad argument 1 to weapon->set_hands");
-    }
-    if (hands < 1 || hands > 2) {
-        error("Bad argument 1 to weapon->set_hands");
+    if (!intp(hands) || hands < 1 || hands > 2) {
+        hands = 1;
     }
     __Hands = hands;
 }
