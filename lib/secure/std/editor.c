@@ -36,7 +36,7 @@ void query_ed_setup () {
     return __User->query_ed_setup();
 }
 int set_ed_setup (int code) {
-   __User->set_ed_setup(code);
+    __User->set_ed_setup(code);
 }
 
 /* ----- applies ----- */
