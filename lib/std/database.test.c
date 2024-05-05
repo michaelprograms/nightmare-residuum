@@ -39,4 +39,8 @@ void test_connect () {
         assert_equal(testOb->close(), 1),
         assert_equal(testOb->query_handle(), 0),
     }) :));
+
+    if(file_size("/save/test/database.db")) {
+        rm("/save/test/database.db");
+    }
 }

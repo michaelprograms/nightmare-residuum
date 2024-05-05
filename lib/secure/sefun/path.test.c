@@ -154,7 +154,9 @@ void test_mkdirs () {
         // no errors for empty string
         assert_equal(testOb->mkdirs(""), 0),
 
-        // test should exist already
+        // test should exist or create
+        assert_equal(testOb->mkdirs("/save/test"), 1),
+        // test should exist
         assert_equal(testOb->mkdirs("/save/test"), 1),
 
         rmdir(PATH_TEST_DIR),
