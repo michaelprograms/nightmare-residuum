@@ -584,6 +584,11 @@ string handle_help (object char) {
         }
     }
 
+    if (__Cooldown != 1) {
+        result += "\n%^CYAN%^BOLD%^Cooldown%^RESET%^\n";
+        result += __Cooldown + " rounds\n";
+    }
+
     if (n = sizeof(__Weapons)) {
         result += "\n%^CYAN%^BOLD%^Weapons%^RESET%^\n";
         foreach (string key,int *value in __Weapons) {
