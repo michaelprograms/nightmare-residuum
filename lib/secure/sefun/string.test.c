@@ -164,7 +164,7 @@ void test_sanitize_name () {
         assert_equal(testOb->sanitize_name("T'- E'- S'- T"), "test"),
     }) :));
     expect("sanitize_name handles bad input", (: ({
-        assert_catch((: testOb->sanitize_name(([ ])) :), "*Bad argument 1 to string->sanitize_name\n"),
+        assert_catch((: testOb->sanitize_name(UNDEFINED) :), "*Bad argument 1 to string->sanitize_name\n"),
         assert_catch((: testOb->sanitize_name(0) :), "*Bad argument 1 to string->sanitize_name\n"),
     }) :));
 }
