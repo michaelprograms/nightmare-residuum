@@ -56,6 +56,9 @@ void test_identify () {
     tOb = new(STD_OBJECT);
     expect("identify handles object", (: ({
         assert_regex(testOb->identify($(tOb)), "OBJ\\("+replace_string(STD_OBJECT[0..<3], "/", "\\/")+"#(.+)\\)"),
+
+        $(tOb)->set_key_name("tester"),
+        assert_regex(testOb->identify($(tOb)), "OBJ\\(tester "+replace_string(STD_OBJECT[0..<3], "/", "\\/")+"#(.+)\\)"),
     }) :));
     destruct(tOb);
 
@@ -128,6 +131,12 @@ void test_wrap () {
         assert_equal(testOb->wrap("test", -10), "test"),
         assert_equal(testOb->wrap("%^BOLD_OFF%^test", 80), "test"),
         assert_equal(testOb->wrap("%^RED%^test%^RESET%^", 80), "test"),
+
+        // test indent
+        assert_equal(testOb->wrap("%^RED%^testtesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttest%^RESET%^", 40, 4), "testtesttesttesttesttesttesttesttesttest\n    testtesttesttesttesttesttesttesttest\n    testtest"),
+
+        // test raw ANSI
+        assert_equal(testOb->wrap("%%^^RED%%^^testtesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttest%%^^RESET%%^^", 20, 0, 1), "%^RED%^testtesttestt\nesttesttesttesttestt\nesttesttesttesttestt\nesttesttesttesttestt\nesttesttest%^RESET%^"),
     }) :));
 }
 
@@ -153,6 +162,10 @@ void test_sanitize_name () {
         assert_equal(testOb->sanitize_name("t-e-s-t"), "test"),
         assert_equal(testOb->sanitize_name("TEST"), "test"),
         assert_equal(testOb->sanitize_name("T'- E'- S'- T"), "test"),
+    }) :));
+    expect("sanitize_name handles bad input", (: ({
+        assert_catch((: testOb->sanitize_name(([ ])) :), "*Bad argument 1 to string->sanitize_name\n"),
+        assert_catch((: testOb->sanitize_name(0) :), "*Bad argument 1 to string->sanitize_name\n"),
     }) :));
 }
 
