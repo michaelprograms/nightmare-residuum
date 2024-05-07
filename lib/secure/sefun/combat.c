@@ -11,6 +11,7 @@ void display_combat_message (object source, object target, string limb, mixed we
     string weaponName;
     int percent;
     string verb, verbs, adverb, sourcePossessive;
+    int i = 0;
 
     if (!source || !target || !weapon || !type) return;
 
@@ -21,21 +22,44 @@ void display_combat_message (object source, object target, string limb, mixed we
         verb = "hit";
         adverb = "ineffectively";
     } else {
-        int i = 0;
-        switch(percent) {
-            case 27..100: i = 11; break;
-            case 23..26: i = 10; break;
-            case 19..22: i = 9; break;
-            case 16..18: i = 8; break;
-            case 13..15: i = 7; break;
-            case 10..12: i = 6; break;
-            case 8..9: i = 5; break;
-            case 6..7: i = 4; break;
-            case 4..5: i = 3; break;
-            case 3: i = 2; break;
-            case 2: i = 1; break;
-            case 1: default: i = 0; break;
-        }
+        switch (percent) {
+            case 27..100:
+                i = 11;
+                break;
+            case 23..26:
+                i = 10;
+                break;
+            case 19..22:
+                i = 9;
+                break;
+            case 16..18:
+                i = 8;
+                break;
+            case 13..15:
+                i = 7;
+                break;
+            case 10..12:
+                i = 6;
+                break;
+            case 8..9:
+                i = 5;
+                break;
+            case 6..7:
+                i = 4;
+                break;
+            case 4..5:
+                i = 3;
+                break;
+            case 3:
+                i = 2;
+                break;
+            case 2:
+                i = 1;
+                break;
+            case 1: default:
+                i = 0;
+                break;
+            }
         if (member_array(type, ({ "blunt", "brawl", "psionic", })) > -1) {
             verb = BLUNT_VERBS[i];
             adverb = BLUNT_ADVERBS[i];
