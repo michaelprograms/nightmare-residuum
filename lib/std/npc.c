@@ -9,6 +9,10 @@ int is_npc () {
     return 1;
 }
 
+void receive_message (string type, string message) {
+
+}
+
 void set_level (int l) {
     int n = l + 1;
 
