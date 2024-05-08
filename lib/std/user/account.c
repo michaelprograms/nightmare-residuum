@@ -353,6 +353,7 @@ protected nomask varargs void account_input (int state, mixed extra, string inpu
                     }
                 } else { // fresh login
                     set_character_name(input);
+                    input_pop();
                     character_enter(0);
                 }
             } else {
@@ -477,6 +478,7 @@ protected nomask varargs void account_input (int state, mixed extra, string inpu
             add_character(query_character()->query_cap_name(), query_character()->query_key_name(), query_character()->query_species());
             D_LOG->log("character/new", sprintf("%s : %s : %s\n", ctime(time()), query_ip_number(), input));
             write("Entering as " + query_character()->query_cap_name() + "...\n");
+            input_pop();
             character_enter(1);
             break;
 
