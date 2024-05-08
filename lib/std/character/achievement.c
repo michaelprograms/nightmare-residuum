@@ -12,11 +12,7 @@ int set_achievement (string str) {
 int query_achievement (string str) {
     if (!mapp(__Achievements)) __Achievements = ([ ]);
 
-    if (__Achievements[str]) {
-        return 1;
-    } else {
-        return 0;
-    }
+    return !!__Achievements[str];
 }
 string *query_achievements () {
     return keys(__Achievements);
