@@ -104,6 +104,12 @@ void test_format_page () {
         assert_equal(testOb->format_page(({ "%^RED%^Red text%^RESET%^", "%^BLUE%^Blue text%^RESET%^", }), 2, 0, 1), " %^RED%^Red text%^RESET%^  %^BLUE%^Blue text%^RESET%^"),
         assert_equal(testOb->format_page(({ "%^RED%^Red%^RESET%^", "%^BLUE%^Blue%^RESET%^", }), 2, 0, 1), "    %^RED%^Red%^RESET%^      %^BLUE%^Blue%^RESET%^   "),
     }) :));
+
+    expect("format_mage handles bad input", (: ({
+        assert_catch((: testOb->format_page(({ })) :), "*Bad argument 1 to format->format_page\n"),
+
+        assert_catch((: testOb->format_page(({ "a", "b", "c" }), 1.0) :), "*Bad argument 2 to format->format_page\n"),
+    }) :));
 }
 
 void test_format_syntax () {
