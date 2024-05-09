@@ -51,7 +51,8 @@ string query_ability (string ability) {
 }
 string query_command (string command) {
     if (__Commands[command]) {
-        if (!previous_object()->query_immortal() && regexp(__Commands[command][0], "/immortal")) {
+        // hide immortal commands from non-immortals
+        if (!sizeof(filter(previous_object(-1), (: $1->query_immortal() :))) && regexp(__Commands[command][0], "/immortal")) {
             return 0;
         }
         return __Commands[command][0];
