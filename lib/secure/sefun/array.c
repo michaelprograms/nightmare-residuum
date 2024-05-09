@@ -1,9 +1,6 @@
 mixed *distinct_array (mixed *arr) {
     int i, l;
     mapping tmp;
-    if (!arrayp(arr) || !sizeof(arr)) {
-        error("Bad argument 1 to array->distinct_array");
-    }
     l = sizeof(arr);
     tmp = allocate_mapping(l);
     for (i = 0; i < l; i ++) {
