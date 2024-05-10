@@ -44,9 +44,9 @@ void test_exists () {
 
     expect("query_exists handles valid accounts", (: ({
         // create a mock account file
-        assert_equal(unguarded((: mkdirs("/save/account/a") :)), 1),
-        assert_equal(unguarded((: write_file("/save/account/a/accounttest.o", "accounttest.o mock save", 1) :)), 1),
+        assert_equal(mkdirs("/save/account/a"), 1),
+        assert_equal(write_file("/save/account/a/accounttest.o", "accounttest.o mock save", 1), 1),
         assert_equal(testOb->query_exists("accounttest"), 1),
-        assert_equal(unguarded((: rm("/save/account/a/accounttest.o") :)), 1),
+        assert_equal(rm("/save/account/a/accounttest.o"), 1),
     }) :));
 }
