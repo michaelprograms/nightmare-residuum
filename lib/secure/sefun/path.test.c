@@ -78,7 +78,7 @@ void test_sanitize_path () {
         assert_equal(testOb->sanitize_path("^Dir/dir/.."), "/domain/Dir/"),
     }) :));
 
-    __MockCharacter = new("/std/module/id.c");
+    __MockCharacter = new("/std/object/id.c");
     __MockCharacter->set_key_name("test"); // must be named test
     __MockShell = new("/secure/shell/shell.c");
     __MockShell->start_shell();
@@ -133,7 +133,7 @@ void test_absolute_path () {
         assert_equal(testOb->absolute_path("^dir/file.c", "/"), "/domain/dir/file.c"),
     }) :));
 
-    __MockCharacter = new("/std/module/id.c");
+    __MockCharacter = new("/std/object/id.c");
     __MockCharacter->set_key_name("test"); // must be named test
     __MockShell = new("/secure/shell/shell.c");
     __MockShell->start_shell();
