@@ -24,13 +24,13 @@ int query_created () {
 /* -----  ----- */
 
 void restore_data () {
-    if (stringp(__SavePath) && unguarded((: file_size, __SavePath :)) > 0) {
-        unguarded((: restore_object, __SavePath :));
+    if (stringp(__SavePath) && file_size(__SavePath) > 0) {
+        restore_object(__SavePath);
     }
 }
 void save_data () {
     if (stringp(__SavePath)) {
         mkdirs(__SavePath);
-        unguarded((: save_object, __SavePath :));
+        save_object(__SavePath);
     }
 }
