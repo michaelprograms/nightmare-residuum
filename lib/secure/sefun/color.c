@@ -1,5 +1,7 @@
 string strip_colour (string str) {
-    if (!str) return str;
+    if (!str) {
+        return str;
+    }
     // parse blank ANSI color tags
     str = terminal_colour(""+str, D_ANSI->query_unknown_term());
     // strip default ANSI reset color tag added by fluffos
@@ -56,9 +58,13 @@ string wrap_ansi (string str, int width) {
 int hex_to_int (string b16) {
     int b10;
 
-    if (!stringp(b16) || !strlen(b16)) error("Bad argument 1 to color->hex_to_int");
+    if (!stringp(b16) || !strlen(b16)) {
+        error("Bad argument 1 to color->hex_to_int");
+    }
     sscanf(b16, "%x", b10);
-    if (undefinedp(b10)) error("Bad argument 1 to color->hex_to_int");
+    if (undefinedp(b10)) {
+        error("Bad argument 1 to color->hex_to_int");
+    }
 
     return b10;
 }
@@ -83,9 +89,15 @@ int *query_random_color () {
 int color_to_sRGB (float n) {
     float f;
 
-    if (!floatp(n) || undefinedp(n)) error("Bad argument 1 to color->color_to_sRGB");
-    if (n <= 0.0031308) f = 12.92 * n;
-    else f = (1.055 * pow(n, 1/2.4)) - 0.055;
+    if (!floatp(n) || undefinedp(n)) {
+        error("Bad argument 1 to color->color_to_sRGB");
+    }
+
+    if (n <= 0.0031308) {
+        f = 12.92 * n;
+    } else {
+        f = (1.055 * pow(n, 1/2.4)) - 0.055;
+    }
 
     return to_int(255.9999 * f);
 }
@@ -94,20 +106,31 @@ int color_to_sRGB (float n) {
 float color_from_sRGB (int n) {
     float x, y;
 
-    if (!intp(n) || undefinedp(n)) error("Bad argument 1 to color->color_from_sRGB");
+    if (!intp(n) || undefinedp(n)) {
+        error("Bad argument 1 to color->color_from_sRGB");
+    }
 
     x = n / 255.0;
-    if (x <= 0.04045) y = x / 12.92;
-    else y = pow(((x + 0.055) / 1.055), 2.4);
+    if (x <= 0.04045) {
+        y = x / 12.92;
+    } else {
+        y = pow(((x + 0.055) / 1.055), 2.4);
+    }
 
     return to_float(sprintf("%0.2f", y));
 }
 
 // Linear Interpolation a color between two colors at a ratio
 float color_lerp (float color1, float color2, float ratio) {
-    if (!floatp(color1)) error("Bad argument 1 to color->color_lerp");
-    if (!floatp(color2)) error("Bad argument 2 to color->color_lerp");
-    if (undefinedp(ratio) || !floatp(ratio) || ratio < 0.0 || ratio > 1.0)  error("Bad argument 3 to color->color_lerp");
+    if (!floatp(color1)) {
+        error("Bad argument 1 to color->color_lerp");
+    }
+    if (!floatp(color2)) {
+        error("Bad argument 2 to color->color_lerp");
+    }
+    if (undefinedp(ratio) || !floatp(ratio) || ratio < 0.0 || ratio > 1.0) {
+        error("Bad argument 3 to color->color_lerp");
+    }
 
     return color1 * (1 - ratio) + color2 * ratio;
 }
@@ -119,9 +142,15 @@ string *color_gradient (int *color1, int *color2, int steps) {
     float *c1, *c2, *b;
     float ratio, intensity, *color, total;
 
-    if (!arrayp(color1) && sizeof(color1) != 3) error("Bad argument 1 to color->color_gradient");
-    if (!arrayp(color2) && sizeof(color2) != 3) error("Bad argument 2 to color->color_gradient");
-    if (!intp(steps)) error("Bad argument 3 to color->color_gradient");
+    if (!arrayp(color1) && sizeof(color1) != 3) {
+        error("Bad argument 1 to color->color_gradient");
+    }
+    if (!arrayp(color2) && sizeof(color2) != 3) {
+        error("Bad argument 2 to color->color_gradient");
+    }
+    if (!intp(steps) || steps < 2) {
+        error("Bad argument 3 to color->color_gradient");
+    }
 
     c1 = ({ 0.0, 0.0, 0.0 });
     c2 = ({ 0.0, 0.0, 0.0 });
@@ -169,7 +198,9 @@ string apply_gradient (string text, string *gradient) {
 
     line = explode(text, "");
 
-    if (sizeof(text) > sizeof(gradient)) error("Bad arguments to color->apply_gradient: invalid sizes "+sizeof(text)+" vs "+sizeof(gradient || ({ })));
+    if (sizeof(text) > sizeof(gradient)) {
+        error("Bad arguments to color->apply_gradient: invalid sizes "+sizeof(text)+" vs "+sizeof(gradient || ({ })));
+    }
 
     for (i = 0, l = sizeof(line); i < l; i ++) {
         result += "\e[38;2;"+gradient[i]+"m" + line[i];
