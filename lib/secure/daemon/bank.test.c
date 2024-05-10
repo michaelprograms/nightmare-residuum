@@ -12,6 +12,6 @@ void test_balance () {
         assert_equal(testOb->query_banks("testcharacter"), ({ "somewhere", })),
         testOb->update_balance("testcharacter", "elsewhere", ([ "copper": 54321, ])),
         assert_equal(testOb->query_banks("testcharacter"), ({ "somewhere", "elsewhere", })),
-        assert_equal(unguarded((: rm("/save/character/t/testcharacter/bank.o") :)), 1),
+        assert_equal(rm("/save/character/t/testcharacter/bank.o"), 1),
     }) :));
 }
