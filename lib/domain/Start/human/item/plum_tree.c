@@ -16,6 +16,5 @@ void create () {
 }
 
 void reset () {
-    item::reset();
-    pickable::reset();
+    ::reset();
 }
