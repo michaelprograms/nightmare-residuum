@@ -80,7 +80,6 @@
 
 // structs
 #define S_SHELL_ALIAS   "/std/struct/shell_alias.c"
-#define S_USER_INPUT    "/std/struct/user_input.c"
 #define StructShellAlias    struct ShellAlias
 #define StructUserInput     struct UserInput
 

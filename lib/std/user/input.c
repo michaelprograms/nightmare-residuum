@@ -5,36 +5,36 @@
 #define STATE_INPUT_SINGLE      1
 #define STATE_INPUT_CHARACTER   2
 
-inherit S_USER_INPUT;
+/*
+Data format:
+    "inputFn": function
+    "prompt": mixed
+    "secure": int
+    "callbackFn": function
+    "lock": int
+    "type": int
+*/
+nosave private mapping *__InputStack = ({ });
 
-nosave private StructUserInput *stack = ({ });
+private nomask mapping get_top_handler (int require_handler);
+private nomask mapping get_bottom_handler ();
 
-private nomask StructUserInput get_top_handler (int require_handler);
-private nomask StructUserInput get_bottom_handler ();
-
-nomask int query_input_stack_size () {
-    return sizeof(stack);
-}
-
-private nomask void dispatch_to_bottom (mixed str) {
-    StructUserInput info;
-    if (!(info = get_bottom_handler())) {
-        return;
-    }
-    evaluate(info.inputFn, str);
-}
 private nomask void dispatch_input (mixed str) {
-    StructUserInput info;
-    if (str[0] == '!' && !stack[<1]->lock) {
-        dispatch_to_bottom(str[1..]); // override ! to shell
+    mapping input;
+
+    if (str[0] == '!' && !__InputStack[<1]["lock"]) {
+        // override ! to bottom handler?
+        if (input = get_bottom_handler()) {
+            evaluate(input["inputFn"], str[1..]);
+        }
     } else {
-        if (!(info = get_top_handler(1))) {
+        if (!(input = get_top_handler(1))) {
             return;
         }
-        if (info.type == STATE_INPUT_SINGLE) {
+        if (input["type"] == STATE_INPUT_SINGLE) {
             input_pop();
         }
-        evaluate(info.inputFn, str);
+        evaluate(input["inputFn"], str);
     }
     if (this_object()) {
         input_focus();
@@ -50,20 +50,22 @@ private nomask string process_input (string str) {
 }
 
 private nomask void stack_push (function inputFn, mixed prompt, int secure, function callbackFn, int lock, int type) {
-    StructUserInput info = new(StructUserInput);
-    info.inputFn = inputFn;
+    mapping input = ([ ]);
+
+    input["inputFn"] = inputFn;
     if (prompt) {
-        info.prompt = prompt;
+        input["prompt"] = prompt;
     }
-    info.secure = secure;
-    info.callbackFn = callbackFn;
-    info.lock = lock;
-    info.type = type;
-    stack += ({ info });
-    if (info.type == STATE_INPUT_CHARACTER) {
-        efun::get_char((: dispatch_input :), info.secure | 2);
+    input["secure"] = secure || 0;
+    input["callbackFn"] = callbackFn || 0;
+    input["lock"] = lock || 0;
+    input["type"] = type;
+    __InputStack += ({ input });
+
+    if (input["type"] == STATE_INPUT_CHARACTER) {
+        efun::get_char((: dispatch_input :), input["secure"] | 2);
     } else {
-        efun::input_to((: dispatch_input :), info.secure | 2);
+        efun::input_to((: dispatch_input :), input["secure"] | 2);
     }
 }
 
@@ -74,37 +76,37 @@ varargs nomask void input_single (function inputFn, mixed prompt, int secure, in
     stack_push(inputFn, prompt, secure, 0, lock, STATE_INPUT_SINGLE);
 }
 varargs nomask void input_next (function inputFn, mixed prompt, int secure, int lock) {
-    stack[<1].inputFn = inputFn;
+    __InputStack[<1]["inputFn"] = inputFn;
     if (prompt) {
-        stack[<1].prompt = prompt;
+        __InputStack[<1]["prompt"] = prompt;
     }
-    stack[<1].secure = secure;
-    stack[<1].lock = lock;
+    __InputStack[<1]["secure"] = secure;
+    __InputStack[<1]["lock"] = lock;
 }
 nomask void input_pop () {
-    StructUserInput info;
+    mapping input;
 
-    stack = stack[0..<2]; // remove last element
+    __InputStack = __InputStack[0..<2]; // remove last element
 
-    if ((info = get_top_handler(0)) && info.callbackFn) {
-        evaluate(info.callbackFn);
+    if ((input = get_top_handler(0)) && input["callbackFn"]) {
+        evaluate(input["callbackFn"]);
     }
 }
-nomask varargs void input_prompt (StructUserInput info) {
+nomask varargs void input_prompt (mapping input) {
     string prompt;
     int go_ahead;
 
-    if (!info) {
-        if (!(info = get_top_handler(1))) {
+    if (!input) {
+        if (!(input = get_top_handler(1))) {
             return;
         }
         go_ahead = 1;
     }
-    if (info.type != STATE_INPUT_CHARACTER && info.prompt) {
-        if (functionp(info.prompt)) {
-            prompt = evaluate(info.prompt);
+    if (input["type"] != STATE_INPUT_CHARACTER && input["prompt"]) {
+        if (functionp(input["prompt"])) {
+            prompt = evaluate(input["prompt"]);
         } else {
-            prompt = info.prompt;
+            prompt = input["prompt"];
         }
         if (prompt) {
             message("prompt", prompt, this_object());
@@ -115,16 +117,16 @@ nomask varargs void input_prompt (StructUserInput info) {
     }
 }
 nomask void input_focus () {
-    StructUserInput info;
+    mapping input;
 
-    if (!(info = get_top_handler(1))) {
+    if (!(input = get_top_handler(1))) {
         return;
     }
-    input_prompt(info);
-    if (info.type == STATE_INPUT_CHARACTER) {
-        efun::get_char((: dispatch_input :), info.secure | 2);
+    input_prompt(input);
+    if (input["type"] == STATE_INPUT_CHARACTER) {
+        efun::get_char((: dispatch_input :), input["secure"] | 2);
     } else {
-        efun::input_to((: dispatch_input :), info.secure | 2);
+        efun::input_to((: dispatch_input :), input["secure"] | 2);
     }
 }
 
@@ -135,7 +137,7 @@ private nomask int create_handler () {
 
     this_object()->shell_start();
 
-    if (!sizeof(stack)) {
+    if (!sizeof(__InputStack)) {
         message("system", "Unable to process input.", this_object());
         destruct();
         return 1;
@@ -143,42 +145,39 @@ private nomask int create_handler () {
     return 0;
 }
 
-private nomask StructUserInput get_top_handler (int require_handler) {
+private nomask mapping get_top_handler (int require_handler) {
     int some_popped = 0;
 
-    while (sizeof(stack)) {
-        StructUserInput info;
-
-        info = stack[<1];
-        if (!(functionp(info.inputFn) & FP_OWNER_DESTED)) {
-            if (some_popped && info.callbackFn) {
-                evaluate(info.callbackFn);
+    while (sizeof(__InputStack)) {
+        mapping input = __InputStack[<1];
+        if (!(functionp(input["inputFn"]) & FP_OWNER_DESTED)) {
+            if (some_popped && input["callbackFn"]) {
+                evaluate(input["callbackFn"]);
             }
-            return info;
+            return input;
         }
 
-        stack = stack[0..<2];
+        __InputStack = __InputStack[0..<2];
         some_popped = 1;
     }
 
-    if (!require_handler || create_handler() || !sizeof(stack)) {
+    if (!require_handler || create_handler() || !sizeof(__InputStack)) {
         return 0;
     }
-    return stack[<1];
+    return __InputStack[<1];
 }
 
-private nomask StructUserInput get_bottom_handler () {
-    while (sizeof(stack)) {
-        StructUserInput info;
-        info = stack[0];
-        if (!(functionp(info.inputFn) & FP_OWNER_DESTED)) {
-            return info;
+private nomask mapping get_bottom_handler () {
+    while (sizeof(__InputStack)) {
+        mapping input = __InputStack[0];
+        if (!(functionp(input["inputFn"]) & FP_OWNER_DESTED)) {
+            return input;
         }
-        stack = stack[1..];
+        __InputStack = __InputStack[1..];
     }
 
     if (create_handler()) {
         return 0;
     }
-    return stack[0];
+    return __InputStack[0];
 }
