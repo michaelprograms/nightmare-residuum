@@ -60,18 +60,18 @@ void test_immortal () {
         // verify turning off while off
         testOb->set_immortal(0),
         assert_equal(testOb->query_immortal(), 0),
-        assert_equal(unguarded((: file_size("/realm/testcharacter") :)), -1),
+        assert_equal(file_size("/realm/testcharacter"), -1),
 
         // verify turning on
         testOb->set_immortal(1),
         assert_equal(testOb->query_immortal(), 1),
-        assert_equal(unguarded((: file_size("/realm/testcharacter") :)), -2),
+        assert_equal(file_size("/realm/testcharacter"), -2),
 
         // verify turning off, realm dir remains
         testOb->set_immortal(0),
         assert_equal(testOb->query_immortal(), 0),
-        assert_equal(unguarded((: file_size("/realm/testcharacter") :)), -2),
+        assert_equal(file_size("/realm/testcharacter"), -2),
 
-        assert_equal(unguarded((: rmdir("/realm/testcharacter") :)), 1),
+        assert_equal(rmdir("/realm/testcharacter"), 1),
     }) :));
 }
