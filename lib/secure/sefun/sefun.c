@@ -1,6 +1,5 @@
 #include "sefun.h"
 
-inherit "/secure/sefun/access.c";
 inherit "/secure/sefun/array.c";
 inherit "/secure/sefun/border.c";
 inherit "/secure/sefun/color.c";

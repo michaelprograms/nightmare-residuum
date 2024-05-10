@@ -8,9 +8,6 @@ string mudlib_version ();
 string mud_name ();
 string call_trace ();
 
-/* --- access --- */
-mixed unguarded (function f);
-
 /* --- array --- */
 mixed *distinct_array (mixed *arr);
 mixed reduce (mixed *arr, function fn, mixed result);

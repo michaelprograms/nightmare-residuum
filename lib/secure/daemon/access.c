@@ -2,7 +2,6 @@
 #include <driver/function.h>
 
 private nosave mapping __Group, __Read, __Write;
-private nosave object __Unguarded;
 
 string query_file_privs (string filename);
 
@@ -29,15 +28,6 @@ void create () {
     __Read = load_config("/secure/etc/read.cfg");
     __Write = load_config("/secure/etc/write.cfg");
 }
-
-// int securep (mixed who) {
-//     mixed tmp = who;
-//     if (!who) who = previous_object();
-//     if (!stringp(who)) who = who->query_key_name();
-//     if (!who || who == "") who = base_name(tmp);
-//     if (member_group(who, "SECURE")) return 1;
-//     else return 0;
-// }
 
 // -----------------------------------------------------------------------------
 
@@ -76,27 +66,8 @@ int query_allowed (object caller, string fn, string file, string mode) {
 
     // debug_message("! D_ACCESS->query_allowed with " + identify(caller) + ", "+identify(pathPrivs)+", "+file+" fn: "+fn);
 
-    // caller utilized unguarded(function)
-    if (__Unguarded == caller) {
-        tmp = base_name(caller);
-        // debug_message("! D_ACCESS->query_allowed unguarded == caller: "+identify(caller)+" "+tmp);
-        // access check passes due to caller requesting valid save path
-        if (regexp(tmp, "^"+STD_CHARACTER[0..<3]) && D_CHARACTER->query_valid_save_path(caller->query_key_name(), file)) {
-            return 1;
-        } else if (regexp(tmp, "^/std/npc/pet") && D_CHARACTER->query_valid_save_path(caller->query_owner_name(), file)) {
-            return 1;
-        } else if (regexp(tmp, "^"+STD_USER[0..<3]) && D_ACCOUNT->query_save_path(caller->query_key_name()) == file) {
-            return 1;
-        } else if (regexp(tmp, "^"+D_LOG) && regexp(file, "^/log/")) {
-            return 1;
-        } else {
-            // set caller as the stack
-            i = sizeof(stack = ({ caller }));
-        }
-    } else {
-        // set all previous objects and caller as the stack
-        i = sizeof(stack = previous_object(-1) + ({ caller }));
-    }
+    // set all previous objects and caller as the stack
+    i = sizeof(stack = previous_object(-1) + ({ caller }));
 
     // debug_message("! D_ACCESS->query_allowed stack is: "+identify(stack));
 
@@ -186,29 +157,4 @@ string query_file_privs (string filename) {
         }
     }
     return result;
-}
-
-mixed unguarded (function f) {
-    object previous_unguarded;
-    string err;
-    mixed value;
-
-    if (!f || !functionp(f)) {
-        error("Bad argument 1 to access->unguarded");
-    }
-
-    if (
-        !regexp(base_name(previous_object(0)), "^/secure/sefun/") ||
-        (functionp(f) & FP_OWNER_DESTED)
-    ) {
-        error("Bad previous_object to access->unguarded");
-    }
-    previous_unguarded = __Unguarded;
-    __Unguarded = previous_object(1);
-    err = catch (value = evaluate(f));
-    __Unguarded = previous_unguarded;
-    if (err) {
-        error(err);
-    }
-    return value;
 }

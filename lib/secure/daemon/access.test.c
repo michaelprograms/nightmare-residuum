@@ -22,13 +22,6 @@ void test_query_file_privs () {
     }) :));
 }
 
-void test_unguarded () {
-    expect("unguarded handles bad arguments", (: ({
-        assert_catch((: testOb->unguarded((: MAX_INT :)) :), "*Bad previous_object to access->unguarded\n"),
-        assert_catch((: testOb->unguarded(function () { return MAX_INT; }) :), "*Bad previous_object to access->unguarded\n"),
-    }) :));
-}
-
 void test_query_allowed () {
     object basicOb;
 
