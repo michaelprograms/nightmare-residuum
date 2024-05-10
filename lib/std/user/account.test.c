@@ -3,8 +3,8 @@ inherit M_TEST;
 #define ACCOUNT_PATH "/save/account/a/accounttest.o"
 
 void after_each_test () {
-    if (unguarded((: file_size(ACCOUNT_PATH) :)) > -1) {
-        unguarded((: rm(ACCOUNT_PATH) :));
+    if (file_size(ACCOUNT_PATH) > -1) {
+        rm(ACCOUNT_PATH);
     }
 }
 
@@ -41,18 +41,18 @@ void test_account_times () {
         testOb->set_name("accounttest"),
         assert_equal(testOb->query_save_path(), ACCOUNT_PATH),
         testOb->save_data(),
-        assert_equal(unguarded((: file_size(ACCOUNT_PATH) :)) > 0, 1),
+        assert_equal(file_size(ACCOUNT_PATH) > 0, 1),
         assert_equal(testOb->query_created(), now),
         assert_equal(testOb->query_last_on(), now),
 
         // read in accounttest.o and modify the __LastOn
-        unguarded((: write_file(ACCOUNT_PATH, implode(map(explode(read_file(ACCOUNT_PATH), "\n"), function (string line) {
+        write_file(ACCOUNT_PATH, implode(map(explode(read_file(ACCOUNT_PATH), "\n"), function (string line) {
             if (regexp(line, "^__LastOn ")) {
                 return "__LastOn " + (now - 100);
             }
             return line;
-        }), "\n"), 1) :)),
-        assert_equal(unguarded((: file_size(ACCOUNT_PATH) :)) > 0, 1),
+        }), "\n"), 1),
+        assert_equal(file_size(ACCOUNT_PATH) > 0, 1),
         testOb->restore_data(),
         assert_equal(testOb->query_last_on(), now - 100),
 
