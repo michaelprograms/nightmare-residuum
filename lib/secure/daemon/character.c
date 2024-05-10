@@ -26,7 +26,7 @@ varargs string query_save_path (string name, string type) {
 varargs int query_exists (string name, string type) {
     if (!name) error("Bad argument 1 to character->query_exists");
     if (!stringp(type) || !sizeof(type)) type = "character";
-    return query_valid_name(name) && unguarded((: file_size, query_save_path(name, type) :)) > -1;
+    return query_valid_name(name) && file_size(query_save_path(name, type)) > -1;
 }
 
 object query_whois_character (string name) {
