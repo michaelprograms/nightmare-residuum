@@ -24,7 +24,7 @@ varargs void add_alias (string name, string template, string *defaults, int xver
     mapping new_alias;
 
     if (sizeof(__Aliases) >= MAX_ALIAS_COUNT) {
-        write("You have reached the maxmimum amount of aliases.\n");
+        write("You have reached the maximum amount of aliases.\n");
         return;
     }
 
@@ -110,6 +110,7 @@ void create () {
         return;
     }
     if (!sizeof(__Aliases)) {
+        __Aliases = ([ ]);
         add_alias("l", "look");
         add_alias("n", "go north");
         add_alias("ne", "go northeast");
