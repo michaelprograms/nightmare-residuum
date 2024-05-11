@@ -1,5 +1,4 @@
 inherit STD_COMMAND;
-inherit S_SHELL_ALIAS;
 
 void create () {
     command::create();
@@ -8,21 +7,21 @@ void create () {
 }
 
 private void print_all_aliases (object shell) {
-    StructShellAlias alias;
+    mapping alias;
     string *aliasKeys;
     string *list = ({ });
 
     aliasKeys = shell->query_alias_names();
     foreach (string name in sort_array(aliasKeys, 1)) {
         alias = shell->query_alias(name);
-        list += ({ name, alias->template, });
-        if (sizeof(alias->defaults) == 1 && alias->defaults[0] != "") {
-            list += ({ "$*: " + alias->defaults[0], });
-        } else if (sizeof(alias->defaults) > 1) {
-            list += ({ "$0: " + alias->defaults[0], });
-            for (int i = 1; i < sizeof(alias->defaults); i ++) {
+        list += ({ name, alias["t"], });
+        if (sizeof(alias["d"]) == 1 && alias["d"][0] != "") {
+            list += ({ "$*: " + alias["d"][0], });
+        } else if (sizeof(alias["d"]) > 1) {
+            list += ({ "$0: " + alias["d"][0], });
+            for (int i = 1; i < sizeof(alias["d"]); i ++) {
                 // insert blank 1st & 2nd columns
-                list += ({ "", "", "$" + i + ": " + alias->defaults[i], });
+                list += ({ "", "", "$" + i + ": " + alias["d"][i], });
             }
         } else {
             // insert blank 3rd column
@@ -56,12 +55,12 @@ void command (string input, mapping flags) {
         string name;
 
         if (sizeof(argv) == 1) {
-            StructShellAlias alias;
+            mapping alias;
             alias = this_user()->query_shell()->query_alias(argv[0]);
             if (!alias) {
                 message("action", "Alias '" + argv[0] + "': not found", this_user());
             } else {
-                message("action", "Alias '" + argv[0] + "': " + alias->template, this_user());
+                message("action", "Alias '" + argv[0] + "': " + alias["t"], this_user());
             }
         } else {
             name = implode(argv[1..], " ");

@@ -1,21 +1,27 @@
 #define MAX_ALIAS_COUNT 100
 
-inherit S_SHELL_ALIAS;
-
-private mapping __Aliases = ([ ]);
+private mapping __Aliases = ([
+/*
+Data format:
+    "t": string // template
+    "d": string * // defaults
+    "n": int
+*/
+]);
 private string *__XAliases = ({ });
+
 
 nomask string *query_alias_names () {
     return keys(__Aliases);
 }
-nomask StructShellAlias query_alias (string alias) {
+nomask mapping query_alias (string alias) {
     return __Aliases[alias];
 }
 
 varargs void add_alias (string name, string template, string *defaults, int xverb) {
-    StructShellAlias new_alias;
     int i;
     string *tmp;
+    mapping new_alias;
 
     if (sizeof(__Aliases) >= MAX_ALIAS_COUNT) {
         write("You have reached the maxmimum amount of aliases.\n");
@@ -26,22 +32,24 @@ varargs void add_alias (string name, string template, string *defaults, int xver
         template += " $*";
     }
 
-    new_alias = new(StructShellAlias);
-    new_alias.template = template;
-    new_alias.defaults = defaults;
     tmp = explode(template[strsrch(template, "$")..], "$");
-    new_alias.num_args = max(map(tmp, function (string s) {
-        int d;
-        sscanf(s, "%d%s", d, s);
-        return d;
-    }));
 
-    if (!arrayp(new_alias.defaults)) {
-        new_alias.defaults = ({ });
+    new_alias = ([
+        "t": template,
+        "d": defaults,
+        "n": max(map(tmp, function (string s) {
+            int d;
+            sscanf(s, "%d%s", d, s);
+            return d;
+        })),
+    ]);
+
+    if (!arrayp(new_alias["d"])) {
+        new_alias["d"] = ({ });
     }
-    i = new_alias.num_args - (sizeof(defaults) - 1);
+    i = new_alias["n"] - (sizeof(defaults) - 1);
     while (i--) {
-        new_alias.defaults += ({ "" });
+        new_alias["d"] += ({ "" });
     }
 
     if (xverb) {
@@ -58,7 +66,7 @@ nomask void remove_alias (string name) {
 
 mixed expand_alias (string input) {
     string *argv = explode(input, " ");
-    StructShellAlias currentAlias;
+    mapping currentAlias;
     string *xverbMatches, expandedInput;
     int numArgs = sizeof(argv) - 1, i, j;
 
@@ -79,11 +87,11 @@ mixed expand_alias (string input) {
         return trim(implode(argv, " "));
     }
 
-    expandedInput = replace_string(currentAlias.template, "\\\\$", sprintf("%c", 255));
+    expandedInput = replace_string(currentAlias["t"], "\\\\$", sprintf("%c", 255));
 
-    for (i = 1, j = numArgs; i <= currentAlias.num_args; i ++, j --) {
+    for (i = 1, j = numArgs; i <= currentAlias["n"]; i ++, j --) {
         if (j < 1) {
-            expandedInput = replace_string(expandedInput, sprintf("$%d", i), currentAlias.defaults[i]);
+            expandedInput = replace_string(expandedInput, sprintf("$%d", i), currentAlias["d"][i]);
         } else {
             expandedInput = replace_string(expandedInput, sprintf("$%d", i), argv[i]);
         }
@@ -91,7 +99,7 @@ mixed expand_alias (string input) {
     if (j > 0) {
         expandedInput = replace_string(expandedInput, "$*", implode(argv[i..], " "));
     } else {
-        expandedInput = replace_string(expandedInput, "$*", currentAlias.defaults[0]);
+        expandedInput = replace_string(expandedInput, "$*", currentAlias["d"][0]);
     }
 
     return trim(replace_string(expandedInput, sprintf("%c", 255), "$"));

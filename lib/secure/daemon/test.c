@@ -355,7 +355,7 @@ void run (mapping options) {
     write("Scanning for test files...\n");
     update_test_data("/secure/", "/secure/cmd");
     update_test_data("/daemon/");
-    update_test_data("/std/", "/std/mock|/std/struct");
+    update_test_data("/std/", "/std/mock");
 
     __TestFiles = keys(__Tests);
     __TestFiles = sort_array(__TestFiles, function(string a, string b) {

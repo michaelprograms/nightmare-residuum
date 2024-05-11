@@ -49,7 +49,9 @@ void handle_remove () {
 void execute_command (string command) {
     string *split, action, input;
 
-    if (!command) return;
+    if (!command) {
+        return;
+    }
 
     split = explode(command, " ") - ({ "" });
     action = split[0];
@@ -68,10 +70,14 @@ void execute_command (string command) {
 }
 
 protected void shell_input (mixed input) {
-    if (input == -1) return handle_remove();
+    if (input == -1) {
+        return handle_remove();
+    }
 
     input = trim(input);
-    if (input == "") return;
+    if (input == "") {
+        return;
+    }
 
     __History += ({ input });
     if (sizeof(__History) > 40) {

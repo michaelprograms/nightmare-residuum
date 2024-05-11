@@ -78,9 +78,4 @@
 #define MASTER          "/secure/daemon/master"
 #define SEFUN           "/secure/sefun/sefun"
 
-// structs
-#define S_SHELL_ALIAS   "/std/struct/shell_alias.c"
-#define StructShellAlias    struct ShellAlias
-#define StructUserInput     struct UserInput
-
 #endif /* __GLOBAL_H__ */
