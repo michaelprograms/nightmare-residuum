@@ -8,7 +8,7 @@ string *test_order () {
         "test_error_applies",
         // "test_ed_applies",
         "test_security_applies",
-     });
+    });
 }
 
 object userOb;
