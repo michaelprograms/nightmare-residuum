@@ -8,6 +8,8 @@ void test_remove_article () {
         assert_equal(testOb->json_encode(123.45), "123.450000"),
 
         assert_equal(testOb->json_encode("String"), "\"String\""),
+        assert_equal(testOb->json_encode("\\"), "\"\\\\\""),
+        assert_equal(testOb->json_encode("\\\""), "\"\\\"\""),
 
         assert_equal(testOb->json_encode(({ 1, 2, 3, "a", "b", "c" })), "[1,2,3,\"a\",\"b\",\"c\"]"),
 
