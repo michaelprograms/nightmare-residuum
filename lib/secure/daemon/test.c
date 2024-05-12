@@ -418,11 +418,11 @@ string create_coverage (string path) {
         } else if (pcre_match(__RawLines[i], "^}$")) {
             // End of Function
             line = "} " + __RawLines[i];
-        } else if (pcre_match(__RawLines[i], "^\\s+} else {")) {
+        } else if (pcre_match(__RawLines[i], "^\\s+\\} else \\{")) {
             // Else Construct
             line = __RawLines[i] + " D_TEST->line_hit(" + (i+1) + ");";
             __Lines[i+1] = ({ 0 });
-        } else if (sizeof(reMatches = pcre_extract(__RawLines[i], "^(\\s+} else if \\()(.*)(\\) {)")) > 0) {
+        } else if (sizeof(reMatches = pcre_extract(__RawLines[i], "^(\\s+\\} else if \\()(.*)(\\) \\{)")) > 0) {
             // Else If Construct
             line = reMatches[0] + "D_TEST->line_hit(" + (i+1) + ") || (" + reMatches[1] + ")" + reMatches[2];
             __Lines[i+1] = ({ 0 });
