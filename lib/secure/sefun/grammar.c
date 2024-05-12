@@ -22,34 +22,47 @@ varargs string add_article (string str, int definite) {
 
 // a number denoting quantity (one, two, three, etc)
 string cardinal (int n) {
-    string sign;
-    if (undefinedp(n) || !intp(n)) error("Bad argument 1 to grammar->cardinal");
-    sign = (n < 0 ? "negative " : "");
+    string sign = "";
+    if (undefinedp(n) || !intp(n)) {
+        error("Bad argument 1 to grammar->cardinal");
+    }
+    if (n < 0) {
+        sign = "negative ";
+    }
     return sign + query_num(abs(n));
 }
 
+nosave private mapping __Ordinals = ([
+    9: "ninth",
+    8: "eighth",
+    7: "seventh",
+    6: "sixth",
+    5: "fifth",
+    4: "fourth",
+    3: "third",
+    2: "second",
+    1: "first",
+    0: "zeroth",
+]);
 // returns a number indicating position or order (1st, 2nd, 3rd, tenth, etc)
 string ordinal (int n) {
     int x;
-    if (undefinedp(n) || !intp(n)) error("Bad argument 1 to grammar->ordinal");
-    if (n < 0) error("Bad argument 1 to grammar->ordinal");
+    if (undefinedp(n) || !intp(n) || n < 0) {
+        error("Bad argument 1 to grammar->ordinal");
+    }
     if (n < 10) {
-        if (n == 9) return "ninth";
-        if (n == 8) return "eighth";
-        if (n == 7) return "seventh";
-        if (n == 6) return "sixth";
-        if (n == 5) return "fifth";
-        if (n == 4) return "fourth";
-        if (n == 3) return "third";
-        if (n == 2) return "second";
-        if (n == 1) return "first";
-        if (n == 0) return "zeroth";
+        return __Ordinals[n];
     } else {
         x = (n < 14 && n > 10) ? 4 : n % 10;
-        if (x == 1) return n + "st";
-        else if (x == 2) return n + "nd";
-        else if (x == 3) return n + "rd";
-        else return n + "th";
+        if (x == 1) {
+            return n + "st";
+        } else if (x == 2) {
+            return n + "nd";
+        } else if (x == 3) {
+            return n + "rd";
+        } else {
+            return n + "th";
+        }
     }
 }
 

@@ -56,6 +56,11 @@ void test_cardinal () {
         assert_equal(testOb->cardinal(100000), "many"),
         assert_equal(testOb->cardinal(-100000), "negative many"),
     }) :));
+
+    expect("cardinal handles bad inputs", (: ({
+        assert_catch((: testOb->cardinal(UNDEFINED) :), "*Bad argument 1 to grammar->cardinal\n"),
+        assert_catch((: testOb->cardinal(1.0) :), "*Bad argument 1 to grammar->cardinal\n"),
+    }) :));
 }
 
 void test_ordinal () {
@@ -72,7 +77,8 @@ void test_ordinal () {
         assert_equal(testOb->ordinal(9), "ninth"),
     }) :));
 
-    expect("ordinal handles numbers outside 11..14 range", (: ({
+    expect("ordinal handles numbers outside 10..14 range", (: ({
+        assert_equal(testOb->ordinal(10), "10th"),
         assert_equal(testOb->ordinal(11), "11th"),
         assert_equal(testOb->ordinal(12), "12th"),
         assert_equal(testOb->ordinal(13), "13th"),
@@ -81,9 +87,17 @@ void test_ordinal () {
 
     expect("ordinal handles numbers outside 0..14 range", (: ({
         assert_equal(testOb->ordinal(15), "15th"),
+        assert_equal(testOb->ordinal(20), "20th"),
+        assert_equal(testOb->ordinal(21), "21st"),
         assert_equal(testOb->ordinal(22), "22nd"),
         assert_equal(testOb->ordinal(23), "23rd"),
         assert_equal(testOb->ordinal(24), "24th"),
+    }) :));
+
+    expect("ordinal handles bad inputs", (: ({
+        assert_catch((: testOb->ordinal(UNDEFINED) :), "*Bad argument 1 to grammar->ordinal\n"),
+        assert_catch((: testOb->ordinal(1.0) :), "*Bad argument 1 to grammar->ordinal\n"),
+        assert_catch((: testOb->ordinal(-1) :), "*Bad argument 1 to grammar->ordinal\n"),
     }) :));
 }
 
