@@ -453,3 +453,39 @@ string create_coverage (string path) {
     write_file(cPath, implode(newLines, "\n"), 1);
     return cPath;
 }
+
+void analyze_coverage (object target) {
+    int l = sizeof(__RawLines);
+    string *lines = ({ });
+
+    if (!target) {
+        return;
+    }
+
+    for (int i = 0; i < l; i ++) {
+        string lineNum = ""+(i+1);
+        string bColor;
+        string lineInfo;
+
+        if (!sizeof(__Lines[i+1]) > 1) { // Function
+            if (!__Lines[i+1][0]) {
+                bColor = "B_FFC";
+            } else {
+                bColor = "B_G14";
+            }
+            lineInfo = __Lines[i+1][0] + "x";
+        } else if (!undefinedp(__Lines[i+1])) { // Line
+            if (!__Lines[i+1][0]) {
+                bColor = "B_FFC";
+            } else {
+                bColor = "B_G14";
+            }
+            lineInfo = __Lines[i+1][0] + "x";
+        } else {
+            bColor = "B_G10";
+            lineInfo = "";
+        }
+        lines += ({ "%^" + bColor + "%^BLACK%^" + lineNum + sprintf("%*s", 8-sizeof(lineNum), lineInfo) + "%^RESET%^  " + __RawLines[i] });
+    }
+    target->handle_pager(lines);
+}
