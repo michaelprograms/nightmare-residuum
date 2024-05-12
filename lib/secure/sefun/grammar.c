@@ -140,7 +140,7 @@ string consolidate (int n, string str) {
 
 varargs string conjunction (string *list, string conjunction) {
     string result = "";
-    int i, l;
+    int l;
 
     if (!arrayp(list) || !sizeof(list)) {
         error("Bad argument 1 to grammar->conjunction");
