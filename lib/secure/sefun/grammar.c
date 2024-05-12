@@ -138,20 +138,25 @@ string consolidate (int n, string str) {
     return result;
 }
 
-string conjunction (string *list) {
+varargs string conjunction (string *list, string conjunction) {
     string result = "";
-    int i, max;
+    int i, l;
 
-    if (arrayp(list)) {
-        list = filter(list, (: stringp($1) && strlen($1) > 0 :));
+    if (!arrayp(list) || !sizeof(list)) {
+        error("Bad argument 1 to grammar->conjunction");
     }
-    if (!arrayp(list) || !sizeof(list)) error("Bad argument 1 to grammar->conjunction");
-    for (i = 0, max = sizeof(list); i < max; i ++) {
-        if (i == max - 1 && max > 1) result += "and ";
-        result += list[i];
-        if (i == max - 1) continue;
-        else if (max > 2) result += ", ";
-        else result += " ";
+    if (undefinedp(conjunction)) {
+        conjunction = "and";
+    }
+
+    l = sizeof(list);
+    if (l == 1) {
+        result = list[0];
+    } else if (l == 2) {
+        result = list[0] + " " + conjunction + " " + list[1];
+    } else if (l > 1) {
+        list[<1] = conjunction + " " + list[<1];
+        result = implode(list, ", ");
     }
     return result;
 }

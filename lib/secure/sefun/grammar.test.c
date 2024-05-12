@@ -25,11 +25,20 @@ void test_add_article () {
 }
 
 void test_conjunction () {
-    expect("conjunction handles list", (: ({
+    expect("conjunction handles list with default 'and'", (: ({
         assert_equal(testOb->conjunction(({ "1" })), "1"),
         assert_equal(testOb->conjunction(({ "1", "2" })), "1 and 2"),
         assert_equal(testOb->conjunction(({ "1", "2", "3" })), "1, 2, and 3"),
         assert_equal(testOb->conjunction(({ "1", "2", "3", "4", "5", "6", "7", "8", "9", "10" })), "1, 2, 3, 4, 5, 6, 7, 8, 9, and 10"),
+    }) :));
+    expect("conjunction handles list with 'or'", (: ({
+        assert_equal(testOb->conjunction(({ "1" }), "or"), "1"),
+        assert_equal(testOb->conjunction(({ "1", "2" }), "or"), "1 or 2"),
+        assert_equal(testOb->conjunction(({ "1", "2", "3" }), "or"), "1, 2, or 3"),
+        assert_equal(testOb->conjunction(({ "1", "2", "3", "4", "5", "6", "7", "8", "9", "10" }), "or"), "1, 2, 3, 4, 5, 6, 7, 8, 9, or 10"),
+    }) :));
+    expect("conjunction handles bad input", (: ({
+        assert_catch((: testOb->conjunction(({ })) :), "*Bad argument 1 to grammar->conjunction\n"),
     }) :));
 }
 
