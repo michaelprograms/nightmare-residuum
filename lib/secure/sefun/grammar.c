@@ -1,13 +1,7 @@
 string remove_article (string str) {
-    string tmp;
-    if (!stringp(str)) {
-        str = "";
-    } else if (sscanf(str, "the %s", tmp)) {
-        str = tmp;
-    } else if (sscanf(str, "a %s", tmp)) {
-        str = tmp;
-    } else if (sscanf(str, "an %s", tmp)) {
-        str = tmp;
+    string *matches;
+    if (sizeof(matches = pcre_extract(str, "^(?:an?|the) (.+)$")) > 0) {
+        str = matches[0];
     }
     return str;
 }
@@ -126,7 +120,9 @@ string consolidate (int n, string str) {
 
     words = explode(str, " ");
     tmp = lower_case(words[0]);
-    if (member_array(tmp, ({"a","an","the","one"})) > -1) words = words[1..];
+    if (member_array(tmp, ({"a","an","the","one"})) > -1) {
+        words = words[1..];
+    }
 
     result = sprintf("%s %s", cardinal(n), pluralize(implode(words, " ")));
 

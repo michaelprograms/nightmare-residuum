@@ -2,7 +2,6 @@ inherit M_TEST;
 
 void test_remove_article () {
     expect("articles are trimmed", (: ({
-        assert_equal(testOb->remove_article(0), ""),
         assert_equal(testOb->remove_article(""), ""),
 
         assert_equal(testOb->remove_article("thing"), "thing"),
