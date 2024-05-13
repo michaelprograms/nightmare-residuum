@@ -1,4 +1,5 @@
 inherit M_TEST;
+#include "access.h"
 
 string *test_order () {
     return ({
@@ -26,6 +27,17 @@ void test_applies () {
         assert_equal(mudStats["NAME"], mud_name()),
         assert_equal(member_array("PLAYERS", keys(mudStats)) > -1, 1),
         assert_equal(member_array("UPTIME", keys(mudStats)) > -1, 1),
+    }) :));
+
+    expect("privs_file handles files", (: ({
+        assert_equal(testOb->privs_file("/etc/welcome"), ACCESS_ALL),
+        assert_equal(testOb->privs_file("/daemon/ansi.c"), ACCESS_MUDLIB),
+        assert_equal(testOb->privs_file("/std/object.c"), ACCESS_ASSIST),
+        assert_equal(testOb->privs_file("/secure/daemon/access.c"), ACCESS_SECURE),
+        assert_equal(testOb->privs_file("/realm/user/workroom.c"), "user"),
+        assert_equal(testOb->privs_file("/domain/Area/room/room1.c"), "Area"),
+        assert_equal(testOb->privs_file("/domain/CAPITALIZED/file.c"), "Capitalized"),
+        assert_equal(testOb->privs_file("/"), 0),
     }) :));
 }
 
@@ -67,7 +79,12 @@ void set_ed_setup (int config) {
 }
 
 void test_ed_applies () {
-    expect("retrieve_ed_setup", (: ({
+    expect("make_path_absolute handles . and ..", (: ({
+        assert_equal(testOb->make_path_absolute("."), "/"),
+        assert_equal(testOb->make_path_absolute("/path"), "/path"),
+    }) :));
+
+    expect("save and retrieve ed_setup", (: ({
         assert_equal(testOb->retrieve_ed_setup(this_object()), 0),
         assert_equal(testOb->save_ed_setup(this_object(), 123), 1),
         assert_equal(testOb->retrieve_ed_setup(this_object()), 123),
