@@ -102,8 +102,10 @@ void done_test (mapping results) {
         if (coverageAfterTests) {
             string file = __TestFiles[currentTest][0..<8] + ".c";
             __TotalLines[file] = ([
-                "fns": hitFns + unhitFns > 0 ? hitFns * 100.0 / (hitFns + unhitFns) : 0.0,
-                "lines": totalLines > 0 ? hitLines * 100.0 / totalLines : 0.0,
+                "fnsPct": totalFns > 0 ? hitFns * 100.0 / (totalFns) : 0.0,
+                "fnsNum": hitFns + "/" + totalFns,
+                "linesPct": totalLines > 0 ? hitLines * 100.0 / totalLines : 0.0,
+                "linesNum": hitLines + "/" + totalLines,
                 "uncovered": convert_to_ranges(uncoveredLines),
             ]);
         }
@@ -181,42 +183,49 @@ private string format_total_line (string name, int current, int total) {
     return tmp;
 }
 string format_coverage_line (int n, mapping coverage) {
-    float fns = coverage["fns"];
-    float lines = coverage["lines"];
+    float fnsPct = coverage["fnsPct"];
+    float linesPct = coverage["linesPct"];
     string uncovered = coverage["uncovered"];
-    string cFns = "", cLines = "", cReset = "\e[0m";
+    string fnsC = "", linesC = "", resetC = "\e[0m";
+    string result;
 
-    if (fns == 100.0) {
-        cFns = "\e[38;5;10m";
-    } else if (fns >= 80.0) {
-        cFns = "\e[38;5;2m";
-    } else if (fns >= 60.0) {
-        cFns = "\e[38;5;11m";
-    } else if (fns >= 40.0) {
-        cFns = "\e[38;5;3m";
-    } else if (fns >= 20.0) {
-        cFns = "\e[38;5;1m";
+    if (fnsPct == 100.0) {
+        fnsC = "\e[38;5;10m";
+    } else if (fnsPct >= 80.0) {
+        fnsC = "\e[38;5;2m";
+    } else if (fnsPct >= 60.0) {
+        fnsC = "\e[38;5;11m";
+    } else if (fnsPct >= 40.0) {
+        fnsC = "\e[38;5;3m";
+    } else if (fnsPct >= 20.0) {
+        fnsC = "\e[38;5;1m";
     } else {
-        cFns = "\e[38;5;9m";
+        fnsC = "\e[38;5;9m";
     }
-    if(lines == 100.0) {
-        cLines = "\e[38;5;10m";
-    } else if (lines >= 80.0) {
-        cLines = "\e[38;5;2m";
-    } else if (lines >= 60.0) {
-        cLines = "\e[38;5;11m";
-    } else if (lines >= 40.0) {
-        cLines = "\e[38;5;3m";
-    } else if (lines >= 20.0) {
-        cLines = "\e[38;5;1m";
+    if (linesPct == 100.0) {
+        linesC = "\e[38;5;10m";
+    } else if (linesPct >= 80.0) {
+        linesC = "\e[38;5;2m";
+    } else if (linesPct >= 60.0) {
+        linesC = "\e[38;5;11m";
+    } else if (linesPct >= 40.0) {
+        linesC = "\e[38;5;3m";
+    } else if (linesPct >= 20.0) {
+        linesC = "\e[38;5;1m";
     } else {
-        cLines = "\e[38;5;9m";
+        linesC = "\e[38;5;9m";
     }
-    if (sizeof(uncovered) > 36) {
-        uncovered = uncovered[0..36] + "…";
+    if (sizeof(uncovered) > 26) {
+        uncovered = uncovered[0..26] + "…";
     }
 
-    return sprintf("%-*' 's%s%6.2f%%%s %s%6.2f%%%s %-s", 23 - n, "", cFns, fns, cReset, cLines, lines, cReset, uncovered);
+    result = sprintf("%-*' 's", 23 - n, "");
+    result += sprintf("%s%3d%% %7|s", fnsC, fnsPct, coverage["fnsNum"]) + resetC + " ";
+    result += sprintf("%s%3d%% %7|s", linesC, linesPct, coverage["linesNum"]) + resetC + " ";
+    if (sizeof(uncovered)) {
+        result += uncovered;
+    }
+    return result;
 }
 
 void display_results (mapping results) {
@@ -264,6 +273,7 @@ void display_results (mapping results) {
     if (__Options["coverage"] && sizeof(__TotalLines)) {
         mapping tree = ([ "/": ([ ]) ]), treeRef;
         string *keys = sort_array(keys(__TotalLines), 1);
+        int n;
 
         for (int k = 0; k < sizeof(keys); k ++) {
             string *split = explode(keys[k], "/");
@@ -276,9 +286,10 @@ void display_results (mapping results) {
                 }
                 treeRef = treeRef[s];
             }
-            treeRef[split[<1]] = format_coverage_line(sizeof(split[<1]) + (sizeof(treeRef) > 9 ? 1 : 0) + sizeof(split) * 2, __TotalLines[keys[k]]);
+            n = sizeof(split[<1]) + (sizeof(treeRef) > 9 ? 1 : 0) + sizeof(split) * 2;
+            treeRef[split[<1]] = format_coverage_line(n, __TotalLines[keys[k]]);
         }
-        tree["/                      Fns     Lines   Uncovered Lines"] = tree["/"];
+        tree["/                      Fns          Lines        Uncovered Lines"] = tree["/"];
         map_delete(tree, "/");
         write(implode(tree(tree), "\n")+"\n\n");
     }
