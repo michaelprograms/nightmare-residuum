@@ -143,7 +143,9 @@ mapping query_powers () {
     return __Powers;
 }
 void set_powers (mapping powers) {
-    if (undefinedp(powers) || !mapp(powers)) error("Bad argument 1 to ability->set_powers");
+    if (undefinedp(powers) || !mapp(powers)) {
+        error("Bad argument 1 to ability->set_powers");
+    }
 
     __Powers = powers;
 }
@@ -286,7 +288,9 @@ int calculate_damage (object source, object target, string limb) {
 nosave private int __DifficultyFactor;
 
 void set_difficulty_factor (int factor) {
-    if (undefinedp(factor) || !intp(factor)) error("Bad argument 1 to ability->set_difficulty_factor");
+    if (undefinedp(factor) || !intp(factor)) {
+        error("Bad argument 1 to ability->set_difficulty_factor");
+    }
     __DifficultyFactor = factor;
 }
 int query_difficulty_factor () {
@@ -634,7 +638,9 @@ mixed can_verb (mixed args...) {
 void do_verb_lvs (mixed args...) {
     object *targets;
 
-    if (sizeof(args) < 2) return;
+    if (sizeof(args) < 2) {
+        return;
+    }
 
     targets = args[1];
     if (sizeof(targets) && __NumTargets == 1) {
