@@ -14,7 +14,9 @@ private mapping load_config (string path) {
         lines = explode(file, "\n");
         num = sizeof(lines);
         for (int i = 0; i < num; i ++) {
-            if (!lines[i] || lines[i] == "" || lines[i][0] == '#') continue;
+            if (!lines[i] || lines[i] == "" || lines[i][0] == '#') {
+                continue;
+            }
             if (sscanf(lines[i], "(%s) %s", key, value) == 2) {
                 result[key] = explode(value, ":");
             }
@@ -74,7 +76,9 @@ int query_allowed (object caller, string fn, string file, string mode) {
     // go through the stack from the caller down thru possible previous objects
     while (i--) {
         // skip invalid stack entry
-        if (!stack[i]) continue;
+        if (!stack[i]) {
+            continue;
+        }
 
         // skip if stack entry is member of the access system
         tmp = file_name(stack[i]);
