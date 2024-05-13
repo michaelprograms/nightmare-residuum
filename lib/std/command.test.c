@@ -7,7 +7,7 @@ string *test_order () {
         "test_help_text",
         "test_help_similar",
         "test_handle_help",
-     });
+    });
 }
 
 void test_name () {
@@ -17,7 +17,7 @@ void test_name () {
 }
 
 void test_syntax () {
-    expect("handles setting and querying syntax", (: ({
+    expect("syntax is settable and queryable", (: ({
         assert_equal(testOb->query_syntax(), UNDEFINED),
 
         testOb->set_syntax(testOb->query_name()),
@@ -25,6 +25,9 @@ void test_syntax () {
 
         testOb->set_syntax(testOb->query_name() + " [target]"),
         assert_equal(testOb->query_syntax(), "<" + testOb->query_name() + " [target]>"),
+    }) :));
+    expect("syntax handles bad inputs", (: ({
+        assert_catch((: testOb->set_syntax("") :), "*Bad argument 1 to command->set_syntax\n"),
     }) :));
 }
 
@@ -38,6 +41,9 @@ void test_help_text () {
         testOb->set_help_text("Different help text."),
         assert_equal(testOb->query_help_text(), "Different help text."),
     }) :));
+    expect("help text handles bad inputs", (: ({
+        assert_catch((: testOb->set_help_text("") :), "*Bad argument 1 to command->set_help_text\n"),
+    }) :));
 }
 
 void test_help_similar () {
@@ -49,6 +55,9 @@ void test_help_similar () {
 
         testOb->set_help_similar(({ "1", "2", "3", })),
         assert_equal(testOb->query_help_similar(), ({ "1", "2", "3", })),
+    }) :));
+    expect("help similar handles bad inputs", (: ({
+        assert_catch((: testOb->set_help_similar("") :), "*Bad argument 1 to command->set_help_similar\n"),
     }) :));
 }
 

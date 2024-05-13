@@ -8,7 +8,9 @@ string query_name () {
 }
 
 void set_syntax (string str) {
-    if (!sizeof(str)) error("Bad argument 1 to command->set_syntax");
+    if (!sizeof(str)) {
+        error("Bad argument 1 to command->set_syntax");
+    }
     __Syntax = format_syntax(str);
 }
 string query_syntax () {
@@ -21,7 +23,9 @@ string query_help_text () {
     return __HelpText;
 }
 void set_help_text (string str) {
-    if (!sizeof(str)) error("Bad argument 1 to command->set_help_text");
+    if (!sizeof(str)) {
+        error("Bad argument 1 to command->set_help_text");
+    }
 
     __HelpText = str;
 }
@@ -29,7 +33,9 @@ string *query_help_similar () {
     return __HelpSimilar;
 }
 void set_help_similar (string *similar) {
-    if (!arrayp(similar) || !sizeof(similar)) error("Bad argument 1 to command->set_help_similar");
+    if (!arrayp(similar) || !sizeof(similar)) {
+        error("Bad argument 1 to command->set_help_similar");
+    }
 
     __HelpSimilar = similar;
 }
