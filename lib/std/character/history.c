@@ -1,18 +1,30 @@
 #define HISTORY_MAX 25
 
-nosave private string *__Tells = ({ });
-nosave private string __TellReply;
-nosave private string *__Says = ({ });
+nosave string *__Tells = ({ });
+nosave string __TellReply;
+nosave string *__Says = ({ });
 
 /* ----- tells  ----- */
 
+private void initialize_history () {
+    if (!arrayp(__Tells)) {
+        __Tells = ({ });
+    }
+    if (!arrayp(__Says)) {
+        __Says = ({ });
+    }
+}
+
 string *query_tell_history () {
+    initialize_history();
     return __Tells;
 }
 void add_tell_history (string msg) {
-    if (!arrayp(__Tells)) __Tells = ({ });
+    initialize_history();
 
-    if (!sizeof(msg)) error("Bad argument 1 to history->add_tell_history");
+    if (!sizeof(msg)) {
+        error("Bad argument 1 to history->add_tell_history");
+    }
 
     __Tells += ({ msg });
 
@@ -25,7 +37,6 @@ string query_tell_reply () {
     return __TellReply;
 }
 void set_tell_reply (string name) {
-    if (!sizeof(name)) error("Bad argument 1 to history->set_tell_reply");
     __TellReply = name;
 }
 
@@ -35,9 +46,11 @@ string *query_say_history () {
     return __Says;
 }
 void add_say_history (string msg) {
-    if (!arrayp(__Says)) __Says = ({ });
+    initialize_history();
 
-    if (!sizeof(msg)) error("Bad argument 1 to history->add_say_history");
+    if (!sizeof(msg)) {
+        error("Bad argument 1 to history->add_say_history");
+    }
 
     __Says += ({ msg });
 
