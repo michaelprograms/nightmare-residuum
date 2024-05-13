@@ -2,6 +2,7 @@ inherit M_TEST;
 
 void test_attributes () {
     expect("null attributes are initialized", (: ({
+        assert_equal(testOb->query_attributes(), ([ ])),
         store_variable("__Attribute", UNDEFINED, testOb),
         assert_equal(testOb->query_attributes(), ([ ])),
     }) :));

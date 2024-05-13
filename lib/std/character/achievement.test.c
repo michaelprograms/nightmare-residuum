@@ -1,6 +1,12 @@
 inherit M_TEST;
 
 void test_achievements () {
+    expect("null achievements are initialized", (: ({
+        assert_equal(testOb->query_achievements(), ({ })),
+        store_variable("__Achievements", UNDEFINED, testOb),
+        assert_equal(testOb->query_achievements(), ({ })),
+    }) :));
+
     expect("achievements are settable and queryable", (: ({
         assert_equal(testOb->query_achievements(), ({ })),
 

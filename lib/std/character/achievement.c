@@ -1,8 +1,13 @@
-private mapping __Achievements = ([ ]);
+mapping __Achievements = ([ ]);
+
+private void initialize_achievements () {
+    if (!mapp(__Achievements)) {
+        __Achievements = ([ ]);
+    }
+}
 
 int set_achievement (string str) {
-    if (!mapp(__Achievements)) __Achievements = ([ ]);
-
+    initialize_achievements();
     if (__Achievements[str]) {
         return 0;
     }
@@ -10,16 +15,15 @@ int set_achievement (string str) {
     return 1;
 }
 int query_achievement (string str) {
-    if (!mapp(__Achievements)) __Achievements = ([ ]);
-
+    initialize_achievements();
     return !!__Achievements[str];
 }
 string *query_achievements () {
+    initialize_achievements();
     return keys(__Achievements);
 }
 
 void remove_achievement (string str) {
-    if (!mapp(__Achievements)) __Achievements = ([ ]);
-
+    initialize_achievements();
     map_delete(__Achievements, str);
 }
