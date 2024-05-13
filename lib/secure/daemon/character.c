@@ -8,8 +8,12 @@ nosave private int __ConnectedTotal = 0;
 
 int query_valid_name (string name) {
     int l;
-    if (!name || (l = strlen(name)) < 4 || l > 18) return 0;
-    if (regexp(name, "^[a-zA-Z]+[a-zA-Z\\ \\'\\-]+$")) return 1;
+    if (!name || (l = strlen(name)) < 4 || l > 18) {
+        return 0;
+    }
+    if (regexp(name, "^[a-zA-Z]+[a-zA-Z\\ \\'\\-]+$")) {
+        return 1;
+    }
     return 0;
 }
 
@@ -18,21 +22,31 @@ int query_valid_save_path (string name, string path) {
     return results[0] == name[0..0] && results[1] == name && member_array(results[2], VALID_TYPES) > -1;
 }
 varargs string query_save_path (string name, string type) {
-    if (strlen(name) < 4) error("Bad argument 1 to character->query_save_path");
-    if (undefinedp(type)) error("Bad argument 2 to character->query_save_path");
+    if (strlen(name) < 4) {
+        error("Bad argument 1 to character->query_save_path");
+    }
+    if (undefinedp(type)) {
+        error("Bad argument 2 to character->query_save_path");
+    }
     return DIR_SAVE_CHARACTER + "/" + name[0..0] + "/" + name + "/" + type + ".o";
 }
 
 varargs int query_exists (string name, string type) {
-    if (!name) error("Bad argument 1 to character->query_exists");
-    if (!stringp(type) || !sizeof(type)) type = "character";
+    if (!name) {
+        error("Bad argument 1 to character->query_exists");
+    }
+    if (!stringp(type) || !sizeof(type)) {
+        type = "character";
+    }
     return query_valid_name(name) && file_size(query_save_path(name, type)) > -1;
 }
 
 object query_whois_character (string name) {
     object char;
 
-    if (!query_exists(name)) return 0;
+    if (!query_exists(name)) {
+        return 0;
+    }
 
     char = clone_object(STD_CHARACTER);
     char->set_name(capitalize(name));
@@ -45,7 +59,9 @@ int query_immortal (string name) {
     object char;
     int immortal;
 
-    if (!query_exists(name)) return 0;
+    if (!query_exists(name)) {
+        return 0;
+    }
 
     char = clone_object(STD_CHARACTER);
     char->set_name(capitalize(name));
