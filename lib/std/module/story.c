@@ -25,7 +25,9 @@ int query_story_delay () {
 /* ----- ----- */
 
 void story_action (object target, mixed line, mixed *lines) {
-    if (!target || (environment(target) != this_object() && environment(target) != environment())) return;
+    if (!target || (environment(target) != this_object() && environment(target) != environment())) {
+        return;
+    }
 
     if (stringp(line)) {
         message("action", line, target);
@@ -45,6 +47,8 @@ void story_action_final (object target) {
 }
 
 void story_start (object target) {
-    if (!target || (environment(target) != this_object() && environment(target) != environment())) return;
+    if (!target || (environment(target) != this_object() && environment(target) != environment())) {
+        return;
+    }
     call_out((: story_action, target, __Lines[0], __Lines[1..] :), __Delay);
 }
