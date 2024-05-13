@@ -196,12 +196,16 @@ mixed direct_look_liv (mixed args...) {
     return direct_look_at_liv(args);
 }
 mixed indirect_give_obj_to_liv (object ob, object liv, string obStr, mixed livStr) {
-    if (previous_object() == liv && environment(ob) == liv) return "You already have that.";
+    if (previous_object() == liv && environment(ob) == liv) {
+        return "You already have that.";
+    }
     return 1;
 }
 mixed direct_give_wrd_wrd_to_liv (mixed args...) {
     object liv = args[2];
-    if (previous_object() == liv) return "You already have that.";
+    if (previous_object() == liv) {
+        return "You already have that.";
+    }
     return 1;
 }
 mixed indirect_inject_obj_into_liv (mixed args...) {
