@@ -32,8 +32,12 @@ void restore_autoload () {
     string err;
 
     for (i = 0; i < l; i ++) {
-        if (!sizeof(__Autoload[i])) continue;
-        if (!stringp(__Autoload[i][0])) continue;
+        if (!sizeof(__Autoload[i])) {
+            continue;
+        }
+        if (!stringp(__Autoload[i][0])) {
+            continue;
+        }
 
         err = catch(ob = new(__Autoload[i][0]));
         if (err || !ob) {
@@ -42,7 +46,9 @@ void restore_autoload () {
             }
             continue;
         }
-        if (!ob->handle_move(this_object()) || !ob) continue;
+        if (!ob->handle_move(this_object()) || !ob) {
+            continue;
+        }
         if (sizeof(__Autoload[i]) > 1) {
             err = catch (ob->restore_autoload(__Autoload[i][1..]));
             if (err && this_object()->query_immortal()) {
@@ -51,7 +57,6 @@ void restore_autoload () {
         }
     }
 }
-
 
 /* ----- applies ----- */
 
