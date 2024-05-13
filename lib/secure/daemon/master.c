@@ -121,7 +121,9 @@ object compile_object (string path) {
     if (!stringp(path) || !sizeof(path)) {
         error("Bad argument 1 to master->compile_object");
     }
-    if (path[0..0] != "/") path = "/" + path;
+    if (path[0..0] != "/") {
+        path = "/" + path;
+    }
 
     if (sscanf(path, "/domain/%s/virtual/room/%s/", area, room) == 2) {
         vpath = sprintf("/domain/%s/virtual/%s", area, room);
@@ -134,8 +136,11 @@ object compile_object (string path) {
 
 // This apply is called by the sprintf efun when printing an object.
 string object_name (object ob) {
-    if (!ob) return "<destructed>";
-    else if (interactive(ob)) return ob->query_key_name() + " <interactive>";
+    if (!ob) {
+        return "<destructed>";
+    } else if (interactive(ob)) {
+        return ob->query_key_name() + " <interactive>";
+    }
     return 0;
 }
 
@@ -168,9 +173,14 @@ private string trace_line (object obj, string prog, string file, int line) {
     int num;
     sscanf(objfn, "%s#%d", objfn, num);
     objfn += ".c";
-    if (objfn != prog && objfn != ("/" + prog)) ret += sprintf(" (%s)", prog);
-    if (file != prog) ret += sprintf(" at %s:%d\n", file, line);
-    else ret += sprintf(" at line %d\n", line);
+    if (objfn != prog && objfn != ("/" + prog)) {
+        ret += sprintf(" (%s)", prog);
+    }
+    if (file != prog) {
+        ret += sprintf(" at %s:%d\n", file, line);
+    } else {
+        ret += sprintf(" at line %d\n", line);
+    }
     return ret;
 }
 private varargs string standard_trace (mapping e) {
@@ -312,7 +322,9 @@ int valid_database (object ob, string action, mixed *info) {
 
 // This apply controls the use of efun:: prefix.
 varargs int valid_override (string file, string efun_name, string main_file) {
-    if (file[0] != '/') return 0;
+    if (file[0] != '/') {
+        return 0;
+    }
 
     switch (efun_name) {
         case "input_to":
@@ -429,8 +441,11 @@ string parser_error_message (int type, object ob, mixed arg, int plural) {
     string wut;
     object wat;
 
-    if (ob) err = ob->query_short();
-    else err = "";
+    if (ob) {
+        err = ob->query_short();
+    } else {
+        err = "";
+    }
 
     if (sizeof(arg) && arg[<1] == '\n') {
         // trim newline added by driver
@@ -440,10 +455,14 @@ string parser_error_message (int type, object ob, mixed arg, int plural) {
     debug_message("parser_error_message: "+type+" "+identify(ob)+" "+arg+" "+plural);
     switch (type) {
     case 0:
-        if (arg && objectp(arg)) wat = arg;
+        if (arg && objectp(arg)) {
+            wat = arg;
+        }
         if (!wat && arg && arrayp(arg) && sizeof(arg)) {
             foreach (mixed element in arg) {
-                if (objectp(element)) wat = element;
+                if (objectp(element)) {
+                    wat = element;
+                }
             }
         }
         if (ob && wat) {
@@ -461,19 +480,29 @@ string parser_error_message (int type, object ob, mixed arg, int plural) {
         if (plural || (arg && stringp(arg))) {
             if (plural) { // || get_object(arg, this_player())) {
                 return "It appears you must be more specific.";
-            } else if (arg && stringp(arg)) wut = remove_article(arg);
-        } else wut = "that";
+            } else if (arg && stringp(arg)) {
+                wut = remove_article(arg);
+            }
+        } else {
+            wut = "that";
+        }
         err = capitalize(wut) +" is not here.";
         break;
 
     case ERR_NOT_LIVING:
-        if (plural) err = "None of the " + pluralize(remove_article(arg)) +" are alive.";
-        else err = "The " + remove_article(arg) + " is not alive.";
+        if (plural) {
+            err = "None of the " + pluralize(remove_article(arg)) +" are alive.";
+        } else {
+            err = "The " + remove_article(arg) + " is not alive.";
+        }
         break;
 
     case ERR_NOT_ACCESSIBLE:
-        if (plural) err = "You can't get to them.";
-        else err = "You can't get to it.";
+        if (plural) {
+            err = "You can't get to them.";
+        } else {
+            err = "You can't get to it.";
+        }
         break;
 
     case ERR_AMBIG:
@@ -488,10 +517,13 @@ string parser_error_message (int type, object ob, mixed arg, int plural) {
                 err = "Do you mean ";
                 for (i = 0; i < sizeof(obs); i ++) {
                     if (sizeof(obs[i]) > 1) {
-                        err += "one of the " + consolidate(sizeof(obs[i]),obs[i][0]->query_short());
+                        err += "one of the " + consolidate(sizeof(obs[i]), obs[i][0]->query_short());
                     } else err += obs[i][0]->query_short();
-                    if (i == (sizeof(obs) - 2)) err += " or ";
-                    else if (i < sizeof(obs) - 1) err += ", ";
+                    if (i == (sizeof(obs) - 2)) {
+                        err += " or ";
+                    } else if (i < sizeof(obs) - 1) {
+                        err += ", ";
+                    }
                 }
                 err += "?";
             }
@@ -499,8 +531,11 @@ string parser_error_message (int type, object ob, mixed arg, int plural) {
         }
 
     case ERR_ORDINAL:
-        if (arg > 1) err = "There are only " + arg + " of them.";
-        else err = "There is only one of them.";
+        if (arg > 1) {
+            err = "There are only " + arg + " of them.";
+        } else {
+            err = "There is only one of them.";
+        }
         break;
 
     case ERR_ALLOCATED:
