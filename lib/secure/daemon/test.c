@@ -182,48 +182,44 @@ private string format_total_line (string name, int current, int total) {
     tmp += "  " + sprintf("%6.2f", current * 100.0 / total) + "%";
     return tmp;
 }
+private string query_coverage_gradient (float f) {
+    switch (to_int(f / 20)) {
+        case 5:
+            return "\e[38;5;10m";
+        case 4:
+            return "\e[38;5;2m";
+        case 3:
+            return "\e[38;5;11m";
+        case 2:
+            return "\e[38;5;3m";
+        case 1:
+            return "\e[38;5;1m";
+        default:
+            return "\e[38;5;9m";
+    }
+}
 string format_coverage_line (int n, mapping coverage) {
     float fnsPct = coverage["fnsPct"];
     float linesPct = coverage["linesPct"];
+    float combinedPct = (fnsPct + linesPct) / 2.0;
     string uncovered = coverage["uncovered"];
-    string fnsC = "", linesC = "", resetC = "\e[0m";
+    string fnsC = "", linesC = "", combinedC = "", resetC = "\e[0m";
     string result;
 
-    if (fnsPct == 100.0) {
-        fnsC = "\e[38;5;10m";
-    } else if (fnsPct >= 80.0) {
-        fnsC = "\e[38;5;2m";
-    } else if (fnsPct >= 60.0) {
-        fnsC = "\e[38;5;11m";
-    } else if (fnsPct >= 40.0) {
-        fnsC = "\e[38;5;3m";
-    } else if (fnsPct >= 20.0) {
-        fnsC = "\e[38;5;1m";
-    } else {
-        fnsC = "\e[38;5;9m";
-    }
-    if (linesPct == 100.0) {
-        linesC = "\e[38;5;10m";
-    } else if (linesPct >= 80.0) {
-        linesC = "\e[38;5;2m";
-    } else if (linesPct >= 60.0) {
-        linesC = "\e[38;5;11m";
-    } else if (linesPct >= 40.0) {
-        linesC = "\e[38;5;3m";
-    } else if (linesPct >= 20.0) {
-        linesC = "\e[38;5;1m";
-    } else {
-        linesC = "\e[38;5;9m";
-    }
-    if (sizeof(uncovered) > 26) {
-        uncovered = uncovered[0..26] + "…";
+    fnsC = query_coverage_gradient(fnsPct);
+    linesC = query_coverage_gradient(linesPct);
+    combinedC = query_coverage_gradient(combinedPct);
+
+    if (sizeof(uncovered) > 31) {
+        uncovered = uncovered[0..31] + "…";
     }
 
     result = sprintf("%-*' 's", 23 - n, "");
-    result += sprintf("%s%3d%% %7|s", fnsC, fnsPct, coverage["fnsNum"]) + resetC + " ";
-    result += sprintf("%s%3d%% %7|s", linesC, linesPct, coverage["linesNum"]) + resetC + " ";
+    result += sprintf("%s%3d%%", combinedC, linesPct) + " ";
+    result += sprintf("%s%7|s", fnsC, coverage["fnsNum"]) + resetC + " ";
+    result += sprintf("%s%7|s", linesC, coverage["linesNum"]) + resetC;
     if (sizeof(uncovered)) {
-        result += uncovered;
+        result += " " + uncovered;
     }
     return result;
 }
@@ -289,7 +285,7 @@ void display_results (mapping results) {
             n = sizeof(split[<1]) + (sizeof(treeRef) > 9 ? 1 : 0) + sizeof(split) * 2;
             treeRef[split[<1]] = format_coverage_line(n, __TotalLines[keys[k]]);
         }
-        tree["/                      Fns          Lines        Uncovered Lines"] = tree["/"];
+        tree["/                     Total   Fns    Lines  Uncovered Lines"] = tree["/"];
         map_delete(tree, "/");
         write(implode(tree(tree), "\n")+"\n\n");
     }
