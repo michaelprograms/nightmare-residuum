@@ -29,7 +29,9 @@ void handle_reset () {
         if (sizeof(__Objects[name]) > 0) {
             continue;
         }
-        if (!counts[name]) counts[name] = 0;
+        if (!counts[name]) {
+            counts[name] = 0;
+        }
         counts[name] += 1;
     }
     foreach (string key, mixed val in __Reset) {
@@ -55,7 +57,6 @@ void handle_reset () {
             }
 
             ob = clone_object(key);
-
             if (mapp(val) && functionp(val["setup"])) {
                 evaluate(val["setup"], ob);
             }
