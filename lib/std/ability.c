@@ -1,56 +1,13 @@
 #include <verb.h>
 
 inherit STD_VERB;
+inherit "/std/ability/requirements.c";
+inherit "/std/ability/weapons.c";
 
-nosave private mapping __Reqs;
 nosave private mapping __Powers;
-nosave private mapping __Weapons = ([ ]);
 nosave private string __Type;
 nosave private int __NumTargets = 1;
 nosave private int __Cooldown = 1;
-
-/* ----- ability requirements ----- */
-
-mapping query_ability_requirements () {
-    return __Reqs;
-}
-void set_ability_requirements (mapping reqs) {
-    /* Data format:
-    "anyone|class|species|NPC": ([
-        "level" : 1,
-        "stats" : ([ "strength": 1, ]),
-    ]),
-    */
-    __Reqs = reqs;
-}
-int verify_ability_requirements (object source) {
-    if (!source || !source->is_living()) return 0;
-
-    if (source->query_immortal()) return 1;
-
-    // no requirements exist
-    if (!sizeof(__Reqs)) return 1;
-
-    foreach (string key,mapping value in __Reqs) {
-        if (key == "NPC") {
-            if (!source->is_npc()) {
-                continue;
-            }
-        } else if (source->query_class() != key && source->query_species() != key && key != "anyone") {
-            continue;
-        }
-        if (intp(value["level"])) {
-            if (source->query_level() < value["level"]) return 0;
-        }
-        if (mapp(value["stats"])) {
-            foreach (string stat,int num in value["stats"]) {
-                if (source->query_stats(stat) < num) return 0;
-            }
-        }
-        return 1;
-    }
-    return 0;
-}
 
 /* ----- ability type ----- */
 
@@ -86,55 +43,6 @@ void set_cooldown (int n) {
 }
 int query_cooldown () {
     return __Cooldown;
-}
-
-/* ----- ability weapons ----- */
-
-void set_weapons (mapping weapons) {
-    /* Data format:
-    ([
-        "blade|blunt": ({ 1, 2 }),
-        "brawl": ({ 1 }),
-    ])
-    */
-    // Validate weapons
-    if (undefinedp(weapons) || !mapp(weapons)) {
-        error("Bad argument 1 to ability->set_weapons");
-    }
-    foreach (string key,int *hands in weapons) {
-        if (member_array(key, ({ "blade", "blunt", "brawl" })) == -1) {
-            error("Bad argument (keys) to ability->set_weapons");
-        }
-        foreach (int hand in hands) {
-            if (hand < 1 || hand > 2) {
-                error("Bad argument (values) to ability->set_weapons");
-            }
-        }
-    }
-    __Weapons = weapons;
-}
-mapping query_weapons () {
-    return __Weapons;
-}
-object query_best_weapon (object source) {
-    object weapon;
-    string *types, t;
-    int wc;
-
-    types = keys(__Weapons);
-
-    foreach (object w in source->query_wielded_weapons()) {
-        if (sizeof(types)) {
-            t = w->query_type();
-            if (member_array(t, types) == -1) continue;
-            if (member_array(w->query_hands(), __Weapons[t]) == -1) continue;
-        }
-        if (w->query_wc() <= wc) continue;
-        wc = w->query_wc();
-        weapon = w;
-    }
-
-    return weapon;
 }
 
 /* ----- skill powers ----- */
