@@ -9,15 +9,15 @@ void set_weapons (mapping weapons) {
     */
     // Validate weapons
     if (undefinedp(weapons) || !mapp(weapons)) {
-        error("Bad argument 1 to ability->set_weapons");
+        error("Bad argument 1 to weapon->set_weapons");
     }
     foreach (string key,int *hands in weapons) {
         if (member_array(key, ({ "blade", "blunt", "brawl" })) == -1) {
-            error("Bad argument (keys) to ability->set_weapons");
+            error("Bad argument (keys) to weapon->set_weapons");
         }
         foreach (int hand in hands) {
             if (hand < 1 || hand > 2) {
-                error("Bad argument (values) to ability->set_weapons");
+                error("Bad argument (values) to weapon->set_weapons");
             }
         }
     }
@@ -36,10 +36,16 @@ object query_best_weapon (object source) {
     foreach (object w in source->query_wielded_weapons()) {
         if (sizeof(types)) {
             t = w->query_type();
-            if (member_array(t, types) == -1) continue;
-            if (member_array(w->query_hands(), __Weapons[t]) == -1) continue;
+            if (member_array(t, types) == -1) {
+                continue;
+            }
+            if (member_array(w->query_hands(), __Weapons[t]) == -1) {
+                continue;
+            }
         }
-        if (w->query_wc() <= wc) continue;
+        if (w->query_wc() <= wc) {
+            continue;
+        }
         wc = w->query_wc();
         weapon = w;
     }
