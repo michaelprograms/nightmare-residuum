@@ -12,8 +12,11 @@ void command (string input, mapping flags) {
     mapping footer;
 
     if (input && tc->query_immortal()) {
-        if (find_character(input)) target = find_character(input);
-        else if (present(input, environment(tc))) target = present(input, environment(tc));
+        if (find_character(input)) {
+            target = find_character(input);
+        } else if (present(input, environment(tc))) {
+            target = present(input, environment(tc));
+        }
     }
 
     limbs = target->query_limbs();
