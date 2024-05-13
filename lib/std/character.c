@@ -102,8 +102,11 @@ void receive_message (string type, string message) {
 string query_character_short () {
     string short = query_cap_name();
 
-    if (query_immortal()) short += " the immortal";
-    else short += " the character";
+    if (query_immortal()) {
+        short += " the immortal";
+    } else {
+        short += " the character";
+    }
 
     return short;
 }
@@ -338,11 +341,17 @@ private void describe_environment_living_contents () {
     list = filter(contents, (: $1 != this_object() :));
     list = sort_array(list, function (object a, object b) {
         if (a->is_character()) {
-            if (b->is_character()) return strcmp(a->query_cap_name(), b->query_cap_name());
-            else return -1;
+            if (b->is_character()) {
+                return strcmp(a->query_cap_name(), b->query_cap_name());
+            } else {
+                return -1;
+            }
         } else if (b->is_character()) {
-            if (a->is_character()) return strcmp(a->query_cap_name(), b->query_cap_name());
-            else return 1;
+            if (a->is_character()) {
+                return strcmp(a->query_cap_name(), b->query_cap_name());
+            } else {
+                return 1;
+            }
         } else return strcmp(a->query_cap_name(), b->query_cap_name());
     });
     list = unique_array(list, (: describe_living_item :));
