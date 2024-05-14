@@ -123,13 +123,16 @@ void set_deleted (string name) {
 }
 
 void set_setting (string key, mixed value) {
-    if (!__Settings || !key) return;
+    if (!__Settings || !key) {
+        return;
+    }
     __Settings[key] = value;
     save_data();
 }
 mixed query_setting (string key) {
-    if (!__Settings || !key) return 0;
-    if (member_array(key, keys(__Settings)) == -1) return 0;
+    if (!__Settings || !key || member_array(key, keys(__Settings)) == -1) {
+        return 0;
+    }
     return __Settings[key];
 }
 mapping query_settings () {
@@ -514,7 +517,9 @@ protected nomask varargs void account_input (int state, mixed extra, string inpu
                     if (intp(query_setting(setting))) {
                         int w = to_int(input);
                         if (setting == "width") {
-                            if (w < 40) w = 40;
+                            if (w < 40) {
+                                w = 40;
+                            }
                         }
                         set_setting(setting, w);
                         write("Setting " + setting + " mode to " + w + ".\n");

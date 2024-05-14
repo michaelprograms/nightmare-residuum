@@ -22,7 +22,9 @@ varargs string query_short (string defaultANSI) {
     string s = evaluate(__Short) || "";
 
     if (strlen(s) && regexp(s, "DEFAULT")) {
-        if (undefinedp(defaultANSI)) defaultANSI = "%^RESET%^";
+        if (undefinedp(defaultANSI)) {
+            defaultANSI = "%^RESET%^";
+        }
         s = replace_string(s, "%^DEFAULT%^", defaultANSI);
     }
 

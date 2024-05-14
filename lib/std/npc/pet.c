@@ -6,7 +6,9 @@ private int __Following;
 nosave private object __Owner;
 
 void set_owner (object owner) {
-    if (!objectp(owner)) error("Bad argument 1 to follower->set_owner");
+    if (!objectp(owner)) {
+        error("Bad argument 1 to follower->set_owner");
+    }
 
     __Owner = owner;
     set_heart_beat(1);
@@ -23,7 +25,9 @@ string query_owner_name () {
 }
 
 void set_following (int i) {
-    if (!intp(i)) error("Bad argument 1 to follower->set_following");
+    if (!intp(i)) {
+        error("Bad argument 1 to follower->set_following");
+    }
     __Following = i;
 }
 int query_following () {
