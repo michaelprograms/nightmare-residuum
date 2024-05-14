@@ -107,7 +107,9 @@ protected mixed query_prompt () {
     int i;
 
     while ((i = strsrch(prompt, "$")) != -1) {
-        if (i + 2 > strlen(prompt) - 1) break;
+        if (i + 2 > strlen(prompt) - 1) {
+            break;
+        }
         switch (prompt[i+1..i+2]) {
             case "hp":
                 prompt = replace_string(prompt, "$hp", ""+tc->query_hp());

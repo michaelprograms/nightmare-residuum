@@ -165,7 +165,9 @@ void process_file (string file, mapping options) {
         }
         if (objectp(testFile)) { // async tests require time
             call_out_walltime(function (object ob) {
-                if (ob) destruct(ob);
+                if (ob) {
+                    destruct(ob);
+                }
             }, 5, testFile);
         }
     }, 0, file, fnDone);
@@ -366,15 +368,25 @@ void run (mapping options) {
 
     __TestFiles = keys(__Tests);
     __TestFiles = sort_array(__TestFiles, function(string a, string b) {
-        if (regexp(a, "^\\/std\\/module\\/test")) return -1;
-        else if (regexp(b, "^\\/std\\/module\\/test")) return 1;
-        else if (regexp(a, "^\\/secure\\/daemon\\/master")) return -1;
-        else if (regexp(b, "^\\/secure\\/daemon\\/master")) return 1;
-        else if (regexp(a, "^\\/secure\\/sefun\\/sefun")) return -1;
-        else if (regexp(b, "^\\/secure\\/sefun\\/sefun")) return 1;
-        else if (regexp(a, "^\\/secure\\/sefun\\/")) return -1;
-        else if (regexp(b, "^\\/secure\\/sefun\\/")) return 1;
-        else return strcmp(a, b);
+        if (regexp(a, "^\\/std\\/module\\/test")) {
+            return -1;
+        } else if (regexp(b, "^\\/std\\/module\\/test")) {
+            return 1;
+        } else if (regexp(a, "^\\/secure\\/daemon\\/master")) {
+            return -1;
+        } else if (regexp(b, "^\\/secure\\/daemon\\/master")) {
+            return 1;
+        } else if (regexp(a, "^\\/secure\\/sefun\\/sefun")) {
+            return -1;
+        } else if (regexp(b, "^\\/secure\\/sefun\\/sefun")) {
+            return 1;
+        } else if (regexp(a, "^\\/secure\\/sefun\\/")) {
+            return -1;
+        } else if (regexp(b, "^\\/secure\\/sefun\\/")) {
+            return 1;
+        } else {
+            return strcmp(a, b);
+        }
     });
 
     call_out_walltime((: process :), 0);

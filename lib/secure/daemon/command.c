@@ -12,10 +12,13 @@ string *query_paths () {
 /* ----- scanning ----- */
 
 void scan (string *paths, string type) {
+    string cmd;
     foreach (string path in paths) {
-        if (file_size(path) != -2) continue;
+        if (file_size(path) != -2) {
+            continue;
+        }
         foreach (string file in get_dir(path + "/*.c")) {
-            string cmd = file[0..<3];
+            cmd = file[0..<3];
             if (type == "ability") {
                 if (!arrayp(__Abilities[cmd])) {
                     __Abilities[cmd] = ({ });
