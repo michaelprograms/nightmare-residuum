@@ -33,10 +33,10 @@ string *query_banks (string name) {
 
 mapping query_balance (string name, string bankID) {
     mapping balance;
-    if (strlen(name) < 4) {
+    if (!stringp(name) || sizeof(name) < 4) {
         error("Bad argument 1 to bank->query_balance");
     }
-    if (undefinedp(bankID)) {
+    if (!stringp(bankID) || !sizeof(bankID)) {
         error("Bad argument 2 to bank->query_balance");
     }
     load_balance(name);
@@ -49,10 +49,10 @@ mapping query_balance (string name, string bankID) {
 }
 
 void update_balance (string name, string bankID, mapping balance) {
-    if (strlen(name) < 4) {
+    if (!stringp(name) || sizeof(name) < 4) {
         error("Bad argument 1 to bank->update_balance");
     }
-    if (undefinedp(bankID)) {
+    if (!stringp(bankID) || !sizeof(bankID)) {
         error("Bad argument 2 to bank->update_balance");
     }
     if (!mapp(balance)) {
