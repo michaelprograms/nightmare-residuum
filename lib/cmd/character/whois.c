@@ -16,8 +16,8 @@ void command (string input, mapping flags) {
         return;
     }
 
-    curChar = find_character(input); // need to do this before query_whois_character
-    char = D_CHARACTER->query_whois_character(input);
+    curChar = find_character(input); // need to do this before D_CHARACTER->query_character
+    char = D_CHARACTER->query_character(input);
     if (!char) {
         message("action", "There is no character with that name on " + mud_name() + ".", tc);
         return;
