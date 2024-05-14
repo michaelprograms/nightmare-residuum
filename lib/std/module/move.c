@@ -72,7 +72,9 @@ string query_environment_short () {
         object destOb;
         if (!(destOb = query_dest_ob(__EnvPath))) {
             return "no where";
-        } else return destOb->query_short() || "no where";
+        } else {
+            return destOb->query_short() || "no where";
+        }
     } else {
         return "no where";
     }

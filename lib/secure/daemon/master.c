@@ -518,7 +518,9 @@ string parser_error_message (int type, object ob, mixed arg, int plural) {
                 for (i = 0; i < sizeof(obs); i ++) {
                     if (sizeof(obs[i]) > 1) {
                         err += "one of the " + consolidate(sizeof(obs[i]), obs[i][0]->query_short());
-                    } else err += obs[i][0]->query_short();
+                    } else {
+                        err += obs[i][0]->query_short();
+                    }
                     if (i == (sizeof(obs) - 2)) {
                         err += " or ";
                     } else if (i < sizeof(obs) - 1) {
@@ -546,8 +548,12 @@ string parser_error_message (int type, object ob, mixed arg, int plural) {
             // ???
             if (tmpob = present(arg, environment(this_character()))) {
                 return "It seems you must be more specific.";
-            } else if (arg && stringp(arg)) wut = remove_article(arg);
-        } else wut = "such thing";
+            } else if (arg && stringp(arg)) {
+                wut = remove_article(arg);
+            }
+        } else {
+            wut = "such thing";
+        }
         err = "There is no "+ wut +" here.";
         break;
 

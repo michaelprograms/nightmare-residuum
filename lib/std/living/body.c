@@ -73,7 +73,7 @@ string query_random_limb () {
     if (sizeof(limbs)) {
         return limbs[random(sizeof(limbs))];
     }
-    else return 0;
+    return 0;
 }
 
 void handle_limb_sever (string limb) {

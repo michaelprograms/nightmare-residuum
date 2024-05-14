@@ -46,9 +46,8 @@ int handle_pick () {
     if (__Picks > 0) {
         __Picks --;
         return 1;
-    } else {
-        return 0;
     }
+    return 0;
 }
 
 mixed direct_pick_obj (mixed args...) {
@@ -56,5 +55,6 @@ mixed direct_pick_obj (mixed args...) {
     if (sizeof(args)) {
         ob = args[0];
         return environment() == environment(ob);
-    } else return 0;
+    }
+    return 0;
 }

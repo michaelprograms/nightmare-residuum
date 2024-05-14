@@ -352,7 +352,9 @@ private void describe_environment_living_contents () {
             } else {
                 return 1;
             }
-        } else return strcmp(a->query_cap_name(), b->query_cap_name());
+        } else {
+            return strcmp(a->query_cap_name(), b->query_cap_name());
+        }
     });
     list = unique_array(list, (: describe_living_item :));
     if (sizeof(list)) {
