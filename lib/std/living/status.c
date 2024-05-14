@@ -53,18 +53,23 @@ string query_posture () {
 /* ----- applies ----- */
 
 void heart_beat () {
-    if (__Busy > 0) __Busy --;
-    if (__Disable > 0) __Disable --;
+    if (__Busy > 0) {
+        __Busy --;
+    }
+    if (__Disable > 0) {
+        __Disable --;
+    }
     if (__Immobile > 0) {
         __Immobile --;
         if (!__Immobile) {
             message("status", "You are able to take actions again.", this_object());
         }
     }
-
-    if (__Posture == "sitting") this_object()->heal(1);
-    else if (__Posture == "laying") this_object()->heal(2);
-    else if (__Posture == "meditating") {
+    if (__Posture == "sitting") {
+        this_object()->heal(1);
+    } else if (__Posture == "laying") {
+        this_object()->heal(2);
+    } else if (__Posture == "meditating") {
         this_object()->heal(2);
         this_object()->add_mp(2+random(2));
     } else if (__Posture == "flying") {

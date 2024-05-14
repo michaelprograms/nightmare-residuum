@@ -31,8 +31,9 @@ string query_species () {
     return stringp(__Species) ? __Species : "unknown";
 }
 void set_species (string species) {
-    if (!stringp(species)) error("Bad argument 1 to body->set_species");
-
+    if (!stringp(species)) {
+        error("Bad argument 1 to body->set_species");
+    }
     __Species = species;
     this_object()->update_vitals(1);
     update_limbs();
@@ -62,12 +63,16 @@ string *query_severed_limbs () {
     return limbs;
 }
 mapping query_limb (string limb) {
-    if (limb && __Limbs[limb]) return __Limbs[limb];
+    if (limb && __Limbs[limb]) {
+        return __Limbs[limb];
+    }
     return 0;
 }
 string query_random_limb () {
     string *limbs = query_limbs();
-    if (sizeof(limbs)) return limbs[random(sizeof(limbs))];
+    if (sizeof(limbs)) {
+        return limbs[random(sizeof(limbs))];
+    }
     else return 0;
 }
 
@@ -182,7 +187,9 @@ varargs int handle_damage (int damage, string limb, object source) {
 int query_limb_armor (string limb) {
     int ac = 0;
 
-    if (!mapp(__Worn)) __Worn = ([ ]);
+    if (!mapp(__Worn)) {
+        __Worn = ([ ]);
+    }
 
     foreach (object ob in __Worn[limb] || ({ })) {
         ac += ob->query_ac();
@@ -193,7 +200,9 @@ int query_limb_armor (string limb) {
 object *query_all_armor () {
     object *worn = ({ });
 
-    if (!mapp(__Worn)) __Worn = ([ ]);
+    if (!mapp(__Worn)) {
+        __Worn = ([ ]);
+    }
 
     foreach (string limb in keys(__Worn)) {
         foreach (object ob in __Worn[limb]) {
@@ -227,7 +236,9 @@ mixed query_can_wear_armor (object armor) {
         if (armor->query_type() == "shield" && __Wielded[limb]) {
             wielded = limb;
         }
-        if (!arrayp(__Worn[limb])) continue;
+        if (!arrayp(__Worn[limb])) {
+            continue;
+        }
         foreach (object ob in __Worn[limb]) {
             if (armor->query_type() == ob->query_type()) {
                 worn ++;
@@ -258,15 +269,24 @@ varargs mixed handle_wear (object ob) {
     string limbConj;
     string result;
 
-    if (!mapp(__Worn)) __Worn = ([ ]);
+    if (!mapp(__Worn)) {
+        __Worn = ([ ]);
+    }
 
-    if (ob->query_worn()) return "You are already wearing " + ob->query_name() + ".";
+    if (ob->query_worn()) {
+        return "You are already wearing " + ob->query_name() + ".";
+    }
     result = query_can_wear_armor(ob);
-    if (stringp(result)) return result;
-    else if (intp(result) != 1) return "You are already wearing " + ob->query_type() + ".";
+    if (stringp(result)) {
+        return result;
+    } else if (intp(result) != 1) {
+        return "You are already wearing " + ob->query_type() + ".";
+    }
 
     foreach (string limb in ob->query_limbs()) {
-        if (!arrayp(__Worn[limb])) __Worn[limb] = ({ });
+        if (!arrayp(__Worn[limb])) {
+            __Worn[limb] = ({ });
+        }
         __Worn[limb] += ({ ob });
     }
     ob->set_worn(this_object());
@@ -279,12 +299,18 @@ varargs mixed handle_wear (object ob) {
 }
 varargs mixed handle_unwear (object ob) {
     string limbConj;
-    if (!mapp(__Worn)) __Worn = ([ ]);
+    if (!mapp(__Worn)) {
+        __Worn = ([ ]);
+    }
 
-    if (!ob->query_worn()) return "You are not wearing " + ob->query_name() + ".";
+    if (!ob->query_worn()) {
+        return "You are not wearing " + ob->query_name() + ".";
+    }
 
     foreach (string limb in ob->query_limbs()) {
-        if (!arrayp(__Worn[limb])) __Worn[limb] = ({ });
+        if (!arrayp(__Worn[limb])) {
+            __Worn[limb] = ({ });
+        }
         if (member_array(ob, __Worn[limb]) > -1) {
             __Worn[limb] -= ({ ob });
         }
@@ -313,13 +339,17 @@ string *query_wieldable_limbs () {
     return wieldable;
 }
 object query_wielded (string l) {
-    if (l && __Limbs[l]["type"] == "WIELD" && __Wielded[l]) return __Wielded[l];
+    if (l && __Limbs[l]["type"] == "WIELD" && __Wielded[l]) {
+        return __Wielded[l];
+    }
     return 0;
 }
 object *query_wielded_weapons () {
     object *weapons = ({ });
     foreach (string l in query_limbs()) {
-        if (__Limbs[l]["type"] == "WIELD" && __Wielded[l]) weapons += ({ query_wielded(l) });
+        if (__Limbs[l]["type"] == "WIELD" && __Wielded[l]) {
+            weapons += ({ query_wielded(l) });
+        }
     }
     return weapons;
 }
@@ -336,10 +366,12 @@ string *query_wielded_limbs (object ob) {
 varargs mixed handle_wield (object ob) {
     string *limbs = query_wieldable_limbs(), *hands, limbConj;
 
-    if (!mapp(__Wielded)) __Wielded = ([ ]);
-
-    if (ob->query_wielded()) return "You are already wielding " + ob->query_name() + ".";
-
+    if (!mapp(__Wielded)) {
+        __Wielded = ([ ]);
+    }
+    if (ob->query_wielded()) {
+        return "You are already wielding " + ob->query_name() + ".";
+    }
     if (ob->query_hands() == 1) {
         if (sizeof(limbs)) {
             hands = limbs[0..0];
@@ -349,7 +381,9 @@ varargs mixed handle_wield (object ob) {
             hands = limbs[0..1];
         }
     }
-    if (sizeof(hands) < ob->query_hands()) return "You are out of limbs to wield " + ob->query_name() + ".";
+    if (sizeof(hands) < ob->query_hands()) {
+        return "You are out of limbs to wield " + ob->query_name() + ".";
+    }
 
     foreach (string limb in hands) {
         __Wielded[limb] = ob;
@@ -365,15 +399,18 @@ varargs mixed handle_wield (object ob) {
 varargs mixed handle_unwield (object ob) {
     string *limbs, limbConj;
 
-    if (!mapp(__Wielded)) __Wielded = ([ ]);
-
-    if (!ob->query_wielded()) return "You are not wielding " + ob->query_name() + ".";
+    if (!mapp(__Wielded)) {
+        __Wielded = ([ ]);
+    }
+    if (!ob->query_wielded()) {
+        return "You are not wielding " + ob->query_name() + ".";
+    }
 
     limbs = this_object()->query_wielded_limbs(ob);
     limbConj = conjunction(limbs);
-
-    if (!sizeof(limbs)) return 0;
-
+    if (!sizeof(limbs)) {
+        return 0;
+    }
     ob->set_wielded(0);
     foreach (string limb in limbs) {
         __Wielded[limb] = 0;
@@ -448,8 +485,12 @@ private void handle_injections () {
 
     if ((amt = __Injections["damaging nanites"]) > 0) {
         n = (this_object()->query_stat("endurance") / 10) + (amt / 10);
-        if (n < 2) n = 2;
-        if (n > amt) n = amt;
+        if (n < 2) {
+            n = 2;
+        }
+        if (n > amt) {
+            n = amt;
+        }
         message("status", "The damaging nanites diminish your health: -"+n+" hp.", this_object());
         this_object()->add_hp(-n);
         __Injections["damaging nanites"] = max(({ 0, amt - n }));
@@ -458,8 +499,12 @@ private void handle_injections () {
         this_object()->query_hp() * 100 / this_object()->query_max_hp() < 100
     ) {
         n = (this_object()->query_stat("endurance") / 10) + (amt / 10);
-        if (n < 2) n = 2;
-        if (n > amt) n = amt;
+        if (n < 2) {
+            n = 2;
+        }
+        if (n > amt) {
+            n = amt;
+        }
         message("status", "The healing nanites recover your health: +"+n+" hp.", this_object());
         this_object()->add_hp(n);
         __Injections["healing nanites"] = max(({ 0, amt - n }));

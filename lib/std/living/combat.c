@@ -177,7 +177,9 @@ private void handle_combat_hit (object target, mixed weapon, int crit) {
     damage -= target->query_protection();
 
     display_combat_message(this_object(), target, limb, weapon, type, damage, crit, 0);
-    if (damage > 0) target->handle_damage(damage, limb, this_object());
+    if (damage > 0) {
+        target->handle_damage(damage, limb, this_object());
+    }
 }
 
 protected void handle_combat () {
@@ -227,14 +229,18 @@ protected void handle_combat () {
     }
 
     for (int h = 0; h < hits; h ++) {
-        if (!target) break;
+        if (!target) {
+            break;
+        }
 
         if (this_object()->query_sp() > 0) {
             d100 = roll_die(1, 100)[0];
         }
         sum = 0;
         foreach (mapping m in query_combat_table(target, h)) {
-            if (!m["value"]) continue;
+            if (!m["value"]) {
+                continue;
+            }
             sum = min(({ 100.0, sum + m["value"], }));
             if (d100 <= sum) {
                 switch(m["id"]) {
