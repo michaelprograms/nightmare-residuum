@@ -9,41 +9,6 @@ string *query_paths () {
     return __Paths;
 }
 
-/* ----- scanning ----- */
-
-void scan (string *paths, string type) {
-    string cmd;
-    foreach (string path in paths) {
-        if (file_size(path) != -2) {
-            continue;
-        }
-        foreach (string file in get_dir(path + "/*.c")) {
-            cmd = file[0..<3];
-            if (type == "ability") {
-                if (!arrayp(__Abilities[cmd])) {
-                    __Abilities[cmd] = ({ });
-                }
-                __Abilities[cmd] += ({ path });
-                // load all verb rules
-                load_object(path + "/" + file);
-            } else if (type == "command") {
-                if (!arrayp(__Commands[cmd])) {
-                    __Commands[cmd] = ({ });
-                }
-                __Commands[cmd] += ({ path });
-            } else if (type == "verb") {
-                if (!arrayp(__Verbs[cmd])) {
-                    __Verbs[cmd] = ({ });
-                }
-                __Verbs[cmd] += ({ path });
-                // load all verb rules
-                load_object(path + "/" + file);
-            }
-        }
-        __Paths = distinct_array(__Paths + ({ path }));
-    }
-}
-
 /* ----- querying single ----- */
 
 string query_ability (string ability) {
@@ -119,6 +84,38 @@ varargs string *query_verbs (string str) {
         }
     }
     return tmp;
+}
+
+/* ----- scanning ----- */
+
+private void scan (string *paths, string type) {
+    string cmd;
+    foreach (string path in paths) {
+        foreach (string file in get_dir(path + "/*.c")) {
+            cmd = file[0..<3];
+            if (type == "ability") {
+                if (!arrayp(__Abilities[cmd])) {
+                    __Abilities[cmd] = ({ });
+                }
+                __Abilities[cmd] += ({ path });
+                // load all verb rules
+                load_object(path + "/" + file);
+            } else if (type == "command") {
+                if (!arrayp(__Commands[cmd])) {
+                    __Commands[cmd] = ({ });
+                }
+                __Commands[cmd] += ({ path });
+            } else if (type == "verb") {
+                if (!arrayp(__Verbs[cmd])) {
+                    __Verbs[cmd] = ({ });
+                }
+                __Verbs[cmd] += ({ path });
+                // load all verb rules
+                load_object(path + "/" + file);
+            }
+        }
+        __Paths = distinct_array(__Paths + ({ path }));
+    }
 }
 
 /* ----- applies ----- */
