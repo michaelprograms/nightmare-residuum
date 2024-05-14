@@ -57,20 +57,35 @@ string query_default_out () {
 }
 
 varargs void set_exit (string dir, string dest, function before, function after, string reverse, string door, string key, int locked) {
-    if (!stringp(dir)) error("Bad argument 1 to exit->set_exit");
-    if (!stringp(dest)) error("Bad argument 2 to exit->set_exit");
+    if (!stringp(dir)) {
+        error("Bad argument 1 to exit->set_exit");
+    }
+    if (!stringp(dest)) {
+        error("Bad argument 2 to exit->set_exit");
+    }
 
-    if (!mapp(__Exits[dir])) __Exits[dir] = ([ ]);
+    if (!mapp(__Exits[dir])) {
+        __Exits[dir] = ([ ]);
+    }
     __Exits[dir]["room"] = dest;
-    if (functionp(before)) __Exits[dir]["before"] = before;
-    if (functionp(after)) __Exits[dir]["after"] = after;
-    if (stringp(reverse)) __Exits[dir]["reverse"] = reverse;
+    if (functionp(before)) {
+        __Exits[dir]["before"] = before;
+    }
+    if (functionp(after)) {
+        __Exits[dir]["after"] = after;
+    }
+    if (stringp(reverse)) {
+        __Exits[dir]["reverse"] = reverse;
+    }
     if (stringp(door)) {
         __Exits[dir]["door"] = door;
         __Exits[dir]["open"] = 0;
-        if (!undefinedp(key) && stringp(key)) __Exits[dir]["key"] = key;
-        if (!undefinedp(locked) && intp(locked)) __Exits[dir]["locked"] = locked;
-        else if (__Exits[dir]["key"]) {
+        if (!undefinedp(key) && stringp(key)) {
+            __Exits[dir]["key"] = key;
+        }
+        if (!undefinedp(locked) && intp(locked)) {
+            __Exits[dir]["locked"] = locked;
+        } else if (__Exits[dir]["key"]) {
             __Exits[dir]["locked"] = 1;
         }
     }
@@ -80,17 +95,25 @@ void set_exits (mapping exits) {
     foreach (mixed dir, mixed dest in exits) {
         if (arrayp(dir)) {
             foreach (string real_dir in dir) {
-                if (arrayp(dest)) set_exit(real_dir, dest...);
-                else set_exit(real_dir, dest);
+                if (arrayp(dest)) {
+                    set_exit(real_dir, dest...);
+                } else {
+                    set_exit(real_dir, dest);
+                }
             }
         } else {
-            if (stringp(dest)) set_exit(dir, dest);
-            else if (arrayp(dest)) set_exit(dir, dest...);
+            if (stringp(dest)) {
+                set_exit(dir, dest);
+            } else if (arrayp(dest)) {
+                set_exit(dir, dest...);
+            }
         }
     }
 }
 void remove_exit (string dir) {
-    if (!stringp(dir)) error("Bad argument 1 to exit->remove_exit");
+    if (!stringp(dir)) {
+        error("Bad argument 1 to exit->remove_exit");
+    }
     map_delete(__Exits, dir);
 }
 void set_hidden_exits (int n) {
@@ -104,7 +127,6 @@ mixed handle_go (object ob, string verb, string dir) {
     mapping exit;
 
     dir = format_exit_verbose(dir);
-
     if (!(exit = __Exits[dir])) {
         if (__Exits["enter " + dir] && !__Exits["out " + dir]) {
             dir = "enter " + dir;
@@ -159,31 +181,51 @@ string query_climb (string dir) {
 }
 
 varargs void set_climb (string dir, string dest, function before, function after, string reverse) {
-    if (!stringp(dir)) error("Bad argument 1 to exit->set_climb");
-    if (!stringp(dest)) error("Bad argument 2 to exit->set_climb");
+    if (!stringp(dir)) {
+        error("Bad argument 1 to exit->set_climb");
+    }
+    if (!stringp(dest)) {
+        error("Bad argument 2 to exit->set_climb");
+    }
 
-    if (!mapp(__Climbs[dir])) __Climbs[dir] = ([ ]);
+    if (!mapp(__Climbs[dir])) {
+        __Climbs[dir] = ([ ]);
+    }
     __Climbs[dir]["room"] = dest;
-    if (functionp(before)) __Climbs[dir]["before"] = before;
-    if (functionp(after)) __Climbs[dir]["after"] = after;
-    if (stringp(reverse)) __Climbs[dir]["reverse"] = reverse;
+    if (functionp(before)) {
+        __Climbs[dir]["before"] = before;
+    }
+    if (functionp(after)) {
+        __Climbs[dir]["after"] = after;
+    }
+    if (stringp(reverse)) {
+        __Climbs[dir]["reverse"] = reverse;
+    }
 }
 void set_climbs (mapping climbs) {
     __Climbs = ([ ]);
     foreach (mixed dir, mixed dest in climbs) {
         if (arrayp(dir)) {
             foreach (string real_dir in dir) {
-                if (arrayp(dest)) set_climb(real_dir, dest...);
-                else set_climb(real_dir, dest);
+                if (arrayp(dest)) {
+                    set_climb(real_dir, dest...);
+                } else {
+                    set_climb(real_dir, dest);
+                }
             }
         } else {
-            if (stringp(dest)) set_climb(dir, dest);
-            else if (arrayp(dest)) set_climb(dir, dest...);
+            if (stringp(dest)) {
+                set_climb(dir, dest);
+            } else if (arrayp(dest)) {
+                set_climb(dir, dest...);
+            }
         }
     }
 }
 void remove_climb (string dir) {
-    if (!stringp(dir)) error("Bad argument 1 to exit->remove_climb");
+    if (!stringp(dir)) {
+        error("Bad argument 1 to exit->remove_climb");
+    }
     map_delete(__Climbs, dir);
 }
 

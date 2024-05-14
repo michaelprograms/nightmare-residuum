@@ -239,8 +239,12 @@ private string format_string_difference (string actual, string expect) {
     int n;
     string result;
 
-    if (!stringp(actual)) actual = identify(actual);
-    if (!stringp(expect)) expect = identify(expect);
+    if (!stringp(actual)) {
+        actual = identify(actual);
+    }
+    if (!stringp(expect)) {
+        expect = identify(expect);
+    }
 
     actual = replace_string(replace_string(replace_string(actual, "\n", "\\n"), "\e", "\\e"), "%^", "%%^%^^");
     expect = replace_string(replace_string(replace_string(expect, "\n", "\\n"), "\e", "\\e"), "%^", "%%^%^^");
@@ -264,13 +268,23 @@ varargs private string format_array_differences (mixed *actual, mixed *expect) {
 
     for (int i = 0; i < l; i ++) {
         if (i < sizeof(actual)) {
-            if (arrayp(actual[i])) a = implode(map(actual[i], (: identify($1) :)), ",");
-            else a = actual[i];
-        } else a = "";
+            if (arrayp(actual[i])) {
+                a = implode(map(actual[i], (: identify($1) :)), ",");
+            } else {
+                a = actual[i];
+            }
+        } else {
+            a = "";
+        }
         if (i < sizeof(expect)) {
-            if (arrayp(expect[i])) e = implode(map(expect[i], (: identify($1) :)), ",");
-            else e = expect[i];
-        } else e = "";
+            if (arrayp(expect[i])) {
+                e = implode(map(expect[i], (: identify($1) :)), ",");
+            } else {
+                e = expect[i];
+            }
+        } else {
+            e = "";
+        }
 
         if (stringp(e) && e[0..0] == "/" && e[<1..<1] == "/") {
             e = e[1..<2];
@@ -320,8 +334,12 @@ private void validate_expect (mixed value1, mixed value2, string message) {
 }
 
 void expect (string message, function fn) {
-    if (!stringp(message)) error("Bad argument 1 to test->expect");
-    if (!functionp(fn)) error("Bad argument 2 to test->expect");
+    if (!stringp(message)) {
+        error("Bad argument 1 to test->expect");
+    }
+    if (!functionp(fn)) {
+        error("Bad argument 2 to test->expect");
+    }
 
     currentTestMsg = message;
     currentTestPassed = 1;
@@ -330,7 +348,9 @@ void expect (string message, function fn) {
 
     passingAsserts = 0;
     catch (evaluate(fn));
-    if (!passingAsserts) currentTestPassed = 0;
+    if (!passingAsserts) {
+        currentTestPassed = 0;
+    }
 
     validate_expect(leftResults, rightResults, currentTestMsg);
 
