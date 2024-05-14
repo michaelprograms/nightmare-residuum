@@ -13,7 +13,9 @@ void display_combat_message (object source, object target, string limb, mixed we
     string verb, verbs, adverb, sourcePossessive;
     int i = 0;
 
-    if (!source || !target || !weapon || !type) return;
+    if (!source || !target || !weapon || !type) {
+        return;
+    }
 
     weaponName = objectp(weapon) ? weapon->query_name() : weapon;
 

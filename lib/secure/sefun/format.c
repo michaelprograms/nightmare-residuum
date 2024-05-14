@@ -90,10 +90,16 @@ varargs string format_page (string *items, mixed columns, int pad, int center, s
 string format_syntax (string text) {
     string s = text;
 
-    if (!stringp(text)) error("Bad argument 1 to format->format_syntax");
+    if (!stringp(text)) {
+        error("Bad argument 1 to format->format_syntax");
+    }
 
-    if (!regexp(s, "^<")) s = "<" + s;
-    if (!regexp(s, ">$")) s = s + ">";
+    if (!regexp(s, "^<")) {
+        s = "<" + s;
+    }
+    if (!regexp(s, ">$")) {
+        s = s + ">";
+    }
     if (SEFUN->query_account_setting("ansi") == "on") {
         s = replace_string(s, "<", "%^CYAN%^<");
         s = replace_string(s, "[", "%^BOLD%^[%^BOLD_OFF%^");
@@ -108,7 +114,9 @@ string format_syntax (string text) {
 
 string format_exit_brief (string dir) {
     string *result = ({ });
-    if (!stringp(dir)) error("Bad argument 1 to format->format_exit_brief");
+    if (!stringp(dir)) {
+        error("Bad argument 1 to format->format_exit_brief");
+    }
     foreach (string part in explode(dir, " ")) {
         switch (part) {
             case "north": result += ({ "n" }); break;
@@ -129,7 +137,9 @@ string format_exit_brief (string dir) {
 }
 string format_exit_verbose (string dir) {
     string *result = ({ });
-    if (!stringp(dir)) error("Bad argument 1 to format->format_exit_verbose");
+    if (!stringp(dir)) {
+        error("Bad argument 1 to format->format_exit_verbose");
+    }
     foreach (string part in explode(dir, " ")) {
         switch (part) {
             case "n": result += ({ "north" }); break;
@@ -150,7 +160,9 @@ string format_exit_verbose (string dir) {
 }
 string format_exit_reverse (string dir) {
     string *result = ({ });
-    if (!stringp(dir)) error("Bad argument 1 to format->format_exit_reverse");
+    if (!stringp(dir)) {
+        error("Bad argument 1 to format->format_exit_reverse");
+    }
     foreach (string part in explode(dir, " ")) {
         switch (part) {
             case "north": result += ({ "south" }); break;
@@ -173,7 +185,9 @@ string format_exit_reverse (string dir) {
 
 string format_stat_brief (string stat) {
     string result = "";
-    if (!stringp(stat)) error("Bad argument 1 to format->format_stat_brief");
+    if (!stringp(stat)) {
+        error("Bad argument 1 to format->format_stat_brief");
+    }
     switch (stat) {
         case "strength": case "str": result = "str"; break;
         case "perception": case "per": result = "per"; break;
@@ -187,7 +201,9 @@ string format_stat_brief (string stat) {
 }
 string format_stat_verbose (string stat) {
     string result = "";
-    if (!stringp(stat)) error("Bad argument 1 to format->format_stat_verbose");
+    if (!stringp(stat)) {
+        error("Bad argument 1 to format->format_stat_verbose");
+    }
     switch (stat) {
         case "str": case "strength": result = "strength"; break;
         case "per": case "perception": result = "perception"; break;
@@ -204,7 +220,9 @@ string format_integer (int num) {
     string *digits, result = "";
     int neg, s;
 
-    if (!intp(num)) error("Bad argument 1 to format->format_integer");
+    if (!intp(num)) {
+        error("Bad argument 1 to format->format_integer");
+    }
 
     neg = (num < 0);
     num = abs(num);

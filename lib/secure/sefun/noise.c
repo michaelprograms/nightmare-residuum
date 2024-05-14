@@ -119,8 +119,11 @@ float noise_perlin_grad (int hash, float x, float y, float z) {
 }
 // Linear interpolation: blend values a and b based on weight t [0.0-1.0]
 float noise_perlin_lerp (float t, float a, float b) {
-    if (0.0 > t) return a;
-    if (1.0 < t) return b;
+    if (0.0 > t) {
+        return a;
+    } else if (1.0 < t) {
+        return b;
+    }
     return a + t * (b - a);
 }
 
@@ -278,7 +281,7 @@ float noise_perlin_3d (float x, float y, float z, int *p, int octaves, float sca
         octaves = 4;
     }
     if (!scale) {
-      scale = 1.0;
+        scale = 1.0;
     }
 
     for (int i = 0; i < octaves; i ++) {
@@ -324,18 +327,36 @@ float noise_simplex_4d_permutation (float x, float y, float z, float w, mapping 
     float t0, t1, t2, t3, t4;
     int gi0, gi1, gi2, gi3, gi4;
 
-    if (x0 > y0) rankx ++;
-    else ranky ++;
-    if (x0 > z0) rankx ++;
-    else rankz ++;
-    if (x0 > w0) rankx ++;
-    else rankw ++;
-    if (y0 > z0) ranky ++;
-    else rankz ++;
-    if (y0 > w0) ranky ++;
-    else rankw ++;
-    if (z0 > w0) rankz ++;
-    else rankw ++;
+    if (x0 > y0) {
+        rankx ++;
+    } else {
+        ranky ++;
+    }
+    if (x0 > z0) {
+        rankx ++;
+    } else {
+        rankz ++;
+    }
+    if (x0 > w0) {
+        rankx ++;
+    } else {
+        rankw ++;
+    }
+    if (y0 > z0) {
+        ranky ++;
+    } else {
+        rankz ++;
+    }
+    if (y0 > w0) {
+        ranky ++;
+    } else {
+        rankw ++;
+    }
+    if (z0 > w0) {
+        rankz ++;
+    } else {
+        rankw ++;
+    }
 
     // simplex[c] is a 4-vector with the numbers 0, 1, 2 and 3 in some order.
     // Many values of c will never occur, since e.g. x>y>z>w makes x<z, y<w and x<w
@@ -386,36 +407,41 @@ float noise_simplex_4d_permutation (float x, float y, float z, float w, mapping 
 
     // Calculate the contribution from the five corners
     t0 = 0.6 - x0 * x0 - y0 * y0 - z0 * z0 - w0 * w0;
-    if (t0 < 0) n0 = 0.0;
-    else {
+    if (t0 < 0) {
+        n0 = 0.0;
+    } else {
         gi0 = ii + p["p"][(jj + p["p"][(kk + p["p"][ll]) & 255]) & 255];
         t0 *= t0;
         n0 = t0 * t0 * (p["x"][gi0 & 255] * x0 + p["y"][gi0 & 255] * y0 + p["z"][gi0 & 255] * z0 + p["w"][gi0 & 255] * w0);
     }
     t1 = 0.6 - x1 * x1 - y1 * y1 - z1 * z1 - w1 * w1;
-    if (t1 < 0) n1 = 0.0;
-    else {
+    if (t1 < 0) {
+        n1 = 0.0;
+    } else {
         gi1 = ii + i1 + p["p"][(jj + j1 + p["p"][(kk + k1 + p["p"][(ll + l1) & 255]) & 255]) & 255];
         t1 *= t1;
         n1 = t1 * t1 * (p["x"][gi1 & 255] * x1 + p["y"][gi1 & 255] * y1 + p["z"][gi1 & 255] * z1 + p["w"][gi1 & 255] * w1);
     }
     t2 = 0.6 - x2 * x2 - y2 * y2 - z2 * z2 - w2 * w2;
-    if (t2 < 0) n2 = 0.0;
-    else {
+    if (t2 < 0) {
+        n2 = 0.0;
+    } else {
         gi2 = ii + i2 + p["p"][(jj + j2 + p["p"][(kk + k2 + p["p"][(ll + l2) & 255]) & 255]) & 255];
         t2 *= t2;
         n2 = t2 * t2 * (p["x"][gi2 & 255] * x2 + p["y"][gi2 & 255] * y2 + p["z"][gi2 & 255] * z2 + p["w"][gi2 & 255] * w2);
     }
     t3 = 0.6 - x3 * x3 - y3 * y3 - z3 * z3 - w3 * w3;
-    if (t3 < 0) n3 = 0.0;
-    else {
+    if (t3 < 0) {
+        n3 = 0.0;
+    } else {
         gi3 = ii + i3 + p["p"][(jj + j3 + p["p"][(kk + k3 + p["p"][(ll + l3) & 255]) & 255]) & 255];
         t3 *= t3;
         n3 = t3 * t3 * (p["x"][gi3 & 255] * x3 + p["y"][gi3 & 255] * y3 + p["z"][gi3 & 255] * z3 + p["w"][gi3 & 255] * w3);
     }
     t4 = 0.6 - x4 * x4 - y4 * y4 - z4 * z4 - w4 * w4;
-    if (t4 < 0) n4 = 0.0;
-    else {
+    if (t4 < 0) {
+        n4 = 0.0;
+    } else {
         gi4 = ii + 1 + p["p"][(jj + 1 + p["p"][(kk + 1 + p["p"][(ll + 1) & 255]) & 255]) & 255];
         t4 *= t4;
         n4 = t4 * t4 * (p["x"][gi4 & 255] * x4 + p["y"][gi4 & 255] * y4 + p["z"][gi4 & 255] * z4 + p["w"][gi4 & 255] * w4);
@@ -450,7 +476,7 @@ float noise_simplex_4d (float x, float y, float z, float w, mapping p, int octav
         octaves = 4;
     }
     if (!scale) {
-      scale = 1.0;
+        scale = 1.0;
     }
 
     for (int i = 0; i < octaves; i ++) {

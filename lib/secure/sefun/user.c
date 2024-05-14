@@ -39,7 +39,8 @@ object *characters () {
 string query_account_setting (string setting) {
     object user;
 
-    if (!(user = this_user())) return 0;
-
+    if (!(user = this_user())) {
+        return 0;
+    }
     return user->query_setting(setting);
 }

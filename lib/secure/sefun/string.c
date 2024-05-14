@@ -71,7 +71,9 @@ varargs string wrap (string str, int width, int indent, int rawANSI) {
     mapping term;
     object po = previous_object();
 
-    if (!str || !stringp(str)) return "";
+    if (!str || !stringp(str)) {
+        return "";
+    }
     if (undefinedp(width) || width < 0) {
         if (!(width = po->query_setting("width"))) {
             width = 80;

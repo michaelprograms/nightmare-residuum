@@ -23,32 +23,46 @@ varargs string time_ago (int timestamp, int granularity) {
         msg += Years + " year" + (Years > 1 ? "s" : "");
         matches ++;
     }
-    if (granularity > 0 && matches >= granularity) return msg + " ago";
+    if (granularity > 0 && matches >= granularity) {
+        return msg + " ago";
+    }
     if (Months > 0) {
-        msg += (strlen(msg)>0?" ":"") + Months + " month" + (Months > 1 ? "s" : "");
+        msg += (sizeof(msg)>0?" ":"") + Months + " month" + (Months > 1 ? "s" : "");
         matches ++;
     }
-    if (granularity > 0 && matches >= granularity) return msg + " ago";
+    if (granularity > 0 && matches >= granularity) {
+        return msg + " ago";
+    }
     if (Weeks > 0) {
-        msg += (strlen(msg)>0?" ":"") + Weeks + " week" + (Weeks > 1 ? "s" : "");
+        msg += (sizeof(msg)>0?" ":"") + Weeks + " week" + (Weeks > 1 ? "s" : "");
         matches ++;
     }
-    if (granularity > 0 && matches >= granularity) return msg + " ago";
+    if (granularity > 0 && matches >= granularity) {
+        return msg + " ago";
+    }
     if (Days > 0) {
-        msg +=  (strlen(msg)>0?" ":"") + Days + " day" + (Days > 1 ? "s" : "");
+        msg +=  (sizeof(msg)>0?" ":"") + Days + " day" + (Days > 1 ? "s" : "");
         matches ++;
     }
-    if (granularity > 0 && matches >= granularity) return msg + " ago";
+    if (granularity > 0 && matches >= granularity) {
+        return msg + " ago";
+    }
 
-    if (strlen(msg) > 0) return msg + " ago";
+    if (sizeof(msg) > 0) {
+        return msg + " ago";
+    }
 
     Hours = diff / HOUR_IN_SECS;
     diff = diff - (Hours * HOUR_IN_SECS);
-    if (Hours > 0) return Hours + " hour" + (Hours > 1 ? "s" : "") + " ago";
+    if (Hours > 0) {
+        return Hours + " hour" + (Hours > 1 ? "s" : "") + " ago";
+    }
 
     Minutes = diff / MINUTE_IN_SECS;
     diff = diff - (Minutes * MINUTE_IN_SECS);
-    if (Minutes > 0) return Minutes + " minute" + (Minutes > 1 ? "s" : "") + " ago";
+    if (Minutes > 0) {
+        return Minutes + " minute" + (Minutes > 1 ? "s" : "") + " ago";
+    }
 
     return "very recently";
 }

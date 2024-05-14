@@ -158,7 +158,9 @@ private string *format_border_item (mapping item, int width, string ansi, string
         if (sizeof(item["header"]) > columnWidth) {
             item["header"] = item["header"][0..columnWidth-1];
         }
-        if (ansi) item["header"] = map(item["header"], (: "%^RESET%^BOLD%^UNDERLINE%^"+$1+"%^RESET%^" :));
+        if (ansi) {
+            item["header"] = map(item["header"], (: "%^RESET%^BOLD%^UNDERLINE%^"+$1+"%^RESET%^" :));
+        }
         line = left + "  " + SEFUN->format_page(item["header"], item["columns"], 4, (item["align"] == "center"), ansi) + "  " + right;
         lines += ({ line });
     }
@@ -420,7 +422,9 @@ string *tree (mapping value) {
     string *ids;
     int i, l;
 
-    if (!mapp(value) || !sizeof(value)) error("Bad argument 1 to border->tree");
+    if (!mapp(value) || !sizeof(value)) {
+        error("Bad argument 1 to border->tree");
+    }
 
     ids = sort_array(keys(value), (: to_int(explode($1," ")[0]) < to_int(explode($2," ")[0]) ? 0 : 1 :));
     l = sizeof(ids);
