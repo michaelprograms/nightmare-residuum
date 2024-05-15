@@ -22,8 +22,14 @@ private nosave string server_root;
 
 /* -----  ----- */
 
+int query_port () {
+    return port;
+}
 void set_port (int p) {
     port = p;
+}
+mixed *query_url_patterns () {
+    return __URLPatterns;
 }
 void add_url_pattern (string pattern, string fn) {
     __URLPatterns += ({ ({ pattern, fn }) });
