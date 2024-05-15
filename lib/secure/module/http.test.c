@@ -14,4 +14,14 @@ void test_config () {
         testOb->add_url_pattern("^/app", "app"),
         assert_equal(testOb->query_url_patterns(), ({ ({ "^/app", "app" }) })),
     }) :));
+
+    expect("allowing static pages is queryable and settable", (: ({
+        assert_equal(testOb->query_allow_static_pages(), 0),
+
+        testOb->allow_static_pages(1),
+        assert_equal(testOb->query_allow_static_pages(), 1),
+
+        testOb->allow_static_pages(0),
+        assert_equal(testOb->query_allow_static_pages(), 0),
+    }) :));
 }

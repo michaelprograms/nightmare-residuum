@@ -15,7 +15,7 @@
 /* -----  ----- */
 
 nosave private int *__Sockets = ({ });
-private nosave int port;
+private nosave int __Port;
 private nosave int __AllowStatic;
 private nosave mixed *__URLPatterns;
 private nosave string server_root;
@@ -23,16 +23,19 @@ private nosave string server_root;
 /* -----  ----- */
 
 int query_port () {
-    return port;
+    return __Port;
 }
 void set_port (int p) {
-    port = p;
+    __Port = p;
 }
 mixed *query_url_patterns () {
     return __URLPatterns;
 }
 void add_url_pattern (string pattern, string fn) {
     __URLPatterns += ({ ({ pattern, fn }) });
+}
+int query_allow_static_pages () {
+    return __AllowStatic;
 }
 void allow_static_pages (int allow) {
     __AllowStatic = !!allow;
@@ -53,25 +56,39 @@ protected mapping parse_request (string req) {
     int l;
 
     tmp = explode(req, "\r\n\r\n"); // 2 linebreaks marks divider
-
     if (sizeof(tmp) > 1) { // content was ""
         request["content"] = tmp[1];
     }
 
     // parse request line
     headers = explode(tmp[0], "\r\n");
-
     tmp = explode(headers[0], " "); // METHOD URI PROTOCOL
     if (sizeof(tmp) == 3) {
         switch (tmp[0]) {
-            case "GET":     request["method"] = GET; break;
-            case "POST":    request["method"] = POST; break;
-            case "HEAD":    request["method"] = HEAD; break;
-            case "PUT":     request["method"] = PUT; break;
-            case "DELETE":  request["method"] = DELETE; break;
-            case "TRACE":   request["method"] = TRACE; break;
-            case "CONNECT": request["method"] = CONNECT; break;
-            default:        request["method"] = UNDEF_REQUEST; break;
+        case "GET":
+            request["method"] = GET;
+            break;
+        case "POST":
+            request["method"] = POST;
+            break;
+        case "HEAD":
+            request["method"] = HEAD;
+            break;
+        case "PUT":
+            request["method"] = PUT;
+            break;
+        case "DELETE":
+            request["method"] = DELETE;
+            break;
+        case "TRACE":
+            request["method"] = TRACE;
+            break;
+        case "CONNECT":
+            request["method"] = CONNECT;
+            break;
+        default:
+            request["method"] = UNDEF_REQUEST;
+            break;
         }
         request["uri"] = tmp[1];
         request["protocol"] = tmp[2];
@@ -152,9 +169,7 @@ void read_socket (int fd, string msg) {
     int t = time_ns();
 
     req = parse_request(msg);
-
     D_LOG->log("http", ctime() + " request " + identify(req));
-
     foreach (mixed *arr in __URLPatterns) {
         string pattern = arr[0];
         string func = arr[1];
@@ -162,7 +177,6 @@ void read_socket (int fd, string msg) {
         if (pcre_match(req["uri"], pattern)) {
             string *args = pcre_extract(req["uri"], pattern);
             res = handle_response(res, func, args);
-            debug_message("res = "+sprintf("%O", res));
             url_match = 1;
             break;
         }
@@ -210,11 +224,9 @@ void close_socket (int socket) {
 
 void listen_socket (int fd) {
     int socket = socket_accept(fd, "read_socket", "write_socket");
-
     if (socket < 0) {
         error("http: Couldn't perform socket_accept.");
     }
-
     __Sockets += ({ socket });
 }
 
@@ -222,7 +234,7 @@ void listen_socket (int fd) {
 
 void create () {
     __Sockets = ({ });
-    port = 0;
+    __Port = 0;
     __AllowStatic = 0;
     __URLPatterns = ({ });
 
@@ -233,15 +245,15 @@ void create () {
 void start () {
     int socket;
 
-    if (!port) {
-        return error("http: No port configured.");
+    if (!__Port) {
+        error("http: No port configured.");
     }
 
     socket = socket_create(SOCKET_STREAM, "read_socket", "close_socket");
     if (socket <= 0) {
         error("Bad response socket_create: " + socket_error(socket));
     }
-    if ((socket = socket_bind(socket, port)) < 0) {
+    if ((socket = socket_bind(socket, __Port)) < 0) {
         error("Bad response from socket_bind: " + socket_error(socket));
     }
     if ((socket = socket_listen(socket, "listen_socket")) < 0) {
