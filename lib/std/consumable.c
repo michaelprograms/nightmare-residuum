@@ -19,14 +19,12 @@ int query_strength () {
     return __Strength;
 }
 
-void handle_consume (object character) {
-    string verb;
+string query_use_verb () {
+    return "consume";
+}
 
-    if (is_drink()) {
-        verb = "drink";
-    } else if (is_food()) {
-        verb = "eat";
-    }
+void handle_consume (object character) {
+    string verb = this_object()->query_use_verb();
 
     message("action", "You " + verb + " " + query_name() + ".", character);
     message("action", character->query_cap_name() + " " + verb + "s " + query_name() + ".", environment(character), character);

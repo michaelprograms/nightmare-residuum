@@ -14,6 +14,10 @@ void test_is_drink () {
         assert_equal(testOb->is_item(), 1),
         assert_equal(testOb->is_weapon(), 0),
     }) :));
+
+    expect("use verb is correct", (: ({
+        assert_equal(testOb->query_use_verb(), "drink"),
+    }) :));
 }
 
 void test_item_verb_drink_applies () {

@@ -13,6 +13,10 @@ void test_is_consumable () {
         assert_equal(testOb->is_drink(), 0),
         assert_equal(testOb->is_food(), 0),
     }) :));
+
+    expect("use verb is correct", (: ({
+        assert_equal(testOb->query_use_verb(), "consume"),
+    }) :));
 }
 
 void test_strength () {
