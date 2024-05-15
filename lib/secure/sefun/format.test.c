@@ -122,6 +122,7 @@ void test_format_page () {
 void test_format_syntax () {
     expect("format_syntax handles syntaxes with ANSI off", (: ({
         assert_equal(__ANSI = "off", "off"),
+        assert_equal(testOb->format_syntax(0), 0),
         assert_equal(testOb->format_syntax("syntax"), "<syntax>"),
         assert_equal(testOb->format_syntax("verb [target] ([limb]) (with [thing])"), "<verb [target] ([limb]) (with [thing])>"),
     }) :));
@@ -247,5 +248,7 @@ void test_format_integer () {
         assert_equal(testOb->format_integer(-1234), "-1,234"),
         assert_equal(testOb->format_integer(-123456789), "-123,456,789"),
         assert_equal(testOb->format_integer(-1234567890), "-1,234,567,890"),
+
+        assert_equal(testOb->format_integer(UNDEFINED), "0"),
     }) :));
 }
