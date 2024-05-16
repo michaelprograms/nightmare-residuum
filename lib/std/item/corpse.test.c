@@ -27,6 +27,7 @@ void test_corpse () {
 
 void test_body () {
     object liv = new(STD_LIVING);
+    object item;
 
     liv->set_name("tester");
     liv->set_id(({ "tester" }));
@@ -38,6 +39,9 @@ void test_body () {
         assert_equal(testOb->query_name(), "corpse of tester"),
         assert_equal(testOb->query_id(), ({ "corpse", "corpseoftester", "corpse of a tester", "corpse of tester", })),
         assert_equal(testOb->query_short(), "corpse of a tester"),
+    }) :));
+    expect("body handles bad argument to setup", (: ({
+        assert_catch((: testOb->setup_body(0) :), "*Bad argument 1 to corpse->setup_body\n"),
     }) :));
 
     liv->set_short("a %^BOLD%^tester%^DEFAULT%^");
@@ -53,13 +57,37 @@ void test_body () {
 
     liv->add_currency("copper", 12345);
     expect("body transfers currency", (: ({
-        assert_equal(present("coins", testOb), 0),
+        // verify no coins on corpse
+        assert_equal(!!present("coins", testOb), 0),
         assert_equal($(liv)->query_currency("copper"), 12345),
+
         testOb->setup_body($(liv)),
+
         // verify coins moved to corpse
+        assert_equal(!!present("coins", testOb), 1),
         assert_equal(present("coins", testOb)->query_currency("copper"), 12345),
         assert_equal($(liv)->query_currency("copper"), 0),
     }) :));
 
-    destruct(liv);
+    liv->add_currency("copper", -12345);
+    item = new(STD_ITEM);
+    item->set_id(({ "item" }));
+    item->set_name("item");
+    item->set_short("item");
+    item->handle_move(liv);
+    expect("body transfers items", (: ({
+        // verify no item on corpse
+        assert_equal(!!present("item", testOb), 0),
+        assert_equal(!!present("item", $(liv)), 1),
+
+        testOb->setup_body($(liv)),
+
+        // verify item moved to corpse
+        assert_equal(!!present("item", testOb), 1),
+        assert_equal(!!present("item", $(liv)), 0),
+        assert_equal($(liv)->query_currency("copper"), 0),
+    }) :));
+
+    if (liv) destruct(liv);
+    if (item) destruct(item);
 }
