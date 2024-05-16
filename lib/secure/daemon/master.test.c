@@ -98,6 +98,7 @@ void test_security_applies () {
         assert_equal(testOb->valid_override("/insecure"), 0),
         assert_equal(testOb->valid_override("/std/user/input", "input_to"), 1),
         assert_equal(testOb->valid_override("/std/user/input", "get_char"), 1),
+        assert_equal(testOb->valid_override("invalid"), 0),
     }) :));
 
     expect("valid_database handles calls", (: ({
