@@ -1,26 +1,9 @@
+#include "planet.h"
+
 inherit M_CLEAN;
 
 #define PI                  3.141592653589793
 #define PIx2                6.283185307179586
-
-#define HEIGHT_DEEPER       0.35
-#define HEIGHT_DEEP         0.40
-#define HEIGHT_SHALLOW      0.45
-#define HEIGHT_SHORE        0.50
-
-#define HEAT_COLDEST        0.05
-#define HEAT_COLDER         0.15
-#define HEAT_COLD           0.35
-#define HEAT_HOT            0.50
-#define HEAT_HOTTER         0.70
-#define HEAT_HOTTEST        1.00
-
-#define HUMIDITY_DRYEST     0.20
-#define HUMIDITY_DRYER      0.45
-#define HUMIDITY_DRY        0.55
-#define HUMIDITY_WET        0.65
-#define HUMIDITY_WETTER     1.0
-// HUMIDITY_WETTEST > 1.0
 
 #define WATER_LAKES         0.75
 #define WATER_RIVER_1       0.60
@@ -328,7 +311,8 @@ string query_biome (float height, float heat, float humidity) {
             // WETTER-WETTEST: TROPICAL RAINFOREST
             biome = "tropical rainforest";
         }
-    } else { // HEAT_HOTTEST
+    } else {
+        // HEAT_HOTTEST
         if (humidity <= HUMIDITY_DRYER) {
             // DRYEST-DRYER: DESERT
             biome = "desert";
@@ -393,33 +377,57 @@ string query_biome_color_hex (string biome) {
     }
 }
 string query_humidity_color_hex (float humidity) {
-    if (humidity <= HUMIDITY_DRYEST)        return "#FF8B11"; // 255;139;17
-    else if (humidity <= HUMIDITY_DRYER)    return "#F5F511"; // 245;245;17
-    else if (humidity <= HUMIDITY_DRY)      return "#50FF00"; // 80;255;0
-    else if (humidity <= HUMIDITY_WET)      return "#55FFFF"; // 85;255;255
-    else if (humidity <= HUMIDITY_WETTER)   return "#1446FF"; // 20;70;255
-    else                                    return "#000064"; // 0;0;100
+    if (humidity <= HUMIDITY_DRYEST) {
+        return "#FF8B11"; // 255;139;17
+    } else if (humidity <= HUMIDITY_DRYER) {
+        return "#F5F511"; // 245;245;17
+    } else if (humidity <= HUMIDITY_DRY) {
+        return "#50FF00"; // 80;255;0
+    } else if (humidity <= HUMIDITY_WET) {
+        return "#55FFFF"; // 85;255;255
+    } else if (humidity <= HUMIDITY_WETTER) {
+        return "#1446FF"; // 20;70;255
+    } else {
+        return "#000064"; // 0;0;100
+    }
 }
 string query_heat_color_hex (float heat) {
-    if (heat <= HEAT_COLDEST)       return "#00FFFF"; // 0;255;255
-    else if (heat <= HEAT_COLDER)   return "#AAFFFF"; // 170;255;255
-    else if (heat <= HEAT_COLD)     return "#00E585"; // 0;229;133
-    else if (heat <= HEAT_HOT)      return "#FFFF64"; // 255;255;100
-    else if (heat <= HEAT_HOTTER)   return "#FF6400"; // 255;100;0
-    else                            return "#F10C00"; // 241;12;0
+    if (heat <= HEAT_COLDEST) {
+        return "#00FFFF"; // 0;255;255
+    } else if (heat <= HEAT_COLDER) {
+        return "#AAFFFF"; // 170;255;255
+    } else if (heat <= HEAT_COLD) {
+        return "#00E585"; // 0;229;133
+    } else if (heat <= HEAT_HOT) {
+        return "#FFFF64"; // 255;255;100
+    } else if (heat <= HEAT_HOTTER) {
+        return "#FF6400"; // 255;100;0
+    } else {
+        return "#F10C00"; // 241;12;0
+    }
 }
 string query_resource_color_hex (int resource) {
     switch (resource) {
-        // case 9:                         return "#FFFFFF";
-        // case 8:                         return "#FFFFFF";
-        // case 7:                         return "#FFFFFF";
-        // case 6:                         return "#FFFFFF";
-        // case 5:                         return "#FFFFFF";
-        // case 4:                         return "#FFFFFF";
-        // case 3:                         return "#FFFFFF";
-        case 2:                         return "#A47449"; // 164, 116, 73
-        case 1:                         return "#C0C0C0"; // 192, 192, 192
-        case 0: default:                return "#000000";
+    // case 9:
+    //     return "#FFFFFF";
+    // case 8:
+    //     return "#FFFFFF";
+    // case 7:
+    //     return "#FFFFFF";
+    // case 6:
+    //     return "#FFFFFF";
+    // case 5:
+    //     return "#FFFFFF";
+    // case 4:
+    //     return "#FFFFFF";
+    // case 3:
+    //     return "#FFFFFF";
+    case 2:
+        return "#A47449"; // 164, 116, 73
+    case 1:
+        return "#C0C0C0"; // 192, 192, 192
+    case 0: default:
+        return "#000000";
     }
 }
 
@@ -461,12 +469,24 @@ void generate_json (string name) {
         for (x = 0; x < size; x ++) {
             n = query_noise(p, size, x, y);
 
-            if (n["height"] < height_min) height_min = n["height"];
-            if (n["height"] > height_max) height_max = n["height"];
-            if (n["humidity"] < humidity_min) humidity_min = n["humidity"];
-            if (n["humidity"] > humidity_max) humidity_max = n["humidity"];
-            if (n["heat"] < heat_min) heat_min = n["heat"];
-            if (n["heat"] > heat_max) heat_max = n["heat"];
+            if (n["height"] < height_min) {
+                height_min = n["height"];
+            }
+            if (n["height"] > height_max) {
+                height_max = n["height"];
+            }
+            if (n["humidity"] < humidity_min) {
+                humidity_min = n["humidity"];
+            }
+            if (n["humidity"] > humidity_max) {
+                humidity_max = n["humidity"];
+            }
+            if (n["heat"] < heat_min) {
+                heat_min = n["heat"];
+            }
+            if (n["heat"] > heat_max) {
+                heat_max = n["heat"];
+            }
 
             biome = query_biome(n["height"], n["heat"], n["humidity"]);
             biomes[biome] ++;
