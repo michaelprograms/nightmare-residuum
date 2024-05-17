@@ -12,6 +12,8 @@ string *test_order () {
 
 void test_exits () {
     expect("exits are addable, queryable, and removable", (: ({
+        assert_equal(testOb->query_exit("invalid"), 0),
+
         assert_equal(testOb->query_exits(), ([ ])),
         assert_equal(testOb->query_exit_directions(), ({ })),
         assert_equal(testOb->query_exit_destinations(), ({ })),
@@ -22,6 +24,15 @@ void test_exits () {
         assert_equal(testOb->query_exit_dirs(), ({ "n" })),
         assert_equal(testOb->query_exit_destinations(), ({ ([ "room": "/northroom.c" ]) })),
         assert_equal(testOb->query_exit("north"), "/northroom.c"),
+
+        testOb->set_exit("enter west", "/westroom.c"),
+        assert_equal(testOb->query_exit("west"), "/westroom.c"),
+        assert_equal(testOb->query_default_enter(), "enter west"),
+        testOb->set_exit("out east", "/eastroom.c"),
+        assert_equal(testOb->query_exit("east"), "/eastroom.c"),
+        assert_equal(testOb->query_default_out(), "out east"),
+        testOb->remove_exit("enter west"),
+        testOb->remove_exit("out east"),
 
         testOb->set_exit("south", "/southroom.c"),
         assert_equal(testOb->query_exits(), ([ "south": ([ "room": "/southroom.c"]), "north": ([ "room": "/northroom.c" ]) ])),
