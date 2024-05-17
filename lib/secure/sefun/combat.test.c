@@ -20,8 +20,8 @@ void test_initiate_combat () {
         assert_equal($(npc1)->query_hostiles(), ({ $(npc2) })),
         assert_equal($(npc2)->query_hostiles(), ({ $(npc1) })),
 
-        assert_equal($(npc1)->query_received_messages(), ({ "attack", "You attack 0!" })),
-        assert_equal($(npc2)->query_received_messages(), ({  "attack", "0 attacks you!" })),
+        assert_equal($(npc1)->query_received_messages(), ({ ({ "attack", "You attack 0!" }) })),
+        assert_equal($(npc2)->query_received_messages(), ({ ({ "attack", "0 attacks you!" }) })),
 
         assert_equal($(mockNpc1)->stop_shadow(), 1),
         assert_equal($(mockNpc2)->stop_shadow(), 1),
