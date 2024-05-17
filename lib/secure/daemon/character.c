@@ -38,7 +38,7 @@ private object load_character (string name) {
     if (!query_exists(name)) {
         return 0;
     }
-    char = clone_object(STD_CHARACTER);
+    char = new(STD_CHARACTER);
     char->set_name(capitalize(name));
     char->restore_data();
     char->set_save_path(0);

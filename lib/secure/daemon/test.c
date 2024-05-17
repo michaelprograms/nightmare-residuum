@@ -157,7 +157,7 @@ void process_file (string file, mapping options) {
     }
     // call out clears the call stack, call other will chain the tests
     call_out_walltime(function(string test, function done) {
-        object testFile = clone_object(test);
+        object testFile = new(test);
         mixed err = catch (testFile->execute_test(done));
         if (err) {
             write("\n    " + test + " encountered an errored:\n" + err + "\n");

@@ -56,7 +56,7 @@ void handle_reset () {
                 continue;
             }
 
-            ob = clone_object(key);
+            ob = new(key);
             if (mapp(val) && functionp(val["setup"])) {
                 evaluate(val["setup"], ob);
             }

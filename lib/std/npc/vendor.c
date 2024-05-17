@@ -133,7 +133,7 @@ void create () {
     ::create();
     if (clonep()) {
         // create vendor inventor
-        __VendorInventory = clone_object("/std/vendor_inventory.c");
+        __VendorInventory = new("/std/vendor_inventory.c");
     }
 }
 

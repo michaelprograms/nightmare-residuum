@@ -11,7 +11,7 @@
 #define B_GREEN     ANSI(42)
 #define B_ORANGE    ANSI(43)
 
-#define TEST_IGNORE_DEFAULTS ({ "before_all_tests", "before_each_test", "after_each_test", "after_all_tests", "test_order", "test_ignore", "clone_object", "execute_test", "create", "init", "reset", "heart_beat", })
+#define TEST_IGNORE_DEFAULTS ({ "before_all_tests", "before_each_test", "after_each_test", "after_all_tests", "test_order", "test_ignore", "execute_test", "create", "init", "reset", "heart_beat", })
 
 nosave protected mixed UNDEFINED = (([ ])[0]); // equivalent of UNDEFINED
 
@@ -69,16 +69,6 @@ int query_expect_catch () {
 }
 
 /* ----- helper functions ----- */
-
-protected object clone_object (string path) {
-    object ob;
-
-    if (!stringp(path) || file_size(path) < 1) {
-        error("Invalid path '"+path+"' passed to test->clone_object");
-    }
-    ob = efun::clone_object(path);
-    return ob;
-}
 
 private int query_async_test_function (string fn) {
     mixed *fns;
@@ -215,7 +205,7 @@ private void process_test () {
         currentTestLog = "";
         currentFailLog = "";
 
-        testOb = clone_object(testFile);
+        testOb = new(testFile);
         before_each_test();
         failingExpectsBefore = failingExpects;
         passingExpectsBefore = passingExpects;

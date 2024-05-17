@@ -9,7 +9,7 @@ nosave private object __Character;
 
 private void set_character_name (string name) {
     if (!__Character) {
-        __Character = clone_object(STD_CHARACTER);
+        __Character = new(STD_CHARACTER);
         __Character->set_user(this_object());
     }
     if (name) {
@@ -17,7 +17,7 @@ private void set_character_name (string name) {
         __Character->set_account(this_object()->query_name());
     } else {
         destruct(__Character);
-        __Character = clone_object(STD_CHARACTER);
+        __Character = new(STD_CHARACTER);
     }
 }
 private void set_character_species (string species) {
