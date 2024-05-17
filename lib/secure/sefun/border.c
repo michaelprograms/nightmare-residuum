@@ -144,7 +144,7 @@ mapping query_border_charset () {
 //         ]),
 //     }) || UNDEFINED,
 // ]);
-private string *format_border_item (mapping item, int width, string ansi, string left, string right) {
+string *format_border_item (mapping item, string ansi, string left, string right) {
     string *lines = ({ }), line = "", format;
     int columnWidth;
 
@@ -219,7 +219,7 @@ string *format_border (mapping data, mapping b, int width, string ansi) {
     if (fTitle) {
         int n = 0;
         // Title Line 1
-        line = "   " + b["tl"+radius] + sprintf("%'"+b["h"]+"'*s", 2 + strlen(data["title"]) + (lSubtitle ? 2 + lSubtitle : 0), "") + b["tr"+radius];
+        line = "   " + b["tl"+radius] + sprintf("%'"+b["h"]+"'*s", 2 + sizeof(data["title"]) + (lSubtitle ? 2 + lSubtitle : 0), "") + b["tr"+radius];
         if (ansi == "256") {
             line = line[0..2] + SEFUN->apply_gradient(line[3..], colors);
         } else if (ansi) {
@@ -229,7 +229,7 @@ string *format_border (mapping data, mapping b, int width, string ansi) {
         // Title Line 2
         line = b["tl"+radius] + (fHeader ? b["t"] : b["h"]) + b["h"];
         line += b["r"] + " " + data["title"];
-        n += 5 + strlen(data["title"]);
+        n += 5 + sizeof(data["title"]);
         if (fSubtitle) {
             line += ": " + data["subtitle"];
             n += 2 + fSubtitle;
@@ -248,7 +248,7 @@ string *format_border (mapping data, mapping b, int width, string ansi) {
 
         // Title Line 3
         line = b["v"] + (fHeader ? b["v"] : " ") + " ";
-        line += b["bl"+radius] + sprintf("%'"+b["h"]+"'*s", 2 + strlen(data["title"]) + (lSubtitle ? 2 + lSubtitle : 0), "") + b["br"+radius];
+        line += b["bl"+radius] + sprintf("%'"+b["h"]+"'*s", 2 + sizeof(data["title"]) + (lSubtitle ? 2 + lSubtitle : 0), "") + b["br"+radius];
         line += sprintf("%*s", width - 1 - n + (fSubtitle - lSubtitle), "");
         line += (fHeader ? b["v"] : " ") + b["v"];
         if (ansi == "256") {
@@ -279,7 +279,7 @@ string *format_border (mapping data, mapping b, int width, string ansi) {
 
     if (fHeader) {
         for (i = 0, l = sizeof(data["header"]); i < l; i ++) {
-            lines += format_border_item(data["header"][i], width, ansi, b["v"]+b["v"], b["v"]+b["v"]);
+            lines += format_border_item(data["header"][i], ansi, b["v"]+b["v"], b["v"]+b["v"]);
             if (i < l-1) {
                 lines += ({ b["v"] + b["v"] + sprintf("%*s", width-4, "") + b["v"] + b["v"] });
             }
@@ -295,7 +295,7 @@ string *format_border (mapping data, mapping b, int width, string ansi) {
         line = b["v"] + sprintf("%*s", width-2, "") + b["v"];
         lines += ({ line });
         foreach (mapping child in data["body"]) {
-            lines += format_border_item(child, width, ansi, b["v"]+" ", " "+b["v"]);
+            lines += format_border_item(child, ansi, b["v"]+" ", " "+b["v"]);
             lines += ({ b["v"] + sprintf("%*s", width-2, "") + b["v"] });
         }
     }
@@ -310,7 +310,7 @@ string *format_border (mapping data, mapping b, int width, string ansi) {
             if (i > 0) {
                 lines += ({ b["v"] + b["v"] + sprintf("%*s", width-4, "") + b["v"] + b["v"] });
             }
-            lines += format_border_item(data["footer"][i], width, ansi, b["v"]+b["v"], b["v"]+b["v"]);
+            lines += format_border_item(data["footer"][i], ansi, b["v"]+b["v"], b["v"]+b["v"]);
         }
         // Footer Bottom line
         line = b["bl"+radius] + b["b"] + sprintf("%'"+b["h"]+"'*s", width-4, "") + b["b"] + b["br"+radius];
