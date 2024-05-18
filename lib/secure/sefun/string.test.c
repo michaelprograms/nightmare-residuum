@@ -105,10 +105,12 @@ void test_identify () {
 }
 
 void test_wrap () {
-    string resetANSI = "\e[0m", linewrap = "\n";
+    string resetANSI = "\e[0;37;40m", linewrap = "\n";
 
     expect("wrap handles wrapping text", (: ({
         assert_equal(this_object()->query_setting("ansi"), "on"),
+
+        assert_equal(testOb->wrap(), ""),
 
         assert_equal(testOb->wrap("test", 80), "test"),
         assert_equal(testOb->wrap("testtesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttest"), "testtesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttesttest" + $(resetANSI) + $(linewrap) + "test"),

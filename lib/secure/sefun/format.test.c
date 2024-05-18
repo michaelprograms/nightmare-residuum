@@ -64,8 +64,8 @@ void test_format_page () {
 
     row = testOb->format_page(({"123456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789"}), 1, 0, 0, "256");
     expect("format_page wrapped longer strings when 1 column with ansi flag", (: ({
-        assert_equal($(row), "123456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789 \e[0m\n123456789 123456789                                                             \n"),
-        assert_equal(strlen($(row)), 166), // 80 + 4 + 1 + 80 + 1
+        assert_equal($(row), "123456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789 \e[0;37;40m\n123456789 123456789                                                             \n"),
+        assert_equal(strlen($(row)), 172), // 80 + 10 + 1 + 80 + 1
     }) :));
 
     expect("format_page left aligns strings", (: ({
