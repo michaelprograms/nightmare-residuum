@@ -67,9 +67,9 @@ void command (string input, mapping flags) {
     int fs, r;
 
     if (!input || input == "") {
-        path = this_user()->query_shell()->query_variable("cwd");
+        path = this_user()->query_variable("cwd");
     } else if (input[0] != '/' && input[0] != '~' && input[0] != '^') {
-        path = this_user()->query_shell()->query_variable("cwd");
+        path = this_user()->query_variable("cwd");
         path = sanitize_path(path + "/" + input);
     } else {
         path = sanitize_path(input);

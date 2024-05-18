@@ -7,13 +7,13 @@ void create () {
 }
 
 void command (string input, mapping flags) {
-    object shell = this_user()->query_shell();
+    object tu = this_user();
 
     if (!input) {
-        message("action", "Prompt is currently set to '" + shell->query_variable("prompt") + "'.", this_character());
-        message("raw ansi", shell->query_variable("prompt") + "\n", this_character());
+        message("action", "Prompt is currently set to '" + tu->query_variable("prompt") + "'.", tu);
+        message("raw ansi", tu->query_variable("prompt") + "\n", tu);
     } else {
-        message("action", "Changing prompt from '" + shell->query_variable("prompt") + "' to '" + input + "'.", this_character());
-        shell->set_variable("prompt", input);
+        message("action", "Changing prompt from '" + tu->query_variable("prompt") + "' to '" + input + "'.", tu);
+        tu->set_variable("prompt", input);
     }
 }

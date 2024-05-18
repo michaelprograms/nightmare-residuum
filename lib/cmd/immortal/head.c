@@ -16,7 +16,7 @@ void command (string input, mapping flags) {
     } else if (input == "here") {
         input = file_name(environment(this_character())) + ".c";
     }
-    cwd = this_user()->query_shell()->query_variable("cwd");
+    cwd = this_user()->query_variable("cwd");
     file = absolute_path(input, cwd);
     switch (file_size(file)) {
         case -2:

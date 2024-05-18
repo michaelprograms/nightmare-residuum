@@ -30,7 +30,7 @@ void command (string input, mapping flags) {
         }
         if (!regexp(path, "/virtual/")) {
             if (file_size(path) == -1) {
-                path = this_user()->query_shell()->query_variable("cwd") + "/" + path;
+                path = this_user()->query_variable("cwd") + "/" + path;
             }
             if (file_size(path) == -1) {
                 message("action", "goto: " + input + " not found.", this_character());

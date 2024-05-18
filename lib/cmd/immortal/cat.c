@@ -13,7 +13,7 @@ void command (string input, mapping flags) {
         write("Syntax: cat [file]\n");
         return;
     }
-    cwd = this_user()->query_shell()->query_variable("cwd");
+    cwd = this_user()->query_variable("cwd");
     file = absolute_path(input, cwd);
     switch (file_size(file)) {
         case -2:

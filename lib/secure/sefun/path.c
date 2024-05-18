@@ -25,10 +25,8 @@ string sanitize_path (string path) {
         error("Bad argument 1 to path->sanitize_path");
     }
 
-    if ((path[0] != '/' && path[0] != '~' && path[0] != '^')) {
-        if (previous_object() && previous_object()->query_shell()) {
-            path = previous_object()->query_shell()->query_variable("cwd");
-        }
+    if ((path[0] != '/' && path[0] != '~' && path[0] != '^') && previous_object()) {
+        path = previous_object()->query_variable("cwd") + path;
     }
 
     trailingSlash = (sizeof(path) > 0 && (path[<1] == '/' || path[<2..] == "/." || path[<3..] == "/.."));

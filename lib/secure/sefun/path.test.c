@@ -9,9 +9,9 @@ object query_character () {
     return __MockCharacter;
 }
 
-object __MockShell;
-object query_shell () {
-    return __MockShell;
+mapping __MockVariable = ([ "cwd": "/" ]);
+mapping query_variable (string key) {
+    return __MockVariable[key];
 }
 
 // -----------------------------------------------------------------------------
@@ -42,7 +42,7 @@ void test_split_path () {
 }
 
 void test_sanitize_path () {
-    expect("sanitize_path handles //", (: ({
+    expect("sanitize_path handles / and //", (: ({
         assert_equal(testOb->sanitize_path("dir/"), "/dir/"),
         assert_equal(testOb->sanitize_path("/dir/"), "/dir/"),
         assert_equal(testOb->sanitize_path("//dir/"), "/dir/"),
@@ -80,8 +80,6 @@ void test_sanitize_path () {
 
     __MockCharacter = new("/std/object/id.c");
     __MockCharacter->set_key_name("test"); // must be named test
-    __MockShell = new("/secure/shell/shell.c");
-    __MockShell->start_shell();
     expect("sanitize_path handles ~", (: ({
         assert_equal(testOb->sanitize_path("~"), "/realm/test"),
         assert_equal(testOb->sanitize_path("~."), "/realm/test"),
@@ -96,15 +94,14 @@ void test_sanitize_path () {
     }) :));
 
     expect("sanitize_path handles cwd", (: ({
-        __MockShell->set_variable("cwd", "/realm/test/testdir/"),
-        assert_equal(testOb->sanitize_path("test"), "/realm/test/testdir/"),
+        __MockVariable["cwd"] = "/realm/test/testdir/",
+        assert_equal(testOb->sanitize_path("test"), "/realm/test/testdir/test"),
 
-        __MockShell->set_variable("cwd", "/realm/test/otherdir/"),
-        assert_equal(testOb->sanitize_path("test"), "/realm/test/otherdir/"),
+        __MockVariable["cwd"] = "/realm/test/otherdir/",
+        assert_equal(testOb->sanitize_path("test"), "/realm/test/otherdir/test"),
     }) :));
 
     destruct(__MockCharacter);
-    destruct(__MockShell);
 
     expect("santitize_path handles invalid input", (: ({
         assert_catch((: testOb->sanitize_path("") :), "*Bad argument 1 to path->sanitize_path\n"),
@@ -135,8 +132,6 @@ void test_absolute_path () {
 
     __MockCharacter = new("/std/object/id.c");
     __MockCharacter->set_key_name("test"); // must be named test
-    __MockShell = new("/secure/shell/shell.c");
-    __MockShell->start_shell();
 
     expect("absolute_path handles ~ alias for /realm", (: ({
         assert_equal(testOb->absolute_path("~", "/"), "/realm/test"),
@@ -146,7 +141,6 @@ void test_absolute_path () {
     }) :));
 
     destruct(__MockCharacter);
-    destruct(__MockShell);
 }
 
 void test_mkdirs () {

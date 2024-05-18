@@ -16,7 +16,7 @@ void command (string input, mapping flags) {
         else if (present(input, environment(tc))) target = present(input, environment(tc));
     }
 
-    history = target->query_user()->query_shell()->query_history();
+    history = target->query_user()->query_history();
     for (int i = 0; i < sizeof(history); i ++) {
         items += ({ sprintf("%3d", i + 1) + " " + history[i] });
     }

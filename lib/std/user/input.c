@@ -18,6 +18,8 @@ nosave private mapping *__InputStack = ({ });
 
 private nomask mapping get_top_handler (int require_handler);
 private nomask mapping get_bottom_handler ();
+nomask void input_pop ();
+nomask void input_focus ();
 
 private nomask void dispatch_input (mixed str) {
     mapping input;
@@ -76,6 +78,9 @@ varargs nomask void input_single (function inputFn, mixed prompt, int secure, in
     stack_push(inputFn, prompt, secure, 0, lock, STATE_INPUT_SINGLE);
 }
 varargs nomask void input_next (function inputFn, mixed prompt, int secure, int lock) {
+    if (!sizeof(__InputStack)) {
+        return;
+    }
     __InputStack[<1]["inputFn"] = inputFn;
     if (prompt) {
         __InputStack[<1]["prompt"] = prompt;
@@ -86,6 +91,7 @@ varargs nomask void input_next (function inputFn, mixed prompt, int secure, int 
 nomask void input_pop () {
     mapping input;
 
+    write("input_pop: size="+sizeof(__InputStack)+"\n");
     __InputStack = __InputStack[0..<2]; // remove last element
 
     if ((input = get_top_handler(0)) && input["callbackFn"]) {

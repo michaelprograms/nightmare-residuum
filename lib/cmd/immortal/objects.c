@@ -31,9 +31,6 @@ private mapping format_data (object ob) {
     if (ob->is_character()) {
         contents += ({ ob->query_user() });
     }
-    if (ob->is_user()) {
-        contents += ({ ob->query_shell() });
-    }
     if (ob->is_vendor()) {
         contents += ob->query_vendor_inventory();
     }

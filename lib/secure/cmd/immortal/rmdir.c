@@ -13,7 +13,7 @@ void command (string input, mapping flags) {
         return;
     }
 
-    cwd = this_user()->query_shell()->query_variable("cwd");
+    cwd = this_user()->query_variable("cwd");
     dir = absolute_path(input, cwd);
     switch (file_size(dir)) {
         case -2: break;

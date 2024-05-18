@@ -20,7 +20,7 @@ void command (string input, mapping flags) {
             message("action", "Update which file?", this_user());
             return;
         } else if (input[0] != '/' && input[0] != '~' && input[0] != '^') {
-            input = this_user()->query_shell()->query_variable("cwd") + "/" + input;
+            input = this_user()->query_variable("cwd") + "/" + input;
         }
         input = sanitize_path(input);
         if (input[<2..] == ".c") {

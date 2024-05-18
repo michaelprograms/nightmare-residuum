@@ -14,7 +14,7 @@ void command (string input, mapping flags) {
         return;
     }
 
-    cwd = this_user()->query_shell()->query_variable("cwd");
+    cwd = this_user()->query_variable("cwd");
     file1 = absolute_path(file1, cwd);
     file2 = absolute_path(file2, cwd);
     if (file2[<1] == '/') {

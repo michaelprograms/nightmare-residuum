@@ -11,12 +11,12 @@ void command (string input, mapping flags) {
         input = user_path(this_character()->query_key_name());
     }
     if (input[0] != '/' && input[0] != '~' && input[0] != '^') {
-        input = this_user()->query_shell()->query_variable("cwd") + "/" + input;
+        input = this_user()->query_variable("cwd") + "/" + input;
     }
     input = sanitize_path(input);
 
     if (file_size(input) == -2) {
-        this_user()->query_shell()->set_variable("cwd", input);
+        this_user()->set_variable("cwd", input);
         write(input + ":\n");
     } else {
         write("Invalid directory.\n");

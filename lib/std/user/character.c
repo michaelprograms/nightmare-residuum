@@ -7,7 +7,7 @@ nosave private object __Character;
 
 // -----------------------------------------------------------------------------
 
-private void set_character_name (string name) {
+void set_character_name (string name) {
     if (!__Character) {
         __Character = new(STD_CHARACTER);
         __Character->set_user(this_object());
@@ -20,7 +20,7 @@ private void set_character_name (string name) {
         __Character = new(STD_CHARACTER);
     }
 }
-private void set_character_species (string species) {
+void set_character_species (string species) {
     __Species = species;
     __Character->set_species(species);
 }
@@ -33,7 +33,7 @@ object query_character () {
 
 // -----------------------------------------------------------------------------
 
-nomask private void character_enter (int newbie) {
+nomask void character_enter (int newbie) {
     remove_call_out();
 
     __Character->setup_character(); // this calls restore_data/save_data
@@ -45,7 +45,8 @@ nomask private void character_enter (int newbie) {
         }
     }
 
-    shell_start();
+    this_object()->input_pop();
+    this_object()->shell_start();
     __Character->enter_world();
 
     if (newbie) {
@@ -60,7 +61,7 @@ nomask private void character_enter (int newbie) {
     this_object()->update_character_data(__Character);
 }
 
-nomask private void character_reconnect (object char) {
+nomask void character_reconnect (object char) {
     remove_call_out();
 
     if (!char) {
@@ -69,14 +70,14 @@ nomask private void character_reconnect (object char) {
 
     __Character = char;
     __Character->set_user(this_object());
-    shell_start();
+    this_object()->shell_start();
     write("\n\nReturning " + __Character->query_cap_name() + " from linkdeath...\n\n");
     __Character->exit_freezer();
     __Character->set_last_action();
     this_object()->update_character_data(__Character);
 }
 
-nomask private void character_override (object char) {
+nomask void character_override (object char) {
     remove_call_out();
 
     if (!char) {
@@ -89,7 +90,7 @@ nomask private void character_override (object char) {
     __Character->set_user(this_object());
     __Character->set_parent(this_object());
 
-    shell_start();
+    this_object()->shell_start();
     __Character->enter_world(1);
     __Character->set_last_action();
     this_object()->update_character_data(__Character);
@@ -99,11 +100,11 @@ nomask void handle_character_override () {
     object po;
     if (base_name(po = previous_object()) == STD_USER[0..<3] && po->query_character() == __Character) {
         __Character = 0;
-        handle_remove("\nYour connection has been overridden from " + query_ip_number(po) + ".\n\n");
+        this_object()->handle_remove("\nYour connection has been overridden from " + query_ip_number(po) + ".\n\n");
     }
 }
 
-nomask protected void character_exit () {
+nomask void character_exit () {
     if (__Character) {
         __Character->set_last_action();
         this_object()->update_character_data(__Character);
@@ -112,7 +113,7 @@ nomask protected void character_exit () {
     }
 }
 
-nomask protected void character_linkdead () {
+nomask void character_linkdead () {
     if (__Character) {
         __Character->set_last_action();
         this_object()->update_character_data(__Character);

@@ -19,7 +19,7 @@ void command (string input, mapping flags) {
         write("Syntax: ed [file]\n");
         return;
     }
-    cwd = this_user()->query_shell()->query_variable("cwd");
+    cwd = this_user()->query_variable("cwd");
     file = absolute_path(input, cwd);
 
     if (objectp(__Locks[file])) {

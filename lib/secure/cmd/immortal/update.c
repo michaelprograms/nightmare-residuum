@@ -19,7 +19,7 @@ void command (string input, mapping flags) {
         if (file_size(input) == -1 && file_size(input + ".c") > 0) input += ".c";
     } else {
         if (input[0] != '/' && input[0] != '~' && input[0] != '^') {
-            input = this_user()->query_shell()->query_variable("cwd") + "/" + input;
+            input = this_user()->query_variable("cwd") + "/" + input;
         }
         input = sanitize_path(input);
         message("action", "Updating " + input + (flags["R"] ? " and deep inherits " : (flags["r"] ? " and inherits " : "")) + "...", this_user());

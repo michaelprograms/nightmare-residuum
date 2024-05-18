@@ -21,6 +21,9 @@ nosave private mapping __Terminal = ([
     "client": "unknown",
 ]);
 
+void receive_message (string type, string message);
+nomask varargs void handle_remove (string message);
+
 int is_user () {
     return 1;
 }
@@ -82,9 +85,6 @@ nomask void net_dead () {
     if (query_name() && query_character()) {
         character_linkdead();
     }
-    if (query_shell()) {
-        destruct(query_shell());
-    }
     destruct();
 }
 
@@ -133,7 +133,6 @@ void set_terminal_color (string color) {
 nomask varargs void quit_character (int destructing) {
     message("system", "Reality "+(random(2)?"explodes into an im":"implodes into an ex")+"plosion of irreality.\n", this_object());
     character_exit();
-    shell_stop();
     flush_messages();
     if (!destructing) {
         account_input(STATE_ACCOUNT_MENU);
@@ -160,9 +159,6 @@ nomask varargs void handle_remove (string message) {
         message("system", message, this_object());
     }
 
-    if (query_shell()) {
-        shell_stop();
-    }
     if (query_character()) {
         quit_character(1);
     }
@@ -173,4 +169,5 @@ nomask varargs void handle_remove (string message) {
 
 void create () {
     account::create();
+    shell::create();
 }

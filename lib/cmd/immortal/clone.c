@@ -14,7 +14,7 @@ void command (string input, mapping flags) {
         message("action", "Syntax: clone [file]", this_character());
         return;
     }
-    cwd = this_user()->query_shell()->query_variable("cwd");
+    cwd = this_user()->query_variable("cwd");
     file = absolute_path(input, cwd);
     if (file_size(file) < 1) {
         message("action", "clone: no such file.", this_character());
