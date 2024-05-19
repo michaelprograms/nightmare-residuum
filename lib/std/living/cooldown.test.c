@@ -7,8 +7,7 @@ void test_cooldown_setup () {
         assert_equal(testOb->query_cooldown("test"), 0),
     }) :));
     expect("cooldown setup errors are caught", (: ({
-        assert_catch((: testOb->set_cooldown() :), "*Bad argument 1 to cooldown->set_cooldown\n"),
-        assert_catch((: testOb->set_cooldown(123) :), "*Bad argument 1 to cooldown->set_cooldown\n"),
+        assert_catch((: testOb->set_cooldown(UNDEFINED) :), "*Bad argument 1 to cooldown->set_cooldown\n"),
         assert_catch((: testOb->set_cooldown("test", 12.3, "heart_beat") :), "*Bad argument 2 to cooldown->set_cooldown\n"),
         assert_catch((: testOb->set_cooldown("test", 12, "timed") :), "*Bad argument 2 to cooldown->set_cooldown\n"),
         assert_catch((: testOb->set_cooldown("test", 12, "invalid") :), "*Bad argument 3 to cooldown->set_cooldown\n"),

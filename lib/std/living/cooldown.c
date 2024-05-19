@@ -51,7 +51,7 @@ protected void cooldown_timed_expire (string name) {
 /* ----- applies ----- */
 
 void heart_beat () {
-    foreach (string name, mapping data in __Cooldown) {
+    foreach (string name, mapping data in __Cooldown || ([ ])) {
         if (data["type"] == "heart_beat") {
             if (data["value"] > 0) {
                 data["value"] --;
