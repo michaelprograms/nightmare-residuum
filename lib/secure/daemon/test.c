@@ -398,7 +398,9 @@ mapping query_lines () {
     return __Lines;
 }
 void line_hit (int n) {
-    __Lines[n][0] ++;
+    if (__Lines[n]) {
+        __Lines[n][0] ++;
+    }
 }
 string *query_hit_functions () {
     return values(map(__Lines, (: sizeof($2) > 1 && $2[0] > 0 ? $2[1] : 0 :))) - ({ 0 });
