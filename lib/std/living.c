@@ -31,10 +31,6 @@ int handle_remove () {
 }
 
 void heart_beat () {
-    if (!clonep()) {
-        return;
-    }
-
     status::heart_beat();
     if (query_hp() > 0) {
         body::heart_beat();
@@ -57,7 +53,6 @@ string query_living_long () {
     }
     str += query_species();
     str = query_cap_name() + " is " + add_article(str);
-
     foreach (string key,string value in query_attributes()) {
         if (key == "build") {
             attributes += ({ add_article(value) + " build" });
@@ -79,7 +74,6 @@ string query_living_long () {
         str += " with " + conjunction(attributes);
     }
     str += ".";
-
     return str;
 }
 
@@ -103,7 +97,6 @@ varargs int do_command (string command, int debug) {
     if (!environment() || !command) {
         return 0;
     }
-
     if (query_immobile()) {
         message("status", "You are unable to take any actions right now.", this_object());
         return 1;
@@ -118,7 +111,6 @@ varargs int do_command (string command, int debug) {
     split = explode(command, " ") - ({ "" });
     action = split[0];
     input = sizeof(split) > 1 ? command[(strlen(action)+1)..] : 0;
-
     if (cmdPath = D_COMMAND->query_command(action)) {
         mixed *parse = parse_command_flags(input);
         catch(call_other(cmdPath + "/" + action, "command", parse[0], parse[1]));
@@ -181,11 +173,9 @@ varargs int handle_go (mixed dest, string verb, string dir, string reverse) {
     article = member_array(formatReverse, ({ "north", "northeast", "east", "southeast", "south", "southwest", "west", "northwest" })) > -1 ? "the " : "";
 
     move = handle_move(newEnv);
-
     message("go", "You " + verb + " %^DIR%^" + dir + "%^DEFAULT%^.", this_object());
     message("go", query_cap_name() + " " + verbs + " %^DIR%^in%^DEFAULT%^ from " + article + "%^DIR%^" + formatReverse + "%^DEFAULT%^.", newEnv->query_living_contents(), this_object());
     message("go", query_cap_name() + " " + verbs + " %^DIR%^" + dir + "%^DEFAULT%^.", oldEnv->query_living_contents(), this_object());
-
     return move;
 }
 
