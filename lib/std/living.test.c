@@ -52,3 +52,9 @@ void test_level () {
         assert_equal(testOb->query_limb("torso"), ([ "damage": 10, "maxdamage": 34, "pct": 100, "status": 0, "type": "FATAL" ])),
     }) :));
 }
+
+void test_parser_applies () {
+    expect("indirect_inject apply behaves", (: ({
+        assert_equal(testOb->indirect_inject_obj_into_liv(), 1),
+    }) :));
+}
