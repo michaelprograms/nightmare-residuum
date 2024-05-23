@@ -39,7 +39,7 @@ int verify_ability_requirements (object source) {
         }
         if (mapp(value["stats"])) {
             foreach (string stat,int num in value["stats"]) {
-                if (source->query_stats(stat) < num) {
+                if (source->query_stat(stat) < num) {
                     return 0;
                 }
             }
