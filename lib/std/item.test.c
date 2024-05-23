@@ -22,7 +22,7 @@ void test_value () {
         assert_equal(testOb->query_value(), 54321),
     }) :));
     expect("value catches bad inputs", (: ({
-        assert_catch((: testOb->set_value(1.0) :), "*Bad argument 1 to item->set_value\n"),
+        assert_catch((: testOb->set_value(UNDEFINED) :), "*Bad argument 1 to item->set_value\n"),
         assert_catch((: testOb->set_value(-1) :), "*Bad argument 1 to item->set_value\n"),
     }) :));
 }

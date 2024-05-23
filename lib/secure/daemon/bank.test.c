@@ -39,11 +39,11 @@ void test_balance () {
     }) :));
 
     expect("querying balance handles bad arguments", (: ({
-        assert_catch((: testOb->query_balance(UNDEFINED, UNDEFINED, UNDEFINED) :), "*Bad argument 1 to bank->query_balance\n"),
-        assert_catch((: testOb->query_balance("123", UNDEFINED, UNDEFINED) :), "*Bad argument 1 to bank->query_balance\n"),
+        assert_catch((: testOb->query_balance(UNDEFINED, UNDEFINED) :), "*Bad argument 1 to bank->query_balance\n"),
+        assert_catch((: testOb->query_balance("123", UNDEFINED) :), "*Bad argument 1 to bank->query_balance\n"),
 
-        assert_catch((: testOb->query_balance("testcharacter", UNDEFINED, UNDEFINED) :), "*Bad argument 2 to bank->query_balance\n"),
-        assert_catch((: testOb->query_balance("testcharacter", 0, UNDEFINED) :), "*Bad argument 2 to bank->query_balance\n"),
+        assert_catch((: testOb->query_balance("testcharacter", UNDEFINED) :), "*Bad argument 2 to bank->query_balance\n"),
+        assert_catch((: testOb->query_balance("testcharacter", 0) :), "*Bad argument 2 to bank->query_balance\n"),
     }) :));
 
 

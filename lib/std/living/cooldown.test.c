@@ -13,8 +13,8 @@ void test_cooldown_setup () {
         assert_catch((: testOb->set_cooldown("test", 12, "invalid") :), "*Bad argument 3 to cooldown->set_cooldown\n"),
     }) :));
 }
-void test_cooldown_heart_beats () {
 
+void test_cooldown_heart_beats () {
     expect("heart_beat cooldowns are settable and queryable", (: ({
         // no cooldowns set
         assert_equal(testOb->query_cooldowns(), ([ ])),
@@ -41,7 +41,7 @@ void test_cooldown_heart_beats () {
         testOb->heart_beat(),
         assert_equal(testOb->query_cooldowns(), ([ ])),
         assert_equal(testOb->query_cooldown("test"), 0),
-     }) :));
+    }) :));
 }
 
 void test_cooldown_timed (function done) {

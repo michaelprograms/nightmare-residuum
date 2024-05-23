@@ -1,10 +1,10 @@
 object this_character ();
 
-nomask varargs int input_to () {
+nomask varargs int input_to (mixed args...) {
     error("efun::input_to disabled");
 }
 
-nomask object this_player (int flag) {
+nomask varargs object this_player (int flag) {
     error("efun::this_player disabled");
 }
 

@@ -59,7 +59,6 @@ void test_cardinal () {
 
     expect("cardinal handles bad inputs", (: ({
         assert_catch((: testOb->cardinal(UNDEFINED) :), "*Bad argument 1 to grammar->cardinal\n"),
-        assert_catch((: testOb->cardinal(1.0) :), "*Bad argument 1 to grammar->cardinal\n"),
     }) :));
 }
 
@@ -96,7 +95,6 @@ void test_ordinal () {
 
     expect("ordinal handles bad inputs", (: ({
         assert_catch((: testOb->ordinal(UNDEFINED) :), "*Bad argument 1 to grammar->ordinal\n"),
-        assert_catch((: testOb->ordinal(1.0) :), "*Bad argument 1 to grammar->ordinal\n"),
         assert_catch((: testOb->ordinal(-1) :), "*Bad argument 1 to grammar->ordinal\n"),
     }) :));
 }

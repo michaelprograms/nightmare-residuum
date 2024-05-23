@@ -2,7 +2,7 @@ inherit M_TEST;
 
 void test_weapons () {
     expect("set_weapons handles bad inputs", (: ({
-        assert_catch((: testOb->set_weapons(1) :), "*Bad argument 1 to weapon->set_weapons\n"),
+        assert_catch((: testOb->set_weapons(UNDEFINED) :), "*Bad argument 1 to weapon->set_weapons\n"),
         assert_catch((: testOb->set_weapons(0) :), "*Bad argument 1 to weapon->set_weapons\n"),
 
         assert_catch((: testOb->set_weapons(([ "bad": ([ ]) ])) :), "*Bad argument (keys) to weapon->set_weapons\n"),

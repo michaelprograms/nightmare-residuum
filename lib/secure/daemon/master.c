@@ -201,17 +201,17 @@ private varargs string standard_trace (mapping e) {
 // This apply is called to handle caught and runtime errors.
 void error_handler (mapping e, int caught) {
     string ret, file = caught ? "catch" : "runtime";
-    object ob;
+    object ob, test;
 
-    if (caught && sizeof(e["trace"]) > 1 && e["trace"][1]["program"] == D_TEST) {
-        object test = filter(e["trace"], (: $1["file"] == M_TEST :))[0]["object"];
+    if (caught && sizeof(e["trace"]) > 1 && regexp(e["trace"][1]["program"], D_TEST+"|\\.test\\.c")) {
+        test = filter(e["trace"], (: $1["file"] == M_TEST :))[0]["object"];
         if (test && !test->query_expect_catch()) {
             write("--- CAUGHT DURING TEST:\n" + standard_trace(e) + "\n---\n");
         }
         return;
     }
 
-    ret = "--- " + ctime(time()) + "\n" + standard_trace(e) + "\n";
+    ret = "--- " + ctime(time()) + standard_trace(e) + "\n";
     if (file_size("/log/" + file) > 20000) { // 20 kb
         rename("/log/" + file, "/log/" + file + "-" + time());
     }

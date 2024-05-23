@@ -54,7 +54,7 @@ void test_level () {
 }
 
 void test_parser_applies () {
-    expect("indirect_inject apply behaves", (: ({
+    expect("inject parser apply behaves", (: ({
         assert_equal(testOb->indirect_inject_obj_into_liv(), 1),
     }) :));
 }

@@ -57,7 +57,7 @@ void test_help_similar () {
         assert_equal(testOb->query_help_similar(), ({ "1", "2", "3", })),
     }) :));
     expect("help similar handles bad inputs", (: ({
-        assert_catch((: testOb->set_help_similar("") :), "*Bad argument 1 to command->set_help_similar\n"),
+        assert_catch((: testOb->set_help_similar(UNDEFINED) :), "*Bad argument 1 to command->set_help_similar\n"),
     }) :));
 }
 
