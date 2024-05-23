@@ -17,7 +17,7 @@ int query_value () {
     return __Value;
 }
 void set_value (int v) {
-    if (!intp(v) || v < 0) {
+    if (undefinedp(v) || !intp(v) || v < 0) {
         error("Bad argument 1 to item->set_value");
     }
     __Value = v;
