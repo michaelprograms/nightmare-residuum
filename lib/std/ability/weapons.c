@@ -27,13 +27,13 @@ mapping query_weapons () {
     return __Weapons;
 }
 object query_best_weapon (object source) {
-    object weapon;
     string *types, t;
+    object weapon, *weapons;
     int wc;
 
     types = keys(__Weapons);
-
-    foreach (object w in source->query_wielded_weapons()) {
+    weapons = source->query_wielded_weapons() || ({ });
+    foreach (object w in weapons) {
         if (sizeof(types)) {
             t = w->query_type();
             if (member_array(t, types) == -1) {
