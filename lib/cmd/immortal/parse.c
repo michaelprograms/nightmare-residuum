@@ -13,5 +13,5 @@ void command (string input, mapping flags) {
         return;
     }
     write("Sending '"+input+"' to parser...\n");
-    this_character()->do_command(input, 2);
+    this_character()->handle_command(input, 2);
 }

@@ -14,7 +14,7 @@ void create () {
     set_exit("down", HUMAN_ROOM + "museum_1.c", function(object po, string dir) {
         object ob = present("synthetic creature");
         if (po->is_character() && !po->query_achievement("human_museum")) {
-            ob->do_command("say " + po->query_cap_name() + ", one as young as yourself should really look through the rest of this museum. You are nearly done.");
+            ob->handle_command("say " + po->query_cap_name() + ", one as young as yourself should really look through the rest of this museum. You are nearly done.");
             return 0;
         }
         return 1;

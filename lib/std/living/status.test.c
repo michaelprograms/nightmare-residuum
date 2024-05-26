@@ -53,13 +53,13 @@ void test_immobile () {
     r1->set_exit("east", file_name(r2));
     r2->set_exit("west", file_name(r1));
 
-    expect("immobile should prevent do_command", (: ({
+    expect("immobile should prevent handle_command", (: ({
         assert_equal(testOb->handle_move($(r1)), 1),
         assert_equal(testOb->query_immobile(), 0),
 
         testOb->set_immobile(2),
         assert_equal(testOb->query_immobile(), 2),
-        assert_equal(testOb->do_command("go east"), 1), // command to move to r2
+        assert_equal(testOb->handle_command("go east"), 1), // command to move to r2
         assert_equal(environment(testOb), $(r1)), // still r1
     }) :));
 

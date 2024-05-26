@@ -158,7 +158,7 @@ void execute_command (string command) {
 
     if (this_object()->query_character()) {
         this_object()->query_character()->set_last_action();
-        if (!this_object()->query_character()->do_command(command)) {
+        if (!this_object()->query_character()->handle_command(command)) {
             write("Do what?\n");
         }
     }

@@ -47,7 +47,7 @@ void heart_beat () {
             message("action", query_cap_name() + " arrives to follow " + __Owner->query_cap_name() + ".", environment(), ({ this_object(), __Owner }));
         }
         if (sizeof(__Owner->query_present_hostiles()) && !sizeof(query_present_hostiles())) {
-            do_command("aid " + __Owner->query_key_name());
+            handle_command("aid " + __Owner->query_key_name());
         }
     }
 }

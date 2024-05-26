@@ -58,17 +58,17 @@ void handle_list (string str, object po) {
 
     if (!sizeof(items)) {
         if (str) {
-            do_command("say I don't have any '" + str + "' for sale.");
+            handle_command("say I don't have any '" + str + "' for sale.");
         } else {
-            do_command("say I don't have any items for sale right now, " + po->query_cap_name() + ".");
+            handle_command("say I don't have any items for sale right now, " + po->query_cap_name() + ".");
         }
         return;
     }
 
     if (str) {
-        do_command("say I have the following '" + str + "' items, " + po->query_cap_name() + ".");
+        handle_command("say I have the following '" + str + "' items, " + po->query_cap_name() + ".");
     } else {
-        do_command("say I have the following items, " + po->query_cap_name() + ".");
+        handle_command("say I have the following items, " + po->query_cap_name() + ".");
     }
     foreach (object ob in items) {
         message("action", sprintf("  %-30s%s %s", ob->query_short(), format_integer(ob->query_value()), query_vendor_currency()), po);
@@ -83,18 +83,18 @@ void handle_buy (string str, object po) {
     int value;
 
     if (!(item = present(str, __VendorInventory))) {
-        do_command("say I don't have any '" + str + "' for sale.");
+        handle_command("say I don't have any '" + str + "' for sale.");
         return;
     }
 
     value = item->query_value();
 
     if (value > po->query_currency(__VendorCurrency)) {
-        do_command("say You can't afford " + item->query_short() + ".");
+        handle_command("say You can't afford " + item->query_short() + ".");
         return;
     }
 
-    do_command("say Here's your " + item->query_short() + ", " + po->query_cap_name() + "!");
+    handle_command("say Here's your " + item->query_short() + ", " + po->query_cap_name() + "!");
     message("action", "You buy " + item->query_short() + " for " + value + " " + __VendorCurrency + ".", po);
     message("action", po->query_cap_name() + " buys " + item->query_short() + ".", environment(po), po);
 
@@ -112,14 +112,14 @@ void handle_sell (object item, object po) {
     int value;
 
     if (!item) {
-        do_command("say You don't have an item to sell.");
+        handle_command("say You don't have an item to sell.");
         return;
     }
 
     value = item->query_value() * 50 / 100;
 
     if (!item->handle_move(__VendorInventory)) {
-        do_command("say My shop is full, I can't buy any more items.");
+        handle_command("say My shop is full, I can't buy any more items.");
         return;
     }
     po->add_currency(__VendorCurrency, value);

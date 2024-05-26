@@ -24,7 +24,7 @@ varargs void do_climb_str (string dir) {
     object po = previous_object(), env = environment(po);
 
     if (po->query_posture() != "standing") {
-        po->do_command("stand");
+        po->handle_command("stand");
     }
 
     env->handle_climb(po, "climb", dir);

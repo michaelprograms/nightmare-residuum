@@ -27,16 +27,16 @@ void handle_receive_living_in_env (object living) {
     if (random(2)) return;
     switch(random(4)) {
     case 0:
-        do_command("say Get a load of this wimp!");
+        handle_command("say Get a load of this wimp!");
         break;
     case 1:
-        do_command("say You think you can take me on?");
+        handle_command("say You think you can take me on?");
         break;
     case 2:
-        do_command("say " + capitalize(subjective(living)) + " thinks " + subjective(living) + " can fight?");
+        handle_command("say " + capitalize(subjective(living)) + " thinks " + subjective(living) + " can fight?");
         break;
     case 3:
-        do_command("say Check out this limp noodle.");
+        handle_command("say Check out this limp noodle.");
         break;
     }
 }

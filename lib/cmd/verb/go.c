@@ -37,7 +37,7 @@ varargs void do_go_str (string dir) {
     string exit;
 
     if (po->query_posture() != "standing") {
-        po->do_command("stand");
+        po->handle_command("stand");
     }
 
     if (dir == "enter") {

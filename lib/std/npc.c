@@ -47,7 +47,7 @@ void handle_ability_attack () {
 
     if (query_ability_chance() > 1+random(100)) {
         string ability = element_of(query_ability_list());
-        this_object()->do_command(ability);
+        handle_command(ability);
     }
 }
 
@@ -76,7 +76,7 @@ void handle_received (object env) {
     if (sizeof(__Inventory)) {
         foreach (string item,string command in __Inventory) {
             new(item)->handle_move(this_object());
-            do_command(command);
+            handle_command(command);
         }
         __Inventory = ([ ]);
     }
@@ -134,7 +134,7 @@ void handle_wander () {
     }
 
     __Wandering = 1;
-    do_command("go " + element_of(exits));
+    handle_command("go " + element_of(exits));
     call_out_walltime(function () {
         __Wandering = 0;
     }, 0);
@@ -168,7 +168,7 @@ void heart_beat () {
     }
 
     if (random(2) && member_array(query_posture(), ({ "sitting", "laying" })) > -1 && sizeof(query_present_hostiles())) {
-        do_command("stand");
+        handle_command("stand");
     }
     ::heart_beat();
 

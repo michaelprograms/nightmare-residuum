@@ -79,7 +79,7 @@ void do_adopt_str (mixed args...) {
     pet->set_ability_chance(25);
     pet->save_data();
 
-    do_command("say You want to take a squirrel? Here you go... I expect you to take good care of "+objective(pet)+"!");
+    handle_command("say You want to take a squirrel? Here you go... I expect you to take good care of "+objective(pet)+"!");
     message("action", "A squirrel walks over to your side.", po);
     message("action", "A squirrel walks over to "+possessive_noun(po->query_cap_name())+" side.", environment(po), po);
     pet->handle_move(environment(po));
@@ -126,7 +126,7 @@ void do_reclaim_str (mixed args...) {
     pet->set_ability_chance(25);
     pet->set_long("A squirrel tamed by the Squirrel Person, "+subjective(pet)+" is very friendly.");
 
-    do_command("say Here "+subjective(pet)+" is, take good care of "+objective(pet)+".");
+    handle_command("say Here "+subjective(pet)+" is, take good care of "+objective(pet)+".");
     message("action", "Your squirrel walks over to your side.", po);
     message("action", possessive_noun(po->query_cap_name())+" squirrel walks over to "+possessive(po)+" side.", environment(po), po);
     pet->handle_move(environment(po));

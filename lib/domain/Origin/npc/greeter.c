@@ -19,7 +19,7 @@ void handle_receive_living_in_env (object living) {
 
     name = living->query_cap_name();
     if (member_array(name, names) == -1) {
-        do_command("say Welcome to our facility, " + name + ".");
+        handle_command("say Welcome to our facility, " + name + ".");
         names += ({ name });
         call_out((: names -= ({ $1 }) :), 30, name);
     }
