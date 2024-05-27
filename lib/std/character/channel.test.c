@@ -29,4 +29,12 @@ void test_channels () {
         assert_equal(testOb->query_channels_available(), ({ "chat", "newbie" })),
         assert_equal(testOb->query_channels_blocked(), ({ })),
     }) :));
+
+    expect("blocked channels list initialized", (: ({
+        assert_equal(testOb->query_channels_blocked(), ({ })),
+        assert_equal(testOb->toggle_channel_blocked("chat"), 1),
+        assert_equal(testOb->query_channels_blocked(), ({ "chat" })),
+        store_variable("__ChannelsBlocked", UNDEFINED, testOb),
+        assert_equal(testOb->query_channels_blocked(), ({ })),
+    }) :));
 }
