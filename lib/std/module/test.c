@@ -243,15 +243,6 @@ private string format_string_difference (string actual, string expect) {
     return result;
 }
 
-private string format_regex_difference (string actual, string regex) {
-    string *results = pcre_extract(actual, "(" + regex + ")");
-    if (sizeof(results) > 0) {
-        return regex + " matched: " + GREEN + results[0] + RESET;
-    } else {
-        return format_string_difference(actual, regex);
-    }
-}
-
 varargs private string format_array_differences (mixed *actual, mixed *expect) {
     string result = "", a, e;
     int l = max(({ sizeof(actual), sizeof(expect) }));
@@ -276,14 +267,7 @@ varargs private string format_array_differences (mixed *actual, mixed *expect) {
             e = "";
         }
 
-        if (stringp(e) && e[0..0] == "/" && e[<1..<1] == "/") {
-            e = e[1..<2];
-            result += "\n      " + sprintf("%2d", i) + ". ";
-            result += format_regex_difference(a, e);
-
-        } else {
-            result += "\n      " + sprintf("%2d", i) + ". " + format_string_difference(a, e);
-        }
+        result += "\n      " + sprintf("%2d", i) + ". " + format_string_difference(a, e);
     }
     return result;
 }
