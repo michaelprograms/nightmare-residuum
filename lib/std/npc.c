@@ -39,15 +39,12 @@ int query_ability_chance () {
 void set_ability_chance (int chance) {
     __AbilityChance = max(({ 0, min(({ chance, 100 })) }));
 }
-
 void handle_ability_attack () {
-    if (!sizeof(query_ability_list())) {
+    if (!sizeof(__AbilityList)) {
         return;
     }
-
-    if (query_ability_chance() > 1+random(100)) {
-        string ability = element_of(query_ability_list());
-        handle_command(ability);
+    if (__AbilityChance > 1 + random(100)) {
+        this_object()->handle_command(element_of(__AbilityList));
     }
 }
 

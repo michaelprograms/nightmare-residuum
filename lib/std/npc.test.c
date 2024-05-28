@@ -153,6 +153,10 @@ void test_wander () {
 }
 
 void test_abilities () {
+    object npc, mockLiving;
+
+    mockLiving = new("/std/mock/living.c");
+
     expect("ability list is queryable and settable", (: ({
         assert_equal(testOb->query_ability_list(), ({ })),
 
@@ -175,4 +179,27 @@ void test_abilities () {
         testOb->set_ability_chance(-123),
         assert_equal(testOb->query_ability_chance(), 0),
     }) :));
+
+    expect("ability should be commanded", (: ({
+        assert_equal($(mockLiving)->start_shadow(testOb), 1),
+
+        // no ability list
+        testOb->set_ability_list(({ })),
+        assert_equal(testOb->query_ability_list(), ({ })),
+        testOb->set_ability_chance(100),
+        assert_equal(testOb->query_ability_chance(), 100),
+        testOb->handle_ability_attack(),
+        // nothing commanded
+        assert_equal(testOb->query_received_commands(), ({ })),
+
+        // ability list
+        testOb->set_ability_list(({ "test ability" })),
+        testOb->handle_ability_attack(),
+        // ability was commanded
+        assert_equal(testOb->query_received_commands(), ({ "test ability" })),
+
+        assert_equal($(mockLiving)->stop_shadow(), 1),
+    }) :));
+
+    if (mockLiving) destruct(mockLiving);
 }
