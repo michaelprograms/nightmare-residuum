@@ -258,8 +258,13 @@ void display_results (mapping results) {
     if (testStartTime > 0) {
         write("\n" + sprintf("%-20s", results["numTests"]+" tests:") + "\e[33m" + sprintf("%7.2f", time/1000000.0) + " ms" + "\e[0m" + "\n\n");
 
-        if (!sizeof(__TestFiles) && sizeof(query_unhit_lines()) > 0) {
-            write(sprintf("%-20s", "Uncovered:") + convert_to_ranges(query_unhit_lines()) + "\n\n");
+        if (!sizeof(__TestFiles)) {
+            if (sizeof(query_unhit_functions()) > 0) {
+                write(sprintf("%-20s", "Untested Functions:") + implode(query_unhit_functions(), ", ") + "\n");
+            }
+            if (sizeof(query_unhit_lines()) > 0) {
+                write(sprintf("%-20s", "Uncovered:") + convert_to_ranges(query_unhit_lines()) + "\n\n");
+            }
         }
     }
 
