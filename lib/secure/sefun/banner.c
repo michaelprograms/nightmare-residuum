@@ -1,22 +1,34 @@
+private string *__Banner = ({
+    "................................................................................",
+    "................................................................................",
+    "........  ______ _______ _______ _____ ______  _ ... _ _ ... _ _______ .........",
+    "........ |_____/ |______ |______ . | . | ... \\ | ... | | ... | |  |  | .........",
+    "........ |    \\_ |______ ______| __|__ |_____/ |_____| |_____| |  |  | .........",
+    "................................................................................",
+    "................................................................................",
+    "................................................................................",
+    "................................................................................",
+});
+
 string query_banner () {
-    string *lines;
     string text = "\e[0;37;40m"; // start with ANSI reset
     string *colors = allocate(6); // left padding
+    object tu = SEFUN->this_user();
+    string userColor = tu && tu->query_terminal_color();
 
     string tmp, dot = " ";
     int pad;
     int r = 25 + 1+random(100);
 
-    lines = explode(read_file("/etc/welcome"), "\n");
     tmp = "  " + mud_name() + "  ";
     pad = 40 - sizeof(tmp) / 2;
-    lines[<2] = lines[<2][0..pad-1] + tmp + lines[<2][80-pad..79];
+    __Banner[<2] = __Banner[<2][0..pad-1] + tmp + __Banner[<2][80-pad..79];
 
     tmp = "  " + version() + "   " + mudlib_version() + "  ";
     pad = 40 - sizeof(tmp) / 2;
-    lines[<1] = lines[<1][0..pad-1] + tmp + lines[<1][80-pad+sizeof(tmp)%2..79];
+    __Banner[<1] = __Banner[<1][0..pad-1] + tmp + __Banner[<1][80-pad+sizeof(tmp)%2..79];
 
-    if (this_user() && this_user()->query_terminal_color() == "256") {
+    if (userColor == "256") {
         int *c1 = query_random_color();
         int *c2 = allocate(3, 159+random(32));
         colors += color_gradient(c1, c2, 34);
@@ -28,12 +40,12 @@ string query_banner () {
         colors += allocate(68, "\e[33m");
     }
 
-    for (int i = 0; i < sizeof(lines); i ++) {
-        for (int j = 0; j < sizeof(lines[i]); j ++) {
-            if (i == sizeof(lines) - 1 && j >= pad && j <= sizeof(lines[i])-pad-1) {
-                text += lines[i][j..j]; // preserve dots in driver/mudlib versions
-            } else if (lines[i][j..j] == ".") {
-                if (this_user() && this_user()->query_terminal_color() == "256") {
+    for (int i = 0; i < sizeof(__Banner); i ++) {
+        for (int j = 0; j < sizeof(__Banner[i]); j ++) {
+            if (i == sizeof(__Banner) - 1 && j >= pad && j <= sizeof(__Banner[i])-pad-1) {
+                text += __Banner[i][j..j]; // preserve dots in driver/mudlib versions
+            } else if (__Banner[i][j..j] == ".") {
+                if (userColor == "256") {
                     dot[0] = 10240 + (
                         (!random(r) ? 0x1 : 0) |
                         (!random(r) ? 0x2 : 0) |
@@ -51,11 +63,11 @@ string query_banner () {
                     dot = random(r/2) ? " " : ".";
                 }
                 text += "\e[0;37;40m" + dot;
-            } else if (lines[i][j..j] != " ") {
+            } else if (__Banner[i][j..j] != " ") {
                 if (i > 0 && i < 8) {
                     text += colors[j];
                 }
-                text += lines[i][j..j] + "\e[0;37;40m";
+                text += __Banner[i][j..j] + "\e[0;37;40m";
             } else {
                 text += " ";
             }
