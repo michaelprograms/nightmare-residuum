@@ -153,9 +153,7 @@ void test_wander () {
 }
 
 void test_abilities () {
-    object npc, mockLiving;
-
-    mockLiving = new("/std/mock/living.c");
+    object mockLiving = new("/std/mock/living.c");
 
     expect("ability list is queryable and settable", (: ({
         assert_equal(testOb->query_ability_list(), ({ })),
