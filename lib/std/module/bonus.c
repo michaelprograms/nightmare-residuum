@@ -1,46 +1,32 @@
 // Inherited by armor or weapons to keep track of bonuses
 
-nosave private mapping __Bonuses = ([ ]);
+nosave mapping __Bonuses = ([ ]);
+
+private void initialize_bonuses () {
+    if (!mapp(__Bonuses)) {
+        __Bonuses = ([ ]);
+    }
+}
 
 /* ----- querying ----- */
 
 mixed query_bonus (string key) {
-    if (!stringp(key) || key == "") {
-        error("Bad argument 1 to bonus->query_bonus");
-    }
-    if (!mapp(__Bonuses)) {
-        __Bonuses = ([ ]);
-    }
+    initialize_bonuses();
     return __Bonuses[key];
 }
 mapping query_bonuses () {
-    if (!mapp(__Bonuses)) {
-        __Bonuses = ([ ]);
-    }
+    initialize_bonuses();
     return __Bonuses;
 }
 
 /* ----- setting ----- */
 
 mixed set_bonus (string key, mixed value) {
-    if (!stringp(key) || key == "") {
-        error("Bad argument 1 to bonus->set_bonus");
-    }
-    if (!intp(value)) {
-        error("Bad argument 2 to bonus->set_bonus");
-    }
-    if (!mapp(__Bonuses)) {
-        __Bonuses = ([ ]);
-    }
+    initialize_bonuses();
     return __Bonuses[key] = value;
 }
 mapping set_bonuses (mapping bonuses) {
-    if (!mapp(bonuses) || !sizeof(bonuses)) {
-        error("Bad argument 1 to bonus->set_bonuses");
-    }
-    if (!mapp(__Bonuses)) {
-        __Bonuses = ([ ]);
-    }
+    initialize_bonuses();
     foreach (string key, int value in bonuses) {
         set_bonus(key, value);
     }

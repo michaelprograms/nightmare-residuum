@@ -1,6 +1,12 @@
 inherit M_TEST;
 
 void test_singular_bonus () {
+    expect("null bonuses are initialized", (: ({
+        assert_equal(testOb->query_bonuses(), ([ ])),
+        store_variable("__Bonuses", UNDEFINED, testOb),
+        assert_equal(testOb->query_bonuses(), ([ ])),
+    }) :));
+
     expect("handles setting and querying bonus", (: ({
         assert_equal(testOb->query_bonus("strength"), 0),
         assert_equal(testOb->query_bonus("luck"), 0),
