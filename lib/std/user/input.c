@@ -91,9 +91,7 @@ varargs nomask void input_next (function inputFn, mixed prompt, int secure, int 
 nomask void input_pop () {
     mapping input;
 
-    write("input_pop: size="+sizeof(__InputStack)+"\n");
     __InputStack = __InputStack[0..<2]; // remove last element
-
     if ((input = get_top_handler(0)) && input["callbackFn"]) {
         evaluate(input["callbackFn"]);
     }
