@@ -3,6 +3,12 @@ inherit M_TEST;
 void test_listen () {
     function fn = function () { return "Function sound."; };
 
+    expect("null listens are initialized", (: ({
+        assert_equal(testOb->query_listens(), ([ ])),
+        store_variable("__Listens", UNDEFINED, testOb),
+        assert_equal(testOb->query_listens(), ([ ])),
+    }) :));
+
     expect("listens are settable and queryable", (: ({
         // verify initial default
         assert_equal(testOb->query_listen("default"), UNDEFINED),
@@ -20,6 +26,12 @@ void test_listen () {
 
 void test_smell () {
     function fn = function () { return "Function scent."; };
+
+    expect("null smells are initialized", (: ({
+        assert_equal(testOb->query_smells(), ([ ])),
+        store_variable("__Smells", UNDEFINED, testOb),
+        assert_equal(testOb->query_smells(), ([ ])),
+    }) :));
 
     expect("smells are settable and queryable", (: ({
         // verify initial default

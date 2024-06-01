@@ -17,9 +17,7 @@ int is_room () {
 void create () {
     object::create();
     reset::create();
-    senses::create();
     reset();
-
     if (this_object()) {
         D_ASTRONOMY->handle_room_create(this_object());
     }
@@ -212,42 +210,39 @@ string *query_room_map () {
     ]);
 
     return ({
+        // top row line 1
         pics["nw"]["nw"] + " " + pics["nw"]["n"] + pics["nw"]["u"] + pics["nw"]["ne"] +
         pics["n"]["nw"]  + " " + pics["n"]["n"]  + pics["n"]["u"]  + pics["n"]["ne"]  +
         pics["ne"]["nw"] + " " + pics["ne"]["n"] + pics["ne"]["u"] + pics["ne"]["ne"],
-
+        // top row line 2
         pics["nw"]["w"] + (roomOb["nw"] ? roomOb["nw"]->query_room_map_bracket() : "   ") + pics["nw"]["e"] +
         pics["n"]["w"]  + (roomOb["n"]  ? roomOb["n"]->query_room_map_bracket() : "   ") + pics["n"]["e"]  +
         pics["ne"]["w"] + (roomOb["ne"] ? roomOb["ne"]->query_room_map_bracket() : "   ") + pics["ne"]["e"],
-
+        // top row line 3
         pics["nw"]["sw"] + pics["nw"]["d"] + pics["nw"]["s"] + " " + pics["nw"]["se"] +
         pics["n"]["sw"]  + pics["n"]["d"]  + pics["n"]["s"]  + " " + pics["n"]["se"]  +
         pics["ne"]["sw"] + pics["ne"]["d"] + pics["ne"]["s"] + " " + pics["ne"]["se"],
-
-        // -----
-
+        // middle row line 1
         pics["w"]["nw"] + " " + pics["w"]["n"] + pics["w"]["u"] + pics["w"]["ne"] +
         pics["x"]["nw"] + " " + pics["x"]["n"] + pics["x"]["u"] + pics["x"]["ne"] +
         pics["e"]["nw"] + " " + pics["e"]["n"] + pics["e"]["u"] + pics["e"]["ne"],
-
+        // middle row line 2
         pics["w"]["w"] + (roomOb["w"] ? roomOb["w"]->query_room_map_bracket() : "   ") + pics["w"]["e"] +
         pics["x"]["w"] + roomBracketColor + "[%^RESET%^CYAN%^BOLD%^X%^RESET%^" + roomBracketColor + "]%^RESET%^" + pics["x"]["e"] +
         pics["e"]["w"] + (roomOb["e"] ? roomOb["e"]->query_room_map_bracket() : "   ") + pics["e"]["e"],
-
+        // middle row line 3
         pics["w"]["sw"] + pics["w"]["d"] + pics["w"]["s"] + " " + pics["w"]["se"] +
         pics["x"]["sw"] + pics["x"]["d"] + pics["x"]["s"] + " " + pics["x"]["se"] +
         pics["e"]["sw"] + pics["e"]["d"] + pics["e"]["s"] + " " + pics["e"]["se"],
-
-        // -----
-
+        // bottom row line 1
         pics["sw"]["nw"] + " " + pics["sw"]["n"] + pics["sw"]["u"] + pics["sw"]["ne"] +
         pics["s"]["nw"]  + " " + pics["s"]["n"]  + pics["s"]["u"]  + pics["s"]["ne"]  +
         pics["se"]["nw"] + " " + pics["se"]["n"] + pics["se"]["u"] + pics["se"]["ne"],
-
+        // bottom row line 2
         pics["sw"]["w"] + (roomOb["sw"] ? roomOb["sw"]->query_room_map_bracket() : "   ") + pics["sw"]["e"] +
         pics["s"]["w"]  + (roomOb["s"]  ? roomOb["s"]->query_room_map_bracket() : "   ") + pics["s"]["e"]  +
         pics["se"]["w"] + (roomOb["se"] ? roomOb["se"]->query_room_map_bracket() : "   ") + pics["se"]["e"],
-
+        // bottom row line 3
         pics["sw"]["sw"] + pics["sw"]["d"] + pics["sw"]["s"] + " " + pics["sw"]["se"] +
         pics["s"]["sw"]  + pics["s"]["d"]  + pics["s"]["s"]  + " "  + pics["s"]["se"]  +
         pics["se"]["sw"] + pics["se"]["d"] + pics["se"]["s"] + " " + pics["se"]["se"],
