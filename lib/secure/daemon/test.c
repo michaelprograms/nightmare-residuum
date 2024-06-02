@@ -456,6 +456,10 @@ string create_coverage (string path) {
             // Case / Default return
             line = replace_string(__RawLines[i], " return", " D_TEST->line_hit(" + (i+1) + "); return");
             __Lines[i+1] = ({ 0 });
+        } else if (pcre_match(__RawLines[i], "(?:default|case \\\"?.+?\\\"?):$")) {
+            // Case / Default
+            line = __RawLines[i] + " D_TEST->line_hit(" + (i+1) + ");";
+            __Lines[i+1] = ({ 0 });
         } else if (pcre_match(__RawLines[i], "^\\s+(break|for \\(|foreach \\(|if \\(|return|switch \\(|while \\(|continue;|efun::)")) {
             // Construct
             line = "D_TEST->line_hit(" + (i+1) + "); " + __RawLines[i];
