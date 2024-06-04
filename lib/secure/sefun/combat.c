@@ -4,7 +4,32 @@
 #define SHARP_VERBS ({ "tap", "tickle", "sting", "graze", "cut", "slice", "slice", "shear", "strike", "mutilate", "dismember", "destroy", })
 #define SHARP_ADVERBS ({ 0, 0, "sharply", 0, 0, 0, "horribly", "to pieces", "letting blood", 0, 0, "utterly", })
 
-string possessive (mixed value);
+int query_combat_tier_from_percent (int percent) {
+    if (percent >= 27) {
+        return 11;
+    } else if (percent >= 23) {
+        return 10;
+    } else if (percent >= 19) {
+        return 9;
+    } else if (percent >= 16) {
+        return 8;
+    } else if (percent >= 13) {
+        return 7;
+    } else if (percent >= 10) {
+        return 6;
+    } else if (percent >= 8) {
+        return 5;
+    } else if (percent >= 6) {
+        return 4;
+    } else if (percent >= 4) {
+        return 3;
+    } else if (percent == 3) {
+        return 2;
+    } else if (percent == 2) {
+        return 1;
+    }
+    return 0;
+}
 
 void display_combat_message (object source, object target, string limb, mixed weapon, string type, int damage, int crit, int isAbility) {
     string sourceMsg, targetMsg, envMsg;
@@ -24,44 +49,7 @@ void display_combat_message (object source, object target, string limb, mixed we
         verb = "hit";
         adverb = "ineffectively";
     } else {
-        switch (percent) {
-            case 27..100:
-                i = 11;
-                break;
-            case 23..26:
-                i = 10;
-                break;
-            case 19..22:
-                i = 9;
-                break;
-            case 16..18:
-                i = 8;
-                break;
-            case 13..15:
-                i = 7;
-                break;
-            case 10..12:
-                i = 6;
-                break;
-            case 8..9:
-                i = 5;
-                break;
-            case 6..7:
-                i = 4;
-                break;
-            case 4..5:
-                i = 3;
-                break;
-            case 3:
-                i = 2;
-                break;
-            case 2:
-                i = 1;
-                break;
-            case 1: default:
-                i = 0;
-                break;
-            }
+        i = query_combat_tier_from_percent(percent);
         if (member_array(type, ({ "blunt", "brawl", "psionic", })) > -1) {
             verb = BLUNT_VERBS[i];
             adverb = BLUNT_ADVERBS[i];
@@ -71,7 +59,7 @@ void display_combat_message (object source, object target, string limb, mixed we
         }
     }
 
-    sourcePossessive = possessive(source);
+    sourcePossessive = SEFUN->possessive(source);
     verbs = pluralize(verb);
     adverb = adverb ? " " + adverb + " " : " ";
 

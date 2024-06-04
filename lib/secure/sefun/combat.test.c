@@ -1,5 +1,45 @@
 inherit M_TEST;
 
+void test_combat_tier_from_percent () {
+    expect("combat message tiers behave", (: ({
+        assert_equal(testOb->query_combat_tier_from_percent(-1), 0),
+        assert_equal(testOb->query_combat_tier_from_percent(0), 0),
+        assert_equal(testOb->query_combat_tier_from_percent(1), 0),
+
+        assert_equal(testOb->query_combat_tier_from_percent(2), 1),
+
+        assert_equal(testOb->query_combat_tier_from_percent(3), 2),
+
+        assert_equal(testOb->query_combat_tier_from_percent(4), 3),
+        assert_equal(testOb->query_combat_tier_from_percent(5), 3),
+
+        assert_equal(testOb->query_combat_tier_from_percent(6), 4),
+        assert_equal(testOb->query_combat_tier_from_percent(7), 4),
+
+        assert_equal(testOb->query_combat_tier_from_percent(8), 5),
+        assert_equal(testOb->query_combat_tier_from_percent(9), 5),
+
+        assert_equal(testOb->query_combat_tier_from_percent(10), 6),
+        assert_equal(testOb->query_combat_tier_from_percent(12), 6),
+
+        assert_equal(testOb->query_combat_tier_from_percent(13), 7),
+        assert_equal(testOb->query_combat_tier_from_percent(15), 7),
+
+        assert_equal(testOb->query_combat_tier_from_percent(16), 8),
+        assert_equal(testOb->query_combat_tier_from_percent(18), 8),
+
+        assert_equal(testOb->query_combat_tier_from_percent(19), 9),
+        assert_equal(testOb->query_combat_tier_from_percent(22), 9),
+
+        assert_equal(testOb->query_combat_tier_from_percent(23), 10),
+        assert_equal(testOb->query_combat_tier_from_percent(26), 10),
+
+        assert_equal(testOb->query_combat_tier_from_percent(27), 11),
+        assert_equal(testOb->query_combat_tier_from_percent(100), 11),
+        assert_equal(testOb->query_combat_tier_from_percent(12345), 11),
+    }) :));
+}
+
 void test_initiate_combat () {
     object npc1, npc2;
     object mockNpc1, mockNpc2;
