@@ -1,11 +1,8 @@
-varargs string json_encode (mixed value, mixed *refs) {
+varargs string json_encode (mixed value) {
     string out = "";
     mixed *tmp;
     int i = 0, l = 0;
 
-    if (!refs) {
-        refs = ({ });
-    }
     if (undefinedp(value)) {
         return "null";
     } else if (intp(value) || floatp(value)) {
@@ -39,15 +36,10 @@ varargs string json_encode (mixed value, mixed *refs) {
         }
         return out;
     }
-
-    if (member_array(value, refs) > -1) {
-        return "null";
-    }
     if (arrayp(value)) {
         if (l = sizeof(value)) {
-            refs += ({ value });
             for (i = 0; i < l; i ++) {
-                out += (!i ? "" : ",") + json_encode(value[i], refs);
+                out += (!i ? "" : ",") + json_encode(value[i]);
             }
             return "[" + (sizeof(out) ? out : "") + "]";
         } else {
@@ -56,12 +48,11 @@ varargs string json_encode (mixed value, mixed *refs) {
     } else if (mapp(value)) {
         tmp = keys(value);
         if (l = sizeof(tmp)) {
-            refs += ({ value });
             for (i = 0; i < l; i ++) {
                 if (!stringp(tmp[i])) {
                     continue;
                 }
-                out += (!i ? "" : ",") + json_encode(tmp[i], refs) + ":" + json_encode(value[tmp[i]], refs);
+                out += (i > 0 && sizeof(out) ? "," : "") + json_encode(tmp[i]) + ":" + json_encode(value[tmp[i]]);
             }
         }
         return "{" + (sizeof(out) ? out : "") + "}";
