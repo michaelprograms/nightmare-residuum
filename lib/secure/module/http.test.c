@@ -25,3 +25,9 @@ void test_config () {
         assert_equal(testOb->query_allow_static_pages(), 0),
     }) :));
 }
+
+void test_response () {
+    expect("response is formatted", (: ({
+        assert_equal(testOb->format_response(([ "code": "code", "connection": "connection", "type": "type", "content": "content" ])), "HTTP/1.0 code\r\nConnection: connection\r\nServer: lpc-http 0.1\r\nContent-Type: type\r\n\r\ncontent")
+    }) :));
+}
