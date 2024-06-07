@@ -7,7 +7,7 @@ string *test_order () {
         "test_noise_perlin",
         "test_noise_simplex",
         "test_gradient",
-     });
+    });
 }
 
 void test_noise_perlin_helpers () {

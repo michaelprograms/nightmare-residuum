@@ -114,7 +114,6 @@ float noise_perlin_grad (int hash, float x, float y, float z) {
         case 0xD: return -y + z;
         case 0xE: return  y - x;
         case 0xF: return -y - z;
-        default:  return 0; // never happens
     }
 }
 // Linear interpolation: blend values a and b based on weight t [0.0-1.0]
