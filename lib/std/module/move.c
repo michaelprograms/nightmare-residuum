@@ -1,14 +1,13 @@
 private string __EnvPath;
 nosave private object __LastEnv, __CurrentEnv;
 
-private object query_dest_ob (mixed dest) {
+object query_dest_ob (mixed dest) {
     object destOb;
-
     if (objectp(dest)) {
         destOb = dest;
     } else if (stringp(dest)) {
         if (!(destOb = find_object(dest))) {
-            if (catch(destOb = load_object(dest)) ) {
+            if (!(destOb = load_object(dest))) {
                 return 0;
             }
         }
@@ -28,20 +27,12 @@ void handle_released (object env) {
 }
 
 int handle_move (mixed dest) {
-    object destOb, env;
-
-    if (!this_object()) {
-        return 0;
-    }
-    env = environment();
+    object destOb, env = environment();
     if (env && !env->can_release(this_object()) && !this_object()->query_immortal()) {
         return 0;
     }
     if (!(destOb = query_dest_ob(dest))) {
         error("Bad argument 1 to move->handle_move");
-    }
-    if (!destOb || destOb == this_object()) {
-        return 0;
     }
     if (!destOb->can_receive(this_object())) {
         return 0;
@@ -69,12 +60,7 @@ string query_environment_short () {
     if (__CurrentEnv) {
         return __CurrentEnv->query_short();
     } else if (__EnvPath) {
-        object destOb;
-        if (!(destOb = query_dest_ob(__EnvPath))) {
-            return "no where";
-        } else {
-            return destOb->query_short() || "no where";
-        }
+        return query_dest_ob(__EnvPath)->query_short() || "no where";
     } else {
         return "no where";
     }

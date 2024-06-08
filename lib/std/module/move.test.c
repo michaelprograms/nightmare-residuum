@@ -22,6 +22,9 @@ int handle_release (object ob) {
     handleReleaseCount ++;
     return ::handle_release(ob);
 }
+string query_short () {
+    return "move.test.c query_short";
+}
 
 void test_move () {
     object ob = new(M_CONTAINER), ob2 = new(M_CONTAINER);
@@ -95,9 +98,15 @@ void test_environment () {
         assert_equal(testOb->query_environment_path(), "/domain/Nowhere/room/freezer.c"),
         assert_equal(testOb->query_environment_short(), "a freezer"),
 
+        // use nonexistent path
+        assert_catch((: testOb->set_environment_path("/nonexistent.c") :), "*Bad argument 1 to move->set_environment_path\n"),
+        assert_equal(testOb->query_dest_ob("/nonexistent.c"), 0),
+        assert_catch((: testOb->handle_move("/nonexistent.c") :), "*Bad argument 1 to move->handle_move\n"),
+
         // move to this_object
         assert_equal(testOb->handle_move(this_object()), 1),
         assert_equal(testOb->query_environment_path(), base_name() + ".c"),
+        assert_equal(testOb->query_environment_short(), "move.test.c query_short"),
 
         // moves to void & freezer but env path is still this_object
         assert_equal(testOb->handle_move("/domain/Nowhere/room/void.c"), 1),
