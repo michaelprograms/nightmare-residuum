@@ -1,9 +1,6 @@
 inherit M_TEST;
 
 void test_json_encode () {
-    mapping m = ([ "a": 1 ]);
-    mixed *arr = ({ m, ({ m }) });
-
     expect("json_encode stringifies correctly", (: ({
         assert_equal(testOb->json_encode(), "null"),
 
