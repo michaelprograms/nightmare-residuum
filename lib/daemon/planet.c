@@ -353,21 +353,21 @@ string query_biome_color_ansi (string biome) {
     }
 }
 nosave private mapping __BiomeColorHex = ([
-    "deeper water":            "#000060",
-    "deep water":              "#000080",
-    "shallow water":           "#191996",
-    "icy water":               "#69BDE6",
-    "frozen water":            "#BDDBF6",
-    "ice":                     "#FFFFFF",
-    "tundra":                  "#608370",
-    "grassland":               "#A4FF63",
-    "woodland":                "#8BAF5A",
-    "boreal forest":           "#5F733E",
-    "desert":                  "#EEDA82",
-    "temperate rainforest":    "#1D4928",
-    "savanna":                 "#B1D16E",
-    "tropical rainforest":     "#427B19",
-    "default":                 "#800000",
+    "deeper water":             "#000060",
+    "deep water":               "#000080",
+    "shallow water":            "#191996",
+    "icy water":                "#69BDE6",
+    "frozen water":             "#BDDBF6",
+    "ice":                      "#FFFFFF",
+    "tundra":                   "#608370",
+    "grassland":                "#A4FF63",
+    "woodland":                 "#8BAF5A",
+    "boreal forest":            "#5F733E",
+    "desert":                   "#EEDA82",
+    "temperate rainforest":     "#1D4928",
+    "savanna":                  "#B1D16E",
+    "tropical rainforest":      "#427B19",
+    "default":                  "#800000",
 ]);
 string query_biome_color_hex (string biome) {
     if (biome && __BiomeColorHex[biome]) {
@@ -376,20 +376,22 @@ string query_biome_color_hex (string biome) {
         return __BiomeColorHex["default"];
     }
 }
+nosave private mapping __HumidityColorHex = ([
+    ""+HUMIDITY_WETTER:         "#1446FF",
+    ""+HUMIDITY_WET:            "#55FFFF",
+    ""+HUMIDITY_DRYER:          "#50FF00",
+    ""+HUMIDITY_DRYEST:         "#FF8B11",
+    "0":                        "#800000",
+]);
 string query_humidity_color_hex (float humidity) {
-    if (humidity <= HUMIDITY_DRYEST) {
-        return "#FF8B11"; // 255;139;17
-    } else if (humidity <= HUMIDITY_DRYER) {
-        return "#F5F511"; // 245;245;17
-    } else if (humidity <= HUMIDITY_DRY) {
-        return "#50FF00"; // 80;255;0
-    } else if (humidity <= HUMIDITY_WET) {
-        return "#55FFFF"; // 85;255;255
-    } else if (humidity <= HUMIDITY_WETTER) {
-        return "#1446FF"; // 20;70;255
-    } else {
-        return "#000064"; // 0;0;100
+    if (humidity) { // && __HumidityColorHex[humidity]) {
+        foreach (string key in sort_array(keys(__HumidityColorHex), 1)) {
+            if (humidity <= to_float(key)) {
+                return __HumidityColorHex[key];
+            }
+        }
     }
+    return __HumidityColorHex["0"];
 }
 string query_heat_color_hex (float heat) {
     if (heat <= HEAT_COLDEST) {

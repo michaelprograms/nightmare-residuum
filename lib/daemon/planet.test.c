@@ -5,14 +5,20 @@ inherit M_TEST;
 void test_biome_colors () {
     expect("biome ANSI colors returned", (: ({
         assert_equal(testOb->query_biome_color_ansi("invalid"), "\e[38;2;128;0;0m"),
+        assert_equal(testOb->query_biome_color_hex("invalid"), "#800000"),
 
         assert_equal(testOb->query_biome_color_ansi("ice"), "\e[38;2;255;255;255m"),
+        assert_equal(testOb->query_biome_color_hex("ice"), "#FFFFFF"),
     }) :));
 
     expect("hex colors returned", (: ({
-        assert_equal(testOb->query_biome_color_hex("invalid"), "#800000"),
-
-        assert_equal(testOb->query_biome_color_hex("ice"), "#FFFFFF"),
+        assert_equal(testOb->query_humidity_color_hex(UNDEFINED), "#800000"),
+        assert_equal(testOb->query_humidity_color_hex(HUMIDITY_DRYEST), "#FF8B11"),
+    }) :));
+}
+void test_humidity () {
+    expect("humidity ANSI colors returned", (: ({
+        assert_equal(testOb->query_biome(HEIGHT_DEEPER, HEAT_COLDEST, HUMIDITY_DRYEST), "frozen water"),
     }) :));
 }
 
