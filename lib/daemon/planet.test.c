@@ -5,15 +5,23 @@ inherit M_TEST;
 void test_biome_colors () {
     expect("biome ANSI colors returned", (: ({
         assert_equal(testOb->query_biome_color_ansi("invalid"), "\e[38;2;128;0;0m"),
-        assert_equal(testOb->query_biome_color_hex("invalid"), "#800000"),
-
         assert_equal(testOb->query_biome_color_ansi("ice"), "\e[38;2;255;255;255m"),
+    }) :));
+    expect("biome hex colors returned", (: ({
+        assert_equal(testOb->query_biome_color_hex("invalid"), "#800000"),
         assert_equal(testOb->query_biome_color_hex("ice"), "#FFFFFF"),
     }) :));
 
-    expect("hex colors returned", (: ({
-        assert_equal(testOb->query_humidity_color_hex(UNDEFINED), "#800000"),
+    expect("humidity hex colors returned", (: ({
+        assert_equal(testOb->query_humidity_color_hex(UNDEFINED), "#F10C00"),
         assert_equal(testOb->query_humidity_color_hex(HUMIDITY_DRYEST), "#FF8B11"),
+        assert_equal(testOb->query_humidity_color_hex(HUMIDITY_WETTER), "#1446FF"),
+    }) :));
+
+    expect("heat hex colors returned", (: ({
+        assert_equal(testOb->query_heat_color_hex(UNDEFINED), "#F10C00"),
+        assert_equal(testOb->query_heat_color_hex(HEAT_COLDEST), "#00FFFF"),
+        assert_equal(testOb->query_heat_color_hex(HEAT_HOTTER), "#FF6400"),
     }) :));
 }
 void test_humidity () {

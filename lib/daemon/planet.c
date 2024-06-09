@@ -377,36 +377,40 @@ string query_biome_color_hex (string biome) {
     }
 }
 nosave private mapping __HumidityColorHex = ([
-    ""+HUMIDITY_WETTER:         "#1446FF",
-    ""+HUMIDITY_WET:            "#55FFFF",
-    ""+HUMIDITY_DRYER:          "#50FF00",
-    ""+HUMIDITY_DRYEST:         "#FF8B11",
-    "0":                        "#800000",
+    ""+HUMIDITY_WETTER:         "#1446FF",  // 20;70;255
+    ""+HUMIDITY_WET:            "#55FFFF",  // 85;255;255
+    ""+HUMIDITY_DRY:            "#50FF00",  // 80;255;0
+    ""+HUMIDITY_DRYER:          "#50FF00",  // 245;245;17
+    ""+HUMIDITY_DRYEST:         "#FF8B11",  // 255;139;17
+    "default":                  "#F10C00",  // 241;12;0
 ]);
 string query_humidity_color_hex (float humidity) {
-    if (humidity) { // && __HumidityColorHex[humidity]) {
+    if (humidity) {
         foreach (string key in sort_array(keys(__HumidityColorHex), 1)) {
             if (humidity <= to_float(key)) {
                 return __HumidityColorHex[key];
             }
         }
     }
-    return __HumidityColorHex["0"];
+    return __HumidityColorHex["default"];
 }
+nosave private mapping __HeatColorHex = ([
+    ""+HEAT_HOTTER:             "#FF6400", // 255;100;0
+    ""+HEAT_HOT:                "#FFFF64", // 255;255;100
+    ""+HEAT_COLD:               "#00E585", // 0;229;133
+    ""+HEAT_COLDER:             "#AAFFFF", // 170;255;255
+    ""+HEAT_COLDEST:            "#00FFFF", // 0;255;255
+    "default":                  "#F10C00", // 241;12;0
+]);
 string query_heat_color_hex (float heat) {
-    if (heat <= HEAT_COLDEST) {
-        return "#00FFFF"; // 0;255;255
-    } else if (heat <= HEAT_COLDER) {
-        return "#AAFFFF"; // 170;255;255
-    } else if (heat <= HEAT_COLD) {
-        return "#00E585"; // 0;229;133
-    } else if (heat <= HEAT_HOT) {
-        return "#FFFF64"; // 255;255;100
-    } else if (heat <= HEAT_HOTTER) {
-        return "#FF6400"; // 255;100;0
-    } else {
-        return "#F10C00"; // 241;12;0
+    if (heat) {
+        foreach (string key in sort_array(keys(__HeatColorHex), 1)) {
+            if (heat <= to_float(key)) {
+                return __HeatColorHex[key];
+            }
+        }
     }
+    return __HeatColorHex["default"];
 }
 string query_resource_color_hex (int resource) {
     switch (resource) {
