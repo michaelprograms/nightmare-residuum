@@ -412,29 +412,20 @@ string query_heat_color_hex (float heat) {
     }
     return __HeatColorHex["default"];
 }
+nosave private mapping __ResourceColorHex = ([
+    "2":                        "#A47449", // 164, 116, 73
+    "1":                        "#C0C0C0", // 192, 192, 192
+    "default":                  "#000000",
+]);
 string query_resource_color_hex (int resource) {
-    switch (resource) {
-    // case 9:
-    //     return "#FFFFFF";
-    // case 8:
-    //     return "#FFFFFF";
-    // case 7:
-    //     return "#FFFFFF";
-    // case 6:
-    //     return "#FFFFFF";
-    // case 5:
-    //     return "#FFFFFF";
-    // case 4:
-    //     return "#FFFFFF";
-    // case 3:
-    //     return "#FFFFFF";
-    case 2:
-        return "#A47449"; // 164, 116, 73
-    case 1:
-        return "#C0C0C0"; // 192, 192, 192
-    case 0: default:
-        return "#000000";
+    if (resource) {
+        foreach (string key in sort_array(keys(__ResourceColorHex), 1)) {
+            if (resource <= to_int(key)) {
+                return __ResourceColorHex[key];
+            }
+        }
     }
+    return __ResourceColorHex["default"];
 }
 
 /* ----- export /tmp/name.json ----- */

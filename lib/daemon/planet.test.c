@@ -23,6 +23,12 @@ void test_biome_colors () {
         assert_equal(testOb->query_heat_color_hex(HEAT_COLDEST), "#00FFFF"),
         assert_equal(testOb->query_heat_color_hex(HEAT_HOTTER), "#FF6400"),
     }) :));
+
+    expect("resource hex colors returned", (: ({
+        assert_equal(testOb->query_resource_color_hex(UNDEFINED), "#000000"),
+        assert_equal(testOb->query_resource_color_hex(1), "#C0C0C0"),
+        assert_equal(testOb->query_resource_color_hex(2), "#A47449"),
+    }) :));
 }
 void test_humidity () {
     expect("humidity ANSI colors returned", (: ({
