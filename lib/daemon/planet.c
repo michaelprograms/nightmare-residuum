@@ -88,7 +88,7 @@ int adjust_planet (string name, mapping config) {
 
 /* ----- noise ----- */
 
-varargs mapping query_noise (mapping p, int size, int x, int y, float heightFactor, float humidityFactor, float heatFactor) {
+varargs mapping query_noise (mapping p, int size, int x, int y, float heightFactor, float humidityFactor, float heatFactor, int time) {
     int size2, level;
     float nx, ny, nz, nw, now, nowAdj;
     float nHeight, nHumidity, nHeat, nTmp, nResource = -1.0;
@@ -102,6 +102,9 @@ varargs mapping query_noise (mapping p, int size, int x, int y, float heightFact
     if (undefinedp(heatFactor)) {
         heatFactor = 1.0;
     }
+    if (undefinedp(time)) {
+        time = time();
+    }
 
     // Calculate our 4D coordinates
     nx = nz = to_float(x);
@@ -110,7 +113,7 @@ varargs mapping query_noise (mapping p, int size, int x, int y, float heightFact
     ny = cos((ny / size) * PIx2) * 2 / PIx2;
     nz = sin((nz / size) * PIx2) * 2 / PIx2;
     nw = sin((nw / size) * PIx2) * 2 / PIx2;
-    now = nowAdj = time() / 86400 % 100 / 100.0; // changes every 24 hours, 0.00-0.99
+    now = nowAdj = time / 86400 % 100 / 100.0; // changes every 24 hours, 0.00-0.99
     if (nowAdj > 0.5) {
         nowAdj -= 0.5;
     }
@@ -459,7 +462,6 @@ void generate_json (string name) {
     size = query_planet_size(name);
     p = noise_generate_permutation_simplex(name);
     file = "/tmp/"+name+".json";
-
     write_file(file, "{\n    \"name\":\""+name+"\",\n    \"size\":\""+size+"\",\n    \"data\":[\n", 1);
     for (y = 0; y < size; y ++) {
         line = "        [ ";
@@ -484,7 +486,6 @@ void generate_json (string name) {
             if (n["heat"] > heat_max) {
                 heat_max = n["heat"];
             }
-
             biome = query_biome(n["height"], n["heat"], n["humidity"]);
             biomes[biome] ++;
             levels[n["level"]] ++;
@@ -504,9 +505,7 @@ void generate_json (string name) {
         write_file(file, line + "\n");
     }
     write_file(file, "    ],\n    \"height_min\":\""+height_min+"\",\n    \"height_max\":\""+height_max+"\",\n    \"humidity_min\":\""+humidity_min+"\",\n    \"humidity_max\":\""+humidity_max+"\",\n    \"heat_min\":\""+heat_min+"\",\n    \"heat_max\":\""+heat_max+"\"\n}");
-
     write("Seed '"+name+"' size "+size+" "+file+" done\n");
-
     write(sprintf("%20s : %10s", "shallow water", format_integer(biomes["shallow water"])) + " : " + sprintf("%2.2f", biomes["shallow water"] * 100.0 / (size * size)) + "%\n");
     write(sprintf("%20s : %10s", "deep water", format_integer(biomes["deep water"])) + " : " + sprintf("%2.2f", biomes["deep water"] * 100.0 / (size * size)) + "%\n");
     write(sprintf("%20s : %10s", "deeper water", format_integer(biomes["deeper water"])) + " : " + sprintf("%2.2f", biomes["deeper water"] * 100.0 / (size * size)) + "%\n");
@@ -521,7 +520,6 @@ void generate_json (string name) {
     write(sprintf("%20s : %10s", "temperate rainforest", format_integer(biomes["temperate rainforest"])) + " : " + sprintf("%2.2f", biomes["temperate rainforest"] * 100.0 / (size * size)) + "%\n");
     write(sprintf("%20s : %10s", "savanna", format_integer(biomes["savanna"])) + " : " + sprintf("%2.2f", biomes["savanna"] * 100.0 / (size * size)) + "%\n");
     write(sprintf("%20s : %10s", "tropical rainforest", format_integer(biomes["tropical rainforest"])) + " : " + sprintf("%2.2f", biomes["tropical rainforest"] * 100.0 / (size * size)) + "%\n");
-
     write(sprintf("%-24s", "height min: "+height_min)+" "+sprintf("%-24s", "height_max: "+height_max)+"\n");
     write(sprintf("%-24s", "humidity min: "+humidity_min)+" "+sprintf("%-24s", "humidity_max: "+humidity_max)+"\n");
     write(sprintf("%-24s", "heat min: "+heat_min)+" "+sprintf("%-24s", "heat_max: "+heat_max)+"\n");

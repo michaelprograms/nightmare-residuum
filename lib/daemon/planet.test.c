@@ -36,6 +36,17 @@ void test_humidity () {
     }) :));
 }
 
+void test_noise () {
+    mapping p = noise_generate_permutation_simplex("test");
+
+    expect("noise returns different values for x,y coordinates", (: ({
+        assert_equal(testOb->query_noise($(p), 100, 49, 49, UNDEFINED, UNDEFINED, UNDEFINED, 1717171717), ([ "heat": 0.811243, "height": 0.638848, "humidity": 0.630995, "level": 1, "resource": 0 ])),
+        assert_equal(testOb->query_noise($(p), 100, 49, 50, UNDEFINED, UNDEFINED, UNDEFINED, 1717171717), ([ "heat": 0.792699, "height": 0.619084, "humidity": 0.515993, "level": 1, "resource": 9 ])),
+        assert_equal(testOb->query_noise($(p), 100, 50, 49, UNDEFINED, UNDEFINED, UNDEFINED, 1717171717), ([ "heat": 0.879001, "height": 0.600883, "humidity": 0.648935, "level": 1, "resource": 5 ])),
+        assert_equal(testOb->query_noise($(p), 100, 50, 50, UNDEFINED, UNDEFINED, UNDEFINED, 1717171717), ([ "heat": 0.901959, "height": 0.547387, "humidity": 0.593906, "level": 1, "resource": 1 ])),
+    }) :));
+}
+
 void test_biome () {
     expect("biomes are returned", (: ({
         assert_equal(testOb->query_biome(HEIGHT_DEEPER, HEAT_COLDEST, HUMIDITY_DRYEST), "frozen water"),
