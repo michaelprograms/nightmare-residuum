@@ -234,12 +234,6 @@ float noise_perlin_2d (float x, float y, int *p, int octaves, float scale) {
     float total = 0.0;
     float amplitude = 1.0;
 
-    if (!floatp(x)) {
-        error("Bad argument 1 to noise->noise_perlin_2d");
-    }
-    if (!floatp(y)) {
-        error("Bad argument 2 to noise->noise_perlin_2d");
-    }
     if (!arrayp(p)) {
         error("Bad argument 3 to noise->noise_perlin_2d");
     }
@@ -247,7 +241,7 @@ float noise_perlin_2d (float x, float y, int *p, int octaves, float scale) {
         octaves = 4;
     }
     if (!scale) {
-      scale = 1.0;
+        scale = 1.0;
     }
 
     for (int i = 0; i < octaves; i ++) {
@@ -264,15 +258,6 @@ float noise_perlin_3d (float x, float y, float z, int *p, int octaves, float sca
     float total = 0.0;
     float amplitude = 1.0;
 
-    if (!floatp(x)) {
-        error("Bad argument 1 to noise->noise_perlin_3d");
-    }
-    if (!floatp(y)) {
-        error("Bad argument 2 to noise->noise_perlin_3d");
-    }
-    if (!floatp(z)) {
-        error("Bad argument 3 to noise->noise_perlin_3d");
-    }
     if (!arrayp(p)) {
         error("Bad argument 4 to noise->noise_perlin_3d");
     }

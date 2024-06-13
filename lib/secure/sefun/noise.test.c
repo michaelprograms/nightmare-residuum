@@ -154,6 +154,13 @@ void test_noise_perlin () {
         assert_equal(testOb->noise_perlin_3d(3.14, 42.0, 7.0, $(seedTest), 1, 1.0), -0.018920),
         assert_equal(testOb->noise_perlin_3d(3.14, 42.0, 7.0, $(seedTest), 8, 15.0), -0.306174),
     }) :));
+
+    expect("noise_perlin_2d handles bad inputs", (: ({
+        assert_catch((: testOb->noise_perlin_2d(0.0, 0.0, UNDEFINED) :), "*Bad argument 3 to noise->noise_perlin_2d\n"),
+    }) :));
+    expect("noise_perlin_3d handles bad inputs", (: ({
+        assert_catch((: testOb->noise_perlin_3d(0.0, 0.0, 0.0, UNDEFINED) :), "*Bad argument 4 to noise->noise_perlin_3d\n"),
+    }) :));
 }
 
 void test_noise_simplex () {
