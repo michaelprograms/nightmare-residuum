@@ -176,9 +176,13 @@ void test_noise_simplex () {
 
     expect("noise_simplex_4d_permutation returns correct non-seeded value", (: ({
         assert_equal(testOb->noise_simplex_4d_permutation(3.14, 42.0, 7.0, 0.0, $(seedZero)), 0.653330),
+        assert_equal(testOb->noise_simplex_4d_permutation(0.5, 0.5, 0.5, 0.0, $(seedZero)), -0.463971),
+        assert_equal(testOb->noise_simplex_4d_permutation(0.1, 0.9, 0.5, 0.0, $(seedZero)), 0.152880),
     }) :));
     expect("noise_simplex_4d_permutation returns seeded value", (: ({
         assert_equal(testOb->noise_simplex_4d_permutation(3.14, 42.0, 7.0, 0.0, $(seedTest)), -0.480029),
+        assert_equal(testOb->noise_simplex_4d_permutation(0.5, 0.5, 0.5, 0.0, $(seedTest)), -0.346874),
+        assert_equal(testOb->noise_simplex_4d_permutation(0.1, 0.9, 0.5, 0.0, $(seedTest)), 0.202266),
     }) :));
     expect("noise_simplex_4d returns non-seeded value", (: ({
         assert_equal(testOb->noise_simplex_4d(3.14, 42.0, 7.0, 0.0, $(seedZero), 1, 1.0), 0.653330),
