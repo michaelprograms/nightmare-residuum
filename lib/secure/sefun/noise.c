@@ -441,18 +441,6 @@ float noise_simplex_4d (float x, float y, float z, float w, mapping p, int octav
     float t = 0.0;
     int f = 1;
 
-    if (!floatp(x)) {
-        error("Bad argument 1 to noise->noise_simplex_4d");
-    }
-    if (!floatp(y)) {
-        error("Bad argument 2 to noise->noise_simplex_4d");
-    }
-    if (!floatp(z)) {
-        error("Bad argument 3 to noise->noise_simplex_4d");
-    }
-    if (!floatp(w)) {
-        error("Bad argument 4 to noise->noise_simplex_4d");
-    }
     if (!mapp(p)) {
         error("Bad argument 5 to noise->noise_simplex_4d");
     }

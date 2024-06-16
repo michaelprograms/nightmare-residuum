@@ -178,11 +178,13 @@ void test_noise_simplex () {
         assert_equal(testOb->noise_simplex_4d_permutation(3.14, 42.0, 7.0, 0.0, $(seedZero)), 0.653330),
         assert_equal(testOb->noise_simplex_4d_permutation(0.5, 0.5, 0.5, 0.0, $(seedZero)), -0.463971),
         assert_equal(testOb->noise_simplex_4d_permutation(0.1, 0.9, 0.5, 0.0, $(seedZero)), 0.152880),
+        assert_equal(testOb->noise_simplex_4d_permutation(0.01, 0.01, 0.01, 0.0, $(seedZero)), 0.069844),
     }) :));
     expect("noise_simplex_4d_permutation returns seeded value", (: ({
         assert_equal(testOb->noise_simplex_4d_permutation(3.14, 42.0, 7.0, 0.0, $(seedTest)), -0.480029),
         assert_equal(testOb->noise_simplex_4d_permutation(0.5, 0.5, 0.5, 0.0, $(seedTest)), -0.346874),
         assert_equal(testOb->noise_simplex_4d_permutation(0.1, 0.9, 0.5, 0.0, $(seedTest)), 0.202266),
+        assert_equal(testOb->noise_simplex_4d_permutation(0.01, 0.01, 0.01, 0.0, $(seedTest)), 0.069844),
     }) :));
     expect("noise_simplex_4d returns non-seeded value", (: ({
         assert_equal(testOb->noise_simplex_4d(3.14, 42.0, 7.0, 0.0, $(seedZero), 1, 1.0), 0.653330),
@@ -191,6 +193,12 @@ void test_noise_simplex () {
     expect("noise_simplex_4d returns seeded value", (: ({
         assert_equal(testOb->noise_simplex_4d(3.14, 42.0, 7.0, 0.0, $(seedTest), 1, 1.0), -0.480029),
         assert_equal(testOb->noise_simplex_4d(3.14, 42.0, 7.0, 0.0, $(seedTest), 8, 15.0), 0.514248),
+    }) :));
+    expect("noise_simplex_4d handles invalid permutation argument", (: ({
+        assert_catch((: testOb->noise_simplex_4d(0.0, 0.0, 0.0, 0.0, UNDEFINED, 0, 1.0) :), "*Bad argument 5 to noise->noise_simplex_4d\n"),
+    }) :));
+    expect("noise_simplex_4d defaults octaves and scale", (: ({
+        assert_equal(testOb->noise_simplex_4d(0.0, 0.0, 0.0, 0.0, $(seedTest), 0, 0.0), testOb->noise_simplex_4d(0.0, 0.0, 0.0, 0.0, $(seedTest), 4, 1.0)),
     }) :));
 }
 
