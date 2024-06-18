@@ -23,4 +23,7 @@ void create () {
         "staircase": "The staircase is in the back of the lobby. The steps are wide stones with a short wall as a railing.",
         ({ "hallways", "wings" }): "Two hallways branch off from the main lobby to the north and west, leading to the wings of the building.",
     ]));
+    set_reset(([
+        HUMAN_NPC + "museum_attendant.c": 1,
+    ]));
 }

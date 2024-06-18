@@ -27,6 +27,6 @@ void create () {
         ({ "archway", "chamber", }): "A chamber of some sort off of the hallway through an archway.",
     ]));
     set_reset(([
-        HUMAN_NPC + "museum_custodian.c": 1,
+        HUMAN_NPC + "museum_attendant.c": 1,
     ]));
 }
