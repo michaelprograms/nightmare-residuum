@@ -211,7 +211,7 @@ void error_handler (mapping e, int caught) {
         return;
     }
 
-    ret = "--- " + ctime(time()) + standard_trace(e) + "\n";
+    ret = "--- " + ctime(time()) + "\n" + standard_trace(e) + "\n";
     if (file_size("/log/" + file) > 20000) { // 20 kb
         rename("/log/" + file, "/log/" + file + "-" + time());
     }
