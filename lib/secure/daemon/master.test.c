@@ -69,6 +69,13 @@ void test_error_applies () {
         assert_equal(testOb->trace_line(this_object(), "prog", "file", 123), file_name() + " (prog) at file:123\n"),
         assert_equal(testOb->trace_line(this_object(), "progfile", "progfile", 123), file_name() + " (progfile) at line 123\n"),
     }) :));
+    expect("standard_trace returns trace lines", (: ({
+        assert_equal(testOb->standard_trace(([ ])), "0Object: <none> (0) at line 0\n\n"),
+
+        assert_equal(testOb->standard_trace(([ "error": "Test Error\n", "object": this_object(), "program": "Test Program", "file": "Test File", "line": 123 ])), "Test Error\nObject: "+file_name()+" (Test Program) at Test File:123\n\n"),
+
+        assert_equal(testOb->standard_trace(([ "error": "Test Error\n", "object": this_object(), "program": "Test Program", "file": "Test File", "line": 123, "trace": ({ ([ "object": this_object(), "program": "Test Program", "file": "Test File", "line": 123, "function": "Test Function" ]) }) ])), "Test Error\nObject: "+file_name()+" (Test Program) at Test File:123\n\n'Test Function' at "+file_name()+" (Test Program) at Test File:123\n"),
+    }) :));
 }
 
 // used for retrieve_ed_setup and save_ed_setup
