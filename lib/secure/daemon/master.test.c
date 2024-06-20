@@ -65,7 +65,10 @@ void test_build_applies () {
 }
 
 void test_error_applies () {
-
+    expect("trace_line returns a trace", (: ({
+        assert_equal(testOb->trace_line(this_object(), "prog", "file", 123), file_name() + " (prog) at file:123\n"),
+        assert_equal(testOb->trace_line(this_object(), "progfile", "progfile", 123), file_name() + " (progfile) at line 123\n"),
+    }) :));
 }
 
 // used for retrieve_ed_setup and save_ed_setup

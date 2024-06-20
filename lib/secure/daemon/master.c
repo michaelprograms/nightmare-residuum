@@ -167,7 +167,7 @@ void crash (string crash_message, object command_giver, object current_object) {
     users()->quit_account();
 }
 
-private string trace_line (object obj, string prog, string file, int line) {
+string trace_line (object obj, string prog, string file, int line) {
     string objfn = obj ? file_name(obj) : "<none>";
     string ret = objfn;
     int num;
@@ -183,7 +183,7 @@ private string trace_line (object obj, string prog, string file, int line) {
     }
     return ret;
 }
-private varargs string standard_trace (mapping e) {
+varargs string standard_trace (mapping e) {
     string ret, t;
     mapping *trace;
     int i, n;
