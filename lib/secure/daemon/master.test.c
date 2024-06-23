@@ -113,9 +113,15 @@ object basicOb;
 void test_security_applies () {
     expect("valid_override handles requests", (: ({
         assert_equal(testOb->valid_override("/secure/sefun/override"), 1),
-        assert_equal(testOb->valid_override("/insecure"), 0),
+
         assert_equal(testOb->valid_override("/std/user/input", "input_to"), 1),
         assert_equal(testOb->valid_override("/std/user/input", "get_char"), 1),
+
+        assert_equal(testOb->valid_override("/std/module/parse", "parse_add_rule"), 1),
+        assert_equal(testOb->valid_override("/std/module/parse", "parse_add_synonym"), 1),
+        assert_equal(testOb->valid_override("/std/module/parse", "parse_init"), 1),
+
+        assert_equal(testOb->valid_override("/insecure"), 0),
         assert_equal(testOb->valid_override("invalid"), 0),
     }) :));
 
