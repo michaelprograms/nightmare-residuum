@@ -12,6 +12,10 @@ string *test_order () {
     });
 }
 
+string query_short () {
+    return file_name() + " query_short";
+}
+
 object userOb;
 mapping mudStats;
 void test_applies () {
@@ -61,6 +65,11 @@ void test_build_applies () {
         assert_equal(testOb->get_include_path("/realm/Name"), ({ ":DEFAULT:", "/realm/Name/include" })),
         assert_equal(testOb->get_include_path("/realm/Name/test"), ({ ":DEFAULT:", "/realm/Name/include" })),
         assert_equal(testOb->get_include_path("/realm/Name/test/dir"), ({ ":DEFAULT:", "/realm/Name/include" })),
+    }) :));
+
+    expect("object_name handles objects", (: ({
+        assert_equal(testOb->object_name(UNDEFINED), "<destructed>"),
+        assert_equal(testOb->object_name(this_object()), file_name() + " query_short"),
     }) :));
 }
 

@@ -141,7 +141,7 @@ string object_name (object ob) {
     } else if (interactive(ob)) {
         return ob->query_key_name() + " <interactive>";
     }
-    return 0;
+    return ob->query_short();
 }
 
 // This apply is called to determine directory relative header file paths.
