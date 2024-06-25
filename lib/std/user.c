@@ -43,7 +43,6 @@ nomask void logon () {
     __Terminal["encoding"] = query_encoding();
     D_LOG->log("connect", ctime() + " " + __Terminal["ip"]);
     D_CHARACTER->increment_connected_total();
-    debug_message(ctime() + " connect from " + __Terminal["ip"]);
 
     receive_message("system", "%^RESET%^Connected...\n");
     call_out_walltime((: logon_banner :), 0.5); // allow time for terminal_type apply to be called
