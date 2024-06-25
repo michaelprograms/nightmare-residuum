@@ -143,6 +143,7 @@ void set_variable_hook (string v, function fn) {
 
 void execute_command (string command) {
     string *split, action, input;
+    object character;
 
     if (!command) {
         return;
@@ -156,9 +157,9 @@ void execute_command (string command) {
         return D_CHANNEL->send(action, this_object()->query_character(), input);
     }
 
-    if (this_object()->query_character()) {
-        this_object()->query_character()->set_last_action();
-        if (!this_object()->query_character()->handle_command(command)) {
+    if (character = this_object()->query_character()) {
+        character->set_last_action();
+        if (!character->handle_command(command)) {
             write("Do what?\n");
         }
     }
