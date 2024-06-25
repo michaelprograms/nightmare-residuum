@@ -14,7 +14,7 @@ private mapping __Characters = ([
             "deleted":          INT,    // 0 or 1
             "level":            INT,
             "name":             STRING, // Name formatted version
-            "last_action":      INT,    // last seen
+            "last_action":      INT,    // last input action
             "last_location":    STRING  // last location short
         ]),
     */
@@ -191,7 +191,7 @@ private void display_account_menu () {
     }
 
     if (sizeof(characterMsg) > 0) {
-        msg += "Character           Species         Location                Last Seen\n" + characterMsg;
+        msg += "Character           Species         Location                Last Action\n" + characterMsg;
     }
 
     write(msg + "\n");
