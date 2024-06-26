@@ -93,7 +93,7 @@ void receive_message (string type, string message) {
         message = replace_string(message, "%^", "%%^^");
         receive(wrap(message, 0, 0, 1));
     } else if (type == "system") {
-        if (strlen(message) > __LARGEST_PRINTABLE_STRING__) {
+        if (sizeof(message) > __LARGEST_PRINTABLE_STRING__) {
             message = message[0..__LARGEST_PRINTABLE_STRING__-1];
         }
         receive(wrap(message, 0, 0));

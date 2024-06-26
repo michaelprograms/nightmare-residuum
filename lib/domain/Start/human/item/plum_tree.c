@@ -1,4 +1,4 @@
-#include "human.h"
+#include <human.h>
 
 inherit STD_ITEM;
 inherit M_PICKABLE;
