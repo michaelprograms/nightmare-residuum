@@ -25,7 +25,7 @@ void create () {
     set_ability_chance(50);
 
     set_inventory(([
-        HUMAN_WEAPON "wooden_staff.c": "wield staff",
+        HUMAN_WEAPON + "wooden_staff.c": "wield staff",
     ]));
 
     parse_init();

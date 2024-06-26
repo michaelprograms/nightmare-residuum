@@ -26,8 +26,8 @@ void create () {
     set_ability_chance(50);
 
     set_inventory(([
-        HUMAN_ARMOR "hemp_pants.c": "wear pants",
-        HUMAN_ARMOR "hemp_shirt.c": "wear shirt",
-        HUMAN_ARMOR "wooden_shield": "wear shield",
+        HUMAN_ARMOR + "hemp_pants.c": "wear pants",
+        HUMAN_ARMOR + "hemp_shirt.c": "wear shirt",
+        HUMAN_ARMOR + "wooden_shield": "wear shield",
     ]));
 }

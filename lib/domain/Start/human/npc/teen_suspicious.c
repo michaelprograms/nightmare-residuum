@@ -16,7 +16,7 @@ void create () {
     set_ability_chance(25);
 
     set_inventory(([
-        HUMAN_WEAPON "bronze_dagger.c": "wield dagger",
+        HUMAN_WEAPON + "bronze_dagger.c": "wield dagger",
     ]));
     add_currency("copper", 1 + random(10));
 }

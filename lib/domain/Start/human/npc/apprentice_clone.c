@@ -25,8 +25,8 @@ void create () {
     set_ability_chance(50);
 
     set_inventory(([
-        HUMAN_ARMOR "silk_pants.c": "wear pants",
-        HUMAN_ARMOR "silk_shirt.c": "wear shirt",
-        HUMAN_WEAPON "wooden_staff.c": "wield staff",
+        HUMAN_ARMOR + "silk_pants.c": "wear pants",
+        HUMAN_ARMOR + "silk_shirt.c": "wear shirt",
+        HUMAN_WEAPON + "wooden_staff.c": "wield staff",
     ]));
 }

@@ -14,7 +14,7 @@ void create () {
     set_smell("default", "A light floral scent tries to mask the stuffy air.");
     set_exits(([
         "out north": HUMAN_ROOM + "market_st_e5.c",
-        "up": HUMAN_ROOM "bell_tower.c",
+        "up": HUMAN_ROOM + "bell_tower.c",
         "down": HUMAN_ROOM + "hall_mystic.c",
     ]));
     set_looks(([

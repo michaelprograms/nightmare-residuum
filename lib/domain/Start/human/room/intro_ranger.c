@@ -1,6 +1,6 @@
 #include "human.h"
 
-inherit ROOM_CLASS_INTRO;
+inherit STD_ROOM;
 
 void create () {
     ::create();
@@ -20,7 +20,7 @@ void create () {
         "building": "Beyond the brick-front and gated archway, there really isn't much more to the building. Is it really a building?",
         "field": "A field full of an assortment of grasses with some wildflowers mixed in. Archery targets are placed out in the field.",
         ({ "entrance", "archway", "gate" }): "The gated archway is the entrance to this building, which houses the field.",
-        "street": "The street is particially obscured by the gate in the archway but some of it is still visible. It looks quiet out there.",
+        "street": "The street is partially obscured by the gate in the archway but some of it is still visible. It looks quiet out there.",
         ({ "archery", "targets" }): "Targets upon which archers can shoot arrows are setup in the field to the west.",
         "fence": "The fence stretches out to the west and boxes in the field from outside view.",
     ]));
