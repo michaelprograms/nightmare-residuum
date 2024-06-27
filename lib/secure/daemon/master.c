@@ -114,7 +114,7 @@ mapping get_mud_stats () {
 
 // --- build applies -----------------------------------------------------------
 
-// This apply is called on non-existant files that could be virtually created.
+// This apply is called on non-existent files that could be virtually created.
 object compile_object (string path) {
     string area, room, vpath;
 

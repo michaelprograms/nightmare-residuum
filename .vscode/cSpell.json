@@ -1,0 +1,49 @@
+{
+    // Version of the setting file.  Always 0.2
+    "version": "0.2",
+    // language - current active spelling language
+    "language": "en",
+    // words - list of words to be always considered correct
+    "words": [
+        // fluffos words
+        "arrayp",
+        "callout",
+        "clonep",
+        "mapp",
+        "nomask",
+        "nosave",
+        "objectp",
+        "sprintf",
+        "sscanf",
+        "stringp",
+        "strsrch",
+        "undefinedp",
+        "varargs",
+        "walltime",
+        // client words
+        "cmud",
+        "mudlet",
+        "zmud",
+        // tech words
+        "efun",
+        "efuns",
+        "fluffos",
+        "gmcp",
+        "mkdirs",
+        "mudlib",
+        "privs",
+        "sefun",
+        "simulefun",
+        "thirdparty",
+        "IPADDRESS",
+        "MSSP",
+        // mud words
+        "irreality",
+        "linkdead",
+        "linkdeath"
+    ],
+    // flagWords - list of words to be always considered incorrect
+    // This is useful for offensive words and common spelling errors.
+    // For example "hte" should be "the"
+    "flagWords": []
+}

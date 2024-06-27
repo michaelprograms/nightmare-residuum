@@ -17,5 +17,11 @@
         "files.exclude": {
             "driver/src/thirdparty/**": true,
         }
+    },
+    "extensions": {
+        "recommendations": [
+            "streetsidesoftware.code-spell-checker",
+            "undeadfish.vscode-lpc-lang"
+        ]
     }
 }
