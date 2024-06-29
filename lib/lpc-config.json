@@ -1,0 +1,17 @@
+{
+    "driver": {
+        "type": "fluffos"
+    },
+    "defines": [],
+    "diagnostics" : "off",
+    "files": {
+        "master": "/secure/daemon/master.c",
+        "simulefun": "/secure/sefun/sefun.c",
+        "init_files": [],
+        "global_include": "/secure/include/global.h"
+    },
+    "include": [
+        "/include",
+        "/secure/include"
+    ]
+}

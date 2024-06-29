@@ -21,6 +21,7 @@
     "extensions": {
         "recommendations": [
             "streetsidesoftware.code-spell-checker",
+            "jlchmura.lpc",
             "undeadfish.vscode-lpc-lang"
         ]
     }
