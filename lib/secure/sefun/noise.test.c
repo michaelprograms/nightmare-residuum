@@ -163,10 +163,10 @@ void test_noise_perlin () {
     }) :));
 
     expect("noise_perlin_2d handles bad inputs", (: ({
-        assert_catch((: testOb->noise_perlin_2d(0.0, 0.0, UNDEFINED) :), "*Bad argument 3 to noise->noise_perlin_2d\n"),
+        assert_catch((: testOb->noise_perlin_2d(0.0, 0.0, UNDEFINED, UNDEFINED, UNDEFINED) :), "*Bad argument 3 to noise->noise_perlin_2d\n"),
     }) :));
     expect("noise_perlin_3d handles bad inputs", (: ({
-        assert_catch((: testOb->noise_perlin_3d(0.0, 0.0, 0.0, UNDEFINED) :), "*Bad argument 4 to noise->noise_perlin_3d\n"),
+        assert_catch((: testOb->noise_perlin_3d(0.0, 0.0, 0.0, UNDEFINED, UNDEFINED, UNDEFINED) :), "*Bad argument 4 to noise->noise_perlin_3d\n"),
     }) :));
 }
 
