@@ -4,6 +4,7 @@ inherit "/secure/sefun/array.c";
 inherit "/secure/sefun/banner.c";
 inherit "/secure/sefun/border.c";
 inherit "/secure/sefun/color.c";
+inherit "/secure/sefun/convert.c";
 inherit "/secure/sefun/combat.c";
 inherit "/secure/sefun/format.c";
 inherit "/secure/sefun/grammar.c";

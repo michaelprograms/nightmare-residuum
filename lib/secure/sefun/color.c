@@ -54,21 +54,6 @@ string wrap_ansi (string str, int width) {
     return implode(linesANSI, "\n");
 }
 
-// Convert a string hex number to an int
-int hex_to_int (string b16) {
-    int b10;
-
-    if (!stringp(b16) || !strlen(b16)) {
-        error("Bad argument 1 to color->hex_to_int");
-    }
-    sscanf(b16, "%x", b10);
-    if (undefinedp(b10)) {
-        error("Bad argument 1 to color->hex_to_int");
-    }
-
-    return b10;
-}
-
 // Returns a random color triplet
 int *query_random_color () {
     int *c = ({ 0, 0, 0, });

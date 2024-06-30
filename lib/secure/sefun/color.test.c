@@ -13,37 +13,6 @@ void test_strip_colour () {
     }) :));
 }
 
-void test_hex_to_int () {
-    expect("hex_to_int handled base 16 to base 10", (: ({
-        assert_equal(testOb->hex_to_int("00"), 0),
-        assert_equal(testOb->hex_to_int("0A"), 10),
-        assert_equal(testOb->hex_to_int("0F"), 15),
-        assert_equal(testOb->hex_to_int("A0"), 160),
-        assert_equal(testOb->hex_to_int("F0"), 240),
-        assert_equal(testOb->hex_to_int("AA"), 170),
-        assert_equal(testOb->hex_to_int("BB"), 187),
-        assert_equal(testOb->hex_to_int("CC"), 204),
-        assert_equal(testOb->hex_to_int("DD"), 221),
-        assert_equal(testOb->hex_to_int("EE"), 238),
-        assert_equal(testOb->hex_to_int("FF"), 255),
-        assert_equal(testOb->hex_to_int("0a"), 10),
-        assert_equal(testOb->hex_to_int("0f"), 15),
-        assert_equal(testOb->hex_to_int("a0"), 160),
-        assert_equal(testOb->hex_to_int("f0"), 240),
-        assert_equal(testOb->hex_to_int("aa"), 170),
-        assert_equal(testOb->hex_to_int("bb"), 187),
-        assert_equal(testOb->hex_to_int("cc"), 204),
-        assert_equal(testOb->hex_to_int("dd"), 221),
-        assert_equal(testOb->hex_to_int("ee"), 238),
-        assert_equal(testOb->hex_to_int("ff"), 255),
-        assert_equal(testOb->hex_to_int("-a"), -10),
-        assert_equal(testOb->hex_to_int("a"), 10),
-        assert_equal(testOb->hex_to_int("A"), 10),
-        assert_equal(testOb->hex_to_int("-A"), -10),
-        assert_equal(testOb->hex_to_int("FFF"), 4095),
-    }) :));
-}
-
 private int *Color;
 void test_random_color () {
     Color = testOb->query_random_color();

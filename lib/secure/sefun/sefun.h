@@ -21,7 +21,6 @@ string *tree (mapping value);
 /* --- color --- */
 string strip_colour (string str);
 string wrap_ansi (string str, int width);
-int hex_to_int (string base16);
 int *query_random_color ();
 int color_to_sRGB (float n);
 float color_from_sRGB (int n);
@@ -29,6 +28,10 @@ float color_lerp (float color1, float color2, float ratio);
 string *color_gradient (int *color1, int *color2, int steps);
 string apply_gradient (string text, string *gradient);
 string format_message_color (string type, string message);
+
+/* ---- convert --- */
+int hex_to_int (string b16);
+string int_to_binary (int b10);
 
 /* --- combat --- */
 void display_combat_message (object source, object target, string limb, mixed weapon, string type, int damage, int crit, int isAbility);
