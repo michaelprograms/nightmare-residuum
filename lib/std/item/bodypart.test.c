@@ -1,10 +1,9 @@
 inherit M_TEST;
 
-private string testObFile;
 private mixed *calloutInfo;
 void test_received () {
     expect("handle_received sets expire timer", (: ({
-        assert_regex(testObFile = file_name(testOb), "/std/item/bodypart.coverage#[0-9]+"),
+        assert_regex(file_name(testOb), "/std/item/bodypart.coverage#[0-9]+"),
 
         // start the expire call_out
         testOb->handle_received(this_object()),

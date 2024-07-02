@@ -13,13 +13,12 @@ void test_expire () {
     if (mockItem) destruct(mockItem);
 }
 
-private string testObFile;
 private mixed *calloutInfo;
 void test_received () {
     function_exists("handle_received", testOb);
 
     expect("handle_received sets expire timer", (: ({
-        assert_regex(testObFile = file_name(testOb), "/std/module/dustable\\.coverage#[0-9]+"),
+        assert_regex(file_name(testOb), "/std/module/dustable\\.coverage#[0-9]+"),
 
         // start the expire call_out
         testOb->handle_received(this_object()),

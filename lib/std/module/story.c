@@ -47,7 +47,7 @@ void story_action_final (object target) {
 }
 
 void story_start (object target) {
-    if (!target || (environment(target) != this_object() && environment(target) != environment())) {
+    if (!target || (environment(target) != this_object() && environment(target) != environment()) || !sizeof(__Lines)) {
         return;
     }
     call_out((: story_action, target, __Lines[0], __Lines[1..] :), __Delay);
