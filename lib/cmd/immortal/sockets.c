@@ -10,7 +10,7 @@ void command (string input, mapping flags) {
     string *sockets = ({ }), *netStats = ({ });
 
     foreach (mixed *s in socket_status()) {
-        sockets += ({ s[0], s[1], s[2], s[3], });
+        sockets += ({ s[0], s[1], s[2], s[3], s[4] });
     }
 
     foreach (string key, int value in filter(network_stats(), (: regexp($1, "socket") :))) {
@@ -23,9 +23,9 @@ void command (string input, mapping flags) {
         "title": "SOCKETS",
         "subtitle": mud_name(),
         "body": ([
-            "header": ({ "Socket", "State", "Mode", "Local Address", }),
+            "header": ({ "Socket", "State", "Mode", "Local Address", "Owner" }),
             "items": sockets,
-            "columns": 4,
+            "columns": 5,
         ]),
         "footer": ([
             "items": netStats,
