@@ -14,7 +14,7 @@ private nomask void editor_input (mixed s) {
     if (s == -1) {
         return destruct();
     }
-    message("system", ed_cmd(s), __User);
+    message("raw ansi", ed_cmd(s), __User);
     if (query_ed_mode() == -1) {
         __User->input_pop();
         if (__EndFn) {
