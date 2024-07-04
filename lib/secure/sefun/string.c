@@ -24,6 +24,7 @@ string identify (mixed args...) {
         a = replace_string(a, "\\\"", "\"");
         a = replace_string(a, "\n", "\\n");
         a = replace_string(a, "\t", "\\t");
+        a = replace_string(a, "\r", "\\r");
         return a;
     } else if (mapp(a)) {
         ret = "([ ";

@@ -67,6 +67,8 @@ void test_identify () {
         assert_equal(testOb->identify("123"), "\"123\""),
         assert_equal(testOb->identify("!@#"), "\"!@#\""),
         assert_equal(testOb->identify($(tString)), "\"Here it is: \\\"abc123\\\".\""),
+
+        assert_equal(testOb->identify("\t\r\n"), "\"\\t\\r\\n\""),
     }) :));
 
     expect("identify handles map", (: ({
