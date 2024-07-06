@@ -11,6 +11,8 @@ string *test_order () {
 }
 
 void test_exits () {
+    function fn = function() {};
+
     expect("exits are addable, queryable, and removable", (: ({
         assert_equal(testOb->query_exit("invalid"), 0),
 
@@ -66,6 +68,23 @@ void test_exits () {
         ])),
         assert_equal(testOb->query_exit_directions(), ({ "north", "south", "east", "west" })),
         assert_equal(testOb->query_exit_dirs(), ({ "n", "s", "e", "w" })),
+        assert_equal(testOb->query_exits(), ([ "east": ([ "room": "/eastroom.c" ]), "north": ([ "room": "/northroom.c" ]), "south": ([ "room": "/southroom.c" ]), "west": ([ "room": "/westroom.c" ]) ])),
+        // array dir and dests
+        testOb->set_exits(([
+            ({ "northeast" }): ({ "/northeastroom.c", 0, 0, "ne_reverse" }),
+            ({ "southeast" }): "/southeastroom.c",
+            "southwest": ({ "/southwestroom.c", 0, 0, "sw_reverse" }),
+            "northwest": "/northwestroom.c",
+        ])),
+        assert_equal(testOb->query_exits(), ([ "northeast": ([ "reverse": "ne_reverse", "room": "/northeastroom.c" ]), "northwest": ([ "room": "/northwestroom.c" ]), "southeast": ([ "room": "/southeastroom.c" ]), "southwest": ([ "reverse": "sw_reverse", "room": "/southwestroom.c" ]) ])),
+
+        // test all options
+        testOb->set_exit("north", "/northroom.c", $(fn), $(fn), "reverse", "door", "key", UNDEFINED),
+        assert_equal(testOb->query_exits()["north"], ([ "after": $(fn), "before": $(fn), "door": "door", "key": "key", "locked": 1, "open": 0, "reverse": "reverse", "room": "/northroom.c" ])),
+        testOb->set_exit("north", "/northroom.c", $(fn), $(fn), "reverse", "door", "key", 0),
+        assert_equal(testOb->query_exits()["north"], ([ "after": $(fn), "before": $(fn), "door": "door", "key": "key", "locked": 0, "open": 0, "reverse": "reverse", "room": "/northroom.c" ])),
+        testOb->set_exit("north", "/northroom.c", $(fn), $(fn), "reverse", "door", "key", 1),
+        assert_equal(testOb->query_exits()["north"], ([ "after": $(fn), "before": $(fn), "door": "door", "key": "key", "locked": 1, "open": 0, "reverse": "reverse", "room": "/northroom.c" ])),
     }) :));
 
     expect("exits are able to set hidden flag", (: ({
@@ -74,6 +93,13 @@ void test_exits () {
         assert_equal(testOb->query_hidden_exits(), 1),
         testOb->set_hidden_exits(0),
         assert_equal(testOb->query_hidden_exits(), 0),
+    }) :));
+
+    expect("exits handles bad inputs", (: ({
+        assert_catch((: testOb->set_exit(UNDEFINED, UNDEFINED) :), "*Bad argument 1 to exit->set_exit\n"),
+        assert_catch((: testOb->set_exit("dir", UNDEFINED) :), "*Bad argument 2 to exit->set_exit\n"),
+
+        assert_catch((: testOb->remove_exit(UNDEFINED) :), "*Bad argument 1 to exit->remove_exit\n"),
     }) :));
 }
 
@@ -118,6 +144,7 @@ void test_climbs () {
 nosave private int checkBefore = 0, checkAfter = 0;
 nosave private object r1, r2, ob;
 
+// TODO: Test this through testOb and mocks
 void test_exits_before_after () {
     checkBefore = 0;
     checkAfter = 0;
