@@ -11,6 +11,7 @@
         "clonep",
         "intp",
         "floatp",
+        "functionp",
         "mapp",
         "nomask",
         "nosave",
