@@ -107,10 +107,13 @@ void test_exits () {
 string query_cap_name () { return "Test"; }
 
 void test_climbs () {
+    function fn = function() {};
+
     expect("climbs are addable and queryable", (: ({
         assert_equal(testOb->query_climbs(), ([ ])),
         assert_equal(testOb->query_climb_directions(), ({ })),
         assert_equal(testOb->query_climb_destinations(), ({ })),
+        assert_equal(testOb->query_climb("up"), 0),
 
         testOb->set_climb("up", "/uproom.c"),
         assert_equal(testOb->query_climbs(), ([ "up": ([ "room": "/uproom.c" ]) ])),
@@ -128,6 +131,10 @@ void test_climbs () {
         assert_equal(testOb->query_climb_directions(), ({ "up" })),
         assert_equal(testOb->query_climb_destinations(), ({ ([ "room": "/uproom.c" ]) })),
 
+        // test all options
+        testOb->set_climb("up", "/uproom.c", $(fn), $(fn), "reverse"),
+        assert_equal(testOb->query_climbs()["up"], ([ "after": $(fn), "before": $(fn), "reverse": "reverse", "room": "/uproom.c" ])),
+
         // override climbs
         testOb->set_climbs(([
             "up": "/uproom2.c",
@@ -137,7 +144,21 @@ void test_climbs () {
         assert_equal(testOb->query_climbs(), ([ "down": ([ "room": "/downroom2.c"]), "something": ([ "room": "/somethingroom.c" ]), "up": ([ "room": "/uproom2.c", ]) ])),
         assert_equal(testOb->query_climb_directions(), ({ "something", "down", "up", })),
         assert_equal(testOb->query_climb_destinations(), ({ ([ "room": "/somethingroom.c" ]), ([ "room": "/downroom2.c" ]), ([ "room": "/uproom2.c" ]), })),
+        // array dir and dests
+        testOb->set_climbs(([
+            ({ "up", }): ({ "/uproom.c", 0, 0, "down" }),
+            ({ "up2" }): "/up2room.c",
+            "down": ({ "/downroom.c", 0, 0, "up" }),
+            "down2": "/down2room.c",
+        ])),
+        assert_equal(testOb->query_climbs(), ([ "up": ([ "reverse": "down", "room": "/uproom.c" ]), "down2": ([ "room": "/down2room.c" ]), "up2": ([ "room": "/up2room.c" ]), "down": ([ "reverse": "up", "room": "/downroom.c" ]) ])),
+    }) :));
 
+    expect("climbs handles bad inputs", (: ({
+        assert_catch((: testOb->set_climb(UNDEFINED, UNDEFINED) :), "*Bad argument 1 to exit->set_climb\n"),
+        assert_catch((: testOb->set_climb("dir", UNDEFINED) :), "*Bad argument 2 to exit->set_climb\n"),
+
+        assert_catch((: testOb->remove_climb(UNDEFINED) :), "*Bad argument 1 to exit->remove_climb\n"),
     }) :));
 }
 

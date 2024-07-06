@@ -101,12 +101,10 @@ void set_exits (mapping exits) {
                     set_exit(real_dir, dest);
                 }
             }
-        } else {
-            if (stringp(dest)) {
-                set_exit(dir, dest);
-            } else if (arrayp(dest)) {
-                set_exit(dir, dest...);
-            }
+        } else if (arrayp(dest)) {
+            set_exit(dir, dest...);
+        } else if (stringp(dest)) {
+            set_exit(dir, dest);
         }
     }
 }
@@ -213,12 +211,10 @@ void set_climbs (mapping climbs) {
                     set_climb(real_dir, dest);
                 }
             }
-        } else {
-            if (stringp(dest)) {
-                set_climb(dir, dest);
-            } else if (arrayp(dest)) {
-                set_climb(dir, dest...);
-            }
+        } else if (arrayp(dest)) {
+            set_climb(dir, dest...);
+        } else if (stringp(dest)) {
+            set_climb(dir, dest);
         }
     }
 }
