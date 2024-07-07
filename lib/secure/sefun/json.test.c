@@ -34,3 +34,27 @@ void test_json_encode () {
         assert_equal(testOb->json_encode(({ this_object(), this_object() })), "[null,null]"),
     }) :));
 }
+
+void test_json_decode () {
+    expect("json_decode parses correctly", (: ({
+        assert_equal(testOb->json_decode(), UNDEFINED),
+
+        assert_equal(testOb->json_decode("\"test123\""), "test123"),
+
+        assert_equal(testOb->json_decode("0"), 0),
+        assert_equal(testOb->json_decode("123"), 123),
+        assert_equal(testOb->json_decode("123.450000"), 123.45),
+        assert_equal(testOb->json_decode("0e0"), 0.0),
+        assert_equal(testOb->json_decode("0E12328"), 0.0),
+
+        assert_equal(testOb->json_decode("[]"), ({ })),
+        assert_equal(testOb->json_decode("[\"a\",\"b\",\"c\"]"), ({ "a", "b", "c" })),
+        assert_equal(testOb->json_decode("[1,2,3]"), ({ 1, 2, 3 })),
+
+        assert_equal(testOb->json_decode("{}"), ([ ])),
+        assert_equal(testOb->json_decode("{\"a\":1,\"b\":2,\"c\":3}"), ([ "a": 1, "b": 2, "c": 3 ])),
+        assert_equal(testOb->json_decode("{\"1\":\"a\",\"2\":\"b\",\"3\":\"c\"}"), ([ "1": "a", "2": "b", "3": "c" ])),
+
+        assert_equal(testOb->json_decode("\"\\ud83d\\ude04\""), "😄"),
+    }) :));
+}
