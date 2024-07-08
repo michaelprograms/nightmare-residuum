@@ -14,6 +14,10 @@ void update_descriptions () {
     set_short(biome);
 
     switch (biome) {
+        case "frozen water":
+            set_long("Surrounded by frozen water.");
+            set_property("water", 1);
+            set_property("go", 4);
         case "icy water":
             set_long("Surrounded by icy water.");
             set_property("water", 1);
