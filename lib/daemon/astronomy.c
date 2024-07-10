@@ -106,14 +106,14 @@ string query_localsky (mapping a, string str) {
 
     if (str == "sky") {
         if (a["DAY_PHASE"] == "dawn") {
-            desc = "%^ORANGE%^It is lit with the colors of a brand new day.%^RESET%^";
+            desc = "%^ORANGE%^BOLD%^It is lit with the colors of a brand new day.%^RESET%^";
         } else if (a["DAY_PHASE"] == "day") {
-            desc = "%^YELLOW%^The sun lights up the daytime sky.%^RESET%^";
+            desc = "%^I_YELLOW%^BOLD%^The sun lights up the daytime sky.%^RESET%^";
         } else if (a["DAY_PHASE"] == "dusk") {
-            desc = "%^BOLD%^CYAN%^The sun is fading over the western horizon.%^RESET%^";
+            desc = "%^CYAN%^BOLD%^The sun is fading over the western horizon.%^RESET%^";
         } else if (a["DAY_PHASE"] == "night") {
             string moons = "";
-            desc = "%^BOLD%^BLUE%^The sky is darkened with night.%^RESET%^";
+            desc = "%^BLUE%^BOLD%^The sky is darkened with night.%^RESET%^";
             foreach (string key,mapping moon in a["MOONS"]) {
                 if (moon["phase"] > 0) {
                     moons += "\n" + "There is a %^" + upper_case(moon["color"]) + "%^" + PHASES[moon["phase"]]+" "+moon["color"]+" moon%^RESET%^ in the sky.%^RESET%^";
@@ -125,9 +125,9 @@ string query_localsky (mapping a, string str) {
         if (a["DAY_PHASE"] == "dawn") {
             desc = "%^ORANGE%^The sun is hanging low in the dawning eastern sky.%^RESET%^";
         } else if (a["DAY_PHASE"] == "day") {
-            desc = "%^YELLOW%^The sun is shining brightly in the daytime sky.%^RESET%^";
+            desc = "%^I_YELLOW%^BOLD%^The sun is shining brightly in the daytime sky.%^RESET%^";
         } else if (a["DAY_PHASE"] == "dusk") {
-            desc = "%^BOLD%^CYAN%^The sun is falling into the twilight sky.%^RESET%^";
+            desc = "%^CYAN%^BOLD%^The sun is falling into the twilight sky.%^RESET%^";
         }
     }
 
@@ -255,16 +255,16 @@ private void process (int t, string key, mapping a) {
             object *characters = filter(characters(), (: regexp($1->query_environment_path(), "^"+$(key)) && !environment($1)->query_property("indoors") :));
             if (dayPhase == "night") {
                 dayPhase = "dawn";
-                message("astronomy", "%^ORANGE%^The sun appears over the horizon.%^RESET%^", characters);
+                message("astronomy", "%^ORANGE%^The sBOLD%^un appears over the horizon.%^RESET%^", characters);
             } else if (dayPhase == "dawn") {
                 dayPhase = "day";
-                message("astronomy", "%^YELLOW%^The sun now shines on a new day.%^RESET%^", characters);
+                message("astronomy", "%^I_YELLOW%^The sBOLD%^un now shines on a new day.%^RESET%^", characters);
             } else if (dayPhase == "day") {
                 dayPhase = "dusk";
-                message("astronomy", "%^BOLD%^CYAN%^The sun falls away into twilight.%^RESET%^", characters);
+                message("astronomy", "%^I_CYAN%^The sBOLD%^un falls away into twilight.%^RESET%^", characters);
             } else if (dayPhase == "dusk") {
                 dayPhase = "night";
-                message("astronomy", "%^BOLD%^BLUE%^The sun disappears below the horizon.%^RESET%^", characters);
+                message("astronomy", "%^I_BLUE%^The sBOLD%^un disappears below the horizon.%^RESET%^", characters);
             }
             a["DAY_PHASE"] = dayPhase;
         } else {

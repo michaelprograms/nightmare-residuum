@@ -1,9 +1,13 @@
 inherit STD_NPC;
 
-#define PLASMA_COLORS ({ "%^BLUE%^", "%^BLUE%^", "%^BLUE%^", "%^WHITE%^", "%^CYAN%^", "%^GREEN%^" })
+string *colors = ({
+    "%^BLUE%^", "%^BLUE%^", "%^BLUE%^", "%^I_BLUE%^",
+    "%^WHITE%^", "%^I_WHITE%^", "%^CYAN%^", "%^I_CYAN%^",
+    "%^GREEN%^", "%^I_GREEN%^"
+});
 
 void create() {
-    string plasmaSnail = "%^RESET%^BOLD%^";
+    string plasmaSnail = "";
     foreach (string s in ({"p","l","a","s","m","a"," ","s","n","a","i","l"})) {
         plasmaSnail += element_of(PLASMA_COLORS) + s;
     }

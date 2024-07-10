@@ -43,13 +43,13 @@ void set_help_similar (string *similar) {
 string handle_help (object char) {
     string result;
 
-    result = "\n%^CYAN%^BOLD%^" + sprintf("%-12s", "Syntax") + "%^RESET%^\n" + query_syntax() + "\n";
+    result = "\n%^I_CYAN%^BOLD%^" + sprintf("%-12s", "Syntax") + "%^RESET%^\n" + query_syntax() + "\n";
 
     if (sizeof(__HelpText) > 0) {
-        result += "\n%^CYAN%^BOLD%^Description%^RESET%^\n" + __HelpText + "\n";
+        result += "\n%^I_CYAN%^BOLD%^Description%^RESET%^\n" + __HelpText + "\n";
     }
     if (sizeof(__HelpSimilar) > 0) {
-        result += "\n%^CYAN%^BOLD%^Similar Actions%^RESET%^\n" + implode(__HelpSimilar, ", ") + "\n";
+        result += "\n%^I_CYAN%^BOLD%^Similar Actions%^RESET%^\n" + implode(__HelpSimilar, ", ") + "\n";
     }
     return result;
 }

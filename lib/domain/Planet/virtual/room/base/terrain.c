@@ -213,7 +213,7 @@ string *query_room_map () {
             // }
             if (xx == 0 && yy == 0) {
                 room = this_object();
-                symbol = "%^CYAN%^BOLD%^X%^RESET%^";
+                symbol = "%^I_CYAN%^BOLD%^X%^RESET%^";
             } else {
                 wx = (x + xx) > 0 ? (x + xx) : size - 1;
                 wy = (y + yy) > 0 ? (y + yy) : size - 1;

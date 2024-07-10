@@ -38,7 +38,7 @@ void command (string input, mapping flags) {
         foreach (object imm in immList) {
             bodyItems += ({
                 imm->query_level(),
-                "%^BOLD%^" + imm->query_short() + "%^RESET%^",
+                "%^I_WHITE%^BOLD%^" + imm->query_short() + "%^RESET%^",
                 capitalize(imm->query_species()),
                 capitalize(imm->query_class()),
             });

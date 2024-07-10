@@ -101,12 +101,12 @@ string format_syntax (string text) {
         s = s + ">";
     }
     if (SEFUN->query_account_setting("ansi") == "on") {
-        s = replace_string(s, "<", "%^CYAN%^<");
+        s = replace_string(s, "<", "%^CYAN%^<%^I_CYAN%^");
         s = replace_string(s, "[", "%^BOLD%^[%^BOLD_OFF%^");
         s = replace_string(s, "]", "%^BOLD%^]%^BOLD_OFF%^");
         s = replace_string(s, "(", "%^RESET%^(%^CYAN%^");
         s = replace_string(s, "|", "%^RESET%^|%^CYAN%^");
-        s = replace_string(s, ")", "%^RESET%^)%^CYAN%^");
+        s = replace_string(s, ")", "%^RESET%^)%^I_CYAN%^");
         s = replace_string(s, ">", ">%^RESET%^");
     }
     return s;

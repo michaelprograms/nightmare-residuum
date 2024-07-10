@@ -236,10 +236,10 @@ void describe_environment_long () {
         map = env->query_room_map();
     }
     if (!(sm = sizeof(map))) {
-        message("room", "%^BOLD%^" + env->query_short() + "%^RESET%^", this_object());
+        message("room", "%^I_WHITE%^BOLD%^" + env->query_short() + "%^RESET%^", this_object());
         message("room", env->query_long(), this_object());
     } else {
-        long = ({ "%^BOLD%^" + env->query_short() + "%^RESET%^" }) + explode(wrap_ansi(env->query_long(), width-16), "\n");
+        long = ({ "%^I_WHITE%^BOLD%^" + env->query_short() + "%^RESET%^" }) + explode(wrap_ansi(env->query_long(), width-16), "\n");
         sl = sizeof(long);
         map = map(map, (: $1+" " :));
         l = max(({ sm, sl }));
@@ -307,7 +307,7 @@ private void describe_environment_exits () {
                     open = environment()->query_open(door);
                     door = " " + (!open ? "[" : "(") + door + (!open ? "]" : ")");
                 }
-                return "%^CYAN%^BOLD%^" + dir + "%^BOLD_OFF%^" + (door ? door : "") + "%^DEFAULT%^";
+                return "%^I_CYAN%^BOLD%^" + dir + "%^BOLD_OFF%^" + (door ? door : "") + "%^DEFAULT%^";
             });
             message("room exits", "There " + (numExits > 1 ? "are" : "is") + " " + cardinal(numExits) + " exit" + (numExits > 1 ? "s" : "") + ": " + conjunction(exits) + ".\n", this_object());
         }
@@ -330,7 +330,7 @@ private string describe_living_item (object ob) {
                 tag += " ("+ob->query_posture()+")"; break;
         }
     }
-    return ob->query_short("%^RED%^BOLD%^") + tag;
+    return ob->query_short("%^I_RED%^BOLD%^") + tag;
 }
 
 private void describe_environment_living_contents () {
@@ -363,7 +363,7 @@ private void describe_environment_living_contents () {
         });
         shorts = map(shorts, (: $1 :));
         shorts[0] = capitalize(shorts[0]);
-        shorts = map(shorts, (: "%^BOLD%^" + $1 + "%^BOLD_OFF%^DEFAULT%^" :));
+        shorts = map(shorts, (: "%^I_RED%^BOLD%^" + $1 + "%^DEFAULT%^" :));
         message("room living contents", conjunction(shorts) + " " + (sizeof(shorts) > 1 ? "are" : "is") + " here.\n", this_object());
     }
 }
@@ -373,11 +373,11 @@ private void describe_environment_item_contents () {
     mixed *list;
     string *shorts;
 
-    list = unique_array(contents, (: $1->query_short("%^MAGENTA%^BOLD%^") :));
+    list = unique_array(contents, (: $1->query_short("%^I_MAGENTA%^BOLD%^") :));
     if (sizeof(list)) {
-        shorts = sort_array(map(list, (: consolidate(sizeof($1), $1[0]->query_short("%^MAGENTA%^BOLD%^")) :)), 1);
+        shorts = sort_array(map(list, (: consolidate(sizeof($1), $1[0]->query_short("%^I_MAGENTA%^BOLD%^")) :)), 1);
         shorts[0] = capitalize(shorts[0]);
-        shorts = map(shorts, (: "%^BOLD%^" + $1 + "%^BOLD_OFF%^DEFAULT%^" :));
+        shorts = map(shorts, (: "%^I_MAGENTA%^" + $1 + "%^DEFAULT%^" :));
         message("room item contents", conjunction(shorts) + " " + (sizeof(shorts) > 1 ? "are" : "is") + " here.", this_object());
     }
 }

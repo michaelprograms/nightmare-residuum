@@ -5,9 +5,9 @@ void test_ansi_terms () {
     int fail;
 
     term = testOb->query_ansi_term();
-    expect("query_ansi_term has 541 items", (: ({
+    expect("query_ansi_term has 550 items", (: ({
         assert_equal(mapp(term), 1),
-        assert_equal(sizeof(term), 543)
+        assert_equal(sizeof(term), 550)
     }) :));
 
     foreach (string key in keys(term)) {
@@ -24,9 +24,9 @@ void test_unknown_terms () {
     int fail = 0;
 
     term = testOb->query_unknown_term();
-    expect("query_unknown_term has 541 items", (: ({
+    expect("query_unknown_term has 550 items", (: ({
         assert_equal(mapp(term), 1),
-        assert_equal(sizeof(term), 543),
+        assert_equal(sizeof(term), 550),
     }) :));
 
     foreach (string key in keys(term)) {
@@ -63,7 +63,6 @@ void test_parse () {
         assert_equal(testOb->parse("%^RED%^"), "\e[31m"),
         assert_equal(testOb->parse("%^GREEN%^"), "\e[32m"),
         assert_equal(testOb->parse("%^ORANGE%^"), "\e[33m"),
-        assert_equal(testOb->parse("%^YELLOW%^"), "\e[1;33m"),
         assert_equal(testOb->parse("%^BLUE%^"), "\e[34m"),
         assert_equal(testOb->parse("%^MAGENTA%^"), "\e[35m"),
         assert_equal(testOb->parse("%^CYAN%^"), "\e[36m"),

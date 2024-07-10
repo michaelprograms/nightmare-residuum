@@ -52,7 +52,7 @@ nomask void character_enter (int newbie) {
     if (newbie) {
         if (QUERY_FIRST_IMMORTAL) {
             __Character->set_immortal(1);
-            write("\n%^BOLD%^Since this appears to be the first connection, you have been set as immortal.%^RESET%^\n\n");
+            write("\n%^I_WHITE%^BOLD%^Since this appears to be the first connection, you have been set as immortal.%^RESET%^\n\n");
         }
         __Character->save_data();
     }

@@ -1,6 +1,6 @@
 #include <config.h>
 
-#define ED_BASIC_COMMANDS "\"%^CYAN%^BOLD%^i%^RESET%^\"nsert code, \"%^CYAN%^BOLD%^.%^RESET%^\" to save, e\"%^CYAN%^BOLD%^x%^RESET%^\"ecute, \"%^CYAN%^BOLD%^q%^RESET%^\"uit to abort"
+#define ED_BASIC_COMMANDS "\"%^I_CYAN%^BOLD%^i%^RESET%^\"nsert code, \"%^I_CYAN%^BOLD%^.%^RESET%^\" to save, e\"%^I_CYAN%^BOLD%^x%^RESET%^\"ecute, \"%^I_CYAN%^BOLD%^q%^RESET%^\"uit to abort"
 
 inherit STD_COMMAND;
 

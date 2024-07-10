@@ -132,17 +132,17 @@ string query_room_map_symbol () {
             symbol = "%^ORANGE%^";
         }
         if (aggressive && !passive) {
-            symbol = "%^BOLD%^RED%^";
+            symbol = "%^I_RED%^";
         }
         if (!aggressive && passive) {
-            symbol = "%^BOLD%^GREEN%^";
+            symbol = "%^GREEN%^";
         }
 
         symbol += (aggressive+passive > 10 ? "+" : ""+(aggressive+passive)) + "%^RESET%^";
     } else {
         item = sizeof(query_item_contents());
         if (item) {
-            symbol = "%^MAGENTA%^BOLD%^" + (item > 10 ? "+" : ""+item) + "%^RESET%^";
+            symbol = "%^MAGENTA%^" + (item > 10 ? "+" : ""+item) + "%^RESET%^";
         }
     }
 
@@ -228,7 +228,7 @@ string *query_room_map () {
         pics["e"]["nw"] + " " + pics["e"]["n"] + pics["e"]["u"] + pics["e"]["ne"],
         // middle row line 2
         pics["w"]["w"] + (roomOb["w"] ? roomOb["w"]->query_room_map_bracket() : "   ") + pics["w"]["e"] +
-        pics["x"]["w"] + roomBracketColor + "[%^RESET%^CYAN%^BOLD%^X%^RESET%^" + roomBracketColor + "]%^RESET%^" + pics["x"]["e"] +
+        pics["x"]["w"] + roomBracketColor + "[%^RESET%^I_CYAN%^X%^RESET%^" + roomBracketColor + "]%^RESET%^" + pics["x"]["e"] +
         pics["e"]["w"] + (roomOb["e"] ? roomOb["e"]->query_room_map_bracket() : "   ") + pics["e"]["e"],
         // middle row line 3
         pics["w"]["sw"] + pics["w"]["d"] + pics["w"]["s"] + " " + pics["w"]["se"] +

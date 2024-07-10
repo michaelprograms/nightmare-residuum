@@ -471,13 +471,10 @@ string handle_help (object char) {
     int n;
 
     result = ::handle_help(char);
-
-    result += "\n%^CYAN%^BOLD%^Type%^RESET%^\n" + capitalize(__Type) + "\n";
-
+    result += "\n%^I_CYAN%^BOLD%^Type%^RESET%^\n" + capitalize(__Type) + "\n";
     if (sizeof(__Reqs)) {
         foreach (string key,mapping value in __Reqs) {
-            result += "\n%^CYAN%^BOLD%^" + capitalize(key) + " Requirements%^RESET%^\n";
-
+            result += "\n%^I_CYAN%^BOLD%^" + capitalize(key) + " Requirements%^RESET%^\n";
             tmp = ({ });
             if (!undefinedp(value["level"]) && intp(value["level"])) {
                 tmp += ({ "Level " + value["level"] });
@@ -495,19 +492,16 @@ string handle_help (object char) {
             result += implode(tmp, ", ") + "\n";
         }
     }
-
     if (__Cooldown != 1) {
-        result += "\n%^CYAN%^BOLD%^Cooldown%^RESET%^\n";
+        result += "\n%^I_CYAN%^BOLD%^Cooldown%^RESET%^\n";
         result += __Cooldown + " rounds\n";
     }
-
     if (n = sizeof(__Weapons)) {
-        result += "\n%^CYAN%^BOLD%^Weapons%^RESET%^\n";
+        result += "\n%^I_CYAN%^BOLD%^Weapons%^RESET%^\n";
         foreach (string key,int *value in __Weapons) {
             result += implode(map(value, (: cardinal($1)+" handed "+$(key) :)), ", ") + "\n";
         }
     }
-
     return result;
 }
 

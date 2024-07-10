@@ -199,42 +199,42 @@ string format_message_color (string type, string message) {
     if (type == "say") {
         message = "%^CYAN%^" + replace_string(message, ":", ":%^RESET%^");
     } else if (type == "tell") {
-        message = "%^RED%^BOLD%^" + replace_string(message, ":", ":%^RESET%^");
+        message = "%^I_RED%^BOLD%^" + replace_string(message, ":", ":%^RESET%^");
     } else if (type == "go") {
         message = replace_string(message, "%^DIR%^", "%^CYAN%^");
         message = replace_string(message, "%^DEFAULT%^", "%^GREEN%^");
-        message = "%^GREEN%^BOLD%^" + message + "%^RESET%^";
+        message = "%^I_GREEN%^BOLD%^" + message + "%^RESET%^";
     } else if (type == "room listen") {
         message = "%^CYAN%^" + message + "%^RESET%^";
     } else if (type == "room smell") {
         message = "%^ORANGE%^" + message + "%^RESET%^";
     } else if (type == "room living contents") {
-        message = "%^RED%^" + replace_string(message, "%^DEFAULT%^", "%^RED%^") + "%^RESET%^";
+        message = "%^I_RED%^BOLD%^" + replace_string(message, "%^DEFAULT%^", "%^RED%^BOLD_OFF%^") + "%^RESET%^";
     } else if (type == "room item contents") {
-        message = "%^MAGENTA%^" + replace_string(message, "%^DEFAULT%^", "%^MAGENTA%^") + "%^RESET%^";
+        message = "%^MAGENTA%^" + replace_string(message, "%^DEFAULT%^", "%^MAGENTA%^BOLD_OFF%^") + "%^RESET%^";
     } else if (type == "room exits") {
         message = replace_string(message, "%^DEFAULT%^", "%^GREEN%^");
         message = "%^GREEN%^" + message + "%^RESET%^";
     } else if (type == "channel") {
-        message = replace_string(message, "[[", "%^GREEN%^[%^BOLD%^");
-        message = replace_string(message, "]]", "%^BOLD_OFF%^GREEN%^]%^RESET%^");
-        message = replace_string(message, "((", "%^CYAN%^(%^BOLD%^");
-        message = replace_string(message, "))", "%^BOLD_OFF%^CYAN%^)%^RESET%^");
+        message = replace_string(message, "[[", "%^GREEN%^[%^I_GREEN%^");
+        message = replace_string(message, "]]", "%^GREEN%^]%^RESET%^");
+        message = replace_string(message, "((", "%^CYAN%^(%^I_CYAN%^");
+        message = replace_string(message, "))", "%^CYAN%^)%^RESET%^");
     } else if (type == "channel error") {
-        message = replace_string(message, "((", "%^CYAN%^(%^RED%^BOLD%^");
-        message = replace_string(message, "))", "%^BOLD_OFF%^CYAN%^)%^RESET%^");
+        message = replace_string(message, "((", "%^CYAN%^(%^I_RED%^");
+        message = replace_string(message, "))", "%^CYAN%^)%^RESET%^");
     } else if (type == "attack") {
-        message = "%^RED%^BOLD%^" + message + "%^RESET%^";
+        message = "%^I_RED%^BOLD%^" + message + "%^RESET%^";
     } else if (type == "combat hit") {
         message = "%^RED%^" + message + "%^RESET%^";
     } else if (type == "combat miss") {
         message = "%^GREEN%^" + message + "%^RESET%^";
     } else if (type == "combat alert") {
-        message = "%^YELLOW%^" + message + "%^RESET%^";
+        message = "%^I_YELLOW%^BOLD%^" + message + "%^RESET%^";
     } else if (type == "ability hit") {
-        message = "%^RED%^BOLD%^" + message + "%^RESET%^";
+        message = "%^I_RED%^BOLD%^" + message + "%^RESET%^";
     } else if (type == "ability miss") {
-        message = "%^BOLD%^" + message + "%^RESET%^";
+        message = "%^I_WHITE%^BOLD%^" + message + "%^RESET%^";
     }
     return message;
 }

@@ -68,9 +68,9 @@ void test_room_map_symbol () {
 
         // test objects
         assert_equal($(item1)->handle_move(testOb), 1),
-        assert_equal(testOb->query_room_map_symbol(), "%^MAGENTA%^BOLD%^1%^RESET%^"),
+        assert_equal(testOb->query_room_map_symbol(), "%^MAGENTA%^1%^RESET%^"),
         assert_equal($(item2)->handle_move(testOb), 1),
-        assert_equal(testOb->query_room_map_symbol(), "%^MAGENTA%^BOLD%^2%^RESET%^"),
+        assert_equal(testOb->query_room_map_symbol(), "%^MAGENTA%^2%^RESET%^"),
 
         // @TODO test passive NPC
 

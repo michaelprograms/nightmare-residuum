@@ -14,7 +14,7 @@ void command (string input, mapping flags) {
 
     border(([
         "title": "TITLE",
-        "subtitle": "%^RED%^BOLD%^Subtitle%^RESET%^",
+        "subtitle": "%^I_RED%^BOLD%^Subtitle%^RESET%^",
     ]));
 
     border(([
