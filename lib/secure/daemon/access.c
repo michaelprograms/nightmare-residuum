@@ -132,7 +132,7 @@ int query_allowed (object caller, string fn, string file, string mode) {
 string query_file_privs (string filename) {
     string *path, result = 0;
     if (sizeof(path = explode(filename, "/")) > 0) {
-        switch(path[0]) {
+        switch (path[0]) {
             case "cmd":
                 result = ACCESS_CMD; // @TODO necessary?
                 break;

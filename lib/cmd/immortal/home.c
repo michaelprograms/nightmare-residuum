@@ -8,11 +8,10 @@ void create () {
 
 void command (string input, mapping flags) {
     if (!input) {
-        input = "/realm/" + this_character()->query_key_name() + "/workroom.c";
-    } else {
-        input = "/realm/" + input + "/workroom.c";
+        input = this_character()->query_key_name();
     }
-    if(file_size(input) < 1) {
+    input = "/realm/" + input + "/workroom.c";
+    if (file_size(input) < 1) {
         message("action", "home: "+input+" not found.", this_character());
         return;
     }

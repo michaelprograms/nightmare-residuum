@@ -18,7 +18,7 @@ string query_gender () {
     return __Gender;
 }
 void set_gender (string str) {
-    switch(str) {
+    switch (str) {
     case "male": case "female": case "neither":
         __Gender = str;
         break;

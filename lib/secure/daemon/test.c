@@ -131,7 +131,7 @@ void process_file (string file, mapping options) {
     __Lines = ([ ]);
     __RawLines = ({ });
 
-    if(mapp(options)) {
+    if (mapp(options)) {
         __Options += options;
     }
 

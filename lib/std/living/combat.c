@@ -243,7 +243,7 @@ protected void handle_combat () {
             }
             sum = min(({ 100.0, sum + m["value"], }));
             if (d100 <= sum) {
-                switch(m["id"]) {
+                switch (m["id"]) {
                 case "miss":
                     handle_combat_miss(target, element_of(weapons));
                     break;

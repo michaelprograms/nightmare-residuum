@@ -5,9 +5,9 @@ Abcdef     #####  ##.##%   #####  ##.##%   #####  ##.##%   #####  ##.##%
 void format_line(string type, int files, int clones, int leaks, int num, int totalAll) {
     string result = sprintf("%8s", type) + "   ";
     result += sprintf("%5d  %5.2f", files, (files * 100.0 / totalAll)) + "%   ";
-    if(clones > -1) result += sprintf("%5d  %5.2f", clones, (clones * 100.0 / totalAll)) + "%   ";
+    if (clones > -1) result += sprintf("%5d  %5.2f", clones, (clones * 100.0 / totalAll)) + "%   ";
     else result += "                ";
-    if(leaks > -1) result += sprintf("%5d  %5.2f", leaks, (leaks * 100.0 / totalAll)) + "%   ";
+    if (leaks > -1) result += sprintf("%5d  %5.2f", leaks, (leaks * 100.0 / totalAll)) + "%   ";
     else result += "                ";
     result += sprintf("%5d %6.2f", num, (num * 100.0 / totalAll)) + "%";
     write(result + "\n");

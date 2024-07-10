@@ -19,8 +19,8 @@ void command (string input, mapping flags) {
 
     xtermColors = filter(xtermColors, (: !regexp($1, "^B_") :));
     xtermColors = sort_array(xtermColors, function(string a, string b) {
-        if(regexp(a, "[0-9]") && !regexp(b, "[0-9]")) return 1;
-        if(!regexp(a, "[0-9]") && regexp(b, "[0-9]")) return -1;
+        if (regexp(a, "[0-9]") && !regexp(b, "[0-9]")) return 1;
+        if (!regexp(a, "[0-9]") && regexp(b, "[0-9]")) return -1;
         return strcmp(a, b);
     });
     xtermColors = xtermColors[0..<25] + ({ " ", " ", " ", " ", " ", " ", " ", " " }) + xtermColors[<24..];

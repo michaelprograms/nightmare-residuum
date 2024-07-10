@@ -24,7 +24,7 @@ void command (string input, mapping flags) {
                     Y = y;
                     Z = 5 - z;
                 }
-                if(y == 0) write(x+" "+y+" "+z+" -> " + x+" "+Y+" "+Z + " "+sprintf("%%^B_%c%c%c%%^  ", 'A' + x, 'A' + y, 'A' + z)+"%^RESET%^\n");
+                if (y == 0) write(x+" "+y+" "+z+" -> " + x+" "+Y+" "+Z + " "+sprintf("%%^B_%c%c%c%%^  ", 'A' + x, 'A' + y, 'A' + z)+"%^RESET%^\n");
                 // write(sprintf("%c", 'A' + x)+"\n");
                 line += sprintf("%%^B_%c%c%c%%^  ", 'A' + X, 'A' + Y, 'A' + Z);
             }

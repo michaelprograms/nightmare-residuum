@@ -112,12 +112,12 @@ private mixed json_decode_object () {
         }
         key = json_decode_string(0);
         found_sep = 0;
-        while(!found_sep) {
+        while (!found_sep) {
             int ch = parseText[parsePos];
             switch (ch) {
             case 0:
                 error("Unexpected end of data in json_decode_object");
-            case ':'    :
+            case ':':
                 found_sep = 1;
                 parsePos ++;
                 parseChar ++;
@@ -131,13 +131,13 @@ private mixed json_decode_object () {
                 parseLine ++;
                 parseChar = 1;
                 break;
-            default     :
+            default:
                 error("Unexpected character in json_decode_object: " + sprintf("%c", ch));
             }
         }
         value = json_decode_value();
         found_comma = 0;
-        while(!found_comma && !done) {
+        while (!found_comma && !done) {
             int ch = parseText[parsePos];
             switch (ch) {
             case 0:

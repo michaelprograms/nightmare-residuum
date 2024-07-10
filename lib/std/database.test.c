@@ -40,7 +40,7 @@ void test_connect () {
         assert_equal(testOb->query_handle(), 0),
     }) :));
 
-    if(file_size("/save/test/database.db")) {
+    if (file_size("/save/test/database.db")) {
         rm("/save/test/database.db");
     }
 }
