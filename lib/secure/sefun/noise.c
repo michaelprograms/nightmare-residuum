@@ -97,7 +97,7 @@ float noise_perlin_fade (float t) {
 }
 // Source: http://riven8192.blogspot.com/2010/08/calculate-perlinnoise-twice-as-fast.html
 float noise_perlin_grad (int hash, float x, float y, float z) {
-    switch(hash & 0xF) {
+    switch (hash & 0xF) {
         case 0x0: return  x + y;
         case 0x1: return -x + y;
         case 0x2: return  x - y;
