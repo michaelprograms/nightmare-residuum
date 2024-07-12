@@ -86,7 +86,7 @@ void done_test (mapping results) {
         __Results["untestedFns"] += results["untestedFns"];
         __Results["passingAsserts"] += results["passingAsserts"];
         __Results["failingAsserts"] += results["failingAsserts"];
-        if (strlen(results["failLog"]) > 0) {
+        if (sizeof(results["failLog"]) > 0) {
             __Results["failLog"] += ({ results["failLog"] });
         }
         hitLines = sizeof(query_hit_lines());
