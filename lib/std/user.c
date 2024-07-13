@@ -19,6 +19,7 @@ nosave private mapping __Terminal = ([
     "encoding": "unknown",
     "color": "256",
     "client": "unknown",
+    "version": "unknown",
 ]);
 
 void receive_message (string type, string message);
@@ -64,14 +65,15 @@ void terminal_type (string term) {
 
 void receive_environ (string key, string value) {
     switch (key) {
-        case "IPADDRESS":
-            __Terminal["ip"] = value + " (" + __Terminal["ip"] + ")";
-            break;
-        case "CLIENT_NAME":
-            __Terminal["client"] = value;
-            break;
-        // case "CLIENT_VERSION":
-        //     break;
+    case "IPADDRESS":
+        __Terminal["ip"] = value + " (" + __Terminal["ip"] + ")";
+        break;
+    case "CLIENT_NAME":
+        __Terminal["client"] = value;
+        break;
+    case "CLIENT_VERSION":
+        __Terminal["version"] = replace_string(value, "/", ".");
+        break;
     }
 }
 
