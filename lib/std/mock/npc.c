@@ -11,7 +11,6 @@ mixed *__ReceivedMessages = ({ });
 mixed *query_received_messages () {
     return __ReceivedMessages;
 }
-
 // override from /std/npc.c
 void receive_message (string type, string message) {
     __ReceivedMessages += ({ ({ type, message }) });
