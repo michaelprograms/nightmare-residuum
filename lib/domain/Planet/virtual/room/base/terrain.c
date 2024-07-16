@@ -15,67 +15,68 @@ void update_descriptions () {
 
     switch (biome) {
         case "frozen water":
-            set_long("Surrounded by frozen water.");
+            set_long("The surroundings are a vast, icy expanse of frozen water. The surface is slick and treacherous, reflecting the cold light of the sky.");
             set_property("water", 1);
             set_property("go", 4);
+            break;
         case "icy water":
-            set_long("Surrounded by icy water.");
+            set_long("The area is filled with icy water, with chunks of ice floating around. The water is frigid, and the cold bites at the skin.");
             set_property("water", 1);
             set_property("go", 4);
             break;
         case "deeper water":
-            set_long("Surrounded by deeper water.");
+            set_long("The water here is deep and dark, hinting at unknown depths below. Strong currents make it harder to stay afloat.");
             set_property("water", 3);
             set_property("go", 5);
             break;
         case "deep water":
-            set_long("Surrounded by deep water.");
+            set_long("The surroundings consist of deep water, with a sense of vastness beneath. The depth makes it difficult to see what lies below the surface.");
             set_property("water", 2);
             set_property("go", 4);
             break;
         case "shallow water":
-            set_long("Surrounded by water.");
+            set_long("Shallow water covers the area, with the ground easily visible beneath. The water is calm and only reaches up to knee height.");
             set_property("water", 1);
             set_property("go", 3);
             break;
         case "ice":
-            set_long("Surrounded by ice.");
+            set_long("The landscape is covered in ice, with frozen ground stretching out in all directions. The air is crisp and cold, with a biting chill.");
             set_property("go", 3);
             break;
         case "tundra":
-            set_long("Surrounded by tundra.");
+            set_long("A tundra surrounds the area, a flat and treeless plain with sparse vegetation. The ground is covered in a mix of moss and small shrubs, and the air is cold and dry.");
             set_property("go", 2);
             break;
         case "grassland":
-            set_long("Surrounded by grassland.");
+            set_long("Grassland stretches out in all directions, with tall grasses swaying in the wind. The open expanse is dotted with wildflowers and small animals.");
             set_property("go", 1);
             break;
         case "woodland":
-            set_long("Surrounded by woodland.");
+            set_long("The area is a woodland, surrounded by trees and underbrush. The forest floor is covered in leaves, and the canopy above provides dappled shade.");
             set_property("go", 1);
             break;
         case "boreal forest":
-            set_long("Surrounded by boreal forest.");
+            set_long("A boreal forest surrounds the area, characterized by dense coniferous trees. The air is cool, and the forest floor is covered in a thick layer of needles and moss.");
             set_property("go", 2);
             break;
         case "desert":
-            set_long("Surrounded by desert.");
+            set_long("The landscape is a desert, with vast stretches of sand and sparse vegetation. The sun is scorching, and the area is dotted with cacti and hardy shrubs.");
             set_property("go", 2);
             break;
         case "seasonal forest":
-            set_long("Surrounded by seasonal forest.");
+            set_long("The surroundings are a seasonal forest, where the foliage changes with the seasons. The forest is rich with diverse plant life and vibrant colors during different times of the year.");
             set_property("go", 1);
             break;
         case "temperate rainforest":
-            set_long("Surrounded by temperate rainforest.");
+            set_long("The area is a temperate rainforest, with lush vegetation and a canopy of towering trees. The air is humid and the forest floor is covered in ferns and moss.");
             set_property("go", 4);
             break;
         case "savanna":
-            set_long("Surrounded by savanna.");
+            set_long("The savanna stretches out, characterized by a mix of grassland and scattered trees. The environment is warm, with an open landscape that supports a variety of wildlife.");
             set_property("go", 2);
             break;
         case "tropical rainforest":
-            set_long("Surrounded by tropical rainforest.");
+            set_long("A tropical rainforest surrounds the area, with dense vegetation and a canopy that blocks out much of the sunlight. The air is warm and humid, and the forest teems with exotic wildlife.");
             set_property("go", 4);
             break;
         default:
