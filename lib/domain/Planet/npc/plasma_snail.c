@@ -9,7 +9,7 @@ string *colors = ({
 void create() {
     string plasmaSnail = "";
     foreach (string s in ({"p","l","a","s","m","a"," ","s","n","a","i","l"})) {
-        plasmaSnail += element_of(PLASMA_COLORS) + s;
+        plasmaSnail += element_of(colors) + s;
     }
     plasmaSnail += "%^DEFAULT%^";
     ::create();
