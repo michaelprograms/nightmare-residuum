@@ -178,7 +178,7 @@ private void handle_combat_hit (object target, mixed weapon, int crit) {
 
     display_combat_message(this_object(), target, limb, weapon, type, damage, crit, 0);
     if (damage > 0) {
-        target->handle_damage(damage, limb, this_object());
+        target->handle_damage(damage, limb);
     }
 }
 

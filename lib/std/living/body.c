@@ -143,8 +143,7 @@ void handle_limb_heal (string limb, int n) {
 
 /* ----- damage ----- */
 
-// @TODO source is not used for anything
-varargs int handle_damage (int damage, string limb, object source) {
+varargs int handle_damage (int damage, string limb) {
     int beforeHp;
 
     if (!this_object()) {
