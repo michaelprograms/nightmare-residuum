@@ -32,6 +32,8 @@ void test_json_encode () {
         assert_equal(testOb->json_encode(this_object()), "null"),
         assert_equal(testOb->json_encode(({ this_object() })), "[null]"),
         assert_equal(testOb->json_encode(({ this_object(), this_object() })), "[null,null]"),
+
+        assert_equal(testOb->json_encode("🤔"), "\"🤔\""),
     }) :));
 }
 
@@ -56,5 +58,6 @@ void test_json_decode () {
         assert_equal(testOb->json_decode("{\"1\":\"a\",\"2\":\"b\",\"3\":\"c\"}"), ([ "1": "a", "2": "b", "3": "c" ])),
 
         assert_equal(testOb->json_decode("\"\\ud83d\\ude04\""), "😄"),
+        assert_equal(testOb->json_decode("\"🤔\""), "🤔"),
     }) :));
 }
