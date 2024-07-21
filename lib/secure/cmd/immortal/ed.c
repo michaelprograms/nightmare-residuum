@@ -23,8 +23,12 @@ void command (string input, mapping flags) {
     file = absolute_path(input, cwd);
 
     if (objectp(__Locks[file])) {
-        write("ed: " + file + " locked by " + __Locks[file]->query_name() + ".\n");
-        return;
+        if (interactive(__Locks[file])) {
+            write("ed: " + file + " locked by " + __Locks[file]->query_name() + ".\n");
+            return;
+        } else {
+            __Locks[file] = 0;
+        }
     }
 
     switch (size = file_size(file)) {
@@ -40,6 +44,5 @@ void command (string input, mapping flags) {
     }
 
     __Locks[file] = this_character();
-
     new("/secure/std/editor.c")->editor_start(file, (: unlock($(file)) :));
 }
