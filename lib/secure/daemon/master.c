@@ -278,16 +278,6 @@ void log_error (string file, string msg) {
 
 // --- ed applies --------------------------------------------------------------
 
-// get_save_file_name
-/*
-    This  master apply is called by ed() when a player disconnects while in
-    the editor and editing a file.  This function should return  an  alter‐
-    nate file name for the file to be saved, to avoid overwriting the orig‐
-    inal.
-
-    string get_save_file_name(string filename?);
-*/
-
 // This apply is called by the ed efun to resolve path names.
 string make_path_absolute (string rel_path) {
     return sanitize_path(rel_path);
