@@ -16,7 +16,4 @@ void create () {
         "chamber": "This chamber is an open room but not quite as large as the rest of the building.",
         ({ "archway", "hallway", }): "Hallway leading north-south and west-east are visible on the other sides of the archways in the stone walls to the east and south.",
     ]));
-    set_reset(([
-
-    ]));
 }
