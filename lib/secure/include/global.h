@@ -42,7 +42,6 @@
 #define M_LEVELABLE     "/std/module/levelable.c"
 #define M_LOOK          "/std/module/look.c"
 #define M_MOVE          "/std/module/move.c"
-#define M_PARENT        "/std/module/parent.c"
 #define M_PARSE         "/std/module/parse.c"
 #define M_PICKABLE      "/std/module/pickable.c"
 #define M_PROPERTY      "/std/module/property.c"
