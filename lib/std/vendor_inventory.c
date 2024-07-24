@@ -1,9 +1,13 @@
 inherit M_CLEAN;
 inherit M_CONTAINER;
-inherit M_PARENT;
 inherit M_RESET;
+inherit M_MOVE;
 
 nosave private int __MaxItems = 0;
+
+int is_vendor_inventory () {
+    return 1;
+}
 
 int query_max_items () {
     return __MaxItems;
@@ -22,7 +26,6 @@ int handle_receive (object ob) {
 }
 
 void create () {
-    parent::create();
     reset::create();
 }
 

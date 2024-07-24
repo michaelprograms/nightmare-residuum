@@ -32,7 +32,7 @@ private mapping format_data (object ob) {
         contents += ({ ob->query_user() });
     }
     if (ob->is_vendor()) {
-        contents += ob->query_vendor_inventory();
+        contents += filter(all_inventory(ob), (: $1->is_vendor_inventory() :));
     }
     if (ob->query_contents()) {
         contents += ob->query_contents();

@@ -1,6 +1,14 @@
 #include <verb.h>
 
 inherit M_TEST;
+inherit M_CONTAINER;
+
+void test_is_vendor_inventory () {
+    expect("is_item returns true", (: ({
+        assert_equal(testOb->is_vendor_inventory(), 1),
+        assert_equal(testOb->is_item(), 0),
+    }) :));
+}
 
 void test_receive () {
     object living, item;
@@ -44,4 +52,12 @@ void test_max_items () {
 
     if (item1) destruct(item1);
     if (item2) destruct(item2);
+}
+
+void test_clean_up () {
+    expect("clean up behaves", (: ({
+        assert_equal($(testOb)->handle_move(this_object()), 1),
+        assert_equal($(testOb)->clean_up(), 0),
+        assert_equal($(testOb)->handle_remove(), 1),
+    }) :));
 }

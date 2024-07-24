@@ -14,7 +14,7 @@ object query_vendor_inventory () {
 
 void set_max_items (int n) {
     if (__VendorInventory) {
-        return __VendorInventory->set_max_items(n);
+        __VendorInventory->set_max_items(n);
     }
 }
 
@@ -132,8 +132,8 @@ void handle_sell (object item, object po) {
 void create () {
     ::create();
     if (clonep()) {
-        // create vendor inventor
         __VendorInventory = new("/std/vendor_inventory.c");
+        __VendorInventory->handle_move(this_object());
     }
 }
 
