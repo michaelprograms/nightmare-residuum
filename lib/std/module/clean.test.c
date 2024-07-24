@@ -58,24 +58,13 @@ void test_clean_up () {
         assert_equal(objectp(testOb), 0),
     }) :));
 }
-void test_clean_up_with_environment () {
+
+void test_clean_up_item_with_environment () {
     object item = new(STD_ITEM);
-    expect("clean up with environment behaves", (: ({
+    expect("clean up item with environment behaves", (: ({
         assert_equal($(item)->handle_move(this_object()), 1),
         assert_equal($(item)->clean_up(), 0),
         assert_equal($(item)->handle_remove(), 1),
     }) :));
-}
-
-void test_clean_up_with_parent () {
-    object vi = new("/std/vendor_inventory.c");
-
-    expect("clean up with parent behaves", (: ({
-        assert_equal($(vi)->query_parent(), this_object()),
-        $(vi)->set_no_clean(0),
-        assert_equal($(vi)->query_no_clean(), 0),
-        assert_equal($(vi)->clean_up(), 1),
-        assert_equal($(vi)->handle_remove(), 1),
-    }) :));
-
+    if (item) destruct(item);
 }

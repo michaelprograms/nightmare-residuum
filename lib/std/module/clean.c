@@ -29,18 +29,13 @@ int handle_remove () {
 // Be wary of calling functions in other objects in clean_up, which may cause
 // that object's clean_up timer to be reset.
 int clean_up (mixed *args...) {
-    // Once an object has an environment it can never lose it. Defer clean_up
-    // to the object's environment.
+    // Objects never lose environment, let environment handle clean_up
     if (environment()) {
         return clean_never();
     }
-    // Objects (mainly rooms or containers) can be flagged to never clean.
+    // Objects (mainly rooms or containers) can be flagged to never clean
     if (__NoClean) {
         return clean_never();
-    }
-    // @TODO deprecrate this
-    if (this_object()->query_parent()) {
-        return clean_later();
     }
     return handle_remove();
 }
