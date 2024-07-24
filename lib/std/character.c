@@ -1,5 +1,4 @@
 inherit STD_LIVING;
-inherit M_PARENT;
 inherit M_PROPERTY;
 inherit M_SAVE;
 
@@ -78,7 +77,6 @@ void restore_character () {
 
 void create () {
     living::create();
-    parent::create();
     autoload::create();
 }
 

@@ -88,7 +88,6 @@ nomask void character_override (object char) {
     __Character = char;
     if (char->query_user())
     __Character->set_user(this_object());
-    __Character->set_parent(this_object());
 
     this_object()->shell_start();
     __Character->enter_world(1);
