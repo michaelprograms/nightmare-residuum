@@ -10,15 +10,8 @@ void create () {
     set_exits(([
         "north": HUMAN_ROOM + "museum_2_n1.c",
         "west": HUMAN_ROOM + "museum_2_w1.c",
+        "down": HUMAN_ROOM + "museum_1.c",
     ]));
-    set_exit("down", HUMAN_ROOM + "museum_1.c", function(object po, string dir) {
-        // object ob = present("museum attendant");
-        // if (po->is_character() && !po->query_achievement("human_museum")) {
-        //     ob->handle_command("say " + po->query_cap_name() + ", one as young as yourself should really look through the rest of this museum. You are nearly done.");
-        //     return 0;
-        // }
-        return 1;
-    });
     set_looks(([
         ({ "building", "ceiling", "walls" }): "A building of large proportions. The lobby is a large room with high ceilings and distant walls.",
         "floor": "The floor is a polished white stone in large blocks.",
