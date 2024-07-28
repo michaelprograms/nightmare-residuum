@@ -58,10 +58,8 @@ nomask void logon () {
 
 void terminal_type (string term) {
     D_LOG->log_unique("term", term);
-
     term = lower_case(explode(term, " ")[0]);
     __Terminal["type"] = term;
-
     if (member_array(term, ({ "cmud", "zmud", })) > -1) {
         // set_encoding("US-ASCII"); // @TODO currently not working
         __Terminal["color"] = "16";
@@ -125,22 +123,6 @@ mixed query_terminal (string key) {
 void set_terminal (string key, mixed value) {
     initialize_terminal();
     __Terminal[key] = value;
-}
-
-string query_terminal_type () {
-    initialize_terminal();
-    return __Terminal["type"];
-}
-string query_terminal_color () {
-    initialize_terminal();
-    return __Terminal["color"];
-}
-void set_terminal_color (string color) {
-    initialize_terminal();
-    if (color != "256" && color != "16") {
-        return;
-    }
-    __Terminal["color"] = color;
 }
 
 nomask varargs void quit_character (int destructing) {

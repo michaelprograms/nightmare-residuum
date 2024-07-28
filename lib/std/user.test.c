@@ -20,4 +20,22 @@ void test_terminal () {
         assert_equal(testOb->query_terminal("width"), 60),
         assert_equal(testOb->query_terminal("height"), 30),
     }) :));
+    expect("receive_environ adjusts terminal", (: ({
+        // initial state
+        testOb->set_terminal("ip", "ipaddress1"),
+        testOb->set_terminal("client", "client1"),
+        testOb->set_terminal("version", "version1"),
+        assert_equal(testOb->query_terminal("ip"), "ipaddress1"),
+        assert_equal(testOb->query_terminal("client"), "client1"),
+        assert_equal(testOb->query_terminal("version"), "version1"),
+
+        testOb->receive_environ("IPADDRESS", "ipaddress2"),
+        assert_equal(testOb->query_terminal("ip"), "ipaddress2 (ipaddress1)"),
+
+        testOb->receive_environ("CLIENT_NAME", "client2"),
+        assert_equal(testOb->query_terminal("client"), "client2"),
+
+        testOb->receive_environ("CLIENT_VERSION", "version2"),
+        assert_equal(testOb->query_terminal("version"), "version2"),
+    }) :));
 }
