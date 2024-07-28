@@ -11,22 +11,28 @@ inherit "/std/user/shell.c";
 
 nosave private int calloutConnect;
 
-nosave private mapping __Terminal = ([
-    "ip": 0,
-    "width": 80,
-    "height": 40,
-    "type": 0,
-    "encoding": "unknown",
-    "color": "256",
-    "client": "unknown",
-    "version": "unknown",
-]);
+nosave private mapping __Terminal;
 
 void receive_message (string type, string message);
 nomask varargs void handle_remove (string message);
 
 int is_user () {
     return 1;
+}
+
+private void initialize_terminal () {
+    if (!mapp(__Terminal)) {
+        __Terminal = ([
+            "ip": 0,
+            "width": 80,
+            "height": 40,
+            "type": 0,
+            "encoding": "unknown",
+            "color": "256",
+            "client": "unknown",
+            "version": "unknown",
+        ]);
+    }
 }
 
 nomask void logon_banner () {
@@ -40,6 +46,7 @@ nomask void logon_banner () {
 /* ----- interactive apply ----- */
 
 nomask void logon () {
+    initialize_terminal();
     __Terminal["ip"] = query_ip_number();
     __Terminal["encoding"] = query_encoding();
     D_LOG->log("connect", ctime() + " " + __Terminal["ip"]);
@@ -112,19 +119,24 @@ void receive_message (string type, string message) {
 /* ----- interactive non-apply ----- */
 
 mixed query_terminal (string key) {
+    initialize_terminal();
     return __Terminal[key];
 }
 void set_terminal (string key, mixed value) {
+    initialize_terminal();
     __Terminal[key] = value;
 }
 
 string query_terminal_type () {
+    initialize_terminal();
     return __Terminal["type"];
 }
 string query_terminal_color () {
+    initialize_terminal();
     return __Terminal["color"];
 }
 void set_terminal_color (string color) {
+    initialize_terminal();
     if (color != "256" && color != "16") {
         return;
     }
