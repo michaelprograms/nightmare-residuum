@@ -14,7 +14,7 @@ string query_banner () {
     string text = "\e[0;37;40m"; // start with ANSI reset
     string *colors = allocate(6); // left padding
     object tu = SEFUN->this_user();
-    string userColor = tu && tu->query_terminal_color();
+    string userColor = tu && tu->query_terminal("color");
 
     string tmp, dot = " ";
     int pad;

@@ -367,7 +367,7 @@ void border (mapping data) {
     int width = to_int(SEFUN->query_account_setting("width")) || DEFAULT_WIDTH;
     string ansi, *result;
     if (undefinedp(data["ansi"]) && SEFUN->query_account_setting("ansi") == "on") {
-        ansi = this_user()->query_terminal_color();
+        ansi = this_user()->query_terminal("color");
     }
 
     result = format_border(data, b, width, ansi);
