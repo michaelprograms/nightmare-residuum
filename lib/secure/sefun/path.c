@@ -137,3 +137,20 @@ string *wild_card (string path) {
     }
     return match;
 }
+
+string query_file_recursive (string path, string type) {
+    string *dirs;
+    string typePath;
+    int l;
+
+    dirs = explode(path, "/")[0..<2];
+    l = sizeof(dirs);
+
+    while (l --) {
+        typePath = "/" + implode(dirs[0..l], "/") + "/" + type + ".c";
+        if (file_size(typePath) > 0) {
+            return typePath;
+        }
+    }
+    return 0;
+}

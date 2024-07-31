@@ -195,3 +195,11 @@ void test_wild_card () {
         assert_equal(testOb->wild_card("../secure/sefun/path*.c"), ({ "/secure/sefun/path.c", "/secure/sefun/path.coverage.c", "/secure/sefun/path.test.c" })),
     }) :));
 }
+
+void test_query_file_recursive () {
+    expect("query_file_recursive finds files recursively", (: ({
+        assert_equal(testOb->query_file_recursive("/secure/sefun/path.test.c", "path"), "/secure/sefun/path.c"),
+
+        assert_equal(testOb->query_file_recursive("/secure/sefun/path.test.c", "nonexistant"), 0),
+    }) :));
+}
