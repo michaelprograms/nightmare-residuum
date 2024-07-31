@@ -115,9 +115,12 @@ void handle_sell (object item, object po) {
         handle_command("say You don't have an item to sell.");
         return;
     }
+    if (member_array(__VendorTypes, item->query_type()) == -1) {
+        handle_command("say I don't buy " + item->query_type() + " items.");
+        return;
+    }
 
     value = item->query_value() * 50 / 100;
-
     if (!item->handle_move(__VendorInventory)) {
         handle_command("say My shop is full, I can't buy any more items.");
         return;
