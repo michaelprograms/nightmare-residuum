@@ -17,7 +17,7 @@ void create () {
     set_id(({ name, "clone", "attendant", "museum attendant", }));
     set_name(capName);
     set_short(capName + " the museum attendant");
-    set_long("A cloned human by the name of " + capName + ", working as a attendant in the museum.");
+    set_long("A cloned human by the name of " + capName + ", working as an attendant in the museum.");
     set_level(10);
     set_species("human");
     set_gender(element_of(({ "male", "female" })));
