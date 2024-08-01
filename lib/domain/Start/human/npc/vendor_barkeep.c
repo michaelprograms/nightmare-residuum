@@ -15,11 +15,11 @@ void create () {
     set_ability_chance(25);
 
     if (clonep()) {
-        query_vendor_inventory()->set_max_items(20);
         query_vendor_inventory()->set_reset(([
 
         ]));
     }
     set_vendor_types(({ STD_DRINK }));
+    set_vendor_max_items(20);
     set_vendor_currency("copper");
 }

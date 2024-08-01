@@ -39,20 +39,15 @@ void test_vendor_inventory () {
 }
 
 void test_max_items () {
-    object vi;
-
-    // grab reference to vendor inventory
-    vi = testOb->query_vendor_inventory();
-
-    expect("vendor inventory max items behaves", (: ({
+    expect("vendor max items behaves", (: ({
         // verify default max items
-        assert_equal($(vi)->query_max_items(), 0),
+        assert_equal(testOb->query_vendor_max_items(), 0),
         // verify changing max items
-        testOb->set_max_items(10),
-        assert_equal($(vi)->query_max_items(), 10),
+        testOb->set_vendor_max_items(10),
+        assert_equal(testOb->query_vendor_max_items(), 10),
         // verify changing max items
-        testOb->set_max_items(123),
-        assert_equal($(vi)->query_max_items(), 123),
+        testOb->set_vendor_max_items(123),
+        assert_equal(testOb->query_vendor_max_items(), 123),
     }) :));
 }
 

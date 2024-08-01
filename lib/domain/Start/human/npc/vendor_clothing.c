@@ -23,7 +23,6 @@ void create () {
     set_gender(element_of(({ "male", "female" })));
 
     if (clonep()) {
-        query_vendor_inventory()->set_max_items(20);
         query_vendor_inventory()->set_reset(([
             HUMAN_ARMOR + "canvas_shoes.c": 1,
             HUMAN_ARMOR + "cloth_pants.c": 1,
@@ -36,5 +35,6 @@ void create () {
         ]));
     }
     set_vendor_types(({ STD_ARMOR }));
+    set_vendor_max_items(20);
     set_vendor_currency("copper");
 }

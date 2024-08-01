@@ -3,6 +3,7 @@ inherit STD_NPC;
 nosave private object __VendorInventory;
 nosave private string __VendorCurrency;
 nosave private string *__VendorTypes;
+nosave private int __VendorMaxItems = 0;
 
 int is_vendor () {
     return 1;
@@ -12,10 +13,11 @@ object query_vendor_inventory () {
     return __VendorInventory;
 }
 
-void set_max_items (int n) {
-    if (__VendorInventory) {
-        __VendorInventory->set_max_items(n);
-    }
+void set_vendor_max_items (int n) {
+    __VendorMaxItems = n;
+}
+int query_vendor_max_items () {
+    return __VendorMaxItems;
 }
 
 string query_vendor_currency () {
@@ -115,16 +117,15 @@ void handle_sell (object item, object po) {
         handle_command("say You don't have an item to sell.");
         return;
     }
-    if (member_array(__VendorTypes, item->query_type()) == -1) {
+    if (!sizeof(__VendorTypes) || member_array(__VendorTypes, item->query_type()) == -1) {
         handle_command("say I don't buy " + item->query_type() + " items.");
         return;
     }
-
-    value = item->query_value() * 50 / 100;
-    if (!item->handle_move(__VendorInventory)) {
+    if (__VendorInventory->query_item_contents() >= __VendorMaxItems) {
         handle_command("say My shop is full, I can't buy any more items.");
         return;
     }
+    value = item->query_value() * 50 / 100;
     po->add_currency(__VendorCurrency, value);
     message("action", "You sell " + item->query_short() + " for " + value + " " + __VendorCurrency + ".", po);
     message("action", po->query_cap_name() + " sells " + item->query_short() + ".", environment(po), po);

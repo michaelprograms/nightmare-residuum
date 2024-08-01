@@ -23,7 +23,6 @@ void create () {
     set_gender(element_of(({ "male", "female" })));
 
     if (clonep()) {
-        query_vendor_inventory()->set_max_items(20);
         query_vendor_inventory()->set_reset(([
             HUMAN_WEAPON + "bronze_dagger.c": 1,
             HUMAN_WEAPON + "iron_sword.c": 1,
@@ -32,5 +31,6 @@ void create () {
         ]));
     }
     set_vendor_types(({ STD_WEAPON }));
+    set_vendor_max_items(20);
     set_vendor_currency("copper");
 }

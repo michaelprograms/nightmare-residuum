@@ -23,12 +23,12 @@ void create () {
     set_gender(element_of(({ "male", "female" })));
 
     if (clonep()) {
-        query_vendor_inventory()->set_max_items(20);
         query_vendor_inventory()->set_reset(([
             HUMAN_ITEM + "croissant.c": 4,
             HUMAN_ITEM + "tea.c": 4,
         ]));
     }
     set_vendor_types(({ STD_FOOD }));
+    set_vendor_max_items(20);
     set_vendor_currency("copper");
 }
