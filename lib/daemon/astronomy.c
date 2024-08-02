@@ -278,11 +278,12 @@ private void process (int t, string key, mapping a) {
 
     // converting to real time
     now = query_hour(t, a) * 60 + query_minute(t, a);
-    next = a["ALMANAC"][newPhase][0] * 60 + a["ALMANAC"][newPhase][1];
-    total = (next > now ? next - now : next + (1200 - now)) * 20;
-
-    nextPhase = t + total - (t % a["SECONDS_PER_MINUTE"]);
-    a["NEXT_PHASE"] = nextPhase;
+    if (a["ALMANAC"]) {
+        next = a["ALMANAC"][newPhase][0] * 60 + a["ALMANAC"][newPhase][1];
+        total = (next > now ? next - now : next + (1200 - now)) * 20;
+        nextPhase = t + total - (t % a["SECONDS_PER_MINUTE"]);
+        a["NEXT_PHASE"] = nextPhase;
+    }
 }
 
 /* ----- life cycle ----- */
