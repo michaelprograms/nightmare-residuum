@@ -197,36 +197,24 @@ void update_dayphase (int t, mapping a) {
 /* -----  ----- */
 
 mapping query_astronomy_from_room (mixed dest) {
-    string roomPath, dirPath, aPath;
-    string *dirs;
-    int l;
+    string roomPath, aPath;
 
     if (objectp(dest) && dest->is_room()) {
         roomPath = base_name(dest);
     } else if (stringp(dest)) {
-        if (__Astronomy[dest]) return __Astronomy[dest];
         roomPath = dest;
     } else {
         return 0;
     }
-    if (!regexp(roomPath, "^/domain/")) return 0;
-
-    dirs = explode(roomPath, "/")[1..<3];
-    l = sizeof(dirs);
-
-    while (l --) {
-        dirPath = "/domain/" + implode(dirs[0..l], "/");
-
-        // astronomy already loaded
-        if (__Astronomy[dirPath]) return __Astronomy[dirPath];
-
-        // check if astronomy exists
-        if (file_size(aPath = dirPath + "/astronomy.c") > 0) {
-            __Astronomy[dirPath] = aPath->query_astronomy();
-            update_almanac(time(), __Astronomy[dirPath]);
-            update_dayphase(time(), __Astronomy[dirPath]);
-            break;
-        }
+    if (!regexp(roomPath, "^/domain/")) {
+        return 0;
+    }
+    if (__Astronomy[roomPath]) {
+        return __Astronomy[roomPath];
+    }
+    if (aPath = query_file_recursive(roomPath, "astronomy")) {
+        __Astronomy[aPath] = aPath->query_astronomy();
+        return __Astronomy[aPath];
     }
     return 0;
 }
