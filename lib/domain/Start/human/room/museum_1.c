@@ -21,6 +21,6 @@ void create () {
         ({ "hallways", "wings" }): "Two hallways branch off from the main lobby to the north and west, leading to the wings of the building.",
     ]));
     set_reset(([
-        HUMAN_NPC + "museum_attendant.c": 1,
+        HUMAN_NPC + "museum_attendant_entry.c": 1,
     ]));
 }
