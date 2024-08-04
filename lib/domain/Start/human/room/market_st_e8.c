@@ -10,7 +10,7 @@ void create () {
     set_exits(([
         "out west": HUMAN_ROOM + "market_st_e7.c",
     ]));
-    set_exit("out east", "/domain/Planet/virtual/room/surface/Terra/251.251.c", (: $1 && $1->query_wander() ?  0 : 1 :));
+    set_exit("out east", "/domain/Planet/virtual/room/surface/Terra/251.251.c", (: $1 && $1->query_wander() ? 0 : 1 :));
     set_looks(([
         "structure": "A small enclosed space within the dome structure. It allows entry into and out of the dome.",
         "hatch": "There are two hatches here, one to the west and one to the east, allowing entry into and out of the dome.",
