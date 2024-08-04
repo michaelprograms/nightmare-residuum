@@ -55,6 +55,7 @@
 
 // daemons
 #define D_ANSI          "/daemon/ansi.c"
+#define D_ACHIEVEMENTS  "/daemon/achievements.c"
 #define D_ASTRONOMY     "/daemon/astronomy.c"
 #define D_CHANNEL       "/daemon/channel.c"
 #define D_CLASS         "/daemon/class.c"
