@@ -34,7 +34,7 @@ void test_json_encode () {
         assert_equal(testOb->json_encode(({ this_object(), this_object() })), "[null,null]"),
 
         assert_equal(testOb->json_encode("🤔"), "\"🤔\""),
-        assert_equal(testOb->json_encode("\u0079\u0316\u0320\u034D\u0318\u0347\u0357\u030F\u033D\u030E\u035E"), "\"y̖̠͍̘͇͗̏̽̎͞\""),
+        assert_equal(testOb->json_encode("y̖̠͍̘͇͗̏̽̎͞"), "\"\u0079\u0316\u0320\u034D\u0318\u0347\u0357\u030F\u033D\u030E\u035E\""),
     }) :));
 }
 
