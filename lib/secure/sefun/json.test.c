@@ -47,6 +47,7 @@ void test_json_decode () {
         assert_equal(testOb->json_decode("0"), 0),
         assert_equal(testOb->json_decode("123"), 123),
         assert_equal(testOb->json_decode("123.450000"), 123.45),
+        assert_equal(testOb->json_decode("-123"), -123),
         assert_equal(testOb->json_decode("0e0"), 0.0),
         assert_equal(testOb->json_decode("0E12328"), 0.0),
 
