@@ -8,8 +8,8 @@ void test_json_encode () {
         assert_equal(testOb->json_encode(123.45), "123.450000"),
 
         assert_equal(testOb->json_encode("String"), "\"String\""),
-        assert_equal(testOb->json_encode("\\"), "\"\\\\\""),
-        assert_equal(testOb->json_encode("\\\""), "\"\\\"\""),
+        assert_equal(testOb->json_encode("\\"), "\"\\\""),
+        assert_equal(testOb->json_encode("\\\""), "\"\\\\\\\"\""),
 
         assert_equal(testOb->json_encode("\b"), "\"\\b\""),
         assert_equal(testOb->json_encode("\n"), "\"\\n\""),

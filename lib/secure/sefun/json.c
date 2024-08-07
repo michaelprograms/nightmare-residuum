@@ -4,18 +4,40 @@ varargs string json_encode (mixed value) {
     int i = 0, l = 0;
 
     if (undefinedp(value)) {
-        return "null";
+        out = "null";
     } else if (intp(value) || floatp(value)) {
-        return "" + value;
+        out = "" + value;
+    } else if (arrayp(value)) {
+        if (l = sizeof(value)) {
+            for (i = 0; i < l; i ++) {
+                out += (!i ? "" : ",") + json_encode(value[i]);
+            }
+            out = "[" + (sizeof(out) ? out : "") + "]";
+        } else {
+            out = "[]";
+        }
+    } else if (mapp(value)) {
+        tmp = keys(value);
+        l = sizeof(tmp);
+        for (i = 0; i < l; i ++) {
+            if (!stringp(tmp[i])) {
+                continue;
+            }
+            out += (i > 0 && sizeof(out) ? "," : "") + json_encode(tmp[i]) + ":" + json_encode(value[tmp[i]]);
+        }
+        out = "{" + (sizeof(out) ? out : "") + "}";
     } else if (stringp(value)) {
         out = value;
+        if (strsrch(out, '"') > -1) {
+            out = replace_string(out, "\"", "\\\"");
+        }
+        out = "\"" + out + "\"";
         if (strsrch(out, '\\') > -1) {
             out = replace_string(out, "\\", "\\\\");
             if (strsrch(out, "\\\"") > -1) {
                 out = replace_string(out, "\\\"", "\"");
             }
         }
-        out = "\"" + out + "\"";
         if (strsrch(out, '\b') > -1) {
             out = replace_string(out, "\b", "\\b");
         }
@@ -34,31 +56,10 @@ varargs string json_encode (mixed value) {
         if (member_array(0x1b, out) > -1) {
             out = replace_string(out, "\x1b", "\\u001b");
         }
-        return out;
-    }
-    if (arrayp(value)) {
-        if (l = sizeof(value)) {
-            for (i = 0; i < l; i ++) {
-                out += (!i ? "" : ",") + json_encode(value[i]);
-            }
-            return "[" + (sizeof(out) ? out : "") + "]";
-        } else {
-            return "[]";
-        }
-    } else if (mapp(value)) {
-        tmp = keys(value);
-        if (l = sizeof(tmp)) {
-            for (i = 0; i < l; i ++) {
-                if (!stringp(tmp[i])) {
-                    continue;
-                }
-                out += (i > 0 && sizeof(out) ? "," : "") + json_encode(tmp[i]) + ":" + json_encode(value[tmp[i]]);
-            }
-        }
-        return "{" + (sizeof(out) ? out : "") + "}";
     } else {
-        return "null";
+        out = "null";
     }
+    return out;
 }
 
 private buffer parseText;
