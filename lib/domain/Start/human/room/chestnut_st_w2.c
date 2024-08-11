@@ -11,7 +11,7 @@ void create () {
         "west": HUMAN_ROOM + "park_nw.c",
     ]));
     set_looks(([
-        "street": "A village street labeled W Chestnut St.",
+        "street": "A street sign is labeled W. Chestnut St.",
         ({ "framework", "hexagons"}): "Far above, the hexagons form a geodesic dome.",
     ]));
 }

@@ -17,7 +17,7 @@ void create () {
         ({ "birch", "trees" }): "Birch trees of various ages branch over the plaza's perimeter.",
         ({ "framework", "hexagons"}): "Far above, the hexagons form a geodesic dome.",
         "streets": "The streets Broad and Market meet and cross here.",
-        ({ "street", "streets" }): "Street signs located around the plaza in the cardinal directions of north, east, south, and west labeled N. Broad St., E. Market St., S. Broad St., and W. Market St. respectfully",
+        ({ "street", "streets" }): "Street signs are labeled Broad St, Market St, and Parkway.",
     ]));
     set_exits(([
         "northwest": HUMAN_ROOM + "parkway_1.c",

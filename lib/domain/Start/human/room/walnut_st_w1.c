@@ -13,7 +13,7 @@ void create () {
         "enter north": HUMAN_ROOM + "intro_warrior.c",
     ]));
     set_looks(([
-        "street": "A village street labeled W Walnut St.",
+        "street": "A street sign is labeled W. Walnut St.",
         "building": "The building looks to be a warrior hall.",
         ({ "framework", "hexagons"}): "Far above, the hexagons form a geodesic dome.",
     ]));

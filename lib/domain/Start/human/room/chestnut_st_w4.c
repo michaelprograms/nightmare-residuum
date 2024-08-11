@@ -11,7 +11,7 @@ void create () {
         "east": HUMAN_ROOM + "park_nw.c",
     ]));
     set_looks(([
-        "street": "A village street labeled W Chestnut St.",
+        "street": "A street sign is labeled W. Chestnut St.",
         "building": "A large marble building that takes spans the width of the street block. It looks to be a couple stories tall with an ornate crowning around the roof line. Some windows are spaced out along the side of the building. Columns span the entranceway.",
         ({ "framework", "hexagons"}): "Far above, the hexagons form a geodesic dome.",
     ]));
