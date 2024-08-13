@@ -10,6 +10,9 @@
 # Personal Files
 /lib/realm
 
+# Backup Archives
+/backup
+
 # Log Files
 /lib/log
 

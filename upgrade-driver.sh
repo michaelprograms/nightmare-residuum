@@ -18,9 +18,9 @@ git pull
 updateVersion=$(git log -1 --format="%at" | xargs -I{} date -d @{} +%Y-%m-%d\ %H:%M:%S)
 
 if [[ "$currentVersion" == "$updateVersion" ]]; then
-  echo "Fluffos driver already on the latest version of ${currentVersion}"
+  echo "FluffOS driver already on the latest version of ${currentVersion}"
 else
-  echo "Fluffos driver updated from ${currentVersion} to ${updateVersion}"
+  echo "FluffOS driver updated from ${currentVersion} to ${updateVersion}"
 fi
 
 cd ..
