@@ -4,13 +4,35 @@ nosave private string *__AbilityList = ({ });
 nosave private int __AbilityChance = 0;
 nosave private int __Aggressive;
 nosave private int __Wander = 0, __Wanders = 0, __NextWander = 0, __Wandering = 0;
+nosave private mapping __SayResponse = ([ ]);
 
 int is_npc () {
     return 1;
 }
 
-void receive_message (string type, string message) {
+void set_say_response (string match, string response) {
+    __SayResponse[match] = response;
+}
+mapping query_say_response () {
+    return __SayResponse;
+}
 
+void handle_say_response (string message) {
+    foreach (string match, string response in __SayResponse) {
+        if (regexp(message, match)) {
+            handle_command("say " + response);
+            return;
+        }
+    }
+}
+
+void receive_message (string type, string message) {
+    if (type == "say") {
+        if (regexp(message, "You say:")) {
+            return;
+        }
+        handle_say_response(message);
+    }
 }
 
 void set_level (int l) {

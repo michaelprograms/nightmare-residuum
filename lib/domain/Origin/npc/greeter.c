@@ -10,7 +10,6 @@ void create () {
 }
 
 string *names = ({ });
-
 void handle_receive_living_in_env (object living) {
     string name;
     ::handle_receive_living_in_env(living);
