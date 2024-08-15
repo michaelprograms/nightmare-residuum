@@ -20,7 +20,6 @@ void create () {
     set_long("A cloned human by the name of " + capName + ", working as the clothing vendor.");
     set_level(10);
     set_species("human");
-    set_gender(element_of(({ "male", "female" })));
 
     if (clonep()) {
         query_vendor_inventory()->set_reset(([
