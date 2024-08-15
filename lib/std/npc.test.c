@@ -201,3 +201,12 @@ void test_abilities () {
 
     if (mockLiving) destruct(mockLiving);
 }
+
+void test_say_response () {
+    expect("say responses should be handled", (: ({
+        assert_equal(testOb->query_say_response(), ([ ])),
+
+        testOb->set_say_response("match", "response"),
+        assert_equal(testOb->query_say_response(), ([ "match": "response" ])),
+    }) :));
+}
