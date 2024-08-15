@@ -25,6 +25,7 @@ void create () {
         "east": HUMAN_ROOM + "market_st_e1.c",
         "south": HUMAN_ROOM + "broad_st_s1.c",
         "west": HUMAN_ROOM + "market_st_w1.c",
+        "enter obelisk": HUMAN_ROOM + "square_obelisk.c",
     ]));
     set_reset(([
         HUMAN_ITEM + "obelisk.c": 1,
