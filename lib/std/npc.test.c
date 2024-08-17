@@ -203,10 +203,38 @@ void test_abilities () {
 }
 
 void test_say_response () {
+    object mockLiving = new("/std/mock/living.c");
+    object living = new(STD_LIVING);
+    object room = new(STD_ROOM);
+
     expect("say responses should be handled", (: ({
+        assert_equal($(mockLiving)->start_shadow(testOb), 1),
+
         assert_equal(testOb->query_say_response(), ([ ])),
 
         testOb->set_say_response("match", "response"),
         assert_equal(testOb->query_say_response(), ([ "match": "response" ])),
+        // nothing commanded
+        assert_equal(testOb->query_received_commands(), ({ })),
+
+        testOb->handle_say_response("something unrelated"),
+        // nothing commanded still
+        assert_equal(testOb->query_received_commands(), ({ })),
+
+        testOb->handle_say_response("match"),
+        // say response was commanded
+        assert_equal(testOb->query_received_commands(), ({ "say response" })),
+
+        // test living in environment
+        assert_equal(testOb->handle_move($(room)), 1),
+        assert_equal($(living)->handle_move($(room)), 1),
+        // won't match off itself
+        testOb->receive_message("say", "You say: match"),
+        assert_equal(testOb->query_received_commands(), ({ "say response" })),
+        // matches off another living
+        $(living)->handle_command("say match"),
+        assert_equal(testOb->query_received_commands(), ({ "say response", "say response" })),
     }) :));
+    if (living) destruct(living);
+    if (room) destruct(room);
 }

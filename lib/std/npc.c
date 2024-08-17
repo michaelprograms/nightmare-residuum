@@ -20,7 +20,7 @@ mapping query_say_response () {
 void handle_say_response (string message) {
     foreach (string match, string response in __SayResponse) {
         if (regexp(message, match)) {
-            handle_command("say " + response);
+            this_object()->handle_command("say " + response);
             return;
         }
     }
