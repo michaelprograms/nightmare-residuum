@@ -229,7 +229,10 @@ void test_say_response () {
         assert_equal(testOb->handle_move($(room)), 1),
         assert_equal($(living)->handle_move($(room)), 1),
         // won't match off itself
+        testOb->receive_message("say", "You ask: match?"),
+        testOb->receive_message("say", "You exclaim: match!"),
         testOb->receive_message("say", "You say: match"),
+        testOb->receive_message("say", "You synthesize: match"),
         assert_equal(testOb->query_received_commands(), ({ "say response" })),
         // matches off another living
         $(living)->handle_command("say match"),

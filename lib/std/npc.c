@@ -28,7 +28,7 @@ void handle_say_response (string message) {
 
 void receive_message (string type, string message) {
     if (type == "say") {
-        if (regexp(message, "You say:")) {
+        if (regexp(message, "^You (ask|exclaim|synthesize|say):")) {
             return;
         }
         handle_say_response(message);
