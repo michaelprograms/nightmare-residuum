@@ -214,6 +214,7 @@ void test_say_response () {
 
         testOb->set_say_response("match", "response"),
         assert_equal(testOb->query_say_response(), ([ "match": "response" ])),
+        assert_equal(testOb->query_say_response_matches(), ({ "match" })),
         // nothing commanded
         assert_equal(testOb->query_received_commands(), ({ })),
 

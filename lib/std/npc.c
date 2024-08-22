@@ -14,7 +14,10 @@ void set_say_response (string match, string response) {
     __SayResponse[match] = response;
 }
 mapping query_say_response () {
-    return __SayResponse;
+    return copy(__SayResponse);
+}
+string *query_say_response_matches () {
+    return keys(__SayResponse);
 }
 
 void handle_say_response (string message) {
