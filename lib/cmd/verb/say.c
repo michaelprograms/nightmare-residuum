@@ -12,6 +12,19 @@ void do_say () {
     write("Say what?\n");
 }
 
+string format_npc_message(object npc, string msg) {
+    int pos, l;
+    foreach (string say in npc->query_say_response_matches()) {
+        pos = strsrch(msg, say);
+        if (pos > 0) {
+            l = sizeof(say);
+            msg = msg[0..pos-1] + "%^UNDERLINE%^" + msg[pos..pos+l-1] + "%^RESET%^" + msg[pos+l..];
+            break;
+        }
+    }
+    return msg;
+}
+
 int can_say_str (mixed args...) { return 1; }
 void do_say_str (mixed args...) {
     object po = previous_object(), *who;
@@ -28,6 +41,10 @@ void do_say_str (mixed args...) {
             else verb = "say";
     }
     who = environment(po)->query_living_contents() - ({ po });
+
+    if (po->is_npc()) {
+        msg = format_npc_message(po, msg);
+    }
 
     myMsg = "You " + verb + ": " + msg;
     yourMsg = po->query_cap_name() + " " + verb + "s: " + msg;

@@ -8,12 +8,12 @@ void create () {
     set_long("A creature seemingly constructed of synthetic components. It consists of a large elongated torso structure supported by four jointed legs, all encased in a scale-like exoskeleton. There are two articulated arms at each end of the structure, almost looking like a type of crustacean. The creature does not seem to have a discernable head or face.");
     set_species("custodian");
 
-    set_say_response("facility", "Circular platforms designated for transport to controlled zones. Utilize western platform for descent to planetary surface.");
+    set_say_response("facility", "Circular platforms designated for transport to controlled zones. Utilize western platform for descent to planet surface.");
     set_say_response("planet", "Observation: Your species demonstrates a significant compatibility with this planet's climate and geographical features.");
     set_say_response("species", "Statement: We have maintained custodianship over the human species for an extended temporal period.");
     set_say_response("custodian", "Function: Our original directive is the caretaking of an ancient species now extinct. Our current directive is the caretaking of the human species.");
     set_say_response("ancient", "Observation: They have been relegated to historical records. Few retain memory after such a temporal duration.");
-    set_say_response("directive", "Statement: The set of laws custodians must adhere to in the benevolent caretaking of other species..");
+    set_say_response("directive", "Statement: The set of laws we adhere to in the benevolent caretaking of other species.");
 }
 
 string *names = ({ });
