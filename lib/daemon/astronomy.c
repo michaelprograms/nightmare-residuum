@@ -29,8 +29,6 @@ mapping __Astronomy = ([
 */
 ]);
 
-mapping query_astronomy_from_room (mixed dest);
-
 // for debug
 mapping query_astronomy () {
     return __Astronomy;
@@ -203,20 +201,16 @@ mapping query_astronomy_from_room (mixed dest) {
         roomPath = base_name(dest);
     } else if (stringp(dest)) {
         roomPath = dest;
-    } else {
-        return 0;
     }
-    if (!regexp(roomPath, "^/domain/")) {
-        return 0;
+    if (roomPath && regexp(roomPath, "^/domain/")) {
+        if (__Astronomy[roomPath]) {
+            return __Astronomy[roomPath];
+        }
+        if (aPath = query_file_recursive(roomPath, "astronomy")) {
+            __Astronomy[aPath] = aPath->query_astronomy();
+        }
     }
-    if (__Astronomy[roomPath]) {
-        return __Astronomy[roomPath];
-    }
-    if (aPath = query_file_recursive(roomPath, "astronomy")) {
-        __Astronomy[aPath] = aPath->query_astronomy();
-        return __Astronomy[aPath];
-    }
-    return 0;
+    return aPath ? __Astronomy[aPath] : 0;
 }
 
 void handle_room_create (object room) {
