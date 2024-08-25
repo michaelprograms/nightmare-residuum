@@ -7,7 +7,7 @@ void test_character_name () {
         testOb->set_character_name("test"),
         assert_equal(testOb->query_character()->is_character(), 1),
 
-        testOb->character_exit(),
+        testOb->query_character()->handle_remove(),
         assert_equal(testOb->query_character(), UNDEFINED),
     }) :));
 }
