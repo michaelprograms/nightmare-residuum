@@ -16,7 +16,7 @@ void create () {
     ]));
     set_exit("pad", HUMAN_ROOM + "square.c", 0, 0, "thin air");
     set_looks(([
-        "hallway": "This hallway connects two rooms.",
+        "hallway": "This hallway is of very utilitarian hallway design, simple but built to last. It connects two rooms together.",
         "walls": "Plain white walls, free of blemishes or signage.",
         "window": "A wide window set into the western wall provides a view of a blue and green planet. Clouds can be seen at various levels of the atmosphere.",
     ]));

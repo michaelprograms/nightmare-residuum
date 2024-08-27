@@ -14,7 +14,7 @@ void create () {
         "east": ORIGIN_ROOM + "northeast.c",
     ]));
     set_looks(([
-        "hallway": "This hallway connects two rooms.",
+        "hallway": "This hallway is of very utilitarian hallway design, simple but built to last. It connects two rooms together.",
         "walls": "Plain white walls, free of blemishes or signage.",
         "window": "A wide window set into the northern wall provides a view of the stars.",
     ]));
