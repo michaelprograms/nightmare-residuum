@@ -113,39 +113,23 @@ int mkdirs (string path) {
 }
 
 string *wild_card (string path) {
-    string *match;
-
-    if (!path || path == "") {
-        return ({ });
-    }
-
-    path = absolute_path(path, "/");
-    match = filter(get_dir(path) || ({ }), (: $1 != "." && $1 != ".." :));
-    if (path[<1] != '/') {
-        path = split_path(path)[0];
-    }
-
-    for (int i = 0; i < sizeof(match); i ++) {
-        switch (file_size(path + match[i])) {
-        case -2:
-            match[i] = path + match[i];
-            break;
-        default:
-            match[i] = path + match[i];
-            break;
+    string *match = ({ });
+    if (path && path != "") {
+        path = absolute_path(path, "/");
+        match = filter(get_dir(path) || ({ }), (: $1 != "." && $1 != ".." :));
+        if (path[<1] != '/') {
+            path = split_path(path)[0];
         }
+        match = map_array(match, (: $(path) + $1 :));
     }
     return match;
 }
 
 string query_file_recursive (string path, string type) {
-    string *dirs;
-    string typePath;
+    string *dirs, typePath;
     int l;
-
     dirs = explode(path, "/")[0..<2];
     l = sizeof(dirs);
-
     while (l --) {
         typePath = "/" + implode(dirs[0..l], "/") + "/" + type + ".c";
         if (file_size(typePath) > 0) {
