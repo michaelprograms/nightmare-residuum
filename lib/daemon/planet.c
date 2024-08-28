@@ -17,6 +17,10 @@ private mapping __Planet = ([
     "name": string,
     "size": integer,
 
+    "heightFactor": 1.0,
+    "humidityFactor": 1.0,
+    "heatFactor": 1.0,
+
     "overrides": ([
         "x": integer,
         "y": integer,

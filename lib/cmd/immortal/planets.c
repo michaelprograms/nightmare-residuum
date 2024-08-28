@@ -6,6 +6,10 @@ void create () {
     set_help_text("The planets command is used to view the entire list of planets available.");
 }
 
+string format_factor (float f) {
+    return undefinedp(f) ? "1.00" : sprintf("%.2f", f);
+}
+
 void command (string input, mapping flags) {
     mapping planet;
     mixed *body = ({ });
@@ -13,21 +17,35 @@ void command (string input, mapping flags) {
     int n;
 
     item = ([
-        "header": ({ "Name", "Size", "Overrides", }),
+        "header": ({ "Name", "Size", "Overrides", "Height", "Humidity", "Heat", }),
         "items": ({ }),
-        "columns": 3,
+        "columns": 6,
     ]);
 
     if (input) {
         planet = D_PLANET->query_planet(input);
 
         if (planet["name"]) {
-            item["items"] += ({ planet["name"], planet["size"], sizeof(planet["overrides"]) });
+            item["items"] += ({
+                planet["name"],
+                planet["size"],
+                sizeof(planet["overrides"]),
+                format_factor(planet["heightFactor"]),
+                format_factor(planet["humidityFactor"]),
+                format_factor(planet["heatFactor"]),
+            });
         }
     } else {
         foreach (string p in D_PLANET->query_all_planets()) {
             planet = D_PLANET->query_planet(p);
-            item["items"] += ({ planet["name"], planet["size"], sizeof(planet["overrides"]) });
+            item["items"] += ({
+                planet["name"],
+                planet["size"],
+                sizeof(planet["overrides"]),
+                format_factor(planet["heightFactor"]),
+                format_factor(planet["humidityFactor"]),
+                format_factor(planet["heatFactor"]),
+            });
         }
     }
     body += ({ item });

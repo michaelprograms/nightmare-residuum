@@ -27,7 +27,7 @@ void setup_room (object room) {
         __PCache[planet["name"]] = noise_generate_permutation_simplex(planet["name"]);
     }
 
-    noise = D_PLANET->query_noise(__PCache[planet["name"]], planet["size"], x, y);
+    noise = D_PLANET->query_noise(__PCache[planet["name"]], planet["size"], x, y, planet["heightFactor"], planet["humidityFactor"], planet["heatFactor"]);
     room->set_property("level", noise["level"]);
     room->set_property("height", to_int(noise["height"] * 100));
     room->set_property("heat", to_int(noise["heat"] * 100));
