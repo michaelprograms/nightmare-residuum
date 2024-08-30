@@ -389,7 +389,7 @@ nosave private mapping __HumidityColorHex = ([
     ""+HUMIDITY_DRY:            "#50FF00",  // 80;255;0
     ""+HUMIDITY_DRYER:          "#50FF00",  // 245;245;17
     ""+HUMIDITY_DRYEST:         "#FF8B11",  // 255;139;17
-    "default":                  "#F10C00",  // 241;12;0
+    "default":                  "#000064",  // 0;0;100
 ]);
 string query_humidity_color_hex (float humidity) {
     if (humidity) {

@@ -13,7 +13,7 @@ void test_biome_colors () {
     }) :));
 
     expect("humidity hex colors returned", (: ({
-        assert_equal(testOb->query_humidity_color_hex(UNDEFINED), "#F10C00"),
+        assert_equal(testOb->query_humidity_color_hex(UNDEFINED), "#000064"),
         assert_equal(testOb->query_humidity_color_hex(HUMIDITY_DRYEST), "#FF8B11"),
         assert_equal(testOb->query_humidity_color_hex(HUMIDITY_WETTER), "#1446FF"),
     }) :));
