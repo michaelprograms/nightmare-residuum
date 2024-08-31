@@ -199,6 +199,9 @@ varargs mapping query_noise (mapping p, int size, int x, int y, float heightFact
     }
     nHeat = nHeat * nTmp * 1.5;
     nHeat *= heatFactor;
+    if (nHeat > 1.0) {
+        nHeat = 1.0;
+    }
     // adjust noise Heat based upon noise Height, higher is colder
     if (nHeight > HEIGHT_SHALLOW) {
         nHeat -= (nHeight - HEIGHT_SHALLOW) * nHeight;
@@ -402,12 +405,13 @@ string query_humidity_color_hex (float humidity) {
     return __HumidityColorHex["default"];
 }
 nosave private mapping __HeatColorHex = ([
+    ""+HEAT_HOTTEST:            "#F10C00", // 241;12;0
     ""+HEAT_HOTTER:             "#FF6400", // 255;100;0
     ""+HEAT_HOT:                "#FFFF64", // 255;255;100
     ""+HEAT_COLD:               "#00E585", // 0;229;133
     ""+HEAT_COLDER:             "#AAFFFF", // 170;255;255
     ""+HEAT_COLDEST:            "#00FFFF", // 0;255;255
-    "default":                  "#F10C00", // 241;12;0
+    "default":                  "#00FFFF", // 0;255;255
 ]);
 string query_heat_color_hex (float heat) {
     if (heat) {

@@ -19,7 +19,7 @@ void test_biome_colors () {
     }) :));
 
     expect("heat hex colors returned", (: ({
-        assert_equal(testOb->query_heat_color_hex(UNDEFINED), "#F10C00"),
+        assert_equal(testOb->query_heat_color_hex(UNDEFINED), "#00FFFF"),
         assert_equal(testOb->query_heat_color_hex(HEAT_COLDEST), "#00FFFF"),
         assert_equal(testOb->query_heat_color_hex(HEAT_HOTTER), "#FF6400"),
     }) :));
