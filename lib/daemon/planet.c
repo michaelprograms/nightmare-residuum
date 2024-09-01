@@ -127,9 +127,11 @@ varargs mapping query_noise (mapping p, int size, int x, int y, float heightFact
     level = to_int(sqrt((size2-x) * (size2-x) + (size2-y) * (size2-y)) / (size2 * 1.0 / LEVEL_RANGE));
     level = max(({ 1, min(({ LEVEL_RANGE, level })) }));
 
-    // noise Humidity
-    nHumidity = max(({ 0.0, (((noise_simplex_4d(nx + nowAdj, ny + nowAdj, nz + nowAdj, nw + nowAdj, p, 4, 3.0) + 1) / 2) - 0.25) / 0.5 })); // normalize 0.25-0.75 to 0-1
-    nHumidity *= humidityFactor;
+    if (heatFactor != 0.0) {
+        // noise Humidity
+        nHumidity = max(({ 0.0, (((noise_simplex_4d(nx + nowAdj, ny + nowAdj, nz + nowAdj, nw + nowAdj, p, 4, 3.0) + 1) / 2) - 0.25) / 0.5 })); // normalize 0.25-0.75 to 0-1
+        nHumidity *= humidityFactor;
+    }
 
     // noise Height
     nHeight = (((noise_simplex_4d(nx, ny, nz, nw, p, 5, 1.25) + 1) / 2) - 0.25) / 0.5; // normalize 0.25-0.75 to 0-1
@@ -152,7 +154,9 @@ varargs mapping query_noise (mapping p, int size, int x, int y, float heightFact
                     nHeight = max(({ 0.0, nHeight - (abs(nHeight - HEIGHT_SHALLOW) + 0.05) }));
                 }
             }
-            nHumidity += 0.1 * nHeight;
+            if (heatFactor != 0.0) {
+                nHumidity += 0.1 * nHeight;
+            }
         } else {
             nTmp = (((noise_simplex_4d(nw, nz, ny, nx, p, 5, 1.25) + 1) / 2) - 0.25) / 0.5; // normalize 0.25-0.75 to 0-1
             if (
@@ -169,44 +173,50 @@ varargs mapping query_noise (mapping p, int size, int x, int y, float heightFact
                         nHeight = max(({ 0.0, nHeight - (abs(nHeight - HEIGHT_SHALLOW) + 0.05) }));
                     }
                 }
-                nHumidity += 0.1 * nHeight;
+                if (heatFactor != 0.0) {
+                    nHumidity += 0.1 * nHeight;
+                }
             }
         }
     }
 
-    // adjust noise Humidity based upon noise Height, lower is wetter
-    if (nHeight <= HEIGHT_DEEPER) {
-        nHumidity += 5.0 * nHeight;
-    } else if (nHeight <= HEIGHT_DEEP) {
-        nHumidity += 4.0 * nHeight;
-    } else if (nHeight <= HEIGHT_SHALLOW) {
-        nHumidity += 3.0 * nHeight;
-    } else if (nHeight <= HEIGHT_SHORE) {
-        nHumidity += 0.2 * nHeight;
+    if (heatFactor != 0.0) {
+        // adjust noise Humidity based upon noise Height, lower is wetter
+        if (nHeight <= HEIGHT_DEEPER) {
+            nHumidity += 5.0 * nHeight;
+        } else if (nHeight <= HEIGHT_DEEP) {
+            nHumidity += 4.0 * nHeight;
+        } else if (nHeight <= HEIGHT_SHALLOW) {
+            nHumidity += 3.0 * nHeight;
+        } else if (nHeight <= HEIGHT_SHORE) {
+            nHumidity += 0.2 * nHeight;
+        }
     }
 
-    // noise Heat
-    nHeat = abs((noise_simplex_4d(nx + nowAdj, ny + nowAdj, nz + nowAdj, nw + nowAdj, p, 4, 2.5) + 1) / 2);
-    nHeat = abs((nHeat - 0.05) / (0.95 - 0.05));
-    // noise Gradient
-    size2 = size * 45 / 100;
-    if (y >= size2 && y <= size - size2) {  // center 20%
-        nTmp = 1.0;
-    } else if (y < size2) {                 // north 40%
-        nTmp = 1.0 - (gradient_2d(1.0, 1.0, 1.0, 0.0, 0.0, (y * 1.0) / size2));
-    } else {                                // south 40%
-        nTmp = 1.0 - (gradient_2d(1.0, 1.0, 1.0, 0.0, 0.0, (size - (y + 1.0)) / size2));
+    if (heatFactor != 0.0) {
+        // noise Heat
+        nHeat = abs((noise_simplex_4d(nx + nowAdj, ny + nowAdj, nz + nowAdj, nw + nowAdj, p, 4, 2.5) + 1) / 2);
+        nHeat = abs((nHeat - 0.05) / (0.95 - 0.05));
+        // noise Gradient
+        size2 = size * 45 / 100;
+        if (y >= size2 && y <= size - size2) {  // center 20%
+            nTmp = 1.0;
+        } else if (y < size2) {                 // north 40%
+            nTmp = 1.0 - (gradient_2d(1.0, 1.0, 1.0, 0.0, 0.0, (y * 1.0) / size2));
+        } else {                                // south 40%
+            nTmp = 1.0 - (gradient_2d(1.0, 1.0, 1.0, 0.0, 0.0, (size - (y + 1.0)) / size2));
+        }
+        nHeat = nHeat * nTmp * 1.5;
+        nHeat *= heatFactor;
+        if (nHeat > 1.0) {
+            nHeat = 1.0;
+        }
+        // adjust noise Heat based upon noise Height, higher is colder
+        if (nHeight > HEIGHT_SHALLOW) {
+            nHeat -= (nHeight - HEIGHT_SHALLOW) * nHeight;
+        }
+        nHeat = max(({ nHeat, 0.0 }));
     }
-    nHeat = nHeat * nTmp * 1.5;
-    nHeat *= heatFactor;
-    if (nHeat > 1.0) {
-        nHeat = 1.0;
-    }
-    // adjust noise Heat based upon noise Height, higher is colder
-    if (nHeight > HEIGHT_SHALLOW) {
-        nHeat -= (nHeight - HEIGHT_SHALLOW) * nHeight;
-    }
-    nHeat = max(({ nHeat, 0.0 }));
 
     // noise Resource
     if (nHeight > HEIGHT_SHORE) {
@@ -387,15 +397,16 @@ string query_biome_color_hex (string biome) {
     }
 }
 nosave private mapping __HumidityColorHex = ([
-    ""+HUMIDITY_WETTER:         "#1446FF",  // 20;70;255
-    ""+HUMIDITY_WET:            "#55FFFF",  // 85;255;255
-    ""+HUMIDITY_DRY:            "#50FF00",  // 80;255;0
-    ""+HUMIDITY_DRYER:          "#50FF00",  // 245;245;17
-    ""+HUMIDITY_DRYEST:         "#FF8B11",  // 255;139;17
-    "default":                  "#000064",  // 0;0;100
+    ""+HUMIDITY_WETTEST:        "#000064", // 0;0;100
+    ""+HUMIDITY_WETTER:         "#1446FF", // 20;70;255
+    ""+HUMIDITY_WET:            "#55FFFF", // 85;255;255
+    ""+HUMIDITY_DRY:            "#50FF00", // 80;255;0
+    ""+HUMIDITY_DRYER:          "#50FF00", // 245;245;17
+    ""+HUMIDITY_DRYEST:         "#FF8B11", // 255;139;17
+    "default":                  "#000000", // 0;0;0
 ]);
 string query_humidity_color_hex (float humidity) {
-    if (humidity) {
+    if (!undefinedp(humidity)) {
         foreach (string key in sort_array(keys(__HumidityColorHex), 1)) {
             if (humidity <= to_float(key)) {
                 return __HumidityColorHex[key];
@@ -411,10 +422,10 @@ nosave private mapping __HeatColorHex = ([
     ""+HEAT_COLD:               "#00E585", // 0;229;133
     ""+HEAT_COLDER:             "#AAFFFF", // 170;255;255
     ""+HEAT_COLDEST:            "#00FFFF", // 0;255;255
-    "default":                  "#00FFFF", // 0;255;255
+    "default":                  "#000000", // 0;0;0
 ]);
 string query_heat_color_hex (float heat) {
-    if (heat) {
+    if (!undefinedp(heat)) {
         foreach (string key in sort_array(keys(__HeatColorHex), 1)) {
             if (heat <= to_float(key)) {
                 return __HeatColorHex[key];

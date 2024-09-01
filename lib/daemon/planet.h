@@ -18,6 +18,6 @@
 #define HUMIDITY_DRY        0.55
 #define HUMIDITY_WET        0.65
 #define HUMIDITY_WETTER     1.00
-// HUMIDITY_WETTEST > 1.0
+#define HUMIDITY_WETTEST 10.0
 
 #endif /* __PLANET_H__ */
