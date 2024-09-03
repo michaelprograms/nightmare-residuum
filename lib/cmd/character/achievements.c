@@ -12,7 +12,7 @@ void command (string input, mapping flags) {
 
     if (input == "here") {
         a = D_ACHIEVEMENTS->query_achievements_from_room(environment(this_character()));
-        foreach (mapping m in a) {
+        foreach (mapping m in a || ([ ])) {
             body += ({
                 ([
                     "items": ({
