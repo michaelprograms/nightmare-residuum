@@ -12,16 +12,28 @@ void command (string input, mapping flags) {
 
     if (input == "here") {
         a = D_ACHIEVEMENTS->query_achievements_from_room(environment(this_character()));
-        foreach (mapping m in a || ([ ])) {
+        if (!sizeof(a)) {
             body += ({
                 ([
                     "items": ({
-                        m["name"] + "\n" + m["description"],
+                        "No achievements found",
                     }),
                     "columns": 1,
-                    "align": "left",
+                    "align": "center",
                 ]),
             });
+        } else {
+            foreach (mapping m in a) {
+                body += ({
+                    ([
+                        "items": ({
+                            m["name"] + "\n" + m["description"],
+                        }),
+                        "columns": 1,
+                        "align": "left",
+                    ]),
+                });
+            }
         }
 
         border(([
@@ -29,6 +41,13 @@ void command (string input, mapping flags) {
             "body": body,
         ]));
     } else {
-        // @TODO: Query your achievements
+        border(([
+            "title": "ACHIEVEMENTS",
+            "body": ([
+                "items": ({
+                    // @TODO: query your achievements
+                })
+            ]),
+        ]));
     }
 }
