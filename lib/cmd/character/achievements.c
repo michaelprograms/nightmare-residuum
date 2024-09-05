@@ -7,11 +7,10 @@ void create () {
 }
 
 void command (string input, mapping flags) {
-    mapping a;
     string *body = ({ });
 
     if (input == "here") {
-        a = D_ACHIEVEMENTS->query_achievements_from_room(environment(this_character()));
+        mapping a = D_ACHIEVEMENTS->query_achievements_from_room(environment(this_character()));
         if (!sizeof(a)) {
             body += ({
                 ([
@@ -41,12 +40,14 @@ void command (string input, mapping flags) {
             "body": body,
         ]));
     } else {
+        string *a = this_character()->query_achievements();
+        if (!sizeof(a)) {
+            a = ({ "You have no achievements" });
+        }
         border(([
             "title": "ACHIEVEMENTS",
             "body": ([
-                "items": ({
-                    // @TODO: query your achievements
-                })
+                "items": a
             ]),
         ]));
     }
