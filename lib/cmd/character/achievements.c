@@ -26,7 +26,7 @@ void command (string input, mapping flags) {
                 body += ({
                     ([
                         "items": ({
-                            m["name"] + "\n" + m["description"],
+                            "%^BOLD%^UNDERLINE%^" + m["name"] + "%^RESET%^ \n" + m["description"],
                         }),
                         "columns": 1,
                         "align": "left",
