@@ -19,6 +19,8 @@ void test_add_and_remove () {
         assert_equal(testOb->add_emote("testemote", "", "$N $vtestemote."), 1),
         assert_equal(testOb->query_emote("testemote"), ([ "": "$N $vtestemote.", ])),
 
+        // can't remove emote with non-existant rule
+        assert_equal(testOb->remove_emote("testemote", "non-existant"), 0),
         // remove emote
         assert_equal(testOb->remove_emote("testemote", ""), 1),
         assert_equal(testOb->query_emote("testemote"), 0),
