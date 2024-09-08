@@ -17,14 +17,18 @@ void test_add_and_remove () {
         // add dummy emote
         assert_equal(!!testOb->query_emote("testemote"), 0),
         assert_equal(testOb->add_emote("testemote", "", "$N $vtestemote."), 1),
-        assert_equal(testOb->query_emote("testemote"), ([ "": "$N $vtestemote.", ])),
+        assert_equal(testOb->add_emote("testemote", "LIV", "$N $vtestemote LIV."), 1),
+        assert_equal(testOb->query_emote("testemote"), ([ "": "$N $vtestemote.", "LIV": "$N $vtestemote LIV." ])),
 
-        // can't remove emote with non-existant rule
+        // can't remove non-existant emote or non-existant rule
+        assert_equal(testOb->remove_emote("non-existant", ""), 0),
         assert_equal(testOb->remove_emote("testemote", "non-existant"), 0),
+        // remove emote rule
+        assert_equal(testOb->remove_emote("testemote", "LIV"), 1),
         // remove emote
         assert_equal(testOb->remove_emote("testemote", ""), 1),
         assert_equal(testOb->query_emote("testemote"), 0),
-        // can't remove again
+        // already removed
         assert_equal(testOb->remove_emote("testemote", ""), 0),
     }) :));
 }
