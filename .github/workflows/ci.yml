@@ -53,7 +53,5 @@ jobs:
     - name: Run Tests
       run: |
         ./build/bin/driver lib/secure/etc/nightmare-residuum.config -ftest
-        echo 'log/catch:' && cat lib/log/catch
-        echo 'log/runtime:' && cat lib/log/runtime
       shell: bash
       timeout-minutes: 1
