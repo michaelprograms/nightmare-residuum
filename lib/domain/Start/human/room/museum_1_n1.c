@@ -9,8 +9,7 @@ void create () {
     set_long("The northern hallway of a building with high ceilings and polished floors. The walls are made of stone blocks and covered with tapestries. The hallway leads further north into the building or south to the lobby. An archway leads to a chamber to the west.");
     set_exits(([
         "north": HUMAN_ROOM + "museum_1_n2.c",
-        "west": HUMAN_ROOM + "museum_vault.c",
-        "south": HUMAN_ROOM + "museum_1.c",
+        "west": HUMAN_ROOM + "museum_1.c",
     ]));
     set_looks(([
         ({ "building", "ceiling", "walls" }): "A building of large proportions. This hallway is a large room with high ceilings and distant walls.",

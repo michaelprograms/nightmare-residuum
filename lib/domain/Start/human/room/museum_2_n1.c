@@ -8,7 +8,7 @@ void create () {
     set_short("a historical building");
     set_long("The northern hallway of a building with high ceilings and polished floors. The walls are made of stone blocks and covered with tapestries, except for the western wall which consists of a large alcove containing a sculpture. The hallway turns towards the north as it heads further into the building.");
     set_exits(([
-        "south": HUMAN_ROOM + "museum_2.c",
+        "west": HUMAN_ROOM + "museum_2.c",
         "north": HUMAN_ROOM + "museum_2_n2.c",
     ]));
     set_looks(([
