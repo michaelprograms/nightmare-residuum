@@ -107,18 +107,12 @@ string *query_room_brackets () {
 }
 
 string query_room_map_symbol () {
-    int aggressive = 0, passive = 0, item = 0;
-    int cha;
-    object char = 0;
-    object *hostiles = ({ });
+    int cha, aggressive = 0, passive = 0, item = 0;
+    object char;
     string symbol = " ";
-
-    char = this_character();
-    if (char) {
+    if (char = this_character()) {
         cha = char->query_stat("charisma");
-        hostiles = char->query_hostiles();
     }
-
     foreach (object l in query_living_contents()) {
         if (char && (cha < l->query_aggressive() || l->query_hostile(char))) {
             aggressive ++;
@@ -126,7 +120,6 @@ string query_room_map_symbol () {
             passive ++;
         }
     }
-
     if (aggressive || passive) {
         if (aggressive && passive) {
             symbol = "%^ORANGE%^";
@@ -137,7 +130,6 @@ string query_room_map_symbol () {
         if (!aggressive && passive) {
             symbol = "%^GREEN%^";
         }
-
         symbol += (aggressive+passive > 10 ? "+" : ""+(aggressive+passive)) + "%^RESET%^";
     } else {
         item = sizeof(query_item_contents());
@@ -145,7 +137,6 @@ string query_room_map_symbol () {
             symbol = "%^MAGENTA%^" + (item > 10 ? "+" : ""+item) + "%^RESET%^";
         }
     }
-
     return symbol;
 }
 
@@ -173,9 +164,8 @@ varargs mapping query_room_exits_picture (string source) {
 private int valid_exit (string path) {
     if (regexp(path, "/virtual/")) {
         return 1;
-    } else {
-        return file_size(path) > 0;
     }
+    return file_size(path) > 0;
 }
 string *query_room_map () {
     mapping blank, roomOb, exits, pics;
@@ -253,15 +243,13 @@ string *query_room_map () {
 
 void handle_environment_damage (object living) {
     int water;
-    if (water = query_property("water") && water > 1) {
+    if ((water = query_property("water")) && water > 1) {
         switch (random(water + 2)) {
             case 0:
                 message("action", "You struggle against the deep water.", living);
                 message("action", living->query_cap_name() + " struggles against the deep water.", this_object(), living);
-
                 living->handle_damage(living->query_max_hp() * 5 / 100, 0);
                 break;
-
             default:
                 break;
         }
