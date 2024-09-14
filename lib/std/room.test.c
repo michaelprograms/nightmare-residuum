@@ -44,6 +44,9 @@ void test_room_bracketing () {
         testOb->set_room_brackets(({ "1", "2" })),
         assert_equal(testOb->query_room_brackets(), ({ "1", "2" })),
     }) :));
+    expect("room bracket behaves with bad argument", (: ({
+        assert_catch((: testOb->set_room_brackets(({ })) :), "*Bad argument 1 to room->set_room_brackets\n"),
+    }) :));
 
     expect("room map bracket is queryable", (: ({
         // default symbol
