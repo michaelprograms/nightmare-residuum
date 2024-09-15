@@ -12,7 +12,8 @@ currentVersion=$(git log -1 --format="%at" | xargs -I{} date -d @{} +%Y-%m-%d\ %
 git stash save "$(date +%Y-%m-%d\ %H:%M:%S)"
 
 # attempt to update the driver
-git pull
+git checkout master
+git pull origin master
 
 # updated driver's last commit date
 updateVersion=$(git log -1 --format="%at" | xargs -I{} date -d @{} +%Y-%m-%d\ %H:%M:%S)
