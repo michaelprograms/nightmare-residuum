@@ -32,7 +32,8 @@ void create () {
     set_vendor_max_items(5);
     set_vendor_currency("copper");
 
-    set_say_response("ticket", "You need a ticket to enter the museum.");
+    set_say_response("ticket", "You need to buy a ticket to enter the museum.");
+    set_say_response("buy", "You need to buy a ticket to enter the museum.");
 }
 
 string *names = ({ });

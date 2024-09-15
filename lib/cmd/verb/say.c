@@ -19,7 +19,6 @@ string format_npc_message(object npc, string msg) {
         if (pos > 0) {
             l = sizeof(say);
             msg = msg[0..pos-1] + "%^UNDERLINE%^" + msg[pos..pos+l-1] + "%^RESET%^" + msg[pos+l..];
-            break;
         }
     }
     return msg;
