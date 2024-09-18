@@ -41,3 +41,9 @@ void test_border_item () {
         assert_equal(testOb->format_border_item(([ "items": ({ "1", "2", "3", }) ]), "256", "L", "R"), ({ "L  1               2                 R", "L  3                                 R" })),
     }) :));
 }
+
+void test_tree () {
+    expect("tree behaves", (: ({
+        assert_equal(testOb->tree(([ "00": "abcdefghi", "01": "abcdefghi" ])), ({ "0. 00abcdefghi", "1. 01abcdefghi" })),
+    }) :));
+}
