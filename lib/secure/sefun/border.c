@@ -417,20 +417,18 @@ private varargs string *format_tree (string key, mixed value, mapping b, int ind
     return result;
 }
 string *tree (mapping value) {
-    string *result = ({ });
-    mapping b = query_border_charset();
-    string *ids;
+    string *result = ({ }), *ids;
+    mapping b;
     int i, l;
-
     if (!mapp(value) || !sizeof(value)) {
         error("Bad argument 1 to border->tree");
     }
-
+    // write(sprintf("%O\n", value));
+    b = query_border_charset();
     ids = sort_array(keys(value), (: to_int(explode($1," ")[0]) < to_int(explode($2," ")[0]) ? 0 : 1 :));
     l = sizeof(ids);
     for (i = 0; i < l; i ++) {
         result += format_tree(i + ". " + ids[i], value[ids[i]], b, 0, i, l-1, ([ ]));
     }
-
     return result;
 }

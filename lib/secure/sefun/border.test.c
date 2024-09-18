@@ -45,5 +45,8 @@ void test_border_item () {
 void test_tree () {
     expect("tree behaves", (: ({
         assert_equal(testOb->tree(([ "00": "abcdefghi", "01": "abcdefghi" ])), ({ "0. 00abcdefghi", "1. 01abcdefghi" })),
+        assert_equal(testOb->tree(([ "A": ([ "1": ([ "a": ([ ]), "b": ([ ]) ]), "2": ([ ]), ]), "B": ([ ]), "C": ([ "1": ([ ]), "2": ([ "a": ([ ]), "b": ([ ]) ]) ]) ]), ), ({  "0. A", "├─0. 1", "│ ├─0. a", "│ └─1. b", "└─1. 2", "1. B", "2. C", "├─0. 1", "└─1. 2", "  ├─0. a", "  └─1. b" })),
+
+        assert_catch((: testOb->tree(UNDEFINED) :), "*Bad argument 1 to border->tree\n"),
     }) :));
 }
