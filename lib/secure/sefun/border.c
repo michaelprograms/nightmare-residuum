@@ -91,6 +91,8 @@ nosave private mapping __BorderCharset = ([
         "b": " ",
         "l": " ",
         "r": " ",
+        "x": " ",
+        "+": " ",
     ]),
 ]);
 mapping query_border_charset () {

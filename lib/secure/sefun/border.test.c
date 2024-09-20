@@ -5,7 +5,7 @@ object query_character () {
     return __MockCharacter;
 }
 
-private nosave string __ANSI = "on";
+private nosave string __ANSI = "on", __Screenreader = "off";
 private nosave int __Width = 80;
 mixed query_setting (string setting) {
     if (setting == "ansi") {
@@ -13,6 +13,9 @@ mixed query_setting (string setting) {
     }
     if (setting == "width") {
         return __Width;
+    }
+    if (setting == "screenreader") {
+        return __Screenreader;
     }
 }
 
@@ -25,6 +28,16 @@ void test_character_colors () {
 
         __MockCharacter->set_class("psionist"),
         assert_equal(testOb->query_character_border_colors(), ({ ({ 65, 105, 225 }), ({ 192, 192, 192 }) })),
+    }) :));
+}
+
+void test_border_charset () {
+    expect("border_charset is returned", (: ({
+        assert_equal(testOb->query_border_charset()["h"],  "─"),
+
+        __Screenreader = "on",
+        assert_equal(testOb->query_border_charset()["h"], " "),
+        __Screenreader = "off",
     }) :));
 }
 
