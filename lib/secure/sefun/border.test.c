@@ -41,7 +41,7 @@ void test_border_charset () {
     }) :));
 }
 
-void test_border_item () {
+void test_format_border_item () {
     expect("border header is formatted", (: ({
         assert_equal(testOb->format_border_item(([ "header": ({ "Header1", "Header2" }), "columns": 2 ]), "256", "L", "R"), ({ "L  %^RESET%^BOLD%^UNDERLINE%^Header1%^RESET%^                             %^RESET%^BOLD%^UNDERLINE%^Header2%^RESET%^                               R" })),
         assert_equal(testOb->format_border_item(([ "header": ({ "A123456789", "B123456789", "C123456789", "D123456789", "E123456789", "F123456789", "G123456789", "H123456789", "I123456789", "J123456789", "K123456789", "L123456789" }), "columns": 10 ]), "256", "L", "R"), ({ "L  A123456B123456C123456D123456E123456F123456G123456H123456I123456J123456    R" })),
@@ -52,6 +52,45 @@ void test_border_item () {
 
         assert_equal(__Width = 40, 40),
         assert_equal(testOb->format_border_item(([ "items": ({ "1", "2", "3", }) ]), "256", "L", "R"), ({ "L  1               2                 R", "L  3                                 R" })),
+    }) :));
+}
+
+void test_format_border () {
+    expect("border is formatted", (: ({
+        assert_equal(__Width, 40),
+        assert_equal(testOb->format_border(([
+            "header": ([
+                "header": ({ "Header Header 1", "Header Header 2", "Header Header 3", "Header Header 4", }),
+                "items": ({ "Header Item 1", "Header Item 2", "Header Item 3", "Header Item 4", }),
+                "columns": 4,
+                "align": "center",
+            ]),
+            "body": ([
+                "header": ({ "Body Header 1", "Body Header 2", "Body Header 3", "Body Header 4", }),
+                "items": ({ "Body Item 1", "Body Item 2", "Body Item 3", "Body Item 4", }),
+                "columns": 4,
+                "align": "center",
+            ]),
+            "footer": ([
+                "header": ({ "Footer Header 1", "Footer Header 2", "Footer Header 3", "Footer Header 4", }),
+                "items": ({ "Footer Item 1", "Footer Item 2", "Footer Item 3", "Footer Item 4", }),
+                "columns": 4,
+                "align": "center",
+            ]),
+        ]), testOb->query_border_charset(), __Width, 0), ({
+            "╭┬────────────────────────────────────┬╮",
+            "││  Header HHeader HHeader HHeader H  ││",
+            "││  Header IHeader IHeader IHeader I  ││",
+            "│╰────────────────────────────────────╯│",
+            "│                                      │",
+            "│   Body HeaBody HeaBody HeaBody Hea   │",
+            "│   Body IteBody IteBody IteBody Ite   │",
+            "│                                      │",
+            "│╭────────────────────────────────────╮│",
+            "││  Footer HFooter HFooter HFooter H  ││",
+            "││  Footer IFooter IFooter IFooter I  ││",
+            "╰┴────────────────────────────────────┴╯"
+        })),
     }) :));
 }
 
