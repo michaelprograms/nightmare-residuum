@@ -96,11 +96,12 @@ nosave private mapping __BorderCharset = ([
     ]),
 ]);
 mapping query_border_charset () {
+    object user;
     string type;
     if (SEFUN->query_account_setting("screenreader") == "on") {
         type = "screenreader";
-    } else if (this_user()) {
-        switch (SEFUN->this_user()->query_terminal("type")) {
+    } else if (user = SEFUN->this_user()) {
+        switch (user->query_terminal("type")) {
         case "cmud": case "zmud":
             type = "US-ASCII";
             break;
