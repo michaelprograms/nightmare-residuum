@@ -269,7 +269,7 @@ string *format_border (mapping data, mapping b, int width, string ansi) {
         }
         lines += ({ line });
 
-    } else { // no title
+    } else { /* no title */
         line = b["tl"+radius] + (fHeader ? b["t"] : b["h"]) + sprintf("%'"+b["h"]+"'*s", width-4, "") + (fHeader ? b["t"] : b["h"]) + b["tr"+radius];
         if (ansi == "256") {
             line = SEFUN->apply_gradient(line, colors);

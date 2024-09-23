@@ -36,7 +36,7 @@ string query_banner () {
             colors[i] = "\e[38;2;"+colors[i]+"m";
             colors += ({ colors[i] });
         }
-    } else { // 16 bit mode
+    } else { /* 16 bit mode */
         colors += allocate(68, "\e[33m");
     }
 

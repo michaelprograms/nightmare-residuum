@@ -246,7 +246,7 @@ int is_ability_successful (object source, object target) {
             } else if (key == "ranged") {
                 sourceN += source->query_stat("agility") * value / powerTotal;
                 targetN += target->query_stat("luck") * value / powerTotal;
-            } else { // blade, blunt, brawl
+            } else { /* blade, blunt, brawl */
                 sourceN += source->query_stat("strength") * value / powerTotal;
                 targetN += target->query_stat("endurance") * value / powerTotal;
             }

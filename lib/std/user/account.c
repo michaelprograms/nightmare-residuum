@@ -356,7 +356,7 @@ protected nomask varargs void account_input (int state, mixed extra, string inpu
                     } else {
                         this_object()->character_reconnect(extra);
                     }
-                } else { // fresh login
+                } else { /* fresh login */
                     this_object()->set_character_name(input);
                     this_object()->character_enter(0);
                 }
