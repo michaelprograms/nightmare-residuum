@@ -175,7 +175,8 @@ string *format_border_item (mapping item, string ansi, string left, string right
 
     return lines;
 }
-string *format_border (mapping data, mapping b, int width, string ansi) {
+string *format_border (mapping rawData, mapping b, int width, string ansi) {
+    mapping data = copy(rawData);
     string *lines = ({ }), line;
     string *colors, *colors2;
     mixed *borderColors;
@@ -426,7 +427,6 @@ string *tree (mapping value) {
     if (!mapp(value) || !sizeof(value)) {
         error("Bad argument 1 to border->tree");
     }
-    // write(sprintf("%O\n", value));
     b = query_border_charset();
     ids = sort_array(keys(value), (: to_int(explode($1," ")[0]) < to_int(explode($2," ")[0]) ? 0 : 1 :));
     l = sizeof(ids);
