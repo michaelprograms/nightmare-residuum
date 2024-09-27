@@ -30,6 +30,8 @@ void test_species () {
 
         testOb->set_species("custodian"),
         assert_equal(testOb->query_species(), "custodian"),
+
+        assert_catch((: testOb->set_species(UNDEFINED) :), "*Bad argument 1 to body->set_species\n"),
     }) :));
 }
 
