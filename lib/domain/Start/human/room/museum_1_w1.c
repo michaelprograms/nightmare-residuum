@@ -17,4 +17,7 @@ void create () {
         "lobby": "The entrance to the building.",
         "hallway": "It leads away and also towards the lobby of the building.",
     ]));
+    set_reset(([
+        HUMAN_NPC + "museum_visitor.c": 1,
+    ]));
 }
