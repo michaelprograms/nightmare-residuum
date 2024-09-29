@@ -17,7 +17,7 @@ int admit_entrance (object ob, string dir) {
 
 void create () {
     ::create();
-    set_properties(([ "indoors": 1, "no attack": 1, ]));
+    set_properties(([ "indoors": 1, ]));
     set_short("a spacious lobby");
     set_long("The entrance to a building consisting of a spacious lobby with high ceilings and polished floors. The walls are made of stone blocks and covered with tapestries. A grand staircase along the back of the lobby leads up towards another floor that looks down upon the lobby. Hallways branch to the north and west, heading to the wings of the building.");
     set_exits(([
