@@ -91,6 +91,9 @@ string *wild_card (string path);
 /* --- roll --- */
 mixed *roll_die (int times, int sides);
 
+/* --- room --- */
+string describe_living_item (object ob);
+
 /* --- string --- */
 string identify (mixed a);
 varargs string wrap (string str, int width, int indent, int rawANSI);
