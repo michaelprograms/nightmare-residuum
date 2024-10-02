@@ -1,4 +1,4 @@
-private mapping __Vitals = ([
+mapping __Vitals = ([
     "hp": 0,
     "hpMax": 0,
     "sp": 0,
