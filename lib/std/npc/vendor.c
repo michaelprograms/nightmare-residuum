@@ -42,6 +42,7 @@ void set_vendor_types (string *types) {
 
 int handle_remove () {
     if (__VendorInventory) {
+        __VendorInventory->clear_inventory();
         __VendorInventory->handle_remove();
     }
     return ::handle_remove();

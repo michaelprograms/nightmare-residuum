@@ -23,3 +23,7 @@ void create () {
 int clean_up (mixed *args...) {
     return clean::clean_up(args);
 }
+
+void clear_inventory () {
+    map(all_inventory(), (: $1->handle_remove() :));
+}
