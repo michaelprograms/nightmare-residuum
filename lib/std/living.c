@@ -37,18 +37,14 @@ void heart_beat () {
         body::heart_beat();
     }
     cooldown::heart_beat();
-
     handle_combat();
-
     if (environment()) {
         environment()->handle_environment_damage(this_object());
     }
 }
 
 string query_living_long () {
-    string *attributes = ({ });
-    string str = "";
-
+    string *attributes = ({ }), str = "";
     if (query_gender() != "neither" && query_gender() != "none") {
         str = query_gender() + " ";
     }

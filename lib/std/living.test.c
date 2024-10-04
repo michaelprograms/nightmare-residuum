@@ -8,11 +8,22 @@ void test_living () {
     }) :));
 }
 
-void test_species () {
-    expect("living handles species", (: ({
-        assert_equal(testOb->query_species(), "unknown"),
-        assert_equal(testOb->set_species("human"), 0),
-        assert_equal(testOb->query_species(), "human"),
+void test_name () {
+    expect("name updates long", (: ({
+        assert_equal(testOb->query_long(), ""),
+
+        testOb->set_name("test"),
+        assert_equal(testOb->query_long(), "Test is an unknown."),
+
+        testOb->set_gender("male"),
+        assert_equal(testOb->query_long(), "Test is a male unknown."),
+
+        testOb->set_attribute("build", "a"),
+        testOb->set_attribute("complexion", "b"),
+        testOb->set_attribute("eye", "c"),
+        testOb->set_attribute("hair", "d"),
+        testOb->set_attribute("height", "e"),
+        assert_equal(testOb->query_long(), "Test is a male unknown with c eyes, e units tall, a b complexion, an a build, and d hair."),
     }) :));
 }
 
