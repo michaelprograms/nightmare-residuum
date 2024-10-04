@@ -33,3 +33,20 @@ void test_clean_up () {
         assert_equal($(testOb)->handle_remove(), 1),
     }) :));
 }
+
+void test_clear_inventory () {
+    object item = new(STD_ITEM);
+
+    expect("clear inventory removes all items", (: ({
+        assert_equal(all_inventory(testOb), ({ })),
+
+        assert_equal($(item)->handle_move(testOb), 1),
+
+        assert_equal(all_inventory(testOb), ({ $(item) })),
+
+        testOb->clear_inventory(),
+        assert_equal(all_inventory(testOb), ({ })),
+    }) :));
+
+    if (item) destruct(item);
+}
