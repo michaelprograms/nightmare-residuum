@@ -2,7 +2,7 @@ inherit M_TEST;
 
 private int action = 0;
 
-void test_set_variables () {
+void test_variables () {
     expect("variables are queryable and settable", (: ({
         assert_equal(testOb->query_variable("testkey1"), UNDEFINED),
 
@@ -31,7 +31,7 @@ void test_set_variables () {
     }) :));
 }
 
-void test_set_variable_hooks () {
+void test_variable_hooks () {
     testOb->set_variable_hook("testkey", function (mixed value) {
         action ++;
         return value;
@@ -45,5 +45,21 @@ void test_set_variable_hooks () {
 
         assert_equal(testOb->set_variable("testkey", "xyz"), "xyz"),
         assert_equal(action, 2),
+    }) :));
+}
+
+void test_aliases () {
+    expect("aliases are queryable, settable, and removable", (: ({
+        assert_equal(testOb->query_alias_names(), ({ "n", "nw", "l", "cl", "ne", "'", "ent", "w", "sw", "u", "e", "d", "se", "s" })),
+        assert_equal(testOb->query_alias("testalias1"), UNDEFINED),
+
+        testOb->add_alias("testalias1", "test alias 1 expansion"),
+        assert_equal(testOb->query_alias("testalias1"), ([ "d": ({ "" }), "n": UNDEFINED, "t": "test alias 1 expansion $*" ])),
+
+        testOb->remove_alias("testalias1"),
+        assert_equal(testOb->query_alias("testalias1"), UNDEFINED),
+
+        testOb->add_alias("testalias1", "xyz"),
+        assert_equal(testOb->query_alias("testalias1"), ([ "d": ({ "" }), "n": UNDEFINED, "t": "xyz $*" ])),
     }) :));
 }
