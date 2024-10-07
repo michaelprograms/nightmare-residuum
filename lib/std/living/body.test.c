@@ -54,17 +54,17 @@ void test_limbs () {
 }
 
 void test_limbs_and_level () {
-    destruct(testOb);
-    testOb = new(STD_LIVING);
+    object mockBody = new("/std/mock/body.c");
+
+    mockBody->start_shadow(testOb);
     expect("setting species first has maxdamage", (: ({
         testOb->set_stat("endurance", 20),
         testOb->set_species("human"),
         testOb->set_level(10),
         assert_equal(testOb->query_limb("torso"), ([ "damage": 0, "maxdamage": 342, "pct": 100, "status": 0, "type": "FATAL" ])),
+        assert_equal(testOb->query_limb(UNDEFINED), 0),
     }) :));
 
-    destruct(testOb);
-    testOb = new(STD_LIVING);
     expect("setting level first has maxdamage", (: ({
         testOb->set_stat("endurance", 20),
         testOb->set_level(10),
@@ -72,19 +72,15 @@ void test_limbs_and_level () {
         assert_equal(testOb->query_limb("torso"), ([ "damage": 0, "maxdamage": 342, "pct": 100, "status": 0, "type": "FATAL" ])),
     }) :));
 
-    destruct(testOb);
-    testOb = new(STD_LIVING);
     expect("maxdamage to increase with endurance", (: ({
-        testOb->set_stat("endurance", 20),
-        testOb->set_level(10),
-        testOb->set_species("human"),
         assert_equal(testOb->query_limb("torso"), ([ "damage": 0, "maxdamage": 342, "pct": 100, "status": 0, "type": "FATAL" ])),
 
         testOb->set_stat("endurance", 40),
         assert_equal(testOb->query_limb("torso"), ([ "damage": 0, "maxdamage": 562, "pct": 100, "status": 0, "type": "FATAL" ])),
     }) :));
 
-    destruct(testOb);
+    mockBody->stop_shadow();
+    if (mockBody) destruct(mockBody);
 }
 
 void test_injections () {
