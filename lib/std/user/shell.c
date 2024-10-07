@@ -21,7 +21,7 @@ nomask mapping query_alias (string alias) {
     return __Aliases[alias];
 }
 
-varargs void add_alias (string name, string template, string *defaults, int xverb) {
+varargs void set_alias (string name, string template, string *defaults, int xverb) {
     int i;
     string *tmp;
     mapping new_alias;
@@ -62,7 +62,7 @@ varargs void add_alias (string name, string template, string *defaults, int xver
     this_object()->save_data();
 }
 
-nomask void remove_alias (string name) {
+nomask void unset_alias (string name) {
     map_delete(__Aliases, name);
     __XAliases -= ({ name });
 }
@@ -249,20 +249,20 @@ void initialize_shell () {
     }
     if (!sizeof(__Aliases)) {
         __Aliases = ([ ]);
-        add_alias("l", "look");
-        add_alias("n", "go north");
-        add_alias("ne", "go northeast");
-        add_alias("e", "go east");
-        add_alias("se", "go southeast");
-        add_alias("s", "go south");
-        add_alias("sw", "go southwest");
-        add_alias("w", "go west");
-        add_alias("nw", "go northwest");
-        add_alias("u", "go up");
-        add_alias("d", "go down");
-        add_alias("ent", "go enter");
-        add_alias("cl", "climb");
-        add_alias("'", "say", 0, 1);
+        set_alias("l", "look");
+        set_alias("n", "go north");
+        set_alias("ne", "go northeast");
+        set_alias("e", "go east");
+        set_alias("se", "go southeast");
+        set_alias("s", "go south");
+        set_alias("sw", "go southwest");
+        set_alias("w", "go west");
+        set_alias("nw", "go northwest");
+        set_alias("u", "go up");
+        set_alias("d", "go down");
+        set_alias("ent", "go enter");
+        set_alias("cl", "climb");
+        set_alias("'", "say", 0, 1);
     }
 }
 

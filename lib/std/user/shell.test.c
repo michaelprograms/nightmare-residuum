@@ -53,13 +53,13 @@ void test_aliases () {
         assert_equal(testOb->query_alias_names(), ({ "n", "nw", "l", "cl", "ne", "'", "ent", "w", "sw", "u", "e", "d", "se", "s" })),
         assert_equal(testOb->query_alias("testalias1"), UNDEFINED),
 
-        testOb->add_alias("testalias1", "test alias 1 expansion"),
+        testOb->set_alias("testalias1", "test alias 1 expansion"),
         assert_equal(testOb->query_alias("testalias1"), ([ "d": ({ "" }), "n": UNDEFINED, "t": "test alias 1 expansion $*" ])),
 
-        testOb->remove_alias("testalias1"),
+        testOb->unset_alias("testalias1"),
         assert_equal(testOb->query_alias("testalias1"), UNDEFINED),
 
-        testOb->add_alias("testalias1", "xyz"),
+        testOb->set_alias("testalias1", "xyz"),
         assert_equal(testOb->query_alias("testalias1"), ([ "d": ({ "" }), "n": UNDEFINED, "t": "xyz $*" ])),
     }) :));
 }

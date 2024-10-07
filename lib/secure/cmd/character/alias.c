@@ -66,7 +66,7 @@ void command (string input, mapping flags) {
         } else {
             name = implode(argv[1..], " ");
             message("action", "Adding alias: '" + argv[0] + "' as '" + name + "'", tu);
-            tu->add_alias(argv[0], name);
+            tu->set_alias(argv[0], name);
         }
     }
 }
