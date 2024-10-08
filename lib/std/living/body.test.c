@@ -38,19 +38,39 @@ void test_species () {
 void test_limbs () {
     expect("species limbs are queryable", (: ({
         assert_equal(testOb->query_limbs(), ({ })),
-
         testOb->set_species("human"),
+
         assert_equal(sort_array(testOb->query_limbs(), 1), ({ "head", "left arm", "left foot", "left hand", "left leg", "right arm", "right foot", "right hand", "right leg", "torso" })),
 
         assert_equal(testOb->query_limb("torso"), ([ "damage": 0, "maxdamage": 1, "pct": 100, "status": 0, "type": "FATAL", ])),
     }) :));
+}
 
+void test_random_limbs () {
     expect("species random limb behaves", (: ({
+        assert_equal(testOb->query_random_limb(), 0),
+        testOb->set_species("human"),
+
         // check random limb is valid
         assert_equal(member_array(testOb->query_random_limb(), ({ "head", "left arm", "left foot", "left hand", "left leg", "right arm", "right foot", "right hand", "right leg", "torso" })) > -1, 1),
         // run a second check
         assert_equal(member_array(testOb->query_random_limb(), ({ "head", "left arm", "left foot", "left hand", "left leg", "right arm", "right foot", "right hand", "right leg", "torso" })) > -1, 1),
     }) :));
+}
+
+void test_limbs_sever () {
+    expect("species limbs are severable", (: ({
+        assert_equal(testOb->query_limbs(), ({ })),
+
+        testOb->set_species("human"),
+        assert_equal(sort_array(testOb->query_limbs(), 1), ({ "head", "left arm", "left foot", "left hand", "left leg", "right arm", "right foot", "right hand", "right leg", "torso" })),
+        assert_equal(testOb->query_severed_limbs(), ({ })),
+
+        testOb->handle_limb_sever("left hand"),
+
+        assert_equal(testOb->query_limb("left hand"), ([ "damage": -1, "maxdamage": 1, "pct": 25, "status": "severed", "type": "WIELD" ])),
+    }) :));
+
 }
 
 void test_limbs_and_level () {

@@ -79,12 +79,8 @@ string query_random_limb () {
 void handle_limb_sever (string limb) {
     object limbOb;
 
-    if (!this_object()) {
-        return;
-    }
-
     // non-fatal limbs can't be severed multiple times
-    if (__Limbs[limb]["status"] == "severed" && __Limbs[limb]["type"] != "FATAL") {
+    if (!this_object() || (__Limbs[limb]["status"] == "severed" && __Limbs[limb]["type"] != "FATAL")) {
         return;
     }
 
