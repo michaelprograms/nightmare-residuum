@@ -12,15 +12,16 @@ void handle_received (object env) {
     dustable::handle_received(env);
 }
 
-void setup_bodypart (string owner, string limb) {
+void setup_bodypart (object owner, string limb) {
     string possOwner;
-    __Owner = owner;
+    __Owner = owner->query_cap_name();
     __Limb = limb;
-
     possOwner = possessive_noun(__Owner);
-
     set_name("piece of " + __Limb);
     set_short("piece of " + possOwner + " " + __Limb);
     set_long("This is the severed " + __Limb + " of " + __Owner + ".\n");
     set_id(({ "piece of " + __Limb, __Limb }));
+    if (environment(owner)) {
+        handle_move(environment(owner));
+    }
 }

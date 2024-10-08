@@ -113,8 +113,7 @@ void handle_limb_sever (string limb) {
 
     // create bodypart
     limbOb = new("/std/item/bodypart.c");
-    limbOb->setup_bodypart(this_object()->query_cap_name(), limb);
-    limbOb->handle_move(environment());
+    limbOb->setup_bodypart(this_object(), limb);
 
     // deal half limb damage as HP damage
     this_object()->handle_damage(max(({ __Limbs[limb]["damage"], __Limbs[limb]["maxdamage"] }))/2, 0);

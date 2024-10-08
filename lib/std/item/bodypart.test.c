@@ -1,4 +1,5 @@
 inherit M_TEST;
+inherit STD_OBJECT;
 
 private mixed *calloutInfo;
 void test_received () {
@@ -17,11 +18,19 @@ void test_received () {
 }
 
 void test_bodypart () {
+    object room = new(STD_ROOM);
+
+    handle_move(room);
     expect("bodypart is setup to match", (: ({
-        testOb->setup_bodypart("Someone", "some limb"),
+        set_name("someone"),
+        assert_equal(query_name(), "someone"),
+
+        testOb->setup_bodypart(this_object(), "some limb"),
         // verify we set bodypart information
         assert_equal(testOb->query_name(), "piece of some limb"),
         assert_equal(testOb->query_short(), "piece of Someone's some limb"),
         assert_equal(testOb->query_id(), ({ "bodypart", "body part", "limb", "pieceofsomelimb", "piece of some limb", "some limb", })),
     }) :));
+    handle_move("/domain/Nowhere/room/void.c");
+    if (room) destruct(room);
 }
