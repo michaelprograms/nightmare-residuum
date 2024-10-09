@@ -41,8 +41,16 @@ void test_remove_protection () {
 
 void test_clear_protection () {
     expect("protection is clearable", (: ({
-        assert_equal(testOb->add_protection(10, 0), 10),
+        assert_equal(testOb->add_protection(10, 1), 10),
         assert_equal(testOb->query_protection(), 10),
+        assert_equal(testOb->clear_protection(), 0),
+        assert_equal(testOb->query_protection(), 0),
+
+        assert_equal(testOb->add_protection(10, 1), 10),
+        assert_equal(testOb->add_protection(10, 1), 20),
+        assert_equal(testOb->add_protection(10, 1), 30),
+
+        assert_equal(testOb->query_protection(), 30),
         assert_equal(testOb->clear_protection(), 0),
         assert_equal(testOb->query_protection(), 0),
     }) :));

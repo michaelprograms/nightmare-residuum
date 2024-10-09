@@ -15,8 +15,8 @@ int clear_protection () {
 
     __Protection = 0;
     if (this_object() && hadProtection) {
-        while (find_call_out("remove_protection") > -1) {
-            remove_call_out("remove_protection");
+        while (find_call_out("protection") > -1) {
+            remove_call_out("protection");
         }
         message("protection", "The protective shield around you fades away.", this_object());
     }
@@ -35,7 +35,7 @@ int add_protection (int n, int time) {
     }
 
     if (time > 0) {
-        call_out("remove_protection", time, n);
+        call_out("protection", time, n);
     }
     return __Protection;
 }
@@ -46,7 +46,6 @@ int remove_protection (int n) {
     if (this_object() && hadProtection) {
         message("protection", "The protective shield around you fades " + (__Protection > 0 ? "slightly" : "away") + ".", this_object());
     }
-
     return __Protection;
 }
 
