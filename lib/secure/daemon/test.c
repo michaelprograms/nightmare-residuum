@@ -330,9 +330,9 @@ varargs void update_test_data (string path, string ignoreRegex) {
             continue;
         } else if (file[1] == -2) {
             update_test_data(path + file[0] + "/", ignoreRegex);
-        } else if (regexp(file[0], "\\.test\\.c$") && !regexp(file[0], "\\.coverage\\.")) {
+        } else if (regexp(file[0], "\\.test\\.c$") && !regexp(file[0], "\\.(coverage|mock)\\.")) {
             __Tests[path+file[0]] = ([ ]);
-        } else if (regexp(file[0], "\\.c$")) {
+        } else if (regexp(file[0], "\\.c$") && !regexp(file[0], "\\.(coverage|mock)\\.")) {
             totalFiles ++;
             codeFiles += ({ file });
         }
@@ -369,7 +369,7 @@ void run (mapping options) {
     write("Scanning for test files...\n");
     update_test_data("/secure/", "/secure/cmd");
     update_test_data("/daemon/");
-    update_test_data("/std/", "/std/mock");
+    update_test_data("/std/");
 
     __TestFiles = keys(__Tests);
     __TestFiles = sort_array(__TestFiles, function(string a, string b) {

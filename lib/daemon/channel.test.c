@@ -67,10 +67,10 @@ void test_history () {
 }
 
 void test_send () {
-    object mockListeners = new("/std/mock/listeners.c");
+    object mockChannel = new("/daemon/channel.mock.c");
 
     expect("system channels can send", (: ({
-        assert_equal($(mockListeners)->start_shadow(testOb), 1),
+        assert_equal($(mockChannel)->start_shadow(testOb), 1),
 
         // bad attempt
         testOb->send("", this_object(), "bad."),
@@ -97,17 +97,17 @@ void test_send () {
 
         // @TODO listen for these messages?
 
-        assert_equal($(mockListeners)->stop_shadow(), 1),
+        assert_equal($(mockChannel)->stop_shadow(), 1),
     }) :));
 
-    if (mockListeners) destruct(mockListeners);
+    if (mockChannel) destruct(mockChannel);
 }
 
 void test_send_system () {
-    object mockListeners = new("/std/mock/listeners.c");
+    object mockChannel = new("/daemon/channel.mock.c");
 
     expect("system channels can send", (: ({
-        assert_equal($(mockListeners)->start_shadow(testOb), 1),
+        assert_equal($(mockChannel)->start_shadow(testOb), 1),
 
         testOb->send_system("invalid", "Test invalid."),
         assert_equal(testOb->query_history("invalid"), UNDEFINED),
@@ -120,8 +120,8 @@ void test_send_system () {
 
         // @TODO listen for these messages?
 
-        assert_equal($(mockListeners)->stop_shadow(), 1),
+        assert_equal($(mockChannel)->stop_shadow(), 1),
     }) :));
 
-    if (mockListeners) destruct(mockListeners);
+    if (mockChannel) destruct(mockChannel);
 }

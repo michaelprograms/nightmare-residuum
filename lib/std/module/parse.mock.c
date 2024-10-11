@@ -1,6 +1,5 @@
 inherit "/std/shadow.c";
 
-
 /* ----- used by tests ----- */
 
 string query_name () {

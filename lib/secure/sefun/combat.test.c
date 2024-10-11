@@ -46,8 +46,8 @@ void test_initiate_combat () {
 
     npc1 = new(STD_NPC);
     npc2 = new(STD_NPC);
-    mockNpc1 = new("/std/mock/npc.c");
-    mockNpc2 = new("/std/mock/npc.c");
+    mockNpc1 = new("/std/npc.mock.c");
+    mockNpc2 = new("/std/npc.mock.c");
 
     expect("hostilities should ensue", (: ({
         assert_equal($(mockNpc1)->start_shadow($(npc1)), 1),

@@ -153,7 +153,7 @@ void test_wander () {
 }
 
 void test_abilities () {
-    object mockLiving = new("/std/mock/living.c");
+    object mockNPC = new("/std/npc.mock.c");
 
     expect("ability list is queryable and settable", (: ({
         assert_equal(testOb->query_ability_list(), ({ })),
@@ -179,7 +179,7 @@ void test_abilities () {
     }) :));
 
     expect("ability should be commanded", (: ({
-        assert_equal($(mockLiving)->start_shadow(testOb), 1),
+        assert_equal($(mockNPC)->start_shadow(testOb), 1),
 
         // no ability list
         testOb->set_ability_list(({ })),
@@ -196,19 +196,17 @@ void test_abilities () {
         // ability was commanded
         assert_equal(testOb->query_received_commands(), ({ "test ability" })),
 
-        assert_equal($(mockLiving)->stop_shadow(), 1),
+        assert_equal($(mockNPC)->stop_shadow(), 1),
     }) :));
 
-    if (mockLiving) destruct(mockLiving);
+    if (mockNPC) destruct(mockNPC);
 }
 
 void test_say_response () {
-    object mockLiving = new("/std/mock/living.c");
-    object living = new(STD_LIVING);
-    object room = new(STD_ROOM);
+    object mockNPC = new("/std/npc.mock.c");
 
     expect("say responses should be handled", (: ({
-        assert_equal($(mockLiving)->start_shadow(testOb), 1),
+        assert_equal($(mockNPC)->start_shadow(testOb), 1),
 
         assert_equal(testOb->query_say_response(), ([ ])),
 
@@ -226,19 +224,17 @@ void test_say_response () {
         // say response was commanded
         assert_equal(testOb->query_received_commands(), ({ "say response" })),
 
-        // test living in environment
-        assert_equal(testOb->handle_move($(room)), 1),
-        assert_equal($(living)->handle_move($(room)), 1),
-        // won't match off itself
         testOb->receive_message("say", "You ask: match?"),
         testOb->receive_message("say", "You exclaim: match!"),
         testOb->receive_message("say", "You say: match"),
         testOb->receive_message("say", "You synthesize: match"),
         assert_equal(testOb->query_received_commands(), ({ "say response" })),
         // matches off another living
-        $(living)->handle_command("say match"),
+        testOb->receive_message("say", "Someone says: match"),
         assert_equal(testOb->query_received_commands(), ({ "say response", "say response" })),
+        testOb->receive_message("say", "Someone says: match"),
+        assert_equal(testOb->query_received_commands(), ({ "say response", "say response", "say response" })),
+
+        assert_equal($(mockNPC)->stop_shadow(), 1),
     }) :));
-    if (living) destruct(living);
-    if (room) destruct(room);
 }

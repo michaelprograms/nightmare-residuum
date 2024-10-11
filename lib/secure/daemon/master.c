@@ -336,7 +336,7 @@ varargs int valid_override (string file, string efun_name, string main_file) {
 // valid_shadow
 int valid_shadow (object ob) {
     // Only mock files or shadow test can use shadows
-    if (regexp(file_name(previous_object()), "^/std/mock/")) {
+    if (regexp(file_name(previous_object()), "[a-z]+\\.mock#[0-9]+")) {
         return 1;
     } else if (base_name(ob) == "/std/shadow.test") {
         return 1;

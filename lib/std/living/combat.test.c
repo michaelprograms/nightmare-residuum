@@ -2,7 +2,7 @@ inherit M_TEST;
 
 void test_hostiles () {
     object ob1 = new(STD_LIVING), ob2 = new(STD_LIVING);
-    object mockCharacter = new("/std/mock/character.c");
+    object mockCharacter = new("/std/character.mock.c");
 
     expect("handles adding, querying, and removing hostiles", (: ({
         assert_equal($(mockCharacter)->start_shadow(testOb), 1),

@@ -74,7 +74,7 @@ void test_limbs_sever () {
 }
 
 void test_limbs_and_level () {
-    object mockBody = new("/std/mock/body.c");
+    object mockBody = new("/std/living/body.mock.c");
 
     mockBody->start_shadow(testOb);
     expect("setting species first has maxdamage", (: ({

@@ -1,7 +1,7 @@
 inherit M_TEST;
 
 void test_add_rules () {
-    object mockParse = new("/std/mock/parse.c");
+    object mockParse = new("/std/module/parse.mock.c");
 
     expect("rules and synonyms are added", (: ({
         assert_equal($(mockParse)->start_shadow(testOb), 1),

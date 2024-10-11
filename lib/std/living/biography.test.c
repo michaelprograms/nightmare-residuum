@@ -59,7 +59,7 @@ void test_handle_victory () {
 
 void test_handle_defeat () {
     object r = new(STD_ROOM);
-    object mockCharacter = new("/std/mock/character.c");
+    object mockCharacter = new("/std/character.mock.c");
 
     // setup test object
     if (testOb) destruct(testOb);
