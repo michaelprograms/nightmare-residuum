@@ -183,10 +183,11 @@ void test_injections () {
 }
 
 void test_heal () {
-    destruct(testOb);
-    testOb = new(STD_LIVING);
+    object mockBody = new("/std/living/body.mock.c");
 
     expect("heal restores hp/sp/mp and limb damage", (: ({
+        assert_equal($(mockBody)->start_shadow(testOb), 1),
+
         testOb->set_species("human"),
         // verify initial state
         assert_equal(testOb->query_hp(), 22),
@@ -211,5 +212,7 @@ void test_heal () {
         assert_equal(testOb->query_sp(), 11),
         assert_equal(testOb->query_mp(), 11),
         assert_equal(testOb->query_limb("torso"), ([ "damage": 15, "maxdamage": 23, "pct": 100, "status": 0, "type": "FATAL" ])),
+
+        assert_equal($(mockBody)->stop_shadow(testOb), 1),
     }) :));
 }
