@@ -104,9 +104,12 @@ void test_limbs_and_level () {
 }
 
 void test_injections () {
+    object mockBody = new("/std/living/body.mock.c");
+
     expect("injections are addable and queryable", (: ({
         assert_equal(testOb->query_injections(), ([ ])),
 
+        // adding
         testOb->add_injection("healing nanites", 5),
         assert_equal(testOb->query_injection("healing nanites"), 5),
         assert_equal(testOb->query_injections(), ([ "healing nanites": 5, ])),
@@ -122,11 +125,20 @@ void test_injections () {
         testOb->add_injection("damaging nanites", 5),
         assert_equal(testOb->query_injections(), ([ "healing nanites": 10, "damaging nanites": 10, ])),
         assert_equal(testOb->query_injection("damaging nanites"), 10),
+
+        // removing
+        testOb->add_injection("healing nanites", -10),
+        assert_equal(testOb->query_injections(), ([ "damaging nanites": 10, ])),
+        assert_equal(testOb->query_injection("healing nanites"), 0),
+
+        testOb->add_injection("damaging nanites", -10),
+        assert_equal(testOb->query_injections(), ([ ])),
+        assert_equal(testOb->query_injection("damaging nanites"), 0),
     }) :));
 
-    destruct(testOb);
-    testOb = new(STD_LIVING);
     expect("injections are handled by heart_beat", (: ({
+        assert_equal($(mockBody)->start_shadow(testOb), 1),
+
         testOb->set_race("human"),
         testOb->set_level(1),
         testOb->add_injection("healing nanites", 10),
@@ -165,6 +177,8 @@ void test_injections () {
         // damaging nanites work before healing nanites again
         assert_equal(testOb->query_injections(), ([ "healing nanites": 6, ])),
         assert_equal(testOb->query_injection("healing nanites"), 6),
+
+        assert_equal($(mockBody)->stop_shadow(testOb), 1),
     }) :));
 }
 

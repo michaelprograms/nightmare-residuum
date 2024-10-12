@@ -466,6 +466,9 @@ void add_injection (string type, int strength) {
         __Injections[type] = 0;
     }
     __Injections[type] += strength;
+    if (__Injections[type] == 0) {
+        map_delete(__Injections, type);
+    }
 }
 private void handle_injections () {
     int n, amt;
