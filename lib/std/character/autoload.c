@@ -32,13 +32,9 @@ void restore_autoload () {
     string err;
 
     for (i = 0; i < l; i ++) {
-        if (!sizeof(__Autoload[i])) {
+        if (!sizeof(__Autoload[i]) || !stringp(__Autoload[i][0])) {
             continue;
         }
-        if (!stringp(__Autoload[i][0])) {
-            continue;
-        }
-
         err = catch(ob = new(__Autoload[i][0]));
         if (err || !ob) {
             if (this_object()->query_immortal()) {

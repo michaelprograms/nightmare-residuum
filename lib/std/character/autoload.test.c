@@ -1,20 +1,10 @@
 inherit M_TEST;
 
-void before_each_test () {
-    // @TODO test coverage
-    testOb = new(STD_CHARACTER); // need inventory and levels
-}
-void after_each_test () {
-    if (objectp(testOb)) destruct(testOb);
-}
-
 void test_autoload () {
+    object mockBody = new("/std/living/body.mock.c");
+
     object ob1, ob2;
 
-    // set need set_level
-    destruct(testOb);
-    testOb = new("/std/character.c");
-    testOb->set_level(1);
 
     ob1 = new(STD_ITEM);
     ob1->set_autoload(1);
@@ -22,7 +12,10 @@ void test_autoload () {
     ob2->set_autoload(0);
 
     expect("autoload updates and restores", (: ({
+        assert_equal($(mockBody)->start_shadow(testOb), 1),
+
         // setup
+        testOb->set_level(1),
         assert_equal(testOb->query_level(), 1),
 
         // move item to inventory
@@ -60,6 +53,8 @@ void test_autoload () {
         // inventory restored
         assert_equal(sizeof(all_inventory(testOb)), 1),
         assert_equal(base_name(all_inventory(testOb)[0]), "/std/item"),
+
+        assert_equal($(mockBody)->stop_shadow(testOb), 1),
     }) :));
 
     if (ob1) destruct(ob1);
