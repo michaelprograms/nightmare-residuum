@@ -2,7 +2,9 @@ inherit "/std/shadow.c";
 
 inherit "/std/living/stats.c";
 inherit "/std/living/vitals.c";
-inherit "/std/module/levelable.c";
+
+inherit M_CONTAINER;
+inherit M_LEVELABLE;
 
 void set_level (int l) {
     levelable::set_level(l);
