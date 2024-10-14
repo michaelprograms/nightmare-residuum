@@ -180,6 +180,8 @@ void test_injections () {
 
         assert_equal($(mockBody)->stop_shadow(testOb), 1),
     }) :));
+
+    if (mockBody) destruct(mockBody);
 }
 
 void test_heal () {
@@ -215,4 +217,6 @@ void test_heal () {
 
         assert_equal($(mockBody)->stop_shadow(testOb), 1),
     }) :));
+
+    if (mockBody) destruct(mockBody);
 }

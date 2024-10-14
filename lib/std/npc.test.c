@@ -237,4 +237,6 @@ void test_say_response () {
 
         assert_equal($(mockNPC)->stop_shadow(), 1),
     }) :));
+
+    if (mockNPC) destruct(mockNPC);
 }
