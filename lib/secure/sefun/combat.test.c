@@ -72,3 +72,32 @@ void test_initiate_combat () {
     if (npc1) destruct(npc1);
     if (npc2) destruct(npc2);
 }
+
+void test_present_hostile () {
+    object room, living1, living2;
+
+    room = new(STD_ROOM);
+    living1 = new(STD_LIVING);
+    living2 = new(STD_LIVING);
+    living1->handle_move(room);
+    living2->handle_move(room);
+
+    expect("present hostiles are returned", (: ({
+        assert_equal(testOb->present_hostiles($(living1)), ({ })),
+        assert_equal(testOb->present_hostile($(living1)), 0),
+        assert_equal(testOb->present_hostiles($(living2)), ({ })),
+        assert_equal(testOb->present_hostile($(living2)), 0),
+
+        $(living1)->add_hostile($(living2)),
+        $(living2)->add_hostile($(living1)),
+
+        assert_equal(testOb->present_hostiles($(living2)), ({ $(living1) })),
+        assert_equal(testOb->present_hostile($(living2)), $(living1)),
+        assert_equal(testOb->present_hostiles($(living1)), ({ $(living2) })),
+        assert_equal(testOb->present_hostile($(living1)), $(living2)),
+    }) :));
+
+    if (room) destruct(room);
+    if (living1) destruct(living1);
+    if (living2) destruct(living2);
+}

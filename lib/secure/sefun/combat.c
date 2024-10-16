@@ -93,3 +93,12 @@ void initiate_combat (object source, object target) {
     source->add_hostile(target);
     target->add_hostile(source);
 }
+
+object *present_hostiles (object source) {
+    object env = environment(source);
+    return filter(source->query_hostiles(), (: environment($1) == $(env) :));
+}
+object present_hostile (object source) {
+    object *hostiles = present_hostiles(source);
+    return sizeof(hostiles) ? hostiles[0] : 0;
+}
