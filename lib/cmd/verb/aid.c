@@ -25,8 +25,7 @@ void do_aid_liv (object ob, string str) {
         message("attack", po->query_cap_name() + " runs to your aid!", ob);
         message("attack", po->query_cap_name() + " runs to " + possessive_noun(ob->query_cap_name()) + " aid!", environment(po), ({ po, ob }));
     }
-
-    foreach (object target in ob->query_present_hostiles()) {
+    foreach (object target in targets) {
         initiate_combat(po, target);
     }
 }
