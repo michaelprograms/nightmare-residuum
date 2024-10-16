@@ -16,7 +16,7 @@ void teleport (object tc) {
 void command (string input, mapping flags) {
     object tc = this_character();
 
-    if (sizeof(tc->query_present_hostiles())) {
+    if (present_hostile(tc)) {
         message("action", "You cannot recall while hostiles opponents are nearby.", tc);
         return;
     }

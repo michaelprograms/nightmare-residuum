@@ -213,7 +213,7 @@ int query_difficulty_factor () {
 object *verify_targets (object source, object *targets) {
     if (__Type == "attack") {
         if ((!targets || !targets[0])) {
-            targets = ({ source->query_target_hostile() });
+            targets = ({ present_hostile(source) });
         }
         if ((!targets || !targets[0])) {
             return 0;

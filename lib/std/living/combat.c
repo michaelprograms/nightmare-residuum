@@ -30,13 +30,6 @@ object *query_hostiles () {
     __Hostiles = filter(__Hostiles, (: !undefinedp($1) :));
     return __Hostiles;
 }
-object *query_present_hostiles () {
-    return filter(query_hostiles(), (: environment($1) == environment() :));
-}
-object query_target_hostile () {
-    object *hostiles = query_present_hostiles();
-    return sizeof(hostiles) ? hostiles[0] : 0;
-}
 
 /* ----- combat table ----- */
 
@@ -185,8 +178,8 @@ protected void handle_combat () {
     int d100;
     float sum = 0;
 
-    target = query_target_hostile();
-    this_object()->check_lifesigns(query_target_hostile());
+    target = present_hostile(this_object());
+    this_object()->check_lifesigns(target);
     if (
         !this_object() ||
         this_object()->query_defeated() ||

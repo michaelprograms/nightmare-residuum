@@ -19,7 +19,7 @@ void do_aid_liv (object ob, string str) {
     object po = previous_object();
     object *targets;
 
-    targets = ob->query_present_hostiles();
+    targets = present_hostiles(ob);
     if (sizeof(targets)) {
         message("attack", "You run to " + possessive_noun(ob->query_cap_name()) + " aid!", po);
         message("attack", po->query_cap_name() + " runs to your aid!", ob);

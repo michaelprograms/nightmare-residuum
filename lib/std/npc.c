@@ -188,8 +188,7 @@ void heart_beat () {
     if (!clonep()) {
         return;
     }
-
-    if (random(2) && member_array(query_posture(), ({ "sitting", "laying" })) > -1 && sizeof(query_present_hostiles())) {
+    if (random(2) && member_array(query_posture(), ({ "sitting", "laying" })) > -1 && present_hostile(this_object())) {
         handle_command("stand");
     }
     ::heart_beat();
