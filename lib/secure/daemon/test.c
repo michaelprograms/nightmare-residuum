@@ -102,7 +102,7 @@ void done_test (mapping results) {
         if (coverageAfterTests) {
             string file = __TestFiles[currentTest][0..<8] + ".c";
             __TotalLines[file] = ([
-                "fnsPct": totalFns > 0 ? hitFns * 100.0 / (totalFns) : 0.0,
+                "fnsPct": totalFns > 0 ? hitFns * 100.0 / totalFns : 0.0,
                 "fnsNum": hitFns + "/" + totalFns,
                 "linesPct": totalLines > 0 ? hitLines * 100.0 / totalLines : 0.0,
                 "linesNum": hitLines + "/" + totalLines,
@@ -212,15 +212,14 @@ string format_coverage_line (int n, mapping coverage) {
     linesC = query_coverage_gradient(linesPct);
     combinedC = query_coverage_gradient(combinedPct);
 
-    if (sizeof(uncovered) > 31) {
-        uncovered = uncovered[0..31] + "…";
-    }
-
     result = sprintf("%-*' 's", 23 - n, "");
     result += sprintf("%s%3d%%", combinedC, linesPct) + " ";
     result += sprintf("%s%7|s", fnsC, coverage["fnsNum"]) + resetC + " ";
     result += sprintf("%s%7|s", linesC, coverage["linesNum"]) + resetC;
     if (sizeof(uncovered)) {
+        if (sizeof(uncovered) > 31) {
+            uncovered = uncovered[0..31] + "…";
+        }
         result += " " + uncovered;
     }
     return result;
