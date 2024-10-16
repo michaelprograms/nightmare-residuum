@@ -26,6 +26,12 @@ void test_hostiles () {
         assert_equal(testOb->query_hostile($(ob1)), 0),     // 1st hostile not found
         assert_equal(testOb->query_hostile($(ob2)), 0),     // 2nd hostile not found
 
+        // test defeated hostile
+        $(ob1)->set_defeated(1),
+        assert_equal(testOb->add_hostile($(ob1)), 0),       // can't add defeated hostile
+        $(ob1)->set_defeated(0),
+        assert_equal(testOb->add_hostile(testOb), 0),       // can't add defeated self
+
         // test filtering undefined
         assert_equal(testOb->add_hostile($(ob1)), 1),       // 1st hostile added
         assert_equal(testOb->add_hostile($(ob2)), 1),       // 2nd hostile added
