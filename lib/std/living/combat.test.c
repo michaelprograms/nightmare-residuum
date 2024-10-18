@@ -1,4 +1,5 @@
 inherit M_TEST;
+inherit M_MOVE;
 
 void test_hostiles () {
     object ob1 = new(STD_LIVING), ob2 = new(STD_LIVING);
@@ -44,4 +45,17 @@ void test_hostiles () {
     if (ob1) ob1->handle_remove();
     if (ob2) ob2->handle_remove();
     if (mockCharacter) destruct(mockCharacter);
+}
+
+int is_living () {
+    return 1;
+}
+void test_parser_applies () {
+    expect("combat applies behave", (: ({
+        assert_equal(testOb->direct_attack_liv(), 1),
+        assert_equal(testOb->direct_aid_liv(), 1),
+        testOb->add_hostile(this_object()),
+        assert_equal(testOb->direct_attack_liv(), 0),
+        assert_equal(testOb->direct_aid_liv(), 0),
+    }) :));
 }
