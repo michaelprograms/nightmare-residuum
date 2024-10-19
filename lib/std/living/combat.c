@@ -36,13 +36,11 @@ object *query_hostiles () {
 mapping *query_combat_table (object target, int hit) {
     mapping *table;
     float levelAdjust;
-
     levelAdjust = (target->query_level() - this_object()->query_level()) / 5.0;
-
     table = ({
         ([
             "id": "miss",
-            "value": min(({ 0.0, 5.0 + levelAdjust + hit }))
+            "value": max(({ 0.0, 5.0 + levelAdjust + hit }))
         ]),
         ([
             "id": "resist",
@@ -50,26 +48,25 @@ mapping *query_combat_table (object target, int hit) {
         ]),
         ([
             "id": "block",
-            "value": (target && target->query_worn_shield() ? min(({ 0.0, 5.0 + levelAdjust - hit })) : 0.0)
+            "value": (target && target->query_worn_shield() ? max(({ 0.0, 5.0 + levelAdjust - hit })) : 0.0)
         ]),
         ([
             "id": "parry",
-            "value": (sizeof(target && target->query_wielded_weapons()) ? min(({ 0.0, 5.0 + levelAdjust - hit })) : 0.0)
+            "value": (sizeof(target && target->query_wielded_weapons()) ? max(({ 0.0, 5.0 + levelAdjust - hit })) : 0.0)
         ]),
         ([
             "id": "evade",
-            "value": min(({ 0.0, 5.0 + levelAdjust - hit }))
+            "value": max(({ 0.0, 5.0 + levelAdjust - hit }))
         ]),
         ([
             "id": "critical hit",
-            "value": min(({ 0.0, 5.0 + levelAdjust - hit }))
+            "value": max(({ 0.0, 5.0 + levelAdjust - hit }))
         ]),
         ([
             "id": "regular hit",
             "value": 100.0
         ]),
     });
-
     return table;
 }
 
