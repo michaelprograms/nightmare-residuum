@@ -31,45 +31,6 @@ object *query_hostiles () {
     return __Hostiles;
 }
 
-/* ----- combat table ----- */
-
-mapping *query_combat_table (object target, int hit) {
-    mapping *table;
-    float levelAdjust;
-    levelAdjust = (target->query_level() - this_object()->query_level()) / 5.0;
-    table = ({
-        ([
-            "id": "miss",
-            "value": max(({ 0.0, 5.0 + levelAdjust + hit }))
-        ]),
-        ([
-            "id": "resist",
-            "value": 0.0
-        ]),
-        ([
-            "id": "block",
-            "value": (target && target->query_worn_shield() ? max(({ 0.0, 5.0 + levelAdjust - hit })) : 0.0)
-        ]),
-        ([
-            "id": "parry",
-            "value": (sizeof(target && target->query_wielded_weapons()) ? max(({ 0.0, 5.0 + levelAdjust - hit })) : 0.0)
-        ]),
-        ([
-            "id": "evade",
-            "value": max(({ 0.0, 5.0 + levelAdjust - hit }))
-        ]),
-        ([
-            "id": "critical hit",
-            "value": max(({ 0.0, 5.0 + levelAdjust - hit }))
-        ]),
-        ([
-            "id": "regular hit",
-            "value": 100.0
-        ]),
-    });
-    return table;
-}
-
 /* ----- combat ----- */
 
 private void handle_combat_miss (object target, mixed weapon) {
@@ -173,7 +134,7 @@ protected void handle_combat () {
     object target, *weapons;
     int min, max, hits;
     int d100;
-    float sum = 0;
+    int sum = 0;
 
     target = present_hostile(this_object());
     this_object()->check_lifesigns(target);
@@ -224,11 +185,11 @@ protected void handle_combat () {
             d100 = roll_die(1, 100)[0];
         }
         sum = 0;
-        foreach (mapping m in query_combat_table(target, h)) {
+        foreach (mapping m in combat_table(this_object(), target, h)) {
             if (!m["value"]) {
                 continue;
             }
-            sum = min(({ 100.0, sum + m["value"], }));
+            sum = min(({ 100, sum + m["value"], }));
             if (d100 <= sum) {
                 switch (m["id"]) {
                 case "miss":

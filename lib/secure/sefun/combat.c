@@ -102,3 +102,38 @@ object present_hostile (object source) {
     object *hostiles = present_hostiles(source);
     return sizeof(hostiles) ? hostiles[0] : 0;
 }
+
+mapping *combat_table (object source, object target, int hits) {
+    mapping *table = ({ });
+    int levelAdjust = to_int(5 + (target->query_level() - source->query_level()) / 5.0);
+    int miss, /*resist,*/ block, parry, evade, criticalHit;
+
+    miss = max(({ 0, levelAdjust + hits }));
+    // resist = 0.0;
+    block = (target && target->query_worn_shield() ? max(({ 0, levelAdjust - hits })) : 0);
+    parry = (sizeof(target && target->query_wielded_weapons()) ? max(({ 0, levelAdjust - hits })) : 0);
+    evade = max(({ 0, levelAdjust - hits }));
+    criticalHit = max(({ 0, levelAdjust - hits }));
+
+    if (miss > 0) {
+        table += ({ ([ "id": "miss", "value": miss ]) });
+    }
+    // TODO: Add resist
+    // if (resist > 0) {
+    //     table += ({ ([ "id": "resist", "value": resist ]) });
+    // }
+    if (block > 0) {
+        table += ({ ([ "id": "block", "value": block ]) });
+    }
+    if (parry > 0) {
+        table += ({ ([ "id": "parry", "value": parry ]) });
+    }
+    if (evade > 0) {
+        table += ({ ([ "id": "evade", "value": evade ]) });
+    }
+    if (criticalHit > 0) {
+        table += ({ ([ "id": "critical hit", "value": criticalHit ]) });
+    }
+    table += ({ ([ "id": "regular hit", "value": 100 ]) });
+    return table;
+}

@@ -101,3 +101,74 @@ void test_present_hostile () {
     if (living1) destruct(living1);
     if (living2) destruct(living2);
 }
+
+void test_combat_table () {
+    object living1 = new("/std/living.c");
+    object living2 = new("/std/living.c");
+
+    expect("combat table is built", (: ({
+        $(living1)->set_level(1),
+        $(living2)->set_level(1),
+        assert_equal(testOb->combat_table($(living1), $(living2), 0), ({
+            ([ "id": "miss", "value": 5 ]),
+            ([ "id": "evade", "value": 5 ]),
+            ([ "id": "critical hit", "value": 5 ]),
+            ([ "id": "regular hit", "value": 100 ])
+        })),
+        assert_equal(testOb->combat_table($(living1), $(living2), 1), ({
+            ([ "id": "miss", "value": 6 ]),
+            ([ "id": "evade", "value": 4 ]),
+            ([ "id": "critical hit", "value": 4 ]),
+            ([ "id": "regular hit", "value": 100 ])
+        })),
+        assert_equal(testOb->combat_table($(living1), $(living2), 2), ({
+            ([ "id": "miss", "value": 7 ]),
+            ([ "id": "evade", "value": 3 ]),
+            ([ "id": "critical hit", "value": 3 ]),
+            ([ "id": "regular hit", "value": 100 ])
+        })),
+        $(living1)->set_level(10),
+        $(living2)->set_level(1),
+        assert_equal(testOb->combat_table($(living1), $(living2), 0), ({
+            ([ "id": "miss", "value": 3 ]),
+            ([ "id": "evade", "value": 3 ]),
+            ([ "id": "critical hit", "value": 3 ]),
+            ([ "id": "regular hit", "value": 100 ])
+        })),
+        assert_equal(testOb->combat_table($(living1), $(living2), 1), ({
+            ([ "id": "miss", "value": 4 ]),
+            ([ "id": "evade", "value": 2 ]),
+            ([ "id": "critical hit", "value": 2 ]),
+            ([ "id": "regular hit", "value": 100 ])
+        })),
+        assert_equal(testOb->combat_table($(living1), $(living2), 2), ({
+            ([ "id": "miss", "value": 5 ]),
+            ([ "id": "evade", "value": 1 ]),
+            ([ "id": "critical hit", "value": 1 ]),
+            ([ "id": "regular hit", "value": 100 ])
+        })),
+        $(living1)->set_level(1),
+        $(living2)->set_level(10),
+        assert_equal(testOb->combat_table($(living1), $(living2), 0), ({
+            ([ "id": "miss", "value": 6 ]),
+            ([ "id": "evade", "value": 6 ]),
+            ([ "id": "critical hit", "value": 6 ]),
+            ([ "id": "regular hit","value": 100 ])
+        })),
+        assert_equal(testOb->combat_table($(living1), $(living2), 1), ({
+            ([ "id": "miss", "value": 7 ]),
+            ([ "id": "evade", "value": 5 ]),
+            ([ "id": "critical hit", "value": 5 ]),
+            ([ "id": "regular hit", "value": 100 ])
+        })),
+        assert_equal(testOb->combat_table($(living1), $(living2), 2), ({
+            ([ "id": "miss", "value": 8 ]),
+            ([ "id": "evade", "value": 4 ]),
+            ([ "id": "critical hit", "value": 4 ]),
+            ([ "id": "regular hit", "value": 100 ])
+        })),
+    }) :));
+
+    if (living1) destruct(living1);
+    if (living2) destruct(living2);
+}

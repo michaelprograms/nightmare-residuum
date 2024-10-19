@@ -40,6 +40,7 @@ void display_heal_message (object source, object target, string limb, int damage
 void initiate_combat (object source, object target);
 object *present_hostiles (object source);
 object present_hostile (object source);
+mapping *combat_table (object source, object target, int hits);
 
 /* --- format --- */
 varargs string format_page (string *items, mixed columns, int pad, int center, string ansi);
