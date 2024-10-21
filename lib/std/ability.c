@@ -450,7 +450,7 @@ private void handle_ability_use (object source, object *targets) {
             } else if (__Type == "heal") {
                 // determine heal
                 damage = calculate_heal(source, target, limb);
-                display_heal_message(source, target, limb, damage);
+                combat_heal_message(source, target, limb, damage);
                 // @TODO determine hp/sp/mp
                 target->add_hp(damage);
 

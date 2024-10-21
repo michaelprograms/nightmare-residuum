@@ -87,6 +87,50 @@ void test_combat_hit_message () {
     if (npc2) destruct(npc2);
 }
 
+void test_combat_heal_message () {
+    object room;
+    object npc1, npc2;
+    object mockNpc1, mockNpc2;
+
+    room = new(STD_ROOM);
+    npc1 = new(STD_NPC);
+    npc2 = new(STD_NPC);
+    npc1->set_name("npc one");
+    npc2->set_name("npc two");
+    npc1->set_stat("endurance", 10);
+    npc2->set_stat("endurance", 10);
+    npc1->handle_move(STD_ROOM);
+    npc2->handle_move(STD_ROOM);
+    mockNpc1 = new("/std/npc.mock.c");
+    mockNpc2 = new("/std/npc.mock.c");
+
+    expect("messages should display", (: ({
+        assert_equal($(mockNpc1)->start_shadow($(npc1)), 1),
+        assert_equal($(mockNpc2)->start_shadow($(npc2)), 1),
+
+        // npc1 is full hp, no heal messages
+        $(npc1)->set_hp($(npc1)->query_max_hp()),
+        testOb->combat_heal_message($(npc2), $(npc1), "limb", 1),
+        assert_equal($(npc1)->query_received_messages(), ({ })),
+        assert_equal($(npc2)->query_received_messages(), ({ })),
+
+        // npc2 at 1 hp, heal messages
+        $(npc2)->set_hp(1),
+        testOb->combat_heal_message($(npc1), $(npc2), "limb", 1),
+        assert_equal($(npc1)->query_received_messages()[<1], ({ "combat heal", "Npc two's wounds heal slightly." })),
+        assert_equal($(npc2)->query_received_messages()[<1], ({ "combat heal", "Your wounds heal slightly." })),
+
+        assert_equal($(mockNpc1)->stop_shadow(), 1),
+        assert_equal($(mockNpc2)->stop_shadow(), 1),
+    }) :));
+
+    if (mockNpc1) destruct(mockNpc1);
+    if (mockNpc2) destruct(mockNpc2);
+    if (npc1) destruct(npc1);
+    if (npc2) destruct(npc2);
+    if (room) destruct(room);
+}
+
 void test_initiate_combat () {
     object npc1, npc2;
     object mockNpc1, mockNpc2;

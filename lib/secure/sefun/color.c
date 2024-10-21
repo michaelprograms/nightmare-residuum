@@ -227,6 +227,8 @@ string format_message_color (string type, string message) {
         message = "%^I_RED%^BOLD%^" + message + "%^RESET%^";
     } else if (type == "combat hit") {
         message = "%^RED%^" + message + "%^RESET%^";
+    } else if (type == "combat heal") {
+        message = "%^I_CYAN%^" + message + "%^RESET%^";
     } else if (type == "combat miss") {
         message = "%^GREEN%^" + message + "%^RESET%^";
     } else if (type == "combat alert") {

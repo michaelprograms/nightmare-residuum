@@ -75,10 +75,10 @@ void combat_hit_message (object source, object target, string limb, mixed weapon
     }
 }
 
-void display_heal_message (object source, object target, string limb, int damage) {
+void combat_heal_message (object source, object target, string limb, int damage) {
     if (target->query_hp() < target->query_max_hp()) {
-        message("action", SEFUN->possessive_noun(target->query_cap_name()) + " wounds heal slightly.", environment(target), target);
-        message("action", "Your wounds heal slightly.", target);
+        message("combat heal", SEFUN->possessive_noun(target->query_cap_name()) + " wounds heal slightly.", environment(target), target);
+        message("combat heal", "Your wounds heal slightly.", target);
     }
 }
 
