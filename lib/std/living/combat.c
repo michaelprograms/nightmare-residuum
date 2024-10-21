@@ -124,7 +124,7 @@ private void handle_combat_hit (object target, mixed weapon, int crit) {
     damage -= target->query_limb_armor(limb);
     damage -= target->query_protection();
 
-    display_combat_message(this_object(), target, limb, weapon, type, damage, crit, 0);
+    combat_hit_message(this_object(), target, limb, weapon, type, damage, crit, 0);
     if (damage > 0) {
         target->handle_damage(damage, limb);
     }

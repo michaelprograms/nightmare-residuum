@@ -35,7 +35,7 @@ string int_to_binary (int b10);
 
 /* --- combat --- */
 int query_combat_tier_from_percent (int percent);
-void display_combat_message (object source, object target, string limb, mixed weapon, string type, int damage, int crit, int isAbility);
+void combat_hit_message (object source, object target, string limb, mixed weapon, string type, int damage, int crit, int isAbility);
 void display_heal_message (object source, object target, string limb, int damage);
 void initiate_combat (object source, object target);
 object *present_hostiles (object source);

@@ -31,20 +31,17 @@ int query_combat_tier_from_percent (int percent) {
     return 0;
 }
 
-void display_combat_message (object source, object target, string limb, mixed weapon, string type, int damage, int crit, int isAbility) {
+void combat_hit_message (object source, object target, string limb, mixed weapon, string type, int damage, int crit, int isAbility) {
     string sourceMsg, targetMsg, envMsg;
     string weaponName;
     int percent;
-    string verb, verbs, adverb, sourcePossessive;
+    string critically, verb, verbs, adverb, sourcePossessive;
     int i = 0;
 
-    if (!source || !target || !weapon || !type) {
-        return;
-    }
-
     weaponName = objectp(weapon) ? weapon->query_name() : weapon;
-
     percent = to_int(damage * 100.0 / target->query_max_hp());
+    critically = crit ? "critically " : "";
+
     if (percent < 1) {
         verb = "hit";
         adverb = "ineffectively";
@@ -63,7 +60,7 @@ void display_combat_message (object source, object target, string limb, mixed we
     verbs = pluralize(verb);
     adverb = adverb ? " " + adverb + " " : " ";
 
-    sourceMsg = sprintf("You %s%s %s%sin the %s with your %s.", crit ? "critically " : "", verb, target->query_cap_name(), adverb, limb, weaponName);
+    sourceMsg = sprintf("You %s%s %s%sin the %s with your %s.", critically, verb, target->query_cap_name(), adverb, limb, weaponName);
     targetMsg = sprintf("%s %s%s you%sin the %s with %s %s.", source->query_cap_name(), crit ? "critically " : "", verbs, adverb, limb, sourcePossessive, weaponName);
     envMsg = sprintf("%s %s%s %s%sin the %s with %s %s.", source->query_cap_name(), crit ? "critically " : "", verbs, target->query_cap_name(), adverb, limb, sourcePossessive, weaponName);
 
