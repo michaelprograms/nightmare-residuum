@@ -20,6 +20,9 @@ void receive_message (string type, string message) {
         query_shadow()->receive_message(type, message);
     }
 }
+void clear_received_messages () {
+    __ReceivedMessages = ({ });
+}
 
 /* ---- commands ---- */
 

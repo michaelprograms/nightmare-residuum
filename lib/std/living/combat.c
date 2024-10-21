@@ -50,18 +50,6 @@ private void handle_combat_miss (object target, mixed weapon) {
     message("combat miss", this_object()->query_cap_name() + " misses you with " + possessive + " " + name + ".", target);
     message("combat miss", this_object()->query_cap_name() + " misses " + target->query_cap_name() + " with " + possessive + " " + name + ".", environment(), ({ this_object(), target }));
 }
-private void handle_combat_block (object target) {
-    string possessive = possessive(this_object());
-    object shield = this_object()->query_worn_shield();
-
-    if (!shield) {
-        error("Bad argument 2 to combat->handle_combat_block");
-    }
-
-    message("combat miss", "You block " + target->query_cap_name() + " with your " + shield->query_name() + ".", this_object());
-    message("combat miss", this_object()->query_cap_name() + " blocks you with " + possessive + " " + shield->query_name() + ".", target);
-    message("combat miss", this_object()->query_cap_name() + " blocks " + target->query_cap_name() + " with " + possessive + " " + shield->query_name() + ".", environment(), ({ this_object(), target }));
-}
 private void handle_combat_parry (object target) {
     string type, name, possessive = possessive(this_object());
     mixed *weapons = this_object()->query_wielded_weapons() + this_object()->query_wieldable_limbs(), weapon = element_of(weapons);
@@ -198,7 +186,7 @@ protected void handle_combat () {
                 // case "resist": // @TODO
                 //     break;
                 case "block":
-                    target->handle_combat_block(target);
+                    combat_block_message(this_object(), target);
                     break;
                 case "parry":
                     target->handle_combat_parry(target, element_of(weapons));

@@ -82,6 +82,14 @@ void combat_heal_message (object source, object target, string limb, int damage)
     }
 }
 
+void combat_block_message (object source, object target) {
+    object shield = source->query_worn_shield();
+    string possessive = SEFUN->possessive(target->query_cap_name());
+    message("combat miss", "You block " + source->query_cap_name() + (shield ? " with your " + shield->query_name() : "") + ".", target);
+    message("combat miss", target->query_cap_name() + " blocks you" + (shield ? " with " + possessive + " " + shield->query_name() : "") + ".", source);
+    message("combat miss", target->query_cap_name() + " blocks " + source->query_cap_name() + (shield ? " with " + possessive + " " + shield->query_name() : "") + ".", environment(target), ({ source, target }));
+}
+
 void initiate_combat (object source, object target) {
     message("attack", "You attack " + target->query_cap_name() + "!", source);
     message("attack", source->query_cap_name() + " attacks you!", target);

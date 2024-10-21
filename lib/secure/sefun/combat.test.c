@@ -40,23 +40,26 @@ void test_combat_tier_from_percent () {
     }) :));
 }
 
-void test_combat_hit_message () {
+void test_combat_messages () {
+    object room;
     object npc1, npc2;
     object mockNpc1, mockNpc2;
 
+    room = new(STD_ROOM);
     npc1 = new(STD_NPC);
     npc2 = new(STD_NPC);
-    npc1->set_level(1);
-    npc2->set_level(1);
     npc1->set_name("npc one");
     npc2->set_name("npc two");
+    npc1->set_stat("endurance", 10);
+    npc2->set_stat("endurance", 10);
+    npc1->handle_move(STD_ROOM);
+    npc2->handle_move(STD_ROOM);
     mockNpc1 = new("/std/npc.mock.c");
     mockNpc2 = new("/std/npc.mock.c");
+    mockNpc1->start_shadow(npc1);
+    mockNpc2->start_shadow(npc2);
 
-    expect("messages should display", (: ({
-        assert_equal($(mockNpc1)->start_shadow($(npc1)), 1),
-        assert_equal($(mockNpc2)->start_shadow($(npc2)), 1),
-
+    expect("combat hit messages should display", (: ({
         testOb->combat_hit_message($(npc1), $(npc2), "limb", "weapon", "blunt", 1, 0, 0),
         assert_equal($(npc1)->query_received_messages()[<1], ({ "combat hit", "You hit Npc two ineffectively in the limb with your weapon." })),
         assert_equal($(npc2)->query_received_messages()[<1], ({ "combat hit", "Npc one hits you ineffectively in the limb with their weapon." })),
@@ -76,38 +79,12 @@ void test_combat_hit_message () {
         testOb->combat_hit_message($(npc1), $(npc2), "limb", "weapon", "blunt", 1, 0, 1),
         assert_equal($(npc1)->query_received_messages()[<1], ({ "ability hit", "You hit Npc two ineffectively in the limb with your weapon." })),
         assert_equal($(npc2)->query_received_messages()[<1], ({ "ability hit", "Npc one hits you ineffectively in the limb with their weapon." })),
-
-        assert_equal($(mockNpc1)->stop_shadow(), 1),
-        assert_equal($(mockNpc2)->stop_shadow(), 1),
     }) :));
 
-    if (mockNpc1) destruct(mockNpc1);
-    if (mockNpc2) destruct(mockNpc2);
-    if (npc1) destruct(npc1);
-    if (npc2) destruct(npc2);
-}
+    mockNpc1->clear_received_messages();
+    mockNpc2->clear_received_messages();
 
-void test_combat_heal_message () {
-    object room;
-    object npc1, npc2;
-    object mockNpc1, mockNpc2;
-
-    room = new(STD_ROOM);
-    npc1 = new(STD_NPC);
-    npc2 = new(STD_NPC);
-    npc1->set_name("npc one");
-    npc2->set_name("npc two");
-    npc1->set_stat("endurance", 10);
-    npc2->set_stat("endurance", 10);
-    npc1->handle_move(STD_ROOM);
-    npc2->handle_move(STD_ROOM);
-    mockNpc1 = new("/std/npc.mock.c");
-    mockNpc2 = new("/std/npc.mock.c");
-
-    expect("messages should display", (: ({
-        assert_equal($(mockNpc1)->start_shadow($(npc1)), 1),
-        assert_equal($(mockNpc2)->start_shadow($(npc2)), 1),
-
+    expect("combat heal messages should display", (: ({
         // npc1 is full hp, no heal messages
         $(npc1)->set_hp($(npc1)->query_max_hp()),
         testOb->combat_heal_message($(npc2), $(npc1), "limb", 1),
@@ -119,11 +96,19 @@ void test_combat_heal_message () {
         testOb->combat_heal_message($(npc1), $(npc2), "limb", 1),
         assert_equal($(npc1)->query_received_messages()[<1], ({ "combat heal", "Npc two's wounds heal slightly." })),
         assert_equal($(npc2)->query_received_messages()[<1], ({ "combat heal", "Your wounds heal slightly." })),
-
-        assert_equal($(mockNpc1)->stop_shadow(), 1),
-        assert_equal($(mockNpc2)->stop_shadow(), 1),
     }) :));
 
+    mockNpc1->clear_received_messages();
+    mockNpc2->clear_received_messages();
+
+    expect("combat block messages should display", (: ({
+        testOb->combat_block_message($(npc1), $(npc2)),
+        assert_equal($(npc1)->query_received_messages()[<1], ({ "combat miss", "Npc two blocks you." })),
+        assert_equal($(npc2)->query_received_messages()[<1], ({ "combat miss", "You block Npc one." })),
+    }) :));
+
+    mockNpc1->stop_shadow(npc1);
+    mockNpc2->stop_shadow(npc2);
     if (mockNpc1) destruct(mockNpc1);
     if (mockNpc2) destruct(mockNpc2);
     if (npc1) destruct(npc1);
