@@ -178,7 +178,7 @@ void test_injections () {
         assert_equal(testOb->query_injections(), ([ "healing nanites": 6, ])),
         assert_equal(testOb->query_injection("healing nanites"), 6),
 
-        assert_equal($(mockBody)->stop_shadow(testOb), 1),
+        assert_equal($(mockBody)->stop_shadow(), 1),
     }) :));
 
     if (mockBody) destruct(mockBody);
@@ -215,7 +215,7 @@ void test_heal () {
         assert_equal(testOb->query_mp(), 11),
         assert_equal(testOb->query_limb("torso"), ([ "damage": 15, "maxdamage": 23, "pct": 100, "status": 0, "type": "FATAL" ])),
 
-        assert_equal($(mockBody)->stop_shadow(testOb), 1),
+        assert_equal($(mockBody)->stop_shadow(), 1),
     }) :));
 
     if (mockBody) destruct(mockBody);

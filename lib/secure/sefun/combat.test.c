@@ -107,8 +107,8 @@ void test_combat_messages () {
         assert_equal($(npc2)->query_received_messages()[<1], ({ "combat miss", "You block Npc one." })),
     }) :));
 
-    mockNpc1->stop_shadow(npc1);
-    mockNpc2->stop_shadow(npc2);
+    mockNpc1->stop_shadow();
+    mockNpc2->stop_shadow();
     if (mockNpc1) destruct(mockNpc1);
     if (mockNpc2) destruct(mockNpc2);
     if (npc1) destruct(npc1);

@@ -57,7 +57,7 @@ void test_autoload () {
         assert_equal(base_name(all_inventory(testOb)[0]), "/std/item"),
     }) :));
 
-    mockBody->stop_shadow(testOb);
+    mockBody->stop_shadow();
     if (ob1) destruct(ob1);
     if (ob2) destruct(ob2);
     if (ob3) destruct(ob3);
