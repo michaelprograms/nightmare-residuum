@@ -33,23 +33,6 @@ object *query_hostiles () {
 
 /* ----- combat ----- */
 
-private void handle_combat_miss (object target, mixed weapon) {
-    string type, name, possessive = possessive(this_object());
-
-    if (objectp(weapon)) {
-        type = weapon->query_type();
-        name = weapon->query_name();
-    } else if (stringp(weapon)) {
-        type = "brawl";
-        name = weapon;
-    } else {
-        error("Bad argument 2 to combat->handle_combat_miss");
-    }
-
-    message("combat miss", "You miss " + target->query_cap_name() + " with your " + name + ".", this_object());
-    message("combat miss", this_object()->query_cap_name() + " misses you with " + possessive + " " + name + ".", target);
-    message("combat miss", this_object()->query_cap_name() + " misses " + target->query_cap_name() + " with " + possessive + " " + name + ".", environment(), ({ this_object(), target }));
-}
 private void handle_combat_parry (object target) {
     string type, name, possessive = possessive(this_object());
     mixed *weapons = this_object()->query_wielded_weapons() + this_object()->query_wieldable_limbs(), weapon = element_of(weapons);
@@ -181,7 +164,7 @@ protected void handle_combat () {
             if (d100 <= sum) {
                 switch (m["id"]) {
                 case "miss":
-                    handle_combat_miss(target, element_of(weapons));
+                    combat_miss_message(this_object(), target, element_of(weapons));
                     break;
                 // case "resist": // @TODO
                 //     break;

@@ -44,6 +44,7 @@ void test_combat_messages () {
     object room;
     object npc1, npc2;
     object mockNpc1, mockNpc2;
+    object weapon;
 
     room = new(STD_ROOM);
     npc1 = new(STD_NPC);
@@ -58,6 +59,9 @@ void test_combat_messages () {
     mockNpc2 = new("/std/npc.mock.c");
     mockNpc1->start_shadow(npc1);
     mockNpc2->start_shadow(npc2);
+    weapon = new(STD_WEAPON);
+    weapon->set_name("test weapon");
+    weapon->set_type("blade");
 
     expect("combat hit messages should display", (: ({
         testOb->combat_hit_message($(npc1), $(npc2), "limb", "weapon", "blunt", 1, 0, 0),
@@ -105,6 +109,19 @@ void test_combat_messages () {
         testOb->combat_block_message($(npc1), $(npc2)),
         assert_equal($(npc1)->query_received_messages()[<1], ({ "combat miss", "Npc two blocks you." })),
         assert_equal($(npc2)->query_received_messages()[<1], ({ "combat miss", "You block Npc one." })),
+    }) :));
+
+    mockNpc1->clear_received_messages();
+    mockNpc2->clear_received_messages();
+
+    expect("combat miss messages should display", (: ({
+        testOb->combat_miss_message($(npc1), $(npc2), "WEAPON"),
+        assert_equal($(npc1)->query_received_messages()[<1], ({ "combat miss", "You miss Npc two with your WEAPON." })),
+        assert_equal($(npc2)->query_received_messages()[<1], ({ "combat miss", "Npc one misses you with their WEAPON." })),
+
+        testOb->combat_miss_message($(npc1), $(npc2), $(weapon)),
+        assert_equal($(npc1)->query_received_messages()[<1], ({ "combat miss", "You miss Npc two with your test weapon." })),
+        assert_equal($(npc2)->query_received_messages()[<1], ({ "combat miss", "Npc one misses you with their test weapon." })),
     }) :));
 
     mockNpc1->stop_shadow();

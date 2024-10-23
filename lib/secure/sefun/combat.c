@@ -31,6 +31,8 @@ int query_combat_tier_from_percent (int percent) {
     return 0;
 }
 
+/* -----  ----- */
+
 void combat_hit_message (object source, object target, string limb, mixed weapon, string type, int damage, int crit, int isAbility) {
     string sourceMsg, targetMsg, envMsg;
     string weaponName;
@@ -82,6 +84,21 @@ void combat_heal_message (object source, object target, string limb, int damage)
     }
 }
 
+void combat_miss_message (object source, object target, mixed weapon) {
+    string type, name, possessive = SEFUN->possessive(source);
+
+    if (objectp(weapon)) {
+        type = weapon->query_type();
+        name = weapon->query_name();
+    } else {
+        type = "brawl";
+        name = weapon;
+    }
+    message("combat miss", "You miss " + target->query_cap_name() + " with your " + name + ".", source);
+    message("combat miss", source->query_cap_name() + " misses you with " + possessive + " " + name + ".", target);
+    message("combat miss", source->query_cap_name() + " misses " + target->query_cap_name() + " with " + possessive + " " + name + ".", environment(source), ({ source, target }));
+}
+
 void combat_block_message (object source, object target) {
     object shield = source->query_worn_shield();
     string possessive = SEFUN->possessive(target->query_cap_name());
@@ -89,6 +106,8 @@ void combat_block_message (object source, object target) {
     message("combat miss", target->query_cap_name() + " blocks you" + (shield ? " with " + possessive + " " + shield->query_name() : "") + ".", source);
     message("combat miss", target->query_cap_name() + " blocks " + source->query_cap_name() + (shield ? " with " + possessive + " " + shield->query_name() : "") + ".", environment(target), ({ source, target }));
 }
+
+/* -----  ----- */
 
 void initiate_combat (object source, object target) {
     message("attack", "You attack " + target->query_cap_name() + "!", source);
@@ -107,6 +126,8 @@ object present_hostile (object source) {
     object *hostiles = present_hostiles(source);
     return sizeof(hostiles) ? hostiles[0] : 0;
 }
+
+/* -----  ----- */
 
 mapping *combat_table (object source, object target, int hits) {
     mapping *table = ({ });
