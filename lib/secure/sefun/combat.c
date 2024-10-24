@@ -107,6 +107,21 @@ void combat_block_message (object source, object target) {
     message("combat miss", target->query_cap_name() + " blocks " + source->query_cap_name() + (shield ? " with " + possessive + " " + shield->query_name() : "") + ".", environment(target), ({ source, target }));
 }
 
+void combat_parry_message (object source, object target, mixed weapon) {
+    string type, name, possessive = SEFUN->possessive(target);
+
+    if (objectp(weapon)) {
+        type = weapon->query_type();
+        name = weapon->query_name();
+    } else {
+        type = "brawl";
+        name = weapon;
+    }
+    message("combat miss", "You parry " + source->query_cap_name() + " with your " + name + ".", target);
+    message("combat miss", target->query_cap_name() + " parries you with " + possessive + " " + name + ".", source);
+    message("combat miss", target->query_cap_name() + " parries " + source->query_cap_name() + " with " + possessive + " " + name + ".", environment(source), ({ source, target }));
+}
+
 /* -----  ----- */
 
 void initiate_combat (object source, object target) {

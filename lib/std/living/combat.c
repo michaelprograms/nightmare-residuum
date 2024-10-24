@@ -32,25 +32,6 @@ object *query_hostiles () {
 }
 
 /* ----- combat ----- */
-
-private void handle_combat_parry (object target) {
-    string type, name, possessive = possessive(this_object());
-    mixed *weapons = this_object()->query_wielded_weapons() + this_object()->query_wieldable_limbs(), weapon = element_of(weapons);
-
-    if (objectp(weapon)) {
-        type = weapon->query_type();
-        name = weapon->query_name();
-    } else if (stringp(weapon)) {
-        type = "brawl";
-        name = weapon;
-    } else {
-        error("Bad argument 2 to combat->handle_combat_parry");
-    }
-
-    message("combat miss", "You parry " + target->query_cap_name() + " with your " + name + ".", this_object());
-    message("combat miss", this_object()->query_cap_name() + " parries you with " + possessive + " " + name + ".", target);
-    message("combat miss", this_object()->query_cap_name() + " parries " + target->query_cap_name() + " with " + possessive + " " + name + ".", environment(), ({ this_object(), target }));
-}
 private void handle_combat_evade (object target) {
     message("combat miss", "You evade " + possessive_noun(target->query_cap_name()) + " attack.", this_object());
     message("combat miss", this_object()->query_cap_name() + " evades your attack.", target);
@@ -172,7 +153,7 @@ protected void handle_combat () {
                     combat_block_message(this_object(), target);
                     break;
                 case "parry":
-                    target->handle_combat_parry(target, element_of(weapons));
+                    combat_parry_message(this_object(), target, element_of(weapons));
                     break;
                 case "evade":
                     target->handle_combat_evade(target);
