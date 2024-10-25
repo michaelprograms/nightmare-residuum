@@ -209,26 +209,45 @@ void test_present_hostile () {
 }
 
 void test_combat_table () {
-    object living1 = new("/std/living.c");
-    object living2 = new("/std/living.c");
+    object living1 = new(STD_LIVING);
+    object living2 = new(STD_LIVING);
+    object weapon = new(STD_WEAPON);
+    object armor = new(STD_ARMOR);
+
+    living1->set_species("human");
+    living2->set_species("human");
+    weapon->set_type("blade");
+    weapon->handle_move(living2);
+    write("weapon hands: "+weapon->query_hands()+"\n");
+    living2->handle_wield(weapon);
+    armor->set_type("shield");
+    armor->set_limbs(({ "left arm", "left hand" }));
+    armor->handle_move(living2);
+    living2->handle_wear(armor);
 
     expect("combat table is built", (: ({
         $(living1)->set_level(1),
         $(living2)->set_level(1),
         assert_equal(testOb->combat_table($(living1), $(living2), 0), ({
             ([ "id": "miss", "value": 5 ]),
+            ([ "id": "block", "value": 5 ]),
+            ([ "id": "parry", "value": 5 ]),
             ([ "id": "evade", "value": 5 ]),
             ([ "id": "critical hit", "value": 5 ]),
             ([ "id": "regular hit", "value": 100 ])
         })),
         assert_equal(testOb->combat_table($(living1), $(living2), 1), ({
             ([ "id": "miss", "value": 6 ]),
+            ([ "id": "block", "value": 4 ]),
+            ([ "id": "parry", "value": 4 ]),
             ([ "id": "evade", "value": 4 ]),
             ([ "id": "critical hit", "value": 4 ]),
             ([ "id": "regular hit", "value": 100 ])
         })),
         assert_equal(testOb->combat_table($(living1), $(living2), 2), ({
             ([ "id": "miss", "value": 7 ]),
+            ([ "id": "block", "value": 3 ]),
+            ([ "id": "parry", "value": 3 ]),
             ([ "id": "evade", "value": 3 ]),
             ([ "id": "critical hit", "value": 3 ]),
             ([ "id": "regular hit", "value": 100 ])
@@ -237,18 +256,24 @@ void test_combat_table () {
         $(living2)->set_level(1),
         assert_equal(testOb->combat_table($(living1), $(living2), 0), ({
             ([ "id": "miss", "value": 3 ]),
+            ([ "id": "block", "value": 3 ]),
+            ([ "id": "parry", "value": 3 ]),
             ([ "id": "evade", "value": 3 ]),
             ([ "id": "critical hit", "value": 3 ]),
             ([ "id": "regular hit", "value": 100 ])
         })),
         assert_equal(testOb->combat_table($(living1), $(living2), 1), ({
             ([ "id": "miss", "value": 4 ]),
+            ([ "id": "block", "value": 2 ]),
+            ([ "id": "parry", "value": 2 ]),
             ([ "id": "evade", "value": 2 ]),
             ([ "id": "critical hit", "value": 2 ]),
             ([ "id": "regular hit", "value": 100 ])
         })),
         assert_equal(testOb->combat_table($(living1), $(living2), 2), ({
             ([ "id": "miss", "value": 5 ]),
+            ([ "id": "block", "value": 1 ]),
+            ([ "id": "parry", "value": 1 ]),
             ([ "id": "evade", "value": 1 ]),
             ([ "id": "critical hit", "value": 1 ]),
             ([ "id": "regular hit", "value": 100 ])
@@ -257,18 +282,24 @@ void test_combat_table () {
         $(living2)->set_level(10),
         assert_equal(testOb->combat_table($(living1), $(living2), 0), ({
             ([ "id": "miss", "value": 6 ]),
+            ([ "id": "block", "value": 6 ]),
+            ([ "id": "parry", "value": 6 ]),
             ([ "id": "evade", "value": 6 ]),
             ([ "id": "critical hit", "value": 6 ]),
             ([ "id": "regular hit","value": 100 ])
         })),
         assert_equal(testOb->combat_table($(living1), $(living2), 1), ({
             ([ "id": "miss", "value": 7 ]),
+            ([ "id": "block", "value": 5 ]),
+            ([ "id": "parry", "value": 5 ]),
             ([ "id": "evade", "value": 5 ]),
             ([ "id": "critical hit", "value": 5 ]),
             ([ "id": "regular hit", "value": 100 ])
         })),
         assert_equal(testOb->combat_table($(living1), $(living2), 2), ({
             ([ "id": "miss", "value": 8 ]),
+            ([ "id": "block", "value": 4 ]),
+            ([ "id": "parry", "value": 4 ]),
             ([ "id": "evade", "value": 4 ]),
             ([ "id": "critical hit", "value": 4 ]),
             ([ "id": "regular hit", "value": 100 ])
@@ -277,4 +308,6 @@ void test_combat_table () {
 
     if (living1) destruct(living1);
     if (living2) destruct(living2);
+    if (weapon) destruct(weapon);
+    if (armor) destruct(armor);
 }

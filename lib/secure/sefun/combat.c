@@ -151,8 +151,8 @@ mapping *combat_table (object source, object target, int hits) {
 
     miss = max(({ 0, levelAdjust + hits }));
     // resist = 0.0;
-    block = (target && target->query_worn_shield() ? max(({ 0, levelAdjust - hits })) : 0);
-    parry = (sizeof(target && target->query_wielded_weapons()) ? max(({ 0, levelAdjust - hits })) : 0);
+    block = target->query_worn_shield() ? max(({ 0, levelAdjust - hits })) : 0;
+    parry = sizeof(target->query_wielded_weapons()) ? max(({ 0, levelAdjust - hits })) : 0;
     evade = max(({ 0, levelAdjust - hits }));
     criticalHit = max(({ 0, levelAdjust - hits }));
 
