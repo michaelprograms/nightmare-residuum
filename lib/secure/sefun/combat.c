@@ -122,9 +122,9 @@ void combat_parry_message (object source, object target, mixed weapon) {
     message("combat miss", target->query_cap_name() + " parries " + source->query_cap_name() + " with " + possessive + " " + name + ".", environment(source), ({ source, target }));
 }
 void combat_evade_message (object source, object target) {
-    message("combat miss", "You evade " + possessive_noun(source->query_cap_name()) + " attack.", target);
+    message("combat miss", "You evade " + SEFUN->possessive_noun(source->query_cap_name()) + " attack.", target);
     message("combat miss", target->query_cap_name() + " evades your attack.", source);
-    message("combat miss", target->query_cap_name() + " evades " + possessive_noun(source->query_cap_name()) + " attack.", environment(source), ({ source, target }));
+    message("combat miss", target->query_cap_name() + " evades " + SEFUN->possessive_noun(source->query_cap_name()) + " attack.", environment(source), ({ source, target }));
 }
 
 /* -----  ----- */
