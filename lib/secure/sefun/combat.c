@@ -121,6 +121,11 @@ void combat_parry_message (object source, object target, mixed weapon) {
     message("combat miss", target->query_cap_name() + " parries you with " + possessive + " " + name + ".", source);
     message("combat miss", target->query_cap_name() + " parries " + source->query_cap_name() + " with " + possessive + " " + name + ".", environment(source), ({ source, target }));
 }
+void combat_evade_message (object source, object target) {
+    message("combat miss", "You evade " + possessive_noun(source->query_cap_name()) + " attack.", target);
+    message("combat miss", target->query_cap_name() + " evades your attack.", source);
+    message("combat miss", target->query_cap_name() + " evades " + possessive_noun(source->query_cap_name()) + " attack.", environment(source), ({ source, target }));
+}
 
 /* -----  ----- */
 
@@ -132,7 +137,6 @@ void initiate_combat (object source, object target) {
     source->add_hostile(target);
     target->add_hostile(source);
 }
-
 object *present_hostiles (object source) {
     object env = environment(source);
     return filter(source->query_hostiles(), (: environment($1) == $(env) :));

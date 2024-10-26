@@ -40,6 +40,7 @@ void combat_heal_message (object source, object target, string limb, int damage)
 void combat_miss_message (object source, object target, mixed weapon);
 void combat_block_message (object source, object target);
 void combat_parry_message (object source, object target, mixed weapon);
+void combat_evade_message (object source, object target);
 void initiate_combat (object source, object target);
 object *present_hostiles (object source);
 object present_hostile (object source);

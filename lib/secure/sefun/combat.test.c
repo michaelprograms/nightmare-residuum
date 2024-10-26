@@ -137,6 +137,19 @@ void test_combat_messages () {
         assert_equal($(npc2)->query_received_messages()[<1], ({ "combat miss", "You parry Npc one with your test weapon." })),
     }) :));
 
+    mockNpc1->clear_received_messages();
+    mockNpc2->clear_received_messages();
+
+    expect("combat evade messages should display", (: ({
+        testOb->combat_evade_message($(npc1), $(npc2)),
+        assert_equal($(npc1)->query_received_messages()[<1], ({ "combat miss", "Npc two evades your attack." })),
+        assert_equal($(npc2)->query_received_messages()[<1], ({ "combat miss", "You evade Npc one's attack." })),
+
+        testOb->combat_evade_message($(npc1), $(npc2)),
+        assert_equal($(npc1)->query_received_messages()[<1], ({ "combat miss", "Npc two evades your attack." })),
+        assert_equal($(npc2)->query_received_messages()[<1], ({ "combat miss", "You evade Npc one's attack." })),
+    }) :));
+
     mockNpc1->stop_shadow();
     mockNpc2->stop_shadow();
     if (mockNpc1) destruct(mockNpc1);

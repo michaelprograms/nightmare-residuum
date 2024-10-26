@@ -32,11 +32,7 @@ object *query_hostiles () {
 }
 
 /* ----- combat ----- */
-private void handle_combat_evade (object target) {
-    message("combat miss", "You evade " + possessive_noun(target->query_cap_name()) + " attack.", this_object());
-    message("combat miss", this_object()->query_cap_name() + " evades your attack.", target);
-    message("combat miss", this_object()->query_cap_name() + " evades " + possessive_noun(target->query_cap_name()) + " attack.", environment(), ({ this_object(), target }));
-}
+
 private void handle_combat_hit (object target, mixed weapon, int crit) {
     int dice, damage = 0;
     string type, name, limb;
@@ -83,61 +79,60 @@ private void handle_combat_hit (object target, mixed weapon, int crit) {
 }
 
 protected void handle_combat () {
+    object to = this_object();
     object target, *weapons;
     int min, max, hits;
     int d100;
     int sum = 0;
 
-    target = present_hostile(this_object());
-    this_object()->check_lifesigns(target);
+    target = present_hostile(to);
+    to->check_lifesigns(target);
     if (
-        !this_object() ||
-        this_object()->query_defeated() ||
-        this_object()->query_disable() ||
+        !to ||
+        to->query_defeated() ||
+        to->query_disable() ||
         !target ||
         environment() != environment(target)
     ) {
         return;
     }
 
-    if (this_object()->query_posture() == "meditating") {
-        this_object()->set_posture("sitting");
+    if (to->query_posture() == "meditating") {
+        to->set_posture("sitting");
     }
-    if (member_array(this_object()->query_posture(), ({ "sitting", "laying" })) > -1) {
-        message("combat info", "You cannot fight while " + this_object()->query_posture() + " down!", this_object());
+    if (member_array(to->query_posture(), ({ "sitting", "laying" })) > -1) {
+        message("combat info", "You cannot fight while " + to->query_posture() + " down!", to);
         return;
     }
 
-    target->add_hostile(this_object());
+    target->add_hostile(to);
 
-    if (this_object()->is_npc() && this_object()->query_ability_chance()) {
-        this_object()->handle_ability_attack();
+    if (to->is_npc() && to->query_ability_chance()) {
+        to->handle_ability_attack();
     }
 
-    weapons = this_object()->query_wielded_weapons() + this_object()->query_wieldable_limbs();
-
-    min = sizeof(weapons[0..2]) + this_object()->query_stat("agility") / 100;
-    max = sizeof(weapons[0..2]) + this_object()->query_stat("agility") / 50;
+    weapons = to->query_wielded_weapons() + to->query_wieldable_limbs();
+    min = sizeof(weapons[0..2]) + to->query_stat("agility") / 100;
+    max = sizeof(weapons[0..2]) + to->query_stat("agility") / 50;
     hits = min + random(max - min + 1);
 
     if (!hits) {
-        message("combat miss", this_object()->query_cap_name() + " " + element_of(({
+        message("combat miss", to->query_cap_name() + " " + element_of(({
             "flops about helplessly",
             "tries to look menacing",
             "uselessly flops around",
-        })) + ".", environment(), this_object());
+        })) + ".", environment(), to);
     }
 
     for (int h = 0; h < hits; h ++) {
         if (!target) {
             break;
         }
-
-        if (this_object()->query_sp() > 0) {
+        if (to->query_sp() > 0) {
             d100 = roll_die(1, 100)[0];
         }
         sum = 0;
-        foreach (mapping m in combat_table(this_object(), target, h)) {
+        foreach (mapping m in combat_table(to, target, h)) {
             if (!m["value"]) {
                 continue;
             }
@@ -145,18 +140,18 @@ protected void handle_combat () {
             if (d100 <= sum) {
                 switch (m["id"]) {
                 case "miss":
-                    combat_miss_message(this_object(), target, element_of(weapons));
+                    combat_miss_message(to, target, element_of(weapons));
                     break;
                 // case "resist": // @TODO
                 //     break;
                 case "block":
-                    combat_block_message(this_object(), target);
+                    combat_block_message(to, target);
                     break;
                 case "parry":
-                    combat_parry_message(this_object(), target, element_of(weapons));
+                    combat_parry_message(to, target, element_of(weapons));
                     break;
                 case "evade":
-                    target->handle_combat_evade(target);
+                    combat_evade_message(to, target);
                     break;
                 case "critical hit":
                     handle_combat_hit(target, weapons[random(sizeof(weapons))], 1);
@@ -168,11 +163,10 @@ protected void handle_combat () {
                 break;
             }
         }
-
     }
-    this_object()->add_sp(-(random(hits) + 1));
+    to->add_sp(-(random(hits) + 1));
     if (target) {
-        target->check_lifesigns(this_object());
+        target->check_lifesigns(to);
     }
 }
 
