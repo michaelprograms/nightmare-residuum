@@ -64,23 +64,31 @@ void test_combat_messages () {
     weapon->set_type("blade");
 
     expect("combat hit messages should display", (: ({
-        testOb->combat_hit_message($(npc1), $(npc2), "limb", "weapon", "blunt", 1, 0, 0),
+        testOb->combat_hit_message($(npc1), $(npc2), "limb", "weapon", 1, 0, 0),
         assert_equal($(npc1)->query_received_messages()[<1], ({ "combat hit", "You hit Npc two ineffectively in the limb with your weapon." })),
         assert_equal($(npc2)->query_received_messages()[<1], ({ "combat hit", "Npc one hits you ineffectively in the limb with their weapon." })),
 
-        testOb->combat_hit_message($(npc1), $(npc2), "limb", "weapon", "blunt", 123, 0, 0),
+        testOb->combat_hit_message($(npc1), $(npc2), "limb", $(weapon), 1, 0, 0),
+        assert_equal($(npc1)->query_received_messages()[<1], ({ "combat hit", "You hit Npc two ineffectively in the limb with your test weapon." })),
+        assert_equal($(npc2)->query_received_messages()[<1], ({ "combat hit", "Npc one hits you ineffectively in the limb with their test weapon." })),
+
+        testOb->combat_hit_message($(npc1), $(npc2), "limb", "weapon", 123, 0, 0),
         assert_equal($(npc1)->query_received_messages()[<1], ({ "combat hit", "You destroy Npc two utterly in the limb with your weapon." })),
         assert_equal($(npc2)->query_received_messages()[<1], ({ "combat hit", "Npc one destroys you utterly in the limb with their weapon." })),
 
-        testOb->combat_hit_message($(npc1), $(npc2), "limb", "weapon", "blade", 123, 0, 0),
+        testOb->combat_hit_message($(npc1), $(npc2), "limb", "weapon", 123, 0, 0),
         assert_equal($(npc1)->query_received_messages()[<1], ({ "combat hit", "You destroy Npc two utterly in the limb with your weapon." })),
         assert_equal($(npc2)->query_received_messages()[<1], ({ "combat hit", "Npc one destroys you utterly in the limb with their weapon." })),
 
-        testOb->combat_hit_message($(npc1), $(npc2), "limb", "weapon", "blade", 123, 1, 0),
+        testOb->combat_hit_message($(npc1), $(npc2), "limb", $(weapon), 123, 0, 0),
+        assert_equal($(npc1)->query_received_messages()[<1], ({ "combat hit", "You destroy Npc two utterly in the limb with your test weapon." })),
+        assert_equal($(npc2)->query_received_messages()[<1], ({ "combat hit", "Npc one destroys you utterly in the limb with their test weapon." })),
+
+        testOb->combat_hit_message($(npc1), $(npc2), "limb", "weapon", 123, 1, 0),
         assert_equal($(npc1)->query_received_messages()[<1], ({ "combat hit", "You critically destroy Npc two utterly in the limb with your weapon." })),
         assert_equal($(npc2)->query_received_messages()[<1], ({ "combat hit", "Npc one critically destroys you utterly in the limb with their weapon." })),
 
-        testOb->combat_hit_message($(npc1), $(npc2), "limb", "weapon", "blunt", 1, 0, 1),
+        testOb->combat_hit_message($(npc1), $(npc2), "limb", "weapon", 1, 0, 1),
         assert_equal($(npc1)->query_received_messages()[<1], ({ "ability hit", "You hit Npc two ineffectively in the limb with your weapon." })),
         assert_equal($(npc2)->query_received_messages()[<1], ({ "ability hit", "Npc one hits you ineffectively in the limb with their weapon." })),
     }) :));
@@ -159,6 +167,31 @@ void test_combat_messages () {
     if (room) destruct(room);
 }
 
+void test_combat_hit_damage () {
+    object npc1, npc2;
+    object weapon;
+    npc1 = new(STD_NPC);
+    npc2 = new(STD_NPC);
+    npc1->set_level(10);
+    npc2->set_level(1);
+    npc1->set_stat("strength", 100);
+    npc2->set_stat("endurance", 1);
+    weapon = new(STD_WEAPON);
+    weapon->set_name("test weapon");
+    weapon->set_type("blade");
+
+    expect("combat hit damage is calculated", (: ({
+        assert_equal(testOb->combat_hit_damage($(npc1), $(npc2), "limb", "WEAPON", 0) >= 0, 1),
+        assert_equal(testOb->combat_hit_damage($(npc1), $(npc2), "limb", $(weapon), 0) >= 0, 1),
+
+        assert_equal(testOb->combat_hit_damage($(npc1), $(npc2), "limb", "WEAPON", 1) >= 0, 1),
+        assert_equal(testOb->combat_hit_damage($(npc1), $(npc2), "limb", $(weapon), 1) >= 0, 1),
+    }) :));
+
+    if (npc1) destruct(npc1);
+    if (npc2) destruct(npc2);
+    if (weapon) destruct(weapon);
+}
 void test_initiate_combat () {
     object npc1, npc2;
     object mockNpc1, mockNpc2;

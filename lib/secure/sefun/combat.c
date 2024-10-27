@@ -33,17 +33,20 @@ int query_combat_tier_from_percent (int percent) {
 
 /* -----  ----- */
 
-void combat_hit_message (object source, object target, string limb, mixed weapon, string type, int damage, int crit, int isAbility) {
-    string sourceMsg, targetMsg, envMsg;
-    string weaponName;
-    int percent;
+void combat_hit_message (object source, object target, string limb, mixed weapon, int damage, int crit, int isAbility) {
+    string sourceMsg, targetMsg, envMsg, weaponName, type;
     string critically, verb, verbs, adverb, sourcePossessive;
-    int i = 0;
+    int percent, i = 0;
 
-    weaponName = objectp(weapon) ? weapon->query_name() : weapon;
-    percent = to_int(damage * 100.0 / target->query_max_hp());
+    if (objectp(weapon)) {
+        type = weapon->query_type();
+        weaponName = weapon->query_name();
+    } else {
+        type = "brawl";
+        weaponName = weapon;
+    }
     critically = crit ? "critically " : "";
-
+    percent = to_int(damage * 100.0 / target->query_max_hp());
     if (percent < 1) {
         verb = "hit";
         adverb = "ineffectively";
@@ -125,6 +128,28 @@ void combat_evade_message (object source, object target) {
     message("combat miss", "You evade " + SEFUN->possessive_noun(source->query_cap_name()) + " attack.", target);
     message("combat miss", target->query_cap_name() + " evades your attack.", source);
     message("combat miss", target->query_cap_name() + " evades " + SEFUN->possessive_noun(source->query_cap_name()) + " attack.", environment(source), ({ source, target }));
+}
+
+int combat_hit_damage (object source, object target, string limb, mixed weapon, int crit) {
+    int dice, damage = 0;
+    // calculate source damage
+    damage += SEFUN->roll_die(1, 6)[0];
+    dice = max(({ 1, random(source->query_stat("strength") + 1) * 5 / 100 }));
+    damage += SEFUN->roll_die(dice, 6)[0];
+    dice = max(({ 1, random(source->query_stat("luck") + 1) * 5 / 100 }));
+    damage += SEFUN->roll_die(dice, 6)[0];
+    if (crit) {
+        damage = damage * 3 / 2;
+    }
+    // apply target mitigations
+    dice = max(({ 1, random(target->query_stat("endurance") + 1) * 10 / 100 }));
+    damage -= SEFUN->roll_die(dice, 6)[0];
+    dice = max(({ 1, random(target->query_stat("luck") + 1) * 10 / 100 }));
+    damage -= SEFUN->roll_die(dice, 6)[0];
+    damage -= target->query_limb_armor(limb);
+    damage -= target->query_protection();
+    damage = max(({ 0, damage }));
+    return damage;
 }
 
 /* -----  ----- */

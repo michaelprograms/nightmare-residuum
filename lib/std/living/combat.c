@@ -33,57 +33,10 @@ object *query_hostiles () {
 
 /* ----- combat ----- */
 
-private void handle_combat_hit (object target, mixed weapon, int crit) {
-    int dice, damage = 0;
-    string type, name, limb;
-
-    if (objectp(weapon)) {
-        type = weapon->query_type();
-        name = weapon->query_name();
-    } else if (stringp(weapon)) {
-        type = "brawl";
-        name = weapon;
-    } else {
-        return; // invalid weapon
-    }
-
-    limb = target->query_random_limb();
-
-    // Base Damage
-    damage += roll_die(1, 6)[0];
-
-    dice = max(({ 1, random(this_object()->query_stat("strength") + 1) * 5 / 100 }));
-    damage += roll_die(dice, 6)[0];
-
-    dice = max(({ 1, random(this_object()->query_stat("luck") + 1) * 5 / 100 }));
-    damage += roll_die(dice, 6)[0];
-
-    if (crit) {
-        damage = damage * 3 / 2;
-    }
-
-    // apply target mitigations
-    dice = max(({ 1, random(target->query_stat("endurance") + 1) * 10 / 100 }));
-    damage -= roll_die(dice, 6)[0];
-
-    dice = max(({ 1, random(target->query_stat("luck") + 1) * 10 / 100 }));
-    damage -= roll_die(dice, 6)[0];
-
-    damage -= target->query_limb_armor(limb);
-    damage -= target->query_protection();
-
-    combat_hit_message(this_object(), target, limb, weapon, type, damage, crit, 0);
-    if (damage > 0) {
-        target->handle_damage(damage, limb);
-    }
-}
-
 protected void handle_combat () {
-    object to = this_object();
-    object target, *weapons;
-    int min, max, hits;
-    int d100;
-    int sum = 0;
+    object to = this_object(), target, *weapons;
+    int min, max, hits, crit, damage, d100, sum = 0;
+    string limb;
 
     target = present_hostile(to);
     to->check_lifesigns(target);
@@ -123,7 +76,6 @@ protected void handle_combat () {
             "uselessly flops around",
         })) + ".", environment(), to);
     }
-
     for (int h = 0; h < hits; h ++) {
         if (!target) {
             break;
@@ -136,6 +88,8 @@ protected void handle_combat () {
             if (!m["value"]) {
                 continue;
             }
+            damage = 0;
+            crit = 0;
             sum = min(({ 100, sum + m["value"], }));
             if (d100 <= sum) {
                 switch (m["id"]) {
@@ -154,10 +108,12 @@ protected void handle_combat () {
                     combat_evade_message(to, target);
                     break;
                 case "critical hit":
-                    handle_combat_hit(target, weapons[random(sizeof(weapons))], 1);
-                    break;
+                    crit = 1;
                 case "regular hit":
-                    handle_combat_hit(target, weapons[random(sizeof(weapons))], 0);
+                    limb = target->query_random_limb();
+                    damage = combat_hit_damage(to, target, limb, element_of(weapons), crit);
+                    combat_hit_message(to, target, limb, element_of(weapons), damage, crit, 0);
+                    target->handle_damage(damage, limb);
                     break;
                 }
                 break;
