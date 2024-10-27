@@ -33,10 +33,56 @@ object *query_hostiles () {
 
 /* ----- combat ----- */
 
+void handle_combat_hit (object target, mapping *table, object weapon) {
+    object to = this_object();
+    int d100, sum, crit, damage;
+    string limb;
+    if (!target) {
+        return;
+    }
+    if (to->query_sp() > 0) {
+        d100 = roll_die(1, 100)[0];
+        sum = 0;
+    }
+    foreach (mapping m in table) {
+        if (!m["value"]) {
+            continue;
+        }
+        damage = 0;
+        crit = 0;
+        sum = min(({ 100, sum + m["value"], }));
+        if (d100 <= sum) {
+            switch (m["id"]) {
+            case "miss":
+                combat_miss_message(to, target, weapon);
+                break;
+            // case "resist": // @TODO
+            //     break;
+            case "block":
+                combat_block_message(to, target);
+                break;
+            case "parry":
+                combat_parry_message(to, target, weapon);
+                break;
+            case "evade":
+                combat_evade_message(to, target);
+                break;
+            case "critical hit":
+                crit = 1;
+            case "regular hit":
+                limb = target->query_random_limb();
+                damage = combat_hit_damage(to, target, limb, weapon, crit);
+                combat_hit_message(to, target, limb, weapon, damage, crit, 0);
+                target->handle_damage(damage, limb);
+                break;
+            }
+            break;
+        }
+    }
+}
 protected void handle_combat () {
     object to = this_object(), target, *weapons;
-    int min, max, hits, crit, damage, d100, sum = 0;
-    string limb;
+    int min, max, hits;
 
     target = present_hostile(to);
     to->check_lifesigns(target);
@@ -80,45 +126,7 @@ protected void handle_combat () {
         if (!target) {
             break;
         }
-        if (to->query_sp() > 0) {
-            d100 = roll_die(1, 100)[0];
-        }
-        sum = 0;
-        foreach (mapping m in combat_table(to, target, h)) {
-            if (!m["value"]) {
-                continue;
-            }
-            damage = 0;
-            crit = 0;
-            sum = min(({ 100, sum + m["value"], }));
-            if (d100 <= sum) {
-                switch (m["id"]) {
-                case "miss":
-                    combat_miss_message(to, target, element_of(weapons));
-                    break;
-                // case "resist": // @TODO
-                //     break;
-                case "block":
-                    combat_block_message(to, target);
-                    break;
-                case "parry":
-                    combat_parry_message(to, target, element_of(weapons));
-                    break;
-                case "evade":
-                    combat_evade_message(to, target);
-                    break;
-                case "critical hit":
-                    crit = 1;
-                case "regular hit":
-                    limb = target->query_random_limb();
-                    damage = combat_hit_damage(to, target, limb, element_of(weapons), crit);
-                    combat_hit_message(to, target, limb, element_of(weapons), damage, crit, 0);
-                    target->handle_damage(damage, limb);
-                    break;
-                }
-                break;
-            }
-        }
+        handle_combat_hit(target, combat_table(to, target, h), element_of(weapons));
     }
     to->add_sp(-(random(hits) + 1));
     if (target) {
