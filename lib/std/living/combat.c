@@ -81,18 +81,12 @@ void handle_combat_hit (object target, mapping *table, object weapon) {
     }
 }
 protected void handle_combat () {
-    object to = this_object(), target, *weapons;
-    int min, max, hits;
+    object to = this_object(), env = environment(), target, *weapons;
+    int base, min, max, hits;
 
     target = present_hostile(to);
     to->check_lifesigns(target);
-    if (
-        !to ||
-        to->query_defeated() ||
-        to->query_disable() ||
-        !target ||
-        environment() != environment(target)
-    ) {
+    if (!to || to->query_defeated() || to->query_disable() || !target || env != environment(target)) {
         return;
     }
 
@@ -103,7 +97,6 @@ protected void handle_combat () {
         message("combat info", "You cannot fight while " + to->query_posture() + " down!", to);
         return;
     }
-
     target->add_hostile(to);
 
     if (to->is_npc() && to->query_ability_chance()) {
@@ -111,8 +104,9 @@ protected void handle_combat () {
     }
 
     weapons = to->query_wielded_weapons() + to->query_wieldable_limbs();
-    min = sizeof(weapons[0..2]) + to->query_stat("agility") / 100;
-    max = sizeof(weapons[0..2]) + to->query_stat("agility") / 50;
+    base = sizeof(weapons[0..2]) + to->query_stat("agility");
+    min = base / 100;
+    max = base / 50;
     hits = min + random(max - min + 1);
 
     if (!hits) {
@@ -120,7 +114,7 @@ protected void handle_combat () {
             "flops about helplessly",
             "tries to look menacing",
             "uselessly flops around",
-        })) + ".", environment(), to);
+        })) + ".", env, to);
     }
     for (int h = 0; h < hits; h ++) {
         if (!target) {
@@ -140,7 +134,6 @@ varargs void check_lifesigns (object source) {
     if (this_object()->query_defeated()) {
         return;
     }
-
     if (this_object()->query_hp() < 0) {
         dead = 1;
     }
