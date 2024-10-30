@@ -131,7 +131,7 @@ void test_verb_get_obj_from_obj_applies () {
         // fails when in this inventory
         assert_equal(testOb->direct_get_obj_from_obj(), 0),
         // fails when in environment
-        assert_equal(testOb->handle_move(environment(this_object())), 1),
+        assert_equal(testOb->handle_move(environment()), 1),
         assert_equal(testOb->direct_get_obj_from_obj(), "You can't get what isn't there."),
         // passes when in container in environment
         assert_equal($(storage)->handle_move("/domain/Nowhere/room/void.c"), 1),

@@ -10,7 +10,7 @@ nomask private void done (int focus) {
     if (focus) {
         __User->input_focus();
     }
-    destruct(this_object());
+    destruct();
 }
 
 nomask private string prompt () {
@@ -36,7 +36,7 @@ private void handle_page (mixed arg) {
     int i, l;
 
     if (arg == -1) {
-        return destruct(this_object());
+        return destruct();
     }
     if (arg) {
         switch (arg[0]) {

@@ -85,11 +85,11 @@ string query_long () {
     float h, m, s;
     string localtime;
 
-    if (!this_user() || !clonep(this_object()) || !environment(this_object())) return long;
+    if (!this_user() || !clonep(this_object()) || !environment()) return long;
 
     width = this_user()->query_setting("width");
     w = width * 2;
-    a = D_ASTRONOMY->query_astronomy_from_room(environment(this_object()));
+    a = D_ASTRONOMY->query_astronomy_from_room(environment());
     t = time();
     dots = allocate(w/2, (: allocate($(w/4), (: 0 :)) :));
     long += "\n";

@@ -238,7 +238,7 @@ void create () {
     __AllowStatic = 0;
     __URLPatterns = ({ });
 
-    server_root = file_name(this_object());
+    server_root = file_name();
     server_root = server_root[0..strsrch(server_root, "/", -1)];
 }
 

@@ -11,7 +11,7 @@ mixed *query_autoload_items () {
 }
 
 varargs void update_autoload (int exit) {
-    object *inv = all_inventory(this_object());
+    object *inv = all_inventory();
     int i, l = sizeof(inv);
     mixed *data;
 
