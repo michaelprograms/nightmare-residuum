@@ -38,22 +38,15 @@ jobs:
       shell: bash
       timeout-minutes: 10
 
-    - name: Replace Absolute Path with Relative Path
-      uses: jacobtomlinson/gha-find-replace@v3
-      with:
-        find: "/home/mud/game/lib"
-        replace: "./lib"
-        include: "lib/secure/etc/nightmare-residuum.config"
-
-    - name: Disable external_port_2
-      uses: jacobtomlinson/gha-find-replace@v3
-      with:
-        find: "external_port_2"
-        replace: "# external_port_2"
-        include: "lib/secure/etc/nightmare-residuum.config"
-
     - name: Run Tests
       run: |
+        # Replace absolute path with relative path
+        sed -i 's|/home/mud/game/lib|./lib|g' lib/secure/etc/nightmare-residuum.config
+
+        # Disable external_port_2
+        sed -i 's|^external_port_2|# external_port_2|' lib/secure/etc/nightmare-residuum.config
+
+        # Run mudlib in test mode
         ./build/bin/driver lib/secure/etc/nightmare-residuum.config -ftest
       shell: bash
       timeout-minutes: 1
