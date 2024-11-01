@@ -38,15 +38,18 @@ jobs:
       shell: bash
       timeout-minutes: 10
 
-    - name: Run Tests
+    - name: Modify Config for Local Test Run
       run: |
         # Replace absolute path with relative path
         sed -i 's|/home/mud/game/lib|./lib|g' lib/secure/etc/nightmare-residuum.config
 
         # Disable external_port_2
         sed -i 's|^external_port_2|# external_port_2|' lib/secure/etc/nightmare-residuum.config
+      shell: bash
+      timeout-minutes: 1
 
-        # Run mudlib in test mode
+    - name: Run Tests
+      run: |
         ./build/bin/driver lib/secure/etc/nightmare-residuum.config -ftest
       shell: bash
       timeout-minutes: 1
