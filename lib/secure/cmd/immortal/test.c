@@ -13,6 +13,8 @@ void command (string input, mapping flags) {
             "brief": flags["brief"] || flags["b"],
             "coverage": flags["coverage"] || flags["c"],
         ]));
+    } else if (input == "coverage") {
+        D_TEST->analyze_coverage(this_user());
     } else if (input) {
         string test = input;
 
