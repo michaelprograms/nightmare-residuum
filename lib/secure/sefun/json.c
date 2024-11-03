@@ -65,7 +65,7 @@ varargs string json_encode (mixed value) {
 private buffer parseText;
 private int parsePos, parseChar, parseLine;
 
-private mixed json_decode_value();
+private mixed json_decode_value ();
 private mixed json_decode_string (int initiator_checked);
 
 private varargs int json_decode_token (string token, int start) {
@@ -106,7 +106,7 @@ private mixed json_decode_object () {
                 parseLine ++;
                 parseChar = 1;
                 break;
-            default     :
+            default:
                 found_non_whitespace = 1;
                 break;
             }
@@ -143,12 +143,12 @@ private mixed json_decode_object () {
             switch (ch) {
             case 0:
                 error("Unexpected end of data in json_decode_object");
-            case ','    :
+            case ',':
                 found_comma = 1;
                 parsePos ++;
                 parseChar ++;
                 break;
-            case '}'    :
+            case '}':
                 done = 1;
                 parsePos ++;
                 parseChar ++;
@@ -162,7 +162,7 @@ private mixed json_decode_object () {
                 parseLine ++;
                 parseChar = 1;
                 break;
-            default     :
+            default:
                 error("Unexpected character in json_decode_object: " + sprintf("%c", ch));
             }
         }
@@ -171,7 +171,7 @@ private mixed json_decode_object () {
     return out;
 }
 private mixed json_decode_array () {
-    mixed *out = ({});
+    mixed *out = ({ });
     int done = 0;
     int found_comma;
     int ch;
@@ -256,7 +256,7 @@ private mixed json_decode_string (int initiator_checked) {
                 to = parsePos - 1;
             }
             break;
-        default         :
+        default:
             if (esc_state) {
                 esc_state = 0;
                 esc_active ++;
@@ -392,7 +392,7 @@ private mixed json_decode_number () {
     while (to == -1) {
         ch = parseText[parsePos];
         switch (ch) {
-        case '.'        :
+        case '.':
             if (dot != -1 || exp != -1) {
                 error("Unexpected character in json_decode_number: " + sprintf("%c", ch));
             }
