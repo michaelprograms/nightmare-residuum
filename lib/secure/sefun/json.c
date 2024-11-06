@@ -378,7 +378,7 @@ private mixed json_decode_number () {
                 parseChar ++;
                 ch = parseText[parsePos];
                 if (ch != ' ' && ch != '\n' && ch != '\r' && ch != '\t') {
-                    return;
+                    return 0;
                 }
             }
             next_ch = parseText[parsePos];
