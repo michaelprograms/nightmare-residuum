@@ -106,8 +106,11 @@ private mixed json_decode_object () {
             }
         }
         key = json_decode_string(0);
+        if (!key) {
+            return out;
+        }
         found_sep = 0;
-        while (!found_sep) {
+        while (!found_sep && !done) {
             ch = parseText[parsePos];
             switch (ch) {
             case 0:
@@ -122,33 +125,39 @@ private mixed json_decode_object () {
             case 0x0c: case '\n':
                 parsePos ++;
                 break;
-            default:
-                error("Unexpected character in json_decode_object: " + sprintf("%c", ch));
-            }
-        }
-        value = json_decode_value();
-        found_comma = 0;
-        while (!found_comma && !done) {
-            ch = parseText[parsePos];
-            switch (ch) {
-            case 0:
-                error("Unexpected end of data in json_decode_object");
-            case ',':
-                found_comma = 1;
-                parsePos ++;
-                break;
             case '}':
                 done = 1;
                 parsePos ++;
                 break;
-            case ' ': case '\t': case '\r':
-                parsePos ++;
-                break;
-            case 0x0c: case '\n':
-                parsePos ++;
-                break;
             default:
                 error("Unexpected character in json_decode_object: " + sprintf("%c", ch));
+            }
+        }
+        if (!done) {
+            value = json_decode_value();
+            found_comma = 0;
+            while (!found_comma && !done) {
+                ch = parseText[parsePos];
+                switch (ch) {
+                case 0:
+                    error("Unexpected end of data in json_decode_object");
+                case ',':
+                    found_comma = 1;
+                    parsePos ++;
+                    break;
+                case '}':
+                    done = 1;
+                    parsePos ++;
+                    break;
+                case ' ': case '\t': case '\r':
+                    parsePos ++;
+                    break;
+                case 0x0c: case '\n':
+                    parsePos ++;
+                    break;
+                default:
+                    error("Unexpected character in json_decode_object: " + sprintf("%c", ch));
+                }
             }
         }
         out[key] = value;
@@ -158,6 +167,7 @@ private mixed json_decode_object () {
 private mixed json_decode_array () {
     mixed *out = ({ }), value;
     int done = 0, found_comma, ch;
+
     parsePos ++;
     ch = parseText[parsePos];
     if (ch == ']') {
@@ -197,14 +207,18 @@ private mixed json_decode_array () {
 
 private mixed json_decode_string (int initiator_checked) {
     int from, to, esc_state, esc_active;
+    int *nybbles = allocate(4), character = 0, next_character = 0, codepoint;
     string out;
-    int *nybbles = allocate(4);
-    int character = 0, next_character = 0, codepoint;
+
     if (!initiator_checked) {
-        if (!parseText[parsePos]) {
+        switch (parseText[parsePos]) {
+        case 0:
             error("Unexpected end of data in json_decode_string");
-        }
-        if (parseText[parsePos] != '"') {
+        case '}':
+            return 0;
+        case '"': case '\n':
+            break;
+        default:
             error("Unexpected character in json_decode_string: " + sprintf("%c", parseText[parsePos]));
         }
     }
@@ -320,9 +334,8 @@ private mixed json_decode_number () {
             error("Unexpected character in json_decode_number: " + sprintf("%c", next_ch));
         }
         parsePos ++;
+        ch = parseText[parsePos];
     }
-
-    ch = parseText[parsePos];
     if (ch == '0') {
         // 0 can only either be an direct int value 0, or 0e or 0E
         next_ch = parseText[parsePos + 1];
@@ -444,6 +457,7 @@ private mixed json_decode_value () {
 
 varargs string json_decode (mixed value) {
     mixed out;
+
     if (!value) {
         return 0;
     }

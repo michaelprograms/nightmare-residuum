@@ -50,7 +50,7 @@ void test_json_decode () {
         assert_equal(testOb->json_decode("-123"), -123),
         assert_equal(testOb->json_decode("0e0"), 0.0),
         assert_equal(testOb->json_decode("0E12328"), 0.0),
-        assert_equal(testOb->json_decode("123E+1"), 1230),
+        assert_equal(testOb->json_decode("123E+1"), 1230.0),
 
         assert_equal(testOb->json_decode("[]"), ({ })),
         assert_equal(testOb->json_decode("[\"a\",\"b\",\"c\"]"), ({ "a", "b", "c" })),
@@ -60,7 +60,7 @@ void test_json_decode () {
         assert_equal(testOb->json_decode("{}"), ([ ])),
         assert_equal(testOb->json_decode(" {} "), ([ ])),
         assert_equal(testOb->json_decode("\n{}\n"), ([ ])),
-        // assert_equal(testOb->json_decode("\n{\n}\n"), ([ ])), // @TODO fails
+        // assert_equal(testOb->json_decode("{\n}"), ([ ])), // @TODO fails
         assert_equal(testOb->json_decode("{\"a\":1,\"b\":2,\"c\":3}"), ([ "a": 1, "b": 2, "c": 3 ])),
         assert_equal(testOb->json_decode("{\"1\":\"a\",\"2\":\"b\",\"3\":\"c\"}"), ([ "1": "a", "2": "b", "3": "c" ])),
 
@@ -69,31 +69,40 @@ void test_json_decode () {
         assert_equal(testOb->json_decode("\"y̖̠͍̘͇͗̏̽̎͞\""), "\u0079\u0316\u0320\u034D\u0318\u0347\u0357\u030F\u033D\u030E\u035E"),
 
         assert_equal(testOb->json_decode("{ \"key1\": true,\r\t\"key2\": false, \"key3\": null }"), ([ "key1": 1, "key2": 0, "key3": 0, ])),
-        assert_equal(testOb->json_decode("{ \"key1\": true,\r\t\"key2\": false }"), ([ "key1": 1, "key2": 0, ])),
-
+        assert_equal(testOb->json_decode("{ \"key1\" \n: true,\r\t\"key2\": false }"), ([ "key1": 1, "key2": 0, ])),
     }) :));
+    testOb->set_log(0);
 
     expect("json_decode catches errors correctly", (: ({
+        assert_catch((: testOb->json_decode("") :), "*Unexpected end of data in json_decode\n"),
+        assert_catch((: testOb->json_decode("{ \"key\": [") :), "*Unexpected end of data in json_decode\n"),
         assert_catch((: testOb->json_decode("{}fail") :), "*Unexpected character in json_decode: f\n"),
-        assert_catch((: testOb->json_decode("{fail}") :), "*Unexpected character in json_decode_string: f\n"),
-
+    }) :));
+    expect("json_decode_value catches errors correctly", (: ({
         assert_catch((: testOb->json_decode("fail{}") :), "*Unexpected character in json_decode_value: f\n"),
         assert_catch((: testOb->json_decode("{ \"key\": n_fail }") :), "*Unexpected character in json_decode_value: n\n"),
         assert_catch((: testOb->json_decode("{ \"key\": f_fail }") :), "*Unexpected character in json_decode_value: f\n"),
         assert_catch((: testOb->json_decode("{ \"key\": t_fail }") :), "*Unexpected character in json_decode_value: t\n"),
-
+        assert_catch((: testOb->json_decode("}") :), "*Unexpected character in json_decode_value: }\n"),
+        assert_catch((: testOb->json_decode("{ \"key\": [ }") :), "*Unexpected character in json_decode_value: }\n"),
+    }) :));
+    expect("json_decode_number catches errors correctly", (: ({
         assert_catch((: testOb->json_decode("0E123E123") :), "*Unexpected character in json_decode_number: E\n"),
         assert_catch((: testOb->json_decode("{ \"key\": 1.f }") :), "*Unexpected character in json_decode_number: f\n"),
         assert_catch((: testOb->json_decode("123E+1.0") :), "*Unexpected character in json_decode_number: .\n"),
         assert_catch((: testOb->json_decode("0f") :), "*Unexpected character in json_decode: f\n"),
-
-        assert_catch((: testOb->json_decode("}") :), "*Unexpected character in json_decode_value: }\n"),
+    }) :));
+    expect("json_decode_object catches errors correctly", (: ({
         assert_catch((: testOb->json_decode("{") :), "*Unexpected end of data in json_decode_object\n"),
         assert_catch((: testOb->json_decode("{\n") :), "*Unexpected end of data in json_decode_object\n"),
-        assert_catch((: testOb->json_decode("{ \"key\": [ }") :), "*Unexpected character in json_decode_value: }\n"),
+        assert_catch((: testOb->json_decode("{ \"key\"") :), "*Unexpected end of data in json_decode_object\n"),
+        assert_catch((: testOb->json_decode("{ \"key\"f") :), "*Unexpected character in json_decode_object: f\n"),
+    }) :));
+    expect("json_decode_array catches errors correctly", (: ({
         assert_catch((: testOb->json_decode("{ \"key\": [ 1, 2, 3") :), "*Unexpected end of data in json_decode_array\n"),
-        assert_catch((: testOb->json_decode("") :), "*Unexpected end of data in json_decode\n"),
-        assert_catch((: testOb->json_decode("{ \"key\": [") :), "*Unexpected end of data in json_decode\n"),
+    }) :));
+    expect("json_decode_string catches errors correctly", (: ({
+        assert_catch((: testOb->json_decode("{fail}") :), "*Unexpected character in json_decode_string: f\n"),
         assert_catch((: testOb->json_decode("{ \"key\": \"") :), "*Unexpected end of data in json_decode_string\n"),
     }) :));
 }
