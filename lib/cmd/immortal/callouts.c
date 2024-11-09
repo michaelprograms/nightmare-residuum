@@ -27,7 +27,7 @@ void command (string input, mapping flags) {
             "columns": 3,
         ]),
         "footer": ([
-            "items": ({ n + " callout" + (n > 1 ? "s" : "") }),
+            "items": ({ n + " callout" + (n != 1 ? "s" : "") }),
             "columns": 1,
             "align": "center",
         ]),
