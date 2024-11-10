@@ -5,9 +5,7 @@ string sculpture_long () {
     object tc = this_character();
     string prop;
 
-    if (tc && (prop = tc->query_property("human_museum")) && !regexp(prop, "s1")) {
-        tc->set_property("human_museum",  prop + "s1");
-    }
+    tc->set_achievement_flag("Art Appreciation", "s1");
 
     if (query_account_setting("screenreader") == "on") {
         desc += "It depicts a blue and white planet off the horizon of the grey surface of an orbiting moon against the dark backdrop of space.";

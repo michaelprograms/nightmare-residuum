@@ -5,9 +5,7 @@ string painting_long () {
     object tc = this_character();
     string prop;
 
-    if (tc && (prop = tc->query_property("human_museum")) && !regexp(prop, "p3")) {
-        tc->set_property("human_museum",  prop + "p3");
-    }
+    tc->set_achievement_flag("Art Appreciation", "p3");
 
     if (query_account_setting("screenreader") == "on") {
         desc += "It depicts a night sky come alive with swirls and orbs of frenetically applied brush marks springing from the yin and yang of the artist's personal demons and awe of nature.";

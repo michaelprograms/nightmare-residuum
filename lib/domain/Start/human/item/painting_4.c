@@ -5,9 +5,7 @@ string painting_long () {
     object tc = this_character();
     string prop;
 
-    if (tc && (prop = tc->query_property("human_museum")) && !regexp(prop, "p3")) {
-        tc->set_property("human_museum",  prop + "p3");
-    }
+    tc->set_achievement_flag("Art Appreciation", "p4");
 
     if (query_account_setting("screenreader") == "on") {
         desc += "It depicts a small group of people in front of a city's ruins under a blue grey sky.";

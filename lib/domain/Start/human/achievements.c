@@ -3,7 +3,7 @@ mapping *query_achievements () {
         ([
             "name": "Art Appreciation",
             "description": "Explore the museum's hallways and appreciate the works of art.",
-            "flags": 10,
+            "flags": "p1,p2,p3,p4,s1,s2,s3,s4"
         ]),
     });
 }
