@@ -8,7 +8,7 @@ string sculpture_long () {
     tc->set_achievement_flag("Art Appreciation", "s1");
 
     if (query_account_setting("screenreader") == "on") {
-        desc += "It depicts a blue and white planet off the horizon of the grey surface of an orbiting moon against the dark backdrop of space.";
+        desc += "It depicts a man standing in the buff in a pose, carved out of marble.";
     } else {
         // https://dom111.github.io/image-to-ansi/
         desc = "#!PAGER!#";
