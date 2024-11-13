@@ -1,11 +1,12 @@
+#include "human.h"
+
 inherit STD_ITEM;
 
 string painting_long () {
     string desc = "";
     object tc = this_character();
-    string prop;
 
-    tc->set_achievement_flag("Art Appreciation", "p4");
+    tc->set_achievement_flag("Art Appreciation", "p4", (HUMAN_BASE + "achievements.c")->query_achievement_flags("Art Appreciation"));
 
     if (query_account_setting("screenreader") == "on") {
         desc += "It depicts a small group of people in front of a city's ruins under a blue grey sky.";

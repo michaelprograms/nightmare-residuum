@@ -1,10 +1,12 @@
+#include "human.h"
+
 inherit STD_ITEM;
 
 string sculpture_long () {
     string desc = "";
     object tc = this_character();
 
-    tc->set_achievement_flag("Art Appreciation", "s3");
+    tc->set_achievement_flag("Art Appreciation", "s3", (HUMAN_BASE + "achievements.c")->query_achievement_flags("Art Appreciation"));
 
     // if (query_account_setting("screenreader") == "on") {
         desc += "It depicts a sculpture.";

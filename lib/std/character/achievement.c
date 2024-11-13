@@ -13,30 +13,29 @@ private void initialize_achievements () {
     }
 }
 
-int set_achievement (string str) {
+int query_achievement_done (string str) {
     initialize_achievements();
-    if (__Achievements[str]) {
-        return 0;
-    }
-    __Achievements[str] = 1;
-    return 1;
+    return __Achievements[str] && __Achievements[str]["done"] == 1;
 }
-int query_achievement (string str) {
+string query_achievement (string str) {
     initialize_achievements();
-    return !!__Achievements[str];
+    return __Achievements[str];
 }
-string *query_achievements () {
+string *query_achievements_done () {
     initialize_achievements();
-    return keys(__Achievements);
+    return keys(filter(__Achievements, (: $2["done"] :)));
+}
+string *query_achievements_incomplete () {
+    initialize_achievements();
+    return keys(filter(__Achievements, (: !$2["done"] :)));
 }
 void remove_achievement (string str) {
     initialize_achievements();
     map_delete(__Achievements, str);
 }
 
-void set_achievement_flag (string str, string flag) {
+mapping set_achievement_flag (string str, string flag, string allflags) {
     string *flags;
-
     if (!__Achievements[str]) {
         __Achievements[str] = ([
             "done": 0,
@@ -49,7 +48,11 @@ void set_achievement_flag (string str, string flag) {
             flags += ({ flag });
             flags = sort_array(flags, (: strcmp :));
             __Achievements[str]["flags"] = implode(flags, ",");
-            // @TODO: CHECK FOR COMPLETION
+            if (__Achievements[str]["flags"] == allflags) {
+                map_delete(__Achievements[str], "flags");
+                __Achievements[str]["done"] = 1;
+            }
         }
     }
+    return __Achievements[str];
 }

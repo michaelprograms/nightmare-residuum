@@ -1,3 +1,5 @@
+#include "human.h"
+
 inherit STD_ITEM;
 
 string painting_long () {
@@ -5,7 +7,7 @@ string painting_long () {
     object tc = this_character();
     string prop;
 
-    tc->set_achievement_flag("Art Appreciation", "p1");
+    tc->set_achievement_flag("Art Appreciation", "p1", (HUMAN_BASE + "achievements.c")->query_achievement_flags("Art Appreciation"));
 
     if (query_account_setting("screenreader") == "on") {
         desc += "It depicts a blue and white planet off the horizon of the grey surface of an orbiting moon against the dark backdrop of space.";
