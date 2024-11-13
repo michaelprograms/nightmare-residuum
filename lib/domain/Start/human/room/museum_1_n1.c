@@ -20,5 +20,6 @@ void create () {
     ]));
     set_reset(([
         HUMAN_NPC + "museum_attendant.c": 1,
+        HUMAN_ITEM + "sculpture_1.c": 1,
     ]));
 }

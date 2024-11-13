@@ -18,7 +18,7 @@ void create () {
         "wall" : "A large painting covers nearly all of the southern wall.",
     ]));
     set_reset(([
-        HUMAN_ITEM + "painting_4.c": 1,
+        HUMAN_ITEM + "painting_3.c": 1,
         HUMAN_NPC + "museum_visitor.c": 1,
     ]));
 }

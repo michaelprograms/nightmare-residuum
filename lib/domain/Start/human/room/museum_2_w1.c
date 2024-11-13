@@ -16,4 +16,7 @@ void create () {
         "floor": "The floor is a polished white stone in large blocks.",
         "hallway": "It leads away and also towards the lobby of the building.",
     ]));
+    set_reset(([
+        HUMAN_ITEM + "sculpture_3.c": 1,
+    ]));
 }

@@ -3,7 +3,6 @@ inherit STD_ITEM;
 string sculpture_long () {
     string desc = "";
     object tc = this_character();
-    string prop;
 
     tc->set_achievement_flag("Art Appreciation", "s1");
 
@@ -48,7 +47,7 @@ void create () {
     ::create();
     set_id(({ "sculpture", "david", }));
     set_name("sculpture");
-    set_short("a sculpture towering in a western alcove");
+    set_short("a sculpture towering in a eastern alcove");
     set_long((: sculpture_long :));
     set_long_footer("A label says 'David' by Michelangelo. It appears to be a recreation of a sculpture from another era of time.");
     set_no_get(1);

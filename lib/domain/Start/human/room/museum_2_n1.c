@@ -18,6 +18,6 @@ void create () {
         ({ "wall", "alcove" }): "A large alcove containing a sculpture covers nearly all of the western wall.",
     ]));
     set_reset(([
-        HUMAN_ITEM + "sculpture_1.c": 1,
+        HUMAN_ITEM + "sculpture_2.c": 1,
     ]));
 }
