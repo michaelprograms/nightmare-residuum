@@ -51,6 +51,8 @@ mapping set_achievement_flag (string str, string flag, string allflags) {
             if (__Achievements[str]["flags"] == allflags) {
                 map_delete(__Achievements[str], "flags");
                 __Achievements[str]["done"] = 1;
+                message("action", "\n%^BOLD%^You have completed "+str+"!%^RESET%^\n", this_object());
+
             }
         }
     }
