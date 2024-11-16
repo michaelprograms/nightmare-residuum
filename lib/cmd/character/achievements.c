@@ -40,15 +40,37 @@ void command (string input, mapping flags) {
             "body": body,
         ]));
     } else {
-        string *a = this_character()->query_achievements();
-        if (!sizeof(a)) {
-            a = ({ "You have no achievements" });
-        }
-        border(([
+        mapping data = ([
             "title": "ACHIEVEMENTS",
-            "body": ([
-                "items": a
-            ]),
-        ]));
+            "body": ({ }),
+         ]);
+        string *done, *incomplete;
+        done = this_character()->query_achievements_done();
+        if (!sizeof(done)) {
+            data["body"] += ({
+                ([
+                    "items": ({ "You have no achievements" }),
+                    "align": "center",
+                    "columns": 1,
+                ])
+            });
+        } else {
+            data["body"] = ({
+                ([
+                    "header": ({ "Complete" }),
+                    "items": done
+                ])
+            });
+        }
+        incomplete = this_character()->query_achievements_incomplete();
+        if (sizeof(incomplete)) {
+            data["body"] += ({
+                ([
+                    "header": ({ "Incomplete" }),
+                    "items": incomplete
+                ])
+            });
+        }
+        border(data);
     }
 }
