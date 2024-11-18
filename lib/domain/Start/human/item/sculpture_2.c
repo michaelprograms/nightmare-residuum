@@ -12,7 +12,7 @@ string sculpture_long () {
         // @TODO
     // }
 
-    tc->set_achievement_flag("Art Appreciation", "s2", (HUMAN_BASE + "achievements.c")->query_achievement_flags("Art Appreciation"));
+    D_ACHIEVEMENT->flag(tc, "Art Appreciation", "s2");
     return desc;
 }
 
