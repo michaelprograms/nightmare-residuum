@@ -8,4 +8,7 @@ void create () {
         "no attack": 1,
         "indoors": 1,
     ]));
+    set_exits(([
+        "out northwest": HUMAN_ROOM + "park_se.c",
+    ]));
 }
