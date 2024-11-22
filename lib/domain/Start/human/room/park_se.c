@@ -5,7 +5,7 @@ inherit STD_ROOM;
 void create () {
     ::create();
     set_short("a village park");
-    set_long("Amongst a village park where three bisecting streets blend into a green space. A pathway meanders through the park's grassy areas, with some sections growing freely into a meadow filled with wild grass and flower. A framework of hexagons glimmer far overhead.");
+    set_long("Amongst a village park where three bisecting streets blend into a green space. A pathway meanders through the park's grassy areas, with some sections growing freely into a meadow filled with wild grass and flower. Two restaurants can be seen on opposite sides of the park. A framework of hexagons glimmer far overhead.");
     set_listen("default", "Water softly splashes into the fountain basin.");
     set_smell("default", "Fresh air smelling of grass.");
     set_exits(([
