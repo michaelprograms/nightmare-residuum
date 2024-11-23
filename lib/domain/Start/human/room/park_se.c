@@ -7,7 +7,7 @@ void create () {
     set_short("a village park");
     set_long("Amongst a village park where three bisecting streets blend into a green space. A pathway meanders through the park's grassy areas, with some sections growing freely into a meadow filled with wild grass and flower. Two restaurants can be seen on opposite sides of the park. A framework of hexagons glimmer far overhead.");
     set_listen("default", "Water softly splashes into the fountain basin.");
-    set_smell("default", "Fresh air smelling of grass.");
+    set_smell("default", "The smell of cooked foods from nearby restaurants.");
     set_exits(([
         "northeast": HUMAN_ROOM + "avenue_n1.c",
         "southwest": HUMAN_ROOM + "avenue_s1.c",
@@ -25,15 +25,6 @@ void create () {
     set_reset(([
         HUMAN_ITEM + "bench.c": 1,
         HUMAN_ITEM + "fountain.c": 1,
-        HUMAN_NPC + "ant.c": ([
-            "number": !random(3),
-        ]),
-        HUMAN_NPC + "bee.c": ([
-            "number": !random(3),
-        ]),
-        HUMAN_NPC + "beetle.c": ([
-            "number": !random(3),
-        ]),
         HUMAN_NPC + "squirrel.c": ([
             "number": !random(3),
         ]),
