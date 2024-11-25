@@ -14,4 +14,7 @@ void create () {
     set_exits(([
         "out northwest": HUMAN_ROOM + "park_se.c",
     ]));
+    set_reset(([
+        HUMAN_NPC + "vendor_vegan.c": 1,
+    ]));
 }
