@@ -16,7 +16,7 @@ void create () {
         "north": HUMAN_ROOM + "fourth_st_s2.c",
         "south": HUMAN_ROOM + "fourth_st_s4.c",
         "enter northwest": HUMAN_ROOM + "store_steak.c",
-        "enter southeast": HUMAN_ROOM + "store_vegan.c",
+        "enter southeast": HUMAN_ROOM + "store_falafel.c",
     ]));
     set_looks(([
         "street": "The street signs are labeled Fourth St, Walnut St, and Avenue.",

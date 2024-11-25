@@ -15,6 +15,6 @@ void create () {
         "out northwest": HUMAN_ROOM + "park_se.c",
     ]));
     set_reset(([
-        HUMAN_NPC + "vendor_vegan.c": 1,
+        HUMAN_NPC + "vendor_falafel.c": 1,
     ]));
 }
