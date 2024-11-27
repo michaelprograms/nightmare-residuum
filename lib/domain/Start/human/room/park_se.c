@@ -15,7 +15,7 @@ void create () {
         "east": HUMAN_ROOM + "walnut_st_e4.c",
         "north": HUMAN_ROOM + "fourth_st_s2.c",
         "south": HUMAN_ROOM + "fourth_st_s4.c",
-        "enter northwest": HUMAN_ROOM + "store_steak.c",
+        "enter northwest": HUMAN_ROOM + "store_meatball.c",
         "enter southeast": HUMAN_ROOM + "store_falafel.c",
     ]));
     set_looks(([
