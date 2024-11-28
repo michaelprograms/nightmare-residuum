@@ -25,9 +25,9 @@ void create () {
     set_species("human");
 
     if (clonep()) {
-        // query_vendor_inventory()->set_reset(([
-        // @TODO
-        // ]));
+        query_vendor_inventory()->set_reset(([
+            HUMAN_ITEM + "food_meatball.c": 4,
+        ]));
     }
     set_vendor_types(({ STD_FOOD }));
     set_vendor_max_items(20);

@@ -23,8 +23,8 @@ void create () {
 
     if (clonep()) {
         query_vendor_inventory()->set_reset(([
-            HUMAN_ITEM + "croissant.c": 4,
-            HUMAN_ITEM + "tea.c": 4,
+            HUMAN_ITEM + "food_croissant.c": 4,
+            HUMAN_ITEM + "drink_tea.c": 4,
         ]));
     }
     set_vendor_types(({ STD_FOOD }));
