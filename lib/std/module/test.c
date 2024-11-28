@@ -295,7 +295,7 @@ private void validate_expect (mixed value1, mixed value2, string message) {
         }
     }
 
-    if (!currentTestPassed) { // @TODO || displayExpects) {
+    if (!currentTestPassed) {
         if (sizeof(value1) || sizeof(value2)) {
             currentTestLog += " ->";
         }
