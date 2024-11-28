@@ -26,7 +26,7 @@ void create () {
 
     if (clonep()) {
         query_vendor_inventory()->set_reset(([
-            HUMAN_ITEM + "food_meatball.c": 4,
+            HUMAN_ITEM + "food_falafel.c": 4,
         ]));
     }
     set_vendor_types(({ STD_FOOD }));
