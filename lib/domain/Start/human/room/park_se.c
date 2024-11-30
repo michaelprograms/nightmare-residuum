@@ -25,6 +25,9 @@ void create () {
     set_reset(([
         HUMAN_ITEM + "bench.c": 1,
         HUMAN_ITEM + "fountain.c": 1,
+        HUMAN_NPC + "teen_suspicious.c": ([
+            "number": !random(2),
+        ]),
         HUMAN_NPC + "squirrel.c": ([
             "number": !random(3),
         ]),

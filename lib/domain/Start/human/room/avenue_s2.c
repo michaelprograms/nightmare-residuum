@@ -14,4 +14,7 @@ void create () {
         "street": "A street sign is labeled 200 S. Avenue.",
         ({ "framework", "hexagons"}): "Far above, the hexagons form a geodesic dome.",
     ]));
+    set_reset(([
+        HUMAN_NPC + "teen_suspicious.c": 1,
+    ]));
 }
