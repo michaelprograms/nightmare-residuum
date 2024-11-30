@@ -1,15 +1,5 @@
 inherit M_TEST;
 
-mapping *query_achievements () {
-    return ({
-        ([
-            "name": "test",
-            "description": "Test.",
-            "flags": 1,
-        ])
-    });
-}
-
 void test_query_achievements_from_room () {
     object room1 = load_object("/domain/Start/human/room/square.c");
     object room2 = load_object("/domain/Start/human/void.c");
@@ -21,4 +11,49 @@ void test_query_achievements_from_room () {
         assert_equal(testOb->query_achievements_from_room("/domain/Nowhere/room/void.c"), 0),
         assert_equal(testOb->query_achievements_from_room($(room2)), 0),
     }) :));
+}
+
+string __Name, __Flag, __Flags;
+void set_achievement_flag (string name, string flag, string flags) {
+    __Name = name;
+    __Flag = flag;
+    __Flags = flags;
+}
+void test_flag () {
+    object mockAchievements = new("/daemon/achievements.mock.c");
+
+    expect("flag sets", (: ({
+        assert_equal($(mockAchievements)->start_shadow(testOb), 1),
+
+        testOb->set_mock_achievements(({
+            ([
+                "name": "test",
+                "description": "Test achievement.",
+                "flags": "a,b,c,1,2,3"
+            ]),
+        })),
+
+        assert_equal(__Name, UNDEFINED),
+        assert_equal(__Flag, UNDEFINED),
+        assert_equal(__Flags, UNDEFINED),
+
+        testOb->flag(this_object(), "test", "a"),
+        assert_equal(__Name, "test"),
+        assert_equal(__Flag, "a"),
+        assert_equal(__Flags, "a,b,c,1,2,3"),
+
+        testOb->flag(this_object(), "test", "b"),
+        assert_equal(__Name, "test"),
+        assert_equal(__Flag, "b"),
+        assert_equal(__Flags, "a,b,c,1,2,3"),
+
+        testOb->flag(this_object(), "test", "z"),
+        assert_equal(__Name, "test"),
+        assert_equal(__Flag, "z"),
+        assert_equal(__Flags, "a,b,c,1,2,3"),
+
+        assert_equal($(mockAchievements)->stop_shadow(), 1),
+    }) :));
+
+    if (mockAchievements) destruct(mockAchievements);
 }

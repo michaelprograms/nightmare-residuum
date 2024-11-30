@@ -16,10 +16,15 @@ mapping query_achievements_from_room (mixed dest) {
 }
 
 void flag (object tc, string name, string flag) {
-    object env = environment(tc);
-    mapping achievements = query_achievements_from_room(env);
-    mapping *match = filter(achievements, (: $1["name"] == $(name) :));
-    mapping matched = sizeof(match) > 0 ? match[0] : 0;
+    object env;
+    mapping achievements, *match, matched;
 
-    tc->set_achievement_flag(name, flag, matched["flags"]);
+    env = environment(tc);
+    achievements = this_object()->query_achievements_from_room(env);
+    match = filter(achievements, (: $1["name"] == $(name) :));
+    matched = sizeof(match) > 0 ? match[0] : 0;
+
+    if (matched) {
+        tc->set_achievement_flag(name, flag, matched["flags"]);
+    }
 }
