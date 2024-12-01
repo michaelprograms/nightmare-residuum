@@ -4,6 +4,9 @@
     },
     "defines": [],
     "diagnostics" : "on",
+    "exclude": [
+        "save/"
+    ],
     "include": [
         "./"
     ],
