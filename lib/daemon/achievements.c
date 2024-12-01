@@ -1,5 +1,10 @@
 mapping __Achievements = ([ ]);
 
+/**
+ * Recursively find an achievements.c from current location
+ *
+ * @param {"std/room"} dest
+ */
 mapping query_achievements_from_room (mixed dest) {
     string roomPath, aPath;
     if (objectp(dest) && dest->is_room()) {
@@ -15,6 +20,13 @@ mapping query_achievements_from_room (mixed dest) {
     return aPath ? __Achievements[aPath] : 0;
 }
 
+/**
+ * Flags the character's achievement progress
+ *
+ * @param {"std/character"} tc - this character
+ * @param name - the name of the achievement to flag
+ * @param flag - the flag to add to achievement
+ */
 void flag (object tc, string name, string flag) {
     object env;
     mapping achievements, *match, matched;

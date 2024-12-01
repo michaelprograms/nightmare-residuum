@@ -3,14 +3,14 @@
         "type": "fluffos"
     },
     "defines": [],
-    "diagnostics" : "off",
-    "files": {
+    "diagnostics" : "on",
+    "libFiles": {
         "master": "/secure/daemon/master.c",
         "simul_efun": "/secure/sefun/sefun.c",
         "init_files": [],
         "global_include": "/secure/include/global.h"
     },
-    "include": [
+    "libInclude": [
         "/include",
         "/secure/include"
     ]
