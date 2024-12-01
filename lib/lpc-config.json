@@ -4,6 +4,9 @@
     },
     "defines": [],
     "diagnostics" : "on",
+    "include": [
+        "./"
+    ],
     "libFiles": {
         "master": "/secure/daemon/master.c",
         "simul_efun": "/secure/sefun/sefun.c",
