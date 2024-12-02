@@ -177,7 +177,7 @@ void test_wild_card () {
         assert_equal(testOb->wild_card(0), ({ })),
         assert_equal(testOb->wild_card(""), ({ })),
 
-        assert_equal(testOb->wild_card("/"), ({ "/cmd", "/daemon", "/doc", "/domain", "/etc", "/include", "/log", "/lpc-config.json", "/realm", "/save", "/secure", "/std", "/tmp"  })),
+        assert_equal(testOb->wild_card("/"), ({ "/cmd", "/daemon", "/doc", "/domain", "/etc", "/include", "/log", "/realm", "/save", "/secure", "/std", "/tmp"  })),
         assert_equal(testOb->wild_card("/r*"), ({ "/realm" })),
         assert_equal(testOb->wild_card("/d*"), ({ "/daemon", "/doc", "/domain" })),
 
