@@ -1,0 +1,25 @@
+{
+    "driver": {
+        "type": "fluffos"
+    },
+    "include": [
+        "../lib"
+    ],
+    "libFiles": {
+        "global_include": "global.h",
+        "simul_efun": "/secure/sefun/sefun.c",
+        "master": "/secure/daemon/master.c",
+        "player": "/std/user.c",
+    },
+    "libInclude": [
+        "secure/include",
+        "include"
+    ],
+    "exclude": [
+        "tmp",
+        "WWW",
+        "log",
+        "help"
+    ],
+    "diagnostics": "on"
+}
