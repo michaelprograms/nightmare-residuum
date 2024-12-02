@@ -152,10 +152,14 @@ string query_file_privs (string filename) {
                 result = ACCESS_SECURE;
                 break;
             case "realm":
-                result = sizeof(path) > 1 ? lower_case(path[1]) : 0;
+                if (sizeof(path) > 1) {
+                    result = lower_case(path[1]);
+                }
                 break;
             case "domain":
-                result = sizeof(path) > 1 ? capitalize(lower_case(path[1])) : 0;
+                if (sizeof(path) > 1) {
+                    result = capitalize(lower_case(path[1]));
+                }
                 break;
             default: result =  0;
         }
