@@ -3,7 +3,7 @@
         "type": "fluffos"
     },
     "include": [
-        "../lib"
+        "./lib"
     ],
     "libFiles": {
         "global_include": "global.h",
@@ -16,10 +16,9 @@
         "include"
     ],
     "exclude": [
-        "tmp",
-        "WWW",
+        "doc",
         "log",
-        "help"
+        "tmp"
     ],
     "diagnostics": "on"
 }
