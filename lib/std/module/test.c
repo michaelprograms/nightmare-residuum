@@ -111,11 +111,10 @@ private void finish_test () {
         "unhitLines": sizeof(D_TEST->query_unhit_lines()),
     ]));
 
-
     destruct();
 }
 
-public int execute_test (function done) {
+public void execute_test (function done) {
     timeTotalBefore = time_ns();
     doneTestFn = done;
 
