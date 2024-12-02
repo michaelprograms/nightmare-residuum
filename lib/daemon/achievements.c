@@ -23,20 +23,18 @@ mapping query_achievements_from_room (mixed dest) {
 /**
  * Flags the character's achievement progress
  *
- * @param {"std/character"} tc - this character
+ * @param {STD_CHARACTER} tc - this character
  * @param name - the name of the achievement to flag
  * @param flag - the flag to add to achievement
  */
 void flag (object tc, string name, string flag) {
     object env;
-    mapping achievements, *match, matched;
+    mapping achievements, *match;
 
     env = environment(tc);
     achievements = this_object()->query_achievements_from_room(env);
     match = filter(achievements, (: $1["name"] == $(name) :));
-    matched = sizeof(match) > 0 ? match[0] : 0;
-
-    if (matched) {
-        tc->set_achievement_flag(name, flag, matched["flags"]);
+    if (sizeof(match)) {
+        tc->set_achievement_flag(name, flag, match[0]["flags"]);
     }
 }
