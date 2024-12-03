@@ -455,7 +455,7 @@ private mixed json_decode_value () {
     }
 }
 
-varargs string json_decode (mixed value) {
+varargs string json_decode (string value) {
     mixed out;
 
     if (!value) {
@@ -478,5 +478,4 @@ varargs string json_decode (mixed value) {
             error("Unexpected character in json_decode: " + sprintf("%c", parseText[parsePos]));
         }
     }
-    return 0;
 }
