@@ -21,5 +21,9 @@
     "libInclude": [
         "secure/include",
         "include"
+    ],
+    "defines": [
+        { "__VERSION__": "\"fluffos\"" },
+        { "__PORT__": "6666" }
     ]
 }
