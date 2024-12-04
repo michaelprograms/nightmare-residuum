@@ -1,7 +1,14 @@
 {
+    "diagnostics": "on",
     "driver": {
         "type": "fluffos"
     },
+    "exclude": [
+        "lib/doc",
+        "lib/log",
+        "lib/save",
+        "lib/tmp"
+    ],
     "include": [
         "./lib"
     ],
@@ -14,11 +21,5 @@
     "libInclude": [
         "secure/include",
         "include"
-    ],
-    "exclude": [
-        "doc",
-        "log",
-        "tmp"
-    ],
-    "diagnostics": "on"
+    ]
 }
