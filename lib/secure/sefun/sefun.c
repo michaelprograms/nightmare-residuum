@@ -18,6 +18,11 @@ inherit "/secure/sefun/string.c";
 inherit "/secure/sefun/time.c";
 inherit "/secure/sefun/user.c";
 
+/**
+ * Sefun to access human readable format of driver version.
+ *
+ * @returns driver version text in v0.0.0 format
+ */
 string version () {
     string v = __VERSION__;
     v = explode(__VERSION__, "-")[0];
@@ -26,14 +31,29 @@ string version () {
     return v;
 }
 
+/**
+ * Sefun to access the driver's primary port.
+ *
+ * @returns port as an integer
+ */
 int driver_port () {
     return __PORT__;
 }
 
+/**
+ * Sefun to access mudlib's version.
+ *
+ * @returns mudlib version text
+ */
 string mudlib_version () {
     return "NR v0.3";
 }
 
+/**
+ * Sefun to access the mud name.
+ *
+ * @returns mudlib name text
+ */
 string mud_name () {
     string name = "Nightmare Residuum";
 #ifdef MUD_NAME
@@ -42,6 +62,11 @@ string mud_name () {
     return name;
 }
 
+/**
+ * Sefun to print a detailed call stack trace.
+ *
+ * @returns multi-line string of the current call stack with some formatting
+ */
 string call_trace () {
     string *programs = map(call_stack(4), (: replace_string($1, ":", "::") :));
     object *objects = call_stack(1);
