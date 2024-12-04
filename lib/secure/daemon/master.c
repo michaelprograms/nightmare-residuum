@@ -4,7 +4,12 @@
 
 // --- master ------------------------------------------------------------------
 
-// This apply is called when a new user connects to the driver.
+/**
+ * This apply is called when a new user connects to the driver.
+ *
+ * @param port The port the user has connected on
+ * @returns {STD_USER} the new user object
+ */
 object connect (int port) {
     object ob;
     string err;
@@ -18,18 +23,18 @@ object connect (int port) {
         }
         return 0;
     }
+    // @TODO: ob->set_port(port);
     return ob;
-}
-
-// This apply is called when a new file is created to determine privilege
-string privs_file (string filename) {
-    return D_ACCESS->query_file_privs(filename);
 }
 
 // --- startup -----------------------------------------------------------------
 
-// This apply is called after master has been loaded.
-// Returns an array of filenames to preload.
+/**
+ * This apply is called after master has been loaded.
+ *
+ * @param load_empty
+ * @returns returns filenames to preload
+ */
 varargs string *epilog (int load_empty) {
     string *preload = ({ });
     if (!load_empty && file_size(CFG_PRELOAD) > 0) {
@@ -38,7 +43,11 @@ varargs string *epilog (int load_empty) {
     return preload;
 }
 
-// This apply is called for each driver command line option passed via -f.
+/**
+ * This apply is called for each driver command line option passed via -f.
+ *
+ * @param flag a command line option passed to driver
+ */
 void flag (string flag) {
     if (flag == "test") {
         call_out((: D_TEST->run(([ "coverage": 1, "shutdown": 1 ])) :), 0);
@@ -47,12 +56,20 @@ void flag (string flag) {
     }
 }
 
-// This apply is called for each filename returned by epilog.
+/**
+ * This apply is called for each filename returned by epilog.
+ *
+ * @param filename the path to load
+ */
 void preload (string filename) {
     catch (load_object(filename));
 }
 
-// This apply is called by the driver during MSSP requests.
+/**
+ * This apply is called by the driver during MSSP requests.
+ *
+  @returns key:value pairs of mud stats
+ */
 mapping get_mud_stats () {
     return ([
         /* --- Required --- */
@@ -114,7 +131,12 @@ mapping get_mud_stats () {
 
 // --- build applies -----------------------------------------------------------
 
-// This apply is called on non-existent files that could be virtually created.
+/**
+ * This apply is called on non-existent files that could be virtually created.
+ *
+ * @param path file path to check for virtual create
+ * @returns loaded object or 0
+ */
 object compile_object (string path) {
     string area, room, vpath;
 
@@ -134,7 +156,12 @@ object compile_object (string path) {
     return 0;
 }
 
-// This apply is called by the sprintf efun when printing an object.
+/**
+ * This apply is called by the sprintf efun when printing an object.
+ *
+ * @param {STD_OBJECT} ob object to name
+ * @returns name of the object
+ */
 string object_name (object ob) {
     if (!ob) {
         return "<destructed>";
@@ -144,7 +171,12 @@ string object_name (object ob) {
     return ob->query_short();
 }
 
-// This apply is called to determine directory relative header file paths.
+/**
+ * This apply is called to determine directory relative header file paths.
+ *
+ * @param file path to be checked for additional include paths
+ * @returns paths to check for header files
+ */
 string *get_include_path (string file) {
     string *path = explode(file, "/") - ({ "" }), *paths = ({ ":DEFAULT:" });
     switch (path[0]) {
@@ -160,7 +192,13 @@ string *get_include_path (string file) {
 
 // --- error applies -----------------------------------------------------------
 
-// This apply is called when shutting down the driver.
+/**
+ * This apply is called when shutting down the driver.
+ *
+ * @param crash_message
+ * @param command_giver
+ * @param current_object
+ */
 void crash (string crash_message, object command_giver, object current_object) {
     debug_message(ctime() + " crashed because " + crash_message + " " + identify(call_stack()) + " " + identify(previous_object(-1)));
     message("system", "Everything is suddenly nothing as irreality takes control.\n", users());
@@ -198,7 +236,12 @@ varargs string standard_trace (mapping e) {
     return ret;
 }
 
-// This apply is called to handle caught and runtime errors.
+/**
+ * This apply is called to handle caught and runtime errors.
+ *
+ * @param e error info
+ * @param caught flag for runtime vs catch
+ */
 void error_handler (mapping e, int caught) {
     string ret, file = caught ? "catch" : "runtime";
     object ob, test;
@@ -225,13 +268,19 @@ void error_handler (mapping e, int caught) {
     return 0;
 }
 
+// @TODO: deprecate this disable warnings system
 private string *read_file_disabled_warnings (string file) {
     string *lines = file_size(file) > 0 ? explode(read_file(file), "\n") : ({ });
     lines = filter(lines, (: regexp($1,"// disable warning:") :));
     return map_array(lines, (: $1[strsrch($1, ": ")+2..<1] :));
 }
 
-// This apply is called when an error occurs during compilation of a file.
+/**
+ * This apply is called when an error occurs during compilation of a file.
+ *
+ * @param file path to write to
+ * @param msg message to log
+ */
 void log_error (string file, string msg) {
     string dest, lcMsg, nom, tmp;
 
@@ -278,44 +327,75 @@ void log_error (string file, string msg) {
 
 // --- ed applies --------------------------------------------------------------
 
-// This apply is called by the ed efun to resolve path names.
+/**
+ * This apply is called by the ed efun to resolve path names.
+ *
+ * @param rel_path the relative path to make absolute
+ * @returns absolute sanitized path of the relative path
+ */
 string make_path_absolute (string rel_path) {
     return sanitize_path(rel_path);
 }
 
-// This apply queries the user's ed config
+/**
+ * This apply queries the user's ed config.
+ *
+ * @param {STD_USER} user the user to query
+ * @returns the integer bitmask of the user's ed setup
+ */
 int retrieve_ed_setup (object user) {
     return user->query_ed_setup();
 }
 
-// This apply saves the user's ed config
+/**
+ * This apply saves the user's ed config.
+ *
+ * @param {STD_USER} user the user to save
+ * @param config the integer bitmask of the user's ed setup
+ * @returns 1
+ */
 int save_ed_setup (object user, int config) {
     user->set_ed_setup(config);
     return 1;
 }
 
-// --- valid applies -----------------------------------------------------------
+// --- privileges applies ------------------------------------------------------
 
-// valid_bind
+/**
+ * This apply is called when a new file is created to determine privileges
+ *
+ * @param filename path to check privileges of
+ * @returns the path's privileges
+ */
+string privs_file (string filename) {
+    return D_ACCESS->query_file_privs(filename);
+}
 
-// valid_database
-// actions: connect, exec, fetch, close
+/**
+ * This apply is called whenever database actions are attempted.
+ * actions: connect, exec, fetch, close
+ *
+ * @param ob object requesting database access
+ * @param action database action
+ * @param info extra info passed by the driver
+ * @returns 1
+ */
 int valid_database (object ob, string action, mixed *info) {
     return 1;
 }
 
-// valid_hide
-
-// valid_link
-
-// valid_object
-
-// This apply controls the use of efun:: prefix.
+/**
+ * This apply controls the use of efun:: prefix.
+ *
+ * @param file the path requesting efun:: prefix
+ * @param efun_name the requested efun
+ * @param main_file
+ * @returns 0 or 1
+ */
 varargs int valid_override (string file, string efun_name, string main_file) {
     if (file[0] != '/') {
         return 0;
     }
-
     switch (efun_name) {
         case "input_to":
         case "get_char":
@@ -325,15 +405,15 @@ varargs int valid_override (string file, string efun_name, string main_file) {
         case "parse_init":
             return regexp(file, "^/std/module/parse");
     }
-    return regexp(file, "^/secure/(sefun|daemon/master)");
+    return !!regexp(file, "^/secure/(sefun|daemon/master)");
 }
 
-
-// valid_save_binary
-
-// valid_seteuid
-
-// valid_shadow
+/**
+ * This apply is called prior to the use of shadow efun.
+ *
+ * @param {object} ob the object to be shadowed
+ * @returns 0 or 1
+ */
 int valid_shadow (object ob) {
     // Only mock files or shadow test can use shadows
     if (regexp(file_name(previous_object()), "[a-z]+\\.mock#[0-9]+")) {
@@ -345,27 +425,36 @@ int valid_shadow (object ob) {
     }
 }
 
-// This apply is called prior to every socket efun.
+/**
+ * This apply is called prior to every socket efun.
+ *
+ * @param {object} caller the object requesting a socket
+ * @param fn the socket function being requested
+ * @param info extra info passed by the driver
+ * @returns 0 or 1
+ */
 int valid_socket (object caller, string fn, mixed *info) {
     return D_ACCESS->query_allowed(caller, fn, 0, "socket");
 }
 
-/*
-    Read efuns:
-        file_size, get_dir, include, load_object, read_bytes, read_file,
-        restore_object, stat,
-    Read/write efuns:
-        ed_start, compress_file, move_file,
-    Write efuns:
-        debugmalloc, dumpallobj, mkdir, remove_file, rename, rmdir,
-        save_object, sqlite3_connect, trace_start, write_bytes, write_file,
-*/
-// This apply is called for each of the read efuns
+/**
+ * This apply is called for each of the read efuns.
+ *
+ * Read efuns:
+ *    file_size, get_dir, include, load_object, read_bytes, read_file,
+ *    restore_object, stat,
+ * Read/write efuns:
+ *    ed_start, compress_file, move_file,
+ *
+ * @param file the path being read
+ * @param caller the source of the efun call
+ * @param fn the efun being called
+ * @returns 0 or 1
+ */
 int valid_read (string file, mixed caller, string fn) {
     int valid = 0;
     if (stringp(file) && sizeof(file)) {
         file = sanitize_path(file);
-
         if (!(valid = regexp(base_name(caller), "^/secure/daemon/[master|access]"))) {
             valid = D_ACCESS->query_allowed(caller, fn, file, "read");
         }
@@ -375,11 +464,24 @@ int valid_read (string file, mixed caller, string fn) {
     }
     return valid;
 }
-// This apply is called for each of the write efuns
+
+/**
+ * This apply is called for each of the write efuns.
+ *
+ * Read/write efuns:
+ *    ed_start, compress_file, move_file,
+ * Write efuns:
+ *    debugmalloc, dumpallobj, mkdir, remove_file, rename, rmdir,
+ *    save_object, sqlite3_connect, trace_start, write_bytes, write_file,
+ *
+ * @param file the path being read
+ * @param caller the source of the efun call
+ * @param fn the efun being called
+ * @returns 0 or 1
+ */
 int valid_write (string file, mixed caller, string fn) {
     int valid = 0;
     file = sanitize_path(file);
-
     if (!(valid = regexp(base_name(caller), "^/secure/daemon/[master|access]"))) {
         valid = D_ACCESS->query_allowed(caller, fn, file, "write");
     }
@@ -389,21 +491,40 @@ int valid_write (string file, mixed caller, string fn) {
     return valid;
 }
 
-// -----------------------------------------------------------------------------
+// --- parser applies ----------------------------------------------------------
 
-// List of nouns that apply to all objects
+/**
+ * List of nouns that apply to all objects.
+ *
+ * @returns string array containing base identifiers
+ */
 string *parse_command_id_list () {
     return ({ "thing" });
 }
-// List of adjectives that apply to all objects
+
+/**
+ * List of adjectives that apply to all objects.
+ *
+ * @returns string array containing adjectives
+ */
 string *parse_command_adjectiv_id_list () {
     return ({ "a", "an", "the" });
 }
-// List of plurals that apply to all objects
+
+/**
+ * List of plurals that apply to all objects.
+ *
+ * @returns string array containing plural identifiers
+ */
 string *parse_command_plural_id_list () {
     return ({ "things", "them", "everything" });
 }
-// List of prepositions that are permitted
+
+/**
+ * List of prepositions that are permitted.
+ *
+ * @returns string array containing prepositions
+ */
 string *parse_command_prepos_list () {
     return ({ "in", "from", "on", "under", "behind", "beside", "of", "for",
         "to", "with", "at", "off", "out", "down", "up", "around", "over",
@@ -414,15 +535,33 @@ string *parse_command_prepos_list () {
         "next to", "over to", "outside of", "up to", "in front of",
         "in back of", "on top of", "off of" });
 }
-// A word that refers to everything in an environment
+
+/**
+ * A word that refers to everything in an environment
+ *
+ * @returns string "all" word
+ */
 string parse_command_all_word () {
     return "all";
 }
-// A list of objects that can match remote living objects.
+
+/**
+ * A list of objects that can match remote living objects.
+ *
+ * @returns {STD_CHARACTER} list of characters
+ */
 object *parse_command_users () {
     return users()->query_character();
 }
-// This apply is called to generate error responses to user input.
+
+/**
+ * This apply is called to generate error responses to user input.
+ *
+ * @param type the type of parser error message
+ * @param {object} ob the object in context
+ * @param arg
+ * @param plural
+ */
 string parser_error_message (int type, object ob, mixed arg, int plural) {
     string err;
     object tmpob;
@@ -552,13 +691,18 @@ string parser_error_message (int type, object ob, mixed arg, int plural) {
     return err;
 }
 
-// This function is called whenever characters enter or exit the world.
+/**
+ * This function is called whenever characters enter or exit the world.
+ */
 void handle_parse_refresh () {
     parse_refresh();
 }
 
-/* ----- object applies ----- */
+// --- object applies ----------------------------------------------------------
 
+/**
+ * Upon create, if not a clone will attempt to make save directories.
+ */
 void create () {
     int i;
     string s = " ";
