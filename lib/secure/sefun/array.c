@@ -1,3 +1,9 @@
+/**
+ * Return unique / distinct elements from an array.
+ *
+ * @param arr the array to make distinct
+ * @returns mixed array with distinct elements
+ */
 mixed *distinct_array (mixed *arr) {
     int i, l;
     mapping tmp;
@@ -9,6 +15,14 @@ mixed *distinct_array (mixed *arr) {
     return keys(tmp);
 }
 
+/**
+ * Process an array in a reduce pattern.
+ *
+ * @param arr the array to reduce
+ * @param fn the function to process array items
+ * @param result accumulator field
+ * @returns the result of the array being reduced
+ */
 mixed reduce (mixed *arr, function fn, mixed result) {
     int i, l;
 
