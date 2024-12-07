@@ -10,6 +10,11 @@ private string *__Banner = ({
     "................................................................................",
 });
 
+/**
+ * Returns the welcome banner to the login screen.
+ *
+ * @returns login banner
+ */
 string query_banner () {
     string text = "\e[0;37;40m"; // start with ANSI reset
     string *colors = allocate(6); // left padding
