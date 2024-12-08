@@ -1,5 +1,13 @@
 #include <time.h>
 
+/**
+ * Converts a timestamp to time ago format.
+ * Example: # years # months # weeks # days ago
+ *
+ * @param timestamp the epoch time() to convert
+ * @param granularity how many details to display
+ * @returns time in human readable format
+ */
 varargs string time_ago (int timestamp, int granularity) {
     int Years, Months, Weeks, Days, Hours, Minutes;
     int diff = time() - timestamp;
@@ -67,6 +75,13 @@ varargs string time_ago (int timestamp, int granularity) {
     return "very recently";
 }
 
+/**
+ * Converts a number of seconds into a time format.
+ * Example: #w #d #h #m #s
+ *
+ * @param seconds number of seconds to convert
+ * @returns time in simple readable format
+ */
 string time_from_seconds (int seconds) {
     int s = seconds, w, d, h, m;
     string *results = ({ });
