@@ -29,7 +29,7 @@ void reset () {
 
 /* ----- M_CLEAN ----- */
 
-int clean_up (mixed *args...) {
+int clean_up (mixed args...) {
     foreach (object ob in deep_inventory()) {
         if (ob->query_user() && userp(ob->query_user())) {
             return ::clean_later();

@@ -88,7 +88,7 @@ varargs mixed do_look_at_obj (object ob, mixed arg) {
 
     return 1;
 }
-varargs mixed do_look_obj (object ob, mixed *args...) {
+varargs mixed do_look_obj (object ob, mixed args...) {
     return do_look_at_obj(ob, args...);
 }
 

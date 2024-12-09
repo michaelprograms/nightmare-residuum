@@ -41,7 +41,7 @@ int set_ed_setup (int code) {
 
 /* ----- applies ----- */
 
-int clean_up (mixed *args...) {
+int clean_up (mixed args...) {
     if (query_ed_mode() == -1) {
         destruct();
         return !this_object();

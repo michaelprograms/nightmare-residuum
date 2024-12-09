@@ -20,7 +20,7 @@ void create () {
     reset::create();
 }
 
-int clean_up (mixed *args...) {
+int clean_up (mixed args...) {
     return clean::clean_up(args);
 }
 

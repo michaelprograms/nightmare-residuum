@@ -79,7 +79,7 @@ int remove_emote (string verb, string rule) {
 // R/r: Reflexive   your/him/her/them/it + self
 // V/v: pluralize word
 // P/p: Possessive
-varargs string parse_emote (object target, string msg, object *who, mixed *args) {
+varargs string parse_emote (object target, string msg, object *who, mixed args) {
     mixed *fmt, obs;
     string emote = "", tmp, names;
     mapping has = ([ ]);
@@ -182,7 +182,7 @@ varargs string parse_emote (object target, string msg, object *who, mixed *args)
     return emote;
 }
 
-varargs private mapping prepare_emote (string verb, string rule, mixed *args) {
+varargs private mapping prepare_emote (string verb, string rule, mixed args) {
     mapping result, rules;
     mixed ruleFormat;
     object *who;

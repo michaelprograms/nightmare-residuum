@@ -1,4 +1,4 @@
-string user_path (mixed *args...) {
+string user_path (mixed args...) {
     string name;
     if (sizeof(args)) {
         name = args[0];

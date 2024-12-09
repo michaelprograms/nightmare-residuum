@@ -28,7 +28,7 @@ int handle_remove () {
 
 // Be wary of calling functions in other objects in clean_up, which may cause
 // that object's clean_up timer to be reset.
-int clean_up (mixed *args...) {
+int clean_up (mixed args...) {
     // Objects never lose environment, let environment handle clean_up
     if (environment()) {
         return clean_never();
