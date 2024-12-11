@@ -1,4 +1,9 @@
-// Convert a string hex number to an integer base10
+/**
+ * Convert a string hex base16 number to an integer base10 number.
+ *
+ * @param b16 hex base16 number to convert
+ * @returns base10 integer number
+ */
 int hex_to_int (string b16) {
     int b10;
 
@@ -9,7 +14,12 @@ int hex_to_int (string b16) {
     return b10;
 }
 
-// Convert an integer base10 to string base2
+/**
+ * Convert an integer base10 to string base2
+ *
+ * @param b10 integer base10 number to convert
+ * @returns string base2 number
+ */
 string int_to_binary (int b10) {
     string b2 = "";
 
