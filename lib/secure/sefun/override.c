@@ -1,5 +1,3 @@
-object this_character ();
-
 /**
  * Disabled: Causes the next line of input to be sent to the specified function.
  *
@@ -35,10 +33,10 @@ object *users () {
  * @param msg the text to receive or display
  */
 nomask void write (string msg) {
-    if (this_character() && this_character()->query_key_name() != "test") {
-        this_character()->receive_message("system", msg);
-    } else if (this_user()) {
-        this_user()->receive_message("system", msg);
+    if (SEFUN->this_character() && SEFUN->this_character()->query_key_name() != "test") {
+        SEFUN->this_character()->receive_message("system", msg);
+    } else if (SEFUN->this_user()) {
+        SEFUN->this_user()->receive_message("system", msg);
     } else {
         if (msg[<1] == '\n') {
             msg = msg[0..<2];
