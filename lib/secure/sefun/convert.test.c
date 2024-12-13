@@ -1,5 +1,9 @@
 inherit M_TEST;
 
+/**
+ * @var {"/secure/sefun/convert"} testOb
+ */
+
 void test_hex_to_int () {
     expect("hex_to_int handled base 16 to base 10", (: ({
         assert_equal(testOb->hex_to_int("00"), 0),

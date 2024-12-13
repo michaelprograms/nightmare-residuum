@@ -2,6 +2,10 @@
 
 inherit M_TEST;
 
+/**
+ * @var {"/secure/daemon/access"} testOb
+ */
+
 void test_query_file_privs () {
     expect("query_file_privs handles files", (: ({
         assert_equal(testOb->query_file_privs("/etc/welcome"), ACCESS_ALL),

@@ -1,5 +1,9 @@
 inherit M_TEST;
 
+/**
+ * @var {"/secure/sefun/json"} testOb
+ */
+
 void test_json_encode () {
     expect("json_encode stringifies correctly", (: ({
         assert_equal(testOb->json_encode(), "null"),

@@ -1,5 +1,9 @@
 inherit M_TEST;
 
+/**
+ * @var {"/secure/daemon/command"} testOb
+ */
+
 nosave private int __ImmortalFlag = 0;
 int query_immortal () {
     return __ImmortalFlag;

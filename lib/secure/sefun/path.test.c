@@ -1,8 +1,10 @@
-#define PATH_TEST_DIR "/save/test/testdir"
-
 inherit M_TEST;
 
-// -----------------------------------------------------------------------------
+#define PATH_TEST_DIR "/save/test/testdir"
+
+/**
+ * @var {"/secure/sefun/path"} testOb
+ */
 
 object __MockCharacter;
 object query_character () {
@@ -13,8 +15,6 @@ mapping __MockVariable = ([ "cwd": "/" ]);
 mapping query_variable (string key) {
     return __MockVariable[key];
 }
-
-// -----------------------------------------------------------------------------
 
 void test_user_path () {
     expect("user_path handles names", (: ({

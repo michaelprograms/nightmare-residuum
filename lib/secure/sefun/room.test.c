@@ -1,6 +1,10 @@
 inherit M_TEST;
 inherit STD_LIVING;
 
+/**
+ * @var {"/secure/sefun/room"} testOb
+ */
+
 void test_describe_living_item () {
     expect("living items are described", (: ({
         assert_equal(testOb->describe_living_item(this_object()), ""),

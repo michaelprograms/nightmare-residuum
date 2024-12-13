@@ -1,5 +1,9 @@
 inherit M_TEST;
 
+/**
+ * @var {"/secure/sefun/string"} testOb
+ */
+
 private nosave string __ANSI = "on";
 mixed query_setting (string setting) {
     if (setting == "ansi") {

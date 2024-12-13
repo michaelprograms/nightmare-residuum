@@ -1,5 +1,9 @@
 inherit M_TEST;
 
+/**
+ * @var {"/secure/sefun/override"} testOb
+ */
+
 void test_disabled_efuns () {
     expect("input_to throws error", (: ({
         assert_catch((: testOb->input_to() :), "*efun::input_to disabled\n"),

@@ -1,5 +1,9 @@
 inherit M_TEST;
 
+/**
+ * @var {"/secure/sefun/format"} testOb
+ */
+
 private nosave string __ANSI = "on";
 private nosave int __Width = 80;
 mixed query_setting (string setting) {

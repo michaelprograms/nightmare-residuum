@@ -1,5 +1,9 @@
 inherit M_TEST;
 
+/**
+ * @var {"/secure/sefun/combat"} testOb
+ */
+
 void test_combat_tier_from_percent () {
     expect("combat message tiers behave", (: ({
         assert_equal(testOb->query_combat_tier_from_percent(-1), 0),

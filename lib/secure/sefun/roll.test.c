@@ -1,5 +1,9 @@
 inherit M_TEST;
 
+/**
+ * @var {"/secure/sefun/roll"} testOb
+ */
+
 mixed *rollData;
 void test_roll_die () {
     expect("roll_die returns valid values", (: ({

@@ -1,5 +1,9 @@
 inherit M_TEST;
 
+/**
+ * @var {"/secure/daemon/character"} testOb
+ */
+
 void test_valid_name () {
     expect("query_valid_name handles names", (: ({
         assert_equal(testOb->query_valid_name("valid"), 1),

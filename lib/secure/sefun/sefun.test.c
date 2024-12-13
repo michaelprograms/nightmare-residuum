@@ -1,5 +1,9 @@
 inherit M_TEST;
 
+/**
+ * @var {"/secure/sefun/sefun"} testOb
+ */
+
 void test_version () {
     expect("version returns a version", (: ({
         assert_equal(stringp(testOb->version()), 1),

@@ -1,5 +1,9 @@
 inherit M_TEST;
 
+/**
+ * @var {"/secure/sefun/noise"} testOb
+ */
+
 string *test_order () {
     return ({
         "test_noise_perlin_helpers",

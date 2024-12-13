@@ -2,6 +2,10 @@
 
 inherit M_TEST;
 
+/**
+ * @var {"/secure/sefun/time"} testOb
+ */
+
 void test_time_ago () {
     int now = time();
 

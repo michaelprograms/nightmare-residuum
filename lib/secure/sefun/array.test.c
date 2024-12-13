@@ -1,5 +1,9 @@
 inherit M_TEST;
 
+/**
+ * @var {"/secure/sefun/array"} testOb
+ */
+
 void test_distinct_array () {
     expect("distinct_array handles inputs", (: ({
         assert_equal(testOb->distinct_array(({ 1, 2, 2, 3, 2, 1, 3, 2, 1 })), ({ 3, 2, 1 })),

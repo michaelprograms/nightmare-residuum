@@ -1,5 +1,9 @@
 inherit M_TEST;
 
+/**
+ * @var {"/secure/sefun/color"} testOb
+ */
+
 void test_strip_colour () {
     string text = "%^BOLD%^Text%^RESET%^";
 

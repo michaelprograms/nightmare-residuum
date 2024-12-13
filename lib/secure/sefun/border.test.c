@@ -1,5 +1,9 @@
 inherit M_TEST;
 
+/**
+ * @var {"/secure/sefun/border"} testOb
+ */
+
 object __MockCharacter;
 object query_character () {
     return __MockCharacter;

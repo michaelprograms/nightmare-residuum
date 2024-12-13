@@ -1,5 +1,9 @@
 inherit M_TEST;
 
+/**
+ * @var {"/secure/sefun/grammar"} testOb
+ */
+
 void test_remove_article () {
     expect("articles are trimmed", (: ({
         assert_equal(testOb->remove_article(""), ""),

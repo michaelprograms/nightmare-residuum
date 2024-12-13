@@ -1,6 +1,10 @@
 inherit M_TEST;
 #include "access.h"
 
+/**
+ * @var {"/secure/daemon/master"} testOb
+ */
+
 string *test_order () {
     return ({
         "test_applies",

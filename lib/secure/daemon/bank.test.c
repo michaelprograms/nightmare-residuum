@@ -1,5 +1,9 @@
 inherit M_TEST;
 
+/**
+ * @var {"/secure/daemon/bank"} testOb
+ */
+
 void test_banks () {
     expect("banks are queryable", (: ({
         assert_equal(testOb->query_banks("testcharacter"), ({ })),
