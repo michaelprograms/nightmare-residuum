@@ -1,3 +1,9 @@
+/**
+ * Generates a short description of a living object as seen by others.
+ *
+ * @param {STD_LIVING} ob
+ * @returns a brief visual description of the living object
+ */
 string describe_living_item (object ob) {
     string tag = "";
     int pct, maxhp;
