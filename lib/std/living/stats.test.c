@@ -1,5 +1,9 @@
 inherit M_TEST;
 
+/**
+ * @var {"/std/living/stats"} testOb
+ */
+
 void test_query_and_set_stat () {
     expect("handles setting and querying stats", (: ({
         testOb->set_stat("strength", 12345),

@@ -1,5 +1,9 @@
 inherit M_TEST;
 
+/**
+ * @var {"/std/living/cooldown"} testOb
+ */
+
 void test_cooldown_setup () {
     expect("cooldown attributes are initialized", (: ({
         store_variable("__Cooldown", UNDEFINED, testOb),

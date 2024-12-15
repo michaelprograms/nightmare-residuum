@@ -1,5 +1,9 @@
 inherit M_TEST;
 
+/**
+ * @var {"/std/living/attribute"} testOb
+ */
+
 void test_attributes () {
     expect("null attributes are initialized", (: ({
         assert_equal(testOb->query_attributes(), ([ ])),

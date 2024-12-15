@@ -1,5 +1,9 @@
 inherit M_TEST;
 
+/**
+ * @var {"/std/living/vitals"} testOb
+ */
+
 string *test_order () {
     return ({ "test_update_vitals", "test_hp", "test_sp", "test_mp" });
 }

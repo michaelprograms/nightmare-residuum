@@ -1,5 +1,9 @@
 inherit M_TEST;
 
+/**
+ * @var {"/std/living/protection"} testOb
+ */
+
 void test_query_and_set_protection () {
     expect("protection is queryable", (: ({
         // initial values

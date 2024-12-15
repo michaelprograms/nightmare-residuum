@@ -1,5 +1,9 @@
 inherit M_TEST;
 
+/**
+ * @var {"/std/living/command"} testOb
+ */
+
 void test_unknown_response () {
     expect("unknown commands are responded to", (: ({
         // no verb called

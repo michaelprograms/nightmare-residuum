@@ -1,5 +1,9 @@
 inherit M_TEST;
 
+/**
+ * @var {"/std/living/class"} testOb
+ */
+
 void test_class () {
     expect("class settable and queryable", (: ({
         assert_equal(testOb->query_class(), "adventurer"),

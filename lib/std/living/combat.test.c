@@ -2,6 +2,10 @@ inherit M_TEST;
 inherit M_MOVE;
 inherit M_LEVELABLE;
 
+/**
+ * @var {"/std/living/combat"} testOb
+ */
+
 void test_hostiles () {
     object ob1 = new(STD_LIVING), ob2 = new(STD_LIVING);
     object mockCharacter = new("/std/character.mock.c");

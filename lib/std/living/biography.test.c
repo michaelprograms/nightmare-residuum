@@ -1,5 +1,9 @@
 inherit M_TEST;
 
+/**
+ * @var {"/std/living/biography"} testOb
+ */
+
 string *test_order () {
     return ({ "test_experience", "test_handle_victory", "test_handle_defeat", });
 }

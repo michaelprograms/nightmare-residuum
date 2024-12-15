@@ -1,5 +1,9 @@
 inherit M_TEST;
 
+/**
+ * @var {"/std/living/status"} testOb
+ */
+
 void test_busy () {
     expect("busy should be settable and queryable", (: ({
         assert_equal(testOb->query_busy(), 0),

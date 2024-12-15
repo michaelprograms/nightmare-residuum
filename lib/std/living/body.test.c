@@ -1,5 +1,9 @@
 inherit M_TEST;
 
+/**
+ * @var {"/std/living/body"} testOb
+ */
+
 void test_gender () {
     expect("gender settable and queryable", (: ({
         assert_equal(testOb->query_gender(), "neither"),
