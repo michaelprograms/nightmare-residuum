@@ -13,6 +13,11 @@ void create () {
     set_help_text("Use psionic powers to restore a target's missing limb.");
 }
 
+/**
+ * @param {STD_LIVING} source
+ * @param {STD_LIVING} target
+ * @param limb
+ */
 void handle_utility (object source, object target, string limb) {
     string *severedLimbs = target->query_severed_limbs();
 

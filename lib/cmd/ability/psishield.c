@@ -16,6 +16,11 @@ void create () {
     set_help_text("Use psionic powers to shield a target with bonus armor.");
 }
 
+/**
+ * @param {STD_LIVING} source
+ * @param {STD_LIVING} target
+ * @param limb
+ */
 void handle_utility (object source, object target, string limb) {
     int n, t;
 
