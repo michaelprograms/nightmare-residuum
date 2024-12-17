@@ -1,6 +1,10 @@
 inherit M_TEST;
 inherit M_CONTAINER;
 
+/**
+ * @var {"/std/module/clean"} testOb
+ */
+
 string *test_order () {
     return ({
         "test_handle_remove",
