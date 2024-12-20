@@ -1,10 +1,14 @@
 inherit M_TEST;
 
+/**
+ * @var {"/std/user"} testOb
+ */
+
 void test_user () {
     expect("is_living returns true", (: ({
         assert_equal(testOb->is_user(), 1),
-        assert_equal(testOb->is_living(), 0),
-        assert_equal(testOb->is_character(), 0),
+        assert_equal(function_exists("is_living", testOb), 0),
+        assert_equal(function_exists("is_character", testOb), 0),
     }) :));
 }
 
