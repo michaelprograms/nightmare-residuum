@@ -2,6 +2,10 @@ inherit M_TEST;
 
 #define ACCOUNT_PATH "/save/account/a/accounttest.o"
 
+/**
+ * @var {"/std/user/account"} testOb
+ */
+
 void after_each_test () {
     if (file_size(ACCOUNT_PATH) > -1) {
         rm(ACCOUNT_PATH);

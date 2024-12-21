@@ -1,5 +1,9 @@
 inherit M_TEST;
 
+/**
+ * @var {"/std/user/shell"} testOb
+ */
+
 private int action = 0;
 
 void test_variables () {
