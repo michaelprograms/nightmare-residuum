@@ -1,4 +1,7 @@
 #include <verb.h>
+/**
+ * @var {"/std/vendor_inventory"} testOb
+ */
 
 inherit M_TEST;
 inherit M_CONTAINER;

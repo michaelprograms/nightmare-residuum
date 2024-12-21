@@ -1,5 +1,8 @@
 inherit M_TEST;
 inherit M_MOVE;
+/**
+ * @var {"/std/room"} testOb
+ */
 
 int is_item () { return 1; } // need to fake being an item for room contents
 

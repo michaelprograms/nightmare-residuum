@@ -1,4 +1,7 @@
 inherit M_TEST;
+/**
+ * @var {"/std/database"} testOb
+ */
 
 nosave private object db;
 void test_connect () {

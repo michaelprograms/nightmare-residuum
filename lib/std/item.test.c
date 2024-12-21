@@ -1,6 +1,10 @@
 inherit M_TEST;
 inherit STD_STORAGE;
 
+/**
+ * @var {"/std/item"} testOb
+ */
+
 void before_each_test () {
     this_object()->handle_move("/domain/Nowhere/room/void.c");
 }

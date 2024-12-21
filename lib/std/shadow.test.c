@@ -1,4 +1,7 @@
 inherit M_TEST;
+/**
+ * @var {"/std/shadow"} testOb
+ */
 
 void test_shadow () {
     expect("shadow handled starting and stopping", (: ({

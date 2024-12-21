@@ -1,6 +1,10 @@
 inherit M_TEST;
 inherit STD_STORAGE;
 
+/**
+ * @var {"/std/injectable"} testOb
+ */
+
 void test_is_injectable () {
     expect("is_injectable returns true", (: ({
         assert_equal(testOb->is_item(), 1),

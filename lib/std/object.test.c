@@ -1,4 +1,7 @@
 inherit M_TEST;
+/**
+ * @var {"/std/object"} testOb
+ */
 
 void test_parser_applies () {
     expect("object handles parser applies", (: ({

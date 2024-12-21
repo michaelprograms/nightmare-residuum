@@ -2,6 +2,10 @@ inherit M_TEST;
 inherit STD_STORAGE;
 inherit "/std/living/vitals";
 
+/**
+ * @var {"/std/consumable"} testOb
+ */
+
 string *test_order () {
     return ({ "test_is_consumable", "test_strength", "test_handle_consume", });
 }

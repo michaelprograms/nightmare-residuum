@@ -1,4 +1,7 @@
 inherit M_TEST;
+/**
+ * @var {"/std/npc"} testOb
+ */
 
 void test_npc () {
     expect("is_npc behaves", (: ({

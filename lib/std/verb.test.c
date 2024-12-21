@@ -1,5 +1,9 @@
 #include <verb.h>
 
+/**
+ * @var {"/std/verb"} testOb
+ */
+
 inherit M_TEST;
 
 nosave private int __Disable, __Busy;

@@ -1,4 +1,7 @@
 inherit M_TEST;
+/**
+ * @var {"/std/living"} testOb
+ */
 
 void test_living () {
     expect("is_living returns true", (: ({
