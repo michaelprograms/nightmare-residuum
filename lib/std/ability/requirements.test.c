@@ -1,5 +1,9 @@
 inherit M_TEST;
 
+/**
+ * @var {"/std/ability/requirements"} testOb
+ */
+
 void test_ability_requirements () {
     object char = new(STD_CHARACTER);
 

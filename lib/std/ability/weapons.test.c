@@ -1,5 +1,9 @@
 inherit M_TEST;
 
+/**
+ * @var {"/std/ability/weapons"} testOb
+ */
+
 void test_weapons () {
     expect("set_weapons handles bad inputs", (: ({
         assert_catch((: testOb->set_weapons(UNDEFINED) :), "*Bad argument 1 to weapon->set_weapons\n"),
