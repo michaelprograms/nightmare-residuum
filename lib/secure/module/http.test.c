@@ -1,5 +1,9 @@
 inherit M_TEST;
 
+/**
+ * @var {"/secure/module/http"} testOb
+ */
+
 void test_config () {
     expect("port is queryable and settable", (: ({
         assert_equal(testOb->query_port(), UNDEFINED),
