@@ -1,5 +1,9 @@
 inherit M_TEST;
 
+/**
+ * @var {"/daemon/astronomy"} testOb
+ */
+
 private int __Time;
 private mapping __Almanac = ([ ]);
 

@@ -2,6 +2,10 @@
 
 inherit M_TEST;
 
+/**
+ * @var {"/daemon/planet"} testOb
+ */
+
 void test_biome_colors () {
     expect("biome ANSI colors returned", (: ({
         assert_equal(testOb->query_biome_color_ansi("invalid"), "\e[38;2;128;0;0m"),

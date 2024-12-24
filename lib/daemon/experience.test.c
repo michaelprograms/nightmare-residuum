@@ -1,5 +1,9 @@
 inherit M_TEST;
 
+/**
+ * @var {"/daemon/experience"} testOb
+ */
+
 nosave private int __MockLevel, __MockLiving;
 int query_level () {
     return __MockLevel;

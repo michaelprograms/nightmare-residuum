@@ -1,5 +1,9 @@
 inherit M_TEST;
 
+/**
+ * @var {"/daemon/log"} testOb
+ */
+
 void test_log () {
     expect("log should handle invalid input", (: ({
         assert_equal(testOb->log("", ""), 0),

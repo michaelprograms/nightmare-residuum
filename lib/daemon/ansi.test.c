@@ -1,5 +1,9 @@
 inherit M_TEST;
 
+/**
+ * @var {"/daemon/ansi"} testOb
+ */
+
 mapping term;
 void test_ansi_terms () {
     int fail;

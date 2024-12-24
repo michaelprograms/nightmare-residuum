@@ -1,5 +1,9 @@
 inherit M_TEST;
 
+/**
+ * @var {"/daemon/class"} testOb
+ */
+
 void test_query_adjust_vitals () {
     expect("hp adjustments are queryable", (: ({
         assert_equal(testOb->query_adjust_hp("warrior"), 3),

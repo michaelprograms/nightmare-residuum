@@ -1,5 +1,9 @@
 inherit M_TEST;
 
+/**
+ * @var {"/daemon/species"} testOb
+ */
+
 void test_species_bodies () {
     expect("bodies exist", (: ({
         assert_equal(mapp(testOb->query_bodies()), 1),

@@ -1,5 +1,9 @@
 inherit M_TEST;
 
+/**
+ * @var {"/daemon/achievements"} testOb
+ */
+
 void test_query_achievements_from_room () {
     object room1 = load_object("/domain/Start/human/room/square.c");
     object room2 = load_object("/domain/Start/human/void.c");

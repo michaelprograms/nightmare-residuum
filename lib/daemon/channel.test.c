@@ -1,5 +1,9 @@
 inherit M_TEST;
 
+/**
+ * @var {"/daemon/channel"} testOb
+ */
+
 string query_cap_name () {
     return "ChannelTest";
 }

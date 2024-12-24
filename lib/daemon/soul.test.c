@@ -1,5 +1,9 @@
 inherit M_TEST;
 
+/**
+ * @var {"/daemon/soul"} testOb
+ */
+
 void test_query_emote () {
     expect("default emotes are queryable", (: ({
         assert_equal(sizeof(testOb->query_emotes()) > 0, 1),
