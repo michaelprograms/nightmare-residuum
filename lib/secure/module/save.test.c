@@ -2,6 +2,10 @@
 
 inherit M_TEST;
 
+/**
+ * @var {"/secure/module/save"} testOb
+ */
+
 string *test_order () {
     return ({ "test_path", "test_save", "test_restore", });
 }
