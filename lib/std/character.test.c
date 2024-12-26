@@ -1,5 +1,9 @@
 inherit M_TEST;
 
+/**
+ * @var {"/std/character"} testOb
+ */
+
 void test_npc () {
     expect("is_character behaves", (: ({
         assert_equal(testOb->is_living(), 1),
