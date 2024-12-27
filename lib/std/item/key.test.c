@@ -1,5 +1,9 @@
 inherit M_TEST;
 
+/**
+ * @var {"/std/item/key"} testOb
+ */
+
 void test_is_key () {
     expect("is_key returns true", (: ({
         assert_equal(testOb->is_key(), 1),

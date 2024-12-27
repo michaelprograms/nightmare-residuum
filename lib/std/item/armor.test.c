@@ -1,6 +1,10 @@
 inherit M_TEST;
 inherit STD_STORAGE;
 
+/**
+ * @var {"/std/item/armor"} testOb
+ */
+
 int query_can_wear_armor (object ob) {
     return 1;
 }

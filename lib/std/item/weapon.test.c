@@ -1,6 +1,10 @@
 inherit M_TEST;
 inherit STD_STORAGE;
 
+/**
+ * @var {"/std/item/weapon"} testOb
+ */
+
 string *test_order () {
     return ({ "test_is_weapon", "test_type", "test_wielded", "test_item_verb_wield_applies", "test_item_verb_drop_applies", });
 }

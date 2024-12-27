@@ -2,6 +2,10 @@ inherit M_TEST;
 inherit M_MOVE;
 inherit M_CONTAINER;
 
+/**
+ * @var {"/std/item/storage"} testOb
+ */
+
 void test_long () {
     object ob1 = new(STD_ITEM);
     object ob2 = new(STD_ITEM);

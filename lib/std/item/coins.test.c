@@ -2,6 +2,10 @@ inherit M_TEST;
 inherit M_CURRENCY;
 inherit M_CONTAINER;
 
+/**
+ * @var {"/std/item/coins"} testOb
+ */
+
 void test_currency () {
     expect("is_currency behaves", (: ({
         assert_equal(testOb->is_item(), 1),

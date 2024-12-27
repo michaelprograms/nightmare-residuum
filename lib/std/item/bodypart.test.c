@@ -1,6 +1,10 @@
 inherit M_TEST;
 inherit STD_OBJECT;
 
+/**
+ * @var {"/std/item/bodypart"} testOb
+ */
+
 private mixed *calloutInfo;
 void test_received () {
     expect("handle_received sets expire timer", (: ({

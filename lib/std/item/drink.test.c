@@ -2,6 +2,10 @@ inherit M_TEST;
 inherit STD_STORAGE;
 inherit "/std/living/vitals";
 
+/**
+ * @var {"/std/item/drink"} testOb
+ */
+
 string *test_order () {
     return ({ "test_is_drink", "test_item_verb_drink_applies", });
 }
