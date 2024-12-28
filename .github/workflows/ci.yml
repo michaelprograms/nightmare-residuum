@@ -38,6 +38,11 @@ jobs:
       shell: bash
       timeout-minutes: 10
 
+    - name: LPC Code Problems
+      uses: jlchmura/lpc-build-action@main
+      with:
+        lpc-config: ${{ github.workspace }}/lpc-config.json
+
     - name: Modify Config for Local Test Run
       run: |
         # Replace absolute path with relative path
