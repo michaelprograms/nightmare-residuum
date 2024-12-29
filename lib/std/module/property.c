@@ -1,12 +1,5 @@
 private mapping __Properties = ([ ]);
 
-mapping query_properties ();
-mixed query_property (string key);
-mixed set_property (string key, mixed value);
-mapping set_properties (mapping properties);
-mixed add_property (string key, mixed value);
-int remove_property (string key);
-
 mapping query_properties () {
     if (!mapp(__Properties)) {
         __Properties = ([ ]);
