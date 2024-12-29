@@ -12,6 +12,7 @@ private int __LastAction;
 private int __Immortal;
 private int __ConnectionTime = 0;
 
+/** @type {STD_USER} __User */
 nosave private object __User;
 
 void describe_environment ();
@@ -224,6 +225,7 @@ void exit_freezer () {
 /* ----- describe environments ---- */
 
 void describe_environment_long () {
+    /** @type {STD_ROOM} env */
     object env = environment();
     string *map = ({ });
     int width = __User->query_setting("width");
@@ -260,6 +262,8 @@ void describe_environment_long () {
 }
 
 varargs void describe_environment_senses (string sense, string focus) {
+    /** @type {STD_ROOM} env */
+    object env = environment();
     mixed tmp;
     string result;
 
@@ -267,7 +271,7 @@ varargs void describe_environment_senses (string sense, string focus) {
         focus = "default";
     }
 
-    if ((!sense || sense == "listen") && (tmp = environment()->query_listen(focus))) {
+    if ((!sense || sense == "listen") && (tmp = env->query_listen(focus))) {
         if (functionp(tmp)) {
             result = evaluate(tmp);
         } else if (stringp(tmp)) {
@@ -276,7 +280,7 @@ varargs void describe_environment_senses (string sense, string focus) {
         message("room listen", result, this_object());
     }
     result = "";
-    if ((!sense || sense == "smell") && (tmp = environment()->query_smell(focus))) {
+    if ((!sense || sense == "smell") && (tmp = env->query_smell(focus))) {
         if (functionp(tmp)) {
             result = evaluate(tmp);
         } else if (stringp(tmp)) {
@@ -291,18 +295,20 @@ varargs void describe_environment_senses (string sense, string focus) {
 }
 
 private void describe_environment_exits () {
+    /** @type {STD_ROOM} env */
+    object env = environment();
     string *exits;
     int numExits;
 
-    if (!environment()->query_hidden_exits()) {
-        if (!(numExits = sizeof(exits = environment()->query_exit_directions()))) {
+    if (!env->query_hidden_exits()) {
+        if (!(numExits = sizeof(exits = env->query_exit_directions()))) {
             message("room exits", "There are no exits.\n", this_object());
         } else {
             exits = map(exits, function (string dir) {
-                string door = environment()->query_dir_door(dir);
+                string door = env->query_dir_door(dir);
                 int open;
                 if (door) {
-                    open = environment()->query_open(door);
+                    open = env->query_open(door);
                     door = " " + (!open ? "[" : "(") + door + (!open ? "]" : ")");
                 }
                 return "%^I_CYAN%^BOLD%^" + dir + "%^BOLD_OFF%^" + (door ? door : "") + "%^DEFAULT%^";
@@ -313,7 +319,9 @@ private void describe_environment_exits () {
 }
 
 private void describe_environment_living_contents () {
-    object env = environment(), *contents = env->query_living_contents();
+    /** @type {STD_ROOM} env */
+    object env = environment();
+    object *contents = env->query_living_contents();
     mixed *list;
     string *shorts;
 
@@ -348,7 +356,9 @@ private void describe_environment_living_contents () {
 }
 
 private void describe_environment_item_contents () {
-    object env = environment(), *contents = env->query_item_contents();
+    /** @type {STD_ROOM} env */
+    object env = environment();
+    object *contents = env->query_item_contents();
     mixed *list;
     string *shorts;
 
@@ -361,6 +371,11 @@ private void describe_environment_item_contents () {
     }
 }
 
+/**
+ * Add extra description text for immortals.
+ *
+ * @param {STD_ROOM} env
+ */
 void describe_environment_immortal (object env) {
     string *props = ({ });
     foreach (string key,mixed value in env->query_properties()) {
@@ -370,7 +385,8 @@ void describe_environment_immortal (object env) {
 }
 
 void describe_environment () {
-    object env;
+    /** @type {STD_ROOM} env */
+    object env = environment();
 
     if (!(env = environment()) || !env->is_room()) {
         message("room", "You do not have an environment.", this_object());
