@@ -304,7 +304,7 @@ private void describe_environment_exits () {
         if (!(numExits = sizeof(exits = env->query_exit_directions()))) {
             message("room exits", "There are no exits.\n", this_object());
         } else {
-            exits = map(exits, function (string dir) {
+            exits = map(exits, function (string dir, object env) {
                 string door = env->query_dir_door(dir);
                 int open;
                 if (door) {
@@ -312,7 +312,7 @@ private void describe_environment_exits () {
                     door = " " + (!open ? "[" : "(") + door + (!open ? "]" : ")");
                 }
                 return "%^I_CYAN%^BOLD%^" + dir + "%^BOLD_OFF%^" + (door ? door : "") + "%^DEFAULT%^";
-            });
+            }, env);
             message("room exits", "There " + (numExits > 1 ? "are" : "is") + " " + cardinal(numExits) + " exit" + (numExits > 1 ? "s" : "") + ": " + conjunction(exits) + ".\n", this_object());
         }
     }
