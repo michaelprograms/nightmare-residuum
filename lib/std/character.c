@@ -304,15 +304,25 @@ private void describe_environment_exits () {
         if (!(numExits = sizeof(exits = env->query_exit_directions()))) {
             message("room exits", "There are no exits.\n", this_object());
         } else {
-            exits = map(exits, function (string dir, object env) {
-                string door = env->query_dir_door(dir);
-                int open;
-                if (door) {
-                    open = env->query_open(door);
-                    door = " " + (!open ? "[" : "(") + door + (!open ? "]" : ")");
-                }
-                return "%^I_CYAN%^BOLD%^" + dir + "%^BOLD_OFF%^" + (door ? door : "") + "%^DEFAULT%^";
-            }, env);
+            exits = map(
+                exits,
+                /**
+                 * Format open/closed status if a door exists this direction.
+                 * @param dir the direction being queried
+                 * @param {STD_ROOM} env the room to check
+                 * @returns the formatted door description
+                 */
+                function (string dir, object env) {
+                    string door = env->query_dir_door(dir);
+                    int open;
+                    if (door) {
+                        open = env->query_open(door);
+                        door = " " + (!open ? "[" : "(") + door + (!open ? "]" : ")");
+                    }
+                    return "%^I_CYAN%^BOLD%^" + dir + "%^BOLD_OFF%^" + (door ? door : "") + "%^DEFAULT%^";
+                },
+                env
+            );
             message("room exits", "There " + (numExits > 1 ? "are" : "is") + " " + cardinal(numExits) + " exit" + (numExits > 1 ? "s" : "") + ": " + conjunction(exits) + ".\n", this_object());
         }
     }
@@ -326,23 +336,26 @@ private void describe_environment_living_contents () {
     string *shorts;
 
     list = filter(contents, (: $1 != this_object() :));
-    list = sort_array(list, function (object a, object b) {
-        if (a->is_character()) {
-            if (b->is_character()) {
+    list = sort_array(
+        list,
+        /**
+         * Sort the list of living objects, with characters alphabetically
+         * followed by NPCs alphabetically.
+         * @param {STD_LIVING} a
+         * @param {STD_LIVING} b
+         */
+        function (object a, object b) {
+            if (characterp(a) && characterp(b)) {
                 return strcmp(a->query_cap_name(), b->query_cap_name());
-            } else {
+            } else if (characterp(a)) {
                 return -1;
-            }
-        } else if (b->is_character()) {
-            if (a->is_character()) {
-                return strcmp(a->query_cap_name(), b->query_cap_name());
-            } else {
+            } else if (characterp(b)) {
                 return 1;
+            } else {
+                return strcmp(a->query_cap_name(), b->query_cap_name());
             }
-        } else {
-            return strcmp(a->query_cap_name(), b->query_cap_name());
         }
-    });
+    );
     list = unique_array(list, (: describe_living_item :));
     if (sizeof(list)) {
         shorts = map(list, function (object *obs) {
