@@ -1,8 +1,10 @@
+// @this_object /std/user.c
 #include "user.h"
 
 #define QUERY_FIRST_IMMORTAL !sizeof(filter(get_dir("/realm/"), (: $1 && $1[0] != '.' :)))
 
 nosave private string __Species;
+/** @type {STD_CHARACTER} */
 nosave private object __Character;
 
 // -----------------------------------------------------------------------------
@@ -27,6 +29,7 @@ void set_character_species (string species) {
 string query_character_species () {
     return __Species;
 }
+/** @returns {STD_CHARACTER} */
 object query_character () {
     return __Character;
 }
@@ -77,6 +80,10 @@ nomask void character_reconnect (object char) {
     this_object()->update_character_data(__Character);
 }
 
+/**
+ * 
+ * @param {STD_CHARACTER} char 
+ */
 nomask void character_override (object char) {
     remove_call_out();
 
