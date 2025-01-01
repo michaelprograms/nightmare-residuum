@@ -1,5 +1,6 @@
 inherit STD_NPC;
 
+/** @type {/std/vendor_inventory} */
 nosave private object __VendorInventory;
 nosave private string __VendorCurrency;
 nosave private string *__VendorTypes;
@@ -50,6 +51,12 @@ int handle_remove () {
 
 /* ----- list ----- */
 
+/**
+ * Lists out the vendor inventory's items.
+ *
+ * @param str the text to filter inventory items by
+ * @param {STD_LIVING} po the previous object requesting the list
+ */
 void handle_list (string str, object po) {
     object *items = ({ });
 
@@ -81,7 +88,14 @@ void handle_list (string str, object po) {
 
 /* ----- buy ----- */
 
+/**
+ * Buy an item from the vendor inventory.
+ *
+ * @param str the text to filter inventory items by
+ * @param {STD_LIVING} po the previous object requesting the list
+ */
 void handle_buy (string str, object po) {
+    /** @type {STD_ITEM} */
     object item;
     int value;
 
@@ -91,7 +105,6 @@ void handle_buy (string str, object po) {
     }
 
     value = item->query_value();
-
     if (value > po->query_currency(__VendorCurrency)) {
         handle_command("say You can't afford " + item->query_short() + ".");
         return;
@@ -111,6 +124,12 @@ void handle_buy (string str, object po) {
 
 /* ----- sell ----- */
 
+/**
+ * Sell an item to the vendor.
+ *
+ * @param {STD_ITEM} item the object being sold to the vendor
+ * @param {STD_LIVING} po the previous object selling the item
+ */
 void handle_sell (object item, object po) {
     int value;
 
@@ -118,6 +137,7 @@ void handle_sell (object item, object po) {
         handle_command("say You don't have an item to sell.");
         return;
     }
+    // @TODO: this doesn't work because item->query_type doesn't exist, and __VendorTypes is an array of inheritables
     if (!sizeof(__VendorTypes) || member_array(__VendorTypes, item->query_type()) == -1) {
         handle_command("say I don't buy " + item->query_type() + " items.");
         return;
