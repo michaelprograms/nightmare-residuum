@@ -33,6 +33,26 @@ object *query_hostiles () {
 
 /* ----- combat ----- */
 
+void handle_combat_miss () {
+    object to = this_object(), env = environment(this_object());
+    string mymsg, yourmsg;
+    switch(random(3)) {
+    case 0:
+        mymsg = "You flop about helplessly.";
+        yourmsg = to->query_cap_name()+" flops about helplessly.";
+        break;
+    case 1:
+        mymsg = "You try to look menacing.";
+        yourmsg = to->query_cap_name()+" tries to look menacing.";
+        break;
+    case 2:
+        mymsg = "You uselessly dance around.";
+        yourmsg = to->query_cap_name()+" uselessly dances around.";
+        break;
+    }
+    message("combat miss", mymsg, to);
+    message("combat miss", yourmsg, env, to);
+}
 void handle_combat_hit (object target, mapping *table, object weapon) {
     object to = this_object();
     int d100, sum, crit, damage;
@@ -80,7 +100,7 @@ void handle_combat_hit (object target, mapping *table, object weapon) {
         }
     }
 }
-protected void handle_combat () {
+void handle_combat () {
     object to = this_object(), env = environment(), target, *weapons;
     int base, min, max, hits;
 
@@ -110,11 +130,8 @@ protected void handle_combat () {
     hits = min + random(max - min + 1);
 
     if (!hits) {
-        message("combat miss", to->query_cap_name() + " " + element_of(({
-            "flops about helplessly",
-            "tries to look menacing",
-            "uselessly flops around",
-        })) + ".", env, to);
+        handle_combat_miss();
+        return;
     }
     for (int h = 0; h < hits; h ++) {
         if (!target) {
