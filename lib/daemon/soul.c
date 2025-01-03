@@ -186,12 +186,16 @@ varargs private mapping prepare_emote (string verb, string rule, mixed args) {
     mapping result, rules;
     mixed ruleFormat;
     object *who;
+    object tc;
+    /** @type {STD_ROOM} env */
+    object env;
 
     if (!(rules = query_emote(verb)) || !(ruleFormat = rules[rule])) {
         return 0;
     }
-
+    tc = this_character();
     who = ({ this_character() });
+    env = environment(tc);
     if (strsrch(rule, "LIV") != -1) {
         foreach (string token in explode(rule, " ")) {
             if (token == "LIV") {
@@ -208,7 +212,7 @@ varargs private mapping prepare_emote (string verb, string rule, mixed args) {
     result = ([
         "who": who,
         "msgs": allocate(sizeof(who) + 1),
-        "env": environment(this_character())->query_living_contents() - ({ this_character() }),
+        "env": env->query_living_contents() - ({ tc }),
     ]);
 
     for (int i = 0; i < sizeof(who); i ++) {
