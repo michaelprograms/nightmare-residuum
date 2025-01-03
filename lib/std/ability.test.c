@@ -203,7 +203,7 @@ void test_direct_verb_lib () {
 void test_ability_requirements () {
     expect("handles setting and querying requirements", (: ({
         // default value
-        assert_equal(testOb->query_ability_requirements(), UNDEFINED),
+        assert_equal(testOb->query_ability_requirements(), ([ ])),
 
         // check updated
         testOb->set_ability_requirements(([ "anyone": ([ "level": 1, ]), ])),
