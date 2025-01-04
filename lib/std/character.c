@@ -144,6 +144,11 @@ void set_mp (int n) {
 
 /* ----- user ----- */
 
+/**
+ * The user associated to this character.
+ *
+ * @returns {STD_USER} the user account
+ */
 object query_user () {
     return __User;
 }

@@ -79,8 +79,7 @@ void command (string input, mapping flags) {
     string *coins = ({ });
 
     if (input && tc->query_immortal()) {
-        if (find_character(input)) target = find_character(input);
-        else if (present(input, environment(tc))) target = present(input, environment(tc));
+        target = determine_immortal_target(tc, input);
     }
 
     items = process_inventory(target);

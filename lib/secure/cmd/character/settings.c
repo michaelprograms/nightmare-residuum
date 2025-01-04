@@ -13,10 +13,7 @@ void command (string input, mapping flags) {
     mapping header;
 
     if (input && tc->query_immortal()) {
-        if (find_character(input)) {
-            target = find_character(input);
-            input = 0;
-        }
+        target = determine_immortal_target(tc, input);
     }
 
     user = target->query_user();

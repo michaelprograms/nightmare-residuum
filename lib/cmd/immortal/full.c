@@ -10,8 +10,7 @@ void command (string input, mapping flags) {
     object tc = this_character(), target = tc;
 
     if (input && tc->query_immortal()) {
-        if (find_character(input)) target = find_character(input);
-        else if (present(input, environment(tc))) target = present(input, environment(tc));
+        target = determine_immortal_target(tc, input);
     }
 
     message("action", "Character returned to full health.", tc);

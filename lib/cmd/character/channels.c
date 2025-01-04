@@ -9,15 +9,13 @@ void create () {
 
 void command (string input, mapping flags) {
     object tc = this_character(), target = tc;
-    string subtitle, *body = ({ }), *list;
+    mapping *body = ({ });
+    string *list = ({ });
 
     if (input && tc->query_immortal()) {
-        if (find_character(input)) target = find_character(input);
-        else if (present(input, environment(tc))) target = present(input, environment(tc));
-        subtitle = target->query_cap_name();
+        target = determine_immortal_target(tc, input);
     }
 
-    list = ({ });
     foreach (string channel in sort_array(D_CHANNEL->query_channels(), 1)) {
         list += ({ sprintf("%-15s %s", channel, target->query_channel_blocked(channel) ? "blocked" : "") });
     }
@@ -39,7 +37,7 @@ void command (string input, mapping flags) {
 
     border(([
         "title": "Channels",
-        "subtitle": subtitle,
+        "subtitle": target->query_cap_name(),
         "body": body,
     ]));
 }

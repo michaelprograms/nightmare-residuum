@@ -6,12 +6,22 @@ void create () {
     set_help_text("The stats command is used to view the primary stats of your character.");
 }
 
-private int query_improve_percent (object target, string stat) {
-    int exp = target->query_experience();
+/**
+ * Calculate how many of a stat can be improved in percent form.
+ * For example, a return value of 150 means 150%, or one and a half.
+ *
+ * @param {STD_LIVING} source the living object to check
+ * @param stat which stat is being checked
+ * @returns an integer representing the percent of progress for this stat
+ */
+private int query_improve_percent (object source, string stat) {
+    int exp = source->query_experience();
     int i, cost, pct;
     for (i = 0; i < 100; i ++) {
-        if (exp <= 0) break;
-        cost = D_EXPERIENCE->query_stat_cost(stat, target->query_stat_base(stat), target->query_class(), target->query_species());
+        if (exp <= 0) {
+            break;
+        }
+        cost = D_EXPERIENCE->query_stat_cost(stat, source->query_stat_base(stat), source->query_class(), source->query_species());
         pct += max(({ min(({ exp * 100 / max(({ cost, 1 })), 100 })), 0 }));
         exp -= cost;
     }
@@ -23,8 +33,7 @@ void command (string input, mapping flags) {
     string *items = ({ });
 
     if (input && tc->query_immortal()) {
-        if (find_character(input)) target = find_character(input);
-        else if (present(input, environment(tc))) target = present(input, environment(tc));
+        target = determine_immortal_target(tc, input);
     }
 
     foreach (string stat in ({ "strength", "perception", "endurance", "charisma", "intelligence", "agility", "luck", })) {

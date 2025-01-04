@@ -17,6 +17,27 @@ string query_syntax () {
     return __Syntax;
 }
 
+/* ----- target ----- */
+
+/**
+ * Allows an immortal to target another living object with a character command.
+ *
+ * @param {STD_CHARACTER} source the source of the command
+ * @param input the text input being targeted
+ * @returns {STD_CHARACTER} the character target
+ */
+object determine_immortal_target (object source, string input) {
+    object target = source;
+    if (find_character(input)) {
+        target = find_character(input);
+    } else if (present(input, environment(source))) {
+        // @TODO: restrict this to characters?
+        target = present(input, environment(source));
+    }
+    return target;
+}
+
+
 /* ----- help ----- */
 
 string query_help_text () {

@@ -12,8 +12,7 @@ void command (string input, mapping flags) {
     string *history;
 
     if (input && tc->query_immortal()) {
-        if (find_character(input)) target = find_character(input);
-        else if (present(input, environment(tc))) target = present(input, environment(tc));
+        target = determine_immortal_target(tc, input);
     }
 
     history = target->query_user()->query_history();
