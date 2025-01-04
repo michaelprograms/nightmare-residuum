@@ -1,4 +1,5 @@
 // @this_object /std/user.c
+
 private mapping __Aliases = ([
     /* Data format:
         "t": string     // template

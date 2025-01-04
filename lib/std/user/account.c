@@ -1,3 +1,5 @@
+// @this_object /std/user.c
+
 #include <config.h>
 
 #include "user.h"

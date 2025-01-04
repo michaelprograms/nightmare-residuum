@@ -1,3 +1,4 @@
+// @this_object /std/user.c
 mapping __GMCPModuleData = ([ ]);
 
 int gmcp_enabled () {

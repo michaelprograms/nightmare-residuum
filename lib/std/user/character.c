@@ -1,4 +1,5 @@
 // @this_object /std/user.c
+
 #include "user.h"
 
 #define QUERY_FIRST_IMMORTAL !sizeof(filter(get_dir("/realm/"), (: $1 && $1[0] != '.' :)))
@@ -81,8 +82,8 @@ nomask void character_reconnect (object char) {
 }
 
 /**
- * 
- * @param {STD_CHARACTER} char 
+ *
+ * @param {STD_CHARACTER} char
  */
 nomask void character_override (object char) {
     remove_call_out();

@@ -1,3 +1,5 @@
+// @this_object /std/user.c
+
 void handle_pager (mixed arg) {
     string *lines;
 
