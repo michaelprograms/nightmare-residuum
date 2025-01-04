@@ -1,3 +1,5 @@
+// @this_object /std/living.c
+
 private string __Class;
 private string __Subclass;
 

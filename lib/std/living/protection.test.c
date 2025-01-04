@@ -59,12 +59,3 @@ void test_clear_protection () {
         assert_equal(testOb->query_protection(), 0),
     }) :));
 }
-
-void test_handle_remove () {
-    expect("protection is cleared upon handle_remove", (: ({
-        assert_equal(testOb->add_protection(10, 0), 10),
-        assert_equal(testOb->query_protection(), 10),
-        assert_equal(testOb->handle_remove(), 0),
-        assert_equal(testOb->query_protection(), 0),
-    }) :));
-}

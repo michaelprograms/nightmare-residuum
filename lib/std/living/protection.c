@@ -1,3 +1,5 @@
+// @this_object /std/living.c
+
 nosave private int __Protection;
 
 int query_protection () {
@@ -47,8 +49,4 @@ int remove_protection (int n) {
         message("protection", "The protective shield around you fades " + (__Protection > 0 ? "slightly" : "away") + ".", this_object());
     }
     return __Protection;
-}
-
-int handle_remove () {
-    clear_protection();
 }

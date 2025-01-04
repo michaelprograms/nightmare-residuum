@@ -1,3 +1,5 @@
+// @this_object /std/living.c
+
 nosave private object *__Hostiles;
 
 void create () {
@@ -6,6 +8,12 @@ void create () {
 
 /* ----- hostiles ----- */
 
+/**
+ * Attempt to add a living object to this living object's hostile list.
+ *
+ * @param {STD_LIVING} ob the living object that is hostile
+ * @returns 0 or 1 for success
+ */
 int add_hostile (object ob) {
     if (!ob || !ob->is_living() || member_array(ob, __Hostiles) > -1) {
         return 0;
@@ -53,6 +61,13 @@ void handle_combat_miss () {
     message("combat miss", mymsg, to);
     message("combat miss", yourmsg, env, to);
 }
+/**
+ * An individual combat hit by this living object to another living target.
+ *
+ * @param {STD_LIVING} target the living object to hit
+ * @param table the combat table for hit/miss/etc chances
+ * @param {STD_WEAPON} weapon the wielded weapon, if any
+ */
 void handle_combat_hit (object target, mapping *table, object weapon) {
     object to = this_object();
     int d100, sum, crit, damage;
@@ -145,6 +160,11 @@ void handle_combat () {
     }
 }
 
+/**
+ * Check if this living object has been defeated.
+ *
+ * @param {STD_LIVING} source the optional living object requesting this check
+ */
 varargs void check_lifesigns (object source) {
     int dead = 0;
 

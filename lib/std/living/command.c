@@ -1,3 +1,5 @@
+// @this_object /std/living.c
+
 /*
 ** If the result is 0, the parser didn't know the verb so we keep looking.
 ** If a 1 was returned, then nothing more needs to be done.
@@ -18,10 +20,11 @@ int query_unknown_command (int result) {
 varargs int handle_command (string command, int debug) {
     string *split, action, input;
     string cmdPath;
-
     mixed result, resultGo;
+    /** @type {STD_ROOM} env */
+    object env = environment();
 
-    if (!environment() || !command) {
+    if (!env || !command) {
         return 0;
     }
     if (this_object()->query_immobile()) {
@@ -52,7 +55,7 @@ varargs int handle_command (string command, int debug) {
         return 1;
     }
 
-    if (environment() && environment()->query_exit(command)) {
+    if (env && env->query_exit(command)) {
         resultGo = parse_sentence("go " + command);
         if (resultGo == 1) {
             return 1;

@@ -1,3 +1,5 @@
+// @this_object /std/living.c
+
 #define VALID_ATTRIBUTES ({ "build", "complexion", "eye", "hair", "height", })
 
 mapping __Attribute = ([ ]);

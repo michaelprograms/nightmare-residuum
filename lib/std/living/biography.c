@@ -1,3 +1,5 @@
+// @this_object /std/living.c
+
 private int __Experience = 0, __TotalExperience = 0;
 private int __Victory = 0, __VictoryLevel;
 private mixed *__Defeat = ({ });
@@ -55,6 +57,12 @@ void set_defeated (int d) {
     __Defeated = d;
 }
 
+/**
+ * When this living object defeats another living object, handle the victory
+ * conditions.
+ *
+ * @param {STD_LIVING} source the object that was defeated by this object
+ */
 void handle_victory (object source) {
     int exp = D_EXPERIENCE->query_value(source);
     __Victory ++;
@@ -62,13 +70,18 @@ void handle_victory (object source) {
     message("action", "You gain " + exp + " experience.", this_object());
     add_experience(exp);
 }
+/**
+ * When this living object is defeated by another living object, handle the
+ * defeat conditions.
+ *
+ * @param {STD_LIVING} source the object that defeated this object
+ */
 void handle_defeat (object source) {
     object env = environment(), corpse;
 
     if (!arrayp(__Defeat)) {
         __Defeat = ({ });
     }
-
     if (__Defeated) {
         return;
     }

@@ -1,3 +1,5 @@
+// @this_object /std/living.c
+
 mapping __Vitals = ([
     "hp": 0,
     "hpMax": 0,

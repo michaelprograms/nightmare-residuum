@@ -154,6 +154,13 @@ int combat_hit_damage (object source, object target, string limb, mixed weapon, 
 
 /* -----  ----- */
 
+/**
+ * Display messages about initiating combat and add each other to their
+ * hostility lists.
+ *
+ * @param {STD_LIVING} source the initiator of hostility
+ * @param {STD_LIVING} target the recipient of hostility
+ */
 void initiate_combat (object source, object target) {
     message("attack", "You attack " + target->query_cap_name() + "!", source);
     message("attack", source->query_cap_name() + " attacks you!", target);
@@ -166,6 +173,12 @@ object *present_hostiles (object source) {
     object env = environment(source);
     return filter(source->query_hostiles(), (: environment($1) == $(env) :));
 }
+/**
+ * If there are any present hostile living objects, return the first one.
+ *
+ * @param {STD_LIVING} source the living object to check the environment of
+ * @returns {STD_LIVING} a valid hostile living object
+ */
 object present_hostile (object source) {
     object *hostiles = present_hostiles(source);
     return sizeof(hostiles) ? hostiles[0] : 0;

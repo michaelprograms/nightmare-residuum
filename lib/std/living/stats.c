@@ -1,3 +1,5 @@
+// @this_object /std/living.c
+
 private mapping __Stats = ([
     "strength": 0,
     "perception": 0,

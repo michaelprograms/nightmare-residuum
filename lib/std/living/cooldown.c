@@ -1,3 +1,5 @@
+// @this_object /std/living.c
+
 mapping __Cooldown = ([ ]);
 
 private void initialize_cooldowns () {

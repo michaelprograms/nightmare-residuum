@@ -27,19 +27,21 @@ void create () {
 }
 
 int handle_remove () {
-    protection::handle_remove();
+    protection::clear_protection();
     return clean::handle_remove();
 }
 
 void heart_beat () {
+    /** @type {STD_ROOM} env */
+    object env = environment();
     status::heart_beat();
     if (query_hp() > 0) {
         body::heart_beat();
     }
     cooldown::heart_beat();
-    handle_combat();
-    if (environment()) {
-        environment()->handle_environment_damage(this_object());
+    combat::handle_combat();
+    if (env) {
+        env->handle_environment_damage(this_object());
     }
 }
 
@@ -87,11 +89,20 @@ void set_level (int l) {
 
 varargs int handle_go (mixed dest, string verb, string dir, string reverse) {
     string verbs, article, formatReverse;
-    object oldEnv, newEnv;
+    /** @type {STD_ROOM} oldEnv  */
+    object oldEnv;
+    /** @type {STD_ROOM} newEnv */
+    object newEnv;
     int move;
 
     oldEnv = environment();
-    newEnv = stringp(dest) ? load_object(dest) : objectp(dest) ? dest : error("Bad argument 1 to living->handle_go");
+    if (stringp(dest)) {
+        newEnv = load_object(dest);
+    } else if (objectp(dest)) {
+        newEnv = dest;
+    } else {
+        error("Bad argument 1 to living->handle_go");
+    }
     verbs = pluralize(verb);
     formatReverse = reverse ? reverse : format_exit_reverse(dir);
     article = member_array(formatReverse, ({ "north", "northeast", "east", "southeast", "south", "southwest", "west", "northwest" })) > -1 ? "the " : "";

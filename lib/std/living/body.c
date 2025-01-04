@@ -1,3 +1,5 @@
+// @this_object /std/living.c
+
 private string __Gender = "neither";
 private string __Species = "unknown";
 mapping __Limbs = ([ ]);
@@ -94,7 +96,7 @@ void handle_limb_sever (string limb) {
 
     // remove wielded weapon
     if (__Wielded[limb]) {
-        handle_unwield(__Wielded[limb], limb);
+        handle_unwield(__Wielded[limb]);
     }
     // remove worn armour
     if (__Worn[limb]) {
@@ -207,6 +209,11 @@ object *query_all_armor () {
     }
     return worn;
 }
+/**
+ * Check to see if this body is wearing a shield.
+ *
+ * @returns {STD_ARMOR} the shield item being worn if any
+ */
 object query_worn_shield () {
     object shield;
     foreach (string limb in keys(__Worn)) {
@@ -218,6 +225,12 @@ object query_worn_shield () {
     }
     return shield;
 }
+/**
+ * Check to see if the armor can be equipped to this living object.
+ *
+ * @param {STD_ARMOR} armor the item attempting to be worn
+ * @returns text failure description or 1 for success
+ */
 mixed query_can_wear_armor (object armor) {
     int worn;
     string wielded;
@@ -259,7 +272,13 @@ mixed query_can_wear_armor (object armor) {
     return 1;
 }
 
-varargs mixed handle_wear (object ob) {
+/**
+ * Attempts to wear the armor item to this living's body.
+ *
+ * @param {STD_ARMOR} ob the armor item to be worn
+ * @returns text failure description or 1 for success
+ */
+mixed handle_wear (object ob) {
     string limbConj;
     string result;
 
@@ -291,7 +310,14 @@ varargs mixed handle_wear (object ob) {
 
     return 1;
 }
-varargs mixed handle_unwear (object ob) {
+
+/**
+ * Attempts to unwear the armor item from this living's body.
+ *
+ * @param {STD_ARMOR} ob the armor item to be removed
+ * @returns text failure description or 1 for success
+ */
+mixed handle_unwear (object ob) {
     string limbConj;
     if (!mapp(__Worn)) {
         __Worn = ([ ]);
@@ -310,11 +336,9 @@ varargs mixed handle_unwear (object ob) {
         }
     }
     ob->remove_worn(this_object());
-
     limbConj = conjunction(ob->query_limbs());
     message("action", "You remove " + ob->query_name() + " from your " + limbConj + ".", this_object());
     message("action", this_object()->query_cap_name() + " removes " + ob->query_name() + " from " + possessive(this_object()) + " " + limbConj + ".", environment(), this_object());
-
     return 1;
 }
 
@@ -357,7 +381,13 @@ string *query_wielded_limbs (object ob) {
     return limbs;
 }
 
-varargs mixed handle_wield (object ob) {
+/**
+ * Attempt to wield a weapon item to this body.
+ *
+ * @param {STD_WEAPON} ob the weapon item to be wielded
+ * @returns text failure description or 1 for success
+ */
+mixed handle_wield (object ob) {
     string *limbs = query_wieldable_limbs(), *hands, limbConj;
 
     if (!mapp(__Wielded)) {
@@ -390,7 +420,13 @@ varargs mixed handle_wield (object ob) {
 
     return 1;
 }
-varargs mixed handle_unwield (object ob) {
+/**
+ * Attempt to unwield a weapon item from this body.
+ *
+ * @param {STD_WEAPON} ob the weapon item to be unwielded
+ * @returns text failure description or 1 for success
+ */
+mixed handle_unwield (object ob) {
     string *limbs, limbConj;
 
     if (!mapp(__Wielded)) {

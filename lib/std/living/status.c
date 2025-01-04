@@ -1,3 +1,5 @@
+// @this_object /std/living.c
+
 private int __Busy = 0;
 private int __Disable = 0;
 private int __Immobile = 0;
