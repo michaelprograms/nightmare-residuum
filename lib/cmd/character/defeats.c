@@ -7,7 +7,8 @@ void create () {
 }
 
 void command (string input, mapping flags) {
-    object tc = this_character(), target = tc;
+    object tc = this_character();
+    object target = tc;
     string *items = ({ });
 
     if (input && tc->query_immortal()) {

@@ -7,19 +7,23 @@ void create () {
 }
 
 void command (string input, mapping flags) {
-    object tc = this_character(), *who;
     string myMsg, yourMsg;
+    object tc = this_character();
+    /** @type {STD_CHARACTER*} */
+    object *who;
+    /** @type {STD_ROOM} */
+    object env;
 
     input = strip_colour(input);
     if (!input) {
         message("action", "Emote what?", tc);
         return;
-    }
-    if (input[<1..] != ".") {
+    } else if (input[<1..] != ".") {
         input += ".";
     }
 
-    who = environment(tc)->query_living_contents() - ({ tc });
+    env = environment(tc);
+    who = env->query_living_contents() - ({ tc });
 
     myMsg = "You " + input;
     yourMsg = tc->query_cap_name() + input;
