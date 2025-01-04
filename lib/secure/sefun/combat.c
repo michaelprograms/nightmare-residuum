@@ -4,6 +4,11 @@
 #define SHARP_VERBS ({ "tap", "tickle", "sting", "graze", "cut", "slice", "slice", "shear", "strike", "mutilate", "dismember", "destroy", })
 #define SHARP_ADVERBS ({ 0, 0, "sharply", 0, 0, 0, "horribly", "to pieces", "letting blood", 0, 0, "utterly", })
 
+/**
+ * Turn a percent of a target's health into a text description.
+ *
+ * @param percent an integer value of 0-100 percent of a target's health
+ */
 int query_combat_tier_from_percent (int percent) {
     if (percent >= 27) {
         return 11;
@@ -33,6 +38,17 @@ int query_combat_tier_from_percent (int percent) {
 
 /* -----  ----- */
 
+/**
+ * Display a combat hit message.
+ *
+ * @param {STD_LIVING} source the source of the attack
+ * @param {STD_LIVING} target the target of the attack
+ * @param limb the target's limb being hit
+ * @param {STD_WEAPON|string} weapon the weapon or limb used
+ * @param damage how much damage this hit will do
+ * @param crit flag if this was a critical hit
+ * @param isAbility flag if this was from an ability
+ */
 void combat_hit_message (object source, object target, string limb, mixed weapon, int damage, int crit, int isAbility) {
     string sourceMsg, targetMsg, envMsg, weaponName, type;
     string critically, verb, verbs, adverb, sourcePossessive;
@@ -80,13 +96,29 @@ void combat_hit_message (object source, object target, string limb, mixed weapon
     }
 }
 
+/**
+ * Display a combat heal message.
+ *
+ * @param {STD_LIVING} source the source of the heal
+ * @param {STD_LIVING} target the target of the heal
+ * @param limb the limb targeted (if any)
+ * @param damage the amount of damage healed
+ */
 void combat_heal_message (object source, object target, string limb, int damage) {
+    // @TODO: use limb and damage
     if (target->query_hp() < target->query_max_hp()) {
         message("combat heal", SEFUN->possessive_noun(target->query_cap_name()) + " wounds heal slightly.", environment(target), target);
         message("combat heal", "Your wounds heal slightly.", target);
     }
 }
 
+/**
+ * Display a combat miss message.
+ *
+ * @param {STD_LIVING} source the source of the miss
+ * @param {STD_LIVING} target the target of the miss
+ * @param {STD_WEAPON|string} weapon the weapon or limb used
+ */
 void combat_miss_message (object source, object target, mixed weapon) {
     string type, name, possessive = SEFUN->possessive(source);
 
@@ -102,6 +134,12 @@ void combat_miss_message (object source, object target, mixed weapon) {
     message("combat miss", source->query_cap_name() + " misses " + target->query_cap_name() + " with " + possessive + " " + name + ".", environment(source), ({ source, target }));
 }
 
+/**
+ * Display a combat block message.
+ *
+ * @param {STD_LIVING} source the source of the block
+ * @param {STD_LIVING} target the target of the block
+ */
 void combat_block_message (object source, object target) {
     object shield = source->query_worn_shield();
     string possessive = SEFUN->possessive(target->query_cap_name());
@@ -110,6 +148,13 @@ void combat_block_message (object source, object target) {
     message("combat miss", target->query_cap_name() + " blocks " + source->query_cap_name() + (shield ? " with " + possessive + " " + shield->query_name() : "") + ".", environment(target), ({ source, target }));
 }
 
+/**
+ * Display a combat parry message.
+ *
+ * @param {STD_LIVING} source the source of the parry
+ * @param {STD_LIVING} target the target of the parry
+ * @param {STD_WEAPON|string} weapon the weapon or limb used
+ */
 void combat_parry_message (object source, object target, mixed weapon) {
     string type, name, possessive = SEFUN->possessive(target);
 
@@ -124,13 +169,30 @@ void combat_parry_message (object source, object target, mixed weapon) {
     message("combat miss", target->query_cap_name() + " parries you with " + possessive + " " + name + ".", source);
     message("combat miss", target->query_cap_name() + " parries " + source->query_cap_name() + " with " + possessive + " " + name + ".", environment(source), ({ source, target }));
 }
+
+/**
+ * Display a combat evade message.
+ *
+ * @param {STD_LIVING} source the source of the evade
+ * @param {STD_LIVING} target the target of the evade
+ */
 void combat_evade_message (object source, object target) {
     message("combat miss", "You evade " + SEFUN->possessive_noun(source->query_cap_name()) + " attack.", target);
     message("combat miss", target->query_cap_name() + " evades your attack.", source);
     message("combat miss", target->query_cap_name() + " evades " + SEFUN->possessive_noun(source->query_cap_name()) + " attack.", environment(source), ({ source, target }));
 }
 
+/**
+ * Calculate how much damage a hit will do.
+ *
+ * @param {STD_LIVING} source the source of the damage
+ * @param {STD_LIVING} target the target of the damage
+ * @param limb the target's limb being hit
+ * @param {STD_WEAPON|string} weapon
+ * @param crit flag if this was a critical hit
+ */
 int combat_hit_damage (object source, object target, string limb, mixed weapon, int crit) {
+    // @TODO: use weapon for damage
     int dice, damage = 0;
     // calculate source damage
     damage += SEFUN->roll_die(1, 6)[0];
@@ -169,6 +231,13 @@ void initiate_combat (object source, object target) {
     source->add_hostile(target);
     target->add_hostile(source);
 }
+
+/**
+ * Return a list of present hostile living objects.
+ *
+ * @param {STD_LIVING} source the living object to check the environment of
+ * @returns {STD_LIVING*} a list of valid hostile living objects
+ */
 object *present_hostiles (object source) {
     object env = environment(source);
     return filter(source->query_hostiles(), (: environment($1) == $(env) :));
@@ -186,6 +255,14 @@ object present_hostile (object source) {
 
 /* -----  ----- */
 
+/**
+ * Create a combat table to determine miss/block/parry/evade/crit/hit chances.
+ * Each subsequent hit in a combat round has a higher chance to miss.
+ *
+ * @param {STD_LIVING} source the source of the attack
+ * @param {STD_LIVING} target the target of the attack
+ * @param hits the n-th hit in a row this combat round
+ */
 mapping *combat_table (object source, object target, int hits) {
     mapping *table = ({ });
     int levelAdjust = to_int(5 + (target->query_level() - source->query_level()) / 5.0);
