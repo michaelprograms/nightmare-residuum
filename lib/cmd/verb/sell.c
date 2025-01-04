@@ -39,9 +39,11 @@ mixed can_sell_obj (mixed args...) {
 void do_sell_obj (mixed args...) {
     object po = previous_object();
     object *vendors;
+    /** @type {STD_ROOM} env */
+    object env = environment(po);
 
-    if (environment(po) && sizeof(args)) {
-        vendors = filter(environment(po)->query_living_contents(), (: $1->is_vendor() :));
+    if (env && sizeof(args)) {
+        vendors = filter(env->query_living_contents(), (: $1->is_vendor() :));
         if (sizeof(vendors) == 1) {
             do_sell_obj_to_obj(args[0], vendors[0]);
         } else {
