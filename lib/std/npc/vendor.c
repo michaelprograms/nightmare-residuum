@@ -13,7 +13,7 @@ int is_vendor () {
 /**
  * Returns the storage object this vendor uses for its items.
  *
- * @returns {STD_STORAGE}
+ * @returns {"/std/vendor_inventory.c"}
  */
 object query_vendor_inventory () {
     return __VendorInventory;
