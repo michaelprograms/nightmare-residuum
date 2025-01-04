@@ -167,7 +167,12 @@ void test_climbs () {
 }
 
 nosave private int checkBefore = 0, checkAfter = 0;
-nosave private object r1, r2, ob;
+/** @type {STD_ROOM} r1 */
+nosave private object r1;
+/** @type {STD_ROOM} r1 */
+nosave private object r2;
+/** @type {STD_NPC} ob */
+nosave private object ob;
 
 // TODO: Test this through testOb and mocks
 void test_exits_before_after () {
@@ -324,6 +329,7 @@ void test_query_defaults () {
 nosave private string __Reverse;
 varargs int handle_go (mixed dest, string verb, string dir, string reverse) {
     __Reverse = reverse;
+    return 1;
 }
 
 void test_exit_reverse_override () {
