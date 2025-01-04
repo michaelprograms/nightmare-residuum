@@ -1,5 +1,9 @@
 inherit M_TEST;
 
+/**
+ * @var {"/std/module/dustable"} testOb
+ */
+
 void test_expire () {
     object mockItem = new("/std/module/dustable.mock.c");
     expect("expire to remove dustable", (: ({

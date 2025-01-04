@@ -1,6 +1,10 @@
 inherit M_TEST;
 inherit M_MOVE;
 
+/**
+ * @var {"/std/module/look"} testOb
+ */
+
 string *test_order () {
     return ({ "test_looks", "test_handle_look" });
 }

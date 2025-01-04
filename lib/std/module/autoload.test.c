@@ -1,5 +1,9 @@
 inherit M_TEST;
 
+/**
+ * @var {"/std/module/autoload"} testOb
+ */
+
 nosave private int __MockLevel;
 int query_level () { return __MockLevel; }
 

@@ -1,5 +1,9 @@
 inherit M_TEST;
 
+/**
+ * @var {"/std/module/parse"} testOb
+ */
+
 void test_add_rules () {
     object mockParse = new("/std/module/parse.mock.c");
 

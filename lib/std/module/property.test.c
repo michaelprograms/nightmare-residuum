@@ -1,5 +1,9 @@
 inherit M_TEST;
 
+/**
+ * @var {"/std/module/property"} testOb
+ */
+
 string *test_order () {
     return ({ "test_property_single", "test_properties_multiple", });
 }

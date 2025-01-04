@@ -1,4 +1,9 @@
 inherit M_TEST;
+inherit STD_LIVING;
+
+/**
+ * @var {"/std/module/bonus"} testOb
+ */
 
 void test_singular_bonus () {
     expect("null bonuses are initialized", (: ({

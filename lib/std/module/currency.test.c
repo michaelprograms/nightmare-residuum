@@ -1,5 +1,9 @@
 inherit M_TEST;
 
+/**
+ * @var {"/std/module/currency"} testOb
+ */
+
 void test_currencies () {
     expect("query_currency returns -1 for invalid currency", (: ({
         assert_equal(testOb->query_currency("unknown"), -1),

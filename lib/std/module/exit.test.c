@@ -1,6 +1,10 @@
 inherit M_TEST;
 inherit M_MOVE;
 
+/**
+ * @var {"/std/module/exit"} testOb
+ */
+
 string *test_order () {
     return ({
         "test_exits",

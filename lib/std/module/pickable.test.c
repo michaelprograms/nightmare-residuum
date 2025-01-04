@@ -1,6 +1,10 @@
 inherit M_TEST;
 inherit M_MOVE;
 
+/**
+ * @var {"/std/module/pickable"} testOb
+ */
+
 void test_pickable () {
     expect("handles initializing with zeroes", (: ({
         assert_equal(testOb->query_picks(), 0),

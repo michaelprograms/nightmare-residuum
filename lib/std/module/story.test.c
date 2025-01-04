@@ -1,5 +1,9 @@
 inherit M_TEST;
 
+/**
+ * @var {"/std/module/story"} testOb
+ */
+
 void test_lines () {
     expect("lines are settable and queryable", (: ({
         assert_equal(testOb->query_story_lines(), ({ })),

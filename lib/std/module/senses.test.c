@@ -1,5 +1,9 @@
 inherit M_TEST;
 
+/**
+ * @var {"/std/module/senses"} testOb
+ */
+
 void test_listen () {
     function fn = function () { return "Function sound."; };
 

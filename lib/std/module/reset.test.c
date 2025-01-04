@@ -1,5 +1,9 @@
 inherit M_TEST;
 
+/**
+ * @var {"/std/module/reset"} testOb
+ */
+
 string *test_order () {
     return ({ "test_resets", "test_objects", });
 }

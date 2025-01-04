@@ -1,6 +1,10 @@
 inherit M_TEST;
 inherit M_CONTAINER;
 
+/**
+ * @var {"/std/module/move"} testOb
+ */
+
 nosave private int canReceiveCount = 0, canReleaseCount = 0;
 nosave private int handleReceiveCount = 0, handleReleaseCount = 0;
 nosave private int noReceive = 0, noRelease = 0;

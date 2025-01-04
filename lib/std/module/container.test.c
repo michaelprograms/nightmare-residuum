@@ -1,5 +1,9 @@
 inherit M_TEST;
 
+/**
+ * @var {"/std/module/container"} testOb
+ */
+
 void test_receive () {
     object ob = new(STD_OBJECT);
 
