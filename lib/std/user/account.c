@@ -110,6 +110,13 @@ string *query_character_names () {
     __CharacterNames = sort_array(keys(tmpCharacters), 1);
     return __CharacterNames;
 }
+/**
+ * Update the character data stored in the account. This is used as a cache for
+ * the character selection screen so that it does not need to query individual
+ * character save files.
+ *
+ * @param {STD_CHARACTER} character the character to be updated
+ */
 void update_character_data (object character) {
     string name;
     if (!character || !(name = character->query_key_name())) {

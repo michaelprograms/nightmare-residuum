@@ -33,12 +33,13 @@ void gmcp (string request) {
         char->gmcp_update_vitals();
     } else if (request == "Room.Info.Get") {
         object char = this_object()->query_character();
+        /** @type {STD_ROOM} env */
         object env;
+
         if (!char) {
             return;
         }
         env = environment(char);
-
         gmcp_send_update("Room.Info",  env ? ([
             "name": env->query_short(),
             "exits": env->query_exit_directions(),
