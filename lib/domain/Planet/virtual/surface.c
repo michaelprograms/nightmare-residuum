@@ -11,6 +11,11 @@ int is_virtual_room () { return 1; }
 
 mapping __PCache = ([ ]);   // Permutation Cache
 
+/**
+ * set up this virtual room for a planet surface.
+ *
+ * @param {"/domain/Planet/virtual/room/base/terrain.c"} room
+ */
 void setup_room (object room) {
     string name;
     int x, y;
@@ -40,6 +45,14 @@ void setup_room (object room) {
     room->set_property("biome", biome);
 }
 
+/**
+ * Add exits to the room, wrapping around from len-1 to 0 and vice-versa.
+ *
+ * @param {"/domain/Planet/virtual/room/base/terrain.c"} room
+ * @param planet the planet's attributes
+ * @param x integer longitude coordinate
+ * @param y integer latitude coordinate
+ */
 void setup_exits (object room, mapping planet, int x, int y) {
     string path;
     string name;
