@@ -1,3 +1,5 @@
+// @this_object /std/ability.c
+
 #include <verb.h>
 
 inherit STD_VERB;
@@ -91,6 +93,14 @@ mapping query_cost () {
 
 /* ----- calculations ----- */
 
+/**
+ * Determine how much source will heal target.
+ *
+ * @param {STD_LIVING} source the source of the heal
+ * @param {STD_LIVING} target the target of the heal
+ * @param limb the targeted limb if any
+ * @returns integer amount of heal
+ */
 int calculate_heal (object source, object target, string limb) {
     int damage;
     int sourceStat, targetStat;
@@ -101,17 +111,17 @@ int calculate_heal (object source, object target, string limb) {
     damage += random(source->query_stat("luck") * 5 / 100 + 1);
 
     // skill powers
+    // @TODO: skills were removed
     foreach (string key,int value in __Powers) {
         switch (key) {
-            case "anatomy":
-                n = 3;
-                break;
-            case "theurgy":
-                n = 1;
-                break;
-            case "medicine": default:
-                n = 2;
-                break;
+        case "anatomy":
+            n = 3;
+            break;
+        case "theurgy":
+            n = 1;
+            break;
+        case "medicine": default:
+            n = 2;
             break;
         }
         sourceStat = source->query_stat("intelligence");
@@ -124,6 +134,14 @@ int calculate_heal (object source, object target, string limb) {
     return damage;
 }
 
+/**
+ * Determine how much source will damage target.
+ *
+ * @param {STD_LIVING} source the source of the damage
+ * @param {STD_LIVING} target the target of the damage
+ * @param limb the targeted limb if any
+ * @returns integer amount of damage
+ */
 int calculate_damage (object source, object target, string limb) {
     int dice, damage, tmp;
     int dieSides;
@@ -231,6 +249,13 @@ object *verify_targets (object source, object *targets) {
 
 /* ----- success ----- */
 
+/**
+ * Check if the usage of an ability will succeed or not.
+ *
+ * @param {STD_LIVING} source the source of the ability
+ * @param {STD_LIVING} target the target of the ability
+ * @returns 0 or 1 for success
+ */
 int is_ability_successful (object source, object target) {
     int sourceN = 0, targetN = 0;
     int chance = 100;
@@ -266,6 +291,12 @@ int is_ability_successful (object source, object target) {
 
 /* ----- messages ----- */
 
+/**
+ * Display a message about attempting to use an ability.
+ *
+ * @param {STD_LIVING} source the source of the attempt
+ * @param {STD_LIVING*} targets the target(s) of the attempt
+ */
 void ability_message_attempt (object source, object *targets) {
     string names;
     int n;
@@ -294,6 +325,13 @@ void ability_message_attempt (object source, object *targets) {
     }
 }
 
+/**
+ * Display a message about failing to use an ability.
+ *
+ * @param {STD_LIVING} source the source of the fail
+ * @param {STD_LIVING} target the target of the fail
+ * @param limb the limb targeted, if any
+ */
 void ability_message_fail (object source, object target, string limb) {
     if (__Type == "attack") {
         message("ability miss", "You miss your " + query_name() + " attempt on " + target->query_cap_name() + "!", source);
@@ -311,6 +349,13 @@ void ability_message_fail (object source, object target, string limb) {
     }
 }
 
+/**
+ * Display a message about succeeding to use an ability.
+ *
+ * @param {STD_LIVING} source the source of the success
+ * @param {STD_LIVING} target the target of the success
+ * @param limb the limb targeted, if any
+ */
 void ability_message_success (object source, object target, string limb) {
     string who, you, plural = pluralize(query_name());
 
@@ -339,6 +384,14 @@ void ability_message_success (object source, object target, string limb) {
     }
 }
 
+/**
+ * Display the amount of damage or heal to any characters that are immortal or
+ * have a debug property flag.
+ *
+ * @param {STD_CHARACTER} source
+ * @param {STD_CHARACTER} target
+ * @param damage the amount of damage being referenced
+ */
 private void ability_debug_message (object source, object target, int damage) {
     string phrase;
     if (__Type == "attack") {
@@ -356,9 +409,17 @@ private void ability_debug_message (object source, object target, int damage) {
 
 /* ----- use ability ----- */
 
+/**
+ * Handle a living object using an ability, determining requirements,
+ * success or failure, damage, and messaging.
+ *
+ * @param {STD_LIVING} source the source of the ability use
+ * @param {STD_LIVING*} targets the target(s) of the ability use
+ */
 private void handle_ability_use (object source, object *targets) {
     mapping cost;
     int damage;
+    /** @type {STD_WEAPON} weapon */
     object weapon;
     string limb;
     int l;
