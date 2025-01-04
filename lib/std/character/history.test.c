@@ -1,5 +1,9 @@
 inherit M_TEST;
 
+/**
+ * @var {"/std/character/history"} testOb
+ */
+
 void test_history () {
     expect("null history is initialized", (: ({
         assert_equal(testOb->query_tell_history(), ({ })),

@@ -1,5 +1,9 @@
 inherit M_TEST;
 
+/**
+ * @var {"/std/character/achievement"} testOb
+ */
+
 void test_achievements () {
     expect("null achievements are initialized", (: ({
         assert_equal(testOb->query_achievements_done(), ({ })),

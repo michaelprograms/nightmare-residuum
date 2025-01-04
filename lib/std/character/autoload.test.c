@@ -1,5 +1,9 @@
 inherit M_TEST;
 
+/**
+ * @var {"/std/character/autoload"} testOb
+ */
+
 void test_autoload () {
     object mockBody = new("/std/living/body.mock.c");
     object mockItem1 = new("/std/item.mock.c");

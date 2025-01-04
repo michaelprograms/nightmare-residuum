@@ -1,5 +1,9 @@
 inherit M_TEST;
 
+/**
+ * @var {"/std/character/channel"} testOb
+ */
+
 void test_channels () {
     expect("channels handles available and toggling blocked", (: ({
         // default channel status
