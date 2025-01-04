@@ -244,7 +244,10 @@ varargs string standard_trace (mapping e) {
  */
 void error_handler (mapping e, int caught) {
     string ret, file = caught ? "catch" : "runtime";
-    object ob, test;
+    /** @type {STD_CHARACTER} */
+    object ob;
+    /** @type {M_TEST} */
+    object test;
 
     if (caught && sizeof(e["trace"]) > 1 && regexp(e["trace"][1]["program"], D_TEST+"|\\.test\\.c")) {
         test = filter(e["trace"], (: $1["file"] == M_TEST :))[0]["object"];
@@ -558,7 +561,7 @@ object *parse_command_users () {
  * This apply is called to generate error responses to user input.
  *
  * @param type the type of parser error message
- * @param {object} ob the object in context
+ * @param {STD_OBJECT} ob the object in context
  * @param arg
  * @param plural
  */
@@ -566,6 +569,7 @@ string parser_error_message (int type, object ob, mixed arg, int plural) {
     string err;
     object tmpob;
     string wut;
+    /** @type {STD_OBJECT} */
     object wat;
 
     if (ob) {
