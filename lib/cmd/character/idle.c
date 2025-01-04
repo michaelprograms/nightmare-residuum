@@ -14,5 +14,5 @@ void command (string input, mapping flags) {
         return;
     }
 
-    message("action", target->query_cap_name() + " has been idle for " + time_from_seconds(query_idle(target->query_user()), 2) + ".", tc);
+    message("action", target->query_cap_name() + " has been idle for " + time_from_seconds(query_idle(target->query_user())) + ".", tc);
 }
