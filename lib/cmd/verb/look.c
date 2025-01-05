@@ -30,7 +30,9 @@ mixed can_look_str (string str, string verb) {
     return can_look_at_str(str, verb);
 }
 void do_look_at_str (mixed args...) {
-    object po = previous_object(), env = environment(po), ob;
+    object po = previous_object(), ob;
+    /** @type {STD_ROOM} env */
+    object env = environment(po);
     string str, desc;
 
     if (sizeof(args)) str = args[0];
@@ -68,6 +70,12 @@ mixed can_look_at_obj (string str, string verb) {
 mixed can_look_obj (string str, string verb) {
     return can_look_at_obj(str, verb);
 }
+/**
+ * Look at and describe a non-living item.
+ *
+ * @param {STD_ITEM} ob the non-living item to be described
+ * @param arg any extra arguments provided by the driver parser (unused)
+ */
 varargs mixed do_look_at_obj (object ob, mixed arg) {
     object po = previous_object();
     string long = replace_string(ob->query_long(), "%^DEFAULT%^", "%^RESET%^");
@@ -100,6 +108,12 @@ mixed can_look_at_liv (string str, string verb) {
 mixed can_look_liv (string str, string verb) {
     return can_look_at_liv(str, verb);
 }
+/**
+ * Look at and describe a living item.
+ *
+ * @param {STD_LIVING} ob the living item to be described
+ * @param arg any extra arguments provided by the driver parser (unused)
+ */
 mixed do_look_at_liv (object ob, mixed arg...) {
     object po = previous_object(), *wielded, *worn;
     string str;
