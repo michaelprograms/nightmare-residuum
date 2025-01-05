@@ -1,5 +1,9 @@
 inherit M_TEST;
 
+/**
+ * @var {"/std/command"} testOb
+ */
+
 string *test_order () {
     return ({
         "test_name",
