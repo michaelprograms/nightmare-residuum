@@ -28,16 +28,16 @@ void command (string input, mapping flags) {
     }
 
     foreach (string action in D_COMMAND->query_abilities(ABILITY_DIR)) {
-        if (mode == "mine") {
+        if (mode == "mine" || mode == "class") {
+            /** @type {STD_ABILITY} ability */
             object ability = load_object(ABILITY_DIR + "/" + action + ".c");
-            if (ability->verify_ability_requirements(po)) {
+            if (mode == "mine" && ability->verify_ability_requirements(po)) {
                 abilities += ({ action });
-            }
-        } else if (mode == "class") {
-            object ability = load_object(ABILITY_DIR + "/" + action + ".c");
-            mapping reqs = ability->query_ability_requirements();
-            if (reqs[input]) {
-                abilities += ({ action });
+            } else if (mode == "class") {
+                mapping reqs = ability->query_ability_requirements();
+                if (reqs[input]) {
+                    abilities += ({ action });
+                }
             }
         } else {
             // no input, show all abilities
