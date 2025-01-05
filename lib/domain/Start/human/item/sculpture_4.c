@@ -12,7 +12,7 @@ string sculpture_long () {
         // @TODO
     // }
 
-    D_ACHIEVEMENT->flag(tc, "Art Appreciation", "s4");
+    D_ACHIEVEMENTS->flag(tc, "Art Appreciation", "s4");
     return desc;
 }
 
