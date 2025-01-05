@@ -1,5 +1,9 @@
 inherit M_TEST;
 
+/**
+ * @var {"/std/object/description"} testOb
+ */
+
 void test_long_and_long_footer () {
     expect("long is settable and queryable", (: ({
         assert_equal(testOb->query_long(), ""),

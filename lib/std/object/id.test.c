@@ -1,5 +1,9 @@
 inherit M_TEST;
 
+/**
+ * @var {"/std/object/id"} testOb
+ */
+
 void test_id () {
     expect("id handles adding names", (: ({
         assert_equal(testOb->query_name(), UNDEFINED),
