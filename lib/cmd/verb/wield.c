@@ -15,6 +15,12 @@ mixed can_wield () {
     return "Wield what?";
 }
 
+/**
+ * Equip an unwielded weapon item to a living body.
+ *
+ * @param {STD_WEAPON} ob the weapon item to be equipped
+ * @param str the input text from the player (ex, 'staff' or 'sword')
+ */
 void do_wield_obj (object ob, string str) {
     mixed result;
     object po = previous_object();

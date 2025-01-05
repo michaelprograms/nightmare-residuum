@@ -15,6 +15,12 @@ mixed can_wear () {
     return "Wear what?";
 }
 
+/**
+ * Wear an unworn armor item to a living body.
+ *
+ * @param {STD_ARMOR} ob the armor item to be equipped
+ * @param str the input text from the player (ex, 'all' or 'helmet')
+ */
 void do_wear_obj (object ob, string str) {
     mixed result;
     object po = previous_object();

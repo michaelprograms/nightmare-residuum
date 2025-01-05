@@ -15,6 +15,12 @@ mixed can_unwear () {
     return "Unwear what?";
 }
 
+/**
+ * Remove a worn armor item from a living body.
+ *
+ * @param {STD_ARMOR} ob the armor item to be removed
+ * @param str the input text from the player (ex, 'all' or 'helmet')
+ */
 void do_unwear_obj (object ob, string str) {
     mixed result;
     object po = previous_object();
