@@ -7,7 +7,7 @@ void create () {
 }
 
 void command (string input, mapping flags) {
-    string *body = ({ });
+    mapping *body = ({ });
 
     if (input == "here") {
         mapping a = D_ACHIEVEMENTS->query_achievements_from_room(environment(this_character()));

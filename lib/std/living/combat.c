@@ -24,6 +24,11 @@ int add_hostile (object ob) {
     __Hostiles += ({ ob });
     return 1;
 }
+/**
+ * Remove a living object as a hostile to this living object.
+ * @param {STD_LIVING} ob the living object to remove
+ * @returns 0 or 1 for success
+ */
 int remove_hostile (object ob) {
     if (!ob || !ob->is_living() || member_array(ob, __Hostiles) == -1) {
         return 0;
@@ -34,6 +39,12 @@ int remove_hostile (object ob) {
 int query_hostile (object ob) {
     return member_array(ob, __Hostiles) > -1;
 }
+/**
+ * Returns a list of all living items that are currently hostile to this living
+ * object.
+ *
+ * @returns {STD_LIVING*} the list of hostiles
+ */
 object *query_hostiles () {
     __Hostiles = filter(__Hostiles, (: !undefinedp($1) :));
     return __Hostiles;
@@ -115,6 +126,10 @@ void handle_combat_hit (object target, mapping *table, object weapon) {
         }
     }
 }
+/**
+ * The main combat handler, this will be called by the living object's
+ * heartbeat.
+ */
 void handle_combat () {
     object to = this_object(), env = environment(), target, *weapons;
     int base, min, max, hits;

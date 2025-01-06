@@ -118,15 +118,7 @@ private void scan (string *paths, string type) {
     }
 }
 
-/* ----- applies ----- */
-
-void create () {
-    set_no_clean(1);
-    __Paths = ({ });
-    __Abilities = ([ ]);
-    __Commands = ([ ]);
-    __Verbs = ([ ]);
-
+void scan_all_paths () {
     scan(({
         "/cmd/ability",
     }), "ability");
@@ -139,4 +131,16 @@ void create () {
     scan(({
         "/cmd/verb",
     }), "verb");
+}
+
+/* ----- applies ----- */
+
+void create () {
+    set_no_clean(1);
+    __Paths = ({ });
+    __Abilities = ([ ]);
+    __Commands = ([ ]);
+    __Verbs = ([ ]);
+
+    scan_all_paths();
 }

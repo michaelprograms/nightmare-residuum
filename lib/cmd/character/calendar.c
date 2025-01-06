@@ -7,7 +7,7 @@ void create () {
 }
 
 void command (string input, mapping flags) {
-    string *body = ({ });
+    mapping *body = ({ });
     mapping a, footer;
     int t = time(), currentMonth, currentDay;
 

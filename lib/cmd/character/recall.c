@@ -6,6 +6,11 @@ void create () {
     set_help_text("The recall command is used to return the Origin Point.");
 }
 
+/**
+ * Teleport the character to the Origin point.
+ *
+ * @param {STD_CHARACTER} tc the character to teleport
+ */
 void teleport (object tc) {
     if (!tc) return;
 

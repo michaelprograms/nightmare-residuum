@@ -13,7 +13,7 @@ void command (string input, mapping flags) {
     mapping header;
 
     if (flags["r"]) {
-        D_COMMAND->scan_all();
+        D_COMMAND->scan_all_paths();
 
         subtitle = "Rescanned";
         header = ([

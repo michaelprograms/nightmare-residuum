@@ -32,6 +32,12 @@ varargs int query_exists (string name, string type) {
     return query_valid_name(name) && file_size(query_save_path(name, type)) > -1;
 }
 
+/**
+ * Loads a character's data.
+ *
+ * @param name which caracter to load
+ * @returns {STD_CHARACTER}
+ */
 private object load_character (string name) {
     object char;
 
@@ -45,6 +51,12 @@ private object load_character (string name) {
     return char;
 }
 
+/**
+ * Queries an off-line character's data.
+ *
+ * @param name which character to query
+ * @returns {STD_CHARACTER}
+ */
 object query_character (string name) {
     return load_character(name);
 }

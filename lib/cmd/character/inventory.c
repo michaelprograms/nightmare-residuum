@@ -15,7 +15,7 @@ mapping process_section (object *items, string label, object target) {
             "items": ({ }),
             "columns": 2,
         ]);
-        foreach (object *obs in unique_array(items, (: $1->query_short() :))) {
+        foreach (/** @type {STD_ITEM*} obs */ object *obs in unique_array(items, (: $1->query_short() :))) {
             string autoload;
             int a = sizeof(filter(obs->query_autoload(target), (: $1 :)));
 
@@ -35,6 +35,11 @@ mapping process_section (object *items, string label, object target) {
     return section;
 }
 
+/**
+ * Process the inventory of a living item, separating items into categories.
+ *
+ * @param {STD_LIVING} target the living item to process
+ */
 mapping *process_inventory (object target) {
     object *weapon = ({ }), *armor = ({ }), *items = ({ });
     mapping *inventory = ({ });
