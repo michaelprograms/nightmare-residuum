@@ -23,7 +23,7 @@ void process_file (string file, mapping options);
 private string format_total_line (string name, int current, int total);
 void process ();
 varargs void update_test_data (string path, string ignore);
-varargs void run (int callShutdown);
+varargs void run (mapping options);
 void display_results (mapping results);
 int *query_hit_lines ();
 int *query_unhit_lines ();

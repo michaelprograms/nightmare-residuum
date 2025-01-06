@@ -50,7 +50,7 @@ varargs string *epilog (int load_empty) {
  */
 void flag (string flag) {
     if (flag == "test") {
-        call_out((: D_TEST->run(([ "coverage": 1, "shutdown": 1 ])) :), 0);
+        call_out_walltime((: D_TEST->run(([ "coverage": 1, "shutdown": 1 ])) :), 0.1);
     } else {
         debug_message("master()->flag: received unknown flag.");
     }

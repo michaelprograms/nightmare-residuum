@@ -35,8 +35,8 @@ object *users () {
 nomask void write (string msg) {
     if (SEFUN->this_character() && SEFUN->this_character()->query_key_name() != "test") {
         SEFUN->this_character()->receive_message("system", msg);
-    } else if (SEFUN->this_user()) {
-        SEFUN->this_user()->receive_message("system", msg);
+    } else if (efun::this_user()) {
+        efun::this_user()->receive_message("system", msg);
     } else {
         if (msg[<1] == '\n') {
             msg = msg[0..<2];
