@@ -1,6 +1,10 @@
 inherit M_TEST;
 inherit STD_OBJECT;
 
+/**
+ * @var {"/std/resource/harvestable"} testOb
+ */
+
 void test_direct_harvest_obj () {
     object r = new(STD_ROOM);
 

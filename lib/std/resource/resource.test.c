@@ -1,5 +1,9 @@
 inherit M_TEST;
 
+/**
+ * @var {"/std/resource/harvestable"} testOb
+ */
+
 void test_type () {
     expect("type is settable and queryable", (: ({
         assert_equal(testOb->query_type(), UNDEFINED),

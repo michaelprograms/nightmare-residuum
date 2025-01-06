@@ -1,33 +1,59 @@
 private string __EnvPath;
-nosave private object __LastEnv, __CurrentEnv;
+nosave private object __LastEnv;
+/** @type {STD_STORAGE} __CurrentEnv */
+nosave private object __CurrentEnv;
 
+/**
+ * Determine if the requested destination is a path or an object. When a path
+ * is provided, turn it into an object.
+ *
+ * @param dest the destination to check
+ * @returns {STD_STORAGE}
+ */
 object query_dest_ob (mixed dest) {
     object destOb;
     if (objectp(dest)) {
         destOb = dest;
     } else if (stringp(dest)) {
-        if (!(destOb = find_object(dest))) {
-            if (!(destOb = load_object(dest))) {
-                return 0;
-            }
+        if (!(destOb = find_object(dest)) && !(destOb = load_object(dest))) {
+            return 0;
         }
     }
     return destOb;
 }
 
+/**
+ * Called after an object has been moved to a new environment.
+ *
+ * @param {STD_STORAGE} env
+ */
 void handle_received (object env) {
     if (env) {
         env->handle_receive(this_object());
     }
 }
+/**
+ * Called before an object has been moved to a new environment.
+ *
+ * @param {STD_STORAGE} env
+ */
 void handle_released (object env) {
     if (env) {
         env->handle_release(this_object());
     }
 }
 
+/**
+ * Attempt to move an object from one environment to another environment.
+ *
+ * @param dest
+ * @returns 0 or 1 for success
+ */
 int handle_move (mixed dest) {
-    object destOb, env = environment();
+    /** @type {STD_STORAGE} env */
+    object env = environment();
+    /** @type {STD_STORAGE} destOb */
+    object destOb;
     if (env && !env->can_release(this_object()) && !this_object()->query_immortal()) {
         return 0;
     }

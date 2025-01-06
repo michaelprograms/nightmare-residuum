@@ -18,6 +18,11 @@ void handle_received (object env) {
     dustable::handle_received(env);
 }
 
+/**
+ * Sets up a corpse based upon the body of a living object.
+ *
+ * @param {STD_LIVING} ob the living object that is being defeated
+ */
 void setup_body (object ob) {
     string *currencies;
 
