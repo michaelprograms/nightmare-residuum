@@ -1,4 +1,5 @@
 nosave private function __EndFn;
+/** @type {STD_USER} */
 nosave private object __User;
 
 nomask private string query_prompt () {
@@ -32,10 +33,10 @@ void editor_start (string file, function endFn) {
 
 /* ----- ed setup ----- */
 
-void query_ed_setup () {
+int query_ed_setup () {
     return __User->query_ed_setup();
 }
-int set_ed_setup (int code) {
+void set_ed_setup (int code) {
     __User->set_ed_setup(code);
 }
 
