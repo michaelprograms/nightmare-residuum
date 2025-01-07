@@ -1,9 +1,13 @@
 inherit M_TEST;
 inherit M_MOVE;
 
+/**
+ * @var {"/std/npc/vendor"} testOb
+ */
+
 void after_each_test () {
     // vendor handle_remove to destruct vendor inventory
-    if (objectp(testOb)) testOb->handle_remove();
+    if (testOb) testOb->handle_remove();
 }
 
 void test_vendor () {

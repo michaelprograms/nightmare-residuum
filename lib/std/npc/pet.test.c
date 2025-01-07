@@ -1,6 +1,10 @@
 inherit M_TEST;
 inherit M_MOVE;
 
+/**
+ * @var {"/std/npc/pet"} testOb
+ */
+
 string query_key_name () {
     return "/std/npc/pet.test.c";
 }
