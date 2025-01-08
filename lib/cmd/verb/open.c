@@ -21,17 +21,17 @@ mixed can_open_str (mixed args...) {
 }
 
 mixed do_open_str (mixed args...) {
-    object po = previous_object(), env = environment(po);
+    object po = previous_object();
+    /** @type {STD_ROOM} env */
+    object env = environment(po);
     string str;
 
     if (sizeof(args) > 1) {
         str = args[0];
     }
-
     if (env->handle_open(po, str)) {
         return 1;
     }
-
     message("action", "There is no " + str + " to open here.", po);
     return 1;
 }
