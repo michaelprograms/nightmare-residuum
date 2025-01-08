@@ -15,6 +15,12 @@ mixed can_drop () {
 mixed can_drop_obj (object ob, string str) {
     return 1;
 }
+/**
+ * Drop an item into the living object's environment.
+ *
+ * @param {STD_ITEM} ob the item being dropped
+ * @param str the text input
+ */
 void do_drop_obj (object ob, string str) {
     object po = previous_object(), env = environment(po);
 
