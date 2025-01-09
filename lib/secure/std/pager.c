@@ -1,5 +1,6 @@
 #include <config.h>
 
+/** @type {STD_USER} __User */
 nosave private object __User;
 nosave private string *__Lines;
 nosave private int __LineNum, __LinesCount;
@@ -59,16 +60,22 @@ private void handle_page (mixed arg) {
     done(0);
 }
 
+/**
+ * Start pager mode for the user.
+ *
+ * @param lines the string array of text to page through
+ * @param {STD_USER} user
+ */
 void start (string *lines, object user) {
     if (user) {
         __ChunkSize = to_int(user->query_setting("lines"));
-    }
-    __Lines = lines;
-    __LinesCount = sizeof(__Lines);
-    __User = user;
-    __User->input_push((: handle_page :), (: prompt :));
-    if (catch (handle_page(0))) {
-        __User->input_pop();
-        __User->input_focus();
+        __Lines = lines;
+        __LinesCount = sizeof(__Lines);
+        __User = user;
+        __User->input_push((: handle_page :), (: prompt :));
+        if (catch (handle_page(0))) {
+            __User->input_pop();
+            __User->input_focus();
+        }
     }
 }
