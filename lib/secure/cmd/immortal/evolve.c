@@ -6,6 +6,14 @@ void create () {
     set_help_text("The evolve command is used to adjust a target's class, level, or stats.");
 }
 
+/**
+ *
+ * @param {STD_CHARACTER} tc
+ * @param {STD_CHARACTER} target
+ * @param type
+ * @param old
+ * @param now
+ */
 void display (object tc, object target, string type, string old, string now) {
     if (tc == target) {
         message("action", "You have changed your " + type + " from " + old + " to " + now + ".", tc);
@@ -25,8 +33,7 @@ void command (string input, mapping flags) {
         return;
     }
     if (input) {
-        if (find_character(input)) target = find_character(input);
-        else if (present(input, environment(tc))) target = present(input, environment(tc));
+        target = determine_immortal_target(tc, input);
     }
 
     if (sizeof(flags["c"]) && target->query_class() != flags["c"]) {
@@ -36,12 +43,12 @@ void command (string input, mapping flags) {
     }
 
     if (sizeof(flags["l"]) && target->query_level() != to_int(flags["l"])) {
-        tmp = target->query_level();
+        tmp = ""+target->query_level();
         target->set_level(to_int(flags["l"]));
-        display(tc, target, "level", tmp, target->query_level());
+        display(tc, target, "level", tmp, ""+target->query_level());
     }
 
-    if (sizeof(flags["s"]) && to_int(flags["s"]) > 0 && to_int(flags["s"] <= 100)) {
+    if (sizeof(flags["s"]) && to_int(flags["s"]) > 0 && to_int(flags["s"]) <= 100) {
         statTarget = to_int(flags["s"]);
     } else {
         statTarget = 80;
