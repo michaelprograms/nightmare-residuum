@@ -7,12 +7,13 @@ void create () {
 }
 
 /**
+ * Display the changes that occurred during the evolution.
  *
- * @param {STD_CHARACTER} tc
- * @param {STD_CHARACTER} target
- * @param type
- * @param old
- * @param now
+ * @param {STD_CHARACTER} tc this character
+ * @param {STD_CHARACTER} target the recipient of the evolution
+ * @param type what kind of evolution
+ * @param old original value
+ * @param now new value
  */
 void display (object tc, object target, string type, string old, string now) {
     if (tc == target) {
