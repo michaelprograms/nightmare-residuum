@@ -44,6 +44,20 @@ void test_combat_tier_from_percent () {
     }) :));
 }
 
+/**
+ * @typedef {STD_NPC & "/std/npc.mock.c"} npcWithMockShadow
+ */
+
+/**
+ * 
+ * @param {"/std/npc.mock.c"} mock 
+ * @param {STD_NPC} ob 
+ * @returns {ob is npcWithMockShadow}
+ */
+int start_mock_shadow(object mock, object ob) {
+    return mock->start_shadow(ob);
+}
+
 void test_combat_messages () {
     object room;
     object npc1, npc2;
@@ -61,8 +75,16 @@ void test_combat_messages () {
     npc2->handle_move(STD_ROOM);
     mockNpc1 = new("/std/npc.mock.c");
     mockNpc2 = new("/std/npc.mock.c");
-    mockNpc1->start_shadow(npc1);
-    mockNpc2->start_shadow(npc2);
+    
+    if (!start_mock_shadow(mockNpc1, npc1)) {
+        throw("Failed to shadow npc1");
+        return;
+    }
+    if (!start_mock_shadow(mockNpc2, npc2)) {
+        throw("Failed to shadow npc2");
+        return;
+    }
+        
     weapon = new(STD_WEAPON);
     weapon->set_name("test weapon");
     weapon->set_type("blade");
