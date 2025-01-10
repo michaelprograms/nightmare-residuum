@@ -49,10 +49,10 @@ void test_combat_tier_from_percent () {
  */
 
 /**
- * 
+ * Helper function to start a mock shadow on an npc. 
  * @param {"/std/npc.mock.c"} mock 
  * @param {STD_NPC} ob 
- * @returns {ob is npcWithMockShadow}
+ * @returns {ob is npcWithMockShadow} 1 if successful, 0 if not
  */
 int start_mock_shadow(object mock, object ob) {
     return mock->start_shadow(ob);
@@ -78,7 +78,7 @@ void test_combat_messages () {
     
     if (!start_mock_shadow(mockNpc1, npc1)) {
         throw("Failed to shadow npc1");
-        return;
+        return; // must return so type guard will apply after this point
     }
     if (!start_mock_shadow(mockNpc2, npc2)) {
         throw("Failed to shadow npc2");
