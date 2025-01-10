@@ -77,11 +77,11 @@ void test_combat_messages () {
     mockNpc2 = new("/std/npc.mock.c");
     
     if (!start_mock_shadow(mockNpc1, npc1)) {
-        throw("Failed to shadow npc1");
+        error("Failed to shadow npc1");
         return; // must return so type guard will apply after this point
     }
     if (!start_mock_shadow(mockNpc2, npc2)) {
-        throw("Failed to shadow npc2");
+        error("Failed to shadow npc2");
         return;
     }
         
