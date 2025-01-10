@@ -78,7 +78,7 @@ void test_combat_messages () {
     
     if (!start_mock_shadow(mockNpc1, npc1)) {
         error("Failed to shadow npc1");
-        return; // must return so type guard will apply after this point
+        return;
     }
     if (!start_mock_shadow(mockNpc2, npc2)) {
         error("Failed to shadow npc2");
