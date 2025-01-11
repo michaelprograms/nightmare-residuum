@@ -69,7 +69,7 @@ void test_now () {
 void test_time_intervals () {
     expect("handles the beginning", (: ({
         assert_equal(testOb->query_now(__Time), 0),
-        assert_equal(testOb->query_minutes(__Time, __Almanac), 0),
+        assert_equal(testOb->query_minute(__Time, __Almanac), 0),
         assert_equal(testOb->query_day(__Time, __Almanac), 0),
         assert_equal(testOb->query_hour(__Time, __Almanac), 0),
         assert_equal(testOb->query_week(__Time, __Almanac), 0),
