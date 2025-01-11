@@ -148,9 +148,9 @@ object compile_object (string path) {
     }
 
     if (sscanf(path, "/domain/%s/virtual/room/%s/", area, room) == 2) {
-        vpath = sprintf("/domain/%s/virtual/%s", area, room);
-        if (file_size(vpath + ".c") > 0) {
-            return vpath->virtual_create(path);
+        vpath = "/domain/" + area + "/virtual/" + room + ".c";
+        if (file_size(vpath) > 0) {
+            return call_other(vpath, "virtual_create", path);
         }
     }
     return 0;
