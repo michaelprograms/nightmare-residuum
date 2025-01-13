@@ -75,7 +75,6 @@ void test_json_decode () {
         assert_equal(testOb->json_decode("{ \"key1\": true,\r\t\"key2\": false, \"key3\": null }"), ([ "key1": 1, "key2": 0, "key3": 0, ])),
         assert_equal(testOb->json_decode("{ \"key1\" \n: true,\r\t\"key2\": false }"), ([ "key1": 1, "key2": 0, ])),
     }) :));
-    testOb->set_log(0);
 
     expect("json_decode catches errors correctly", (: ({
         assert_catch((: testOb->json_decode("") :), "*Unexpected end of data in json_decode\n"),
