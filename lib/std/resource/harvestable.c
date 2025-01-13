@@ -70,6 +70,11 @@ int direct_harvest_obj (mixed args...) {
     return environment() && environment() == environment(previous_object());
 }
 
+/**
+ * Handle a harvest action made by a character to gather a resource.
+ *
+ * @param {STD_CHARACTER} character the source of the harvest action
+ */
 void handle_harvest (object character) {
     object ob, tool;
     string toolType, harvestableType;
@@ -97,7 +102,6 @@ void handle_harvest (object character) {
 
     ob = new("/std/resource/resource.c");
     ob->set_type(__ResourceType);
-    ob->set_level(query_level());
 
     harvestableType = __Resource[__ResourceType][query_level()];
     switch (__ResourceType) {
@@ -115,7 +119,6 @@ void handle_harvest (object character) {
             break;
         default:
             return;
-            break;
     }
 
     ob->handle_move(character);
