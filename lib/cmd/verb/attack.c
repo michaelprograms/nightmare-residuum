@@ -12,9 +12,17 @@ mixed can_attack () {
 }
 
 mixed can_attack_liv (object lv, string str) {
-    if (environment(previous_object())->query_property("no attack")) return "You cannot attack here.";
+    /** @type {STD_ROOM} env */
+    object env = environment(previous_object());
+    if (env->query_property("no attack")) return "You cannot attack here.";
     return 1;
 }
+/**
+ * Attack a living object to engage in combat.
+ *
+ * @param {STD_LIVING} ob the living object being attacked
+ * @param str the input text
+ */
 void do_attack_liv (object ob, string str) {
     object po = previous_object();
     if (po->query_defeated()) {

@@ -11,15 +11,21 @@ mixed can_aid () {
     return "Aid whom?";
 }
 
-mixed can_aid_liv (object lv, string str) {
-    if (environment(previous_object())->query_property("no attack")) return "You cannot attack here.";
+mixed can_aid_liv (object liv, string str) {
+    /** @type {STD_ROOM} env */
+    object env = environment(previous_object());
+    if (env->query_property("no attack")) return "You cannot attack here.";
     return 1;
 }
+/**
+ * Aid a living object to engage in combat with their hostile opponents.
+ *
+ * @param {STD_LIVING} ob the living object being aided
+ * @param str the input text
+ */
 void do_aid_liv (object ob, string str) {
     object po = previous_object();
-    object *targets;
-
-    targets = present_hostiles(ob);
+    object *targets = present_hostiles(ob);
     if (sizeof(targets)) {
         message("attack", "You run to " + possessive_noun(ob->query_cap_name()) + " aid!", po);
         message("attack", po->query_cap_name() + " runs to your aid!", ob);
