@@ -84,7 +84,7 @@ string pluralize (mixed single) {
     int n;
 
     if (objectp(single)) {
-        str = single->query_name();
+        str = /** @type {STD_OBJECT} single */(single)->query_name();
     } else {
         str = single;
     }
@@ -176,7 +176,7 @@ string possessive_noun (mixed value) {
         return "Its";
     }
     if (objectp(value)) {
-        value = value->query_cap_name();
+        value = /** @type {STD_OBJECT} value */(value)->query_cap_name();
         if (!value) {
             value = "It";
         }
@@ -191,31 +191,49 @@ string possessive_noun (mixed value) {
 
 // subjective pronoun of an object
 string subjective (mixed value) {
-    switch (objectp(value) ? value->query_gender() : value) {
-    case "male": return "he";
-    case "female": return "she";
-    case "neither": return "they";
-    default: return "it";
+    string str;
+    if (objectp(value)) {
+        str = /** @type {STD_LIVING} value */(value)->query_gender();
+    } else {
+        str = value;
+    }
+    switch (str) {
+        case "male": return "he";
+        case "female": return "she";
+        case "neither": return "they";
+        default: return "it";
     }
 }
 
 // objective pronoun of an object
 string objective (mixed value) {
-    switch (objectp(value) ? value->query_gender() : value) {
-    case "male": return "him";
-    case "female": return "her";
-    case "neither": return "them";
-    default: return "it";
+    string str;
+    if (objectp(value)) {
+        str = /** @type {STD_LIVING} value */(value)->query_gender();
+    } else {
+        str = value;
+    }
+    switch (str) {
+        case "male": return "him";
+        case "female": return "her";
+        case "neither": return "them";
+        default: return "it";
     }
 }
 
 // possessive pronoun of an object
 string possessive (mixed value) {
-    switch (objectp(value) ? value->query_gender() : value) {
-    case "male": return "his";
-    case "female": return "her";
-    case "neither": return "their";
-    default: return "its";
+    string str;
+    if (objectp(value)) {
+        str = /** @type {STD_LIVING} value */(value)->query_gender();
+    } else {
+        str = value;
+    }
+    switch (str) {
+        case "male": return "his";
+        case "female": return "her";
+        case "neither": return "their";
+        default: return "its";
     }
 }
 
