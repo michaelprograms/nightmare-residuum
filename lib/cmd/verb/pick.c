@@ -7,13 +7,24 @@ void create () {
     set_help_text("Your character will attempt to pick the provided item.");
 }
 
-int can_pick () { return 1; }
+int can_pick () {
+    return 1;
+}
 void do_pick () {
     write("Pick what?\n");
 }
 
-int can_pick_obj (object ob, string verb) { return 1; }
-void do_pick_obj (object ob, string verb) {
+int can_pick_obj (object ob, string verb) {
+    return 1;
+}
+/**
+ * Handle picking an item to place a picked item in the living object's
+ * inventory.
+ *
+ * @param {STD_ITEM & M_PICKABLE} ob the item being picked
+ * @param str the input text
+ */
+void do_pick_obj (object ob, string str) {
     object p;
 
     if (ob->query_picks() < 1 || !ob->query_pick_item()) {
