@@ -17,7 +17,10 @@ void command (string input, mapping flags) {
         ]),
     ]);
     int nImm = 0, nChar = 0;
-    object *immList = ({ }), *charList = ({ });
+    /** @type {STD_CHARACTER*} immList */
+    object *immList = ({ });
+    /** @type {STD_CHARACTER*} charList */
+    object *charList = ({ });
     string *bodyItems = ({ }), *footerItems = ({ });
 
     foreach (object user in users()) {
@@ -67,8 +70,7 @@ void command (string input, mapping flags) {
     ]);
     footerItems += ({ nChar + " character" + (nChar != 1 ? "s" : "") });
     data["footer"]["items"] = ({
-        implode(footerItems, ", ") + " connected",
-        D_CHARACTER->query_connected_concurrent() + " concurrent, " + D_CHARACTER->query_connected_total() + " total"
+        implode(footerItems, ", ") + " connected"
     });
 
     border(data);
