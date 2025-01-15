@@ -35,6 +35,7 @@ void create_tmp_file (string file, string input, mapping flags);
 
 void end_edit (string evalfile, string tmpfile, mapping flags) {
     string input;
+    /** @type {M_CLEAN} ob */
     object ob;
 
     input = read_file(tmpfile);
