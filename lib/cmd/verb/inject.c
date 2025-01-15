@@ -17,12 +17,17 @@ mixed can_inject () {
     return "Inject what?";
 }
 
+/**
+ * Handle an injectable item being used.
+ *
+ * @param {STD_INJECTABLE} ob the item being injected
+ * @param str the input text
+ */
 void do_inject_obj (object ob, string str) {
     object po = previous_object();
 
     message("action", "You inject " + ob->query_name() + " of " + ob->query_type() + ".", po);
     message("action", po->query_cap_name() + " injects " + ob->query_name() + " of " + ob->query_type() + ".", environment(po), po);
-
     ob->handle_inject(po);
 }
 
