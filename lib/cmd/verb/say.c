@@ -12,6 +12,12 @@ void do_say () {
     write("Say what?\n");
 }
 
+/**
+ * Format a message from an NPC, providing context clues to any special phrases.
+ *
+ * @param {STD_NPC} npc the source of the message
+ * @param msg the message
+ */
 string format_npc_message(object npc, string msg) {
     int pos, l;
     foreach (string say in npc->query_say_response_matches()) {
@@ -24,9 +30,13 @@ string format_npc_message(object npc, string msg) {
     return msg;
 }
 
-int can_say_str (mixed args...) { return 1; }
+int can_say_str (mixed args...) {
+    return 1;
+}
 void do_say_str (mixed args...) {
     object po = previous_object(), *who;
+    /** @type {STD_ROOM} env */
+    object env;
     string msg, verb, myMsg, yourMsg;
 
     if (!sizeof(args)) return;
@@ -39,7 +49,8 @@ void do_say_str (mixed args...) {
             if (po->query_species() == "custodian") verb = "synthesize";
             else verb = "say";
     }
-    who = environment(po)->query_living_contents() - ({ po });
+    env = environment(po);
+    who = env->query_living_contents() - ({ po });
 
     if (po->is_npc()) {
         msg = format_npc_message(po, msg);
