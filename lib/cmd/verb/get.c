@@ -23,7 +23,7 @@ mixed can_get_obj (object ob, string str) {
  * Get an item from the living object's environment.
  *
  * @param {STD_ITEM} ob the item being gotten
- * @param str the text input
+ * @param str the input text
  */
 void do_get_obj (object ob, string str) {
     object po = previous_object();

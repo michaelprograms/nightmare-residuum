@@ -15,6 +15,12 @@ mixed can_eat () {
     return "Eat what?";
 }
 
+/**
+ * Handle consuming a food object.
+ *
+ * @param {STD_FOOD} ob the object to eat
+ * @param str the input text
+ */
 void do_eat_obj (object ob, string str) {
     ob->handle_consume(this_character());
 }
