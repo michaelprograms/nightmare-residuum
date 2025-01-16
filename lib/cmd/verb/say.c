@@ -34,7 +34,10 @@ int can_say_str (mixed args...) {
     return 1;
 }
 void do_say_str (mixed args...) {
-    object po = previous_object(), *who;
+    object po = previous_object();
+    object *who;
+    /** @type {STD_CHARACTER*} chars */
+    object *chars;
     /** @type {STD_ROOM} env */
     object env;
     string msg, verb, myMsg, yourMsg;
@@ -63,5 +66,7 @@ void do_say_str (mixed args...) {
     message("say", yourMsg, who);
 
     po->add_say_history(myMsg);
-    who->add_say_history(yourMsg);
+    /** @type {STD_CHARACTER*} who */
+    chars = filter(who, (: $1->is_character() :));
+    chars->add_say_history(yourMsg);
 }
