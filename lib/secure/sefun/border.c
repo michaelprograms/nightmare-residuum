@@ -370,12 +370,15 @@ void border (mapping data) {
     mapping b = query_border_charset();
     int width = to_int(SEFUN->query_account_setting("width")) || DEFAULT_WIDTH;
     string ansi, *result;
+    /** @type {STD_USER} tu */
+    object tu = SEFUN->this_user();
+
     if (undefinedp(data["ansi"]) && SEFUN->query_account_setting("ansi") == "on") {
-        ansi = this_user()->query_terminal("color");
+        ansi = tu->query_terminal("color");
     }
 
     result = format_border(data, b, width, ansi);
-    SEFUN->this_user()->handle_pager(result);
+    tu->handle_pager(result);
 }
 
 private varargs string *format_tree (string key, mixed value, mapping b, int indent, int index, int maxIndex, mapping prefix) {

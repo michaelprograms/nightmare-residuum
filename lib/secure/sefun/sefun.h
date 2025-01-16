@@ -1,6 +1,14 @@
 #ifndef __SEFUN_H
 #define __SEFUN_H
 
+/**
+ *
+ * This file is not included anywhere.
+ *
+ * The function definitions here are just for reference.
+ *
+ */
+
 /* --- sefun --- */
 int driver_port ();
 string version ();
