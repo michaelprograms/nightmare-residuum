@@ -3,6 +3,11 @@
 inherit STD_ROOM;
 inherit M_STORY;
 
+/**
+ * The end of the M_STORY.
+ *
+ * @param {STD_CHARACTER} target the character entering
+ */
 void story_action_final (object target) {
     message("action", "A gradually increasing brightness attracts your attention.", target);
     message("action", "You " + format_syntax("look") + " over your surroundings.", target);
@@ -10,6 +15,11 @@ void story_action_final (object target) {
     target->describe_environment();
 }
 
+/**
+ * The M_CONTAINER hook for receiving an object.
+ *
+ * @param {STD_CHARACTER} ob the character entering the room
+ */
 int handle_receive (object ob) {
     int result = ::handle_receive(ob);
     if (result && ob->is_character()) {
