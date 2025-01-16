@@ -17,16 +17,21 @@ void create () {
 }
 
 string *names = ({ });
+
+/**
+ * The STD_NPC hook for receiving a living object in this object's environment.
+ *
+ * @param {STD_LIVING} living the living object entering the environment
+ */
 void handle_receive_living_in_env (object living) {
     string name;
     ::handle_receive_living_in_env(living);
-
-    if (!living->is_character()) return;
-
-    name = living->query_cap_name();
-    if (member_array(name, names) == -1) {
-        handle_command("say Welcome to this facility, " + name + ".");
-        names += ({ name });
-        call_out((: names -= ({ $1 }) :), 30, name);
+    if (characterp(living)) {
+        name = living->query_cap_name();
+        if (member_array(name, names) == -1) {
+            handle_command("say Welcome to this facility, " + name + ".");
+            names += ({ name });
+            call_out((: names -= ({ $1 }) :), 30, name);
+        }
     }
 }
