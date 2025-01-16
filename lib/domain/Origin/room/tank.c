@@ -1,3 +1,4 @@
+#include <config.h>
 #include "origin.h"
 
 inherit STD_ROOM;
@@ -18,6 +19,11 @@ nosave private mapping syntax = ([
     "download full": format_syntax("download warrior|mystic|scoundrel|ranger|psionist|paladin"),
 ]);
 
+/**
+ * Randomize a character's attributes.
+ *
+ * @param {STD_CHARACTER} tc the character being randomized
+ */
 private void randomize_attributes (object tc) {
     mapping attributes = D_SPECIES->query_species()["human"]["attributes"];
 
@@ -28,7 +34,7 @@ private void randomize_attributes (object tc) {
     tc->set_attribute("height", "" + (attributes["height"]["min"] + random(attributes["height"]["max"] - attributes["height"]["min"] + 1)));
 }
 
-string prepare_long_footer () {
+void prepare_long_footer () {
     object tc = this_character();
     string fmt = "%-14s %-20s";
     border(([
@@ -86,6 +92,11 @@ void create () {
     parse_add_rule("done", "");
 }
 
+/**
+ * Handle a character entering this room.
+ *
+ * @param {STD_CHARACTER} ob
+ */
 int handle_receive (object ob) {
     if (ob && ob->is_character()) {
         if (ob->query_species() == "human" && !sizeof(ob->query_attributes())) {
@@ -253,7 +264,7 @@ void do_download_str (mixed args...) {
     tc->set_class(str);
     message("action", "You tap the button on the display.", tc);
     message("action", "A shock arcs through your body!", tc);
-    message("system", prepare_long_footer(), tc);
+    prepare_long_footer();
 }
 
 /* ----- parser rule: randomize ----- */
@@ -271,7 +282,7 @@ void do_randomize () {
 
     message("action", "You tap the button on the display.", tc);
     message("action", "A shock arcs through your body!", tc);
-    message("system", prepare_long_footer(), tc);
+    prepare_long_footer();
 }
 
 /* ----- parser rule: done ----- */
