@@ -88,7 +88,6 @@ void handle_harvest (object character) {
             break;
         default:
             return;
-            break;
     }
 
     tool = present(toolType, character);

@@ -92,6 +92,7 @@ void add_terrain_override (string text) {
 void update_resource () {
     int nLevel = query_property("level");
     int nResource = query_property("resource");
+    /** @type {"/std/resource/harvestable.c"} obResource */
     object obResource = present("resource_node");
 
     // clear existing reset
@@ -107,8 +108,6 @@ void update_resource () {
             obResource->set_type("ore");
             obResource->set_level(nLevel);
             obResource->handle_move(this_object());
-        } else {
-            obResource->reset();
         }
     } else if (nResource == 2) { // wood
         if (!obResource) {
@@ -116,8 +115,6 @@ void update_resource () {
             obResource->set_type("wood");
             obResource->set_level(nLevel);
             obResource->handle_move(this_object());
-        } else {
-            obResource->reset();
         }
     } else if (nResource == 3 || nResource == 4) { // NPC
         string npc;
@@ -158,6 +155,12 @@ void update_resource () {
 
 /* ----- exit override ----- */
 
+/**
+ *
+ * @param {STD_LIVING} ob
+ * @param verb
+ * @param dir
+ */
 mixed handle_go (object ob, string verb, string dir) {
     if (ob->query_cooldown("go")) {
         message("action", "You cannot go anywhere yet.", ob);
@@ -195,6 +198,7 @@ string *query_room_map () {
     string name, path, line, symbol;
     int size, radius = 2;
     int x, y, xx, yy, wx, wy;
+    /** @type {STD_ROOM} room */
     object room;
 
     if (sscanf(file_name(), PLANET_V_ROOM + "surface/%s/%d.%d", name, x, y) != 3) {
