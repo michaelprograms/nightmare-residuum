@@ -8,12 +8,19 @@ void create () {
 }
 
 mixed can_lead () {
-    return "Leadd whom?";
+    return "Lead whom?";
 }
 
 mixed can_lead_liv (object lv, string str) {
     return 1;
 }
+
+/**
+ * Parser apply for leading a living object such as a pet.
+ *
+ * @param {"/std/npc/pet.c"} ob the living object being lead
+ * @param str
+ */
 void do_lead_liv (object ob, string str) {
     object po = previous_object();
 

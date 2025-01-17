@@ -3,6 +3,7 @@ inherit M_SAVE;
 
 private int __Following;
 
+/** @type {STD_CHARACTER} __Owner */
 nosave private object __Owner;
 
 void set_owner (object owner) {
