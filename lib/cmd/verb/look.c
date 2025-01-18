@@ -115,7 +115,11 @@ mixed can_look_liv (string str, string verb) {
  * @param arg any extra arguments provided by the driver parser (unused)
  */
 mixed do_look_at_liv (object ob, mixed arg...) {
-    object po = previous_object(), *wielded, *worn;
+    object po = previous_object();
+    /** @type {STD_WEAPON*} wielded */
+    object *wielded;
+    /** @type {STD_ARMOR*} worn */
+    object *worn;
     string str;
 
     message("action", "You look over " + ob->query_cap_name() + "...", po);

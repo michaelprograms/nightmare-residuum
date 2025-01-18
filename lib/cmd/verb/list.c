@@ -56,12 +56,14 @@ mixed can_list_str (mixed args...) {
 }
 void do_list_str (mixed args...) {
     object po = previous_object();
+    /** @type {STD_ROOM} env */
+    object env = environment(po);
     object *vendors;
     string str;
 
-    if (sizeof(args) && environment(po)) {
+    if (sizeof(args) && env) {
         str = args[0];
-        vendors = filter(environment(po)->query_living_contents(), (: $1->is_vendor() :));
+        vendors = filter(env->query_living_contents(), (: $1->is_vendor() :));
         if (sizeof(vendors) == 1) {
             vendors[0]->handle_list(str, po);
         } else {

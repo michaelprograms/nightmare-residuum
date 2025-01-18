@@ -12,7 +12,9 @@ mixed can_go () {
 }
 
 varargs mixed can_go_str (string dir) {
-    object po = previous_object(), env;
+    object po = previous_object();
+    /** @type {STD_ROOM} env */
+    object env;
     string exit, *split = explode(dir, " ");
 
     if (!(env = environment(po))) return "You are nowhere.";
@@ -33,7 +35,9 @@ varargs mixed can_go_str (string dir) {
     return 1;
 }
 varargs void do_go_str (string dir) {
-    object po = previous_object(), env = environment(po);
+    object po = previous_object();
+    /** @type {STD_ROOM} env */
+    object env = environment(po);
     string exit;
 
     if (po->query_posture() != "standing") {

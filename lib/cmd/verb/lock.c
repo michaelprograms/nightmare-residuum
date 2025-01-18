@@ -21,7 +21,11 @@ mixed can_lock_str_with_obj (mixed args...) {
 }
 
 mixed do_lock_str_with_obj (mixed args...) {
-    object po = previous_object(), env = environment(po), key;
+    object po = previous_object();
+    /** @type {STD_KEY} key */
+    object key;
+    /** @type {STD_ROOM} env */
+    object env = environment(po);
     string str;
 
     if (sizeof(args) > 1) {

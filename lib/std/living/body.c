@@ -152,7 +152,7 @@ varargs int handle_damage (int damage, string limb) {
     if (this_object()->query_max_hp() < this_object()->query_hp()) {
         this_object()->set_hp(this_object()->query_max_hp());
     }
-    if (this_object()->is_character()) {
+    if (characterp(this_object())) {
         // @TODO move to vitals
         message("system", sprintf("hp: %d (%d) sp: %d    mp: %d\n", this_object()->query_hp(), this_object()->query_hp() - beforeHp, this_object()->query_sp(), this_object()->query_mp()), this_object());
     }
@@ -362,6 +362,11 @@ object query_wielded (string l) {
     }
     return 0;
 }
+/**
+ * Returns a list of weapons wielded to this body.
+ *
+ * @returns {STD_WEAPON*} list of weapons
+ */
 object *query_wielded_weapons () {
     object *weapons = ({ });
     foreach (string l in query_limbs()) {

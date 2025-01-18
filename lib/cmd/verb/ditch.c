@@ -14,6 +14,13 @@ mixed can_ditch () {
 mixed can_ditch_liv (object lv, string str) {
     return 1;
 }
+/**
+ * Parser apply to stop leading a pet living object that is following the source
+ * object.
+ *
+ * @param {"/std/npc/pet"} ob the following pet object being ditched
+ * @param str the input text
+ */
 void do_ditch_liv (object ob, string str) {
     object po = previous_object();
 
