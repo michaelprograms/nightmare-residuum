@@ -4,6 +4,8 @@ inherit M_TEST;
  * @var {"/secure/sefun/combat"} testOb
  */
 
+#define NPC_MOCK "/std/npc.c" & "/std/npc.mock.c"
+
 void test_combat_tier_from_percent () {
     expect("combat message tiers behave", (: ({
         assert_equal(testOb->query_combat_tier_from_percent(-1), 0),
@@ -69,32 +71,32 @@ void test_combat_messages () {
 
     expect("combat hit messages should display", (: ({
         testOb->combat_hit_message($(npc1), $(npc2), "limb", "weapon", 1, 0, 0),
-        assert_equal($(npc1)->query_received_messages()[<1], ({ "combat hit", "You hit Npc two ineffectively in the limb with your weapon." })),
-        assert_equal($(npc2)->query_received_messages()[<1], ({ "combat hit", "Npc one hits you ineffectively in the limb with their weapon." })),
+        assert_equal(/** @type {NPC_MOCK} */ ($(npc1))->query_received_messages()[<1], ({ "combat hit", "You hit Npc two ineffectively in the limb with your weapon." })),
+        assert_equal(/** @type {NPC_MOCK} */ ($(npc2))->query_received_messages()[<1], ({ "combat hit", "Npc one hits you ineffectively in the limb with their weapon." })),
 
         testOb->combat_hit_message($(npc1), $(npc2), "limb", $(weapon), 1, 0, 0),
-        assert_equal($(npc1)->query_received_messages()[<1], ({ "combat hit", "You hit Npc two ineffectively in the limb with your test weapon." })),
-        assert_equal($(npc2)->query_received_messages()[<1], ({ "combat hit", "Npc one hits you ineffectively in the limb with their test weapon." })),
+        assert_equal(/** @type {NPC_MOCK} */ ($(npc1))->query_received_messages()[<1], ({ "combat hit", "You hit Npc two ineffectively in the limb with your test weapon." })),
+        assert_equal(/** @type {NPC_MOCK} */ ($(npc2))->query_received_messages()[<1], ({ "combat hit", "Npc one hits you ineffectively in the limb with their test weapon." })),
 
         testOb->combat_hit_message($(npc1), $(npc2), "limb", "weapon", 123, 0, 0),
-        assert_equal($(npc1)->query_received_messages()[<1], ({ "combat hit", "You destroy Npc two utterly in the limb with your weapon." })),
-        assert_equal($(npc2)->query_received_messages()[<1], ({ "combat hit", "Npc one destroys you utterly in the limb with their weapon." })),
+        assert_equal(/** @type {NPC_MOCK} */ ($(npc1))->query_received_messages()[<1], ({ "combat hit", "You destroy Npc two utterly in the limb with your weapon." })),
+        assert_equal(/** @type {NPC_MOCK} */ ($(npc2))->query_received_messages()[<1], ({ "combat hit", "Npc one destroys you utterly in the limb with their weapon." })),
 
         testOb->combat_hit_message($(npc1), $(npc2), "limb", "weapon", 123, 0, 0),
-        assert_equal($(npc1)->query_received_messages()[<1], ({ "combat hit", "You destroy Npc two utterly in the limb with your weapon." })),
-        assert_equal($(npc2)->query_received_messages()[<1], ({ "combat hit", "Npc one destroys you utterly in the limb with their weapon." })),
+        assert_equal(/** @type {NPC_MOCK} */ ($(npc1))->query_received_messages()[<1], ({ "combat hit", "You destroy Npc two utterly in the limb with your weapon." })),
+        assert_equal(/** @type {NPC_MOCK} */ ($(npc2))->query_received_messages()[<1], ({ "combat hit", "Npc one destroys you utterly in the limb with their weapon." })),
 
         testOb->combat_hit_message($(npc1), $(npc2), "limb", $(weapon), 123, 0, 0),
-        assert_equal($(npc1)->query_received_messages()[<1], ({ "combat hit", "You destroy Npc two utterly in the limb with your test weapon." })),
-        assert_equal($(npc2)->query_received_messages()[<1], ({ "combat hit", "Npc one destroys you utterly in the limb with their test weapon." })),
+        assert_equal(/** @type {NPC_MOCK} */ ($(npc1))->query_received_messages()[<1], ({ "combat hit", "You destroy Npc two utterly in the limb with your test weapon." })),
+        assert_equal(/** @type {NPC_MOCK} */ ($(npc2))->query_received_messages()[<1], ({ "combat hit", "Npc one destroys you utterly in the limb with their test weapon." })),
 
         testOb->combat_hit_message($(npc1), $(npc2), "limb", "weapon", 123, 1, 0),
-        assert_equal($(npc1)->query_received_messages()[<1], ({ "combat hit", "You critically destroy Npc two utterly in the limb with your weapon." })),
-        assert_equal($(npc2)->query_received_messages()[<1], ({ "combat hit", "Npc one critically destroys you utterly in the limb with their weapon." })),
+        assert_equal(/** @type {NPC_MOCK} */ ($(npc1))->query_received_messages()[<1], ({ "combat hit", "You critically destroy Npc two utterly in the limb with your weapon." })),
+        assert_equal(/** @type {NPC_MOCK} */ ($(npc2))->query_received_messages()[<1], ({ "combat hit", "Npc one critically destroys you utterly in the limb with their weapon." })),
 
         testOb->combat_hit_message($(npc1), $(npc2), "limb", "weapon", 1, 0, 1),
-        assert_equal($(npc1)->query_received_messages()[<1], ({ "ability hit", "You hit Npc two ineffectively in the limb with your weapon." })),
-        assert_equal($(npc2)->query_received_messages()[<1], ({ "ability hit", "Npc one hits you ineffectively in the limb with their weapon." })),
+        assert_equal(/** @type {NPC_MOCK} */ ($(npc1))->query_received_messages()[<1], ({ "ability hit", "You hit Npc two ineffectively in the limb with your weapon." })),
+        assert_equal(/** @type {NPC_MOCK} */ ($(npc2))->query_received_messages()[<1], ({ "ability hit", "Npc one hits you ineffectively in the limb with their weapon." })),
     }) :));
 
     mockNpc1->clear_received_messages();
@@ -104,14 +106,14 @@ void test_combat_messages () {
         // npc1 is full hp, no heal messages
         $(npc1)->set_hp($(npc1)->query_max_hp()),
         testOb->combat_heal_message($(npc2), $(npc1), "limb", 1),
-        assert_equal($(npc1)->query_received_messages(), ({ })),
-        assert_equal($(npc2)->query_received_messages(), ({ })),
+        assert_equal(/** @type {NPC_MOCK} */ ($(npc1))->query_received_messages(), ({ })),
+        assert_equal(/** @type {NPC_MOCK} */ ($(npc2))->query_received_messages(), ({ })),
 
         // npc2 at 1 hp, heal messages
         $(npc2)->set_hp(1),
         testOb->combat_heal_message($(npc1), $(npc2), "limb", 1),
-        assert_equal($(npc1)->query_received_messages()[<1], ({ "combat heal", "Npc two's wounds heal slightly." })),
-        assert_equal($(npc2)->query_received_messages()[<1], ({ "combat heal", "Your wounds heal slightly." })),
+        assert_equal(/** @type {NPC_MOCK} */ ($(npc1))->query_received_messages()[<1], ({ "combat heal", "Npc two's wounds heal slightly." })),
+        assert_equal(/** @type {NPC_MOCK} */ ($(npc2))->query_received_messages()[<1], ({ "combat heal", "Your wounds heal slightly." })),
     }) :));
 
     mockNpc1->clear_received_messages();
@@ -119,8 +121,8 @@ void test_combat_messages () {
 
     expect("combat block messages should display", (: ({
         testOb->combat_block_message($(npc1), $(npc2)),
-        assert_equal($(npc1)->query_received_messages()[<1], ({ "combat miss", "Npc two blocks you." })),
-        assert_equal($(npc2)->query_received_messages()[<1], ({ "combat miss", "You block Npc one." })),
+        assert_equal(/** @type {NPC_MOCK} */ ($(npc1))->query_received_messages()[<1], ({ "combat miss", "Npc two blocks you." })),
+        assert_equal(/** @type {NPC_MOCK} */ ($(npc2))->query_received_messages()[<1], ({ "combat miss", "You block Npc one." })),
     }) :));
 
     mockNpc1->clear_received_messages();
@@ -128,12 +130,12 @@ void test_combat_messages () {
 
     expect("combat miss messages should display", (: ({
         testOb->combat_miss_message($(npc1), $(npc2), "WEAPON"),
-        assert_equal($(npc1)->query_received_messages()[<1], ({ "combat miss", "You miss Npc two with your WEAPON." })),
-        assert_equal($(npc2)->query_received_messages()[<1], ({ "combat miss", "Npc one misses you with their WEAPON." })),
+        assert_equal(/** @type {NPC_MOCK} */ ($(npc1))->query_received_messages()[<1], ({ "combat miss", "You miss Npc two with your WEAPON." })),
+        assert_equal(/** @type {NPC_MOCK} */ ($(npc2))->query_received_messages()[<1], ({ "combat miss", "Npc one misses you with their WEAPON." })),
 
         testOb->combat_miss_message($(npc1), $(npc2), $(weapon)),
-        assert_equal($(npc1)->query_received_messages()[<1], ({ "combat miss", "You miss Npc two with your test weapon." })),
-        assert_equal($(npc2)->query_received_messages()[<1], ({ "combat miss", "Npc one misses you with their test weapon." })),
+        assert_equal(/** @type {NPC_MOCK} */ ($(npc1))->query_received_messages()[<1], ({ "combat miss", "You miss Npc two with your test weapon." })),
+        assert_equal(/** @type {NPC_MOCK} */ ($(npc2))->query_received_messages()[<1], ({ "combat miss", "Npc one misses you with their test weapon." })),
     }) :));
 
     mockNpc1->clear_received_messages();
@@ -141,12 +143,12 @@ void test_combat_messages () {
 
     expect("combat miss messages should display", (: ({
         testOb->combat_parry_message($(npc1), $(npc2), "WEAPON"),
-        assert_equal($(npc1)->query_received_messages()[<1], ({ "combat miss", "Npc two parries you with their WEAPON." })),
-        assert_equal($(npc2)->query_received_messages()[<1], ({ "combat miss", "You parry Npc one with your WEAPON." })),
+        assert_equal(/** @type {NPC_MOCK} */ ($(npc1))->query_received_messages()[<1], ({ "combat miss", "Npc two parries you with their WEAPON." })),
+        assert_equal(/** @type {NPC_MOCK} */ ($(npc2))->query_received_messages()[<1], ({ "combat miss", "You parry Npc one with your WEAPON." })),
 
         testOb->combat_parry_message($(npc1), $(npc2), $(weapon)),
-        assert_equal($(npc1)->query_received_messages()[<1], ({ "combat miss", "Npc two parries you with their test weapon." })),
-        assert_equal($(npc2)->query_received_messages()[<1], ({ "combat miss", "You parry Npc one with your test weapon." })),
+        assert_equal(/** @type {NPC_MOCK} */ ($(npc1))->query_received_messages()[<1], ({ "combat miss", "Npc two parries you with their test weapon." })),
+        assert_equal(/** @type {NPC_MOCK} */ ($(npc2))->query_received_messages()[<1], ({ "combat miss", "You parry Npc one with your test weapon." })),
     }) :));
 
     mockNpc1->clear_received_messages();
@@ -154,12 +156,12 @@ void test_combat_messages () {
 
     expect("combat evade messages should display", (: ({
         testOb->combat_evade_message($(npc1), $(npc2)),
-        assert_equal($(npc1)->query_received_messages()[<1], ({ "combat miss", "Npc two evades your attack." })),
-        assert_equal($(npc2)->query_received_messages()[<1], ({ "combat miss", "You evade Npc one's attack." })),
+        assert_equal(/** @type {NPC_MOCK} */ ($(npc1))->query_received_messages()[<1], ({ "combat miss", "Npc two evades your attack." })),
+        assert_equal(/** @type {NPC_MOCK} */ ($(npc2))->query_received_messages()[<1], ({ "combat miss", "You evade Npc one's attack." })),
 
         testOb->combat_evade_message($(npc1), $(npc2)),
-        assert_equal($(npc1)->query_received_messages()[<1], ({ "combat miss", "Npc two evades your attack." })),
-        assert_equal($(npc2)->query_received_messages()[<1], ({ "combat miss", "You evade Npc one's attack." })),
+        assert_equal(/** @type {NPC_MOCK} */ ($(npc1))->query_received_messages()[<1], ({ "combat miss", "Npc two evades your attack." })),
+        assert_equal(/** @type {NPC_MOCK} */ ($(npc2))->query_received_messages()[<1], ({ "combat miss", "You evade Npc one's attack." })),
     }) :));
 
     mockNpc1->stop_shadow();
@@ -216,8 +218,8 @@ void test_initiate_combat () {
         assert_equal($(npc1)->query_hostiles(), ({ $(npc2) })),
         assert_equal($(npc2)->query_hostiles(), ({ $(npc1) })),
 
-        assert_equal($(npc1)->query_received_messages(), ({ ({ "attack", "You attack 0!" }) })),
-        assert_equal($(npc2)->query_received_messages(), ({ ({ "attack", "0 attacks you!" }) })),
+        assert_equal(/** @type {NPC_MOCK} */ ($(npc1))->query_received_messages(), ({ ({ "attack", "You attack 0!" }) })),
+        assert_equal(/** @type {NPC_MOCK} */ ($(npc2))->query_received_messages(), ({ ({ "attack", "0 attacks you!" }) })),
 
         assert_equal($(mockNpc1)->stop_shadow(), 1),
         assert_equal($(mockNpc2)->stop_shadow(), 1),
