@@ -50,16 +50,16 @@ int query_combat_tier_from_percent (int percent) {
  * @param isAbility flag if this was from an ability
  */
 void combat_hit_message (object source, object target, string limb, mixed weapon, int damage, int crit, int isAbility) {
-    string sourceMsg, targetMsg, envMsg, weaponName, type;
+    string sourceMsg, targetMsg, envMsg, name, type;
     string critically, verb, verbs, adverb, sourcePossessive;
     int percent, i = 0;
 
     if (objectp(weapon)) {
-        type = weapon->query_type();
-        weaponName = weapon->query_name();
+        type = /** @type {STD_WEAPON} */ (weapon)->query_type();
+        name = /** @type {STD_WEAPON} */ (weapon)->query_name();
     } else {
         type = "brawl";
-        weaponName = weapon;
+        name = weapon;
     }
     critically = crit ? "critically " : "";
     percent = to_int(damage * 100.0 / target->query_max_hp());
@@ -81,9 +81,9 @@ void combat_hit_message (object source, object target, string limb, mixed weapon
     verbs = pluralize(verb);
     adverb = adverb ? " " + adverb + " " : " ";
 
-    sourceMsg = sprintf("You %s%s %s%sin the %s with your %s.", critically, verb, target->query_cap_name(), adverb, limb, weaponName);
-    targetMsg = sprintf("%s %s%s you%sin the %s with %s %s.", source->query_cap_name(), crit ? "critically " : "", verbs, adverb, limb, sourcePossessive, weaponName);
-    envMsg = sprintf("%s %s%s %s%sin the %s with %s %s.", source->query_cap_name(), crit ? "critically " : "", verbs, target->query_cap_name(), adverb, limb, sourcePossessive, weaponName);
+    sourceMsg = sprintf("You %s%s %s%sin the %s with your %s.", critically, verb, target->query_cap_name(), adverb, limb, name);
+    targetMsg = sprintf("%s %s%s you%sin the %s with %s %s.", source->query_cap_name(), crit ? "critically " : "", verbs, adverb, limb, sourcePossessive, name);
+    envMsg = sprintf("%s %s%s %s%sin the %s with %s %s.", source->query_cap_name(), crit ? "critically " : "", verbs, target->query_cap_name(), adverb, limb, sourcePossessive, name);
 
     if (isAbility) {
         message("ability hit", sourceMsg, source);
@@ -123,8 +123,8 @@ void combat_miss_message (object source, object target, mixed weapon) {
     string type, name, possessive = SEFUN->possessive(source);
 
     if (objectp(weapon)) {
-        type = weapon->query_type();
-        name = weapon->query_name();
+        type = /** @type {STD_WEAPON} */ (weapon)->query_type();
+        name = /** @type {STD_WEAPON} */ (weapon)->query_name();
     } else {
         type = "brawl";
         name = weapon;
@@ -159,8 +159,8 @@ void combat_parry_message (object source, object target, mixed weapon) {
     string type, name, possessive = SEFUN->possessive(target);
 
     if (objectp(weapon)) {
-        type = weapon->query_type();
-        name = weapon->query_name();
+        type = /** @type {STD_WEAPON} */ (weapon)->query_type();
+        name = /** @type {STD_WEAPON} */ (weapon)->query_name();
     } else {
         type = "brawl";
         name = weapon;
