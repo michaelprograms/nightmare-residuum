@@ -33,7 +33,7 @@ mixed can_listen_str (string str, string verb) {
     return 1;
 }
 void do_listen_str (mixed args...) {
-    object po = previous_object()
+    object po = previous_object();
     /** @type {STD_ROOM} env */
     object env = environment(po);
     string str;
