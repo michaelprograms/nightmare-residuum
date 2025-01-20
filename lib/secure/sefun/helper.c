@@ -4,8 +4,8 @@
  * @param {STD_CHARACTER} ob the object to check
  * @returns 0 or 1
  */
-int characterp (object ob) {
-    return ob && /** @type {STD_CHARACTER} */(ob)->is_character();
+int characterp (mixed ob) {
+    return objectp(ob) && /** @type {STD_CHARACTER} */(ob)->is_character();
 }
 
 /**
@@ -14,6 +14,6 @@ int characterp (object ob) {
  * @param {STD_LIVING} ob the object to check
  * @returns 0 or 1
  */
-int livingp (object ob) {
-    return ob && /** @type {STD_LIVING} */(ob)->is_living();
+int livingp (mixed ob) {
+    return objectp(ob) && /** @type {STD_LIVING} */(ob)->is_living();
 }
