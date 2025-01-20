@@ -5,7 +5,7 @@ mapping __Achievements = ([ ]);
  *
  * @param {"std/room"} dest
  */
-mapping query_achievements_from_room (mixed dest) {
+mapping *query_achievements_from_room (mixed dest) {
     string roomPath, aPath;
     if (objectp(dest) && dest->is_room()) {
         roomPath = base_name(dest);

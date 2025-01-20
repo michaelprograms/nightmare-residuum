@@ -43,7 +43,7 @@ void command (string input, mapping flags) {
         mapping data = ([
             "title": "ACHIEVEMENTS",
             "body": ({ }),
-         ]);
+        ]);
         string *done, *incomplete;
         done = this_character()->query_achievements_done();
         if (!sizeof(done)) {
