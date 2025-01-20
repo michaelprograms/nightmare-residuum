@@ -7,7 +7,13 @@ void create () {
     set_help_text("The objects command is used to view the list of objects in your current environment.\n\nUsing the all argument will show the entire list of objects.\n\nUsing a name or file filter will show the list of objects that match either filter.");
 }
 
-private void set_data (mapping result, object ob, int index) {
+/**
+ * Format an item to display, storing in a mapping for later display.
+ *
+ * @param result by reference mapping used to store the data
+ * @param {STD_ITEM} ob the item to format
+ */
+private void set_data (mapping result, object ob) {
     mapping tmp = format_data(ob);
     string key;
 
@@ -28,7 +34,7 @@ private mapping format_data (object ob) {
 
     if (!ob) return 0;
 
-    if (ob->is_character()) {
+    if (characterp(ob)) {
         contents += ({ ob->query_user() });
     }
     if (ob->is_vendor()) {
@@ -40,7 +46,7 @@ private mapping format_data (object ob) {
 
     l = sizeof(contents);
     for (int i = 0; i < l; i ++) {
-        set_data(result, contents[i], i);
+        set_data(result, contents[i]);
     }
 
     return result;

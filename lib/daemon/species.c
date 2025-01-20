@@ -243,11 +243,14 @@ int query_adjust_stat (string s, string stat) {
 
 /* ----- setup ----- */
 
-// initial stats for a STD_CHARACTER
+/**
+ * Sets the initial stats for a character object.
+ *
+ * @param {STD_CHARACTER} ob the character object
+ */
 void setup_stats (object ob) {
-    int adjust;
     string s = ob->query_species();
-
+    int adjust;
     foreach (string stat in ({ "strength", "perception", "endurance", "charisma", "intelligence", "agility", "luck" })) {
         adjust = query_adjust_stat(s, stat);
         ob->set_stat(stat, 5 + (adjust * 2));
@@ -255,6 +258,12 @@ void setup_stats (object ob) {
 }
 
 // new body for a STD_LIVING
+/**
+ * Sets a new body for a living object.
+ *
+ * @param {STD_LIVING} ob the living object
+ * @returns the body's attributes in a mapping
+ */
 mapping setup_body (object ob) {
     mapping newBody = ([ ]);
     mapping limbs;

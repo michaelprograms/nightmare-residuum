@@ -51,15 +51,6 @@ object find_character (string name) {
 }
 
 /**
- * Checks if an object is a character.
- *
- * @param {STD_CHARACTER} ob the object to check
- */
-int characterp (object ob) {
-    return ob && /** @type {STD_CHARACTER} */(ob)->is_character();
-}
-
-/**
  * Returns the list of current interactive characters.
  *
  * @returns {STD_CHARACTER *} list of characters

@@ -69,6 +69,13 @@ private void handle_send (string name, string channel, string msg, int emote, in
 //     handle_send(name, channel, msg, 0, 1);
 // }
 
+/**
+ * Send a message to a channel from a source.
+ *
+ * @param channel the channel to receive the message
+ * @param {STD_CHARACTER} source who sent the message
+ * @param msg the message being sent
+ */
 void send (string channel, object source, string msg) {
     int emote;
 

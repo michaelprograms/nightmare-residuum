@@ -6,6 +6,7 @@ inherit "/secure/sefun/convert.c";
 inherit "/secure/sefun/combat.c";
 inherit "/secure/sefun/format.c";
 inherit "/secure/sefun/grammar.c";
+inherit "/secure/sefun/helper.c";
 inherit "/secure/sefun/json.c";
 inherit "/secure/sefun/noise.c";
 inherit "/secure/sefun/override.c";

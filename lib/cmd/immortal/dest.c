@@ -23,7 +23,7 @@ void command (string input, mapping flags) {
         ob = find_object(input);
     }
     if (ob) {
-        if (ob->is_living()) {
+        if (livingp(ob)) {
             name = ob->query_cap_name();
         } else if (ob->is_room()) {
             name = ob->query_short();
