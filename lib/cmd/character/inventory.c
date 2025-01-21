@@ -45,9 +45,9 @@ mapping *process_inventory (object target) {
     mapping *inventory = ({ });
 
     foreach (object item in target->query_item_contents()) {
-        if (item->is_weapon()) {
+        if (weaponp(item)) {
             weapon += ({ item });
-        } else if (item->is_armor()) {
+        } else if (armorp(item)) {
             armor += ({ item });
         } else {
             items += ({ item });

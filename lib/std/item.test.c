@@ -11,9 +11,10 @@ void before_each_test () {
 
 void test_is_item () {
     expect("is_item returns true", (: ({
-        assert_equal(testOb->is_item(), 1),
-        assert_equal(testOb->is_weapon(), 0),
-        assert_equal(testOb->is_food(), 0),
+        assert_equal(itemp(testOb), 1),
+        assert_equal(weaponp(testOb), 0),
+        assert_equal(foodp(testOb), 0),
+        assert_equal(drinkp(testOb), 0),
     }) :));
 }
 

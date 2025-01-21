@@ -8,10 +8,10 @@ inherit M_CONTAINER;
 
 void test_currency () {
     expect("is_currency behaves", (: ({
-        assert_equal(testOb->is_item(), 1),
+        assert_equal(itemp(testOb), 1),
         assert_equal(testOb->is_currency(), 1),
-        assert_equal(testOb->is_character(), UNDEFINED),
-        assert_equal(testOb->is_npc(), UNDEFINED),
+        assert_equal(characterp(testOb), 0),
+        assert_equal(npcp(testOb), 0),
     }) :));
 }
 

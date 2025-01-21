@@ -7,10 +7,10 @@ inherit M_TEST;
 void test_is_key () {
     expect("is_key returns true", (: ({
         assert_equal(testOb->is_key(), 1),
-        assert_equal(testOb->is_item(), 1),
-        assert_equal(testOb->is_weapon(), 0),
-        assert_equal(testOb->is_armor(), 0),
-        assert_equal(testOb->is_living(), 0),
+        assert_equal(itemp(testOb), 1),
+        assert_equal(weaponp(testOb), 0),
+        assert_equal(armorp(testOb), 0),
+        assert_equal(livingp(testOb), 0),
     }) :));
 }
 

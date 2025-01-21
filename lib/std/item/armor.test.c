@@ -15,10 +15,10 @@ object *query_all_armor () {
 
 void test_is_armor () {
     expect("is_armor returns true", (: ({
-        assert_equal(testOb->is_armor(), 1),
-        assert_equal(testOb->is_item(), 1),
-        assert_equal(testOb->is_weapon(), UNDEFINED),
-        assert_equal(testOb->is_food(), UNDEFINED),
+        assert_equal(armorp(testOb), 1),
+        assert_equal(itemp(testOb), 1),
+        assert_equal(weaponp(testOb), 0),
+        assert_equal(foodp(testOb), 0),
     }) :));
 }
 

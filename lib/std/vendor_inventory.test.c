@@ -9,7 +9,7 @@ inherit M_CONTAINER;
 void test_is_vendor_inventory () {
     expect("is_item returns true", (: ({
         assert_equal(testOb->is_vendor_inventory(), 1),
-        assert_equal(testOb->is_item(), 0),
+        assert_equal(itemp(testOb), 0),
     }) :));
 }
 

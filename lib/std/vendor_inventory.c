@@ -10,7 +10,7 @@ int is_vendor_inventory () {
 }
 
 int handle_receive (object ob) {
-    if (!ob->is_item()) {
+    if (!itemp(ob)) {
         return 0;
     }
     return ::handle_receive(ob);

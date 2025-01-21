@@ -12,10 +12,10 @@ string *test_order () {
 
 void test_is_consumable () {
     expect("is_consumable returns true", (: ({
-        assert_equal(testOb->is_item(), 1),
+        assert_equal(itemp(testOb), 1),
         assert_equal(testOb->is_consumable(), 1),
-        assert_equal(testOb->is_drink(), 0),
-        assert_equal(testOb->is_food(), 0),
+        assert_equal(drinkp(testOb), 0),
+        assert_equal(foodp(testOb), 0),
     }) :));
 
     expect("use verb is correct", (: ({

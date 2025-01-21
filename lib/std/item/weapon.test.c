@@ -20,10 +20,10 @@ object *query_wielded_weapons () {
 
 void test_is_weapon () {
     expect("is_weapon returns true", (: ({
-        assert_equal(testOb->is_weapon(), 1),
-        assert_equal(testOb->is_item(), 1),
-        assert_equal(testOb->is_armor(), UNDEFINED),
-        assert_equal(testOb->is_food(), UNDEFINED),
+        assert_equal(weaponp(testOb), 1),
+        assert_equal(itemp(testOb), 1),
+        assert_equal(armorp(testOb), 0),
+        assert_equal(foodp(testOb), 0),
     }) :));
 }
 

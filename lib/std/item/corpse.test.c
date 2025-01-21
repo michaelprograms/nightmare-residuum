@@ -22,10 +22,10 @@ void test_received () {
 
 void test_corpse () {
     expect("is_corpse behaves", (: ({
-        assert_equal(testOb->is_item(), 1),
+        assert_equal(itemp(testOb), 1),
         assert_equal(testOb->is_corpse(), 1),
-        assert_equal(testOb->is_character(), UNDEFINED),
-        assert_equal(testOb->is_npc(), UNDEFINED),
+        assert_equal(characterp(testOb), 0),
+        assert_equal(npcp(testOb), 0),
     }) :));
 }
 
@@ -69,7 +69,7 @@ void test_body () {
 
         // verify coins moved to corpse
         assert_equal(!!present("coins", testOb), 1),
-        assert_equal(present("coins", testOb)->query_currency("copper"), 12345),
+        assert_equal(/** @type {STD_COINS} */ (present("coins", testOb))->query_currency("copper"), 12345),
         assert_equal($(liv)->query_currency("copper"), 0),
     }) :));
 
