@@ -6,6 +6,7 @@
     "exclude": [
         "lib/doc",
         "lib/log",
+        "lib/realm",
         "lib/save",
         "lib/tmp"
     ],
