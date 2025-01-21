@@ -42,7 +42,7 @@ int clean_up (mixed args...) {
 
 int handle_receive (object ob) {
     if (ob) {
-        if (ob->is_living()) {
+        if (livingp(ob)) {
             object *obs = query_living_contents() + query_item_contents() - ({ ob });
             foreach (object o in obs) {
                 // call out to delay fn til after move
@@ -71,7 +71,7 @@ int handle_receive (object ob) {
 
 int handle_release (object ob) {
     if (ob) {
-        if (ob->is_living()) {
+        if (livingp(ob)) {
             object *obs = query_living_contents() + query_item_contents() - ({ ob });
             foreach (object o in obs) {
                 o->handle_release_living_in_env(ob);
@@ -241,6 +241,12 @@ string *query_room_map () {
 
 /* ----- environment damage ----- */
 
+/**
+ * Apply environmental damage to a living object if the room has certain
+ * conditions.
+ *
+ * @param {STD_LIVING} living the target of environment damage
+ */
 void handle_environment_damage (object living) {
     int water;
     if ((water = query_property("water")) && water > 1) {
