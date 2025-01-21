@@ -12,6 +12,12 @@ void set_ability_requirements (mapping reqs) {
     */
     __Reqs = reqs;
 }
+/**
+ * Verify a living object meets the requirement of this ability.
+ *
+ * @param {STD_LIVING} source the living object to check requirements of
+ * @returns 0 or 1
+ */
 int verify_ability_requirements (object source) {
     if (!source || !source->is_living()) {
         return 0;
