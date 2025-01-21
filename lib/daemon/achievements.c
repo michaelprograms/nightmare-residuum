@@ -14,7 +14,7 @@ mapping *query_achievements_from_room (mixed dest) {
     }
     if (roomPath && regexp(roomPath, "^/domain/")) {
         if (aPath = query_file_recursive(roomPath, "achievements")) {
-            __Achievements[aPath] = aPath->query_achievements();
+            __Achievements[aPath] = call_other(aPath, "query_achievements");
         }
     }
     return aPath ? __Achievements[aPath] : 0;

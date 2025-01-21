@@ -4,6 +4,8 @@ inherit M_TEST;
  * @var {"/daemon/achievements"} testOb
  */
 
+#define ACHIEVEMENTS_MOCK "/daemon/achievements.c" & "/daemon/achievements.mock.c"
+
 void test_query_achievements_from_room () {
     object room1 = load_object("/domain/Start/human/room/square.c");
     object room2 = load_object("/domain/Start/human/void.c");
@@ -29,7 +31,7 @@ void test_flag () {
     expect("flag sets", (: ({
         assert_equal($(mockAchievements)->start_shadow(testOb), 1),
 
-        testOb->set_mock_achievements(({
+        /** @type {ACHIEVEMENTS_MOCK} */ (testOb)->set_mock_achievements(({
             ([
                 "name": "test",
                 "description": "Test achievement.",
