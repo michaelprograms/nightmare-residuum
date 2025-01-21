@@ -13,29 +13,29 @@ void test_connect () {
     }) :));
     expect("handle is queryable", (: ({
         // query non-existant
-        assert_equal(db->query("SELECT * FROM `Test`"), UNDEFINED),
+        assert_equal(testOb->query("SELECT * FROM `Test`"), UNDEFINED),
 
         // create
-        db->query("CREATE TABLE `Test` ( `id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `thing` TEXT NOT NULL )"),
+        testOb->query("CREATE TABLE `Test` ( `id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `thing` TEXT NOT NULL )"),
 
         // table is empty
-        assert_equal(db->query("SELECT * FROM `Test`"), UNDEFINED),
+        assert_equal(testOb->query("SELECT * FROM `Test`"), UNDEFINED),
 
         // insert into table
-        db->query("INSERT INTO `Test` (thing) VALUES ('some thing')"),
-        db->query("INSERT INTO `Test` (thing) VALUES ('another thing')"),
+        testOb->query("INSERT INTO `Test` (thing) VALUES ('some thing')"),
+        testOb->query("INSERT INTO `Test` (thing) VALUES ('another thing')"),
 
         // table has records
-        assert_equal(db->query("SELECT * FROM `Test`"), ({ ({ 1, "some thing" }), ({ 2, "another thing" }) })),
+        assert_equal(testOb->query("SELECT * FROM `Test`"), ({ ({ 1, "some thing" }), ({ 2, "another thing" }) })),
 
         // delete table records
-        assert_equal(db->query("DELETE FROM `Test`"), UNDEFINED),
+        assert_equal(testOb->query("DELETE FROM `Test`"), UNDEFINED),
 
         // table is empty
-        assert_equal(db->query("SELECT * FROM `Test`"), UNDEFINED),
+        assert_equal(testOb->query("SELECT * FROM `Test`"), UNDEFINED),
 
         // drop table
-        assert_equal(db->query("DROP TABLE `Test`"), UNDEFINED),
+        assert_equal(testOb->query("DROP TABLE `Test`"), UNDEFINED),
     }) :));
     expect("close stops a handle", (: ({
         // close

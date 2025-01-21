@@ -24,6 +24,7 @@
     ],
     "defines": [
         { "__VERSION__": "\"fluffos\"" },
-        { "__PORT__": "6666" }
+        { "__PORT__": "6666" },
+        { "__USE_SQLITE3__": "2" }
     ]
 }
