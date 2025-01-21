@@ -29,6 +29,7 @@ void do_inject_obj (object ob, string str) {
     message("action", "You inject " + ob->query_name() + " of " + ob->query_type() + ".", po);
     message("action", po->query_cap_name() + " injects " + ob->query_name() + " of " + ob->query_type() + ".", environment(po), po);
     ob->handle_inject(po);
+    po->set_disable(1);
 }
 
 /* ----- OBJ into LIV ----- */
@@ -55,4 +56,5 @@ void do_inject_obj_into_liv (mixed args...) {
     message("action", po->query_cap_name() + " injects " + ob->query_name() + " of " + ob->query_type() + " into you.", target);
     message("action", po->query_cap_name() + " injects " + ob->query_name() + " of " + ob->query_type() + " into " + target->query_cap_name() + ".", environment(po), ({ po, target }));
     ob->handle_inject(target);
+    po->set_disable(1);
 }

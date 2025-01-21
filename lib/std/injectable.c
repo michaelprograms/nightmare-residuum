@@ -20,9 +20,13 @@ int query_strength () {
     return __Strength;
 }
 
+/**
+ * Inject this item into the target.
+ *
+ * @param {STD_LIVING} target the target of the injection
+ */
 void handle_inject (object target) {
     target->add_injection(__Type, __Strength);
-    target->set_disable(1);
     // @TODO add empty container
     handle_remove();
 }
