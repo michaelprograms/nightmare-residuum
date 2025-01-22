@@ -504,7 +504,7 @@ private void handle_ability_use (object source, object *targets) {
             if (__Type == "attack") {
                 // determine damage
                 damage = calculate_damage(source, target, limb);
-                combat_hit_message(source, target, limb, query_name(), (weapon ? weapon->query_type() : "blunt"), damage, 0, 1);
+                combat_hit_message(source, target, limb, query_name(), damage, 0, 1);
                 target->handle_damage(damage, limb);
 
                 ability_debug_message(source, target, damage);
