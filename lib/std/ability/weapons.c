@@ -26,13 +26,19 @@ void set_weapons (mapping weapons) {
 mapping query_weapons () {
     return __Weapons;
 }
+/**
+ * Find the best wielded weapon according to this ability's requirements.
+ *
+ * @param {STD_LIVING} source who is using this ability
+ * @returns {STD_WEAPON} the best weapon
+ */
 object query_best_weapon (object source) {
     string *types, t;
     object weapon, *weapons;
     int wc;
 
     types = keys(__Weapons);
-    weapons = source->query_wielded_weapons() || ({ });
+    weapons = source->query_wielded_weapons();
     foreach (object w in weapons) {
         if (sizeof(types)) {
             t = w->query_type();
