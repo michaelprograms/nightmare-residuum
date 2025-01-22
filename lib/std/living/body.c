@@ -356,6 +356,12 @@ string *query_wieldable_limbs () {
     }
     return wieldable;
 }
+/**
+ * Accesses the weapon wielded to the limb queried.
+ *
+ * @param l the limb to query
+ * @returns {STD_WEAPON} the possible weapon wielded to this limb
+ */
 object query_wielded (string l) {
     if (l && __Limbs[l]["type"] == "WIELD" && __Wielded[l]) {
         return __Wielded[l];
