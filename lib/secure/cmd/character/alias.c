@@ -6,6 +6,11 @@ void create () {
     set_help_text("The alias command is used to view your current alias list, or if a name is produced, create a new alias if possible, or if remove and a name is provided, attempt to delete an alias.\n\nAliases can be used as shortcuts for longer commands. For example, " + format_syntax("alias bag put $* in bag") + " will allow you to type " + format_syntax("bag [item]") + " instead of " + format_syntax("put [item] in bag") + ".");
 }
 
+/**
+ * Prints all aliases that a user has set.
+ *
+ * @param {STD_USER} user the owner of the aliases
+ */
 private void print_all_aliases (object user) {
     mapping alias;
     string *aliasKeys;

@@ -9,6 +9,7 @@ void create () {
 void command (string input, mapping flags) {
     string tmp;
     object ob;
+    /** @type {STD_LIVING*} keep */
     object *keep = ({ });
 
     if (!input || input == "") {
@@ -57,7 +58,7 @@ void command (string input, mapping flags) {
         while (i --) {
             object o = find_object(list[i]);
             if (o) {
-                o->handle_remove();
+                /** @type {M_CLEAN} */ (o)->handle_remove();
             }
             if (o) {
                 destruct(o);
@@ -79,9 +80,9 @@ void command (string input, mapping flags) {
         }
     }
 
-    if (ob && ob->query_living_contents()) {
-        foreach (object l in ob->query_living_contents()) {
-            if (l->is_character()) {
+    if (ob && /** @type {M_CONTAINER} */ (ob)->query_living_contents()) {
+        foreach (object l in /** @type {M_CONTAINER} */ (ob)->query_living_contents()) {
+            if (characterp(l)) {
                 keep += ({ l });
                 l->handle_move("/domain/Nowhere/room/void.c");
             } else {
@@ -90,7 +91,7 @@ void command (string input, mapping flags) {
         }
     }
     if (ob) {
-        ob->handle_remove();
+        /** @type {M_CLEAN} */ (ob)->handle_remove();
     }
     if (ob) {
         destruct(ob);
@@ -102,8 +103,8 @@ void command (string input, mapping flags) {
         message("action", "update: " + input + ": Ok", this_user());
         foreach (object l in keep) {
             l->handle_move(input);
+            /** @type {STD_CHARACTER} */ (l)->describe_environment();
         }
-        keep->describe_environment();
         keep = ({ });
         if (file_size(test) > 0) {
             D_TEST->process_file(test, ([
