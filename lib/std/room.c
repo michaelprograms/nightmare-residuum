@@ -30,8 +30,8 @@ void reset () {
 /* ----- M_CLEAN ----- */
 
 int clean_up (mixed args...) {
-    foreach (object ob in deep_inventory()) {
-        if (ob->query_user() && userp(ob->query_user())) {
+    foreach (object ob in query_living_contents()) {
+        if (userp(/** @type {STD_CHARACTER} */ (ob)->query_user())) {
             return ::clean_later();
         }
     }
@@ -46,21 +46,25 @@ int handle_receive (object ob) {
             object *obs = query_living_contents() + query_item_contents() - ({ ob });
             foreach (object o in obs) {
                 // call out to delay fn til after move
-                call_out_walltime(function (object ob, object o) {
-                    if (objectp(ob) && objectp(o)) {
-                        ob->handle_receive_living_in_env(o);
-                        o->handle_receive_living_in_env(ob);
+                call_out_walltime(function (object ob1, object ob2) {
+                    if (ob && ob2) {
+                        // @lpc-ignore
+                        ob1->handle_receive_living_in_env(ob2);
+                        // @lpc-ignore
+                        ob2->handle_receive_living_in_env(ob1);
                     }
                 }, 0, ob, o);
             }
-        } else if (ob->is_item()) {
+        } else if (itemp(ob)) {
             object *obs = query_living_contents() + query_item_contents() - ({ ob });
             foreach (object o in obs) {
                 // call out to delay fn til after move
-                call_out_walltime(function (object ob, object o) {
-                    if (objectp(ob) && objectp(o)) {
-                        ob->handle_receive_item_in_env(o);
-                        o->handle_receive_item_in_env(ob);
+                call_out_walltime(function (object ob1, object ob2) {
+                    if (ob1 && ob2) {
+                        // @lpc-ignore
+                        ob1->handle_receive_item_in_env(ob2);
+                        // @lpc-ignore
+                        ob2->handle_receive_item_in_env(ob1);
                     }
                 }, 0, ob, o);
             }
@@ -74,11 +78,13 @@ int handle_release (object ob) {
         if (livingp(ob)) {
             object *obs = query_living_contents() + query_item_contents() - ({ ob });
             foreach (object o in obs) {
+                // @lpc-ignore
                 o->handle_release_living_in_env(ob);
             }
-        } else if (ob->is_item()) {
+        } else if (itemp(ob)) {
             object *obs = query_living_contents() + query_item_contents() - ({ ob });
             foreach (object o in obs) {
+                // @lpc-ignore
                 o->handle_release_item_in_env(ob);
             }
         }
@@ -114,6 +120,7 @@ string query_room_map_symbol () {
         cha = char->query_stat("charisma");
     }
     foreach (object l in query_living_contents()) {
+        // @lpc-ignore
         if (char && (cha < l->query_aggressive() || l->query_hostile(char))) {
             aggressive ++;
         } else {
