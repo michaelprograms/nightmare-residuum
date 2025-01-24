@@ -11,7 +11,7 @@ string identify (mixed args...) {
     if ((!undefinedp(a) && intp(a)) || floatp(a)) {
         return "" + a;
     } else if (objectp(a)) {
-        if (ret = a->query_key_name()) {
+        if (ret = /** @type {STD_OBJECT} */ (a)->query_key_name()) {
             ret += " ";
         } else {
             ret = "";
