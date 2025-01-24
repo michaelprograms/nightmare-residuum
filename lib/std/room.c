@@ -47,7 +47,7 @@ int handle_receive (object ob) {
             foreach (object o in obs) {
                 // call out to delay fn til after move
                 call_out_walltime(function (object ob1, object ob2) {
-                    if (ob && ob2) {
+                    if (ob1 && ob2) {
                         // @lpc-ignore
                         ob1->handle_receive_living_in_env(ob2);
                         // @lpc-ignore
