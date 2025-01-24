@@ -21,7 +21,7 @@ void set_ability_requirements (mapping reqs) {
 int verify_ability_requirements (object source) {
     if (!source || !source->is_living()) {
         return 0;
-    } else if (source->query_immortal()) {
+    } else if (immortalp(source)) {
         return 1;
     }
 
@@ -32,7 +32,7 @@ int verify_ability_requirements (object source) {
 
     foreach (string key,mapping value in __Reqs) {
         if (key == "NPC") {
-            if (!source->is_npc()) {
+            if (!npcp(source)) {
                 continue;
             }
         } else if (source->query_class() != key && source->query_species() != key && key != "anyone") {

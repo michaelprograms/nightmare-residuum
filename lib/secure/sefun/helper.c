@@ -9,6 +9,16 @@ int characterp (mixed ob) {
 }
 
 /**
+ * Checks if an object is an immortal character object.
+ *
+ * @param {STD_CHARACTER} ob the object to check
+ * @returns 0 or 1
+ */
+int immortalp (mixed ob) {
+    return objectp(ob) && /** @type {STD_CHARACTER} */(ob)->query_immortal();
+}
+
+/**
  * Checks if an object is a NPC object.
  *
  * @param {STD_NPC} ob the object to check
