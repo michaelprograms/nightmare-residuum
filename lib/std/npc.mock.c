@@ -17,7 +17,7 @@ mixed *query_received_messages () {
 void receive_message (string type, string message) {
     __ReceivedMessages += ({ ({ type, message }) });
     if (query_shadow()) {
-        query_shadow()->receive_message(type, message);
+        /** @type {STD_NPC} */ (query_shadow())->receive_message(type, message);
     }
 }
 void clear_received_messages () {
@@ -34,6 +34,7 @@ mixed *query_received_commands () {
 varargs int handle_command (string command, int debug) {
     __ReceivedCommands += ({ command });
     if (query_shadow()) {
-        query_shadow()->handle_command(command, debug);
+        /** @type {STD_NPC} */ (query_shadow())->handle_command(command, debug);
     }
+    return 1;
 }
