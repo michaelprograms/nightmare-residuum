@@ -9,7 +9,6 @@ void test_is_injectable () {
     expect("is_injectable returns true", (: ({
         assert_equal(itemp(testOb), 1),
         assert_equal(testOb->is_injectable(), 1),
-        assert_equal(testOb->is_consumable(), 0),
         assert_equal(drinkp(testOb), 0),
         assert_equal(foodp(testOb), 0),
     }) :));

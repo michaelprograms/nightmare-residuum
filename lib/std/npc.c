@@ -104,8 +104,13 @@ void handle_received (object env) {
     }
 }
 
+/**
+ * Handle receiving a living object in the same environment as this NPC.
+ *
+ * @param {STD_LIVING} living the living object entering the environment
+ */
 void handle_receive_living_in_env (object living) {
-    if (living->is_character()) {
+    if (characterp(living)) {
         // auto attack characters
         if (
             __Aggressive > 0 &&

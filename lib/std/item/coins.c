@@ -47,7 +47,7 @@ void handle_received (object env) {
     if (env && inherits(M_CURRENCY, env)) {
         foreach (string c in query_currencies()) {
             int n = query_currency(c);
-            env->add_currency(c, n);
+            /** @type {M_CURRENCY} */ (env)->add_currency(c, n);
             add_currency(c, -n);
             list += ({ n + " " + c });
         }

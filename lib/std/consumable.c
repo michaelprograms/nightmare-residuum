@@ -23,16 +23,21 @@ string query_use_verb () {
     return "consume";
 }
 
-void handle_consume (object character) {
+/**
+ * Handle a living object consume this item.
+ *
+ * @param {STD_LIVING} living who is consuming this consumable
+ */
+void handle_consume (object living) {
     string verb = this_object()->query_use_verb();
 
-    message("action", "You " + verb + " " + query_name() + ".", character);
-    message("action", character->query_cap_name() + " " + verb + "s " + query_name() + ".", environment(character), character);
+    message("action", "You " + verb + " " + query_name() + ".", living);
+    message("action", living->query_cap_name() + " " + verb + "s " + query_name() + ".", environment(living), living);
 
-    character->add_hp(__Strength);
-    character->add_sp(__Strength);
-    character->add_mp(__Strength);
-    character->set_disable(1);
+    living->add_hp(__Strength);
+    living->add_sp(__Strength);
+    living->add_mp(__Strength);
+    living->set_disable(1);
     // @TODO add empty container
     handle_remove();
 }

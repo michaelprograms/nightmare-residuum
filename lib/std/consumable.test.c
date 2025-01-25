@@ -6,10 +6,6 @@ inherit "/std/living/vitals";
  * @var {"/std/consumable"} testOb
  */
 
-string *test_order () {
-    return ({ "test_is_consumable", "test_strength", "test_handle_consume", });
-}
-
 void test_is_consumable () {
     expect("is_consumable returns true", (: ({
         assert_equal(itemp(testOb), 1),
