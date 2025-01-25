@@ -12,6 +12,7 @@ nosave private int currentTest = 0, totalFiles = 0;
 nosave private int shutdownAfterTests = 0, coverageAfterTests = 0;
 private nosave int testStartTime;
 
+/** @type {STD_USER} __User */
 nosave private object __User;
 
 mapping __Lines = ([ ]), __TotalLines = ([ ]);
@@ -483,13 +484,9 @@ string create_coverage (string path) {
     return cPath;
 }
 
-void analyze_coverage (object target) {
+void analyze_coverage () {
     int l = sizeof(__RawLines);
     string *lines = ({ });
-
-    if (!target) {
-        return;
-    }
 
     for (int i = 0; i < l; i ++) {
         string lineNum = ""+(i+1);
@@ -516,5 +513,5 @@ void analyze_coverage (object target) {
         }
         lines += ({ "%^" + bColor + "%^BLACK%^" + lineNum + sprintf("%*s", 8-sizeof(lineNum), lineInfo) + "%^RESET%^  " + __RawLines[i] });
     }
-    target->handle_pager(lines);
+    this_user()->handle_pager(lines);
 }

@@ -3,8 +3,9 @@
 inherit STD_ROOM;
 
 int admit_entrance (object ob, string dir) {
+    /** @type {STD_NPC} npc */
     object npc;
-    if (ob->is_character()) {
+    if (characterp(ob)) {
         if (present("museum ticket", ob)) {
             return 1;
         } else if (npc = present("museum attendant", environment(ob))) {
