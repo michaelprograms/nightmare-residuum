@@ -1,6 +1,5 @@
 inherit STD_ITEM;
 
-nosave private string __Type;
 nosave private object __Wielder;
 nosave private int __Hands = 1;
 nosave private int __WC;
@@ -19,13 +18,6 @@ varargs string query_short (string defaultANSI) {
     }
 
     return short;
-}
-
-void set_type (string type) {
-    __Type = type;
-}
-string query_type () {
-    return __Type;
 }
 
 object query_wielded () {

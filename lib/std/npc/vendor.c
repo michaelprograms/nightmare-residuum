@@ -63,6 +63,7 @@ int handle_remove () {
  * @param {STD_LIVING} po the previous object requesting the list
  */
 void handle_list (string str, object po) {
+    /** @type {STD_ITEM*} items */
     object *items = ({ });
 
     if (str) {
@@ -88,7 +89,6 @@ void handle_list (string str, object po) {
     foreach (object ob in items) {
         message("action", sprintf("  %-30s%s %s", ob->query_short(), format_integer(ob->query_value()), query_vendor_currency()), po);
     }
-
 }
 
 /* ----- buy ----- */
@@ -142,8 +142,7 @@ void handle_sell (object item, object po) {
         handle_command("say You don't have an item to sell.");
         return;
     }
-    // @TODO: this doesn't work because item->query_type doesn't exist, and __VendorTypes is an array of inheritables
-    if (!sizeof(__VendorTypes) || member_array(__VendorTypes, item->query_type()) == -1) {
+    if (!sizeof(__VendorTypes) || member_array(item->query_type(), __VendorTypes) == -1) {
         handle_command("say I don't buy " + item->query_type() + " items.");
         return;
     }

@@ -1,7 +1,7 @@
 inherit STD_ITEM;
 inherit M_BONUS;
 
-nosave string __Type, *__Limbs;
+nosave string *__Limbs;
 nosave object __Worn;
 nosave int __AC;
 
@@ -19,13 +19,6 @@ varargs string query_short (string defaultANSI) {
     }
 
     return short;
-}
-
-void set_type (string type) {
-    __Type = type;
-}
-string query_type () {
-    return __Type;
 }
 
 void set_limbs (string *limbs) {

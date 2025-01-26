@@ -12,6 +12,12 @@ void handle_received (object env) {
     dustable::handle_received(env);
 }
 
+/**
+ * Configure this bodypart off of the living owner passed.
+ *
+ * @param {STD_LIVING} owner whose bodypart this is
+ * @param limb the name of the limb
+ */
 void setup_bodypart (object owner, string limb) {
     string possOwner;
     __Owner = owner->query_cap_name();

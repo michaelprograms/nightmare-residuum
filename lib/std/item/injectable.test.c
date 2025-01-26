@@ -28,14 +28,6 @@ void test_strength () {
     }) :));
 }
 
-void test_type () {
-    expect("injectable handles type", (: ({
-        assert_equal(testOb->query_type(), ""),
-        testOb->set_type("healing nanites"),
-        assert_equal(testOb->query_type(), "healing nanites"),
-    }) :));
-}
-
 void test_item_verb_inject_applies () {
     expect("inject handles verb apply direct_inject_obj", (: ({
         assert_equal(environment(testOb), 0),

@@ -8,5 +8,4 @@ void create () {
 
 void command (string input, mapping flags) {
     this_character()->handle_go("/domain/Nowhere/room/hall.c", "teleport", "away");
-    this_character()->describe_environment();
 }

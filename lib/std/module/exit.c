@@ -121,6 +121,13 @@ int query_hidden_exits () {
     return __HiddenExits;
 }
 
+/**
+ * Handle a living object going in a direction.
+ *
+ * @param {STD_LIVING} ob the living to go
+ * @param verb the action to describe this movement
+ * @param dir the direction of this movement
+ */
 mixed handle_go (object ob, string verb, string dir) {
     mapping exit;
 
@@ -146,7 +153,6 @@ mixed handle_go (object ob, string verb, string dir) {
                 return 0;
             }
             ob->handle_go(exit["room"], verb, dir, exit["reverse"]);
-            ob->describe_environment();
             if (exit["after"]) {
                 evaluate(exit["after"], ob, dir);
             }
@@ -225,6 +231,13 @@ void remove_climb (string dir) {
     map_delete(__Climbs, dir);
 }
 
+/**
+ * Handle a living object climbing in a direction.
+ *
+ * @param {STD_LIVING} ob the living to climb
+ * @param verb the action to describe this movement
+ * @param dir the direction of this movement
+ */
 mixed handle_climb (object ob, string verb, string dir) {
     mapping exit;
 
@@ -247,7 +260,6 @@ mixed handle_climb (object ob, string verb, string dir) {
     } else if (exit["room"]) {
         if ((regexp(exit["room"], "#[0-9]+") && find_object(exit["room"])) || (file_size(exit["room"]) > 0)) {
             ob->handle_go(exit["room"], verb, dir, exit["reverse"]);
-            ob->describe_environment();
             if (exit["after"]) {
                 evaluate(exit["after"], ob, dir);
             }
@@ -328,6 +340,12 @@ void set_locked (string str, int locked) {
     }
 }
 
+/**
+ * Handle a living object opening a door.
+ *
+ * @param {STD_LIVING} ob the living to open
+ * @param str the door
+ */
 int handle_open (object ob, string str) {
     mapping doors = map_mapping(filter_mapping(__Exits, (: $2["door"] :)), (: $2["door"] :));
     string dir, door;
@@ -359,6 +377,12 @@ int handle_open (object ob, string str) {
     }
 }
 
+/**
+ * Handle a living object closing a door.
+ *
+ * @param {STD_LIVING} ob the living to close
+ * @param str the door
+ */
 int handle_close (object ob, string str) {
     mapping doors = map_mapping(filter_mapping(__Exits, (: $2["door"] :)), (: $2["door"] :));
     string dir, door;
@@ -386,6 +410,12 @@ int handle_close (object ob, string str) {
     }
 }
 
+/**
+ * Handle a living object locking a door.
+ *
+ * @param {STD_LIVING} ob the living to lock
+ * @param str the door
+ */
 int handle_lock (object ob, string str, string key) {
     mapping doors = map_mapping(filter_mapping(__Exits, (: $2["door"] :)), (: $2["door"] :));
     string dir, door;
@@ -419,6 +449,12 @@ int handle_lock (object ob, string str, string key) {
     }
 }
 
+/**
+ * Handle a living object unlocking a door.
+ *
+ * @param {STD_LIVING} ob the living to unlock
+ * @param str the door
+ */
 int handle_unlock (object ob, string str, string key) {
     mapping doors = map_mapping(filter_mapping(__Exits, (: $2["door"] :)), (: $2["door"] :));
     string dir, door;

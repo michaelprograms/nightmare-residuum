@@ -33,11 +33,11 @@ void test_direct_harvest_obj () {
 
 void test_type () {
     expect("type is queryable and settable", (: ({
-        assert_equal(testOb->query_type(), UNDEFINED),
+        assert_equal(testOb->query_type(), ""),
 
         // invalid type
         testOb->set_type("nothing"),
-        assert_equal(testOb->query_type(), UNDEFINED),
+        assert_equal(testOb->query_type(), ""),
 
         // valid type
         testOb->set_type("ore"),

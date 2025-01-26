@@ -29,7 +29,7 @@ void test_is_weapon () {
 
 void test_type () {
     expect("weapon handles type", (: ({
-        assert_equal(testOb->query_type(), 0),
+        assert_equal(testOb->query_type(), ""),
 
         testOb->set_type("blade"),
         assert_equal(testOb->query_type(), "blade"),

@@ -27,7 +27,6 @@ mapping __Resource = ([
         10: "teak",
     ]),
 ]);
-string __ResourceType;
 
 void create () {
     ::create();
@@ -38,31 +37,28 @@ void create () {
     set_no_get(1);
 }
 
-string query_type () {
-    return __ResourceType;
-}
 void set_type (string type) {
     if (member_array(type, keys(__Resource)) == -1) {
         return;
     }
-    __ResourceType = type;
+    item::set_type(type);
 }
 
 void set_level (int l) {
-    string resource;
+    string resource, type;
     levelable::set_level(l);
-
-    if (__ResourceType && (resource = __Resource[__ResourceType][l])) {
-        if (__ResourceType == "ore") {
+    type = query_type();
+    if (sizeof(type) && (resource = __Resource[type][l])) {
+        if (type == "ore") {
             set_short("a rock containing " + resource + " ore");
             set_long("A rock containing a strip of " + resource + " ore.");
             set_id(({ "ore", "rock", resource + " ore", resource }));
-        } else if (__ResourceType == "wood") {
+        } else if (type == "wood") {
             set_short("a log containing " + resource + " wood");
             set_long("A log containing a strip of " + resource + " wood.");
             set_id(({ "wood", "log", resource + " wood", resource }));
         }
-        set_name(resource + " " + __ResourceType);
+        set_name(resource + " " + type);
     }
 }
 
@@ -77,9 +73,9 @@ int direct_harvest_obj (mixed args...) {
  */
 void handle_harvest (object character) {
     object ob, tool;
-    string toolType, harvestableType;
+    string toolType, harvestableType, type = query_type();
 
-    switch (__ResourceType) {
+    switch (type) {
         case "ore":
             toolType = "pickaxe";
             break;
@@ -100,10 +96,10 @@ void handle_harvest (object character) {
     message("action", character->query_cap_name() + " harvests " + query_name() + ".", environment(character), character);
 
     ob = new("/std/resource/resource.c");
-    ob->set_type(__ResourceType);
+    ob->set_type(type);
 
-    harvestableType = __Resource[__ResourceType][query_level()];
-    switch (__ResourceType) {
+    harvestableType = __Resource[type][query_level()];
+    switch (type) {
         case "ore":
             ob->set_short("a chunk of " + harvestableType + " ore");
             ob->set_long("A chunk containing a strip of " + harvestableType + " ore.");

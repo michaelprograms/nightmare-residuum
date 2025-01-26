@@ -24,7 +24,7 @@ void test_is_armor () {
 
 void test_type () {
     expect("armor handles type", (: ({
-        assert_equal(testOb->query_type(), 0),
+        assert_equal(testOb->query_type(), ""),
 
         testOb->set_type("pants"),
         assert_equal(testOb->query_type(), "pants"),

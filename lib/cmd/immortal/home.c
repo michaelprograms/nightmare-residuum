@@ -16,5 +16,4 @@ void command (string input, mapping flags) {
         return;
     }
     this_character()->handle_go(input, "teleport", "away");
-    this_character()->describe_environment();
 }

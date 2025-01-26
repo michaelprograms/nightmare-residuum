@@ -32,6 +32,14 @@ void test_value () {
     }) :));
 }
 
+void test_type () {
+    expect("item handles type", (: ({
+        assert_equal(testOb->query_type(), ""),
+        testOb->set_type("test type"),
+        assert_equal(testOb->query_type(), "test type"),
+    }) :));
+}
+
 void test_verb_look_applies () {
     object r = new(STD_ROOM);
 

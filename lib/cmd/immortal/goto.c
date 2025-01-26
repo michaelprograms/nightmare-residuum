@@ -21,7 +21,6 @@ void command (string input, mapping flags) {
     ) {
         message("action", "Going to "+input+"...", this_character());
         this_character()->handle_go(environment(ob), "teleport", "away");
-        this_character()->describe_environment();
         return;
     } else {
         path = input;
@@ -44,6 +43,5 @@ void command (string input, mapping flags) {
             message("action", "Going...", this_character());
         }
         this_character()->handle_go(path, "teleport", "away");
-        this_character()->describe_environment();
     }
 }

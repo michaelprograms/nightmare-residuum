@@ -4,11 +4,21 @@ inherit M_AUTOLOAD;
 
 nosave private mixed __NoGet;
 nosave private int __Value;
+nosave private string __Type = "";
 
 /* -----  ----- */
 
 int is_item () {
     return 1;
+}
+
+/* ----- type ----- */
+
+void set_type (string type) {
+    __Type = type;
+}
+string query_type () {
+    return __Type;
 }
 
 /* ----- value ----- */

@@ -5,6 +5,7 @@ int is_key () {
 }
 
 int direct_lock_str_with_obj (mixed args...) {
+    /** @type {STD_KEY} key */
     object key;
     if (sizeof(args) > 1 && objectp(args[1])) {
         key = args[1];
@@ -15,6 +16,7 @@ int direct_lock_str_with_obj (mixed args...) {
     return 0;
 }
 int direct_unlock_str_with_obj (mixed args...) {
+    /** @type {STD_KEY} key */
     object key;
     if (sizeof(args) > 1 && objectp(args[1])) {
         key = args[1];

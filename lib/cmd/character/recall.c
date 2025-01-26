@@ -13,14 +13,11 @@ void create () {
  */
 void teleport (object tc) {
     if (!tc) return;
-
     tc->handle_go("/domain/Origin/room/center.c", "teleport", "away");
-    tc->describe_environment();
 }
 
 void command (string input, mapping flags) {
     object tc = this_character();
-
     if (present_hostile(tc)) {
         message("action", "You cannot recall while hostiles opponents are nearby.", tc);
         return;

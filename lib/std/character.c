@@ -142,6 +142,14 @@ void set_mp (int n) {
     gmcp_update_vitals();
 }
 
+varargs int handle_go (mixed dest, string verb, string dir, string reverse) {
+    int go = living::handle_go(dest, verb, dir, reverse);
+    if (go) {
+        describe_environment();
+    }
+    return go;
+}
+
 /* ----- user ----- */
 
 /**
