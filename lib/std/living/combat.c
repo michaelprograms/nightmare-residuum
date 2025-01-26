@@ -131,6 +131,7 @@ void handle_combat_hit (object target, mapping *table, object weapon) {
  * heartbeat.
  */
 void handle_combat () {
+    /** @type {STD_LIVING} to */
     object to = this_object(), env = environment(), target, *weapons;
     int base, min, max, hits;
 
@@ -149,8 +150,8 @@ void handle_combat () {
     }
     target->add_hostile(to);
 
-    if (to->is_npc() && to->query_ability_chance()) {
-        to->handle_ability_attack();
+    if (npcp(to) && /** @type {STD_NPC} */ (to)->query_ability_chance()) {
+        /** @type {STD_NPC} */ (to)->handle_ability_attack();
     }
 
     weapons = to->query_wielded_weapons() + to->query_wieldable_limbs();
