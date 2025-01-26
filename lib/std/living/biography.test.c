@@ -72,13 +72,13 @@ void test_handle_defeat () {
     expect("handle_defeat behaved", (: ({
         assert_equal(testOb->query_experience(), 0),
         assert_equal(testOb->query_defeat(), ({ })),
-        assert_equal(testOb->handle_move($(r)), 1),
+        assert_equal(/** @type {M_MOVE} */ (testOb)->handle_move($(r)), 1),
         assert_equal(sizeof($(r)->query_living_contents()), 1),
         assert_equal(sizeof($(r)->query_item_contents()), 0),
 
         // test defeat with keep
         assert_equal($(mockCharacter)->start_shadow(testOb), 1),
-        assert_equal(testOb->is_character(), 1),
+        assert_equal(characterp(testOb), 1),
         assert_equal(testOb->query_defeated(), 0),
         assert_equal(testOb->handle_defeat(this_object()), 0),
         assert_equal(objectp(testOb), 1),
@@ -87,12 +87,12 @@ void test_handle_defeat () {
         assert_equal(sizeof($(r)->query_living_contents()), 0),
         assert_equal(sizeof($(r)->query_item_contents()), 1),
         assert_equal(!!present("corpse", $(r)), 1),
-        assert_equal(present("corpse", $(r))->handle_remove(), 1),
+        assert_equal(/** @type {M_CLEAN} */ (present("corpse", $(r)))->handle_remove(), 1),
         testOb->set_defeated(0),
         assert_equal(testOb->query_defeated(), 0),
 
         // move test object back
-        assert_equal(testOb->handle_move($(r)), 1),
+        assert_equal(/** @type {M_MOVE} */ (testOb)->handle_move($(r)), 1),
         assert_equal(sizeof($(r)->query_living_contents()), 1),
         assert_equal(sizeof($(r)->query_item_contents()), 0),
 
@@ -103,7 +103,7 @@ void test_handle_defeat () {
         assert_equal(sizeof($(r)->query_living_contents()), 0),
         assert_equal(sizeof($(r)->query_item_contents()), 1),
         assert_equal(!!present("corpse", $(r)), 1),
-        assert_equal(present("corpse", $(r))->handle_remove(), 1),
+        assert_equal(/** @type {M_CLEAN} */ (present("corpse", $(r)))->handle_remove(), 1),
     }) :));
 
     // cleanup

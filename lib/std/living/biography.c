@@ -111,7 +111,7 @@ void handle_defeat (object source) {
         })
     });
 
-    if (this_object()->is_character()) {
+    if (characterp(this_object())) {
         this_object()->handle_move("/domain/Nowhere/room/defeat.c");
     } else {
         this_object()->handle_remove();
