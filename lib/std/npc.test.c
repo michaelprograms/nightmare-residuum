@@ -191,12 +191,14 @@ void test_abilities () {
         assert_equal(testOb->query_ability_chance(), 100),
         testOb->handle_ability_attack(),
         // nothing commanded
+        // @lpc-ignore
         assert_equal(testOb->query_received_commands(), ({ })),
 
         // ability list
         testOb->set_ability_list(({ "test ability" })),
         testOb->handle_ability_attack(),
         // ability was commanded
+        // @lpc-ignore
         assert_equal(testOb->query_received_commands(), ({ "test ability" })),
 
         assert_equal($(mockNPC)->stop_shadow(), 1),

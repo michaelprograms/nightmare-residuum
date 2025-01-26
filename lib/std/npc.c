@@ -148,6 +148,7 @@ int query_wanders () {
 }
 
 void handle_wander () {
+    /** @type {STD_ROOM} env */
     object env;
     string *exits;
 

@@ -1,3 +1,5 @@
+string query_name();
+
 void add_parse_rule (string name, string rule) {
     efun::parse_add_rule(name, rule);
 }
