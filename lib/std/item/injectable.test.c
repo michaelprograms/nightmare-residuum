@@ -2,7 +2,7 @@ inherit M_TEST;
 inherit STD_STORAGE;
 
 /**
- * @var {"/std/injectable"} testOb
+ * @var {"/std/item/injectable"} testOb
  */
 
 void test_is_injectable () {
