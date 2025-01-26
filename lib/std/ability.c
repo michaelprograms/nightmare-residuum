@@ -247,6 +247,13 @@ object *verify_targets (object source, object *targets) {
     return targets;
 }
 
+/* ----- utility ----- */
+
+void handle_utility (object source, object target, string limb) {
+    // @TODO: refactor this to be std/ability inheritable and more automatic
+    // override this function for utility abilities
+}
+
 /* ----- success ----- */
 
 /**
@@ -569,15 +576,19 @@ string handle_help (object char) {
 /* ----- applies ----- */
 
 int direct_verb_liv (mixed args...) {
+    /** @type {STD_LIVING} living */
+    object living;
+
     if (sizeof(args) < 2) {
         return 0;
     }
 
-    if (!objectp(args[1]) || !args[1]->is_living()) {
+    living = args[1];
+    if (!livingp(living)) {
         return 0;
     }
     if (__Type == "attack") {
-        if (args[1] == previous_object() || args[1]->query_defeated()) {
+        if (living == previous_object() || living->query_defeated()) {
             return 0;
         }
         return 1;

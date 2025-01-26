@@ -35,13 +35,13 @@ private mapping format_data (object ob) {
     if (!ob) return 0;
 
     if (characterp(ob)) {
-        contents += ({ ob->query_user() });
+        contents += ({ /** @type {STD_CHARACTER} */ (ob)->query_user() });
     }
-    if (ob->is_vendor()) {
+    if (/** @type {STD_VENDOR} */ (ob)->is_vendor()) {
         contents += filter(all_inventory(ob), (: $1->is_vendor_inventory() :));
     }
-    if (ob->query_contents()) {
-        contents += ob->query_contents();
+    if (/** @type {M_CONTAINER} */ (ob)->query_contents()) {
+        contents += /** @type {M_CONTAINER} */ (ob)->query_contents();
     }
 
     l = sizeof(contents);

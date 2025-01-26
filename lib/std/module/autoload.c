@@ -10,6 +10,11 @@ mixed *query_autoload_data () {
     return ({ });
 }
 
+/**
+ * Check the autoload requirements of this module against the character.
+ *
+ * @param {STD_CHARACTER} character the target of requirements
+ */
 mixed *query_autoload (object character) {
     if (character && character->query_level() >= __LevelReq && __LevelReq > 0) {
         return ({ base_name(), this_object()->query_autoload_data()... });

@@ -6,9 +6,9 @@ inherit M_TEST;
 
 void test_npc () {
     expect("is_character behaves", (: ({
-        assert_equal(testOb->is_living(), 1),
-        assert_equal(testOb->is_character(), 1),
-        assert_equal(testOb->is_npc(), UNDEFINED),
+        assert_equal(livingp(testOb), 1),
+        assert_equal(characterp(testOb), 1),
+        assert_equal(npcp(testOb), 0),
     }) :));
 }
 

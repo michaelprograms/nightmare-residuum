@@ -203,14 +203,14 @@ string *format_border (mapping rawData, mapping b, int width, string ansi) {
 
     if (ansi && arrayp(data["borderColors"])) {
         borderColors = data["borderColors"];
-        colors = SEFUN->color_gradient(borderColors[0..1]..., width);
+        colors = SEFUN->color_gradient(borderColors[0], borderColors[1], width);
         colors2 = ({ });
         for (i = sizeof(colors)-1; i >= 0; i --) {
             colors2 += ({ colors[i] });
         }
     } else if (ansi == "256") {
         borderColors = query_character_border_colors();
-        colors = SEFUN->color_gradient(borderColors[0..1]..., width);
+        colors = SEFUN->color_gradient(borderColors[0], borderColors[1], width);
         colors2 = ({ });
         for (i = sizeof(colors)-1; i >= 0; i --) {
             colors2 += ({ colors[i] });

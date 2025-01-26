@@ -87,3 +87,13 @@ int foodp (mixed ob) {
 int drinkp (mixed ob) {
     return objectp(ob) && /** @type {STD_DRINK} */(ob)->is_drink();
 }
+
+/**
+ * Checks if an object is a room object.
+ *
+ * @param {STD_ROOM} ob the object to check
+ * @returns 0 or 1
+ */
+int roomp (mixed ob) {
+    return objectp(ob) && /** @type {STD_ROOM} */(ob)->is_room();
+}

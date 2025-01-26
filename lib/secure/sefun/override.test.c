@@ -38,18 +38,18 @@ void test_message () {
 
         // blank msg
         testOb->message("type", "", ({ $(mockNpc1), $(mockNpc1) })),
-        assert_equal($(npc1)->query_received_messages(), ({ })),
-        assert_equal($(npc2)->query_received_messages(), ({ })),
+        assert_equal(/** @type {"/std/npc.mock"} */ ($(npc1))->query_received_messages(), ({ })),
+        assert_equal(/** @type {"/std/npc.mock"} */ ($(npc2))->query_received_messages(), ({ })),
 
         // target msg
         testOb->message("type", "Message.", $(mockNpc1)),
-        assert_equal($(npc1)->query_received_messages(), ({ ({ "type", "Message." }) })),
-        assert_equal($(npc2)->query_received_messages(), ({ })),
+        assert_equal(/** @type {"/std/npc.mock"} */ ($(npc1))->query_received_messages(), ({ ({ "type", "Message." }) })),
+        assert_equal(/** @type {"/std/npc.mock"} */ ($(npc2))->query_received_messages(), ({ })),
 
         // room msg
         testOb->message("room", "Room message.", $(r1)),
-        assert_equal($(npc1)->query_received_messages(), ({ ({ "type", "Message." }), ({ "room", "Room message." }) })),
-        assert_equal($(npc2)->query_received_messages(), ({ ({ "room", "Room message." }) })),
+        assert_equal(/** @type {"/std/npc.mock"} */ ($(npc1))->query_received_messages(), ({ ({ "type", "Message." }), ({ "room", "Room message." }) })),
+        assert_equal(/** @type {"/std/npc.mock"} */ ($(npc2))->query_received_messages(), ({ ({ "room", "Room message." }) })),
 
         assert_equal($(mockNpc1)->stop_shadow(), 1),
         assert_equal($(mockNpc2)->stop_shadow(), 1),

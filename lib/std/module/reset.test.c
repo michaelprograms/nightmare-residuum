@@ -47,8 +47,14 @@ void test_resets () {
     }) :));
 }
 
-nosave private object r1, r2, npc;
+nosave private object r1, r2;
+/** @type {STD_NPC} npc */
+nosave private object npc;
 void test_objects () {
+    /**
+     * Called upon room's reset setup.
+     * @param {STD_NPC} ob new npc
+     */
     function setupFn = function (object ob) {
         npc = ob;
         npc->set_wander(1);

@@ -14,7 +14,7 @@ void command (string input, mapping flags) {
             "coverage": flags["coverage"] || flags["c"],
         ]));
     } else if (input == "coverage") {
-        D_TEST->analyze_coverage(this_user());
+        D_TEST->analyze_coverage();
     } else if (input) {
         string test = input;
 

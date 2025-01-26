@@ -34,7 +34,9 @@ mapping query_weapons () {
  */
 object query_best_weapon (object source) {
     string *types, t;
-    object weapon, *weapons;
+    object weapon;
+    /** @type {STD_WEAPON*} weapons */
+    object *weapons;
     int wc;
 
     types = keys(__Weapons);

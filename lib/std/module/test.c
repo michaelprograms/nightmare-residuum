@@ -80,6 +80,7 @@ private int query_async_test_function (string fn) {
 /* -----  ----- */
 
 private void finish_test () {
+    // @lpc-ignore
     if (!this_object()->query_skip_coverage() && regexp(testFile, "\\.coverage\\.")) {
         rm(testFile);
     }
@@ -137,6 +138,7 @@ public void execute_test (function done) {
         write("\nEvaluating " + CYAN + UNDERLINE + base_name() + RESET + "\n");
     }
 
+    // @lpc-ignore
     if (this_object()->query_skip_coverage()) {
         testFile = replace_string(base_name(), ".test", ".c");
     } else {
@@ -156,6 +158,7 @@ private void done_current_test () {
 
     timeAfter = time_ns();
     if (objectp(testOb)) {
+        // @lpc-ignore
         testOb->handle_remove();
         if (testOb) {
             destruct(testOb);

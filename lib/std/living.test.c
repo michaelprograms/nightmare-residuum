@@ -6,8 +6,8 @@ inherit M_TEST;
 void test_living () {
     expect("is_living returns true", (: ({
         assert_equal(testOb->is_living(), 1),
-        assert_equal(testOb->is_npc(), 0),
-        assert_equal(testOb->is_character(), 0),
+        assert_equal(npcp(testOb), 0),
+        assert_equal(characterp(testOb), 0),
     }) :));
 }
 

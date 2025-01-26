@@ -1,7 +1,6 @@
 nosave private int __Delay = 3;
 nosave private mixed *__Lines = ({ });
 
-void story_action (object target, string line, int final);
 void story_action_final (object target);
 
 /* ----- ----- */

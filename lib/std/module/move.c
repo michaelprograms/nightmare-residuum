@@ -54,7 +54,7 @@ int handle_move (mixed dest) {
     object env = environment();
     /** @type {STD_STORAGE} destOb */
     object destOb;
-    if (env && !env->can_release(this_object()) && !this_object()->query_immortal()) {
+    if (env && !env->can_release(this_object()) && !immortalp(this_object())) {
         return 0;
     }
     if (!(destOb = query_dest_ob(dest))) {

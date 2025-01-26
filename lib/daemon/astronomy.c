@@ -197,7 +197,7 @@ void update_dayphase (int t, mapping a) {
 mapping query_astronomy_from_room (mixed dest) {
     string roomPath, aPath;
 
-    if (objectp(dest) && dest->is_room()) {
+    if (objectp(dest) && roomp(dest)) {
         roomPath = base_name(dest);
     } else if (stringp(dest)) {
         roomPath = dest;
@@ -207,7 +207,7 @@ mapping query_astronomy_from_room (mixed dest) {
             return __Astronomy[roomPath];
         }
         if (aPath = query_file_recursive(roomPath, "astronomy")) {
-            __Astronomy[aPath] = aPath->query_astronomy();
+            __Astronomy[aPath] = call_other(aPath, "query_astronomy");
         }
     }
     return aPath ? __Astronomy[aPath] : 0;
@@ -234,7 +234,7 @@ private void process (int t, string key, mapping a) {
 
     if (nextPhase > 0) {
         if (t >= nextPhase) {
-            object *characters = filter(characters(), (: regexp($1->query_environment_path(), "^"+$(key)) && !environment($1)->query_property("indoors") :));
+            object *characters = filter(characters(), (: regexp($1->query_environment_path(), "^"+$(key)) && /** @type {STD_ROOM} */ (environment($1))->query_property("indoors") == 0 :));
             if (dayPhase == "night") {
                 dayPhase = "dawn";
                 message("astronomy", "%^ORANGE%^BOLD%^The sun appears over the horizon.%^RESET%^", characters);
