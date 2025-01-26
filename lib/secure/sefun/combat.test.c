@@ -270,7 +270,6 @@ void test_combat_table () {
     living2->set_species("human");
     weapon->set_type("blade");
     weapon->handle_move(living2);
-    write("weapon hands: "+weapon->query_hands()+"\n");
     living2->handle_wield(weapon);
     armor->set_type("shield");
     armor->set_limbs(({ "left arm", "left hand" }));
