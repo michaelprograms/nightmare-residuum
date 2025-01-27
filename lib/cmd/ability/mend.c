@@ -10,6 +10,7 @@ void create () {
             "level": 1,
         ]),
     ]));
+    // @TODO: rework this
     set_powers(([
         "medicine": 5,
     ]));
