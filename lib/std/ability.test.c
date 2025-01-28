@@ -20,21 +20,6 @@ void test_name () {
     }) :));
 }
 
-void test_type () {
-    expect("handles setting and querying type", (: ({
-        assert_equal(testOb->query_type(), UNDEFINED),
-
-        testOb->set_type("attack"),
-        assert_equal(testOb->query_type(), "attack"),
-
-        testOb->set_type("heal"),
-        assert_equal(testOb->query_type(), "heal"),
-
-        testOb->set_type("utility"),
-        assert_equal(testOb->query_type(), "utility"),
-    }) :));
-}
-
 void test_powers () {
     expect("handles setting and querying skill powers", (: ({
         assert_equal(testOb->query_powers(), ([ ])),
