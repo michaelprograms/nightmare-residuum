@@ -20,18 +20,6 @@ void test_name () {
     }) :));
 }
 
-void test_powers () {
-    expect("handles setting and querying skill powers", (: ({
-        assert_equal(testOb->query_powers(), ([ ])),
-
-        testOb->set_powers(([ "brawl": 5, ])),
-        assert_equal(testOb->query_powers(), ([ "brawl": 5, ])),
-
-        testOb->set_powers(([ "ranged": 5, "psionic": 5, ])),
-        assert_equal(testOb->query_powers(), ([ "ranged": 5, "psionic": 5, ])),
-    }) :));
-}
-
 void test_weapons () {
     object liv, weaponBlade, weaponBlunt;
 
