@@ -30,9 +30,6 @@ string *test_order () {
     nTestOrder ++;
     return testOrder;
 }
-string *test_ignore () {
-    return ({ "test_should_be_ignored" });
-}
 
 void test_expects_passing () {
     expect("assert_equal should pass", (: ({
@@ -109,11 +106,5 @@ void test_lifecycle_events () {
         assert_equal(query_expect_catch(), 0),
         assert_catch((: query_expect_catch() && error("Catch") :), "*Catch\n"),
         assert_equal(query_expect_catch(), 0),
-    }) :));
-}
-
-void test_should_be_ignored () {
-    expect("this test should be ignored", (: ({
-        assert_equal(0, 1),
     }) :));
 }

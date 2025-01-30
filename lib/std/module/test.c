@@ -11,7 +11,7 @@
 #define B_GREEN     ANSI(42)
 #define B_ORANGE    ANSI(43)
 
-#define TEST_IGNORE_DEFAULTS ({ "before_all_tests", "before_each_test", "after_each_test", "after_all_tests", "test_order", "test_ignore", "execute_test", "create", "init", "reset", "heart_beat", })
+#define TEST_IGNORE_DEFAULTS ({ "before_all_tests", "before_each_test", "after_each_test", "after_all_tests", "test_order", "execute_test", "create", "init", "reset", "heart_beat", })
 
 nosave protected mixed UNDEFINED = (([ ])[0]); // equivalent of UNDEFINED
 
@@ -50,9 +50,6 @@ void after_all_tests () {
 }
 string *test_order () {
     return 0;
-}
-string *test_ignore () {
-    return ({ });
 }
 
 /* ----- test functions ----- */
@@ -124,14 +121,16 @@ public void execute_test (function done) {
     passingExpects = 0;
     totalFailLog = "";
 
-    // @TODO simplify this
     testFunctions = test_order();
     if (!sizeof(testFunctions)) {
-        testFunctions = functions(this_object(), 2) - TEST_IGNORE_DEFAULTS - test_ignore();
+        testFunctions = functions(this_object(), 2) - TEST_IGNORE_DEFAULTS;
     } else if (sizeof(testFunctions) != sizeof(functions(this_object(), 2))) {
         // grab any tests that were not included in test_order and test_ignore
-        testFunctions += (functions(this_object(), 2) - TEST_IGNORE_DEFAULTS - test_ignore() - testFunctions);
+        testFunctions += (functions(this_object(), 2) - TEST_IGNORE_DEFAULTS - testFunctions);
     }
+    // @TODO
+    // testFunctions = (sizeof(test_order()) ? test_order() : ({ })) + (functions(this_object(), 2) - TEST_IGNORE_DEFAULTS);
+    // functions to test, must  with start with 'test_'
     testFunctions = filter(testFunctions, (: regexp($1, "test_") :));
 
     if (!D_TEST->query_option("brief")) {

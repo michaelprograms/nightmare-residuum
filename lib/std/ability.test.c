@@ -4,13 +4,6 @@ inherit M_TEST;
  * @var {"/std/ability"} testOb
  */
 
-string *test_ignore () {
-    return ({
-        "can_verb", "can_verb_liv", "can_verb_lvs",
-        "do_verb_lvs", "do_verb_liv", "do_verb_rule",
-    });
-}
-
 nosave private int __MockLiving;
 int is_living () { return __MockLiving; }
 
