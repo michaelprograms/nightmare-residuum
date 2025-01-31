@@ -3,6 +3,7 @@ inherit M_TEST;
 private int nBeforeAll = 0;
 private int nBeforeEach = 0;
 private int nAfterEach = 0;
+private int nAfterAll = 0;
 private int nTestOrder = 0;
 private string *testOrder = ({
     "test_expects_passing",
@@ -17,9 +18,9 @@ int query_skip_coverage() {
 void before_all_tests () {
     nBeforeAll ++;
 }
-// void after_all_tests () {
-
-// }
+void after_all_tests () {
+    nAfterAll ++;
+}
 void before_each_test () {
     nBeforeEach ++;
 }
@@ -100,6 +101,8 @@ void test_lifecycle_events () {
         assert_equal(nAfterEach, sizeof(testOrder) - 1), // after_each_test not called for this test
 
         assert_equal(nTestOrder, 1), // test_order
+
+        assert_equal(nAfterAll, 0), // after_all_tests not called yet
     }) :));
 
     expect("query_expect_catch is enabled during assert 'catch'", (: ({

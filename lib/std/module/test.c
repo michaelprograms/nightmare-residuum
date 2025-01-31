@@ -77,12 +77,13 @@ private int query_async_test_function (string fn) {
 /* -----  ----- */
 
 private void finish_test () {
+    after_all_tests();
+    timeTotalAfter = time_ns();
+
     // @lpc-ignore
     if (!this_object()->query_skip_coverage() && regexp(testFile, "\\.coverage\\.")) {
         rm(testFile);
     }
-    after_all_tests();
-    timeTotalAfter = time_ns();
 
     if (D_TEST->query_option("brief")) {
         string status = "";
