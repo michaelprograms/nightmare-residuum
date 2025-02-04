@@ -4,6 +4,14 @@ inherit M_TEST;
  * @var {"/std/module/currency"} testOb
  */
 
+void test_null_currencies () {
+    expect("null achievements are initialized", (: ({
+        assert_equal(testOb->query_currencies(), ({ })),
+        store_variable("__Currency", UNDEFINED, testOb),
+        assert_equal(testOb->query_currencies(), ({ })),
+    }) :));
+}
+
 void test_currencies () {
     expect("query_currency returns -1 for invalid currency", (: ({
         assert_equal(testOb->query_currency("unknown"), -1),
@@ -28,5 +36,11 @@ void test_currencies () {
         assert_equal(testOb->add_currency("copper", -5), 1), // can remove
         assert_equal(testOb->query_currencies(), ({ "copper" })), // some remains
         assert_equal(testOb->query_currency("copper"), 5),
+    }) :));
+    expect("currency handles bad inputs", (: ({
+        assert_catch((: testOb->query_currency(UNDEFINED) :), "*Bad argument 1 to currency->query_currency\n"),
+
+        assert_catch((: testOb->add_currency(UNDEFINED, UNDEFINED) :), "*Bad argument 1 to currency->add_currency\n"),
+        assert_catch((: testOb->add_currency("copper", UNDEFINED) :), "*Bad argument 2 to currency->add_currency\n"),
     }) :));
 }

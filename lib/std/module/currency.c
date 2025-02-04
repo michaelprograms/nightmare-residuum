@@ -1,18 +1,20 @@
 #define VALID_CURRENCIES ({ "copper" })
 
-private mapping __Currency;
+mapping __Currency;
 
-string *query_currencies () {
+private void initialize_currencies () {
     if (!mapp(__Currency)) {
         __Currency = ([ ]);
     }
+}
+
+string *query_currencies () {
+    initialize_currencies();
     return keys(filter(__Currency, (: $2 > 0 :)));
 }
 
 int query_currency (string type) {
-    if (!mapp(__Currency)) {
-        __Currency = ([ ]);
-    }
+    initialize_currencies();
     if (!stringp(type)) {
         error("Bad argument 1 to currency->query_currency");
     }
@@ -29,9 +31,7 @@ int query_currency (string type) {
 int add_currency (string type, int amount) {
     int result = 0;
 
-    if (!mapp(__Currency)) {
-        __Currency = ([ ]);
-    }
+    initialize_currencies();
 
     if (!stringp(type) || member_array(type, VALID_CURRENCIES) == -1) {
         error("Bad argument 1 to currency->add_currency");
