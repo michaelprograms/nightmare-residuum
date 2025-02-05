@@ -2,10 +2,6 @@ inherit "/std/shadow.c";
 
 /* ----- used by tests ----- */
 
-string query_name () {
-    return "mockparse";
-}
-
 private nosave mixed *__Rules = ({ });
 mixed *query_rules () {
     return __Rules;
