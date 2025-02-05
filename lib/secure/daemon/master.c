@@ -68,7 +68,7 @@ void preload (string filename) {
 /**
  * This apply is called by the driver during MSSP requests.
  *
-  @returns key:value pairs of mud stats
+ * @returns key:value pairs of mud stats
  */
 mapping get_mud_stats () {
     return ([
