@@ -1,41 +1,60 @@
 // @this_object /std/living.c
 
-private int __Experience = 0, __TotalExperience = 0;
-private int __Victory = 0, __VictoryLevel;
-private mixed *__Defeat = ({ });
-private int __Defeated = 0;
+int __Experience = 0, __TotalExperience = 0;
+int __Victory = 0, __VictoryLevel = 0;
+int __Defeated = 0;
+mixed *__Defeat = ({ });
 
-int query_experience () {
+private void initialize_experience () {
     if (undefinedp(__Experience)) {
         __Experience = 0;
     }
-    return __Experience;
-}
-int query_total_experience () {
     if (undefinedp(__TotalExperience)) {
         __TotalExperience = 0;
     }
+}
+private void initialize_victory () {
+    if (undefinedp(__Victory)) {
+        __Victory = 0;
+    }
+    if (undefinedp(__VictoryLevel)) {
+        __VictoryLevel = 0;
+    }
+}
+private void initialize_defeat () {
+    if (undefinedp(__Defeated)) {
+        __Defeated = 0;
+    }
+    if (!arrayp(__Defeat)) {
+        __Defeat = ({ });
+    }
+}
+
+int query_experience () {
+    initialize_experience();
+    return __Experience;
+}
+int query_total_experience () {
+    initialize_experience();
     return __TotalExperience;
 }
 void add_experience (int exp) {
-    if (!intp(exp)) {
-        error("Bad argument 1 to body->add_experience");
+    if (undefinedp(exp) || !intp(exp)) {
+        error("Bad argument 1 to biography->add_experience");
     }
     __Experience = __Experience + exp;
     // @TODO if (__Experience > ExpMax) __Experience = ExpMax
 }
 void spend_experience (int exp) {
     if (!intp(exp) || __Experience < exp || exp < 1) {
-        error("Bad argument 1 to body->spend_experience");
+        error("Bad argument 1 to biography->spend_experience");
     }
     __Experience = __Experience - exp;
     __TotalExperience = __TotalExperience + exp;
 }
 
 int query_victory () {
-    if (undefinedp(__Victory)) {
-        __Victory = 0;
-    }
+    initialize_victory();
     return __Victory;
 }
 int query_victory_average () {
@@ -45,9 +64,7 @@ int query_victory_average () {
     return __VictoryLevel / __Victory;
 }
 mixed *query_defeat () {
-    if (!arrayp(__Defeat)) {
-        __Defeat = ({ });
-    }
+    initialize_defeat();
     return __Defeat;
 }
 int query_defeated () {
@@ -79,9 +96,7 @@ void handle_victory (object source) {
 void handle_defeat (object source) {
     object env = environment(), corpse;
 
-    if (!arrayp(__Defeat)) {
-        __Defeat = ({ });
-    }
+    initialize_defeat();
     if (__Defeated) {
         return;
     }

@@ -14,6 +14,15 @@ int is_living () { return __MockLiving; }
 string query_cap_name () { return "Biography Test"; }
 
 void test_experience () {
+    expect("null experience is initialized", (: ({
+        assert_equal(testOb->query_experience(), 0),
+        assert_equal(testOb->query_total_experience(), 0),
+        store_variable("__Experience", UNDEFINED, testOb),
+        store_variable("__TotalExperience", UNDEFINED, testOb),
+        assert_equal(testOb->query_experience(), 0),
+        assert_equal(testOb->query_total_experience(), 0),
+    }) :));
+
     expect("handles adding and spending experience", (: ({
         assert_equal(testOb->query_experience(), 0),
         assert_equal(testOb->query_total_experience(), 0),
@@ -33,6 +42,10 @@ void test_experience () {
         assert_equal(testOb->spend_experience(2000), 0),
         assert_equal(testOb->query_experience(), 6123),
         assert_equal(testOb->query_total_experience(), 3000),
+
+        assert_catch((: testOb->add_experience(UNDEFINED) :), "*Bad argument 1 to biography->add_experience\n"),
+        assert_catch((: testOb->spend_experience(UNDEFINED) :), "*Bad argument 1 to biography->spend_experience\n"),
+        assert_catch((: testOb->spend_experience(testOb->query_experience() * 2) :), "*Bad argument 1 to biography->spend_experience\n"),
     }) :));
 }
 
@@ -40,6 +53,15 @@ void test_handle_victory () {
     // setup test object
     __MockLiving = 1;
     __MockLevel = 1;
+
+    expect("null victory is initialized", (: ({
+        assert_equal(testOb->query_victory(), 0),
+        assert_equal(testOb->query_victory_average(), 0),
+        store_variable("__Victory", UNDEFINED, testOb),
+        store_variable("__VictoryLevel", UNDEFINED, testOb),
+        assert_equal(testOb->query_victory(), 0),
+        assert_equal(testOb->query_victory_average(), 0),
+    }) :));
 
     expect("handle_victory behaves", (: ({
         assert_equal(testOb->query_experience(), 0),
@@ -65,6 +87,20 @@ void test_handle_defeat () {
     object r = new(STD_ROOM);
     object mockCharacter = new("/std/character.mock.c");
 
+    expect("null defeat is initialized", (: ({
+        assert_equal(testOb->query_defeat(), ({ })),
+        assert_equal(testOb->query_defeated(), 0),
+        store_variable("__Defeat", UNDEFINED, testOb),
+        store_variable("__Defeated", UNDEFINED, testOb),
+        assert_equal(testOb->query_defeat(), ({ })),
+        assert_equal(testOb->query_defeated(), 0),
+    }) :));
+    expect("defeat can be set", (: ({
+        testOb->set_defeated(1),
+        assert_equal(testOb->query_defeated(), 1),
+    }) :));
+
+    // @TODO: re-visit this for test coverage
     // setup test object
     if (testOb) destruct(testOb);
     testOb = new(STD_LIVING); // need biography's parent inherit living for handle_move
