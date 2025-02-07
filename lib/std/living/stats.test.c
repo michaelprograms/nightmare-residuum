@@ -53,6 +53,12 @@ void test_query_and_set_stat () {
 }
 
 void test_stat_bonus () {
+    expect("null stats bonus are initialized", (: ({
+        assert_equal(testOb->query_stat_bonus("luck"), 0),
+        store_variable("__StatBonus", UNDEFINED, testOb),
+        assert_equal(testOb->query_stat_bonus("luck"), 0),
+    }) :));
+
     expect("handles setting and querying stats", (: ({
         testOb->set_stat("strength", 100),
         testOb->set_stat("perception", 100),
@@ -89,5 +95,11 @@ void test_stat_bonus () {
         assert_equal(testOb->query_stat_bonus("intelligence"), 25),
         assert_equal(testOb->query_stat_bonus("agility"), 25),
         assert_equal(testOb->query_stat_bonus("luck"), 25),
+
+        testOb->set_stat("unknown", 100),
+        testOb->add_stat_bonus("unknown", 100),
+        assert_equal(testOb->query_stat("unknown"), UNDEFINED),
+        assert_equal(testOb->query_stat_base("unknown"), UNDEFINED),
+        assert_equal(testOb->query_stat_bonus("unknown"), UNDEFINED),
     }) :));
 }
