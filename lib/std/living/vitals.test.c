@@ -34,6 +34,23 @@ void test_update_vitals () {
         assert_equal(testOb->query_mp(), 10),
         assert_equal(testOb->query_mp() == testOb->query_max_mp(), 1),
     }) :));
+
+    expect("null vitals are initialized", (: ({
+        assert_equal(testOb->query_hp(), 20),
+        assert_equal(testOb->query_max_hp(), 20),
+        assert_equal(testOb->query_sp(), 10),
+        assert_equal(testOb->query_max_sp(), 10),
+        assert_equal(testOb->query_mp(), 10),
+        assert_equal(testOb->query_max_mp(), 10),
+        store_variable("__Vitals", UNDEFINED, testOb),
+        testOb->update_vitals(0),   // don't heal
+        assert_equal(testOb->query_hp(), 0),
+        assert_equal(testOb->query_max_hp(), 20),
+        assert_equal(testOb->query_sp(), 0),
+        assert_equal(testOb->query_max_sp(), 10),
+        assert_equal(testOb->query_mp(), 0),
+        assert_equal(testOb->query_max_mp(), 10),
+    }) :));
 }
 
 void test_hp () {
@@ -41,6 +58,10 @@ void test_hp () {
         testOb->update_vitals(1),
 
         testOb->add_hp(1),  // already max
+        assert_equal(testOb->query_hp(), 20),
+        assert_equal(testOb->query_max_hp(), 20),
+
+        testOb->set_hp(100), // can't go above max
         assert_equal(testOb->query_hp(), 20),
 
         testOb->add_hp(-10),
@@ -66,6 +87,10 @@ void test_sp () {
 
         testOb->add_sp(1),  // already max
         assert_equal(testOb->query_sp(), 10),
+        assert_equal(testOb->query_max_sp(), 10),
+
+        testOb->set_sp(100), // can't go above max
+        assert_equal(testOb->query_sp(), 10),
 
         testOb->add_sp(-5),
         assert_equal(testOb->query_sp(), 5),
@@ -73,7 +98,7 @@ void test_sp () {
         assert_equal(testOb->query_sp(), 7),
         testOb->add_sp(0),
         assert_equal(testOb->query_sp(), 7),
-        testOb->add_sp(5), // attespt to go over max
+        testOb->add_sp(5), // attempt to go over max
         assert_equal(testOb->query_sp(), 10),
 
         testOb->set_sp(5),
@@ -89,6 +114,10 @@ void test_mp () {
         testOb->update_vitals(1),
 
         testOb->add_mp(1),  // already max
+        assert_equal(testOb->query_mp(), 10),
+        assert_equal(testOb->query_max_mp(), 10),
+
+        testOb->set_mp(100), // can't go above max
         assert_equal(testOb->query_mp(), 10),
 
         testOb->add_mp(-5),
