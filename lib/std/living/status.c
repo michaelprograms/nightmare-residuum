@@ -36,11 +36,7 @@ int query_immobile () {
 }
 
 void set_posture (string p) {
-    if (
-        !stringp(p) &&
-        !sizeof(p) &&
-        member_array(p, ({ "flying", "laying", "meditating", "sitting", "standing" })) == -1
-    ) {
+    if (member_array(p, ({ "flying", "laying", "meditating", "sitting", "standing" })) == -1) {
         error("Bad argument 1 to status->set_posture");
     }
     __Posture = p;

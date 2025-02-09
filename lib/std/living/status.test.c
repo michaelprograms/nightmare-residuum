@@ -82,6 +82,8 @@ void test_posture () {
         assert_equal(testOb->query_posture(), "laying"),
         testOb->set_posture("standing"),
         assert_equal(testOb->query_posture(), "standing"),
+
+        assert_catch((: testOb->set_posture("unknown") :), "*Bad argument 1 to status->set_posture\n"),
     }) :));
 
     // @TODO
