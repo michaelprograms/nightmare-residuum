@@ -1,6 +1,6 @@
 // @this_object /std/living.c
 
-private mapping __Stat = ([
+mapping __Stat = ([
     "strength": 0,
     "perception": 0,
     "endurance": 0,
@@ -19,7 +19,18 @@ nosave mapping __StatBonus = ([
     "luck": 0,
 ]);
 
-private void initialize_stat_bonus () {
+private void initialize_stats () {
+    if (!mapp(__Stat)) {
+        __Stat = ([
+            "strength": 0,
+            "perception": 0,
+            "endurance": 0,
+            "charisma": 0,
+            "intelligence": 0,
+            "agility": 0,
+            "luck": 0,
+        ]);
+    }
     if (!mapp(__StatBonus)) {
         __StatBonus = ([
             "strength": 0,
@@ -34,15 +45,15 @@ private void initialize_stat_bonus () {
 }
 
 int query_stat_base (string stat) {
-    initialize_stat_bonus();
+    initialize_stats();
     return __Stat[stat];
 }
 int query_stat_bonus (string stat) {
-    initialize_stat_bonus();
+    initialize_stats();
     return __StatBonus[stat];
 }
 int query_stat (string stat) {
-    initialize_stat_bonus();
+    initialize_stats();
     return __Stat[stat] + query_stat_bonus(stat);
 }
 
@@ -55,7 +66,7 @@ void set_stat (string stat, int n) {
     this_object()->update_limbs();
 }
 void add_stat_bonus (string stat, int n) {
-    initialize_stat_bonus();
+    initialize_stats();
     if (member_array(stat, keys(__StatBonus)) == -1) {
         return;
     }

@@ -55,6 +55,7 @@ void test_query_and_set_stat () {
 void test_stat_bonus () {
     expect("null stats bonus are initialized", (: ({
         assert_equal(testOb->query_stat_bonus("luck"), 0),
+        store_variable("__Stat", UNDEFINED, testOb),
         store_variable("__StatBonus", UNDEFINED, testOb),
         assert_equal(testOb->query_stat_bonus("luck"), 0),
     }) :));
