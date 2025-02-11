@@ -293,9 +293,9 @@ void log_error (string file, string msg) {
     if (sscanf(file, "/realm/%s/%s", nom, tmp) == 2) {
         dest = nom;
     } else if (sscanf(file, "/domain/%s/%s", nom, tmp) == 2) {
-        dest = nom;
+        dest = "syntax";
     } else if (sscanf(file, "/%s/%s", nom, tmp) == 2) {
-        dest = nom;
+        dest = "syntax";
     }
     if (!dest) {
         dest = "log";
