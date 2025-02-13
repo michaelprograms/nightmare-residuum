@@ -348,7 +348,6 @@ varargs void update_test_data (string path, string ignoreRegex) {
 }
 
 void run (mapping options) {
-
     remove_call_out();
     reset_data();
 
@@ -365,7 +364,6 @@ void run (mapping options) {
     }
 
     testStartTime = time_ns();
-
     write("Scanning for test files...\n");
     update_test_data("/secure/", "/secure/cmd");
     update_test_data("/daemon/");
