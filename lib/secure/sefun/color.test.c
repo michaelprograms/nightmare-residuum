@@ -83,3 +83,19 @@ void test_gradient () {
         assert_catch((: testOb->color_gradient(({ 0, 0, 0 }), ({ 0, 0, 0 }), UNDEFINED) :), "*Bad argument 3 to color->color_gradient\n"),
     }) :));
 }
+
+void test_format_message_color () {
+    expect("", (: ({
+        assert_equal(testOb->format_message_color("nothing", "Message."), "Message."),
+
+        assert_equal(testOb->format_message_color("say", "Someone says: Something."), "%^CYAN%^Someone says:%^RESET%^ Something."),
+        assert_equal(testOb->format_message_color("tell", "Someone tells you: Something."), "%^I_RED%^BOLD%^Someone tells you:%^RESET%^ Something."),
+        assert_equal(testOb->format_message_color("go", "Someone goes %^DIR%^direction%^DEFAULT%^."), "%^I_GREEN%^BOLD%^Someone goes %^CYAN%^direction%^GREEN%^.%^RESET%^"),
+        assert_equal(testOb->format_message_color("room listen", "Sounds."), "%^CYAN%^Sounds.%^RESET%^"),
+        assert_equal(testOb->format_message_color("room smell", "Smells."), "%^ORANGE%^Smells.%^RESET%^"),
+
+        // TODO:
+        // room living contents, room item contents, room exits, channel, channel error
+        // attack, combat hit, combat heal, combat miss, combat alert, ability hit, ability miss
+    }) :));
+}
