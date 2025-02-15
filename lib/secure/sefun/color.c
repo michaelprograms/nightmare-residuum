@@ -209,12 +209,15 @@ string format_message_color (string type, string message) {
     } else if (type == "room smell") {
         message = "%^ORANGE%^" + message + "%^RESET%^";
     } else if (type == "room living contents") {
-        message = "%^I_RED%^BOLD%^" + replace_string(message, "%^DEFAULT%^", "%^RED%^BOLD_OFF%^") + "%^RESET%^";
+        message = replace_string(message, "%^DEFAULT%^", "%^RED%^BOLD_OFF%^") + "%^RESET%^";
+        message = replace_string(message, "%^%^", "%^");
     } else if (type == "room item contents") {
-        message = "%^MAGENTA%^" + replace_string(message, "%^DEFAULT%^", "%^MAGENTA%^BOLD_OFF%^") + "%^RESET%^";
+        message = replace_string(message, "%^DEFAULT%^", "%^MAGENTA%^BOLD_OFF%^") + "%^RESET%^";
+        message = replace_string(message, "%^%^", "%^");
     } else if (type == "room exits") {
         message = replace_string(message, "%^DEFAULT%^", "%^GREEN%^");
         message = "%^GREEN%^" + message + "%^RESET%^";
+        message = replace_string(message, "%^%^", "%^");
     } else if (type == "channel") {
         message = replace_string(message, "[[", "%^GREEN%^[%^I_GREEN%^");
         message = replace_string(message, "]]", "%^GREEN%^]%^RESET%^");
