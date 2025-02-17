@@ -102,7 +102,12 @@ void test_format_message_color () {
         assert_equal(testOb->format_message_color("channel", "Name ((channel)) Text."), "Name %^CYAN%^(%^I_CYAN%^channel%^CYAN%^)%^RESET%^ Text."),
         assert_equal(testOb->format_message_color("channel error", "Channel ((eror)) Text."), "Channel %^CYAN%^(%^I_RED%^eror%^CYAN%^)%^RESET%^ Text."),
 
-        // TODO:
-        // attack, combat hit, combat heal, combat miss, combat alert, ability hit, ability miss
+        assert_equal(testOb->format_message_color("attack", "Attack message!"), "%^I_RED%^BOLD%^Attack message!%^RESET%^"),
+        assert_equal(testOb->format_message_color("combat hit", "Someone hits you."), "%^RED%^Someone hits you.%^RESET%^"),
+        assert_equal(testOb->format_message_color("combat heal", "Someone heals you."), "%^I_CYAN%^Someone heals you.%^RESET%^"),
+        assert_equal(testOb->format_message_color("combat miss", "Someone misses you."), "%^GREEN%^Someone misses you.%^RESET%^"),
+        assert_equal(testOb->format_message_color("combat alert", "Combat alert!"), "%^I_YELLOW%^BOLD%^Combat alert!%^RESET%^"),
+        assert_equal(testOb->format_message_color("ability hit", "Ability hit!"), "%^I_RED%^BOLD%^Ability hit!%^RESET%^"),
+        assert_equal(testOb->format_message_color("ability miss", "Ability miss."), "%^I_WHITE%^BOLD%^Ability miss.%^RESET%^"),
     }) :));
 }
