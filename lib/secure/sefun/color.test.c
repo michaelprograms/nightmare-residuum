@@ -98,8 +98,11 @@ void test_format_message_color () {
         assert_equal(testOb->format_message_color("room item contents", "%^I_RED%^BOLD%^Something%^DEFAULT%^, %^I_RED%^BOLD%^a different something%^DEFAULT%^, and %^I_RED%^BOLD%^something else%^DEFAULT%^."), "%^I_RED%^BOLD%^Something%^MAGENTA%^BOLD_OFF%^, %^I_RED%^BOLD%^a different something%^MAGENTA%^BOLD_OFF%^, and %^I_RED%^BOLD%^something else%^MAGENTA%^BOLD_OFF%^.%^RESET%^"),
         assert_equal(testOb->format_message_color("room exits", "There are four exits: %^I_CYAN%^BOLD%^north%^BOLD_OFF%^DEFAULT%^, %^I_CYAN%^BOLD%^east%^BOLD_OFF%^DEFAULT%^, %^I_CYAN%^BOLD%^south%^BOLD_OFF%^DEFAULT%^, and west."), "%^GREEN%^There are four exits: %^I_CYAN%^BOLD%^north%^BOLD_OFF%^GREEN%^, %^I_CYAN%^BOLD%^east%^BOLD_OFF%^GREEN%^, %^I_CYAN%^BOLD%^south%^BOLD_OFF%^GREEN%^, and west.%^RESET%^"),
 
+        assert_equal(testOb->format_message_color("channel", "Name [[channel]] Text."), "Name %^GREEN%^[%^I_GREEN%^channel%^GREEN%^]%^RESET%^ Text."),
+        assert_equal(testOb->format_message_color("channel", "Name ((channel)) Text."), "Name %^CYAN%^(%^I_CYAN%^channel%^CYAN%^)%^RESET%^ Text."),
+        assert_equal(testOb->format_message_color("channel error", "Channel ((eror)) Text."), "Channel %^CYAN%^(%^I_RED%^eror%^CYAN%^)%^RESET%^ Text."),
+
         // TODO:
-        // channel, channel error
         // attack, combat hit, combat heal, combat miss, combat alert, ability hit, ability miss
     }) :));
 }
