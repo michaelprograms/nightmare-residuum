@@ -28,7 +28,6 @@ string wrap_ansi (string str, int width) {
             linesANSI[i] = sprintf("%' '*s", width, "");
             continue;
         }
-
         diff = width - sizeof(linesUnknown[i]);
         if (diff > 0) {
             // when difference in length between ANSI and Unknown,

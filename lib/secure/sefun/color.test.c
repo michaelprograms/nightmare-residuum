@@ -84,8 +84,24 @@ void test_color_gradient () {
     }) :));
 }
 
+void test_apply_gradient () {
+    mixed *gradient1 = testOb->color_gradient(({ 255, 255, 255 }), ({ 0, 0, 0 }), 3);
+    mixed *gradient2 = testOb->color_gradient(({ 0, 0, 0 }), ({ 255, 255, 255 }), 10);
+
+    expect("apply_gradient behaves", (: ({
+        assert_equal(testOb->apply_gradient("123", $(gradient1)), "\e[38;2;255;255;255m1\e[38;2;127;127;127m2\e[38;2;0;0;0m3\e[0;37;40m"),
+        assert_equal(testOb->apply_gradient("1234567890", $(gradient2)), "\e[38;2;0;0;0m1\e[38;2;28;28;28m2\e[38;2;56;56;56m3\e[38;2;85;85;85m4\e[38;2;113;113;113m5\e[38;2;141;141;141m6\e[38;2;170;170;170m7\e[38;2;198;198;198m8\e[38;2;226;226;226m9\e[38;2;255;255;255m0\e[0;37;40m"),
+
+        // smaller text than gradient works
+        assert_equal(testOb->apply_gradient("123", $(gradient2)), "\e[38;2;0;0;0m1\e[38;2;28;28;28m2\e[38;2;56;56;56m3\e[0;37;40m"),
+    }) :));
+    expect("apply_gradient handles bad input", (: ({
+        assert_catch((: testOb->apply_gradient("1234567890", $($(gradient1))) :), "*Bad arguments to color->apply_gradient: invalid sizes 10 vs 3\n"),
+    }) :));
+}
+
 void test_format_message_color () {
-    expect("", (: ({
+    expect("format_message_color behaves", (: ({
         assert_equal(testOb->format_message_color("nothing", "Message."), "Message."),
 
         assert_equal(testOb->format_message_color("say", "Someone says: Something."), "%^CYAN%^Someone says:%^RESET%^ Something."),
