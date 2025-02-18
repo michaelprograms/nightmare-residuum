@@ -69,10 +69,10 @@ void test_lerp () {
     }) :));
 }
 
-void test_gradient () {
+void test_color_gradient () {
     expect("color_gradient behaves", (: ({
-        assert_equal(testOb->color_gradient(({ 0, 0, 0 }), ({ 255, 255, 255 }), 2), ({ "0;0;0", "193;193;193" })),
-        assert_equal(testOb->color_gradient(({ 0, 0, 0 }), ({ 255, 255, 255 }), 5), ({ "0;0;0", "102;102;102", "141;141;141", "170;170;170", "193;193;193" })),
+        assert_equal(testOb->color_gradient(({ 0, 0, 0 }), ({ 255, 255, 255 }), 2), ({ "0;0;0", "255;255;255" })),
+        assert_equal(testOb->color_gradient(({ 0, 0, 0 }), ({ 255, 255, 255 }), 5), ({  "0;0;0", "63;63;63", "127;127;127", "191;191;191", "255;255;255" })),
     }) :));
 
     expect("color_gradient handles bad input", (: ({

@@ -120,12 +120,10 @@ float color_lerp (float color1, float color2, float ratio) {
     return color1 * (1 - ratio) + color2 * ratio;
 }
 
-// Generate a color gradient between 'color1' and 'color2' of length 'steps'
-// based upon https://stackoverflow.com/questions/22607043/color-gradient-algorithm
-string *color_gradient (int *color1, int *color2, int steps) {
-    string *gradient = ({ });
-    float *c1, *c2, *b;
-    float ratio, intensity, *color, total;
+// Generate a color gradient between 'color1' and 'color2' of length 'steps'.
+// Originally based upon https://stackoverflow.com/questions/22607043/color-gradient-algorithm
+string *color_gradient (mixed *color1, mixed *color2, int steps) {
+    string *gradient = allocate(steps);
 
     if (!arrayp(color1) && sizeof(color1) != 3) {
         error("Bad argument 1 to color->color_gradient");
@@ -137,41 +135,13 @@ string *color_gradient (int *color1, int *color2, int steps) {
         error("Bad argument 3 to color->color_gradient");
     }
 
-    c1 = ({ 0.0, 0.0, 0.0 });
-    c2 = ({ 0.0, 0.0, 0.0 });
-    b = ({ 0.0, 0.0 });
-
-    // Red
-    c1[0] = color_from_sRGB(color1[0]);
-    c2[0] = color_from_sRGB(color2[0]);
-    // Green
-    c1[1] = color_from_sRGB(color1[1]);
-    c2[1] = color_from_sRGB(color2[1]);
-    // Blue
-    c1[2] = color_from_sRGB(color1[2]);
-    c2[2] = color_from_sRGB(color2[2]);
-    // Bright
-    b[0] = pow(c1[0] + c1[1] + c1[2], 0.43);
-    b[1] = pow(c2[0] + c2[1] + c2[2], 0.43);
-
-    for (int i = 0; i < steps; i ++) {
-        ratio = i * 1.0 / (steps-1);
-        intensity = color_lerp(b[0], b[1], ratio);
-        color = ({
-            color_lerp(c1[0], c2[0], ratio),
-            color_lerp(c1[1], c2[1], ratio),
-            color_lerp(c1[2], c2[2], ratio),
-        });
-        total = color[0] + color[1] + color[2];
-        if (total != 0) {
-            color[0] = color[0] * intensity / total;
-            color[1] = color[1] * intensity / total;
-            color[2] = color[2] * intensity / total;
-        }
-        color = map(color, (: color_to_sRGB :));
-        gradient += ({ implode(map(color, (: ""+to_int($1) :)), ";") });
+    for (int i = 0; i < steps; i++) {
+        float ratio = 1.0 * i / (steps - 1);
+        int r = to_int(color1[0] + ratio * (color2[0] - color1[0]));
+        int g = to_int(color1[1] + ratio * (color2[1] - color1[1]));
+        int b = to_int(color1[2] + ratio * (color2[2] - color1[2]));
+        gradient[i] = sprintf("%d;%d;%d", r, g, b);
     }
-
     return gradient;
 }
 
