@@ -256,17 +256,13 @@ string *format_border (mapping rawData, mapping b, int width, string ansi) {
         line += sprintf("%*s", width - 1 - n + (fSubtitle - lSubtitle), "");
         line += (fHeader ? b["v"] : " ") + b["v"];
         if (ansi == "256") {
-            line = SEFUN->apply_gradient(line[0..fHeader], colors[0..fHeader]) +
-                line[1+fHeader..2] +
-                SEFUN->apply_gradient(line[3..l+1], colors[3..l+1]) +
-                line[l+2..<2+fHeader] +
-                SEFUN->apply_gradient(line[<1+fHeader..<1], colors[<1+fHeader..<1]) + ""; // empty string at the end prevents a strange bug where it inserts '0' instead of correct right wall symbol
+            line = SEFUN->apply_gradient(line[0..fHeader], colors[0..fHeader]) + line[1+fHeader..2] + SEFUN->apply_gradient(line[3..l+1], colors[3..l+1]) + line[l+2..<2+fHeader] + SEFUN->apply_gradient(line[<1+fHeader..<1], colors[<1+fHeader..<1]);
         } else if (ansi) {
             line = "\e[36m" + line[0..fHeader] + "\e[0;37;40m" +
-            line[1+fHeader..2] +
-            "\e[36m" + line[3..l+1] + "\e[0;37;40m" +
-            line[l+2..<2+fHeader] +
-            "\e[36m" + line[<1+fHeader..<1] + "\e[0;37;40m";
+                line[1+fHeader..2] +
+                "\e[36m" + line[3..l+1] + "\e[0;37;40m" +
+                line[l+2..<2+fHeader] +
+                "\e[36m" + line[<1+fHeader..<1] + "\e[0;37;40m";
         }
         lines += ({ line });
 
