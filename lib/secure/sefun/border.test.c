@@ -326,3 +326,17 @@ void test_tree () {
         assert_catch((: testOb->tree(UNDEFINED) :), "*Bad argument 1 to border->tree\n"),
     }) :));
 }
+
+string *Result;
+void handle_pager (string *result) {
+    Result = result;
+}
+void test_border () {
+    expect("border behaves", (: ({
+        testOb->border(([ ])),
+        assert_equal(Result, ({
+            "╭──────────────────────────────────────────────────────────────────────────────╮",
+            "╰──────────────────────────────────────────────────────────────────────────────╯"
+        })),
+    }) :));
+}
