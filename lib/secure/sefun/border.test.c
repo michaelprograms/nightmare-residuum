@@ -35,13 +35,27 @@ void test_character_colors () {
     }) :));
 }
 
+string __Type;
+string query_terminal (string key) {
+    if (key == "type") {
+        return __Type;
+    }
+}
+
 void test_border_charset () {
     expect("border_charset is returned", (: ({
         assert_equal(testOb->query_border_charset()["h"],  "─"),
+        assert_equal(testOb->query_border_charset()["v"],  "│"),
 
         __Screenreader = "on",
         assert_equal(testOb->query_border_charset()["h"], " "),
+        assert_equal(testOb->query_border_charset()["v"], " "),
         __Screenreader = "off",
+
+        __Type = "cmud",
+        assert_equal(testOb->query_border_charset()["h"], "-"),
+        assert_equal(testOb->query_border_charset()["v"], "|"),
+        __Type = 0,
     }) :));
 }
 

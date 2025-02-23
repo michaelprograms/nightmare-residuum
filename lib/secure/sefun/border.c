@@ -97,7 +97,7 @@ nosave private mapping __BorderCharset = ([
 ]);
 mapping query_border_charset () {
     object user;
-    string type;
+    string type = "utf-8";
     if (SEFUN->query_account_setting("screenreader") == "on") {
         type = "screenreader";
     } else if (user = SEFUN->this_user()) {
@@ -109,8 +109,6 @@ mapping query_border_charset () {
             type = query_encoding();
             break;
         }
-    } else {
-        type = "utf-8";
     }
     return copy(__BorderCharset[type]);
 }
