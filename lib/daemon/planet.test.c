@@ -97,3 +97,15 @@ void test_biome () {
         assert_equal(testOb->query_biome(HEIGHT_SHORE, HEAT_HOTTEST, HUMIDITY_WETTER), "tropical rainforest"),
     }) :));
 }
+
+void test_querying_planets () {
+    expect("querying all is an array", (: ({
+        assert_equal(arrayp(testOb->query_all_planets()), 1),
+    }) :));
+
+    expect("querying default planet (Terra)", (: ({
+        assert_equal(mapp(testOb->query_planet("Terra")), 1),
+        assert_equal(testOb->query_planet("Terra")["name"], "Terra"),
+        assert_equal(testOb->query_planet_size("Terra"), 500),
+    }) :));
+}
