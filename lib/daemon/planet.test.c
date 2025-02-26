@@ -43,6 +43,11 @@ void test_humidity () {
 void test_noise () {
     mapping p = noise_generate_permutation_simplex("test");
 
+    expect("noise initializes all values", (: ({
+        // UNDEFINED values report different then defined values (different than defaults)
+        assert_equal(testOb->query_noise($(p), 100, 49, 49, UNDEFINED, UNDEFINED, UNDEFINED, UNDEFINED) != testOb->query_noise($(p), 100, 49, 49, 0.1, 0.1, 0.1, 1717171717), 1),
+    }) :));
+
     expect("noise returns different values for x,y coordinates", (: ({
         assert_equal(testOb->query_noise($(p), 100, 49, 49, UNDEFINED, UNDEFINED, UNDEFINED, 1717171717), ([ "heat": 0.811243, "height": 0.638848, "humidity": 0.630995, "level": 1, "resource": 0 ])),
         assert_equal(testOb->query_noise($(p), 100, 49, 50, UNDEFINED, UNDEFINED, UNDEFINED, 1717171717), ([ "heat": 0.792699, "height": 0.619084, "humidity": 0.515993, "level": 1, "resource": 9 ])),
@@ -112,9 +117,10 @@ void test_querying_planets () {
 
 void test_creating_and_adjusting_planet () {
     string testPlanet = "test_" + time();
-
+    string testPlanetFile = "/save/planet/t/"+testPlanet+".o";
     expect("create_planet behaves", (: ({
         // planet doesn't exist yet
+        assert_equal(file_size($(testPlanetFile)), -1),
         assert_equal(testOb->query_planet($(testPlanet)), ([ ])),
         // create test planet
         assert_equal(testOb->create_planet($(testPlanet), ([ "size": 123 ])), 1),
@@ -128,7 +134,8 @@ void test_creating_and_adjusting_planet () {
         assert_equal(testOb->adjust_planet($(testPlanet), ([ "size": 321 ])), 1),
         // can't adjust non-existant planet
         assert_equal(testOb->adjust_planet($(testPlanet+"-bad"), ([ "size": 321 ])), 0),
+        rm($(testPlanetFile)),
+        assert_equal(file_size($(testPlanetFile)), -1),
     }) :));
 
-    rm("/save/planet/t/"+testPlanet+".o");
 }
