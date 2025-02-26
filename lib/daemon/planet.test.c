@@ -109,3 +109,26 @@ void test_querying_planets () {
         assert_equal(testOb->query_planet_size("Terra"), 500),
     }) :));
 }
+
+void test_creating_and_adjusting_planet () {
+    string testPlanet = "test_" + time();
+
+    expect("create_planet behaves", (: ({
+        // planet doesn't exist yet
+        assert_equal(testOb->query_planet($(testPlanet)), ([ ])),
+        // create test planet
+        assert_equal(testOb->create_planet($(testPlanet), ([ "size": 123 ])), 1),
+        // planet exists
+        assert_equal(testOb->query_planet($(testPlanet)), ([ "name": $(testPlanet), "size": 123 ])),
+        // planet was already created
+        assert_equal(testOb->create_planet($(testPlanet), ([ ])), 0),
+    }) :));
+    expect("adjust_planet behaves", (: ({
+        // adjust planet size
+        assert_equal(testOb->adjust_planet($(testPlanet), ([ "size": 321 ])), 1),
+        // can't adjust non-existant planet
+        assert_equal(testOb->adjust_planet($(testPlanet+"-bad"), ([ "size": 321 ])), 0),
+    }) :));
+
+    rm("/save/planet/t/"+testPlanet+".o");
+}

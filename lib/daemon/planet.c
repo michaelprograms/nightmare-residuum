@@ -71,19 +71,19 @@ int create_planet (string name, mapping config) {
     }
     config["name"] = name;
     __Planet = config;
-    return save_object(path);
+    return !!save_object(path);
 }
 
 int adjust_planet (string name, mapping config) {
     string path = "/save/planet/" + lower_case(name[0..0]) + "/" + name + ".o";
-    if (file_size(path) == 0) {
+    if (file_size(path) == -1) {
         return 0;
     }
     __Planet = ([ ]);
     map_delete(config, "name");
     restore_object(path);
     __Planet += config;
-    return save_object(path);
+    return !!save_object(path);
 }
 
 /* ----- noise ----- */
