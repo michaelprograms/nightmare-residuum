@@ -54,6 +54,13 @@ void test_noise () {
         assert_equal(testOb->query_noise($(p), 100, 50, 49, UNDEFINED, UNDEFINED, UNDEFINED, 1717171717), ([ "heat": 0.879001, "height": 0.600883, "humidity": 0.648935, "level": 1, "resource": 5 ])),
         assert_equal(testOb->query_noise($(p), 100, 50, 50, UNDEFINED, UNDEFINED, UNDEFINED, 1717171717), ([ "heat": 0.901959, "height": 0.547387, "humidity": 0.593906, "level": 1, "resource": 1 ])),
     }) :));
+
+    expect("noise returns water adjustments", (: ({
+        assert_equal(testOb->query_noise($(p), 100, 70, 0, UNDEFINED, UNDEFINED, UNDEFINED, 1717171717), ([ "heat": 0.000000, "height": 0.400000, "humidity": 2.000008, "level": 20, "resource": 0 ])),
+
+        assert_equal(testOb->query_noise($(p), 100, 8, 0, UNDEFINED, UNDEFINED, UNDEFINED, 1717171717), ([ "heat": 0.000000, "height": 0.353097, "humidity": 2.135435, "level": 20, "resource": 0 ])),
+        assert_equal(testOb->query_noise($(p), 100, 14, 0, UNDEFINED, UNDEFINED, UNDEFINED, 1717171717), ([ "heat": 0.000000, "height": 0.400000, "humidity": 1.924181, "level": 20, "resource": 0 ])),
+    }) :));
 }
 
 void test_biome () {

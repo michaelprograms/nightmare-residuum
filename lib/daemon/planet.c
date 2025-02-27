@@ -144,11 +144,7 @@ varargs mapping query_noise (mapping p, int size, int x, int y, float heightFact
         nTmp = (((noise_simplex_4d(nx, ny, nz, nw, p, 4, 1.25) + 1) / 2) - 0.25) / 0.5; // normalize 0.25-0.75 to 0-1
         if (nTmp >= WATER_LAKES-0.026 && nTmp <= WATER_LAKES+0.026) {
             if (nTmp >= WATER_LAKES-0.025 && nTmp <= WATER_LAKES+0.025) {
-                if (nHeight <= HEIGHT_SHALLOW) {
-                    nHeight = nHeight * 0.8;
-                } else {
-                    nHeight = max(({ 0.0, nHeight - (abs(nHeight - HEIGHT_SHALLOW) + 0.05) }));
-                }
+                nHeight = max(({ 0.0, nHeight - (abs(nHeight - HEIGHT_SHALLOW) + 0.05) }));
             }
             if (heatFactor != 0.0) {
                 nHumidity += 0.1 * nHeight;
