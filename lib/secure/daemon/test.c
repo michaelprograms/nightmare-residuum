@@ -443,8 +443,9 @@ string create_coverage (string path) {
             // End of Function
             line = "} " + __RawLines[i];
         } else if (pcre_match(__RawLines[i], "^\\s+\\} else \\{")) {
+            int n = strsrch(__RawLines[i], "{");
             // Else Construct
-            line = __RawLines[i] + " D_TEST->line_hit(" + (i+1) + ");";
+            line = __RawLines[i][0..n] + " D_TEST->line_hit(" + (i+1) + ");" + __RawLines[i][n+1..];
             __Lines[i+1] = ({ 0 });
         } else if (sizeof(reMatches = pcre_extract(__RawLines[i], "^(\\s+\\} else if \\()(.*)(\\) \\{)")) > 0) {
             // Else If Construct
