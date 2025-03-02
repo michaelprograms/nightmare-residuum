@@ -42,10 +42,13 @@ void test_humidity () {
 
 void test_noise () {
     mapping p = noise_generate_permutation_simplex("test");
-
     expect("noise initializes all values", (: ({
         // UNDEFINED values report different then defined values (different than defaults)
         assert_equal(testOb->query_noise($(p), 100, 49, 49, UNDEFINED, UNDEFINED, UNDEFINED, UNDEFINED) != testOb->query_noise($(p), 100, 49, 49, 0.1, 0.1, 0.1, 1717171717), 1),
+    }) :));
+
+    expect("noise ensures central land mass", (: ({
+        assert_equal(testOb->query_noise($(p), 100, 49, 49, 0.1, 0.1, 0.1, 1717171717), ([ "heat": 0.068189, "height": 0.500000, "humidity": 0.156711, "level": 1, "resource": 0 ])),
     }) :));
 
     expect("noise returns different values for x,y coordinates", (: ({
@@ -56,26 +59,30 @@ void test_noise () {
     }) :));
 
     expect("noise returns water adjustments", (: ({
+        // water - lake
         assert_equal(testOb->query_noise($(p), 100, 70, 0, UNDEFINED, UNDEFINED, UNDEFINED, 1717171717), ([ "heat": 0.000000, "height": 0.400000, "humidity": 2.000008, "level": 20, "resource": 0 ])),
-
+        // water - height below height shallow
         assert_equal(testOb->query_noise($(p), 100, 8, 0, UNDEFINED, UNDEFINED, UNDEFINED, 1717171717), ([ "heat": 0.000000, "height": 0.353097, "humidity": 2.135435, "level": 20, "resource": 0 ])),
+        // water - height above height shallow
         assert_equal(testOb->query_noise($(p), 100, 14, 0, UNDEFINED, UNDEFINED, UNDEFINED, 1717171717), ([ "heat": 0.000000, "height": 0.400000, "humidity": 1.924181, "level": 20, "resource": 0 ])),
     }) :));
 
     expect("noise returns humidity adjustments", (: ({
+        // humidity - height below height deeper
         assert_equal(testOb->query_noise($(p), 100, 46, 0, UNDEFINED, UNDEFINED, UNDEFINED, 1717171717), ([ "heat": 0.000000, "height": 0.281879, "humidity": 2.366390, "level": 20, "resource": 0 ])),
+        // humidity - height below height deep
         assert_equal(testOb->query_noise($(p), 100, 45, 0, UNDEFINED, UNDEFINED, UNDEFINED, 1717171717), ([ "heat": 0.000000, "height": 0.365770, "humidity": 2.399587, "level": 20, "resource": 0 ])),
+        // humidity - height below height shallow
         assert_equal(testOb->query_noise($(p), 100, 44, 0, UNDEFINED, UNDEFINED, UNDEFINED, 1717171717), ([ "heat": 0.000000, "height": 0.416786, "humidity": 2.145491, "level": 20, "resource": 0 ])),
+        // humidity - height below height shore
         assert_equal(testOb->query_noise($(p), 100, 38, 0, UNDEFINED, UNDEFINED, UNDEFINED, 1717171717), ([ "heat": 0.000000, "height": 0.469673, "humidity": 0.530347, "level": 20, "resource": 0 ])),
     }) :));
 
     expect("noise returns heat adjustments", (: ({
         // north 40%
         assert_equal(testOb->query_noise($(p), 100, 0, 99, UNDEFINED, UNDEFINED, UNDEFINED, 1717171717), ([ "heat": 0.000000, "height": 0.559112, "humidity": 0.633468, "level": 20, "resource": 3 ])),
-
         // center 20%
         assert_equal(testOb->query_noise($(p), 100, 95, 50, UNDEFINED, UNDEFINED, UNDEFINED, 1717171717), ([ "heat": 0.529401, "height": 0.557625, "humidity": 0.355702, "level": 18, "resource": 4 ])),
-
         // south 40%
         assert_equal(testOb->query_noise($(p), 100, 99, 99, UNDEFINED, UNDEFINED, UNDEFINED, 1717171717), ([ "heat": 0.000000, "height": 0.559822, "humidity": 0.642394, "level": 20, "resource": 6 ])),
     }) :));
