@@ -85,6 +85,9 @@ void test_noise () {
         assert_equal(testOb->query_noise($(p), 100, 95, 50, UNDEFINED, UNDEFINED, UNDEFINED, 1717171717), ([ "heat": 0.529401, "height": 0.557625, "humidity": 0.355702, "level": 18, "resource": 4 ])),
         // south 40%
         assert_equal(testOb->query_noise($(p), 100, 99, 99, UNDEFINED, UNDEFINED, UNDEFINED, 1717171717), ([ "heat": 0.000000, "height": 0.559822, "humidity": 0.642394, "level": 20, "resource": 6 ])),
+
+        // heat capped at 1.0
+        assert_equal(testOb->query_noise($(p), 100, 49, 45, UNDEFINED, UNDEFINED, UNDEFINED, 1717171717), ([ "heat": 0.866250, "height": 0.654389, "humidity": 0.382916, "level": 2, "resource": 9 ])),
     }) :));
 }
 
