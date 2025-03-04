@@ -80,6 +80,8 @@ void test_targets () {
 
         testOb->set_targets(10),
         assert_equal(testOb->query_targets(), 10),
+
+        assert_catch((: testOb->set_targets(0) :), "*Bad argument 1 to ability->set_targets\n"),
     }) :));
 }
 
@@ -96,6 +98,8 @@ void test_cooldown () {
 
         testOb->set_cooldown(0),
         assert_equal(testOb->query_cooldown(), 0),
+
+        assert_catch((: testOb->set_cooldown(-1) :), "*Bad argument 1 to ability->set_cooldown\n"),
     }) :));
 }
 
