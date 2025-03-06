@@ -444,7 +444,7 @@ string query_resource_color_hex (int resource) {
 
 /* ----- export /tmp/name.json ----- */
 
-void generate_json_line (mapping data) {
+void generate_json_line (mapping data, int time) {
     mapping p = data["p"], planet = data["planet"];
     int y = data["y"];
     string biome, line = "        [ ";
@@ -454,7 +454,7 @@ void generate_json_line (mapping data) {
     write("generate_json_line: "+data["y"]+"\n");
 
     for (int x = 0; x < size; x ++) {
-        n = query_noise(p, size, x, y, planet["heightFactor"], planet["humidityFactor"], planet["heatFactor"]);
+        n = query_noise(p, size, x, y, planet["heightFactor"], planet["humidityFactor"], planet["heatFactor"], time);
         if (n["height"] < data["min"]["height"]) {
             data["min"]["height"] = n["height"];
         } else if (n["height"] > data["max"]["height"]) {
@@ -527,13 +527,13 @@ void generate_json_line (mapping data) {
     } else {
         data["y"] ++;
         if (data["y"] % 5 > 0) {
-            generate_json_line(data);
+            generate_json_line(data, time);
         } else {
-            call_out_walltime((: generate_json_line :), 0.005, data);
+            call_out_walltime((: generate_json_line :), 0.005, data, time);
         }
     }
 }
-void generate_json (string name) {
+varargs void generate_json (string name, int time) {
     mapping data = ([
         "start": time_ns(),
         "name": name,
@@ -555,8 +555,11 @@ void generate_json (string name) {
         "y": 0,
         "file": "/tmp/"+name+".json",
     ]);
+    if (undefinedp(time)) {
+        time = time();
+    }
 
     write_file(data["file"], "{\n\"name\":\""+name+"\",\n\"size\":\""+data["planet"]["size"]+"\",\n\"data\":[\n", 1);
 
-    call_out_walltime((: generate_json_line :), 0.005, data);
+    call_out_walltime((: generate_json_line :), 0.005, data, time);
 }
