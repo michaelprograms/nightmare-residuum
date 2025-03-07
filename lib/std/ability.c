@@ -4,6 +4,7 @@
 
 inherit STD_VERB;
 inherit "/std/ability/config.c";
+inherit "/std/ability/cost.c";
 inherit "/std/ability/requirements.c";
 inherit "/std/ability/weapons.c";
 
@@ -32,30 +33,6 @@ void set_cooldown (int n) {
 }
 int query_cooldown () {
     return __Cooldown;
-}
-
-/* ----- cost ----- */
-
-mapping query_cost () {
-    string vitalType;
-    mapping cost = ([
-        "sp": 0,
-        "mp": 0,
-    ]);
-
-    foreach (string key,int value in query_powers()) {
-        switch (key) {
-        case "psionic":
-            vitalType = "mp";
-            break;
-        case "ranged": case "brawl": default:
-            vitalType = "sp";
-            break;
-        }
-        cost[vitalType] += value;
-    }
-
-    return cost;
 }
 
 /* ----- calculations ----- */
