@@ -52,7 +52,7 @@ mapping query_cost () {
             vitalType = "sp";
             break;
         }
-        cost[vitalType] += value/2 + (random(value/2) + 1);
+        cost[vitalType] += value;
     }
 
     return cost;
@@ -446,10 +446,10 @@ private void handle_ability_use (object source, object *targets) {
     }
     // update source vitals
     if (cost["sp"] > 0) {
-        source->add_sp(-cost["sp"]);
+        source->add_sp(-(cost["sp"]*3/4 + (random(cost["sp"]/4) + 1)));
     }
     if (cost["mp"]) {
-        source->add_mp(-cost["mp"]);
+        source->add_mp(-(cost["mp"]*3/4 + (random(cost["mp"]/4) + 1)));
     }
 
     // update statuses

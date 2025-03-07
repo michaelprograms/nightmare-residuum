@@ -103,6 +103,24 @@ void test_cooldown () {
     }) :));
 }
 
+void test_query_cost () {
+    expect("handles cost", (: ({
+        assert_equal(testOb->query_cost(), ([ "sp": 0, "mp": 0 ])),
+
+        testOb->set_powers(([ "ranged": 10 ])),
+        assert_equal(testOb->query_cost(), ([ "sp": 10, "mp": 0 ])),
+
+        testOb->set_powers(([ "brawl": 20 ])),
+        assert_equal(testOb->query_cost(), ([ "sp": 20, "mp": 0 ])),
+
+        testOb->set_powers(([ "psionic": 123 ])),
+        assert_equal(testOb->query_cost(), ([ "sp": 0, "mp": 123 ])),
+
+        testOb->set_powers(([ "brawl": 31, "psionic": 32 ])),
+        assert_equal(testOb->query_cost(), ([ "sp": 31, "mp": 32 ])),
+    }) :));
+}
+
 void test_difficulty_factor () {
     expect("handles difficulty factor", (: ({
         // defaults to 100
