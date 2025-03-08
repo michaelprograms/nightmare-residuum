@@ -412,22 +412,10 @@ private void handle_ability_use (object source, object *targets) {
 
     // determine cost
     cost = query_cost();
-    // check source vitals
-    if (cost["sp"] > 0 && source->query_sp() < cost["sp"]) {
-        message("action", "You are too drained to " + query_name() + ".", source);
+    if (!verify_cost(source, cost)) {
         return;
     }
-    if (cost["mp"] > 0 && source->query_mp() < cost["mp"]) {
-        message("action", "You are too tired to " + query_name() + ".", source);
-        return;
-    }
-    // update source vitals
-    if (cost["sp"] > 0) {
-        source->add_sp(-(cost["sp"]*3/4 + (random(cost["sp"]/4) + 1)));
-    }
-    if (cost["mp"]) {
-        source->add_mp(-(cost["mp"]*3/4 + (random(cost["mp"]/4) + 1)));
-    }
+    apply_cost(source, cost);
 
     // update statuses
     source->set_busy(1);
