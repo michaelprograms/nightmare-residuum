@@ -37,12 +37,13 @@ int verify_cost (object source, mapping cost) {
     // check source vitals
     if (cost["sp"] > 0 && source->query_sp() < cost["sp"]) {
         message("action", "You are too drained to " + this_object()->query_name() + ".", source);
-        return;
+        return 0;
     }
     if (cost["mp"] > 0 && source->query_mp() < cost["mp"]) {
         message("action", "You are too tired to " + this_object()->query_name() + ".", source);
-        return;
+        return 0;
     }
+    return 1;
 }
 
 /**
