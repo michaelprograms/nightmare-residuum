@@ -12,7 +12,7 @@ private int __LastAction;
 private int __Immortal;
 private int __ConnectionTime = 0;
 
-/** @type {STD_USER} __User */
+/** @type {STD_USER} */
 nosave private object __User;
 
 void describe_environment ();

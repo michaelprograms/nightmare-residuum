@@ -18,7 +18,6 @@ private string *__Banner = ({
 string query_banner () {
     string text = "\e[0;37;40m"; // start with ANSI reset
     string *colors = allocate(6); // left padding
-    /** @type {STD_USER} tu */
     object tu = SEFUN->this_user();
     string userColor = tu && tu->query_terminal("color");
 

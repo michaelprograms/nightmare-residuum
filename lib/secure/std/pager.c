@@ -1,6 +1,6 @@
 #include <config.h>
 
-/** @type {STD_USER} __User */
+/** @type {STD_USER} */
 nosave private object __User;
 nosave private string *__Lines;
 nosave private int __LineNum, __LinesCount;
