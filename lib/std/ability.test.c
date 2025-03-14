@@ -209,5 +209,9 @@ void test_handle_help () {
         // updated weapon requirements
         testOb->set_weapons(([ "blunt": ({ 1, 2 }), ])),
         assert_equal(regexp(testOb->handle_help(this_object()), "one handed blunt, two handed blunt"), 1),
+
+        // cooldown
+        testOb->set_cooldown(2),
+        assert_equal(regexp(testOb->handle_help(this_object()), "2 rounds"), 1),
     }) :));
 }
