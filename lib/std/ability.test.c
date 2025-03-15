@@ -118,6 +118,15 @@ void test_difficulty_factor () {
     }) :));
 }
 
+void test_can_verb_rule () {
+    // these functions call verb->can_verb_rule which is tested in verb.test.c
+    expect("can_verb_rule should handle can_verb_* applies", (: ({
+        assert_equal(testOb->can_verb_lvs("verb", "rule"), 1),
+        assert_equal(testOb->can_verb_liv("verb", "rule"), 1),
+        assert_equal(testOb->can_verb("verb", "rule"), 1),
+    }) :));
+}
+
 void test_direct_verb_lib () {
     object ob;
 
