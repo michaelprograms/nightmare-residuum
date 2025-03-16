@@ -70,21 +70,6 @@ void test_weapons () {
     if (weaponBlunt) weaponBlunt->handle_remove();
 }
 
-void test_targets () {
-    expect("handles setting and querying targets", (: ({
-        // default
-        assert_equal(testOb->query_targets(), 1),
-
-        testOb->set_targets(2),
-        assert_equal(testOb->query_targets(), 2),
-
-        testOb->set_targets(10),
-        assert_equal(testOb->query_targets(), 10),
-
-        assert_catch((: testOb->set_targets(0) :), "*Bad argument 1 to ability->set_targets\n"),
-    }) :));
-}
-
 void test_cooldown () {
     expect("handles setting and querying cooldown", (: ({
         // default

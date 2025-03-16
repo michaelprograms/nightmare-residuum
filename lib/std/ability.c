@@ -7,22 +7,10 @@ inherit "/std/ability/config.c";
 inherit "/std/ability/cost.c";
 inherit "/std/ability/message.c";
 inherit "/std/ability/requirements.c";
+inherit "/std/ability/target.c";
 inherit "/std/ability/weapons.c";
 
-nosave private int __NumTargets = 1;
 nosave private int __Cooldown = 1;
-
-/* ----- ability targets ----- */
-
-void set_targets (int n) {
-    if (undefinedp(n) || !intp(n) || n < 1) {
-        error("Bad argument 1 to ability->set_targets");
-    }
-    __NumTargets = n;
-}
-int query_targets () {
-    return __NumTargets;
-}
 
 /* ----- ability cooldown ----- */
 
@@ -287,11 +275,11 @@ private void handle_ability_use (object source, object *targets) {
         return;
     }
 
-    if (__NumTargets < sizeof(targets)) {
+    if (query_targets() < sizeof(targets)) {
         return;
     }
 
-    l = min(({ sizeof(targets), __NumTargets }));
+    l = min(({ sizeof(targets), query_targets() }));
 
     // determine cost
     cost = query_cost();
@@ -432,12 +420,12 @@ void do_verb_lvs (mixed args...) {
     }
 
     targets = args[1];
-    if (sizeof(targets) && __NumTargets == 1) {
+    if (sizeof(targets) && query_targets() == 1) {
         handle_ability_use(previous_object(), ({ targets[0] }));
         return;
     }
-    if (__NumTargets > 1) {
-        handle_ability_use(previous_object(), targets[0..__NumTargets-1]);
+    if (query_targets() > 1) {
+        handle_ability_use(previous_object(), targets[0..query_targets()-1]);
     }
 }
 
@@ -461,7 +449,7 @@ void do_verb_rule (mixed args...) {
 void create () {
     ::create();
     __Reqs = ([ ]);
-    __NumTargets = 1;
+    set_targets(1);
     if (query_name() != "ability") {
         add_rules(({ "", "LIV", "LVS", }));
     }
