@@ -40,7 +40,7 @@ int calculate_heal (object source, object target, string limb) {
     int n;
 
     // base heal
-    damage = random(5 + source->query_level());
+    damage = 1 + random(5 + source->query_level());
     damage += random(source->query_stat("luck") * 5 / 100 + 1);
 
     // skill powers

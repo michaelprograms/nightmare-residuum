@@ -13,6 +13,12 @@ void test_name () {
     }) :));
 }
 
+void test_calculate () {
+    expect("heals are calculated", (: ({
+        assert_equal(testOb->calculate_heal(this_object(), this_object(), 0) > 0, 1),
+    }) :));
+}
+
 void test_weapons () {
     object liv, weaponBlade, weaponBlunt;
 
