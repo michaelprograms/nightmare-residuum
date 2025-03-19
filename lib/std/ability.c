@@ -47,9 +47,6 @@ int calculate_heal (object source, object target, string limb) {
     // @TODO: skills were removed
     foreach (string key,int value in query_powers()) {
         switch (key) {
-        case "anatomy":
-            n = 3;
-            break;
         case "theurgy":
             n = 1;
             break;

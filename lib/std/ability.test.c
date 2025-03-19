@@ -7,15 +7,32 @@ inherit M_TEST;
 nosave private int __MockLiving;
 int is_living () { return __MockLiving; }
 
+// @TODO: clean this up with real test mock stats
+int MockIntelligence = 0;
+int query_stat (string key) {
+    if (key == "intelligence") {
+        return MockIntelligence;
+    }
+}
+
 void test_name () {
     expect("handles ability name", (: ({
         assert_equal(testOb->query_name(), "ability.coverage"),
     }) :));
 }
 
+int cValue1 = 0, cValue2 = 0;
 void test_calculate () {
+    MockIntelligence = 10;
+
     expect("heals are calculated", (: ({
-        assert_equal(testOb->calculate_heal(this_object(), this_object(), 0) > 0, 1),
+        cValue1 = testOb->calculate_heal(this_object(), this_object(), 0),
+        assert_equal(cValue1 > 0, 1),
+
+        // @TODO: remove these eventually
+        testOb->set_powers(([ "theurgy": 1, "medicine": 1, ])),
+        cValue2 = testOb->calculate_heal(this_object(), this_object(), 0),
+        assert_equal(cValue2 > cValue1, 1),
     }) :));
 }
 
