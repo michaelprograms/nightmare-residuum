@@ -347,6 +347,7 @@ void handle_pager (string *result) {
 }
 void test_border () {
     expect("border behaves", (: ({
+        assert_equal(__Width = 80, 80),
         testOb->border(([ ])),
         assert_equal(Result, ({
             "╭──────────────────────────────────────────────────────────────────────────────╮",
