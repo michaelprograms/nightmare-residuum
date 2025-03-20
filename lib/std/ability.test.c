@@ -14,6 +14,10 @@ int query_stat (string key) {
         return MockIntelligence;
     }
 }
+int MockLevel = 0;
+int query_level () {
+    return MockLevel;
+}
 
 void test_name () {
     expect("handles ability name", (: ({
@@ -24,15 +28,22 @@ void test_name () {
 int cValue1 = 0, cValue2 = 0;
 void test_calculate () {
     MockIntelligence = 10;
+    MockLevel = 10;
 
     expect("heals are calculated", (: ({
         cValue1 = testOb->calculate_heal(this_object(), this_object(), 0),
         assert_equal(cValue1 > 0, 1),
 
         // @TODO: remove these eventually
-        testOb->set_powers(([ "theurgy": 1, "medicine": 1, ])),
+        testOb->set_powers(([ "theurgy": 123, "medicine": 123, ])),
         cValue2 = testOb->calculate_heal(this_object(), this_object(), 0),
         assert_equal(cValue2 > cValue1, 1),
+    }) :));
+
+    expect("damage is calculated", (: ({
+        testOb->set_powers(([ "psionic": 123, ])),
+        cValue1 = testOb->calculate_damage(this_object(), this_object(), "head"),
+        assert_equal(cValue1 > 0, 1),
     }) :));
 }
 
