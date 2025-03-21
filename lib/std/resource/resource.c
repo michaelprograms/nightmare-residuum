@@ -1,5 +1,9 @@
 inherit STD_ITEM;
 
+int is_resource () {
+    return 1;
+}
+
 void create () {
     ::create();
     set_name("resource");
