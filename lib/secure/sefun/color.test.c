@@ -131,5 +131,19 @@ void test_format_message_color () {
 void test_wrap_ansi () {
     expect("wrap_ansi behaves", (: ({
         assert_equal(testOb->wrap_ansi("1\n2\n3", 10), "1\e[0;37;40m         \n2\e[0;37;40m         \n3         "),
+
+        assert_equal(
+            testOb->wrap_ansi("01 02 03 04 05 06 07 08 09 10 11 12 %^GREEN%^BOLD%^13 14 15 16 17%^RESET%^ 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49 50 51 52 53 54 55 56 57 58 59 60 \n\n%^A bunch of %^UNDERLINE%^text that %^RED%^has some colors%^UNDERLINE_OFF%^ %^BOLD%^and style%^BOLD_OFF%^ set into it that%^RESET%^ will %^GREEN%^wrap around to the next line and retain its color and%^RESET%^ padding.", 40),
+            "01 02 03 04 05 06 07 08 09 10 11 12 \e[32m\e[1m13\e[0;37;40m  \n"+
+            "\e[32m\e[1m14 15 16 17\e[0;37;40m 18 19 20 21 22 23 24 25 26  \e[0;37;40m\n"+
+            "27 28 29 30 31 32 33 34 35 36 37 38 39  \e[0;37;40m\n"+
+            "40 41 42 43 44 45 46 47 48 49 50 51 52  \e[0;37;40m\n"+
+            "53 54 55 56 57 58 59 60                 \e[0;37;40m\n"+
+            "                                        \n"+
+            "A bunch of \e[4mtext that \e[31mhas some colors\e[24m \e[1mand\e[0;37;40m\n"+
+            "\e[4m\e[31m\e[24m\e[1mstyle\e[22m set into it that\e[0;37;40m will \e[32mwrap around \e[0;37;40m\n"+
+            "\e[32mto the next line and retain its color   \e[0;37;40m\n"+
+            "\e[32mand\e[0;37;40m padding.                            "
+        ),
     }) :));
 }
