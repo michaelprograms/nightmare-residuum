@@ -127,3 +127,9 @@ void test_format_message_color () {
         assert_equal(testOb->format_message_color("ability miss", "Ability miss."), "%^I_WHITE%^BOLD%^Ability miss.%^RESET%^"),
     }) :));
 }
+
+void test_wrap_ansi () {
+    expect("wrap_ansi behaves", (: ({
+        assert_equal(testOb->wrap_ansi("1\n2\n3", 10), "1\e[0;37;40m         \n2\e[0;37;40m         \n3         "),
+    }) :));
+}
