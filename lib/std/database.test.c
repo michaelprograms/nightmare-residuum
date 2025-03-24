@@ -6,10 +6,15 @@ inherit M_TEST;
 nosave private object db;
 void test_connect () {
     expect("connect returns a handle", (: ({
+        assert_catch((: testOb->connect(UNDEFINED) :), "*Bad argument 1 to database->connect\n"),
+        assert_catch((: testOb->connect(([ ])) :), "*Bad argument 1 to database->connect: missing db\n"),
+
         // connect
         db = testOb->connect(([ "db": "/save/test/database.db", ])),
         assert_equal(objectp(db), 1),
         assert_equal(testOb->query_handle() > 0, 1),
+
+        assert_catch((: testOb->connect(([ "db": "/save/test/database.db", ])) :), "*Database already connected\n"),
     }) :));
     expect("handle is queryable", (: ({
         // query non-existant
