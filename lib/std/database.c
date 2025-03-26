@@ -32,10 +32,10 @@ mixed connect (mapping config) {
     if (config["user"]) {
         dbUser = config["user"];
     }
-    if (config["type"]) {
+    if (!undefinedp(config["type"])) {
         dbType = config["type"];
     }
-    if (config["autoclose"]) {
+    if (!undefinedp(config["autoclose"])) {
         dbAutoclose = config["autoclose"];
     }
 

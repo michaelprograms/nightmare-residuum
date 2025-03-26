@@ -10,7 +10,7 @@ void test_connect () {
         assert_catch((: testOb->connect(([ ])) :), "*Bad argument 1 to database->connect: missing db\n"),
 
         // connect
-        db = testOb->connect(([ "db": "/save/test/database.db", ])),
+        db = testOb->connect(([ "host": "", "db": "/save/test/database.db", "user": "", "type": __USE_SQLITE3__, "autoclose": 0, ])),
         assert_equal(objectp(db), 1),
         assert_equal(testOb->query_handle() > 0, 1),
 
