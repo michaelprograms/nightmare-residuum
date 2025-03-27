@@ -7,7 +7,6 @@ nosave private int dbType = __USE_SQLITE3__;
 nosave private mixed dbHandle;
 nosave private int dbAutoclose = 0;
 
-
 mixed query_handle () {
     return dbHandle;
 }
