@@ -46,6 +46,18 @@ void test_connect () {
         // close
         assert_equal(testOb->close(), 1),
         assert_equal(testOb->query_handle(), 0),
+
+        // can't query when closed
+        assert_catch((: testOb->query("SELECT * FROM `Test`") :), "*Database not connected\n"),
+    }) :));
+    expect("autoclose stops a handle", (: ({
+        db = testOb->connect(([ "db": "/save/test/database.db", "autoclose": 1, ])),
+
+        // query
+        assert_equal(testOb->query("SELECT * FROM `Test`"), UNDEFINED),
+
+        // closed
+        assert_equal(testOb->query_handle(), 0),
     }) :));
 
     if (file_size("/save/test/database.db")) {
