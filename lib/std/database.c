@@ -5,7 +5,6 @@ nosave private string dbDatabase;
 nosave private string dbUser = "";
 nosave private int dbType = __USE_SQLITE3__;
 nosave private mixed dbHandle;
-nosave private int dbAutoclose = 0;
 
 mixed query_handle () {
     return dbHandle;
@@ -33,9 +32,6 @@ mixed connect (mapping config) {
     }
     if (!undefinedp(config["type"])) {
         dbType = config["type"];
-    }
-    if (!undefinedp(config["autoclose"])) {
-        dbAutoclose = config["autoclose"];
     }
 
     dbHandle = db_connect(dbHost, dbDatabase, dbUser, dbType);
@@ -71,9 +67,6 @@ mixed query (string sql) {
             result[i] = db_fetch(dbHandle, i+1);
         }
     }
-    if (dbAutoclose) {
-        close();
-    }
     return result;
 }
 
@@ -82,10 +75,4 @@ mixed query (string sql) {
 int handle_remove () {
     close();
     return ::handle_remove();
-}
-
-varargs void create (mapping config) {
-    if (mapp(config)) {
-        connect(config);
-    }
 }

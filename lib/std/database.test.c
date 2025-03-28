@@ -10,7 +10,7 @@ void test_connect () {
         assert_catch((: testOb->connect(([ ])) :), "*Bad argument 1 to database->connect: missing db\n"),
 
         // connect
-        db = testOb->connect(([ "host": "", "db": "/save/test/database.db", "user": "", "type": __USE_SQLITE3__, "autoclose": 0, ])),
+        db = testOb->connect(([ "host": "", "db": "/save/test/database.db", "user": "", "type": __USE_SQLITE3__, ])),
         assert_equal(objectp(db), 1),
         assert_equal(testOb->query_handle() > 0, 1),
 
@@ -49,15 +49,6 @@ void test_connect () {
 
         // can't query when closed
         assert_catch((: testOb->query("SELECT * FROM `Test`") :), "*Database not connected\n"),
-    }) :));
-    expect("autoclose stops a handle", (: ({
-        db = testOb->connect(([ "db": "/save/test/database.db", "autoclose": 1, ])),
-
-        // query
-        assert_equal(testOb->query("SELECT * FROM `Test`"), UNDEFINED),
-
-        // closed
-        assert_equal(testOb->query_handle(), 0),
     }) :));
 
     if (file_size("/save/test/database.db")) {
