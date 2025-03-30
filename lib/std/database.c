@@ -1,10 +1,12 @@
 inherit M_CLEAN;
 
-nosave private string dbHost = "";
-nosave private string dbDatabase;
-nosave private string dbUser = "";
-nosave private int dbType = __USE_SQLITE3__;
-nosave private mixed dbHandle;
+nosave string dbHost = "";
+nosave string dbDatabase;
+nosave string dbUser = "";
+nosave int dbType = __USE_SQLITE3__;
+nosave mixed dbHandle;
+
+#define UNDEFINED ([ ])[0]
 
 mixed query_handle () {
     return dbHandle;
@@ -43,7 +45,7 @@ mixed connect (mapping config) {
 
 mixed close () {
     mixed result;
-    if (dbHandle) {
+    if (dbHandle || (dbHandle == 0 && dbHandle != UNDEFINED)) {
         result = db_close(dbHandle);
         dbHandle = 0;
     }
