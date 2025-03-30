@@ -340,52 +340,80 @@ string query_biome (float height, float heat, float humidity) {
     return biome;
 }
 
-nosave private mapping __BiomeColorANSI = ([
-    "deeper water":         "\e[38;2;0;0;96m",
-    "deep water":           "\e[38;2;0;0;128m",
-    "shallow water":        "\e[38;2;25;25;150m",
-    "icy water":            "\e[38;2;105;189;230m",
-    "frozen water":         "\e[38;2;189;219;246m",
-    "ice":                  "\e[38;2;255;255;255m",
-    "tundra":               "\e[38;2;96;131;112m",
-    "grassland":            "\e[38;2;164;255;99m",
-    "woodland":             "\e[38;2;139;175;90m",
-    "boreal forest":        "\e[38;2;95;115;62m",
-    "desert":               "\e[38;2;238;218;130m",
-    "temperate rainforest": "\e[38;2;29;73;40m",
-    "savanna":              "\e[38;2;177;209;110m",
-    "tropical rainforest":  "\e[38;2;66;123;25m",
-    "default":              "\e[38;2;128;0;0m",
+nosave private mapping __BiomeColor = ([
+    "deeper water":         ([
+        "ANSI": "\e[38;2;0;0;96m",
+        "RGB": "#000060",
+    ]),
+    "deep water":           ([
+        "ANSI": "\e[38;2;0;0;128m",
+        "RGB": "#000080",
+    ]),
+    "shallow water":        ([
+        "ANSI": "\e[38;2;25;25;150m",
+        "RGB": "#191996",
+    ]),
+    "icy water":            ([
+        "ANSI": "\e[38;2;105;189;230m",
+        "RGB": "#69BDE6",
+    ]),
+    "frozen water":         ([
+        "ANSI": "\e[38;2;189;219;246m",
+        "RGB": "#BDDBF6",
+    ]),
+    "ice":                  ([
+        "ANSI": "\e[38;2;255;255;255m",
+        "RGB": "#FFFFFF",
+    ]),
+    "tundra":               ([
+        "ANSI": "\e[38;2;96;131;112m",
+        "RGB": "#608370",
+    ]),
+    "grassland":            ([
+        "ANSI": "\e[38;2;164;255;99m",
+        "RGB": "#A4FF63",
+    ]),
+    "woodland":             ([
+        "ANSI": "\e[38;2;139;175;90m",
+        "RGB": "#8BAF5A",
+    ]),
+    "boreal forest": ([
+        "ANSI": "\e[38;2;95;115;62m",
+        "RGB": "#5F733E",
+    ]),
+    "desert":  ([
+        "ANSI": "\e[38;2;238;218;130m",
+        "RGB": "#EEDA82",
+    ]),
+    "temperate rainforest": ([
+        "ANSI": "\e[38;2;29;73;40m",
+        "RGB": "#1D4928",
+    ]),
+    "savanna": ([
+        "ANSI": "\e[38;2;177;209;110m",
+        "RGB": "#B1D16E",
+    ]),
+    "tropical rainforest": ([
+        "ANSI": "\e[38;2;66;123;25m",
+        "RGB": "#427B19",
+    ]),
+    "default": ([
+        "ANSI": "\e[38;2;128;0;0m",
+        "RGB": "#800000",
+    ]),
 ]);
 string query_biome_color_ansi (string biome) {
-    if (biome && __BiomeColorANSI[biome]) {
-        return __BiomeColorANSI[biome];
+    if (biome && __BiomeColor[biome]) {
+        return __BiomeColor[biome]["ANSI"];
     } else {
-        return __BiomeColorANSI["default"];
+        return __BiomeColor["default"]["ANSI"];
     }
 }
-nosave private mapping __BiomeColorHex = ([
-    "deeper water":             "#000060",
-    "deep water":               "#000080",
-    "shallow water":            "#191996",
-    "icy water":                "#69BDE6",
-    "frozen water":             "#BDDBF6",
-    "ice":                      "#FFFFFF",
-    "tundra":                   "#608370",
-    "grassland":                "#A4FF63",
-    "woodland":                 "#8BAF5A",
-    "boreal forest":            "#5F733E",
-    "desert":                   "#EEDA82",
-    "temperate rainforest":     "#1D4928",
-    "savanna":                  "#B1D16E",
-    "tropical rainforest":      "#427B19",
-    "default":                  "#800000",
-]);
 string query_biome_color_hex (string biome) {
-    if (biome && __BiomeColorHex[biome]) {
-        return __BiomeColorHex[biome];
+    if (biome && __BiomeColor[biome]) {
+        return __BiomeColor[biome]["RGB"];
     } else {
-        return __BiomeColorHex["default"];
+        return __BiomeColor["default"]["RGB"];
     }
 }
 nosave private mapping __HumidityColorHex = ([
@@ -500,7 +528,7 @@ void generate_json_line (mapping data, int time) {
         write("Seed '"+planet["name"]+"' size "+size+" "+data["file"]+" done: %^ORANGE%^"+sprintf("%.2f", t/1000000.0)+" ms%^RESET%^\n");
 
         // TODO: clean this up
-        foreach (string b in ({ "shallow water", "deep water", "deeper water", "icy water", "frozen water", "ice", "tundra", "grassland", "woodland", "boreal forest", "desert", "temperate rainforest", "savanna", "tropical rainforest", })) {
+        foreach (string b in keys(__BiomeColor)) {
             write(sprintf("%20s : %10s", b, format_integer(data["biomes"][b])) + " : " + sprintf("%2.2f", data["biomes"][b] * 100.0 / size2) + "%\n");
         }
         write(sprintf("%-24s", "min height: "+data["min"]["height"])+" "+sprintf("%-24s", "max height: "+data["max"]["height"])+"\n");
