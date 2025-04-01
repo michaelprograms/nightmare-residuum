@@ -11,12 +11,12 @@ void create () {
     set_exits(([
         "east": HUMAN_ROOM + "spruce_st_w2.c",
         "south": HUMAN_ROOM + "second_st_n5.c",
-        "enter west": HUMAN_ROOM + "intro_ranger.c",
+        "enter west": HUMAN_ROOM + "building_archery.c",
     ]));
     set_looks(([
         "street": "A street sign is labeled N. Second St.",
         "building": "A large marble building that takes spans the width of the street block. It looks to be a couple stories tall with an ornate crowning around the roof line. Some windows are spaced out along the side of the building. Columns span the entranceway.",
-        "building": "The building looks to be a ranger hall.",
+        "building": "The building looks to be an archery hall.",
         ({ "framework", "hexagons"}): "Far above, the hexagons form a geodesic dome.",
     ]));
 }
