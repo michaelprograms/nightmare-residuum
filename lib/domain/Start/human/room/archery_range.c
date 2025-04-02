@@ -4,10 +4,6 @@ inherit STD_ROOM;
 
 void create () {
     ::create();
-    set_properties(([
-        "no attack": 1,
-        "indoors": 1,
-    ]));
     set_short("an archery range");
     set_long("The middle of a field of grasses and wildflowers that consists of the training area of ranged archers. A brick-front can be seen to the east. Several archery targets are placed a distance away for archers to practice upon. A wooden fence surrounds the field to obscure view.");
     set_listen("default", "Quiet interspersed with several thuds of arrows hitting targets.");
@@ -20,5 +16,8 @@ void create () {
         "field": "A field full of an assortment of grasses with some wildflowers mixed in. Archery targets are placed out in the field.",
         ({ "archery", "targets" }): "Targets upon which archers can shoot arrows are setup in the field.",
         "fence": "The fence stretches out and boxes in the field from outside view.",
+    ]));
+    set_reset(([
+        HUMAN_NPC + "archer.c": 2,
     ]));
 }
