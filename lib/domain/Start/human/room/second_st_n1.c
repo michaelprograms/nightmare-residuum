@@ -11,14 +11,11 @@ void create () {
     set_exits(([
         "south": HUMAN_ROOM + "market_st_w3.c",
         "north": HUMAN_ROOM + "second_st_n2.c",
-        "enter west": HUMAN_ROOM + "intro_psionist.c",
+        "enter west": HUMAN_ROOM + "building_meditation.c",
     ]));
     set_looks(([
         "street": "A street sign is labeled N. Second St.",
         "building": "The building looks to be a psionist hall.",
         ({ "framework", "hexagons"}): "Far above, the hexagons form a geodesic dome.",
-    ]));
-    set_reset(([
-        HUMAN_NPC + "teen_meditate.c": 2,
     ]));
 }
