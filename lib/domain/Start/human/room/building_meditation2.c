@@ -19,6 +19,6 @@ void create () {
         "stairs": "The staircase lead back down to the first floor of the building.",
     ]));
     set_reset(([
-        HUMAN_NPC + "teen_meditate.c": 2,
+        HUMAN_NPC + "adult_meditate.c": 1,
     ]));
 }

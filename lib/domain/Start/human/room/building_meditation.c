@@ -20,4 +20,7 @@ void create () {
         ({ "door", "window" }): "The front of the building consists of a door that swings open to the street and several wide and tall windows.",
         "stairs": "The staircase lead up to the second floor of the building, where meditation training of takes place.",
     ]));
+    set_reset(([
+        HUMAN_NPC + "teen_meditate.c": 2,
+    ]));
 }
