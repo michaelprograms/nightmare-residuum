@@ -9,7 +9,7 @@ void create () {
     set_listen("default", "The whispering chants of hymns can be heard below.");
     set_smell("default", "A breeze of freshened air flows past.");
     set_exits(([
-        "down": HUMAN_ROOM + "intro_mystic.c",
+        "down": HUMAN_ROOM + "building_church.c",
     ]));
     set_looks(([
         "tower": "The tower is above the temple and contains a bell. The sides of the tower are open to the air to allow the bell's ringing to carry unimpeded.",
