@@ -23,4 +23,7 @@ void create () {
         "doors": "The front of the building consists of a set of doors facing the street without any windows.",
         "stairs": "The wooden staircase leads down to the basement catacombs of the building.",
     ]));
+    set_reset(([
+        HUMAN_NPC + "teen_pray.c": 2,
+    ]));
 }
