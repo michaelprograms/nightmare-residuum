@@ -19,4 +19,7 @@ void create () {
         "stairs": "The staircase lead back up to the first floor of the temple.",
         ({ "walls", "chambers", "remains" }): "Important people resting after their duties have completed.",
     ]));
+    set_reset(([
+        HUMAN_NPC + "caretaker_catacomb.c": 1,
+    ]));
 }
