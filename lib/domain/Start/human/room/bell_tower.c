@@ -18,4 +18,7 @@ void create () {
         "platform": "A creaky wooden platform built into the tower to allow a person passage to operate the bell tower.",
         ({ "framework", "hexagons"}): "Far above, the hexagons form a geodesic dome.",
     ]));
+    set_reset(([
+        HUMAN_NPC + "teen_pray.c": 1,
+    ]));
 }
