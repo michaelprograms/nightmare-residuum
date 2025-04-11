@@ -19,6 +19,6 @@ void create () {
         ({ "framework", "hexagons"}): "Far above, the hexagons form a geodesic dome.",
     ]));
     set_reset(([
-        HUMAN_NPC + "teen_pray.c": 1,
+        HUMAN_NPC + "teen_sightseer.c": 1,
     ]));
 }
