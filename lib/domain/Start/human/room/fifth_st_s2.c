@@ -14,4 +14,7 @@ void create () {
         "street": "A street sign is labeled S. Fifth St.",
         ({ "framework", "hexagons"}): "Far above, the hexagons form a geodesic dome.",
     ]));
+    set_reset(([
+        HUMAN_NPC + "greasy_rat.c": 1,
+    ]));
 }
