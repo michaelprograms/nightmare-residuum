@@ -20,4 +20,7 @@ void create () {
         "stairs": "The staircase lead back up to the first floor of the warehouse.",
         ({ "columns", "archways" }): "The columns are evenly spaced, with some connecting to form archways, providing support the warehouse floor above.",
     ]));
+    set_reset(([
+        HUMAN_NPC + "greasy_rat.c": 2,
+    ]));
 }
