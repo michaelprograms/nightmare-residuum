@@ -21,4 +21,7 @@ void create () {
         "stairs": "The wooden staircase leads down to the darkened basement of the warehouse.",
         "dust": "The dust is an indication of a long passage of time.",
     ]));
+    set_reset(([
+        HUMAN_NPC + "greasy_rat.c": 1,
+    ]));
 }
