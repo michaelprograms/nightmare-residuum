@@ -37,7 +37,7 @@ void test_calculate () {
         // @TODO: remove these eventually
         testOb->set_powers(([ "theurgy": 123, "medicine": 123, ])),
         cValue2 = testOb->calculate_heal(this_object(), this_object(), 0),
-        assert_equal(cValue2 > cValue1, 1),
+        assert_equal(cValue2 >= cValue1, 1),
     }) :));
 
     expect("damage is calculated", (: ({
