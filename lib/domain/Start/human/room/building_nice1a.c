@@ -15,10 +15,11 @@ void create () {
         "a small table, creating a cozy seating area. The large front window "
         "lets in plenty of natural light, and a few potted plants add a touch "
         "of greenery to the space.");
-    set_listen("default", "YThe occasional chirping of birds outside.");
+    set_listen("default", "The occasional chirping of birds outside.");
     set_smell("default", "The air smells faintly of freshly brewed tea.");
     set_exits(([
         "out east": HUMAN_ROOM + "first_st_s2.c",
+        "up": HUMAN_ROOM + "building_nice1b.c",
     ]));
     set_looks(([
         "sofa": "A plush, comfortable sofa with soft cushions, perfect for relaxing.",
