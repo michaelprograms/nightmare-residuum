@@ -16,5 +16,8 @@ void create () {
     ]));
     set_reset(([
         HUMAN_NPC + "adult_suspicious.c": 1,
+        HUMAN_NPC + "greasy_rat.c": ([
+            "number": !random(3),
+        ]),
     ]));
 }
