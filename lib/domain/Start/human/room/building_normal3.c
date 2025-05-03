@@ -19,4 +19,7 @@ void create () {
     set_exits(([
         "out east": HUMAN_ROOM + "first_st_n2.c",
     ]));
+    set_reset(([
+        HUMAN_NPC + "adult_normal.c": 1,
+    ]));
 }
