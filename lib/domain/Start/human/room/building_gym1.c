@@ -5,16 +5,15 @@ inherit STD_ROOM;
 void create () {
     ::create();
     set_properties(([
-        "no attack": 1,
         "indoors": 1,
     ]));
-    set_short("a warrior's hall");
+    set_short("a gym hall");
     set_long("The inside of a wide brick building that consists of a sparsely furnished room. There is an open door to the south facing the street next to a singular wide window. Some chairs are scattered around some weight training equipment. A staircase leads up to the second floor.");
     set_listen("default", "Several warriors talk boisterously while lifting weights.");
     set_smell("default", "The smell of sweat.");
     set_exits(([
         "out south": HUMAN_ROOM + "walnut_st_w1.c",
-        "up": HUMAN_ROOM + "hall_warrior.c",
+        "up": HUMAN_ROOM + "building_gym2.c",
     ]));
     set_looks(([
         ({ "chairs", "equipment" }): "Chairs in this sparsely furnished room that are scattered around a few weight training stations.",
