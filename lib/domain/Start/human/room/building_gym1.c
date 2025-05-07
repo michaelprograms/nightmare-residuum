@@ -20,4 +20,7 @@ void create () {
         ({ "door", "window" }): "The front of the building consists of a door that swings open to the street and a wide window.",
         "stairs": "The wooden staircase leads up to the second floor of the building, where the warriors like to train away from prying eyes.",
     ]));
+    set_reset(([
+        HUMAN_NPC + "adult_weightlifter.c": 1,
+    ]));
 }
