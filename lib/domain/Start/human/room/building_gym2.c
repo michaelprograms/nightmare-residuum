@@ -18,4 +18,7 @@ void create () {
         "equipment": "Things used to make a warrior strong.",
         "stairs": "The staircase lead back down to the first floor of the building.",
     ]));
+    set_reset(([
+        HUMAN_NPC + "teen_weightlifter.c": 2,
+    ]));
 }

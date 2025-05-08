@@ -4,9 +4,9 @@ inherit STD_NPC;
 
 void create () {
     ::create();
-    set_id(({ "adult", "adult", "human" }));
+    set_id(({ "adult", "weightlifting adult", "human" }));
     set_name("adult");
-    set_short("an adult lifting weights");
+    set_short("a weightlifting adult");
     set_gender(element_of(({ "male", "female" })));
     set_long("An adult who ignores your presence while " + possessive(this_object()) + " continues lifting weights.");
     set_level(8);
