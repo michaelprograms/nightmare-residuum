@@ -22,4 +22,7 @@ void create () {
         "door": "The front of the building consists of a door that swings open to the street, but no window.",
         "stairs": "The wooden staircase leads down to the basement of the building.",
     ]));
+    set_reset(([
+        HUMAN_NPC + "adult_worship.c": 1,
+    ]));
 }
