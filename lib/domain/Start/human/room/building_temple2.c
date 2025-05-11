@@ -18,4 +18,7 @@ void create () {
         "mats": "Mats used to help the holy meditate.",
         "stairs": "The staircase lead back up to the first floor of the building.",
     ]));
+    set_reset(([
+        HUMAN_NPC + "adult_worship.c": 2,
+    ]));
 }
