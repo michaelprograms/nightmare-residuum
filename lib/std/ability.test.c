@@ -31,6 +31,8 @@ void test_calculate () {
     MockLevel = 10;
 
     expect("heals are calculated", (: ({
+        // @TODO: remove these eventually
+        testOb->set_powers(([ "theurgy": 1, "medicine": 1, ])),
         cValue1 = testOb->calculate_heal(this_object(), this_object(), 0),
         assert_equal(cValue1 > 0, 1),
 
