@@ -8,9 +8,11 @@ nosave private int __MockLiving;
 int is_living () { return __MockLiving; }
 
 // @TODO: clean this up with real test mock stats
-int MockIntelligence = 0;
+int MockCharisma = 0, MockIntelligence = 0;
 int query_stat (string key) {
-    if (key == "intelligence") {
+    if (key == "charisma") {
+        return MockCharisma;
+    } else if (key == "intelligence") {
         return MockIntelligence;
     }
 }
@@ -28,6 +30,7 @@ void test_name () {
 int cValue1 = 0, cValue2 = 0;
 void test_calculate () {
     MockIntelligence = 10;
+    MockCharisma = 10;
     MockLevel = 10;
 
     expect("heals are calculated", (: ({
@@ -36,6 +39,8 @@ void test_calculate () {
         cValue1 = testOb->calculate_heal(this_object(), this_object(), 0),
         assert_equal(cValue1 > 0, 1),
 
+        MockIntelligence = 100,
+        MockCharisma = 100,
         // @TODO: remove these eventually
         testOb->set_powers(([ "theurgy": 123, "medicine": 123, ])),
         cValue2 = testOb->calculate_heal(this_object(), this_object(), 0),
