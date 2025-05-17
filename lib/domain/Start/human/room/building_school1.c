@@ -16,6 +16,9 @@ void create () {
         "out south": HUMAN_ROOM + "market_st_e5.c",
     ]));
     set_looks(([
-
+        "hallway": "A plain hallway leading to several classrooms.",
+        "floors": "The floors are scuffed from travel.",
+        "doors": "The open doors are the entrances to classrooms, while the "
+            "double doors lead outside.",
     ]));
 }
