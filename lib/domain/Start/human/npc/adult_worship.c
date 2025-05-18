@@ -9,7 +9,7 @@ void create () {
     set_short("a worshiping adult");
     set_gender(element_of(({ "male", "female" })));
     set_long("A worshiping adult who pays you no attention.");
-    set_level(5);
+    set_level(8);
     set_species("human");
     set_ability_list(({ "bite" }));
     set_ability_chance(25);

@@ -9,7 +9,7 @@ void create () {
     set_short("a preppy adult");
     set_gender(element_of(({ "male", "female" })));
     set_long("An adult who scoffs at your presence in " + possessive(this_object()) + " house.");
-    set_level(5);
+    set_level(8);
     set_species("human");
     set_ability_list(({ "bite" }));
     set_ability_chance(25);
