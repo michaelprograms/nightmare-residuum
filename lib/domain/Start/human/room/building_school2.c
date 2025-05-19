@@ -18,4 +18,7 @@ void create () {
         "desks": "Student desks facing the front of the classroom where a "
             "teacher's desk faces them.",
     ]));
+    set_reset(([
+        HUMAN_NPC + "adult_teacher.c": 1,
+    ]));
 }
