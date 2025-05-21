@@ -16,7 +16,7 @@ void create () {
     ]));
     set_looks(([
         "street": "A street sign is labeled E. Market St.",
-        "building": "The building looks to be a mystic hall.",
+        "building": "A building to the south looks to be a church, while the the building to the south looks to be a school, with a yard adjacent to it.",
         ({ "framework", "hexagons"}): "Far above, the hexagons form a geodesic dome.",
     ]));
 }
