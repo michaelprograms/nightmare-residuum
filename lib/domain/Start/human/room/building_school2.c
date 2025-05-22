@@ -17,9 +17,10 @@ void create () {
         "floors": "The floors are scuffed from travel.",
         "desks": "Student desks facing the front of the classroom where a "
             "teacher's desk faces them.",
+        "chalkboard": "The chalkboard contains some elementary math.",
     ]));
     set_reset(([
         HUMAN_NPC + "adult_teacher.c": 1,
-        HUMAN_NPC + "teen_student.c": 2,
+        HUMAN_NPC + "teen_student.c": 4,
     ]));
 }
