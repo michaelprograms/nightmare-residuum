@@ -15,9 +15,9 @@ void create () {
         "out south": HUMAN_ROOM + "spruce_st_e2.c",
     ]));
     set_looks(([
-    "vats": "Large metal vats, each filled with beer at different stages of fermentation. Bubbles rise to the surface inside.",
-    "barrels": "Sturdy wooden barrels are stacked neatly in the corner, ready to be filled with fresh beer.",
-    "tools": "Various brewing tools, such as ladles, tongs, and brushes, hang from hooks near the workbench.",
-    "workbench": "A sturdy wooden workbench stained from years of use. It holds a few scattered brewing notes and empty mugs.",
-]));
+        "vats": "Large metal vats, each filled with beer at different stages of fermentation. Bubbles rise to the surface inside.",
+        "barrels": "Sturdy wooden barrels are stacked neatly in the corner, ready to be filled with fresh beer.",
+        "tools": "Various brewing tools, such as ladles, tongs, and brushes, hang from hooks near the workbench.",
+        "workbench": "A sturdy wooden workbench stained from years of use. It holds a few scattered brewing notes and empty mugs.",
+    ]));
 }
