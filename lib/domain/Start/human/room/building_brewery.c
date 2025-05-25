@@ -20,4 +20,7 @@ void create () {
         "tools": "Various brewing tools, such as ladles, tongs, and brushes, hang from hooks near the workbench.",
         "workbench": "A sturdy wooden workbench stained from years of use. It holds a few scattered brewing notes and empty mugs.",
     ]));
+    set_reset(([
+        HUMAN_NPC + "brewer.c": 1,
+    ]));
 }
