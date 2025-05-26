@@ -22,5 +22,6 @@ void create () {
     ]));
     set_reset(([
         HUMAN_NPC + "brewer.c": 1,
+        HUMAN_ITEM + "brewery_vat.c": 2,
     ]));
 }
