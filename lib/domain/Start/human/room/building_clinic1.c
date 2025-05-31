@@ -16,4 +16,8 @@ void create () {
     set_looks(([
 
     ]));
+    set_reset(([
+        HUMAN_NPC + "clinic_receptionist.c": 1,
+        HUMAN_NPC + "clinic_patient.c": 1,
+    ]));
 }

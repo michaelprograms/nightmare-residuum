@@ -8,7 +8,7 @@ void create () {
     set_name("patient");
     set_short("a patient");
     set_gender(element_of(({ "male", "female" })));
-    set_long("A patient being being treated in the clinic.");
+    set_long("A patient visiting the clinic to be treated.");
     set_level(8);
     set_species("human");
     set_ability_list(({ "bite" }));
