@@ -82,18 +82,20 @@ nomask void character_reconnect (object char) {
 }
 
 /**
+ * Handle overriding a character login. This account will transfer connection
+ * of the character to this user.
  *
- * @param {STD_CHARACTER} char
+ * @param {STD_CHARACTER} character The character being overridden
  */
-nomask void character_override (object char) {
+nomask void handle_character_override (object character) {
     remove_call_out();
 
-    if (!char) {
-        error("Bad argument 1 to user/character->character_override");
+    if (!character) {
+        error("Bad argument 1 to user/character->handle_character_override");
     }
 
     // Swap character's user
-    __Character = char;
+    __Character = character;
     __Character->set_user(this_object());
 
     this_object()->shell_start();
@@ -102,7 +104,17 @@ nomask void character_override (object char) {
     this_object()->update_character_data(__Character);
 }
 
-nomask void handle_character_override (object character) {
+/**
+ * Handle overriding a user's character from an old connection (this_object) to
+ * a new connection.
+ *
+ * @param {STD_CHARACTER} character The character being overridden
+ */
+nomask void handle_character_override_old_connection (object character) {
+    if (!character) {
+        error("Bad argument 1 to user/character->handle_character_override_old_connection");
+    }
+
     if (character == __Character) {
         __Character = 0;
         this_object()->handle_remove("\nYour connection has been overridden from " + query_ip_number(previous_object()) + ".\n\n");
