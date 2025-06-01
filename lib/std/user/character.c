@@ -94,7 +94,6 @@ nomask void character_override (object char) {
 
     // Swap character's user
     __Character = char;
-    if (char->query_user())
     __Character->set_user(this_object());
 
     this_object()->shell_start();
@@ -103,11 +102,10 @@ nomask void character_override (object char) {
     this_object()->update_character_data(__Character);
 }
 
-nomask void handle_character_override () {
-    object po;
-    if (base_name(po = previous_object()) == STD_USER[0..<3] && po->query_character() == __Character) {
+nomask void handle_character_override (object character) {
+    if (character == __Character) {
         __Character = 0;
-        this_object()->handle_remove("\nYour connection has been overridden from " + query_ip_number(po) + ".\n\n");
+        this_object()->handle_remove("\nYour connection has been overridden from " + query_ip_number(previous_object()) + ".\n\n");
     }
 }
 

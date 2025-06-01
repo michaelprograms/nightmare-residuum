@@ -465,13 +465,12 @@ protected nomask varargs void account_input (int state, mixed extra, string inpu
                 write("\nCanceled character connection override.\n");
                 account_input(STATE_ACCOUNT_MENU);
                 return;
-            } else {
-                write("\n\nOverriding connection of " + extra->query_cap_name() + "...\n\n");
-                if (extra->query_user()) {
-                    extra->query_user()->handle_character_override();
-                }
-                this_object()->character_override(extra);
             }
+            write("\n\nOverriding connection of " + extra->query_cap_name() + "...\n\n");
+            if (extra->query_user()) {
+                extra->query_user()->handle_character_override(extra);
+            }
+            this_object()->character_override(extra);
             break;
 
         case STATE_SPECIES_ENTER:
