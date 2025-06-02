@@ -87,7 +87,7 @@ nomask void character_reconnect (object char) {
  *
  * @param {STD_CHARACTER} character The character being overridden
  */
-nomask void handle_character_override (object character) {
+nomask void handle_character_override_new_connection (object character) {
     remove_call_out();
 
     if (!character) {

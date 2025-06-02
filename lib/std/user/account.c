@@ -470,7 +470,7 @@ protected nomask varargs void account_input (int state, mixed extra, string inpu
             if (extra->query_user()) {
                 extra->query_user()->handle_character_override_old_connection(extra);
             }
-            this_object()->handle_character_override(extra);
+            this_object()->handle_character_override_new_connection(extra);
             break;
 
         case STATE_SPECIES_ENTER:
