@@ -133,7 +133,8 @@ void test_format_syntax () {
 
     expect("format_syntax handles syntaxes with ANSI on", (: ({
         assert_equal(__ANSI = "on", "on"),
-        assert_equal(testOb->format_syntax("syntax"), "%^CYAN%^<%^I_CYAN%^syntax>%^RESET%^"),
+        assert_equal(testOb->format_syntax("syntax"), "%^CYAN%^<%^I_CYAN%^syntax%^CYAN%^>%^RESET%^"),
+        assert_equal(testOb->format_syntax("syntax [target] (optional1|optional2)"), "%^CYAN%^<%^I_CYAN%^syntax %^BOLD%^[%^BOLD_OFF%^target%^BOLD%^]%^BOLD_OFF%^ %^RESET%^(%^CYAN%^optional1%^RESET%^|%^CYAN%^optional2%^RESET%^)%^CYAN%^>%^RESET%^"),
         assert_equal(strip_colour(testOb->format_syntax("syntax target")), "<syntax target>"),
     }) :));
 }

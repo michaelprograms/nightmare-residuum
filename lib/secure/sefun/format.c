@@ -107,7 +107,8 @@ string format_syntax (string text) {
         s = replace_string(s, "(", "%^RESET%^(%^CYAN%^");
         s = replace_string(s, "|", "%^RESET%^|%^CYAN%^");
         s = replace_string(s, ")", "%^RESET%^)%^I_CYAN%^");
-        s = replace_string(s, ">", ">%^RESET%^");
+        s = replace_string(s, ">", "%^CYAN%^>%^RESET%^");
+        s = replace_string(s, "%^I_CYAN%^%^CYAN%^", "%^CYAN%^");
     }
     return s;
 }
