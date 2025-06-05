@@ -227,7 +227,7 @@ private void display_account_menu () {
                 "items": bodyItems,
                 "columns": ({ 2, 3, }),
             ]),
-            "ansi": 1,
+            "borderColors": ({ ({ 191, 63, 191 }), ({ 63, 191, 191 }) }),
         ]));
     }
     this_object()->input_next((: account_input, STATE_ACCOUNT_MENU, 0 :), PROMPT_ACCOUNT_CHOICE);
