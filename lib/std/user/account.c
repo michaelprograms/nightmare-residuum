@@ -173,7 +173,8 @@ void set_name (string name) {
 /* -----  ----- */
 
 private void display_account_menu () {
-    string msg = "", characterMsg = "";
+    string *bodyItems = ({ });
+    int locked = CONNECTION_LOCKED;
 
     if (!query_playable_characters()) {
         write("\nYou have no characters. You will now create a character.\n");
@@ -182,28 +183,53 @@ private void display_account_menu () {
     }
 
     remove_call_out();
-    if (CONNECTION_LOCKED) {
-        msg += "\n\n%^ORANGE%^Attention!%^RESET%^\nConnection to " + mud_name() + " is currently limited to immortals only.%^RESET%^\n\n";
+    if (locked) {
+        border(([
+            "body": ([
+                "items": ({
+                    "\n\n%^ORANGE%^Attention!%^RESET%^\nConnection to " + mud_name() + " is currently limited to immortals only.%^RESET%^\n\n"
+                })
+            ])
+        ]));
+    } else {
+        // @TODO different format for screenreader here?
+        foreach (string name in query_character_names()) {
+            mapping character = query_character_by_name(name);
+            bodyItems += ({
+                format_syntax(character["name"]),
+                "Level " + character["level"] + " " + capitalize(character["species"]+""),
+                "",
+                character["last_location"] + ", " + time_ago(character["last_action"]),
+            });
+        }
+        border(([
+            "header": ({
+                ([
+                    "header": ({ "Account Actions" }),
+                    "items": ({
+                        format_syntax("settings"),
+                        format_syntax("password"),
+                        format_syntax("exit"),
+                    }),
+                    "columns": 4,
+                ]),
+                ([
+                    "header": ({ "Character Actions" }),
+                    "items": ({
+                        format_syntax("new"),
+                        format_syntax("delete")
+                    }),
+                    "columns": 4,
+                ]),
+            }),
+            "body": ([
+                "header": ({ "Characters", "", "" }),
+                "items": bodyItems,
+                "columns": ({ 2, 3, }),
+            ]),
+            "ansi": 1,
+        ]));
     }
-    msg += "\nAccount Actions   : " + format_syntax("settings") + " " + format_syntax("password") + " " + format_syntax("exit") + "%^RESET%^\nCharacter Actions : " + format_syntax("new") + " " + format_syntax("delete") + "\n\n";
-
-    // @TODO different format for screenreader here?
-    foreach (string name in query_character_names()) {
-        mapping character = query_character_by_name(name);
-        string tmp = "%^CYAN%^" + sprintf("%-22s", "<" + character["name"] + ">") + "%^RESET%^";
-        tmp += sprintf("%-16s", capitalize(character["species"]+""));
-        tmp += sprintf("%-24s", character["last_location"]);
-        // @TODO change for connected / disconnected
-        tmp += sprintf("%-20s", time_ago(character["last_action"]));
-        tmp += "\n";
-        characterMsg += tmp;
-    }
-
-    if (sizeof(characterMsg) > 0) {
-        msg += "Character           Species         Location                Last Action\n" + characterMsg;
-    }
-
-    write(msg + "\n");
     this_object()->input_next((: account_input, STATE_ACCOUNT_MENU, 0 :), PROMPT_ACCOUNT_CHOICE);
 }
 
