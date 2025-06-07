@@ -233,6 +233,40 @@ private void display_account_menu () {
     this_object()->input_next((: account_input, STATE_ACCOUNT_MENU, 0 :), PROMPT_ACCOUNT_CHOICE);
 }
 
+private void display_settings_menu () {
+    string *bodyItems = ({ });
+
+    foreach (string setting in sort_array(keys(query_settings()), 1)) {
+        string display;
+        if (intp(query_setting(setting))) {
+            display = "" + query_setting(setting);
+        } else {
+            display = query_setting(setting);
+        }
+        bodyItems += ({ sprintf("%-24s", setting) + "  " + display });
+    }
+
+    border(([
+        "title": "Account Settings",
+        "header": ({
+        ([
+                "header": ({ "Settings Actions" }),
+                "items": ({
+                    format_syntax("back"),
+                    format_syntax("[setting] [option]"),
+                }),
+                "columns": ({ 1, 3 }),
+            ]),
+        }),
+        "body": ([
+            "items": bodyItems,
+            "columns": 1,
+        ]),
+        "borderColors": ({ ({ 191, 63, 191 }), ({ 63, 191, 191 }) }),
+    ]));
+    this_object()->input_next((: account_input, STATE_SETTINGS_HANDLE, 0 :), PROMPT_SETTINGS_ENTER);
+}
+
 private string query_unlocked_species () {
     // string *unlocks; // @TODO
     //if (!sizeof(unlocks = explode(query_property("unlockedSpecies") || "", ","))) {
@@ -362,7 +396,6 @@ protected nomask varargs void account_input (int state, mixed extra, string inpu
                 save_data();
                 this_object()->handle_remove("\nExiting account. Connection closed.\n");
             } else if (input == "settings") {
-                write("\nAccount Settings\n\n");
                 account_input(STATE_SETTINGS_ENTER);
             } else if (input == "passwd") {
                 this_object()->reset_connect_timeout();
@@ -520,18 +553,7 @@ protected nomask varargs void account_input (int state, mixed extra, string inpu
             break;
 
         case STATE_SETTINGS_ENTER:
-            write("Settings Actions  : " + format_syntax("back") + " " + format_syntax("[setting] [option]") + "\n\n");
-            foreach (string setting in sort_array(keys(query_settings()), 1)) {
-                string display;
-                if (intp(query_setting(setting))) {
-                    display = "" + query_setting(setting);
-                } else {
-                    display = query_setting(setting);
-                }
-                write("  " + sprintf("%-24s", setting) + "  " + display + "\n");
-            }
-            write("\n");
-            this_object()->input_next((: account_input, STATE_SETTINGS_HANDLE, 0 :), PROMPT_SETTINGS_ENTER);
+            display_settings_menu();
             break;
 
         case STATE_SETTINGS_HANDLE:
