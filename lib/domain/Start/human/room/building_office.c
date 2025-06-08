@@ -5,7 +5,7 @@ inherit STD_ROOM;
 void create () {
     room::create();
     set_properties(([ "indoors": 1, ]));
-    set_short("an office hall");
+    set_short("an office building");
     set_long("The inside of a brick building that consists of a large open hall. The doorway on the west wall is held open by ropes attached to hooks. Desks with chairs are placed in rows.");
     set_exits(([
         "out west": HUMAN_ROOM + "broad_st_n1.c",
