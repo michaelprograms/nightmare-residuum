@@ -8,7 +8,7 @@ void create () {
     set_long("A small street traveling north to south through brick dwellings covered in dark ivy. Several birch trees branch over the street and dwellings. A building with open doors on the east side of the street. A public square can be seen to the south surrounding an obelisk. A framework of hexagons glimmer overhead.");
     set_exits(([
         "north": HUMAN_ROOM + "broad_st_n2.c",
-        "enter east": HUMAN_ROOM + "hall_adventure.c",
+        "enter east": HUMAN_ROOM + "hall_office.c",
         "south": HUMAN_ROOM + "square.c",
     ]));
     set_looks(([
