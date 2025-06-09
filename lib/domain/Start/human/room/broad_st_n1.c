@@ -18,7 +18,4 @@ void create () {
         "square": "A square plaza with trees, benches, and more.",
         ({ "framework", "hexagons"}): "Far above, the hexagons form a geodesic dome.",
     ]));
-    set_reset(([
-
-    ]));
 }

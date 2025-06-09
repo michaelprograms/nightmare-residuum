@@ -16,4 +16,7 @@ void create () {
         ({ "desks", "chairs" }): "The desks each have a chair, and are covered in paperwork.",
         "paperwork": "The paperwork looks to be government related.",
     ]));
+    set_reset(([
+        HUMAN_NPC + "office_worker.c": 3,
+    ]));
 }
