@@ -72,8 +72,12 @@ void test_limbs_sever () {
         assert_equal(sort_array(testOb->query_limbs(), 1), ({ "head", "left arm", "left foot", "left hand", "left leg", "right arm", "right foot", "right hand", "right leg", "torso" })),
         assert_equal(testOb->query_severed_limbs(), ({ })),
 
+        // sever non-fatal
         testOb->handle_limb_sever("left hand"),
+        assert_equal(testOb->query_limb("left hand"), ([ "damage": -1, "maxdamage": 1, "pct": 25, "status": "severed", "type": "WIELD" ])),
 
+        // already severed non-fatal
+        testOb->handle_limb_sever("left hand"),
         assert_equal(testOb->query_limb("left hand"), ([ "damage": -1, "maxdamage": 1, "pct": 25, "status": "severed", "type": "WIELD" ])),
     }) :));
 
