@@ -73,6 +73,7 @@ void test_limbs_sever () {
         assert_equal(testOb->query_severed_limbs(), ({ })),
 
         // sever non-fatal
+        assert_equal(testOb->query_limb("left hand"), ([ "damage": 0, "maxdamage": 1, "pct": 25, "status": 0, "type": "WIELD" ])),
         testOb->handle_limb_sever("left hand"),
         assert_equal(testOb->query_limb("left hand"), ([ "damage": -1, "maxdamage": 1, "pct": 25, "status": "severed", "type": "WIELD" ])),
 
@@ -83,6 +84,13 @@ void test_limbs_sever () {
         // sever fatal
         testOb->handle_limb_sever("torso"),
         assert_equal(testOb->query_limb("torso"), ([ "damage": -1, "maxdamage": 1, "pct": 100, "status": "severed", "type": "FATAL" ])),
+
+        // sever attached
+        assert_equal(testOb->query_limb("right hand"), ([ "damage": 0, "maxdamage": 1, "pct": 25, "status": 0, "type": "WIELD" ])),
+        assert_equal(testOb->query_limb("right arm"), ([ "attach": "right hand", "damage": 0, "maxdamage": 1, "pct": 30, "status": 0, ])),
+        testOb->handle_limb_sever("right arm"),
+        assert_equal(testOb->query_limb("right hand"), ([ "damage": -1, "maxdamage": 1, "pct": 25, "status": "severed", "type": "WIELD" ])),
+        assert_equal(testOb->query_limb("right arm"), ([ "attach": "right hand", "damage": -1, "maxdamage": 1, "pct": 30, "status": "severed", ])),
     }) :));
 
 }
