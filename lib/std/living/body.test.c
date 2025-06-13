@@ -50,6 +50,9 @@ void test_limbs () {
 
         assert_equal(testOb->query_limb("torso"), ([ "damage": 0, "maxdamage": 1, "pct": 100, "status": 0, "type": "FATAL", ])),
     }) :));
+    expect("species limbs have wieldable", (: ({
+        assert_equal(testOb->query_wieldable_limbs(), ({ "right hand", "left hand" })),
+    }) :));
 }
 
 void test_random_limbs () {
