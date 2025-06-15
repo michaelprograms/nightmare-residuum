@@ -245,3 +245,9 @@ void test_heal () {
 
     if (mockBody) destruct(mockBody);
 }
+
+void test_armor () {
+    expect("all armor behaves", (: ({
+        assert_equal(testOb->query_all_armor(), ({ })),
+}) :));
+}
