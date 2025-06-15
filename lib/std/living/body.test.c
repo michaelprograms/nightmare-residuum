@@ -247,7 +247,8 @@ void test_heal () {
 }
 
 void test_armor () {
-    expect("all armor behaves", (: ({
+    expect("querying armor behaves", (: ({
         assert_equal(testOb->query_all_armor(), ({ })),
-}) :));
+        assert_equal(testOb->query_limb_armor("torso"), 0),
+    }) :));
 }
