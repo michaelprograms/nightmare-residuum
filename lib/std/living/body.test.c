@@ -67,8 +67,8 @@ void test_random_limbs () {
     }) :));
 }
 
-void test_limbs_sever () {
-    expect("species limbs are severable", (: ({
+void test_sever_and_restore () {
+    expect("limbs are severable", (: ({
         assert_equal(testOb->query_limbs(), ({ })),
 
         testOb->set_species("human"),
@@ -88,12 +88,30 @@ void test_limbs_sever () {
         testOb->handle_limb_sever("torso"),
         assert_equal(testOb->query_limb("torso"), ([ "damage": -1, "maxdamage": 1, "pct": 100, "status": "severed", "type": "FATAL" ])),
 
-        // sever attached
+        // verify hand and arm are attached
         assert_equal(testOb->query_limb("right hand"), ([ "damage": 0, "maxdamage": 1, "pct": 25, "status": 0, "type": "WIELD" ])),
         assert_equal(testOb->query_limb("right arm"), ([ "attach": "right hand", "damage": 0, "maxdamage": 1, "pct": 30, "status": 0, ])),
+        // sever attached arm and hand
         testOb->handle_limb_sever("right arm"),
         assert_equal(testOb->query_limb("right hand"), ([ "damage": -1, "maxdamage": 1, "pct": 25, "status": "severed", "type": "WIELD" ])),
         assert_equal(testOb->query_limb("right arm"), ([ "attach": "right hand", "damage": -1, "maxdamage": 1, "pct": 30, "status": "severed", ])),
+    }) :));
+    expect("limbs are restorable", (: ({
+        // hand and arm are severed
+        assert_equal(testOb->query_limb("right hand"), ([ "damage": -1, "maxdamage": 1, "pct": 25, "status": "severed", "type": "WIELD" ])),
+        assert_equal(testOb->query_limb("right arm"), ([ "attach": "right hand", "damage": -1, "maxdamage": 1, "pct": 30, "status": "severed", ])),
+
+        // can't restore hand without arm
+        testOb->handle_limb_restore("right hand"),
+        // still severed
+        assert_equal(testOb->query_limb("right hand"), ([ "damage": -1, "maxdamage": 1, "pct": 25, "status": "severed", "type": "WIELD" ])),
+
+        // restore arm
+        testOb->handle_limb_restore("right arm"),
+        assert_equal(testOb->query_limb("right arm"), ([ "attach": "right hand", "damage": 0, "maxdamage": 1, "pct": 30, "status": 0, ])),
+        // restore hand
+        testOb->handle_limb_restore("right hand"),
+        assert_equal(testOb->query_limb("right hand"), ([ "damage": 0, "maxdamage": 1, "pct": 25, "status": 0, "type": "WIELD" ])),
     }) :));
 
 }

@@ -28,6 +28,7 @@ void handle_utility (object source, object target, string limb) {
     }
 
     limb = element_of(severedLimbs);
+    // TODO: need to check return status
     target->handle_limb_restore(limb);
 
     message("action", possessive_noun(target->query_cap_name()) + " " + limb + " is regrows as it is restored.", environment(target), target);

@@ -120,12 +120,19 @@ void handle_limb_sever (string limb) {
     }
 }
 
-void handle_limb_restore (string limb) {
+// TODO: need to use return -1, 0, or 1 in code that calls this
+int handle_limb_restore (string limb) {
+    string *attach;
     if (__Limbs[limb]["status"] != "severed") {
-        return;
+        return 0;
     }
-    map_delete(__Limbs[limb], "status");
+    attach = filter(__Limbs, (: __Limbs[$1]["attach"] == $(limb) && __Limbs[$1]["status"] == "severed" :));
+    if (sizeof(attach) > 0) {
+        return -1;
+    }
+    __Limbs[limb]["status"] = 0;
     __Limbs[limb]["damage"] = 0;
+    return 1;
 }
 
 void handle_limb_heal (string limb, int n) {

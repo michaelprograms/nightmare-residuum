@@ -34,6 +34,7 @@ void command (string input, mapping flags) {
 
     // restore limbs
     foreach (string l in target->query_severed_limbs()) {
+        // TODO: need to check return status and do attached limbs first
         target->handle_limb_restore(l);
         message("action", "Your " + l + " is replaced.", target);
     }
