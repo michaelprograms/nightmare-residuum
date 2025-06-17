@@ -120,7 +120,13 @@ void handle_limb_sever (string limb) {
     }
 }
 
-// TODO: need to use return -1, 0, or 1 in code that calls this
+/**
+ * Attempt to restore a limb the living body is missing.
+ *
+ * @param limb the name of the limb to restore
+ * @returns 1 for success restoring, 0 for failure to restore because it wasn't
+ * severed, and -1 for unable to restore because the attached limb is severed
+ */
 int handle_limb_restore (string limb) {
     string *attach;
     if (__Limbs[limb]["status"] != "severed") {

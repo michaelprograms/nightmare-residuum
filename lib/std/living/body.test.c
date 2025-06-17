@@ -102,16 +102,19 @@ void test_sever_and_restore () {
         assert_equal(testOb->query_limb("right arm"), ([ "attach": "right hand", "damage": -1, "maxdamage": 1, "pct": 30, "status": "severed", ])),
 
         // can't restore hand without arm
-        testOb->handle_limb_restore("right hand"),
+        assert_equal(testOb->handle_limb_restore("right hand"), -1),
         // still severed
         assert_equal(testOb->query_limb("right hand"), ([ "damage": -1, "maxdamage": 1, "pct": 25, "status": "severed", "type": "WIELD" ])),
 
         // restore arm
-        testOb->handle_limb_restore("right arm"),
+        assert_equal(testOb->handle_limb_restore("right arm"), 1),
         assert_equal(testOb->query_limb("right arm"), ([ "attach": "right hand", "damage": 0, "maxdamage": 1, "pct": 30, "status": 0, ])),
         // restore hand
-        testOb->handle_limb_restore("right hand"),
+        assert_equal(testOb->handle_limb_restore("right hand"), 1),
         assert_equal(testOb->query_limb("right hand"), ([ "damage": 0, "maxdamage": 1, "pct": 25, "status": 0, "type": "WIELD" ])),
+        // already restored
+        assert_equal(testOb->handle_limb_restore("right arm"), 0),
+        assert_equal(testOb->handle_limb_restore("right hand"), 0),
     }) :));
 
 }
