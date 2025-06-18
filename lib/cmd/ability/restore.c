@@ -20,6 +20,7 @@ void create () {
  */
 void handle_utility (object source, object target, string limb) {
     string *severedLimbs = target->query_severed_limbs();
+    int result;
 
     if (!sizeof(severedLimbs)) {
         message("action", target->query_cap_name() + " has no missing limbs.", source);
@@ -27,10 +28,14 @@ void handle_utility (object source, object target, string limb) {
         return;
     }
 
+    // TODO: allow this to be targeted
     limb = element_of(severedLimbs);
-    // TODO: need to check return status
-    target->handle_limb_restore(limb);
-
-    message("action", possessive_noun(target->query_cap_name()) + " " + limb + " is regrows as it is restored.", environment(target), target);
-    message("action", "Your " + limb + " regrows as it is restored.", target);
+    result = target->handle_limb_restore(limb);
+    if (result == -1) {
+        message("action", target->query_cap_name()+" is missing the limb the "+limb+" is attached to.", source);
+        message("action", "Nothing happens.", target);
+    } else {
+        message("action", possessive_noun(target->query_cap_name()) + " " + limb + " is regrows as it is restored.", environment(target), target);
+        message("action", "Your " + limb + " regrows as it is restored.", target);
+    }
 }
