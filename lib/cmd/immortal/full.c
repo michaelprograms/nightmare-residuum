@@ -8,6 +8,7 @@ void create () {
 
 void command (string input, mapping flags) {
     object tc = this_character(), target = tc;
+    string *limbs = ({ });
 
     if (input && tc->query_immortal()) {
         target = determine_immortal_target(tc, input);
@@ -23,6 +24,16 @@ void command (string input, mapping flags) {
     target->set_sp(target->query_max_sp());
     target->set_mp(target->query_max_mp());
 
+    // restore severed limbs
+    limbs = sort_array(target->query_severed_limbs(), (: $(target)->query_limb($1)["attach"] == $1 ? -1 : $(target)->query_limb($2)["attach"] == $1 ? 1 : 0 :));
+    foreach (string l in limbs) {
+        if (target->handle_limb_restore(l) == -1) {
+            message("action", "Unable to restore your missing " + l + ".", target);
+        } else {
+            message("action", "Your missing " + l + " is restored.", target);
+        }
+    }
+
     // heal limbs
     foreach (string l in target->query_limbs()) {
         mapping limb = target->query_limb(l);
@@ -30,12 +41,5 @@ void command (string input, mapping flags) {
             target->handle_limb_heal(l, limb["damage"]);
             message("action", "Your " + l + " is fully healed.", target);
         }
-    }
-
-    // restore limbs
-    foreach (string l in target->query_severed_limbs()) {
-        // TODO: need to check return status and do attached limbs first
-        target->handle_limb_restore(l);
-        message("action", "Your " + l + " is replaced.", target);
     }
 }
