@@ -9,6 +9,8 @@ void create () {
     set_exits(([
         "west": HUMAN_ROOM + "building_apartment1.c",
         "south": HUMAN_ROOM + "building_apartment3.c",
+        "enter north": HUMAN_ROOM + "building_apartment_room2.c",
+        "enter east": HUMAN_ROOM + "building_apartment_room3.c",
     ]));
     set_looks(([
         "floor": "The floor has been smoothed by the passage of many people.",

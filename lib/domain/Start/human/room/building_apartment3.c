@@ -10,6 +10,7 @@ void create () {
         "out west": HUMAN_ROOM + "chestnut_st_e6.c",
         "north": HUMAN_ROOM + "building_apartment2.c",
         "up": HUMAN_ROOM + "building_apartment6.c",
+        "enter east": HUMAN_ROOM + "building_apartment_room4.c",
     ]));
     set_looks(([
         "floor": "The floor has been smoothed by the passage of many people.",
