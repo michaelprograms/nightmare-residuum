@@ -15,4 +15,7 @@ void create () {
         "table": "A small table with a single chair, placed near the window.",
         "window": "A window that lets in some natural light, offering a view of the street outside.",
     ]));
+    set_reset(([
+        HUMAN_NPC + "adult_normal.c": 1,
+    ]));
 }
