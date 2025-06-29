@@ -8,7 +8,7 @@ void create () {
     set_name("regular adult");
     set_short("a regular adult");
     set_gender(element_of(({ "male", "female" })));
-    set_long("A regular adult who ponders at your presence in " + possessive(this_object()) + " house.");
+    set_long("A regular adult who ponders at your presence in " + possessive(this_object()) + " home.");
     set_level(8);
     set_species("human");
     set_ability_list(({ "bite" }));
