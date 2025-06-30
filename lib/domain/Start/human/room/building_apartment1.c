@@ -17,4 +17,7 @@ void create () {
         "building": "The building houses many people.",
         "walls": "The exposed brick walls are reminiscent of many of the buildings in this village.",
     ]));
+    set_reset(([
+        HUMAN_NPC + "teen_normal.c": 1,
+    ]));
 }
