@@ -17,5 +17,6 @@ void create () {
     ]));
     set_reset(([
         HUMAN_NPC + "adult_normal.c": 1,
+        HUMAN_NPC + "teen_normal.c": 1,
     ]));
 }
