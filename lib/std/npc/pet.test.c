@@ -1,5 +1,6 @@
 inherit M_TEST;
 inherit M_MOVE;
+inherit "/std/living/combat.c";
 
 /**
  * @var {"/std/npc/pet"} testOb
@@ -34,6 +35,28 @@ void test_following () {
         testOb->set_following(0),
         assert_equal(testOb->query_following(), 0),
     }) :));
+}
+
+void test_heart_beat () {
+    object r1 = new(STD_ROOM);
+    object r2 = new(STD_ROOM);
+
+    expect("", (: ({
+        assert_equal(testOb->handle_move($(r1)), 1),
+        assert_equal(this_object()->handle_move($(r2)), 1),
+
+        testOb->set_owner(this_object()),
+        testOb->set_following(1),
+        assert_equal(testOb->query_following(), 1),
+
+        assert_equal(environment(testOb), $(r1)),
+        testOb->heart_beat(),
+        assert_equal(environment(testOb), $(r2)),
+    }) :));
+
+    this_object()->handle_move("/domain/Nowhere/room/void.c");
+    if (r1) destruct(r1);
+    if (r2) destruct(r2);
 }
 
 void test_parser_applies () {
