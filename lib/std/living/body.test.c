@@ -261,6 +261,10 @@ void test_heal () {
         assert_equal(/** @type {BODY_MOCK} */ (testOb)->query_mp(), 11),
         assert_equal(testOb->query_limb("torso"), ([ "damage": 15, "maxdamage": 23, "pct": 100, "status": 0, "type": "FATAL" ])),
 
+        // can't heal below zero
+        testOb->handle_limb_heal("torso", 50),
+        assert_equal(testOb->query_limb("torso"), ([ "damage": 0, "maxdamage": 23, "pct": 100, "status": 0, "type": "FATAL" ])),
+
         assert_equal($(mockBody)->stop_shadow(), 1),
     }) :));
 
