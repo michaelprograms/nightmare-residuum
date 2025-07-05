@@ -254,6 +254,13 @@ void test_heal () {
         assert_equal(/** @type {BODY_MOCK} */ (testOb)->query_mp(), 1),
         assert_equal(testOb->query_limb("torso"), ([ "damage": 20, "maxdamage": 23, "pct": 100, "status": 0, "type": "FATAL" ])),
 
+        // negative heal does nothing
+        testOb->heal(-10),
+        assert_equal(/** @type {BODY_MOCK} */ (testOb)->query_hp(), 1),
+        assert_equal(/** @type {BODY_MOCK} */ (testOb)->query_sp(), 1),
+        assert_equal(/** @type {BODY_MOCK} */ (testOb)->query_mp(), 1),
+        assert_equal(testOb->query_limb("torso"), ([ "damage": 20, "maxdamage": 23, "pct": 100, "status": 0, "type": "FATAL" ])),
+
         // test heal vitals/limbs
         testOb->heal(10),
         assert_equal(/** @type {BODY_MOCK} */ (testOb)->query_hp(), 11),
