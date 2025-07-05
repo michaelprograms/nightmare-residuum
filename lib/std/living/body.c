@@ -489,12 +489,7 @@ void heal (int n) {
 
     n = n / 2;
     foreach (string limb in query_limbs()) {
-        if (__Limbs[limb]["damage"] > 0) {
-            __Limbs[limb]["damage"] -= n;
-            if (__Limbs[limb]["damage"] < 0) {
-                __Limbs[limb]["damage"] = 0;
-            }
-        }
+        handle_limb_heal(limb, n);
     }
 }
 
