@@ -47,6 +47,7 @@ void test_exists () {
 
         // test query_exists
         assert_equal(testOb->query_exists("charactertest"), 1),
+        assert_equal(testOb->query_exists("Charactertest"), 1),
 
         // delete mock character file
         assert_equal(rm("/save/character/c/charactertest/character.o"), 1),

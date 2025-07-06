@@ -705,7 +705,7 @@ void handle_parse_refresh () {
 // --- object applies ----------------------------------------------------------
 
 /**
- * Upon create, if not a clone will attempt to make save directories.
+ * Upon create, if this is not a clone, attempt to make save directories.
  */
 void create () {
     int i;
@@ -718,6 +718,10 @@ void create () {
         mkdirs("/save/account/" + s);
         mkdirs("/save/character/" + s);
         mkdirs("/save/planet/" + s);
+    }
+    for (i = 'A'; i <= 'Z'; i ++) {
+        s[0] = i;
+        mkdirs("/save/account/" + s);
     }
     for (i = 0; i <= 9; i ++) {
         s = "" + i;

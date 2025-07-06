@@ -29,6 +29,7 @@ varargs int query_exists (string name, string type) {
     if (!stringp(type) || !sizeof(type)) {
         type = "character";
     }
+    name = lower_case(name);
     return query_valid_name(name) && file_size(query_save_path(name, type)) > -1;
 }
 
