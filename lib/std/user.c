@@ -87,7 +87,7 @@ void window_size (int width, int height) {
 }
 
 nomask void net_dead () {
-    if (query_name() && query_character()) {
+    if (valid_character()) {
         character_linkdead();
     }
     destruct();
@@ -134,7 +134,9 @@ nomask varargs void quit_character (int destructing) {
 }
 
 nomask void quit_account () {
-    quit_character(1);
+    if (valid_character()) {
+        quit_character(1);
+    }
     handle_remove();
 }
 

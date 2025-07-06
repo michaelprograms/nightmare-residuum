@@ -1,14 +1,18 @@
 inherit M_TEST;
 
-#define ACCOUNT_PATH "/save/account/a/accounttest.o"
+#define PATH_accounttest "/save/account/a/accounttest.o"
+#define PATH_AccountTest "/save/account/A/AccountTest.o"
 
 /**
  * @var {"/std/user/account"} testOb
  */
 
 void after_each_test () {
-    if (file_size(ACCOUNT_PATH) > -1) {
-        rm(ACCOUNT_PATH);
+    if (file_size(PATH_accounttest) > -1) {
+        rm(PATH_accounttest);
+    }
+    if (file_size(PATH_AccountTest) > -1) {
+        rm(PATH_AccountTest);
     }
 }
 
@@ -18,11 +22,11 @@ void test_account_name () {
         testOb->set_name("accounttest"),
         assert_equal(testOb->query_name(), "accounttest"),
         assert_equal(testOb->query_key_name(), "accounttest"),
-        assert_equal(testOb->query_save_path(), ACCOUNT_PATH),
+        assert_equal(testOb->query_save_path(), PATH_accounttest),
         testOb->set_name("AccountTest"),
         assert_equal(testOb->query_name(), "AccountTest"),
-        assert_equal(testOb->query_key_name(), "accounttest"),
-        assert_equal(testOb->query_save_path(), ACCOUNT_PATH),
+        assert_equal(testOb->query_key_name(), "AccountTest"),
+        assert_equal(testOb->query_save_path(), PATH_AccountTest),
     }) :));
 }
 
@@ -43,20 +47,20 @@ void test_account_times () {
         assert_equal((now = time()) > 0, 1),
 
         testOb->set_name("accounttest"),
-        assert_equal(testOb->query_save_path(), ACCOUNT_PATH),
+        assert_equal(testOb->query_save_path(), PATH_accounttest),
         testOb->save_data(),
-        assert_equal(file_size(ACCOUNT_PATH) > 0, 1),
+        assert_equal(file_size(PATH_accounttest) > 0, 1),
         assert_equal(testOb->query_created(), now),
         assert_equal(testOb->query_last_on(), now),
 
         // read in accounttest.o and modify the __LastOn
-        write_file(ACCOUNT_PATH, implode(map(explode(read_file(ACCOUNT_PATH), "\n"), function (string line) {
+        write_file(PATH_accounttest, implode(map(explode(read_file(PATH_accounttest), "\n"), function (string line) {
             if (regexp(line, "^__LastOn ")) {
                 return "__LastOn " + (now - 100);
             }
             return line;
         }), "\n"), 1),
-        assert_equal(file_size(ACCOUNT_PATH) > 0, 1),
+        assert_equal(file_size(PATH_accounttest) > 0, 1),
         testOb->restore_data(),
         assert_equal(testOb->query_last_on(), now - 100),
 

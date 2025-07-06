@@ -8,6 +8,10 @@ nosave private string __Species;
 /** @type {STD_CHARACTER} */
 nosave private object __Character;
 
+int valid_character () {
+    return __Character && __Character->query_key_name() != 0 && __Character->query_species() != "unknown";
+}
+
 // -----------------------------------------------------------------------------
 
 void set_character_name (string name) {
@@ -122,14 +126,14 @@ nomask void handle_character_override_old_connection (object character) {
 }
 
 nomask void character_exit () {
-    if (__Character) {
+    if (valid_character()) {
         __Character->exit_world();
         __Species = 0;
     }
 }
 
 nomask void character_linkdead () {
-    if (__Character) {
+    if (valid_character()) {
         this_object()->update_character_data(__Character);
         __Character->enter_freezer();
     }

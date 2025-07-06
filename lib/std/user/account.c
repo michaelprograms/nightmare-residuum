@@ -65,7 +65,7 @@ string query_name () {
     return __Name;
 }
 string query_key_name () {
-    return __Name ? lower_case(__Name) : 0;
+    return __Name ? __Name : 0;
 }
 
 nomask void set_password (string str) {
@@ -160,7 +160,7 @@ void set_name (string name) {
     if (!stringp(__Name)) {  // name can be cleared during account creation
         return;
     }
-    set_save_path(D_ACCOUNT->query_save_path(lower_case(__Name)));
+    set_save_path(D_ACCOUNT->query_save_path(__Name));
     if (D_ACCOUNT->query_exists(__Name)) {
         restore_data();
     }
@@ -446,6 +446,7 @@ protected nomask varargs void account_input (int state, mixed extra, string inpu
                     return this_object()->handle_remove("\nInvalid entry. Connection terminated.\n");
                 }
             } else {
+                input = lower_case(input);
                 if (input && input == "exit") {
                     set_last_on();
                     save_data();
