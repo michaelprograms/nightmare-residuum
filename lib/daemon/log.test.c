@@ -4,6 +4,7 @@ inherit M_TEST;
  * @var {"/daemon/log"} testOb
  */
 
+string time;
 void test_log () {
     expect("log should handle invalid input", (: ({
         assert_equal(testOb->log("", ""), 0),
@@ -23,13 +24,17 @@ void test_log () {
         // queue up log roll
         assert_equal(write_file("/log/test", sprintf("%20000s", ".")), 1),
         assert_equal(file_size("/log/test"), 20000),
+        assert_equal(sizeof(get_dir("/log/test-*")), 0),
         // log roll
         assert_equal(testOb->log("test", "."), 1),
-        assert_equal(file_size("/log/test-"+time()), 20000),
+        assert_equal(sizeof(get_dir("/log/test-*")), 1),
+
+        time = explode(get_dir("/log/test-*")[0], "-")[1],
+        assert_equal(file_size("/log/test-"+time), 20000),
         assert_equal(file_size("/log/test"), 2),
         // clean files
         assert_equal(rm("/log/test"), 1),
-        assert_equal(rm("/log/test-"+time()), 1),
+        assert_equal(rm("/log/test-"+time), 1),
     }) :));
 }
 
