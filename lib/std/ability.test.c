@@ -7,6 +7,9 @@ inherit M_TEST;
 nosave private int __MockLiving;
 int is_living () { return __MockLiving; }
 
+nosave private string __MockClass;
+string query_class () { return __MockClass; }
+
 // @TODO: clean this up with real test mock stats
 int MockCharisma = 0, MockIntelligence = 0;
 int query_stat (string key) {
@@ -48,7 +51,15 @@ void test_calculate () {
     }) :));
 
     expect("damage is calculated", (: ({
-        testOb->set_powers(([ "psionic": 123, ])),
+        testOb->set_powers(([ "psionic": 123, "ranged": 123, "brawl": 123, ])),
+        cValue1 = testOb->calculate_damage(this_object(), this_object(), "head"),
+        assert_equal(cValue1 > 0, 1),
+
+        __MockClass = "psionist",
+        cValue1 = testOb->calculate_damage(this_object(), this_object(), "head"),
+        assert_equal(cValue1 > 0, 1),
+
+        __MockClass = "mystic",
         cValue1 = testOb->calculate_damage(this_object(), this_object(), "head"),
         assert_equal(cValue1 > 0, 1),
     }) :));
