@@ -5,10 +5,10 @@
 inherit STD_VERB;
 inherit "/std/ability/config.c";
 inherit "/std/ability/cost.c";
+inherit "/std/ability/helpers.c";
 inherit "/std/ability/message.c";
 inherit "/std/ability/requirements.c";
 inherit "/std/ability/target.c";
-inherit "/std/ability/utility.c";
 inherit "/std/ability/weapons.c";
 
 nosave private int __Cooldown = 1;
