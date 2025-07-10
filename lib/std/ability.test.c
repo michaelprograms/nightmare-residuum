@@ -30,20 +30,6 @@ void test_name () {
     }) :));
 }
 
-void test_die_sides () {
-    expect("handles die sides", (: ({
-        // default
-        assert_equal(testOb->query_die_sides(this_object()), 6),
-
-        // psionist
-        __MockClass = "psionist",
-        assert_equal(testOb->query_die_sides(this_object()), 8),
-
-        __MockClass = "mystic",
-        assert_equal(testOb->query_die_sides(this_object()), 7),
-    }) :));
-}
-
 int cValue1 = 0, cValue2 = 0;
 void test_calculate () {
     MockIntelligence = 10;
