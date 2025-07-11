@@ -118,10 +118,7 @@ int calculate_damage (object source, object target, string limb) {
     damage -= target->query_limb_armor(limb);
     damage -= target->query_protection();
 
-    if (damage < 0) {
-        damage = 0;
-    }
-
+    damage = max(({ 0, damage }));
     return damage;
 }
 

@@ -51,9 +51,13 @@ void test_calculate () {
     }) :));
 
     expect("damage is calculated", (: ({
-        testOb->set_powers(([ "psionic": 123, "ranged": 123, "brawl": 123, ])),
+        testOb->set_powers(([ "psionic": 10, "ranged": 10, "brawl": 10, ])),
         cValue1 = testOb->calculate_damage(this_object(), this_object(), "head"),
         assert_equal(cValue1 > 0, 1),
+
+        testOb->set_powers(([ "psionic": 123, "ranged": 123, "brawl": 123, ])),
+        cValue2 = testOb->calculate_damage(this_object(), this_object(), "head"),
+        assert_equal(cValue2 > cValue1, 1),
 
         __MockClass = "psionist",
         cValue1 = testOb->calculate_damage(this_object(), this_object(), "head"),
