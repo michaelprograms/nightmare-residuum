@@ -156,6 +156,8 @@ void test_difficulty_factor () {
         // check raising difficulty factor
         testOb->set_difficulty_factor(110),
         assert_equal(testOb->query_difficulty_factor(), 110),
+
+        assert_catch((: testOb->set_difficulty_factor(UNDEFINED) :), "*Bad argument 1 to ability->set_difficulty_factor\n"),
     }) :));
 }
 
