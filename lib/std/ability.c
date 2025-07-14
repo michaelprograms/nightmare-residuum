@@ -139,27 +139,6 @@ int query_difficulty_factor () {
     return __DifficultyFactor;
 }
 
-/* ----- targets ----- */
-
-object *verify_targets (object source, object *targets) {
-    if (query_type() == "attack") {
-        if ((!targets || !targets[0])) {
-            targets = ({ present_hostile(source) });
-        }
-        if ((!targets || !targets[0])) {
-            return 0;
-        }
-    } else if (query_type() == "heal" || query_type() == "utility") {
-        if ((!targets || !targets[0])) {
-            targets = ({ source });
-        }
-        if ((!targets || !targets[0])) {
-            return 0;
-        }
-    }
-    return targets;
-}
-
 /* ----- utility ----- */
 
 void handle_utility (object source, object target, string limb) {

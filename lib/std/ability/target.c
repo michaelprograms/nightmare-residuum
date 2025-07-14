@@ -11,3 +11,22 @@ void set_targets (int n) {
 int query_targets () {
     return __NumTargets;
 }
+
+object *verify_targets (object source, object *targets) {
+    if (this_object()->query_type() == "attack") {
+        if ((!targets || !targets[0])) {
+            targets = ({ present_hostile(source) });
+        }
+        if ((!targets || !targets[0])) {
+            return 0;
+        }
+    } else if (this_object()->query_type() == "heal" || this_object()->query_type() == "utility") {
+        if ((!targets || !targets[0])) {
+            targets = ({ source });
+        }
+        if ((!targets || !targets[0])) {
+            return 0;
+        }
+    }
+    return targets;
+}
