@@ -173,7 +173,7 @@ void test_can_verb_rule () {
 void test_direct_verb_lib () {
     object ob;
 
-    // setuip test living object
+    // setup test living object
     ob = new(STD_LIVING);
     ob->set_species("human");
 
