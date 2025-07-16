@@ -28,5 +28,5 @@ object *verify_targets (object source, object *targets) {
             return 0;
         }
     }
-    return targets;
+    return 0;
 }
