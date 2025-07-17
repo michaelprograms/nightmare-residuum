@@ -4,6 +4,8 @@ inherit M_TEST;
  * @var {"/std/ability/target"} testOb
  */
 
+#define CONFIG_MOCK "/std/ability/target.c" & "/std/ability/config.mock.c"
+
 void test_targets () {
     expect("handles setting and querying targets", (: ({
         // default
@@ -20,15 +22,27 @@ void test_targets () {
 }
 
 void test_verify_targets () {
-    object npc1, npc2;
+    object npc1, npc2, room;
+    object mockConfig = new("/std/ability/config.mock.c");
+
+    room = new(STD_ROOM);
     npc1 = new(STD_NPC);
     npc2 = new(STD_NPC);
+    mockConfig->start_shadow(testOb);
 
     expect("handles verifying targets", (: ({
         // no type set, no targets returned
         assert_equal(testOb->verify_targets(this_object(), ({ $(npc1), $(npc2) })), 0),
+
+        /** @type {CONFIG_MOCK} */ (testOb)->set_type("attack"),
+        $(npc1)->handle_move($(room)),
+        $(npc2)->handle_move($(room)),
+        assert_equal(testOb->verify_targets(this_object(), ({ $(npc2) })), ({ $(npc2) })),
     }) :));
 
     if (npc1) destruct(npc1);
     if (npc2) destruct(npc2);
+    if (room) destruct(room);
+    mockConfig->stop_shadow();
+    if (mockConfig) destruct(mockConfig);
 }
