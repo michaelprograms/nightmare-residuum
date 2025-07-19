@@ -34,10 +34,18 @@ void test_verify_targets () {
         // no type set, no targets returned
         assert_equal(testOb->verify_targets(this_object(), ({ $(npc1), $(npc2) })), 0),
 
+        // attack type, target is returned
         /** @type {CONFIG_MOCK} */ (testOb)->set_type("attack"),
         $(npc1)->handle_move($(room)),
         $(npc2)->handle_move($(room)),
         assert_equal(testOb->verify_targets(this_object(), ({ $(npc2) })), ({ $(npc2) })),
+
+        // attack type, no supplied targets, no present hostiles
+        assert_equal(testOb->verify_targets($(npc1), 0), 0),
+
+        // attack type, supplied targets returned
+        assert_equal($(npc1)->add_hostile($(npc2)), 1),
+        assert_equal(testOb->verify_targets($(npc1), 0), ({ $(npc2) })),
     }) :));
 
     if (npc1) destruct(npc1);
