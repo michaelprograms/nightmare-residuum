@@ -21,11 +21,8 @@ object *verify_targets (object source, object *targets) {
             return 0;
         }
     } else if (this_object()->query_type() == "heal" || this_object()->query_type() == "utility") {
-        if (!targets || !targets[0]) {
+        if (!sizeof(targets) || !targets[0]) {
             targets = ({ source });
-        }
-        if (!targets || !targets[0]) {
-            return 0;
         }
     } else {
         return 0;
