@@ -28,9 +28,9 @@ void test_verify_targets () {
     room = new(STD_ROOM);
     npc1 = new(STD_NPC);
     npc2 = new(STD_NPC);
-    mockConfig->start_shadow(testOb);
 
     expect("handles verifying targets", (: ({
+        assert_equal($(mockConfig)->start_shadow(testOb), 1),
         // no type set, no targets returned
         assert_equal(testOb->verify_targets($(npc1), ({ $(npc2) })), 0),
 
@@ -50,12 +50,11 @@ void test_verify_targets () {
         // heal/utility type, no target defaults to source
         /** @type {CONFIG_MOCK} */ (testOb)->set_type("heal"),
         assert_equal(testOb->verify_targets($(npc1), 0), ({ $(npc1) })),
-
+        assert_equal($(mockConfig)->stop_shadow(), 1),
     }) :));
 
     if (npc1) destruct(npc1);
     if (npc2) destruct(npc2);
     if (room) destruct(room);
-    mockConfig->stop_shadow();
     if (mockConfig) destruct(mockConfig);
 }
