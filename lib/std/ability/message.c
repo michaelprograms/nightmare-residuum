@@ -27,10 +27,11 @@ void ability_message_attempt (object source, object *targets) {
     }
 
     names = conjunction(map(targets, (: $1 == $(source) ? reflexive($(source)) : $1->query_cap_name() :)));
+    // TODO: names should be updated for each target to be targets-source-this_object, you, and themselves
     if (this_object()->query_type() == "attack") {
         message("action", source->query_cap_name() + " attempts to " + this_object()->query_name() + " " + names + "!", environment(source), ({ source, targets... }));
     } else if (this_object()->query_type() == "heal" || this_object()->query_type() == "utility") {
-        message("action", source->query_cap_name() + " attempts to " + this_object()->query_name() + " towards " + names + ".", environment(source), ({ source }));
+        message("action", source->query_cap_name() + " attempts to " + this_object()->query_name() + " towards " + names + ".", environment(source), ({ source, targets... }));
     }
 }
 
