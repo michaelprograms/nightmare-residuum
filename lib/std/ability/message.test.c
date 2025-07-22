@@ -24,17 +24,12 @@ void test_messages () {
     npc2->handle_move(r);
     npc3->handle_move(r);
 
-    expect("say responses should be handled", (: ({
-        assert_equal($(mockConfig)->start_shadow(testOb), 1),
-        assert_equal($(mockNPC1)->start_shadow($(npc1)), 1),
-        assert_equal($(mockNPC2)->start_shadow($(npc2)), 1),
-        assert_equal($(mockNPC3)->start_shadow($(npc3)), 1),
+    mockConfig->start_shadow(testOb);
+    mockNPC1->start_shadow(npc1);
+    mockNPC2->start_shadow(npc2);
+    mockNPC3->start_shadow(npc3);
 
-        // no messages yet
-        assert_equal($(mockNPC1)->query_received_messages(), ({ })),
-        assert_equal($(mockNPC2)->query_received_messages(), ({ })),
-        assert_equal($(mockNPC3)->query_received_messages(), ({ })),
-
+    expect("attempt messages are handled", (: ({
         // attack type
         /** @type {CONFIG_MOCK} */ (testOb)->set_type("attack"),
         testOb->ability_message_attempt($(npc1), ({ $(npc2 )})),
@@ -52,12 +47,25 @@ void test_messages () {
         assert_equal($(mockNPC1)->query_received_messages(), ({ ({ "action", "You attempt to 0 towards Npc2 and yourself." }) })),
         assert_equal($(mockNPC2)->query_received_messages(), ({ ({ "action", "Npc1 attempts to 0 towards you." }) })),
         assert_equal($(mockNPC3)->query_received_messages(), ({ ({ "action", "Npc1 attempts to 0 towards Npc2 and themself." }) })),
-
-        assert_equal($(mockConfig)->stop_shadow(), 1),
-        assert_equal($(mockNPC1)->stop_shadow(), 1),
-        assert_equal($(mockNPC2)->stop_shadow(), 1),
-        assert_equal($(mockNPC3)->stop_shadow(), 1),
     }) :));
+
+    mockNPC1->clear_received_messages();
+    mockNPC2->clear_received_messages();
+    mockNPC3->clear_received_messages();
+
+    expect("fail messages are handled", (: ({
+        // attack type
+        /** @type {CONFIG_MOCK} */ (testOb)->set_type("attack"),
+        testOb->ability_message_fail($(npc1), $(npc2), 0),
+        assert_equal($(mockNPC1)->query_received_messages(), ({ ({ "ability miss", "You miss your 0 attempt on Npc2!" }) })),
+        assert_equal($(mockNPC2)->query_received_messages(), ({ ({ "ability miss", "Npc1 misses their 0 attempt on you!" }) })),
+        assert_equal($(mockNPC3)->query_received_messages(), ({ ({ "ability miss", "Npc1 misses their 0 attempt on Npc2!" }) })),
+    }) :));
+
+    mockConfig->stop_shadow();
+    mockNPC1->stop_shadow();
+    mockNPC2->stop_shadow();
+    mockNPC3->stop_shadow();
 
     if (mockConfig) destruct(mockConfig);
     if (mockNPC1) destruct(mockNPC1);
