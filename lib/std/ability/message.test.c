@@ -62,6 +62,19 @@ void test_messages () {
         assert_equal($(mockNPC3)->query_received_messages(), ({ ({ "ability miss", "Npc1 misses their 0 attempt on Npc2!" }) })),
     }) :));
 
+    mockNPC1->clear_received_messages();
+    mockNPC2->clear_received_messages();
+    mockNPC3->clear_received_messages();
+
+    expect("success messages are handled", (: ({
+        // attack type
+        /** @type {CONFIG_MOCK} */ (testOb)->set_type("attack"),
+        testOb->ability_message_success($(npc1), $(npc2), 0),
+        assert_equal($(mockNPC1)->query_received_messages(), ({ ({ "action", "You 0 Npc2!" }) })),
+        assert_equal($(mockNPC2)->query_received_messages(), ({ ({ "action", "Npc1 0s you!" }) })),
+        assert_equal($(mockNPC3)->query_received_messages(), ({ ({ "action", "Npc1 0s Npc2!" }) })),
+    }) :));
+
     mockConfig->stop_shadow();
     mockNPC1->stop_shadow();
     mockNPC2->stop_shadow();

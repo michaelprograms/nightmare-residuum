@@ -67,7 +67,7 @@ void ability_message_fail (object source, object target, string limb) {
  * @param limb the limb targeted, if any
  */
 void ability_message_success (object source, object target, string limb) {
-    string who, you, plural = pluralize(this_object()->query_name());
+    string who, you, plural = pluralize(this_object()->query_name() + "");
 
     if (this_object()->query_type() == "attack") {
         if (limb) {
