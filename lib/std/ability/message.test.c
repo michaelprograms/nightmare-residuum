@@ -60,6 +60,27 @@ void test_messages () {
         assert_equal($(mockNPC1)->query_received_messages(), ({ ({ "ability miss", "You miss your 0 attempt on Npc2!" }) })),
         assert_equal($(mockNPC2)->query_received_messages(), ({ ({ "ability miss", "Npc1 misses their 0 attempt on you!" }) })),
         assert_equal($(mockNPC3)->query_received_messages(), ({ ({ "ability miss", "Npc1 misses their 0 attempt on Npc2!" }) })),
+
+        $(mockNPC1)->clear_received_messages(),
+        $(mockNPC2)->clear_received_messages(),
+        $(mockNPC3)->clear_received_messages(),
+
+        // heal type, targeting themself
+        /** @type {CONFIG_MOCK} */ (testOb)->set_type("heal"),
+        testOb->ability_message_fail($(npc1), $(npc1), 0),
+        assert_equal($(mockNPC1)->query_received_messages(), ({ ({ "ability miss", "Your 0 fails to affect yourself." }) })),
+        assert_equal($(mockNPC2)->query_received_messages(), ({ ({ "ability miss", "Npc1's 0 fails to affect themself." }) })),
+        assert_equal($(mockNPC3)->query_received_messages(), ({ ({ "ability miss", "Npc1's 0 fails to affect themself." }) })),
+
+        $(mockNPC1)->clear_received_messages(),
+        $(mockNPC2)->clear_received_messages(),
+        $(mockNPC3)->clear_received_messages(),
+
+        // heal type, targeting another
+        testOb->ability_message_fail($(npc1), $(npc2), 0),
+        assert_equal($(mockNPC1)->query_received_messages(), ({ ({ "ability miss", "Your 0 fails to affect Npc2." }) })),
+        assert_equal($(mockNPC2)->query_received_messages(), ({ ({ "ability miss", "Npc1's 0 fails to affect you." }) })),
+        assert_equal($(mockNPC3)->query_received_messages(), ({ ({ "ability miss", "Npc1's 0 fails to affect Npc2." }) })),
     }) :));
 
     mockNPC1->clear_received_messages();

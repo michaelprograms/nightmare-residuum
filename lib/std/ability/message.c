@@ -49,7 +49,7 @@ void ability_message_fail (object source, object target, string limb) {
         message("ability miss", source->query_cap_name() + " misses " + possessive(source) + " " + this_object()->query_name() + " attempt on " + target->query_cap_name() + "!", environment(source), ({ source, target }));
     } else if (this_object()->query_type() == "heal" || this_object()->query_type() == "utility") {
         if (source == target) {
-            message("action", "Your " + this_object()->query_name() + " fails to affect yourself.", source);
+            message("ability miss", "Your " + this_object()->query_name() + " fails to affect yourself.", source);
             message("ability miss", possessive_noun(source->query_cap_name()) + " " + this_object()->query_name() + " fails to affect " + reflexive(source) + ".", environment(source), ({ source }));
         } else {
             message("ability miss", "Your " + this_object()->query_name() + " fails to affect " + target->query_cap_name() + ".", source);
