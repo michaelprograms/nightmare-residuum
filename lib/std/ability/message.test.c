@@ -33,16 +33,16 @@ void test_messages () {
         // attack type
         /** @type {CONFIG_MOCK} */ (testOb)->set_type("attack"),
         testOb->ability_message_attempt($(npc1), ({ $(npc2 )})),
-        assert_equal($(mockNPC1)->query_received_messages()[<1..<1], ({ ({ "action", "You attempt to 0 Npc2!" }) })),
-        assert_equal($(mockNPC2)->query_received_messages()[<1..<1], ({ ({ "action", "Npc1 attempts to 0 you!" }) })),
-        assert_equal($(mockNPC3)->query_received_messages()[<1..<1], ({ ({ "action", "Npc1 attempts to 0 Npc2!" }) })),
+        assert_equal($(mockNPC1)->query_received_messages()[<1], ({ "action", "You attempt to 0 Npc2!" })),
+        assert_equal($(mockNPC2)->query_received_messages()[<1], ({ "action", "Npc1 attempts to 0 you!" })),
+        assert_equal($(mockNPC3)->query_received_messages()[<1], ({ "action", "Npc1 attempts to 0 Npc2!" })),
 
         // heal type
         /** @type {CONFIG_MOCK} */ (testOb)->set_type("heal"),
         testOb->ability_message_attempt($(npc1), ({ $(npc1), $(npc2 )})),
-        assert_equal($(mockNPC1)->query_received_messages()[<1..<1], ({ ({ "action", "You attempt to 0 towards Npc2 and yourself." }) })),
-        assert_equal($(mockNPC2)->query_received_messages()[<1..<1], ({ ({ "action", "Npc1 attempts to 0 towards you." }) })),
-        assert_equal($(mockNPC3)->query_received_messages()[<1..<1], ({ ({ "action", "Npc1 attempts to 0 towards Npc2 and themself." }) })),
+        assert_equal($(mockNPC1)->query_received_messages()[<1], ({ "action", "You attempt to 0 towards Npc2 and yourself." })),
+        assert_equal($(mockNPC2)->query_received_messages()[<1], ({ "action", "Npc1 attempts to 0 towards you." })),
+        assert_equal($(mockNPC3)->query_received_messages()[<1], ({ "action", "Npc1 attempts to 0 towards Npc2 and themself." })),
     }) :));
 
     mockNPC1->clear_received_messages();
@@ -53,22 +53,22 @@ void test_messages () {
         // attack type
         /** @type {CONFIG_MOCK} */ (testOb)->set_type("attack"),
         testOb->ability_message_fail($(npc1), $(npc2), 0),
-        assert_equal($(mockNPC1)->query_received_messages()[<1..<1], ({ ({ "ability miss", "You miss your 0 attempt on Npc2!" }) })),
-        assert_equal($(mockNPC2)->query_received_messages()[<1..<1], ({ ({ "ability miss", "Npc1 misses their 0 attempt on you!" }) })),
-        assert_equal($(mockNPC3)->query_received_messages()[<1..<1], ({ ({ "ability miss", "Npc1 misses their 0 attempt on Npc2!" }) })),
+        assert_equal($(mockNPC1)->query_received_messages()[<1], ({ "ability miss", "You miss your 0 attempt on Npc2!" })),
+        assert_equal($(mockNPC2)->query_received_messages()[<1], ({ "ability miss", "Npc1 misses their 0 attempt on you!" })),
+        assert_equal($(mockNPC3)->query_received_messages()[<1], ({ "ability miss", "Npc1 misses their 0 attempt on Npc2!" })),
 
         // heal type, targeting themself
         /** @type {CONFIG_MOCK} */ (testOb)->set_type("heal"),
         testOb->ability_message_fail($(npc1), $(npc1), 0),
-        assert_equal($(mockNPC1)->query_received_messages()[<1..<1], ({ ({ "ability miss", "Your 0 fails to affect yourself." }) })),
-        assert_equal($(mockNPC2)->query_received_messages()[<1..<1], ({ ({ "ability miss", "Npc1's 0 fails to affect themself." }) })),
-        assert_equal($(mockNPC3)->query_received_messages()[<1..<1], ({ ({ "ability miss", "Npc1's 0 fails to affect themself." }) })),
+        assert_equal($(mockNPC1)->query_received_messages()[<1], ({ "ability miss", "Your 0 fails to affect yourself." })),
+        assert_equal($(mockNPC2)->query_received_messages()[<1], ({ "ability miss", "Npc1's 0 fails to affect themself." })),
+        assert_equal($(mockNPC3)->query_received_messages()[<1], ({ "ability miss", "Npc1's 0 fails to affect themself." })),
 
         // heal type, targeting another
         testOb->ability_message_fail($(npc1), $(npc2), 0),
-        assert_equal($(mockNPC1)->query_received_messages()[<1..<1], ({ ({ "ability miss", "Your 0 fails to affect Npc2." }) })),
-        assert_equal($(mockNPC2)->query_received_messages()[<1..<1], ({ ({ "ability miss", "Npc1's 0 fails to affect you." }) })),
-        assert_equal($(mockNPC3)->query_received_messages()[<1..<1], ({ ({ "ability miss", "Npc1's 0 fails to affect Npc2." }) })),
+        assert_equal($(mockNPC1)->query_received_messages()[<1], ({ "ability miss", "Your 0 fails to affect Npc2." })),
+        assert_equal($(mockNPC2)->query_received_messages()[<1], ({ "ability miss", "Npc1's 0 fails to affect you." })),
+        assert_equal($(mockNPC3)->query_received_messages()[<1], ({ "ability miss", "Npc1's 0 fails to affect Npc2." })),
     }) :));
 
     mockNPC1->clear_received_messages();
@@ -79,14 +79,14 @@ void test_messages () {
         // attack type
         /** @type {CONFIG_MOCK} */ (testOb)->set_type("attack"),
         testOb->ability_message_success($(npc1), $(npc2), 0),
-        assert_equal($(mockNPC1)->query_received_messages()[<1..<1], ({ ({ "action", "You 0 Npc2!" }) })),
-        assert_equal($(mockNPC2)->query_received_messages()[<1..<1], ({ ({ "action", "Npc1 0s you!" }) })),
-        assert_equal($(mockNPC3)->query_received_messages()[<1..<1], ({ ({ "action", "Npc1 0s Npc2!" }) })),
+        assert_equal($(mockNPC1)->query_received_messages()[<1], ({ "action", "You 0 Npc2!" })),
+        assert_equal($(mockNPC2)->query_received_messages()[<1], ({ "action", "Npc1 0s you!" })),
+        assert_equal($(mockNPC3)->query_received_messages()[<1], ({ "action", "Npc1 0s Npc2!" })),
 
         testOb->ability_message_success($(npc1), $(npc2), "torso"),
-        assert_equal($(mockNPC1)->query_received_messages()[<1..<1], ({ ({ "action", "You 0 Npc2's torso!" }) })),
-        assert_equal($(mockNPC2)->query_received_messages()[<1..<1], ({ ({ "action", "Npc1 0s your torso!" }) })),
-        assert_equal($(mockNPC3)->query_received_messages()[<1..<1], ({ ({ "action", "Npc1 0s Npc2's torso!" }) })),
+        assert_equal($(mockNPC1)->query_received_messages()[<1], ({ "action", "You 0 Npc2's torso!" })),
+        assert_equal($(mockNPC2)->query_received_messages()[<1], ({ "action", "Npc1 0s your torso!" })),
+        assert_equal($(mockNPC3)->query_received_messages()[<1], ({ "action", "Npc1 0s Npc2's torso!" })),
     }) :));
 
     mockConfig->stop_shadow();
