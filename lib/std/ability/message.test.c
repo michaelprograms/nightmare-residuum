@@ -91,9 +91,14 @@ void test_messages () {
         // heal type
         /** @type {CONFIG_MOCK} */ (testOb)->set_type("heal"),
         testOb->ability_message_success($(npc1), $(npc1), 0),
-        assert_equal($(mockNPC1)->query_received_messages()[<1], ({ "action", "You 0 towards yourself." })),
+        assert_equal($(mockNPC1)->query_received_messages()[<1], ({ "action", "You 0 towards yourself effectively." })),
         assert_equal($(mockNPC2)->query_received_messages()[<1], ({ "action", "Npc1 0s towards themself effectively." })),
         assert_equal($(mockNPC3)->query_received_messages()[<1], ({ "action", "Npc1 0s towards themself effectively." })),
+
+        testOb->ability_message_success($(npc1), $(npc2), 0),
+        assert_equal($(mockNPC1)->query_received_messages()[<1], ({ "action", "You 0 towards Npc2 effectively." })),
+        assert_equal($(mockNPC2)->query_received_messages()[<1], ({ "action", "Npc1 0s towards you effectively." })),
+        assert_equal($(mockNPC3)->query_received_messages()[<1], ({ "action", "Npc1 0s towards Npc2 effectively." })),
     }) :));
 
     mockConfig->stop_shadow();

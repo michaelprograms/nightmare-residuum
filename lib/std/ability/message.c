@@ -82,7 +82,7 @@ void ability_message_success (object source, object target, string limb) {
         message("action", source->query_cap_name() + " " + plural + " " + who + "!", environment(source), ({ source, target }));
     } else if (this_object()->query_type() == "heal" || this_object()->query_type() == "utility") {
         if (source == target) {
-            message("action", "You " + this_object()->query_name() + " towards yourself.", source);
+            message("action", "You " + this_object()->query_name() + " towards yourself effectively.", source);
             message("action", source->query_cap_name() + " " + plural + " towards " + reflexive(source) + " effectively.", environment(source), ({ source, target }));
         } else {
             who = target->query_cap_name();
