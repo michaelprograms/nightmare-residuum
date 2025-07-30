@@ -50,7 +50,7 @@ void test_messages () {
     mockNPC3->clear_received_messages();
 
     expect("fail messages are handled", (: ({
-        // attack type
+        // attack type, targeting another
         /** @type {CONFIG_MOCK} */ (testOb)->set_type("attack"),
         testOb->ability_message_fail($(npc1), $(npc2), 0),
         assert_equal($(mockNPC1)->query_received_messages()[<1], ({ "ability miss", "You miss your 0 attempt on Npc2!" })),
@@ -76,25 +76,27 @@ void test_messages () {
     mockNPC3->clear_received_messages();
 
     expect("success messages are handled", (: ({
-        // attack type
+        // attack type, targeting another, no limb
         /** @type {CONFIG_MOCK} */ (testOb)->set_type("attack"),
         testOb->ability_message_success($(npc1), $(npc2), 0),
         assert_equal($(mockNPC1)->query_received_messages()[<1], ({ "action", "You 0 Npc2!" })),
         assert_equal($(mockNPC2)->query_received_messages()[<1], ({ "action", "Npc1 0s you!" })),
         assert_equal($(mockNPC3)->query_received_messages()[<1], ({ "action", "Npc1 0s Npc2!" })),
 
+        // attack type, targeting another's limb
         testOb->ability_message_success($(npc1), $(npc2), "torso"),
         assert_equal($(mockNPC1)->query_received_messages()[<1], ({ "action", "You 0 Npc2's torso!" })),
         assert_equal($(mockNPC2)->query_received_messages()[<1], ({ "action", "Npc1 0s your torso!" })),
         assert_equal($(mockNPC3)->query_received_messages()[<1], ({ "action", "Npc1 0s Npc2's torso!" })),
 
-        // heal type
+        // heal type, targeting themself
         /** @type {CONFIG_MOCK} */ (testOb)->set_type("heal"),
         testOb->ability_message_success($(npc1), $(npc1), 0),
         assert_equal($(mockNPC1)->query_received_messages()[<1], ({ "action", "You 0 towards yourself effectively." })),
         assert_equal($(mockNPC2)->query_received_messages()[<1], ({ "action", "Npc1 0s towards themself effectively." })),
         assert_equal($(mockNPC3)->query_received_messages()[<1], ({ "action", "Npc1 0s towards themself effectively." })),
 
+        // heal type, targeting another
         testOb->ability_message_success($(npc1), $(npc2), 0),
         assert_equal($(mockNPC1)->query_received_messages()[<1], ({ "action", "You 0 towards Npc2 effectively." })),
         assert_equal($(mockNPC2)->query_received_messages()[<1], ({ "action", "Npc1 0s towards you effectively." })),
