@@ -170,7 +170,7 @@ void test_can_verb_rule () {
     }) :));
 }
 
-void test_direct_verb_lib () {
+void test_direct_verb_liv () {
     object ob;
 
     // setup test living object
@@ -180,7 +180,7 @@ void test_direct_verb_lib () {
     // setup test object
     __MockLiving = 1;
 
-    expect("handles ", (: ({
+    expect("direct_verb_liv should handle applies", (: ({
         // not enough arguments
         assert_equal(testOb->direct_verb_liv(), 0),
         assert_equal(testOb->direct_verb_liv(1), 0),
