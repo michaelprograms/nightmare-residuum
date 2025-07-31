@@ -11,23 +11,33 @@ void test_messages () {
     object mockNPC1 = new("/std/npc.mock.c");
     object mockNPC2 = new("/std/npc.mock.c");
     object mockNPC3 = new("/std/npc.mock.c");
+    object mockC1 = new("/std/npc.mock.c"); // TODO: this is weird, its not an NPC but this is the functionality we need
+    object mockC2 = new("/std/npc.mock.c");
     object npc1 = new(STD_NPC);
     object npc2 = new(STD_NPC);
     object npc3 = new(STD_NPC);
+    object c1 = new(STD_CHARACTER);
+    object c2 = new(STD_CHARACTER);
     object r = new(STD_ROOM);
 
     npc1->set_name("npc1");
     npc2->set_name("npc2");
     npc3->set_name("npc3");
+    c1->set_name("test character 1");
+    c2->set_name("test character 2");
 
     npc1->handle_move(r);
     npc2->handle_move(r);
     npc3->handle_move(r);
+    c1->handle_move(r);
+    c2->handle_move(r);
 
     mockConfig->start_shadow(testOb);
     mockNPC1->start_shadow(npc1);
     mockNPC2->start_shadow(npc2);
     mockNPC3->start_shadow(npc3);
+    mockC1->start_shadow(c1);
+    mockC2->start_shadow(c2);
 
     expect("attempt messages are handled", (: ({
         // attack type
@@ -103,15 +113,42 @@ void test_messages () {
         assert_equal($(mockNPC3)->query_received_messages()[<1], ({ "action", "Npc1 0s towards Npc2 effectively." })),
     }) :));
 
+    mockNPC1->clear_received_messages();
+    mockNPC2->clear_received_messages();
+    mockNPC3->clear_received_messages();
+
+    expect("debug messages are handled", (: ({
+        $(c1)->set_property("debug", 1),
+        $(c2)->set_property("debug", 1),
+
+        // attack type
+        /** @type {CONFIG_MOCK} */ (testOb)->set_type("attack"),
+        testOb->ability_debug_message($(c1), $(c2), 123),
+        assert_equal($(mockC1)->query_received_messages()[<1], ({ "action", "%^ORANGE%^Damage:%^RESET%^ 123" })),
+
+        // heal type
+        /** @type {CONFIG_MOCK} */ (testOb)->set_type("heal"),
+        testOb->ability_debug_message($(c1), $(c1), 123),
+        assert_equal($(mockC1)->query_received_messages()[<1], ({ "action", "%^CYAN%^Heal:%^RESET%^ 123" })),
+    }) :));
+
     mockConfig->stop_shadow();
     mockNPC1->stop_shadow();
     mockNPC2->stop_shadow();
     mockNPC3->stop_shadow();
+    mockC1->stop_shadow();
+    mockC2->stop_shadow();
 
     if (mockConfig) destruct(mockConfig);
     if (mockNPC1) destruct(mockNPC1);
     if (mockNPC2) destruct(mockNPC2);
+    if (mockNPC3) destruct(mockNPC3);
     if (npc1) destruct(npc1);
     if (npc2) destruct(npc2);
     if (npc3) destruct(npc3);
+    if (mockC1) destruct(mockC1);
+    if (mockC2) destruct(mockC2);
+    if (c1) destruct(c1);
+    if (c2) destruct(c2);
+    if (r) destruct(r);
 }
