@@ -381,9 +381,7 @@ void do_verb_lvs (mixed args...) {
     targets = args[1];
     if (sizeof(targets) && query_targets() == 1) {
         handle_ability_use(previous_object(), ({ targets[0] }));
-        return;
-    }
-    if (query_targets() > 1) {
+    } else if (query_targets() > 1) {
         handle_ability_use(previous_object(), targets[0..query_targets()-1]);
     }
 }
