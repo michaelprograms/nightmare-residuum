@@ -161,15 +161,6 @@ void test_difficulty_factor () {
     }) :));
 }
 
-void test_can_verb_rule () {
-    // these functions call verb->can_verb_rule which is tested in verb.test.c
-    expect("can_verb_rule should handle can_verb_* applies", (: ({
-        assert_equal(testOb->can_verb_lvs("verb", "rule"), 1),
-        assert_equal(testOb->can_verb_liv("verb", "rule"), 1),
-        assert_equal(testOb->can_verb("verb", "rule"), 1),
-    }) :));
-}
-
 void test_direct_verb_liv () {
     object ob;
 
@@ -220,6 +211,22 @@ void test_direct_verb_liv () {
     }) :));
 
     destruct(ob);
+}
+
+void test_can_verb_rule () {
+    // these functions call verb->can_verb_rule which is tested in verb.test.c
+    expect("can_verb_rule should handle can_verb_* applies", (: ({
+        assert_equal(testOb->can_verb_lvs("verb", "rule"), 1),
+        assert_equal(testOb->can_verb_liv("verb", "rule"), 1),
+        assert_equal(testOb->can_verb("verb", "rule"), 1),
+    }) :));
+}
+
+void test_do_verb_applies () {
+    expect("do_verb_liv is handled", (: ({
+        // this error signifies that handle_ability_use was called
+        assert_catch((: testOb->do_verb_liv(0, this_object()) :), "*Ability ability.coverage does not have an ability type set\n"),
+    }) :));
 }
 
 void test_ability_requirements () {
