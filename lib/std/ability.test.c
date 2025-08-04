@@ -229,6 +229,9 @@ void test_do_verb_applies () {
     }) :));
 
     expect("do_verb_lvs is handled", (: ({
+        // no args, no result
+        assert_equal(testOb->do_verb_lvs(), UNDEFINED),
+
         testOb->set_targets(1),
         // this error signifies that handle_ability_use was called
         assert_catch((: testOb->do_verb_lvs(0, ({ this_object() })) :), "*Ability ability.coverage does not have an ability type set\n"),
