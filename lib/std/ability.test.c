@@ -240,6 +240,11 @@ void test_do_verb_applies () {
         // this error signifies that handle_ability_use was called
         assert_catch((: testOb->do_verb_lvs(0, ({ this_object(), this_object(), this_object() })) :), "*Ability ability.coverage does not have an ability type set\n"),
     }) :));
+
+    expect("do_verb_rule is handled", (: ({
+        // this error signifies that handle_ability_use was called
+        assert_catch((: testOb->do_verb_rule() :), "*Ability ability.coverage does not have an ability type set\n"),
+    }) :));
 }
 
 void test_ability_requirements () {
