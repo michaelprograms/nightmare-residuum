@@ -126,6 +126,26 @@ void test_weapons () {
     if (weaponBlunt) weaponBlunt->handle_remove();
 }
 
+void test_ability_success () {
+    expect("is_ability_successful behaves", (: ({
+        // no type, fails
+        assert_equal(testOb->is_ability_successful(this_object(), this_object()), 0),
+
+        // attack type, should succeed
+        testOb->set_type("attack"),
+        assert_equal(testOb->is_ability_successful(this_object(), this_object()), 1),
+        // TODO: test attack different powers
+
+        // utilities always pass
+        testOb->set_type("utility"),
+        assert_equal(testOb->is_ability_successful(this_object(), this_object()), 1),
+
+        // utilities always pass
+        testOb->set_type("heal"),
+        assert_equal(testOb->is_ability_successful(this_object(), this_object()), 1),
+    }) :));
+}
+
 void test_cooldown () {
     expect("handles setting and querying cooldown", (: ({
         // default
