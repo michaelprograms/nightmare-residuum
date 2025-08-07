@@ -249,7 +249,7 @@ private void handle_ability_use (object source, object *targets) {
 
     // update statuses
     source->set_busy(1);
-    // @TODO re-enable this when determing busy vs disable
+    // @TODO re-enable this when determining busy vs disable
     // source->set_disable(1);
 
     if (__Cooldown > 0) {
