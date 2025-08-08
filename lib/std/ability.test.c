@@ -133,6 +133,7 @@ void test_ability_success () {
 
         // attack type, should succeed
         testOb->set_type("attack"),
+        testOb->set_powers(([ "psionic": 123, "ranged": 123, "brawl": 123 ])),
         assert_equal(testOb->is_ability_successful(this_object(), this_object()), 1),
         // TODO: test attack different powers
 
