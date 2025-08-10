@@ -150,7 +150,7 @@ void test_querying_planets () {
     }) :));
 }
 
-void test_creating_and_adjusting_planet () {
+void test_creating_and_adjusting_planet (function done) {
     string testPlanet = "test_" + time();
     string testPlanetFile = "/save/planet/t/"+testPlanet+".o";
     expect("create_planet behaves", (: ({
@@ -167,10 +167,19 @@ void test_creating_and_adjusting_planet () {
     expect("adjust_planet behaves", (: ({
         // adjust planet size
         assert_equal(testOb->adjust_planet($(testPlanet), ([ "size": 321 ])), 1),
-        // can't adjust non-existant planet
+        // can't adjust non-existent planet
         assert_equal(testOb->adjust_planet($(testPlanet+"-bad"), ([ "size": 321 ])), 0),
-        rm($(testPlanetFile)),
-        assert_equal(file_size($(testPlanetFile)), -1),
     }) :));
 
+    testOb->adjust_planet(testPlanet, ([ "size": 10 ]));
+    testOb->generate_json(testPlanet, UNDEFINED);
+    call_out_walltime(function (function done, string testPlanet, string testPlanetFile) {
+        expect("planet is generated", (: ({
+            assert_equal(file_size("/tmp/"+$(testPlanet)+".json") > 0, 1),
+            rm($(testPlanetFile)),
+            assert_equal(file_size($(testPlanetFile)), -1),
+        }) :));
+
+        evaluate(done);
+    }, 0.1, done, testPlanet, testPlanetFile);
 }

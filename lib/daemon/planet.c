@@ -479,8 +479,6 @@ void generate_json_line (mapping data, int time) {
     mapping n;
     int size = planet["size"];
 
-    write("generate_json_line: "+data["y"]+"\n");
-
     for (int x = 0; x < size; x ++) {
         n = query_noise(p, size, x, y, planet["heightFactor"], planet["humidityFactor"], planet["heatFactor"], time);
         if (n["height"] < data["min"]["height"]) {
@@ -525,39 +523,39 @@ void generate_json_line (mapping data, int time) {
         // write_file(data["file"], "    ],\n    \"min height\":\""+data["min"]["height"]+"\",\n    \"max height\":\""+data["max"]["height"]+"\",\n    \"min humidity\":\""+data["min"]["humidity"]+"\",\n    \"max humidity\":\""+data["max"]["humidity"]+"\",\n    \"min heat\":\""+data["min"]["heat"]+"\",\n    \"max heat\":\""+data["max"]["heat"]+"\"\n}");
 
         t = time_ns() - data["start"];
-        write("Seed '"+planet["name"]+"' size "+size+" "+data["file"]+" done: %^ORANGE%^"+sprintf("%.2f", t/1000000.0)+" ms%^RESET%^\n");
+        // write("Seed '"+planet["name"]+"' size "+size+" "+data["file"]+" done: %^ORANGE%^"+sprintf("%.2f", t/1000000.0)+" ms%^RESET%^\n");
 
         // TODO: clean this up
-        foreach (string b in keys(__BiomeColor)) {
-            write(sprintf("%20s : %10s", b, format_integer(data["biomes"][b])) + " : " + sprintf("%2.2f", data["biomes"][b] * 100.0 / size2) + "%\n");
-        }
-        write(sprintf("%-24s", "min height: "+data["min"]["height"])+" "+sprintf("%-24s", "max height: "+data["max"]["height"])+"\n");
-        write(sprintf("%-24s", "min humidity: "+data["min"]["humidity"])+" "+sprintf("%-24s", "max humidity: "+data["max"]["humidity"])+"\n");
-        write(sprintf("%-24s", "min heat: "+data["min"]["heat"])+" "+sprintf("%-24s", "max heat: "+data["max"]["heat"])+"\n");
-        write(
-            sprintf(
-                "%-24s",
-                "land: "+(data["biomes"]["ice"]+data["biomes"]["tundra"]+data["biomes"]["grassland"]+data["biomes"]["woodland"]+data["biomes"]["boreal forest"]+data["biomes"]["desert"]+data["biomes"]["temperate rainforest"]+data["biomes"]["savanna"]+data["biomes"]["tropical rainforest"])*100.0/(size*size)
-            )+" "+
-            sprintf(
-                "%-24s",
-                "water: "+(data["biomes"]["shallow water"]+data["biomes"]["deep water"]+data["biomes"]["deeper water"]+data["biomes"]["icy water"]+data["biomes"]["frozen water"])*100.0/(size*size)
-            )+"\n"
-        );
-        write("level distribution:\n");
-        foreach (int key,int value in data["levels"]) {
-            write(sprintf("%20s : %10s", ""+key, format_integer(value)) + " : " + sprintf("%2.2f", value * 100.0 / (size * size)) + "%\n");
-        }
-        write("resource distribution:\n");
-        foreach (int key,int value in data["resources"]) {
-            write(sprintf("%20s : %10s", ""+key, format_integer(value)) + " : " + sprintf("%2.2f", value * 100.0 / (size * size)) + "%\n");
-        }
+        // foreach (string b in keys(__BiomeColor)) {
+        //     write(sprintf("%20s : %10s", b, format_integer(data["biomes"][b])) + " : " + sprintf("%2.2f", data["biomes"][b] * 100.0 / size2) + "%\n");
+        // }
+        // write(sprintf("%-24s", "min height: "+data["min"]["height"])+" "+sprintf("%-24s", "max height: "+data["max"]["height"])+"\n");
+        // write(sprintf("%-24s", "min humidity: "+data["min"]["humidity"])+" "+sprintf("%-24s", "max humidity: "+data["max"]["humidity"])+"\n");
+        // write(sprintf("%-24s", "min heat: "+data["min"]["heat"])+" "+sprintf("%-24s", "max heat: "+data["max"]["heat"])+"\n");
+        // write(
+        //     sprintf(
+        //         "%-24s",
+        //         "land: "+(data["biomes"]["ice"]+data["biomes"]["tundra"]+data["biomes"]["grassland"]+data["biomes"]["woodland"]+data["biomes"]["boreal forest"]+data["biomes"]["desert"]+data["biomes"]["temperate rainforest"]+data["biomes"]["savanna"]+data["biomes"]["tropical rainforest"])*100.0/(size*size)
+        //     )+" "+
+        //     sprintf(
+        //         "%-24s",
+        //         "water: "+(data["biomes"]["shallow water"]+data["biomes"]["deep water"]+data["biomes"]["deeper water"]+data["biomes"]["icy water"]+data["biomes"]["frozen water"])*100.0/(size*size)
+        //     )+"\n"
+        // );
+        // write("level distribution:\n");
+        // foreach (int key,int value in data["levels"]) {
+        //     write(sprintf("%20s : %10s", ""+key, format_integer(value)) + " : " + sprintf("%2.2f", value * 100.0 / (size * size)) + "%\n");
+        // }
+        // write("resource distribution:\n");
+        // foreach (int key,int value in data["resources"]) {
+        //     write(sprintf("%20s : %10s", ""+key, format_integer(value)) + " : " + sprintf("%2.2f", value * 100.0 / (size * size)) + "%\n");
+        // }
     } else {
         data["y"] ++;
         if (data["y"] % 5 > 0) {
             generate_json_line(data, time);
         } else {
-            call_out_walltime((: generate_json_line :), 0.005, data, time);
+            call_out_walltime((: generate_json_line :), 0.001, data, time);
         }
     }
 }
@@ -589,5 +587,5 @@ varargs void generate_json (string name, int time) {
 
     write_file(data["file"], "{\n\"name\":\""+name+"\",\n\"size\":\""+data["planet"]["size"]+"\",\n\"data\":[\n", 1);
 
-    call_out_walltime((: generate_json_line :), 0.005, data, time);
+    call_out_walltime((: generate_json_line :), 0.001, data, time);
 }
