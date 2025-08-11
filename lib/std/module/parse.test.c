@@ -8,6 +8,9 @@ void test_add_rules_with_mock () {
     object mockParse = new("/std/module/parse.mock.c");
 
     expect("rules and synonyms are added", (: ({
+        // add before shadow so lines are covered
+        testOb->add_rules(({ "", "LVS", }), ({ "synonym1", "synonym2" })),
+
         assert_equal($(mockParse)->start_shadow(testOb), 1),
 
         assert_equal($(mockParse)->query_rules(), ({ })),
