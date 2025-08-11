@@ -364,81 +364,80 @@ void test_exit_reverse_override () {
 
 void test_doors () {
     r1 = new(STD_ROOM);
-    r2 = new(STD_ROOM);
 
     expect("regular doors behave", (: ({
         // no doors are setup
         assert_equal(r1->query_doors(), ({ })),
-        assert_equal(r2->query_doors(), ({ })),
+        assert_equal(testOb->query_doors(), ({ })),
         assert_equal(r1->query_open("door"), -1),
-        assert_equal(r2->query_open("door"), -1),
+        assert_equal(testOb->query_open("door"), -1),
         assert_equal(r1->query_locked("door"), -1),
-        assert_equal(r2->query_locked("door"), -1),
+        assert_equal(testOb->query_locked("door"), -1),
         assert_equal(r1->query_dir_door("east"), 0),
-        assert_equal(r2->query_dir_door("west"), 0),
+        assert_equal(testOb->query_dir_door("west"), 0),
 
         // setup door without key
-        r1->set_exit("east", file_name(r2), 0, 0, 0, "door", 0, 0),
-        r2->set_exit("west", file_name(r1), 0, 0, 0, "door", 0, 0),
+        r1->set_exit("east", file_name(testOb), 0, 0, 0, "door", 0, 0),
+        testOb->set_exit("west", file_name(r1), 0, 0, 0, "door", 0, 0),
         // doors are setup
         assert_equal(r1->query_doors(), ({ "door", })),
-        assert_equal(r2->query_doors(), ({ "door", })),
+        assert_equal(testOb->query_doors(), ({ "door", })),
         assert_equal(r1->query_doors(1), ({ "east", "door", })),
-        assert_equal(r2->query_doors(1), ({ "west", "door", })),
+        assert_equal(testOb->query_doors(1), ({ "west", "door", })),
         assert_equal(r1->query_dir_door("east"), "door"),
-        assert_equal(r2->query_dir_door("west"), "door"),
+        assert_equal(testOb->query_dir_door("west"), "door"),
         assert_equal(r1->query_door_dir("door"), "east"),
-        assert_equal(r2->query_door_dir("door"), "west"),
+        assert_equal(testOb->query_door_dir("door"), "west"),
         assert_equal(r1->query_open("door"), 0),
-        assert_equal(r2->query_open("door"), 0),
+        assert_equal(testOb->query_open("door"), 0),
         assert_equal(r1->query_locked("door"), 0),
-        assert_equal(r2->query_locked("door"), 0),
+        assert_equal(testOb->query_locked("door"), 0),
     }) :));
     expect("lockable doors behave", (: ({
         // setup locked door with key
-        r1->set_exit("east", file_name(r2), 0, 0, 0, "door", "test key", 1),
-        r2->set_exit("west", file_name(r1), 0, 0, 0, "door", "test key", 1),
+        r1->set_exit("east", file_name(testOb), 0, 0, 0, "door", "test key", 1),
+        testOb->set_exit("west", file_name(r1), 0, 0, 0, "door", "test key", 1),
         // doors are setup
         assert_equal(r1->query_open("door"), 0),
-        assert_equal(r2->query_open("door"), 0),
+        assert_equal(testOb->query_open("door"), 0),
         assert_equal(r1->query_locked("door"), 1),
-        assert_equal(r2->query_locked("door"), 1),
+        assert_equal(testOb->query_locked("door"), 1),
 
         // setup unlocked door with key
-        r1->set_exit("east", file_name(r2), 0, 0, 0, "door", "test key", 0),
-        r2->set_exit("west", file_name(r1), 0, 0, 0, "door", 0, 0),
+        r1->set_exit("east", file_name(testOb), 0, 0, 0, "door", "test key", 0),
+        testOb->set_exit("west", file_name(r1), 0, 0, 0, "door", 0, 0),
         // doors are setup and closed
         assert_equal(r1->query_open("door"), 0),
-        assert_equal(r2->query_open("door"), 0),
+        assert_equal(testOb->query_open("door"), 0),
         assert_equal(r1->query_locked("door"), 0),
-        assert_equal(r2->query_locked("door"), 0),
+        assert_equal(testOb->query_locked("door"), 0),
 
         // lock doors
         r1->set_locked("east", 1),
-        r2->set_locked("west", 1),
+        testOb->set_locked("west", 1),
         assert_equal(r1->query_locked("door"), 1),
-        assert_equal(r2->query_locked("door"), 1),
+        assert_equal(testOb->query_locked("door"), 1),
         assert_equal(r1->query_open("door"), 0),
-        assert_equal(r2->query_open("door"), 0),
+        assert_equal(testOb->query_open("door"), 0),
 
         // can't open doors
         r1->set_open("east", 1),
-        r2->set_open("west", 1),
+        testOb->set_open("west", 1),
         assert_equal(r1->query_open("door"), 0),
-        assert_equal(r2->query_open("door"), 0),
+        assert_equal(testOb->query_open("door"), 0),
 
         // unlock doors
         r1->set_locked("east", 0),
-        r2->set_locked("west", 0),
+        testOb->set_locked("west", 0),
         assert_equal(r1->query_locked("door"), 0),
-        assert_equal(r2->query_locked("door"), 0),
+        assert_equal(testOb->query_locked("door"), 0),
         assert_equal(r1->query_open("door"), 0),
-        assert_equal(r2->query_open("door"), 0),
+        assert_equal(testOb->query_open("door"), 0),
         // open previously locked doors
         r1->set_open("east", 1),
-        r2->set_open("west", 1),
+        testOb->set_open("west", 1),
         assert_equal(r1->query_open("door"), 1),
-        assert_equal(r2->query_open("door"), 1),
+        assert_equal(testOb->query_open("door"), 1),
     }) :));
 
     expect("doors handle open, close, lock, and unlock", (: ({
@@ -446,45 +445,44 @@ void test_doors () {
         assert_equal(r1->handle_close(this_object(), "door"), 1),
         // already closed
         assert_equal(r1->handle_close(this_object(), "door"), -1),
-        assert_equal(r2->handle_close(this_object(), "door"), -1),
+        assert_equal(testOb->handle_close(this_object(), "door"), -1),
         // lock r1 door
         assert_equal(r1->handle_lock(this_object(), "door", "test key"), 1),
         // already locked
         assert_equal(r1->handle_lock(this_object(), "door", "test key"), -1),
-        assert_equal(r2->handle_lock(this_object(), "door", "test key"), -1),
+        assert_equal(testOb->handle_lock(this_object(), "door", "test key"), -1),
         // unlock r1 door
         assert_equal(r1->handle_unlock(this_object(), "door", "test key"), 1),
         // already unlocked
         assert_equal(r1->handle_unlock(this_object(), "door", "test key"), -1),
-        assert_equal(r2->handle_unlock(this_object(), "door", "test key"), -1),
+        assert_equal(testOb->handle_unlock(this_object(), "door", "test key"), -1),
         // open r1 door
         assert_equal(r1->handle_open(this_object(), "door"), 1),
         // already open
         assert_equal(r1->handle_open(this_object(), "door"), -1),
-        assert_equal(r2->handle_open(this_object(), "door"), -1),
+        assert_equal(testOb->handle_open(this_object(), "door"), -1),
 
-        // close r2 door
-        assert_equal(r2->handle_close(this_object(), "door"), 1),
+        // close testOb door
+        assert_equal(testOb->handle_close(this_object(), "door"), 1),
         // already closed
-        assert_equal(r2->handle_close(this_object(), "door"), -1),
+        assert_equal(testOb->handle_close(this_object(), "door"), -1),
         assert_equal(r1->handle_close(this_object(), "door"), -1),
-        // lock r2 door
-        assert_equal(r2->handle_lock(this_object(), "door", "test key"), 1),
+        // lock testOb door
+        assert_equal(testOb->handle_lock(this_object(), "door", "test key"), 1),
         // already locked
-        assert_equal(r2->handle_lock(this_object(), "door", "test key"), -1),
+        assert_equal(testOb->handle_lock(this_object(), "door", "test key"), -1),
         assert_equal(r1->handle_lock(this_object(), "door", "test key"), -1),
-        // unlock r2 door
-        assert_equal(r2->handle_unlock(this_object(), "door", "test key"), 1),
+        // unlock testOb door
+        assert_equal(testOb->handle_unlock(this_object(), "door", "test key"), 1),
         // already unlocked
-        assert_equal(r2->handle_unlock(this_object(), "door", "test key"), -1),
+        assert_equal(testOb->handle_unlock(this_object(), "door", "test key"), -1),
         assert_equal(r1->handle_unlock(this_object(), "door", "test key"), -1),
-        // open r2 door
-        assert_equal(r2->handle_open(this_object(), "door"), 1),
+        // open testOb door
+        assert_equal(testOb->handle_open(this_object(), "door"), 1),
         // already open
-        assert_equal(r2->handle_open(this_object(), "door"), -1),
+        assert_equal(testOb->handle_open(this_object(), "door"), -1),
         assert_equal(r1->handle_open(this_object(), "door"), -1),
     }) :));
 
     if (r1) destruct(r1);
-    if (r2) destruct(r2);
 }
