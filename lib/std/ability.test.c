@@ -11,12 +11,16 @@ nosave private string __MockClass;
 string query_class () { return __MockClass; }
 
 // @TODO: clean this up with real test mock stats
-int MockCharisma = 0, MockIntelligence = 0;
+int MockCharisma = 0, MockIntelligence = 0, MockPerception = 0;
 int query_stat (string key) {
     if (key == "charisma") {
         return MockCharisma;
     } else if (key == "intelligence") {
         return MockIntelligence;
+    } else if (key == "perception") {
+        return MockPerception;
+    } else {
+        return 0;
     }
 }
 int MockLevel = 0;
@@ -135,7 +139,14 @@ void test_ability_success () {
         testOb->set_type("attack"),
         testOb->set_powers(([ "psionic": 123, "ranged": 123, "brawl": 123 ])),
         assert_equal(testOb->is_ability_successful(this_object(), this_object()), 1),
-        // TODO: test attack different powers
+
+        // attack type, should be 0-1
+        MockIntelligence = 100,
+        MockPerception = 10000,
+        testOb->set_difficulty_factor(200),
+        assert_equal(testOb->is_ability_successful(this_object(), this_object()) <= 1, 1),
+        MockIntelligence = 0,
+        MockPerception = 0,
 
         // utilities always pass
         testOb->set_type("utility"),
