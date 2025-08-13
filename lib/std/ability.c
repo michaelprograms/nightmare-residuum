@@ -197,7 +197,7 @@ int is_ability_successful (object source, object target) {
  * @param {STD_LIVING} source the source of the ability use
  * @param {STD_LIVING*} targets the target(s) of the ability use
  */
-private void handle_ability_use (object source, object *targets) {
+void handle_ability_use (object source, object *targets) {
     mapping cost;
     int damage;
     /** @type {STD_WEAPON} weapon */

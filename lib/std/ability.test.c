@@ -158,6 +158,31 @@ void test_ability_success () {
     }) :));
 }
 
+void test_ability_use () {
+    object char = new(STD_CHARACTER);
+    object mockC1 = new("/std/npc.mock.c"); // TODO: this is weird, its not an NPC but this is the functionality we need
+
+    char->set_name("test character");
+    mockC1->start_shadow(char);
+
+    expect("ability use ties it all together", (: ({
+        testOb->set_type("attack"),
+
+        // simple level requirement
+        testOb->set_ability_requirements(([ "anyone": ([ "level": 10 ]) ])),
+
+        // doesn't meet requirements
+        $(char)->set_level(1),
+        testOb->handle_ability_use($(char), 0),
+        assert_equal($(mockC1)->query_received_messages()[<1], ({ "action", "You cannot do that." })),
+
+        // meet requirements
+        // $(char)->set_level(10),
+        // testOb->handle_ability_use($(char), 0),
+        // assert_equal($(mockC1)->query_received_messages()[<1], ({ "action", "You cannot do that." })),
+    }) :));
+}
+
 void test_cooldown () {
     expect("handles setting and querying cooldown", (: ({
         // default
