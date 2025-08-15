@@ -176,10 +176,11 @@ void test_ability_use () {
         testOb->handle_ability_use($(char), 0),
         assert_equal($(mockC1)->query_received_messages()[<1], ({ "action", "You cannot do that." })),
 
-        // meet requirements
-        // $(char)->set_level(10),
-        // testOb->handle_ability_use($(char), 0),
-        // assert_equal($(mockC1)->query_received_messages()[<1], ({ "action", "You cannot do that." })),
+        // meet requirements. but cooldown
+        $(char)->set_level(10),
+        $(char)->set_cooldown(testOb->query_name(), 1),
+        testOb->handle_ability_use($(char), 0),
+        assert_equal($(mockC1)->query_received_messages()[<1], ({ "action", "You are not yet ready to ability.coverage again." })),
     }) :));
 }
 
