@@ -46,7 +46,7 @@ mapping query_cooldowns () {
     return __Cooldown;
 }
 
-protected void cooldown_timed_expire (string name) {
+void cooldown_timed_expire (string name) {
     map_delete(__Cooldown, name);
 }
 

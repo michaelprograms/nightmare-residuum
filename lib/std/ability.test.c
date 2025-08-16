@@ -161,6 +161,7 @@ void test_ability_success () {
 void test_ability_use () {
     object char = new(STD_CHARACTER);
     object mockC1 = new("/std/npc.mock.c"); // TODO: this is weird, its not an NPC but this is the functionality we need
+    object npc1 = new(STD_NPC);
 
     char->set_name("test character");
     mockC1->start_shadow(char);
@@ -181,11 +182,21 @@ void test_ability_use () {
         $(char)->set_cooldown(testOb->query_name(), 1),
         testOb->handle_ability_use($(char), 0),
         assert_equal($(mockC1)->query_received_messages()[<1], ({ "action", "You are not yet ready to ability.coverage again." })),
+
+        // requires targets, but no targets provided
+        $(char)->cooldown_timed_expire(testOb->query_name()),
+        testOb->set_targets(1),
+        testOb->handle_ability_use($(char), 0),
+        assert_equal($(mockC1)->query_received_messages()[<1], ({ "action", "You have no hostile targets present." })),
+
+        // testOb->handle_ability_use($(char, ({ $(npc1) })), 0),
+
     }) :));
 
     mockC1->stop_shadow();
     if (mockC1) destruct(mockC1);
     if (char) destruct(char);
+    if (npc1) destruct(npc1);
 }
 
 void test_cooldown () {
