@@ -182,6 +182,10 @@ void test_ability_use () {
         testOb->handle_ability_use($(char), 0),
         assert_equal($(mockC1)->query_received_messages()[<1], ({ "action", "You are not yet ready to ability.coverage again." })),
     }) :));
+
+    mockC1->stop_shadow();
+    if (mockC1) destruct(mockC1);
+    if (char) destruct(char);
 }
 
 void test_cooldown () {
