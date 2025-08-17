@@ -162,6 +162,17 @@ void test_ability_use () {
     object char = new(STD_CHARACTER);
     object mockC1 = new("/std/npc.mock.c"); // TODO: this is weird, its not an NPC but this is the functionality we need
     object npc1 = new(STD_NPC);
+    object weapon1 = new(STD_WEAPON);
+    object weapon2 = new(STD_WEAPON);
+
+    char->set_species("human");
+    char->set_level(1);
+    weapon1->set_name("blade");
+    weapon1->set_type("blade");
+    weapon1->handle_move(char);
+    weapon2->set_name("blunt");
+    weapon2->set_type("blunt");
+    weapon2->handle_move(char);
 
     char->set_name("test character");
     mockC1->start_shadow(char);
@@ -189,12 +200,17 @@ void test_ability_use () {
         testOb->handle_ability_use($(char), 0),
         assert_equal($(mockC1)->query_received_messages()[<1], ({ "action", "You have no hostile targets present." })),
 
-        // testOb->handle_ability_use($(char, ({ $(npc1) })), 0),
-
+        testOb->set_weapons(([ "brawl": ({ 1 }), ])),
+        assert_equal($(char)->handle_wield($(weapon1)), 1),
+        assert_equal($(char)->handle_wield($(weapon2)), 1),
+        testOb->handle_ability_use($(char), ({ $(npc1) })),
+        assert_equal($(mockC1)->query_received_messages()[<1], ({ "action", "You do not have any free hands." })),
     }) :));
 
     mockC1->stop_shadow();
     if (mockC1) destruct(mockC1);
+    if (weapon1) destruct(weapon1);
+    if (weapon2) destruct(weapon2);
     if (char) destruct(char);
     if (npc1) destruct(npc1);
 }
