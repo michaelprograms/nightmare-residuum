@@ -200,11 +200,15 @@ void test_ability_use () {
         testOb->handle_ability_use($(char), 0),
         assert_equal($(mockC1)->query_received_messages()[<1], ({ "action", "You have no hostile targets present." })),
 
-        testOb->set_weapons(([ "brawl": ({ 1 }), ])),
+        testOb->set_weapons(([ "brawl": ({ 2 }), ])),
         assert_equal($(char)->handle_wield($(weapon1)), 1),
-        assert_equal($(char)->handle_wield($(weapon2)), 1),
         testOb->handle_ability_use($(char), ({ $(npc1) })),
         assert_equal($(mockC1)->query_received_messages()[<1], ({ "action", "You do not have any free hands." })),
+
+        testOb->set_weapons(([ "blunt": ({ 1 }), ])),
+        assert_equal($(char)->handle_wield($(weapon2)), 1),
+        testOb->handle_ability_use($(char), ({ $(npc1) })),
+        assert_equal($(mockC1)->query_received_messages()[<1], ({ "action", "You are not wielding the correct type of weapon." })),
     }) :));
 
     mockC1->stop_shadow();
