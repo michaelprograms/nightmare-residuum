@@ -203,7 +203,6 @@ void handle_ability_use (object source, object *targets) {
     /** @type {STD_WEAPON} weapon */
     object weapon;
     string limb;
-    int l;
 
     if (!query_type()) {
         error("Ability "+query_name()+" does not have an ability type set");
@@ -234,12 +233,6 @@ void handle_ability_use (object source, object *targets) {
         return;
     }
 
-    if (query_targets() < sizeof(targets)) {
-        return;
-    }
-
-    l = min(({ sizeof(targets), query_targets() }));
-
     // determine cost
     cost = query_cost();
     if (!verify_cost(source, cost)) {
@@ -256,6 +249,7 @@ void handle_ability_use (object source, object *targets) {
         source->set_cooldown(query_name(), __Cooldown);
     }
 
+    targets = targets[0..query_targets()-1];
     // send attempt messages
     this_object()->ability_message_attempt(source, targets);
 
