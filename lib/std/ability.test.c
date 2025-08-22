@@ -163,9 +163,12 @@ void test_ability_use () {
     object mockC1 = new("/std/npc.mock.c"); // TODO: this is weird, its not an NPC but this is the functionality we need
     object npc1 = new(STD_NPC);
     object weapon1 = new(STD_WEAPON);
+    object room = new(STD_ROOM);
 
     char->set_species("human");
     char->set_level(1);
+    npc1->set_species("human");
+    npc1->set_level(1);
     weapon1->set_name("test blade");
     weapon1->set_type("blade");
     weapon1->set_wc(5);
@@ -173,6 +176,9 @@ void test_ability_use () {
 
     char->set_name("test character");
     mockC1->start_shadow(char);
+
+    char->handle_move(room);
+    npc1->handle_move(room);
 
     expect("ability use ties it all together", (: ({
         testOb->set_type("attack"),
@@ -213,6 +219,14 @@ void test_ability_use () {
         $(char)->set_sp(0),
         testOb->handle_ability_use($(char), ({ $(npc1) })),
         assert_equal($(mockC1)->query_received_messages()[<1], ({ "action", "You are too drained to ability.coverage." })),
+
+        $(char)->set_sp($(char)->query_max_sp()),
+        testOb->set_cooldown(1),
+        $(char)->set_stat("dexterity", 1),
+        $(npc1)->set_stat("dexterity", 300),
+        testOb->handle_ability_use($(char), ({ $(npc1) })),
+        // TODO: this will be a flakey test due to sometimes hitting ineffectievly
+        assert_equal($(mockC1)->query_received_messages()[<1], ({ "ability miss", "You miss your ability.coverage attempt on 0!" })),
     }) :));
 
     mockC1->stop_shadow();
@@ -220,6 +234,7 @@ void test_ability_use () {
     if (weapon1) destruct(weapon1);
     if (char) destruct(char);
     if (npc1) destruct(npc1);
+    if (room) destruct(room);
 }
 
 void test_cooldown () {
