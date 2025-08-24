@@ -213,7 +213,7 @@ void handle_ability_use (object source, object *targets) {
         return;
     }
 
-    if (source->query_cooldown(query_name()) > 0) {
+    if (__Cooldown && source->query_cooldown(query_name()) > 0) {
         message("action", "You are not yet ready to " + query_name() + " again.", source);
         return;
     }

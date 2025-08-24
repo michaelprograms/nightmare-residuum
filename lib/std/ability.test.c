@@ -222,10 +222,18 @@ void test_ability_use () {
 
         $(char)->set_sp($(char)->query_max_sp()),
         testOb->set_cooldown(1),
-        $(char)->set_stat("dexterity", 1),
-        $(npc1)->set_stat("dexterity", 300),
+        $(char)->set_stat("agility", 1),
+        $(npc1)->set_stat("agility", 300),
         testOb->handle_ability_use($(char), ({ $(npc1) })),
-        assert_equal(member_array($(mockC1)->query_received_messages()[<1][0], ({ "ability hit", "ability miss" })) > -1, 1),
+        assert_equal(regexp($(mockC1)->query_received_messages()[<1][0], "ability [hit|miss]"), 1),
+
+        testOb->set_cooldown(0),
+        $(char)->set_stat("strength", 50),
+        $(char)->set_stat("agility", 50),
+        $(npc1)->set_stat("agility", 10),
+        $(npc1)->set_stat("endurance", 10),
+        testOb->handle_ability_use($(char), ({ $(npc1) })),
+        assert_equal($(mockC1)->query_received_messages()[<1][0], "ability hit"),
     }) :));
 
     mockC1->stop_shadow();
