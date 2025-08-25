@@ -234,6 +234,11 @@ void test_ability_use () {
         $(npc1)->set_stat("endurance", 10),
         testOb->handle_ability_use($(char), ({ $(npc1) })),
         assert_equal($(mockC1)->query_received_messages()[<1][0], "ability hit"),
+
+        testOb->set_type("heal"),
+        $(npc1)->set_hp(1),
+        testOb->handle_ability_use($(char), ({ $(npc1) })),
+        assert_equal($(mockC1)->query_received_messages()[<1][0], "combat heal"),
     }) :));
 
     mockC1->stop_shadow();
