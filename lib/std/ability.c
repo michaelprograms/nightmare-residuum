@@ -176,11 +176,11 @@ int is_ability_successful (object source, object target) {
                 targetN += target->query_stat("endurance") * value / powerTotal;
             }
         }
-        // success range is 10% to 100%
+        // success range is 0% to 100%
         targetN = targetN * query_difficulty_factor() / 100;
         if (sourceN < targetN) {
             chance = sourceN * 100 / targetN;
-            chance = max(({ 10, min(({ 100, chance })) }));
+            chance = max(({ 0, min(({ 100, chance })) }));
         }
         return (1+random(100)) <= chance;
     } else if (query_type() == "heal" || query_type() == "utility") {

@@ -220,17 +220,26 @@ void test_ability_use () {
         testOb->handle_ability_use($(char), ({ $(npc1) })),
         assert_equal($(mockC1)->query_received_messages()[<1], ({ "action", "You are too drained to ability.coverage." })),
 
+        // success
         $(char)->set_sp($(char)->query_max_sp()),
-        testOb->set_cooldown(1),
-        $(char)->set_stat("agility", 1),
-        $(npc1)->set_stat("agility", 300),
-        testOb->handle_ability_use($(char), ({ $(npc1) })),
-        assert_equal(regexp($(mockC1)->query_received_messages()[<1][0], "ability [hit|miss]"), 1),
-
-        testOb->set_cooldown(0),
+        testOb->set_difficulty_factor(100),
         $(char)->set_stat("strength", 50),
-        $(char)->set_stat("agility", 50),
-        $(npc1)->set_stat("agility", 10),
+        $(npc1)->set_stat("endurance", 10),
+        testOb->handle_ability_use($(char), ({ $(npc1) })),
+        assert_equal($(mockC1)->query_received_messages()[<1][0], "ability hit"),
+        assert_equal($(char)->query_cooldown(testOb->query_name()), 1),
+
+        // failure
+        testOb->set_cooldown(0),
+        $(char)->set_sp($(char)->query_max_sp()),
+        testOb->set_difficulty_factor(5000),
+        $(char)->set_stat("strength", 10),
+        $(npc1)->set_stat("endurance", 50),
+        testOb->handle_ability_use($(char), ({ $(npc1) })),
+        assert_equal($(mockC1)->query_received_messages()[<1][0], "ability miss"),
+
+        testOb->set_difficulty_factor(100),
+        $(char)->set_stat("strength", 50),
         $(npc1)->set_stat("endurance", 10),
         testOb->handle_ability_use($(char), ({ $(npc1) })),
         assert_equal($(mockC1)->query_received_messages()[<1][0], "ability hit"),
