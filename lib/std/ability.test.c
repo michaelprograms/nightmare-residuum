@@ -239,6 +239,10 @@ void test_ability_use () {
         $(npc1)->set_hp(1),
         testOb->handle_ability_use($(char), ({ $(npc1) })),
         assert_equal($(mockC1)->query_received_messages()[<1][0], "combat heal"),
+
+        testOb->set_type("utility"),
+        testOb->handle_ability_use($(char), ({ $(npc1) })),
+        assert_equal($(mockC1)->query_received_messages()[<1][0], "ability utility"),
     }) :));
 
     mockC1->stop_shadow();

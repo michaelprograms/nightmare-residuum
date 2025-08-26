@@ -144,6 +144,7 @@ int query_difficulty_factor () {
 void handle_utility (object source, object target, string limb) {
     // @TODO: refactor this to be std/ability inheritable and more automatic
     // override this function for utility abilities
+    message("ability utility", "Nothing happens.", source);
 }
 
 /* ----- success ----- */
