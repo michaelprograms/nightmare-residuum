@@ -68,6 +68,10 @@ void test_random_limbs () {
 }
 
 void test_sever_and_restore () {
+    object weapon1 = new(STD_WEAPON);
+    weapon1->set_type("blade");
+    weapon1->set_hands(2);
+
     expect("limbs are severable", (: ({
         assert_equal(testOb->query_limbs(), ({ })),
 
@@ -75,10 +79,15 @@ void test_sever_and_restore () {
         assert_equal(sort_array(testOb->query_limbs(), 1), ({ "head", "left arm", "left foot", "left hand", "left leg", "right arm", "right foot", "right hand", "right leg", "torso" })),
         assert_equal(testOb->query_severed_limbs(), ({ })),
 
-        // sever non-fatal
+        // sever non-fatal, and verify weapon unwielded
         assert_equal(testOb->query_limb("left hand"), ([ "damage": 0, "maxdamage": 1, "pct": 25, "status": 0, "type": "WIELD" ])),
+        testOb->handle_wield($(weapon1)),
+        assert_equal($(weapon1)->query_wielded(), testOb),
+        assert_equal(testOb->query_wielded_weapons(), ({ $(weapon1) })),
         testOb->handle_limb_sever("left hand"),
         assert_equal(testOb->query_limb("left hand"), ([ "damage": -1, "maxdamage": 1, "pct": 25, "status": "severed", "type": "WIELD" ])),
+        assert_equal($(weapon1)->query_wielded(), 0),
+        assert_equal(testOb->query_wielded_weapons(), ({ })),
 
         // already severed non-fatal
         testOb->handle_limb_sever("left hand"),
@@ -117,6 +126,7 @@ void test_sever_and_restore () {
         assert_equal(testOb->handle_limb_restore("right hand"), 0),
     }) :));
 
+    if (weapon1) destruct(weapon1);
 }
 
 void test_limbs_and_level () {

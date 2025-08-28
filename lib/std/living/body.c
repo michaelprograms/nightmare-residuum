@@ -390,7 +390,9 @@ object *query_wielded_weapons () {
     object *weapons = ({ });
     foreach (string l in query_limbs()) {
         if (__Limbs[l]["type"] == "WIELD" && __Wielded[l]) {
-            weapons += ({ query_wielded(l) });
+            if (member_array(query_wielded(l), weapons) == -1) {
+                weapons += ({ query_wielded(l) });
+            }
         }
     }
     return weapons;
