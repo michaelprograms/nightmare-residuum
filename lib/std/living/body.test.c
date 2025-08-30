@@ -290,6 +290,11 @@ void test_heal () {
         testOb->handle_limb_heal("torso", 50),
         assert_equal(testOb->query_limb("torso"), ([ "damage": 0, "maxdamage": 23, "pct": 100, "status": 0, "type": "FATAL" ])),
 
+        // can't heal severed limbs
+        testOb->handle_limb_sever("left hand"),
+        testOb->handle_limb_heal("left hand", 50),
+        assert_equal(testOb->query_limb("left hand"), ([ "damage": -1, "maxdamage": 6, "pct": 25, "status": "severed", "type": "WIELD" ])),
+
         assert_equal($(mockBody)->stop_shadow(), 1),
     }) :));
 
