@@ -282,18 +282,18 @@ private void validate_expect (mixed value1, mixed value2, string message) {
         if (failingExpects == -1) { // expected this error
             passingExpects ++;
             if (!D_TEST->query_option("brief")) {
-                currentTestLog += "\n" + GREEN + "    +" + RESET + RED + " x" + RESET + " " + message;
+                currentTestLog += "\n    " + GREEN + "+" + RESET + RED + " x" + RESET + " " + message;
             }
         } else if (!D_TEST->query_option("brief")) {
-            currentTestLog += "\n" + RED + "    x" + RESET + " " + message;
-            currentFailLog += "\n" + RED + "    x" + RESET + " " + message;
+            currentTestLog += "\n    " + RED + "x" + RESET + " " + message;
+            currentFailLog += "\n    " + RED + "x" + RESET + " " + message;
         }
         failingExpects ++;
     } else {
         passingExpects ++;
         if (!D_TEST->query_option("brief")) {
             message = stringp(message) ? message : "An expect passed.";
-            currentTestLog += "\n" + GREEN + "    +" + RESET + " " + message;
+            currentTestLog += "\n    " + GREEN + "+" + RESET + " " + message;
         }
     }
 
