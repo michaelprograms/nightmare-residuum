@@ -156,15 +156,13 @@ void handle_limb_heal (string limb, int n) {
 varargs int handle_damage (int damage, string limb) {
     int beforeHp;
 
+    // @TODO: can this be removed?
     if (!this_object()) {
         return 0;
     }
 
     beforeHp = this_object()->query_hp();
     this_object()->add_hp(-damage);
-    if (this_object()->query_max_hp() < this_object()->query_hp()) {
-        this_object()->set_hp(this_object()->query_max_hp());
-    }
     if (characterp(this_object())) {
         // @TODO move to vitals
         message("system", sprintf("hp: %d (%d) sp: %d    mp: %d\n", this_object()->query_hp(), this_object()->query_hp() - beforeHp, this_object()->query_sp(), this_object()->query_mp()), this_object());
