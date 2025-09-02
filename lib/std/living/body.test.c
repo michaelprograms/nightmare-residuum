@@ -301,6 +301,21 @@ void test_heal () {
     if (mockBody) destruct(mockBody);
 }
 
+void test_damage () {
+    object mockBody = new("/std/living/body.mock.c");
+
+    expect("heal restores hp/sp/mp and limb damage", (: ({
+        assert_equal($(mockBody)->start_shadow(testOb), 1),
+
+        testOb->set_species("human"),
+        assert_equal(testOb->handle_damage(50, "left hand"), 50),
+
+        assert_equal($(mockBody)->stop_shadow(), 1),
+    }) :));
+
+    if (mockBody) destruct(mockBody);
+}
+
 void test_armor () {
     expect("querying armor behaves", (: ({
         assert_equal(testOb->query_all_armor(), ({ })),
