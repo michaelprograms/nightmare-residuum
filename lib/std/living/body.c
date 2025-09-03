@@ -172,9 +172,7 @@ varargs int handle_damage (int damage, string limb) {
         int limbDamagePct;
 
         __Limbs[limb]["damage"] += damage / 2;
-        if (__Limbs[limb]["damage"] < 0) {
-            __Limbs[limb]["damage"] = 0;
-        }
+        __Limbs[limb]["damage"] = min(({ 0, max(({ __Limbs[limb]["maxdamage"], __Limbs[limb]["damage"] })) }));
         limbDamagePct = __Limbs[limb]["damage"] * 100 / __Limbs[limb]["maxdamage"];
 
         if (limbDamagePct >= 100) {
