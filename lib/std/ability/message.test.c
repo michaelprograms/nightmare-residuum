@@ -4,8 +4,6 @@ inherit M_TEST;
  * @var {"/std/ability/message"} testOb
  */
 
-#define CONFIG_MOCK "/std/ability/message.c" & "/std/ability/config.mock.c"
-
 void test_messages () {
     object mockConfig = new("/std/ability/config.mock.c");
     object mockNPC1 = new("/std/npc.mock.c");
@@ -41,14 +39,14 @@ void test_messages () {
 
     expect("attempt messages are handled", (: ({
         // attack type
-        /** @type {CONFIG_MOCK} */ (testOb)->set_type("attack"),
+        $(mockConfig)->set_type("attack"),
         testOb->ability_message_attempt($(npc1), ({ $(npc2 )})),
         assert_equal($(mockNPC1)->query_received_messages()[<1], ({ "action", "You attempt to 0 Npc2!" })),
         assert_equal($(mockNPC2)->query_received_messages()[<1], ({ "action", "Npc1 attempts to 0 you!" })),
         assert_equal($(mockNPC3)->query_received_messages()[<1], ({ "action", "Npc1 attempts to 0 Npc2!" })),
 
         // heal type
-        /** @type {CONFIG_MOCK} */ (testOb)->set_type("heal"),
+        $(mockConfig)->set_type("heal"),
         testOb->ability_message_attempt($(npc1), ({ $(npc1), $(npc2 )})),
         assert_equal($(mockNPC1)->query_received_messages()[<1], ({ "action", "You attempt to 0 towards Npc2 and yourself." })),
         assert_equal($(mockNPC2)->query_received_messages()[<1], ({ "action", "Npc1 attempts to 0 towards you." })),
@@ -61,14 +59,14 @@ void test_messages () {
 
     expect("fail messages are handled", (: ({
         // attack type, targeting another
-        /** @type {CONFIG_MOCK} */ (testOb)->set_type("attack"),
+        $(mockConfig)->set_type("attack"),
         testOb->ability_message_fail($(npc1), $(npc2), 0),
         assert_equal($(mockNPC1)->query_received_messages()[<1], ({ "ability miss", "You miss your 0 attempt on Npc2!" })),
         assert_equal($(mockNPC2)->query_received_messages()[<1], ({ "ability miss", "Npc1 misses their 0 attempt on you!" })),
         assert_equal($(mockNPC3)->query_received_messages()[<1], ({ "ability miss", "Npc1 misses their 0 attempt on Npc2!" })),
 
         // heal type, targeting themself
-        /** @type {CONFIG_MOCK} */ (testOb)->set_type("heal"),
+        $(mockConfig)->set_type("heal"),
         testOb->ability_message_fail($(npc1), $(npc1), 0),
         assert_equal($(mockNPC1)->query_received_messages()[<1], ({ "ability miss", "Your 0 fails to affect yourself." })),
         assert_equal($(mockNPC2)->query_received_messages()[<1], ({ "ability miss", "Npc1's 0 fails to affect themself." })),
@@ -87,7 +85,7 @@ void test_messages () {
 
     expect("success messages are handled", (: ({
         // attack type, targeting another, no limb
-        /** @type {CONFIG_MOCK} */ (testOb)->set_type("attack"),
+        $(mockConfig)->set_type("attack"),
         testOb->ability_message_success($(npc1), $(npc2), 0),
         assert_equal($(mockNPC1)->query_received_messages()[<1], ({ "action", "You 0 Npc2!" })),
         assert_equal($(mockNPC2)->query_received_messages()[<1], ({ "action", "Npc1 0s you!" })),
@@ -100,7 +98,7 @@ void test_messages () {
         assert_equal($(mockNPC3)->query_received_messages()[<1], ({ "action", "Npc1 0s Npc2's torso!" })),
 
         // heal type, targeting themself
-        /** @type {CONFIG_MOCK} */ (testOb)->set_type("heal"),
+        $(mockConfig)->set_type("heal"),
         testOb->ability_message_success($(npc1), $(npc1), 0),
         assert_equal($(mockNPC1)->query_received_messages()[<1], ({ "action", "You 0 towards yourself effectively." })),
         assert_equal($(mockNPC2)->query_received_messages()[<1], ({ "action", "Npc1 0s towards themself effectively." })),
@@ -122,12 +120,12 @@ void test_messages () {
         $(c2)->set_property("debug", 1),
 
         // attack type
-        /** @type {CONFIG_MOCK} */ (testOb)->set_type("attack"),
+        $(mockConfig)->set_type("attack"),
         testOb->ability_debug_message($(c1), $(c2), 123),
         assert_equal($(mockC1)->query_received_messages()[<1], ({ "action", "%^ORANGE%^Damage:%^RESET%^ 123" })),
 
         // heal type
-        /** @type {CONFIG_MOCK} */ (testOb)->set_type("heal"),
+        $(mockConfig)->set_type("heal"),
         testOb->ability_debug_message($(c1), $(c1), 123),
         assert_equal($(mockC1)->query_received_messages()[<1], ({ "action", "%^CYAN%^Heal:%^RESET%^ 123" })),
     }) :));
