@@ -303,13 +303,18 @@ void test_heal () {
 
 void test_damage () {
     object mockBody = new("/std/living/body.mock.c");
+    object mockNpc;
+
+    mockBody->set_level(5);
+    mockNpc = new("/std/npc.mock.c");
 
     expect("heal restores hp/sp/mp and limb damage", (: ({
         assert_equal($(mockBody)->start_shadow(testOb), 1),
 
         testOb->set_species("human"),
-        assert_equal(testOb->handle_damage(50, "left hand"), 50),
-
+        assert_equal(testOb->handle_damage(50, "left hand"), 50), // >= 100
+        assert_equal(testOb->handle_damage(20, "right hand"), 20), // >= 75
+        assert_equal(testOb->handle_damage(18, "right hand"), 18), // >= 50
         assert_equal($(mockBody)->stop_shadow(), 1),
     }) :));
 
