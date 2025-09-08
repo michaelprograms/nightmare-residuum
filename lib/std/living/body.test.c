@@ -319,6 +319,7 @@ void test_damage () {
     }) :));
 
     if (mockBody) destruct(mockBody);
+    if (mockNpc) destruct(mockNpc);
 }
 
 void test_armor () {
