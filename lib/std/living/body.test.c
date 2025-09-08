@@ -313,8 +313,8 @@ void test_damage () {
 
         testOb->set_species("human"),
         assert_equal(testOb->handle_damage(50, "left hand"), 50), // >= 100
-        assert_equal(testOb->handle_damage(20, "right hand"), 20), // >= 75
-        assert_equal(testOb->handle_damage(18, "right hand"), 18), // >= 50
+        assert_equal(testOb->handle_damage(30, "right hand"), 30), // >= 75
+        assert_equal(testOb->handle_damage(20, "right arm"), 20), // >= 50
         assert_equal($(mockBody)->stop_shadow(), 1),
     }) :));
 
