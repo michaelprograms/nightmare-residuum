@@ -29,5 +29,7 @@ void setup_bodypart (object owner, string limb) {
     set_id(({ "piece of " + __Limb, __Limb }));
     if (environment(owner)) {
         handle_move(environment(owner));
+    } else {
+        handle_remove();
     }
 }
