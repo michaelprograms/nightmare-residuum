@@ -51,7 +51,7 @@ protected int internal_remove () {
 /**
  * This function is used to remove an object from the game.
  *
- * @returns 0 or 1 for succes
+ * @returns 0 or 1 for success
  */
 int handle_remove () {
     return internal_remove();
