@@ -189,26 +189,25 @@ varargs int handle_damage (int damage, string limb) {
 
 /* ----- wearing ----- */
 
-int query_limb_armor (string limb) {
-    int ac = 0;
-
+private void initialize_worn () {
     if (!mapp(__Worn)) {
         __Worn = ([ ]);
     }
+}
 
+int query_limb_armor (string limb) {
+    int ac = 0;
+
+    initialize_worn();
     foreach (object ob in __Worn[limb] || ({ })) {
         ac += ob->query_ac();
     }
-
     return ac;
 }
 object *query_all_armor () {
     object *worn = ({ });
 
-    if (!mapp(__Worn)) {
-        __Worn = ([ ]);
-    }
-
+    initialize_worn();
     foreach (string limb in keys(__Worn)) {
         foreach (object ob in __Worn[limb]) {
             if (member_array(ob, worn) == -1) {
@@ -225,6 +224,8 @@ object *query_all_armor () {
  */
 object query_worn_shield () {
     object shield;
+
+    initialize_worn();
     foreach (string limb in keys(__Worn)) {
         foreach (object ob in __Worn[limb]) {
             if (ob->query_type() == "shield") {
@@ -244,10 +245,7 @@ mixed query_can_wear_armor (object armor) {
     int worn;
     string wielded;
 
-    if (!mapp(__Worn)) {
-        __Worn = ([ ]);
-    }
-
+    initialize_worn();
     foreach (string limb in armor->query_limbs()) {
         if (armor->query_type() == "shield" && __Wielded[limb]) {
             wielded = limb;
@@ -288,13 +286,9 @@ mixed query_can_wear_armor (object armor) {
  * @returns text failure description or 1 for success
  */
 mixed handle_wear (object ob) {
-    string limbConj;
-    string result;
+    string limbConj, result;
 
-    if (!mapp(__Worn)) {
-        __Worn = ([ ]);
-    }
-
+    initialize_worn();
     if (ob->query_worn()) {
         return "You are already wearing " + ob->query_name() + ".";
     }
@@ -328,10 +322,7 @@ mixed handle_wear (object ob) {
  */
 mixed handle_unwear (object ob) {
     string limbConj;
-    if (!mapp(__Worn)) {
-        __Worn = ([ ]);
-    }
-
+    initialize_worn();
     if (!ob->query_worn()) {
         return "You are not wearing " + ob->query_name() + ".";
     }
