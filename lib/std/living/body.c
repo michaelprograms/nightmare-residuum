@@ -353,6 +353,12 @@ mixed handle_unwear (object ob) {
 
 /* ----- wielding ----- */
 
+/**
+ * Returns the limbs this body can use to wield weapons.
+ * Will exclude limbs wearing shields.
+ *
+ * @returns {string*} the possible limbs that can wield a weapon
+ */
 string *query_wieldable_limbs () {
     string *wieldable = ({ });
     object shield = query_worn_shield();
