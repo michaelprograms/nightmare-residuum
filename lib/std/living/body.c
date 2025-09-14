@@ -344,6 +344,12 @@ mixed handle_unwear (object ob) {
 
 /* ----- wielding ----- */
 
+private void initialize_wielded () {
+    if (!mapp(__Wielded)) {
+        __Wielded = ([ ]);
+    }
+}
+
 /**
  * Returns the limbs this body can use to wield weapons.
  * Will exclude limbs wearing shields.
@@ -353,6 +359,7 @@ mixed handle_unwear (object ob) {
 string *query_wieldable_limbs () {
     string *wieldable = ({ });
     object shield = query_worn_shield();
+    initialize_wielded();
     foreach (string l in query_limbs()) {
         if (__Limbs[l]["type"] == "WIELD" && !__Wielded[l]) {
             if (!shield || (shield && member_array(l, shield->query_limbs()) == -1)) {
@@ -369,6 +376,7 @@ string *query_wieldable_limbs () {
  * @returns {STD_WEAPON} the possible weapon wielded to this limb
  */
 object query_wielded (string l) {
+    initialize_wielded();
     if (l && __Limbs[l]["type"] == "WIELD" && __Wielded[l]) {
         return __Wielded[l];
     }
@@ -381,6 +389,7 @@ object query_wielded (string l) {
  */
 object *query_wielded_weapons () {
     object *weapons = ({ });
+    initialize_wielded();
     foreach (string l in query_limbs()) {
         if (__Limbs[l]["type"] == "WIELD" && __Wielded[l]) {
             if (member_array(query_wielded(l), weapons) == -1) {
@@ -392,6 +401,7 @@ object *query_wielded_weapons () {
 }
 string *query_wielded_limbs (object ob) {
     string *limbs = ({ });
+    initialize_wielded();
     foreach (string l in query_limbs()) {
         if (__Limbs[l]["type"] == "WIELD" && __Wielded[l] == ob) {
             limbs += ({ l });
@@ -409,9 +419,7 @@ string *query_wielded_limbs (object ob) {
 mixed handle_wield (object ob) {
     string *limbs = query_wieldable_limbs(), *hands, limbConj;
 
-    if (!mapp(__Wielded)) {
-        __Wielded = ([ ]);
-    }
+    initialize_wielded();
     if (ob->query_wielded()) {
         return "You are already wielding " + ob->query_name() + ".";
     }
@@ -448,9 +456,7 @@ mixed handle_wield (object ob) {
 mixed handle_unwield (object ob) {
     string *limbs, limbConj;
 
-    if (!mapp(__Wielded)) {
-        __Wielded = ([ ]);
-    }
+    initialize_wielded();
     if (!ob->query_wielded()) {
         return "You are not wielding " + ob->query_name() + ".";
     }
