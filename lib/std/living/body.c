@@ -154,14 +154,7 @@ void handle_limb_heal (string limb, int n) {
 /* ----- damage ----- */
 
 varargs int handle_damage (int damage, string limb) {
-    int beforeHp;
-
-    // @TODO: can this be removed?
-    if (!this_object()) {
-        return 0;
-    }
-
-    beforeHp = this_object()->query_hp();
+    int beforeHp = this_object()->query_hp();
     this_object()->add_hp(-damage);
     if (characterp(this_object())) {
         // @TODO move to vitals
