@@ -41,6 +41,19 @@ void test_species () {
     }) :));
 }
 
+void test_worn_and_wielded () {
+    expect("null worn is initialized", (: ({
+        assert_equal(testOb->query_all_armor(), ({ })),
+        store_variable("__Worn", UNDEFINED, testOb),
+        assert_equal(testOb->query_all_armor(), ({ })),
+    }) :));
+    expect("null weapons are initialized", (: ({
+        assert_equal(testOb->query_wielded_weapons(), ({ })),
+        store_variable("__Wielded", UNDEFINED, testOb),
+        assert_equal(testOb->query_wielded_weapons(), ({ })),
+    }) :));
+}
+
 void test_limbs () {
     expect("species limbs are queryable", (: ({
         assert_equal(testOb->query_limbs(), ({ })),

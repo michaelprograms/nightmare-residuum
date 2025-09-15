@@ -3,8 +3,8 @@
 private string __Gender = "neither";
 private string __Species = "unknown";
 mapping __Limbs = ([ ]);
-private nosave mapping __Wielded = ([ ]);
-private nosave mapping __Worn = ([ ]);
+nosave mapping __Wielded = ([ ]);
+nosave mapping __Worn = ([ ]);
 nosave private int __NextHeal;
 nosave private mapping __Injections = ([ ]);
 
