@@ -336,8 +336,19 @@ void test_damage () {
 }
 
 void test_armor () {
+    object armor = new(STD_ARMOR);
+
     expect("querying armor behaves", (: ({
         assert_equal(testOb->query_all_armor(), ({ })),
         assert_equal(testOb->query_limb_armor("torso"), 0),
+
+        $(armor)->set_type("shirt"),
+        $(armor)->set_limbs(({ "torso" })),
+        $(armor)->set_ac(2),
+        testOb->handle_wear($(armor)),
+        assert_equal(testOb->query_all_armor(), ({ $(armor) })),
+        assert_equal(testOb->query_limb_armor("torso"), 2),
     }) :));
+
+    if (armor) destruct(armor);
 }
