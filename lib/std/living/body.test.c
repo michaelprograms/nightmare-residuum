@@ -345,9 +345,18 @@ void test_armor () {
         $(armor)->set_type("shirt"),
         $(armor)->set_limbs(({ "torso" })),
         $(armor)->set_ac(2),
-        testOb->handle_wear($(armor)),
+        assert_equal(testOb->handle_wear($(armor)), 1),
         assert_equal(testOb->query_all_armor(), ({ $(armor) })),
         assert_equal(testOb->query_limb_armor("torso"), 2),
+        assert_equal(testOb->handle_unwear($(armor)), 1),
+
+        $(armor)->set_type("shield"),
+        $(armor)->set_limbs(({ "left arm" })),
+        assert_equal(testOb->handle_wear($(armor)), 1),
+        assert_equal(testOb->query_all_armor(), ({ $(armor) })),
+        assert_equal(testOb->query_limb_armor("left arm"), 2),
+        assert_equal(testOb->query_worn_shield(), $(armor)),
+        assert_equal(testOb->handle_unwear($(armor)), 1),
     }) :));
 
     if (armor) destruct(armor);
