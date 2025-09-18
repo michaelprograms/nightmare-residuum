@@ -289,7 +289,7 @@ mixed handle_wear (object ob) {
     if (stringp(result)) {
         return result;
     } else if (intp(result) != 1) {
-        return "You are already wearing " + ob->query_type() + ".";
+        return "You are already wearing a " + ob->query_type() + ".";
     }
 
     foreach (string limb in ob->query_limbs()) {

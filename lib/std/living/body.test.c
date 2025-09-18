@@ -336,28 +336,34 @@ void test_damage () {
 }
 
 void test_armor () {
-    object armor = new(STD_ARMOR);
+    object armor1 = new(STD_ARMOR);
+    object armor2 = new(STD_ARMOR);
 
     expect("querying armor behaves", (: ({
         assert_equal(testOb->query_all_armor(), ({ })),
         assert_equal(testOb->query_limb_armor("torso"), 0),
 
-        $(armor)->set_type("shirt"),
-        $(armor)->set_limbs(({ "torso" })),
-        $(armor)->set_ac(2),
-        assert_equal(testOb->handle_wear($(armor)), 1),
-        assert_equal(testOb->query_all_armor(), ({ $(armor) })),
+        $(armor1)->set_type("shirt"),
+        $(armor1)->set_limbs(({ "torso" })),
+        $(armor1)->set_ac(2),
+        assert_equal(testOb->handle_wear($(armor1)), 1),
+        assert_equal(testOb->query_all_armor(), ({ $(armor1) })),
         assert_equal(testOb->query_limb_armor("torso"), 2),
-        assert_equal(testOb->handle_unwear($(armor)), 1),
+        assert_equal(testOb->handle_unwear($(armor1)), 1),
 
-        $(armor)->set_type("shield"),
-        $(armor)->set_limbs(({ "left arm" })),
-        assert_equal(testOb->handle_wear($(armor)), 1),
-        assert_equal(testOb->query_all_armor(), ({ $(armor) })),
+        $(armor1)->set_type("shield"),
+        $(armor1)->set_limbs(({ "left arm" })),
+        assert_equal(testOb->handle_wear($(armor1)), 1),
+        assert_equal(testOb->query_all_armor(), ({ $(armor1) })),
         assert_equal(testOb->query_limb_armor("left arm"), 2),
-        assert_equal(testOb->query_worn_shield(), $(armor)),
-        assert_equal(testOb->handle_unwear($(armor)), 1),
+        assert_equal(testOb->query_worn_shield(), $(armor1)),
+        // trying to wear another shield fails
+        $(armor2)->set_type("shield"),
+        $(armor2)->set_limbs(({ "left arm" })),
+        assert_equal(testOb->handle_wear($(armor2)), "You are already wearing a shield."),
+        assert_equal(testOb->handle_unwear($(armor1)), 1),
     }) :));
 
-    if (armor) destruct(armor);
+    if (armor1) destruct(armor1);
+    if (armor2) destruct(armor2);
 }
