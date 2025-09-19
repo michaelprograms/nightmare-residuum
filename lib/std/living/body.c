@@ -238,7 +238,6 @@ mixed query_can_wear_armor (object armor) {
     int worn;
     string wielded;
 
-    initialize_worn();
     foreach (string limb in armor->query_limbs()) {
         if (armor->query_type() == "shield" && __Wielded[limb]) {
             wielded = limb;

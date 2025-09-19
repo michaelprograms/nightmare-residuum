@@ -338,6 +338,9 @@ void test_damage () {
 void test_armor () {
     object armor1 = new(STD_ARMOR);
     object armor2 = new(STD_ARMOR);
+    object weapon1 = new(STD_WEAPON);
+
+    testOb->set_species("human");
 
     expect("querying armor behaves", (: ({
         assert_equal(testOb->query_all_armor(), ({ })),
@@ -352,18 +355,25 @@ void test_armor () {
         assert_equal(testOb->handle_unwear($(armor1)), 1),
 
         $(armor1)->set_type("shield"),
-        $(armor1)->set_limbs(({ "left arm" })),
+        $(armor1)->set_limbs(({ "left arm", "left hand" })),
         assert_equal(testOb->handle_wear($(armor1)), 1),
         assert_equal(testOb->query_all_armor(), ({ $(armor1) })),
         assert_equal(testOb->query_limb_armor("left arm"), 2),
+        assert_equal(testOb->query_limb_armor("left hand"), 2),
         assert_equal(testOb->query_worn_shield(), $(armor1)),
         // trying to wear another shield fails
         $(armor2)->set_type("shield"),
-        $(armor2)->set_limbs(({ "left arm" })),
+        $(armor2)->set_limbs(({ "left arm", "left hand" })),
         assert_equal(testOb->handle_wear($(armor2)), "You are already wearing a shield."),
         assert_equal(testOb->handle_unwear($(armor1)), 1),
+
+        $(weapon1)->set_type("sword"),
+        $(weapon1)->set_hands(2),
+        assert_equal(testOb->handle_wield($(weapon1)), 1),
+        assert_equal(testOb->handle_wear($(armor2)), "You cannot wear a shield while wielding a weapon in your left hand."),
     }) :));
 
     if (armor1) destruct(armor1);
     if (armor2) destruct(armor2);
+    if (weapon1) destruct(weapon1);
 }
