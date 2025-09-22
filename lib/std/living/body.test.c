@@ -341,6 +341,7 @@ void test_armor () {
     object weapon1 = new(STD_WEAPON);
 
     testOb->set_species("human");
+    armor1->set_name("armor1");
 
     expect("querying armor behaves", (: ({
         assert_equal(testOb->query_all_armor(), ({ })),
@@ -377,6 +378,7 @@ void test_armor () {
         $(armor2)->set_type("shirt"),
         $(armor2)->set_limbs(({ "torso", "left arm", "right arm" })),
         assert_equal(testOb->handle_wear($(armor1)), 1),
+        assert_equal(testOb->handle_wear($(armor1)), "You are already wearing armor1."),
         assert_equal(testOb->handle_wear($(armor2)), "You are already wearing a shirt."),
     }) :));
 
