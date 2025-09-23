@@ -267,7 +267,6 @@ mixed query_can_wear_armor (object armor) {
         }
         break;
     }
-
     return 1;
 }
 
@@ -287,8 +286,6 @@ mixed handle_wear (object ob) {
     result = query_can_wear_armor(ob);
     if (stringp(result)) {
         return result;
-    } else if (intp(result) != 1) {
-        return "You are already wearing a " + ob->query_type() + ".";
     }
 
     foreach (string limb in ob->query_limbs()) {

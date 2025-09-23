@@ -354,6 +354,7 @@ void test_armor () {
         assert_equal(testOb->query_all_armor(), ({ $(armor1) })),
         assert_equal(testOb->query_limb_armor("torso"), 2),
         assert_equal(testOb->handle_unwear($(armor1)), 1),
+        assert_equal(testOb->handle_unwear($(armor1)), "You are not wearing armor1."),
 
         $(armor1)->set_type("shield"),
         $(armor1)->set_limbs(({ "left arm", "left hand" })),
