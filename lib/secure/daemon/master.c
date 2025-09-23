@@ -23,7 +23,6 @@ object connect (int port) {
         }
         return 0;
     }
-    // @TODO: ob->set_port(port);
     return ob;
 }
 
