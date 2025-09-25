@@ -98,7 +98,10 @@ void test_sever_and_restore () {
 
         // sever non-fatal, and verify weapon unwielded and armour unworn
         assert_equal(testOb->query_limb("left hand"), ([ "damage": 0, "maxdamage": 1, "pct": 25, "status": 0, "type": "WIELD" ])),
+        assert_equal(testOb->query_wielded("left hand"), 0),
+        assert_equal($(weapon1)->query_wielded(), 0),
         testOb->handle_wield($(weapon1)),
+        assert_equal(testOb->query_wielded("left hand"), $(weapon1)),
         assert_equal($(weapon1)->query_wielded(), testOb),
         assert_equal(testOb->query_wielded_weapons(), ({ $(weapon1) })),
         testOb->handle_wear($(armor1)),
