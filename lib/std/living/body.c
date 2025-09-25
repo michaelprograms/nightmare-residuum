@@ -317,9 +317,6 @@ mixed handle_unwear (object ob) {
     }
 
     foreach (string limb in ob->query_limbs()) {
-        if (!arrayp(__Worn[limb])) {
-            __Worn[limb] = ({ });
-        }
         if (member_array(ob, __Worn[limb]) > -1) {
             __Worn[limb] -= ({ ob });
         }
