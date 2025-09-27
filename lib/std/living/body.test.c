@@ -84,6 +84,7 @@ void test_sever_and_restore () {
     object weapon1 = new(STD_WEAPON);
     object armor1 = new(STD_ARMOR);
 
+    weapon1->set_name("weapon1");
     weapon1->set_type("blade");
     weapon1->set_hands(2);
     armor1->set_type("gloves");
@@ -100,7 +101,8 @@ void test_sever_and_restore () {
         assert_equal(testOb->query_limb("left hand"), ([ "damage": 0, "maxdamage": 1, "pct": 25, "status": 0, "type": "WIELD" ])),
         assert_equal(testOb->query_wielded("left hand"), 0),
         assert_equal($(weapon1)->query_wielded(), 0),
-        testOb->handle_wield($(weapon1)),
+        assert_equal(testOb->handle_wield($(weapon1)), 1),
+        assert_equal(testOb->handle_wield($(weapon1)), "You are already wielding weapon1."),
         assert_equal(testOb->query_wielded("left hand"), $(weapon1)),
         assert_equal($(weapon1)->query_wielded(), testOb),
         assert_equal(testOb->query_wielded_weapons(), ({ $(weapon1) })),
