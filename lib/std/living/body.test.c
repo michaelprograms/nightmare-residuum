@@ -340,13 +340,16 @@ void test_damage () {
     if (mockNpc) destruct(mockNpc);
 }
 
-void test_armor () {
+void test_armor_and_weapons () {
     object armor1 = new(STD_ARMOR);
     object armor2 = new(STD_ARMOR);
     object weapon1 = new(STD_WEAPON);
+    object weapon2 = new(STD_WEAPON);
 
     testOb->set_species("human");
     armor1->set_name("armor1");
+    weapon1->set_name("weapon1");
+    weapon2->set_name("weapon2");
 
     expect("querying armor behaves", (: ({
         assert_equal(testOb->query_all_armor(), ({ })),
@@ -379,6 +382,10 @@ void test_armor () {
         assert_equal(testOb->handle_wield($(weapon1)), 1),
         assert_equal(testOb->handle_wear($(armor2)), "You cannot wear a shield while wielding a weapon in your left hand."),
 
+        $(weapon2)->set_type("sword"),
+        $(weapon2)->set_hands(1),
+        assert_equal(testOb->handle_wield($(weapon2)), "You are out of limbs to wield weapon2."),
+
         $(armor1)->set_type("shirt"),
         $(armor1)->set_limbs(({ "torso", "left arm", "right arm" })),
         $(armor2)->set_type("shirt"),
@@ -386,9 +393,12 @@ void test_armor () {
         assert_equal(testOb->handle_wear($(armor1)), 1),
         assert_equal(testOb->handle_wear($(armor1)), "You are already wearing armor1."),
         assert_equal(testOb->handle_wear($(armor2)), "You are already wearing a shirt."),
+
+
     }) :));
 
     if (armor1) destruct(armor1);
     if (armor2) destruct(armor2);
     if (weapon1) destruct(weapon1);
+    if (weapon2) destruct(weapon2);
 }
