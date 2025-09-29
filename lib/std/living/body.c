@@ -427,7 +427,7 @@ mixed handle_wield (object ob) {
     }
     ob->set_wielded(this_object());
 
-    limbConj = conjunction(this_object()->query_wielded_limbs(ob));
+    limbConj = conjunction(query_wielded_limbs(ob));
     message("action", "You wield " + ob->query_name() + " in your " + limbConj + ".", this_object());
     message("action", this_object()->query_cap_name() + " wields " + ob->query_name() + " in " + possessive(this_object()) + " " + limbConj + ".", environment(), this_object());
 
@@ -447,7 +447,7 @@ mixed handle_unwield (object ob) {
         return "You are not wielding " + ob->query_name() + ".";
     }
 
-    limbs = this_object()->query_wielded_limbs(ob);
+    limbs = query_wielded_limbs(ob);
     limbConj = conjunction(limbs);
     if (!sizeof(limbs)) {
         return 0;

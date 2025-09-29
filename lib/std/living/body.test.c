@@ -377,6 +377,7 @@ void test_armor_and_weapons () {
         assert_equal(testOb->handle_wear($(armor2)), "You are already wearing a shield."),
         assert_equal(testOb->handle_unwear($(armor1)), 1),
 
+        // wield two hander
         $(weapon1)->set_type("sword"),
         $(weapon1)->set_hands(2),
         assert_equal(testOb->handle_wield($(weapon1)), 1),
@@ -394,7 +395,10 @@ void test_armor_and_weapons () {
         assert_equal(testOb->handle_wear($(armor1)), "You are already wearing armor1."),
         assert_equal(testOb->handle_wear($(armor2)), "You are already wearing a shirt."),
 
-
+        // try wielding one hander
+        assert_equal(testOb->handle_unwield($(weapon1)), 1),
+        assert_equal(testOb->handle_unwield($(weapon1)), "You are not wielding weapon1."),
+        assert_equal(testOb->handle_wield($(weapon2)), 1),
     }) :));
 
     if (armor1) destruct(armor1);
