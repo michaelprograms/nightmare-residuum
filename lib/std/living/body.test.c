@@ -4,8 +4,6 @@ inherit M_TEST;
  * @var {"/std/living/body"} testOb
  */
 
-#define BODY_MOCK "/std/living/body.c" & "/std/living/body.mock.c"
-
 void test_gender () {
     expect("gender settable and queryable", (: ({
         assert_equal(testOb->query_gender(), "neither"),
@@ -160,16 +158,16 @@ void test_limbs_and_level () {
 
     mockBody->start_shadow(testOb);
     expect("setting species first has maxdamage", (: ({
-        /** @type {BODY_MOCK} */ (testOb)->set_stat("endurance", 20),
+        $(mockBody)->set_stat("endurance", 20),
         testOb->set_species("human"),
-        /** @type {BODY_MOCK} */ (testOb)->set_level(10),
+        $(mockBody)->set_level(10),
         assert_equal(testOb->query_limb("torso"), ([ "damage": 0, "maxdamage": 342, "pct": 100, "status": 0, "type": "FATAL" ])),
         assert_equal(testOb->query_limb(UNDEFINED), 0),
     }) :));
 
     expect("setting level first has maxdamage", (: ({
-        /** @type {BODY_MOCK} */ (testOb)->set_stat("endurance", 20),
-        /** @type {BODY_MOCK} */ (testOb)->set_level(10),
+        $(mockBody)->set_stat("endurance", 20),
+        $(mockBody)->set_level(10),
         testOb->set_species("human"),
         assert_equal(testOb->query_limb("torso"), ([ "damage": 0, "maxdamage": 342, "pct": 100, "status": 0, "type": "FATAL" ])),
     }) :));
@@ -177,7 +175,7 @@ void test_limbs_and_level () {
     expect("maxdamage to increase with endurance", (: ({
         assert_equal(testOb->query_limb("torso"), ([ "damage": 0, "maxdamage": 342, "pct": 100, "status": 0, "type": "FATAL" ])),
 
-        /** @type {BODY_MOCK} */ (testOb)->set_stat("endurance", 40),
+        $(mockBody)->set_stat("endurance", 40),
         assert_equal(testOb->query_limb("torso"), ([ "damage": 0, "maxdamage": 562, "pct": 100, "status": 0, "type": "FATAL" ])),
     }) :));
 
@@ -221,8 +219,8 @@ void test_injections () {
     expect("injections are handled by heart_beat", (: ({
         assert_equal($(mockBody)->start_shadow(testOb), 1),
 
-        /** @type {BODY_MOCK} */ (testOb)->set_species("human"),
-        /** @type {BODY_MOCK} */ (testOb)->set_level(1),
+        $(mockBody)->set_species("human"),
+        $(mockBody)->set_level(1),
         testOb->add_injection("healing nanites", 10),
         testOb->add_injection("damaging nanites", 10),
 
@@ -274,34 +272,34 @@ void test_heal () {
 
         testOb->set_species("human"),
         // verify initial state
-        assert_equal(/** @type {BODY_MOCK} */ (testOb)->query_hp(), 22),
-        assert_equal(/** @type {BODY_MOCK} */ (testOb)->query_sp(), 12),
-        assert_equal(/** @type {BODY_MOCK} */ (testOb)->query_mp(), 12),
+        assert_equal($(mockBody)->query_hp(), 22),
+        assert_equal($(mockBody)->query_sp(), 12),
+        assert_equal($(mockBody)->query_mp(), 12),
         assert_equal(testOb->query_limb("torso"), ([ "damage": 0, "maxdamage": 23, "pct": 100, "status": 0, "type": "FATAL" ])),
 
         // reduce vitals/limbs
-        /** @type {BODY_MOCK} */ (testOb)->set_hp(1),
-        /** @type {BODY_MOCK} */ (testOb)->set_sp(1),
-        /** @type {BODY_MOCK} */ (testOb)->set_mp(1),
+        $(mockBody)->set_hp(1),
+        $(mockBody)->set_sp(1),
+        $(mockBody)->set_mp(1),
         testOb->handle_limb_heal("torso", -20),
         // verify reduced vitals/limbs
-        assert_equal(/** @type {BODY_MOCK} */ (testOb)->query_hp(), 1),
-        assert_equal(/** @type {BODY_MOCK} */ (testOb)->query_sp(), 1),
-        assert_equal(/** @type {BODY_MOCK} */ (testOb)->query_mp(), 1),
+        assert_equal($(mockBody)->query_hp(), 1),
+        assert_equal($(mockBody)->query_sp(), 1),
+        assert_equal($(mockBody)->query_mp(), 1),
         assert_equal(testOb->query_limb("torso"), ([ "damage": 20, "maxdamage": 23, "pct": 100, "status": 0, "type": "FATAL" ])),
 
         // negative heal does nothing
         testOb->heal(-10),
-        assert_equal(/** @type {BODY_MOCK} */ (testOb)->query_hp(), 1),
-        assert_equal(/** @type {BODY_MOCK} */ (testOb)->query_sp(), 1),
-        assert_equal(/** @type {BODY_MOCK} */ (testOb)->query_mp(), 1),
+        assert_equal($(mockBody)->query_hp(), 1),
+        assert_equal($(mockBody)->query_sp(), 1),
+        assert_equal($(mockBody)->query_mp(), 1),
         assert_equal(testOb->query_limb("torso"), ([ "damage": 20, "maxdamage": 23, "pct": 100, "status": 0, "type": "FATAL" ])),
 
         // test heal vitals/limbs
         testOb->heal(10),
-        assert_equal(/** @type {BODY_MOCK} */ (testOb)->query_hp(), 11),
-        assert_equal(/** @type {BODY_MOCK} */ (testOb)->query_sp(), 11),
-        assert_equal(/** @type {BODY_MOCK} */ (testOb)->query_mp(), 11),
+        assert_equal($(mockBody)->query_hp(), 11),
+        assert_equal($(mockBody)->query_sp(), 11),
+        assert_equal($(mockBody)->query_mp(), 11),
         assert_equal(testOb->query_limb("torso"), ([ "damage": 15, "maxdamage": 23, "pct": 100, "status": 0, "type": "FATAL" ])),
 
         // can't heal below zero
