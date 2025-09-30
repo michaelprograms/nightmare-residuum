@@ -449,9 +449,6 @@ mixed handle_unwield (object ob) {
 
     limbs = query_wielded_limbs(ob);
     limbConj = conjunction(limbs);
-    if (!sizeof(limbs)) {
-        return 0;
-    }
     ob->set_wielded(0);
     foreach (string limb in limbs) {
         __Wielded[limb] = 0;
@@ -459,7 +456,6 @@ mixed handle_unwield (object ob) {
 
     message("action", "You unwield " + ob->query_name() + " from your " + limbConj + ".", this_object());
     message("action", this_object()->query_cap_name() + " unwields " + ob->query_name() + " from " + possessive(this_object()) + " " + limbConj + ".", environment(), this_object());
-
     return 1;
 }
 
