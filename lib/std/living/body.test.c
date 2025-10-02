@@ -404,3 +404,36 @@ void test_armor_and_weapons () {
     if (weapon1) destruct(weapon1);
     if (weapon2) destruct(weapon2);
 }
+
+void test_passive_heal () {
+    object mockBody = new("/std/living/body.mock.c");
+
+    expect("passive heal regenerates", (: ({
+        assert_equal($(mockBody)->start_shadow(testOb), 1),
+
+        $(mockBody)->set_level(10),
+        testOb->set_species("human"),
+        $(mockBody)->set_hp(1),
+        $(mockBody)->set_sp(1),
+        $(mockBody)->set_mp(1),
+        assert_equal($(mockBody)->query_hp(), 1),
+        assert_equal($(mockBody)->query_sp(), 1),
+        assert_equal($(mockBody)->query_mp(), 1),
+
+        // first heal starts next heal timer, no heal
+        testOb->handle_passive_heal(),
+        assert_equal($(mockBody)->query_hp(), 1),
+        assert_equal($(mockBody)->query_sp(), 1),
+        assert_equal($(mockBody)->query_mp(), 1),
+
+        // force next heal timer to be in past, heals
+        store_variable("__NextHeal", time() - 20, testOb),
+        testOb->handle_passive_heal(),
+        assert_equal($(mockBody)->query_hp(), 4),
+        assert_equal($(mockBody)->query_sp(), 4),
+        assert_equal($(mockBody)->query_mp(), 4),
+
+        assert_equal($(mockBody)->stop_shadow(), 1),
+    }) :));
+    if (mockBody) destruct(mockBody);
+}

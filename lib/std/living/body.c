@@ -5,7 +5,7 @@ private string __Species = "unknown";
 mapping __Limbs = ([ ]);
 nosave mapping __Wielded = ([ ]);
 nosave mapping __Worn = ([ ]);
-nosave private int __NextHeal;
+nosave int __NextHeal;
 nosave private mapping __Injections = ([ ]);
 
 /* ----- function prototypes ----- */
@@ -476,18 +476,17 @@ void heal (int n) {
     }
 }
 
-private void handle_passive_heal () {
-    int amt;
+void handle_passive_heal () {
+    int amt, t = time();
 
     if (!__NextHeal) {
-        __NextHeal = time() + 10;
+        __NextHeal = t + 10;
         return;
-    } else if (__NextHeal > time()) {
+    } else if (__NextHeal > t) {
         return;
     }
-
-    __NextHeal = time() + 10;
-    amt = to_int(ceil((this_object()->query_level() / 5.0) + (this_object()->query_stat("endurance") / 10.0) + (this_object()->query_stat("luck") / 20.0)));
+    __NextHeal = t + 10;
+    amt = 1 + to_int(ceil((this_object()->query_level() / 5.0) + (this_object()->query_stat("endurance") / 10.0) + (this_object()->query_stat("luck") / 20.0)));
     heal(amt);
 }
 
