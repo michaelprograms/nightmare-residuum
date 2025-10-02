@@ -219,7 +219,7 @@ void test_injections () {
     expect("injections are handled by heart_beat", (: ({
         assert_equal($(mockBody)->start_shadow(testOb), 1),
 
-        $(mockBody)->set_species("human"),
+        testOb->set_species("human"),
         $(mockBody)->set_level(1),
         testOb->add_injection("healing nanites", 10),
         testOb->add_injection("damaging nanites", 10),
