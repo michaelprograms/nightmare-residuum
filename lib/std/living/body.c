@@ -503,7 +503,7 @@ void add_injection (string type, int strength) {
         __Injections[type] = 0;
     }
     __Injections[type] += strength;
-    if (__Injections[type] == 0) {
+    if (__Injections[type] <= 0) {
         map_delete(__Injections, type);
     }
 }
@@ -512,7 +512,7 @@ private void handle_injections () {
 
     // remove any injections that are zero
     foreach (string key, int value in __Injections) {
-        if (value == 0) {
+        if (value <= 0) {
             map_delete(__Injections, key);
         }
     }

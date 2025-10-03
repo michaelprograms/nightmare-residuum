@@ -224,16 +224,14 @@ void test_injections () {
         testOb->add_injection("healing nanites", 10),
         testOb->add_injection("damaging nanites", 10),
 
-        // heart_beat for handle_injections
-        testOb->heart_beat(),
+        testOb->heart_beat(),   // heart_beat for handle_injections
 
         // damaging nanites work before healing nanites
         assert_equal(testOb->query_injections(), ([ "healing nanites": 10, "damaging nanites": 8, ])),
         assert_equal(testOb->query_injection("healing nanites"), 10),
         assert_equal(testOb->query_injection("damaging nanites"), 8),
 
-        // heart_beat for handle_injections
-        testOb->heart_beat(),
+        testOb->heart_beat(),   // heart_beat for handle_injections
 
         // damaging nanites work before healing nanites again
         assert_equal(testOb->query_injections(), ([ "healing nanites": 10, "damaging nanites": 6, ])),
@@ -242,21 +240,37 @@ void test_injections () {
 
         // remove damaging nanites for healing nanites test
         testOb->add_injection("damaging nanites", -6),
-        assert_equal(testOb->query_injection("damaging nanites"), 0),
+        assert_equal(testOb->query_injection("damaging nanites"), UNDEFINED),
 
-        // heart_beat for handle_injections
-        testOb->heart_beat(),
+        testOb->heart_beat(),   // heart_beat for handle_injections
 
-        // damaging nanites work before healing nanites again
+        // healing nanites work
         assert_equal(testOb->query_injections(), ([ "healing nanites": 8, ])),
         assert_equal(testOb->query_injection("healing nanites"), 8),
 
-        // heart_beat for handle_injections
-        testOb->heart_beat(),
+        testOb->heart_beat(),   // heart_beat for handle_injections
 
-        // damaging nanites work before healing nanites again
+        // healing nanites work again
         assert_equal(testOb->query_injections(), ([ "healing nanites": 6, ])),
         assert_equal(testOb->query_injection("healing nanites"), 6),
+
+        testOb->add_injection("healing nanites", -5),
+        assert_equal(testOb->query_injections(), ([ "healing nanites": 1 ])),
+        assert_equal(testOb->query_injection("healing nanites"), 1),
+
+        $(mockBody)->set_stat("endurance", 50),
+        $(mockBody)->set_hp(1),
+        testOb->heart_beat(),   // heart_beat for handle_injections
+
+        // healing nanites again
+        assert_equal(testOb->query_injections(), ([ "healing nanites": 0 ])),
+        assert_equal(testOb->query_injection("healing nanites"), 0),
+
+        testOb->heart_beat(),   // heart_beat for handle_injections
+
+        // damaging nanites work before healing nanites again
+        assert_equal(testOb->query_injections(), ([ ])),
+        assert_equal(testOb->query_injection("healing nanites"), UNDEFINED),
 
         assert_equal($(mockBody)->stop_shadow(), 1),
     }) :));
