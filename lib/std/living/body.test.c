@@ -353,23 +353,27 @@ void test_heal () {
 
 void test_damage () {
     object mockBody = new("/std/living/body.mock.c");
-    object mockNpc;
-
-    mockBody->set_level(5);
-    mockNpc = new("/std/npc.mock.c");
+    object mockCharacter = new("/std/character.mock.c");
 
     expect("heal restores hp/sp/mp and limb damage", (: ({
         assert_equal($(mockBody)->start_shadow(testOb), 1),
+        assert_equal($(mockCharacter)->start_shadow(testOb), 1),
+
+        $(mockBody)->set_level(5),
+        assert_equal($(mockBody)->query_level(), 5),
+        assert_equal($(mockCharacter)->is_character(), 1),
 
         testOb->set_species("human"),
         assert_equal(testOb->handle_damage(50, "left hand"), 50), // >= 100
         assert_equal(testOb->handle_damage(30, "right hand"), 30), // >= 75
         assert_equal(testOb->handle_damage(20, "right arm"), 20), // >= 50
+
         assert_equal($(mockBody)->stop_shadow(), 1),
+        assert_equal($(mockCharacter)->query_shadow(), 0),
     }) :));
 
     if (mockBody) destruct(mockBody);
-    if (mockNpc) destruct(mockNpc);
+    if (mockCharacter) destruct(mockCharacter);
 }
 
 void test_armor_and_weapons () {
