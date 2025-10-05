@@ -262,15 +262,35 @@ void test_injections () {
         $(mockBody)->set_hp(1),
         testOb->heart_beat(),   // heart_beat for handle_injections
 
-        // healing nanites again
+        // healing nanites now empty
         assert_equal(testOb->query_injections(), ([ "healing nanites": 0 ])),
         assert_equal(testOb->query_injection("healing nanites"), 0),
 
         testOb->heart_beat(),   // heart_beat for handle_injections
 
-        // damaging nanites work before healing nanites again
+        // healing nanites removed since empty
         assert_equal(testOb->query_injections(), ([ ])),
         assert_equal(testOb->query_injection("healing nanites"), UNDEFINED),
+
+        testOb->add_injection("damaging nanites", 1),
+        assert_equal(testOb->query_injections(), ([ "damaging nanites": 1 ])),
+        assert_equal(testOb->query_injection("damaging nanites"), 1),
+
+        testOb->heart_beat(),   // heart_beat for handle_injections
+
+        // damaging nanites now empty
+        assert_equal(testOb->query_injections(), ([ "damaging nanites": 0 ])),
+        assert_equal(testOb->query_injection("damaging nanites"), 0),
+
+        testOb->heart_beat(),   // heart_beat for handle_injections
+
+        // damaging nanites removed since empty
+        assert_equal(testOb->query_injections(), ([ ])),
+        assert_equal(testOb->query_injection("damaging nanites"), UNDEFINED),
+
+        testOb->heart_beat(),   // heart_beat for handle_injections
+
+
 
         assert_equal($(mockBody)->stop_shadow(), 1),
     }) :));
