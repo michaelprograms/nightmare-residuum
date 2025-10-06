@@ -1,4 +1,5 @@
 inherit M_TEST;
+inherit STD_OBJECT;
 
 /**
  * @var {"/std/command"} testOb
@@ -8,6 +9,7 @@ string *test_order () {
     return ({
         "test_name",
         "test_syntax",
+        "test_target",
         "test_help_text",
         "test_help_similar",
         "test_handle_help",
@@ -33,6 +35,40 @@ void test_syntax () {
     expect("syntax handles bad inputs", (: ({
         assert_catch((: testOb->set_syntax("") :), "*Bad argument 1 to command->set_syntax\n"),
     }) :));
+}
+
+void test_target () {
+    object r = new(STD_ROOM);
+    object char = new(STD_CHARACTER);
+    object npc = new(STD_NPC);
+
+    char->set_name("test character");
+    npc->set_name("test npc");
+
+    expect("handles immortal targets", (: ({
+        // check initial lack of environments
+        assert_equal(environment(testOb), 0),
+        assert_equal(environment(), 0),
+
+        // assert_equal(testOb->determine_immortal_target(this_object(), "test character"), $(char)),
+
+        // check mismatch environments but character
+        assert_equal(handle_move("/domain/Nowhere/room/void.c"), 1),
+        assert_equal($(char)->handle_move($(r)), 1),
+        assert_equal(testOb->determine_immortal_target(this_object(), "testcharacter"), this_object()),  // failure
+
+        // check matching environments but NPC
+        assert_equal(handle_move($(r)), 1),
+        assert_equal($(npc)->handle_move($(r)), 1),
+        assert_equal(testOb->determine_immortal_target(this_object(), "testnpc"), $(npc)),  // success
+
+        // cleanup
+        assert_equal(this_object()->handle_move("/domain/Nowhere/room/void.c"), 1),
+    }) :));
+
+    if (npc) destruct(npc);
+    if (char) destruct(char);
+    if (r) destruct(r);
 }
 
 void test_help_text () {

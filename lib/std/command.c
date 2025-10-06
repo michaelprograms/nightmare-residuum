@@ -27,12 +27,12 @@ string query_syntax () {
  * @returns {STD_CHARACTER} the character target
  */
 object determine_immortal_target (object source, string input) {
-    object target = source;
-    if (find_character(input)) {
-        target = find_character(input);
-    } else if (present(input, environment(source))) {
-        // @TODO: restrict this to characters?
+    object target;
+    if (!(target = find_character(input))) {
         target = present(input, environment(source));
+    }
+    if (!target) {
+        target = source;
     }
     return target;
 }
