@@ -21,7 +21,7 @@ void test_species_bodies () {
 }
 
 void test_setup_body () {
-    object ob;
+    object ob, npc;
     mapping limbs = ([ ]);
 
     // setting a species will setup the body
@@ -31,8 +31,15 @@ void test_setup_body () {
     foreach (string limb in ob->query_limbs()) {
         limbs[limb] = ob->query_limb(limb);
     }
+    npc = new(STD_NPC);
+    npc->set_species("invalid");
 
     expect("species bodies exist", (: ({
+        // verify invalid calls are handled
+        assert_equal(testOb->setup_body(0), 0),
+        assert_equal($(npc)->query_species(), "invalid"),
+        assert_equal(testOb->setup_body($(npc)), 0),
+
         // verify limbs exist
         assert_equal(sizeof(keys($(limbs))) > 0, 1),
         // compare body to limbs
@@ -40,6 +47,7 @@ void test_setup_body () {
     }) :));
 
     destruct(ob);
+    destruct(npc);
 }
 
 void test_adjust_stat () {

@@ -270,14 +270,11 @@ mapping setup_body (object ob) {
     string species, body;
 
     // Setup of LIVING may trigger setup_body calls before species has been set
-    if (!ob || !(species = ob->query_species()) || !mapp(__Species[species])) {
+    if (!ob || !(species = ob->query_species()) || !mapp(__Species[species]) || !sizeof(body = __Species[species]["body"])) {
         return 0;
     }
 
     body = __Species[species]["body"];
-    if (!sizeof(body)) {
-        error("Invalid body found for species " + species + " in daemon/species.");
-    }
     limbs = __Bodies[body];
 
     foreach (string limb in keys(limbs)) {
