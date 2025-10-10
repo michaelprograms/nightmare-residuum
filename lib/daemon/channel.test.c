@@ -90,8 +90,13 @@ void test_send () {
         testOb->send("invalid", this_object(), "invalid."),
         assert_equal(testOb->query_history("invalid"), UNDEFINED),
 
+        // valid message
         testOb->send("chat", this_object(), "Test chat."),
         assert_equal(testOb->query_history("chat"), ({ "ChannelTest [[chat]] Test chat." })),
+
+        // invalid message
+        testOb->send("connection", this_object(), "Not allowed to send messages on this line."),
+        assert_equal(testOb->query_history("connection"), UNDEFINED),
 
         testOb->send("chat:", this_object(), "chat emotes."),
         assert_equal(testOb->query_history("chat"), ({ "ChannelTest [[chat]] Test chat.", "[[chat]] ChannelTest chat emotes." })),
