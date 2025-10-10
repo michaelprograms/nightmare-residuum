@@ -7,6 +7,13 @@ inherit M_TEST;
 string query_cap_name () {
     return "ChannelTest";
 }
+mapping blocked = ([]);
+void toggle_channel_blocked (string channel) {
+    blocked[channel] = !blocked[channel];
+}
+int query_channel_blocked (string channel) {
+    return !!blocked[channel];
+}
 
 void test_channels () {
     expect("channels exist", (: ({
@@ -73,9 +80,8 @@ void test_history () {
 void test_send () {
     object mockChannel = new("/daemon/channel.mock.c");
 
-    expect("system channels can send", (: ({
-        assert_equal($(mockChannel)->start_shadow(testOb), 1),
-
+    mockChannel->start_shadow(testOb);
+    expect("channels can send", (: ({
         // bad attempt
         testOb->send("", this_object(), "bad."),
         assert_equal(testOb->query_history(""), UNDEFINED),
@@ -98,11 +104,18 @@ void test_send () {
 
         testOb->send("chat", this_object(), ": again!"),
         assert_equal(testOb->query_history("chat"), ({ "ChannelTest [[chat]] Test chat.", "[[chat]] ChannelTest chat emotes.", "[[chat]] ChannelTest again.", "[[chat]] ChannelTest again!", "[[chat]] ChannelTest again!" })),
-
-        // @TODO listen for these messages?
-
-        assert_equal($(mockChannel)->stop_shadow(), 1),
     }) :));
+
+    expect("channels toggle to blocked", (: ({
+        // test blocking
+        assert_equal(blocked["chat"], UNDEFINED),
+        testOb->send("chat", this_object(), 0),
+        assert_equal(blocked["chat"], 1),
+        testOb->send("chat", this_object(), 0),
+        assert_equal(blocked["chat"], 0),
+    }) :));
+
+    mockChannel->stop_shadow();
 
     if (mockChannel) destruct(mockChannel);
 }
