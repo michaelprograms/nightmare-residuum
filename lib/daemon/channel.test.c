@@ -118,6 +118,12 @@ void test_send () {
         assert_equal(blocked["chat"], 1),
         testOb->send("chat", this_object(), 0),
         assert_equal(blocked["chat"], 0),
+        testOb->send("chat", this_object(), 0),
+        assert_equal(blocked["chat"], 1),
+        // can send a message when blocked to unblock
+        testOb->send("chat", this_object(), "New message."),
+        assert_equal(blocked["chat"], 0),
+        assert_equal(testOb->query_history("chat")[<1], "ChannelTest [[chat]] New message."),
     }) :));
 
     mockChannel->stop_shadow();
