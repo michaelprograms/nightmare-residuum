@@ -20,7 +20,8 @@ object this_user () {
  * @returns {STD_USER} a matching user
  */
 object find_user (string name) {
-    object *results = filter(children(STD_USER), (: $1 && $1->query_key_name() == $(name) :));
+    object *results = children(STD_USER);
+    results = filter(results, (: $1 && $1->query_key_name() == $(name) :));
     return sizeof(results) ? results[0] : 0;
 }
 

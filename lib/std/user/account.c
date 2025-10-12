@@ -153,7 +153,7 @@ mapping query_settings () {
 /* -----  ----- */
 
 void set_name (string name) {
-    if (!regexp(base_name(this_user()), "^("+STD_USER[0..<3]+"|"+D_TEST[0..<3]+")")) {
+    if (!regexp(base_name(this_user()), "^("+STD_USER[0..<3]+"|"+D_TEST[0..<3]+"|/secure/sefun/user)")) {
         return 0;
     }
     __Name = name;
