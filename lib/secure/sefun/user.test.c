@@ -1,5 +1,10 @@
 inherit M_TEST;
 
+/**
+ * @var {"/secure/sefun/user"} testOb
+ */
+
+
 void test_user () {
     object user = new(STD_USER);
     user->set_name("test");
