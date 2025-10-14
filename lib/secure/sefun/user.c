@@ -57,7 +57,9 @@ object find_character (string name) {
  * @returns {STD_CHARACTER *} list of characters
  */
 object *characters () {
-    return map(filter(users() || ({ }), (: $1 && interactive($1) && $1->query_character() :)) || ({ }), (: $1->query_character() :)) || ({ });
+    object users = users() || ({ });
+    users = filter(users, (: $1 && interactive($1) && $1->query_character() :));
+    return map(users, (: $1->query_character() :)) || ({ });
 }
 
 /**

@@ -15,3 +15,9 @@ void test_user () {
 
     destruct(user);
 }
+
+void test_characters () {
+    expect("characters returns an array", (: ({
+        assert_equal(arrayp(testOb->characters()), 1),
+    }) :));
+}
