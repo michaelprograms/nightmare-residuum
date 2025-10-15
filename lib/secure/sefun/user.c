@@ -47,7 +47,8 @@ object this_character () {
  * @returns {STD_CHARACTER} a matching character
  */
 object find_character (string name) {
-    object *results = filter(children(STD_CHARACTER), (: $1 && $1->query_key_name() == SEFUN->sanitize_name($(name)) && $1->query_user() :));
+    object *results = children(STD_CHARACTER);
+    results = filter(results, (: $1 && $1->query_key_name() == SEFUN->sanitize_name($(name)) && $1->query_user() :));
     return sizeof(results) ? results[0] : 0;
 }
 
