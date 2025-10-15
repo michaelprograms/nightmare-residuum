@@ -4,6 +4,9 @@ inherit M_TEST;
  * @var {"/secure/sefun/user"} testOb
  */
 
+int is_user () {
+    return 1;
+}
 
 void test_user () {
     object user = new(STD_USER);
@@ -12,6 +15,10 @@ void test_user () {
     expect("find_user behaves", (: ({
         assert_equal(testOb->find_user("unknown user"), 0),
         assert_equal(testOb->find_user("test"), $(user)),
+    }) :));
+    expect("this_user behaves", (: ({
+        assert_equal(objectp(testOb->this_user()), 1),
+        assert_equal(testOb->this_user()->is_user(), 1),
     }) :));
 
     destruct(user);
@@ -25,6 +32,10 @@ void test_character () {
     expect("find_character behaves", (: ({
         assert_equal(testOb->find_character("unknown character"), 0),
         assert_equal(testOb->find_character("test"), $(char)),
+    }) :));
+    expect("this_character behaves", (: ({
+        assert_equal(objectp(testOb->this_character()), 1),
+        assert_equal(testOb->this_character()->is_character(), 1),
     }) :));
 
     destruct(char);
