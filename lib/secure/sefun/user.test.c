@@ -7,6 +7,13 @@ inherit M_TEST;
 int is_user () {
     return 1;
 }
+string query_setting (string name) {
+    if (name == "test") {
+        return "123";
+    } else {
+        return UNDEFINED;
+    }
+}
 
 void test_user () {
     object user = new(STD_USER);
@@ -19,6 +26,10 @@ void test_user () {
     expect("this_user behaves", (: ({
         assert_equal(objectp(testOb->this_user()), 1),
         assert_equal(testOb->this_user()->is_user(), 1),
+    }) :));
+    expect("query_account_setting behaves", (: ({
+        assert_equal(testOb->query_account_setting("test"), "123"),
+        assert_equal(testOb->query_account_setting("invalid"), UNDEFINED),
     }) :));
 
     destruct(user);
