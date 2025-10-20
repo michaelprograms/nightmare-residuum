@@ -14,6 +14,9 @@ string query_setting (string name) {
         return UNDEFINED;
     }
 }
+object query_character () {
+    return this_object();
+}
 
 void test_user () {
     object user = new(STD_USER);
@@ -44,11 +47,10 @@ void test_character () {
         assert_equal(testOb->find_character("unknown character"), 0),
         assert_equal(testOb->find_character("test"), $(char)),
     }) :));
-    // @TODO: re-assess this
-    // expect("this_character behaves", (: ({
-    //     assert_equal(objectp(testOb->this_character()), 1),
-    //     // TODO: assert_equal(testOb->this_character()->is_character(), 1),
-    // }) :));
+    expect("this_character behaves", (: ({
+        assert_equal(objectp(testOb->this_character()), 1),
+        assert_equal(testOb->this_character()->is_character(), 1),
+    }) :));
 
     destruct(char);
 }
