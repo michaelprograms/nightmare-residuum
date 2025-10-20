@@ -17,6 +17,9 @@ string query_setting (string name) {
 object query_character () {
     return this_object();
 }
+int is_character() {
+    return 321;
+}
 
 void test_user () {
     object user = new(STD_USER);
@@ -49,7 +52,7 @@ void test_character () {
     }) :));
     expect("this_character behaves", (: ({
         assert_equal(objectp(testOb->this_character()), 1),
-        assert_equal(testOb->this_character()->is_character(), 1),
+        assert_equal(testOb->this_character()->is_character(), is_character()),
     }) :));
 
     destruct(char);
