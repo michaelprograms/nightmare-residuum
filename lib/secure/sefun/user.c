@@ -68,9 +68,6 @@ object *characters () {
  * @returns the setting's value
  */
 string query_account_setting (string name) {
-    object user;
-    if (!(user = this_user())) {
-        return 0;
-    }
-    return user->query_setting(name);
+    object user = this_user();
+    return user ? user->query_setting(name) : 0;
 }
