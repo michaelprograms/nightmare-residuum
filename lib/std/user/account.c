@@ -227,6 +227,14 @@ private void display_account_menu () {
                 "items": bodyItems,
                 "columns": ({ 2, 3, }),
             ]),
+            "footer": ([
+                "items": ({
+                    format_syntax("<autojoin [name]|[seconds]|off>"),
+                    "Automatically join as the named character after the "
+                    "provided seconds."
+                }),
+                "columns": 1
+            ]),
             "borderColors": ({ ({ 191, 63, 191 }), ({ 63, 191, 191 }) }),
         ]));
     }
