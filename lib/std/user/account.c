@@ -59,6 +59,12 @@ void ensure_default_settings () {
     if (undefinedp(__Settings["gmcp"])) {
         __Settings["gmcp"] = "off";
     }
+    if (undefinedp(__Settings["autojoin_name"])) {
+        __Settings["autojoin_name"] = "";
+    }
+    if (undefinedp(__Settings["autojoin_delay"])) {
+        __Settings["autojoin_delay"] = 5;
+    }
 }
 
 string query_name () {
@@ -238,6 +244,9 @@ private void display_account_menu () {
             "borderColors": ({ ({ 191, 63, 191 }), ({ 63, 191, 191 }) }),
         ]));
     }
+
+    // @TODO: if autojoin_name / autojoin_delay, use them
+
     this_object()->input_next((: account_input, STATE_ACCOUNT_MENU, 0 :), PROMPT_ACCOUNT_CHOICE);
 }
 
@@ -423,6 +432,7 @@ protected nomask varargs void account_input (int state, mixed extra, string inpu
                 if (CONNECTION_LOCKED && !D_CHARACTER->query_immortal(input)) {
                     return display_account_menu();
                 }
+                // @TODO: make this a function that can be re-used with autojoin
                 // Check for existing character
                 if (extra = find_character(input)) {
                     if (extra->query_user() && interactive(extra->query_user())) {
@@ -436,7 +446,7 @@ protected nomask varargs void account_input (int state, mixed extra, string inpu
                     this_object()->set_character_name(input);
                     this_object()->character_enter(0);
                 }
-            } else if (regexp(input, "^autojoin")) {
+            } else if (regexp(input, "^autojoin ")) {
                 string *parts = explode(input, " ");
                 string name;
                 int delay;
@@ -446,14 +456,18 @@ protected nomask varargs void account_input (int state, mixed extra, string inpu
                 if (sizeof(parts) > 2) {
                     delay = to_int(parts[2]);
                 }
-
                 if (name) {
-                    write("Autojoin set to character " + name + "!\n");
-                    // @TODO: persist name
-                    if (delay > 0) {
-                        write("Delay is set to " + delay + ".\n");
-                        // @TODO: persist delay
+                    write("Autojoin set to character '" + name + "'.\n"); // @TODO: put character's formatted name here
+                    __Settings["autojoin_name"] = name;
+                    if (delay < 0) {
+                        delay = 0;
+                    } else if (delay > 30) {
+                        delay = 30;
                     }
+                    write("Delay is set to " + delay + ".\n");
+                    __Settings["autojoin_delay"] = delay;
+                } else {
+                    write("Unknown character.\n");
                 }
             } else {
                 write("Invalid input choice received.\n\n");
