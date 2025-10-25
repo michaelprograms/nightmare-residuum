@@ -436,6 +436,25 @@ protected nomask varargs void account_input (int state, mixed extra, string inpu
                     this_object()->set_character_name(input);
                     this_object()->character_enter(0);
                 }
+            } else if (regexp(input, "^autojoin")) {
+                string *parts = explode(input, " ");
+                string name;
+                int delay;
+                if (sizeof(parts) > 1 && member_array(parts[1], query_character_names()) > -1) {
+                    name = parts[1];
+                }
+                if (sizeof(parts) > 2) {
+                    delay = to_int(parts[2]);
+                }
+
+                if (name) {
+                    write("Autojoin set to character " + name + "!\n");
+                    // @TODO: persist name
+                    if (delay > 0) {
+                        write("Delay is set to " + delay + ".\n");
+                        // @TODO: persist delay
+                    }
+                }
             } else {
                 write("Invalid input choice received.\n\n");
                 display_account_menu();
