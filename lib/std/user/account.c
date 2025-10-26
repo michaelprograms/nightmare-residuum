@@ -59,11 +59,11 @@ void ensure_default_settings () {
     if (undefinedp(__Settings["gmcp"])) {
         __Settings["gmcp"] = "off";
     }
-    if (undefinedp(__Settings["autojoin_name"])) {
-        __Settings["autojoin_name"] = "";
+    if (undefinedp(__Settings["autojoin.name"])) {
+        __Settings["autojoin.name"] = "";
     }
-    if (undefinedp(__Settings["autojoin_delay"])) {
-        __Settings["autojoin_delay"] = 5;
+    if (undefinedp(__Settings["autojoin.delay"])) {
+        __Settings["autojoin.delay"] = 5;
     }
 }
 
@@ -245,7 +245,7 @@ private void display_account_menu () {
         ]));
     }
 
-    // @TODO: if autojoin_name / autojoin_delay, use them
+    // @TODO: if autojoin.name / autojoin.delay, use them
 
     this_object()->input_next((: account_input, STATE_ACCOUNT_MENU, 0 :), PROMPT_ACCOUNT_CHOICE);
 }
@@ -458,14 +458,14 @@ protected nomask varargs void account_input (int state, mixed extra, string inpu
                 }
                 if (name) {
                     write("Autojoin set to character '" + name + "'.\n"); // @TODO: put character's formatted name here
-                    __Settings["autojoin_name"] = name;
+                    __Settings["autojoin.name"] = name;
                     if (delay < 0) {
                         delay = 0;
                     } else if (delay > 30) {
                         delay = 30;
                     }
                     write("Delay is set to " + delay + ".\n");
-                    __Settings["autojoin_delay"] = delay;
+                    __Settings["autojoin.delay"] = delay;
                 } else {
                     write("Unknown character.\n");
                 }

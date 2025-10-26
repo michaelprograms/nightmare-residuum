@@ -160,12 +160,12 @@ void test_ensure_default_settings () {
         // remove gmcp
         map_delete($(settings), "gmcp"),
         assert_equal(testOb->query_setting("gmcp"), 0),
-        // remove autojoin_name
-        map_delete($(settings), "autojoin_name"),
-        assert_equal(testOb->query_setting("autojoin_name"), 0),
-        // remove autojoin_delay
-        map_delete($(settings), "autojoin_delay"),
-        assert_equal(testOb->query_setting("autojoin_delay"), 0),
+        // remove autojoin.name
+        map_delete($(settings), "autojoin.name"),
+        assert_equal(testOb->query_setting("autojoin.name"), 0),
+        // remove autojoin.delay
+        map_delete($(settings), "autojoin.delay"),
+        assert_equal(testOb->query_setting("autojoin.delay"), 0),
         // now empty
         assert_equal(sizeof(testOb->query_settings()), 0),
         // restore defaults
