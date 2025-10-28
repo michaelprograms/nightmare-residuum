@@ -617,19 +617,19 @@ protected nomask varargs void account_input (int state, mixed extra, string inpu
                 if (member_array(setting, settings) == -1) {
                     write("Invalid setting.\n");
                 } else if (intp(query_setting(setting))) {
-                        int w = to_int(input);
-                        if (setting == "width") {
-                            if (w < 40) {
-                                w = 40;
-                            }
+                    int w = to_int(input);
+                    if (setting == "width") {
+                        if (w < 40) {
+                            w = 40;
                         }
-                        set_setting(setting, w);
-                        write("Setting " + setting + " mode to " + w + ".\n");
+                    }
+                    set_setting(setting, w);
+                    write("Setting " + setting + " mode to " + w + ".\n");
                 } else if (member_array(input, ({ "on", "off"})) > -1) {
-                            set_setting(setting, input);
-                            write("Setting " + setting + " mode " + input + ".\n");
-                        } else {
-                            write("Invalid setting.\n");
+                    set_setting(setting, input);
+                    write("Setting " + setting + " mode " + input + ".\n");
+                } else {
+                    write("Invalid setting.\n");
                 }
             }
             account_input(STATE_SETTINGS_ENTER);
