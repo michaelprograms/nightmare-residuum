@@ -178,6 +178,23 @@ void set_name (string name) {
 
 /* -----  ----- */
 
+private void account_select_character (string name) {
+    object c;
+    // Check for existing character
+    if (c = find_character(name)) {
+        if (c->query_user() && interactive(c->query_user())) {
+            this_object()->reset_connect_timeout();
+            write(c->query_cap_name()+" is connected and interactive.\n\n");
+            this_object()->input_next((: account_input, STATE_CHARACTER_OVERRIDE, c :), PROMPT_CHARACTER_OVERRIDE);
+        } else {
+            this_object()->character_reconnect(c);
+        }
+    } else { /* fresh login */
+        this_object()->set_character_name(name);
+        this_object()->character_enter(0);
+    }
+}
+
 private void display_account_menu () {
     string *bodyItems = ({ });
     int locked = CONNECTION_LOCKED;
@@ -432,20 +449,7 @@ protected nomask varargs void account_input (int state, mixed extra, string inpu
                 if (CONNECTION_LOCKED && !D_CHARACTER->query_immortal(input)) {
                     return display_account_menu();
                 }
-                // @TODO: make this a function that can be re-used with autojoin
-                // Check for existing character
-                if (extra = find_character(input)) {
-                    if (extra->query_user() && interactive(extra->query_user())) {
-                        this_object()->reset_connect_timeout();
-                        write(extra->query_cap_name()+" is connected and interactive.\n\n");
-                        this_object()->input_next((: account_input, STATE_CHARACTER_OVERRIDE, extra :), PROMPT_CHARACTER_OVERRIDE);
-                    } else {
-                        this_object()->character_reconnect(extra);
-                    }
-                } else { /* fresh login */
-                    this_object()->set_character_name(input);
-                    this_object()->character_enter(0);
-                }
+                account_select_character(input);
             } else if (regexp(input, "^autojoin ")) {
                 string *parts = explode(input, " ");
                 string name;
@@ -469,6 +473,7 @@ protected nomask varargs void account_input (int state, mixed extra, string inpu
                 } else {
                     write("Unknown character.\n");
                 }
+                display_account_menu();
             } else {
                 write("Invalid input choice received.\n\n");
                 display_account_menu();
@@ -611,8 +616,7 @@ protected nomask varargs void account_input (int state, mixed extra, string inpu
                 input = sizeof(split) > 1 ? input[(sizeof(setting)+1)..] : 0;
                 if (member_array(setting, settings) == -1) {
                     write("Invalid setting.\n");
-                } else {
-                    if (intp(query_setting(setting))) {
+                } else if (intp(query_setting(setting))) {
                         int w = to_int(input);
                         if (setting == "width") {
                             if (w < 40) {
@@ -621,14 +625,11 @@ protected nomask varargs void account_input (int state, mixed extra, string inpu
                         }
                         set_setting(setting, w);
                         write("Setting " + setting + " mode to " + w + ".\n");
-                    } else {
-                        if (member_array(input, ({ "on", "off"})) > -1) {
+                } else if (member_array(input, ({ "on", "off"})) > -1) {
                             set_setting(setting, input);
                             write("Setting " + setting + " mode " + input + ".\n");
                         } else {
                             write("Invalid setting.\n");
-                        }
-                    }
                 }
             }
             account_input(STATE_SETTINGS_ENTER);
