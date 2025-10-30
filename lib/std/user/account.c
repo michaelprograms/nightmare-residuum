@@ -198,6 +198,7 @@ private void account_select_character (string name) {
 private void display_account_menu () {
     string *bodyItems = ({ });
     int locked = CONNECTION_LOCKED;
+    string autojoinBlurb;
 
     if (!query_playable_characters()) {
         write("\nYou have no characters. You will now create a character.\n");
@@ -224,6 +225,11 @@ private void display_account_menu () {
                 "",
                 character["last_location"] + ", " + time_ago(character["last_action"]),
             });
+        }
+        if (__Settings["autojoin.name"]) {
+            autojoinBlurb = "You will automatically join as " + __Settings["autojoin.name"] + " after " + __Settings["autojoin.delay"] + " seconds.";
+        } else {
+            autojoinBlurb = "Automatically join as the named character after a provided delay.";
         }
         border(([
             "header": ({
@@ -252,9 +258,8 @@ private void display_account_menu () {
             ]),
             "footer": ([
                 "items": ({
+                    autojoinBlurb,
                     format_syntax("<autojoin [name]|[seconds]|off>"),
-                    "Automatically join as the named character after the "
-                    "provided seconds."
                 }),
                 "columns": 1
             ]),
