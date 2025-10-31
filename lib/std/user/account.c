@@ -180,8 +180,8 @@ void set_name (string name) {
 
 private void account_select_character (string name) {
     object c;
-    // Check for existing character
     if (c = find_character(name)) {
+        // existing character
         if (c->query_user() && interactive(c->query_user())) {
             this_object()->reset_connect_timeout();
             write(c->query_cap_name()+" is connected and interactive.\n\n");
@@ -189,9 +189,23 @@ private void account_select_character (string name) {
         } else {
             this_object()->character_reconnect(c);
         }
-    } else { /* fresh login */
+    } else {
+        // fresh login
         this_object()->set_character_name(name);
         this_object()->character_enter(0);
+    }
+}
+
+private void account_autojoin (int attempt) {
+    string name = __Settings["autojoin.name"];
+    int delay = to_int(__Settings["autojoin.delay"]);
+    int n = delay - attempt;
+    // @TODO: translate autojoin.name into CapName
+    if (attempt >= delay) {
+        account_select_character(name);
+    } else {
+        write("Autojoining as "+name+" in "+n+" second"+(n > 1 ? "s" : "")+"...\n");
+        call_out_walltime((: account_autojoin($(attempt) + 1) :), 1.0);
     }
 }
 
@@ -266,9 +280,6 @@ private void display_account_menu () {
             "borderColors": ({ ({ 191, 63, 191 }), ({ 63, 191, 191 }) }),
         ]));
     }
-
-    // @TODO: if autojoin.name / autojoin.delay, use them
-
     this_object()->input_next((: account_input, STATE_ACCOUNT_MENU, 0 :), PROMPT_ACCOUNT_CHOICE);
 }
 
@@ -416,6 +427,9 @@ protected nomask varargs void account_input (int state, mixed extra, string inpu
                 } else {
                     write("\n\n%^BOLD%^Welcome back, "+query_name()+". Last seen "+time_ago(query_last_on())+".%^RESET%^\n");
                     display_account_menu();
+                    if (__Settings["autojoin.name"] && member_array(__Settings["autojoin.name"], query_character_names()) > -1) {
+                        account_autojoin(0);
+                    }
                 }
                 set_last_on();
                 save_data();
