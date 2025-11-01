@@ -27,7 +27,7 @@ void command (string input, mapping flags) {
         value = implode(split[1..], " ");
 
         switch (key) {
-            case "width": case "lines":
+            case "width": case "lines": case "autojoin.delay":
                 value = to_int(value);
                 break;
             case "ansi": case "gmcp": case "screenreader":
