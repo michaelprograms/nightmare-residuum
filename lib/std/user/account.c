@@ -482,7 +482,7 @@ protected nomask varargs void account_input (int state, mixed extra, string inpu
                 if (name) {
                     write("Autojoin set to character '" + name + "'.\n"); // @TODO: put character's formatted name here
                     __Settings["autojoin.name"] = name;
-                    if (delay < 0) {
+                    if (delay < 1) {
                         delay = 0;
                     } else if (delay > 30) {
                         delay = 30;
