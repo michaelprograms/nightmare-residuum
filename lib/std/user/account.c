@@ -106,7 +106,7 @@ void add_character (string name, string nameClean, string species) {
 mapping query_character_by_name (string name) {
     return copy(__Characters[name]);
 }
-int query_playable_characters () {
+int query_has_playable_characters () {
     mapping tmpCharacters = filter_mapping(__Characters, (: !$2["deleted"] :));
     __CharacterNames = sort_array(keys(tmpCharacters), 1);
     return sizeof(__CharacterNames) > 0;
@@ -214,7 +214,7 @@ private void display_account_menu () {
     int locked = CONNECTION_LOCKED;
     string autojoinBlurb;
 
-    if (!query_playable_characters()) {
+    if (!query_has_playable_characters()) {
         write("\nYou have no characters. You will now create a character.\n");
         account_input(STATE_CHARACTER_ENTER);
         return;
@@ -410,7 +410,7 @@ protected nomask varargs void account_input (int state, mixed extra, string inpu
 
         case STATE_ACCOUNT_COMPLETE:
             D_LOG->log("account/new", sprintf("%s : %s : %s\n", ctime(time()), query_ip_number(), query_name()));
-            if (!query_playable_characters()) {
+            if (!query_has_playable_characters()) {
                 write("\nWelcome, "+query_name()+"! You will now create a character.\n");
                 account_input(STATE_CHARACTER_ENTER);
                 return;
@@ -421,7 +421,7 @@ protected nomask varargs void account_input (int state, mixed extra, string inpu
 
         case STATE_ACCOUNT_PASSWORD:
             if (crypt(input, query_password()) == query_password()) {
-                if (!query_playable_characters()) {
+                if (!query_has_playable_characters()) {
                     write("\nWelcome, "+query_name()+"! You will now create a character.\n");
                     account_input(STATE_CHARACTER_ENTER);
                 } else {

@@ -103,11 +103,11 @@ void test_account_characters () {
 
     expect("account characters can be added and deleted", (: ({
         assert_equal(testOb->query_character_names(), ({ })),
-        assert_equal(testOb->query_playable_characters(), 0),
+        assert_equal(testOb->query_has_playable_characters(), 0),
 
         testOb->add_character("Tester", "tester", "custodian"),
 
-        assert_equal(testOb->query_playable_characters(), 1),
+        assert_equal(testOb->query_has_playable_characters(), 1),
         assert_equal(testOb->query_character_names(), ({ "tester" })),
         assert_equal(testOb->query_character_by_name("tester")["name"], "Tester"),
         assert_equal(testOb->query_character_by_name("tester")["deleted"], 0),
@@ -131,7 +131,7 @@ void test_account_characters () {
         testOb->set_deleted("tester"),
         assert_equal(testOb->query_character_by_name("tester")["deleted"], 1),
         assert_equal(testOb->query_character_names(), ({ })),
-        assert_equal(testOb->query_playable_characters(), 0),
+        assert_equal(testOb->query_has_playable_characters(), 0),
     }) :));
 
     __KeyName = "accounttest";
