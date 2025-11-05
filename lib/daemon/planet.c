@@ -517,7 +517,7 @@ void generate_json_line (mapping data, int time) {
     write_file(data["file"], line + "\n");
 
     if (y + 1 == size) {
-        int size2 = size * size;
+        // int size2 = size * size;
         int t;
         write_file(data["file"], "]}");
         // write_file(data["file"], "    ],\n    \"min height\":\""+data["min"]["height"]+"\",\n    \"max height\":\""+data["max"]["height"]+"\",\n    \"min humidity\":\""+data["min"]["humidity"]+"\",\n    \"max humidity\":\""+data["max"]["humidity"]+"\",\n    \"min heat\":\""+data["min"]["heat"]+"\",\n    \"max heat\":\""+data["max"]["heat"]+"\"\n}");
