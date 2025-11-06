@@ -205,6 +205,9 @@ private void account_autojoin (int attempt) {
         account_select_character(name);
     } else {
         write("Autojoining as "+name+" in "+n+" second"+(n > 1 ? "s" : "")+"...\n");
+        if (attempt > 0) {
+            this_object()->input_prompt();
+        }
         call_out_walltime((: account_autojoin($(attempt) + 1) :), 1.0);
     }
 }
