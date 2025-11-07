@@ -1,5 +1,5 @@
 // @this_object /std/user.c
-mapping __GMCPModuleData = ([ ]);
+nosave mapping __GMCPModuleData = ([ ]);
 
 int gmcp_enabled () {
     if (this_object()->query_setting("gmcp") != "on") {
