@@ -196,6 +196,7 @@ private void account_select_character (string name) {
     }
 }
 
+nosave int autojoined = 0;
 private void account_autojoin (int attempt) {
     string name = __Settings["autojoin.name"];
     int delay = to_int(__Settings["autojoin.delay"]);
@@ -204,6 +205,7 @@ private void account_autojoin (int attempt) {
     if (attempt >= delay) {
         account_select_character(name);
     } else {
+        autojoined = 1;
         write("Autojoining as "+name+" in "+n+" second"+(n > 1 ? "s" : "")+"...\n");
         if (attempt > 0) {
             this_object()->input_prompt();
@@ -243,10 +245,12 @@ private void display_account_menu () {
                 character["last_location"] + ", " + time_ago(character["last_action"]),
             });
         }
-        if (__Settings["autojoin.name"]) {
-            autojoinBlurb = "You will automatically join as " + __Settings["autojoin.name"] + " after " + __Settings["autojoin.delay"] + " seconds.";
-        } else {
-            autojoinBlurb = "Automatically join as the named character after a provided delay.";
+        if (!autojoined) {
+            if (__Settings["autojoin.name"]) {
+                autojoinBlurb = "You will automatically join as " + __Settings["autojoin.name"] + " after " + __Settings["autojoin.delay"] + " seconds.";
+            } else {
+                autojoinBlurb = "Automatically join as the named character after a provided delay.";
+            }
         }
         border(([
             "header": ({
@@ -273,7 +277,7 @@ private void display_account_menu () {
                 "items": bodyItems,
                 "columns": ({ 2, 3, }),
             ]),
-            "footer": ([
+            "footer": autojoined ? 0 : ([
                 "items": ({
                     autojoinBlurb,
                     format_syntax("<autojoin [name]|[seconds]|off>"),
