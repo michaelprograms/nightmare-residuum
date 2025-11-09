@@ -196,8 +196,8 @@ private void account_select_character (string name) {
     }
 }
 
-nosave int autojoined = 0;
-private void account_autojoin (int attempt) {
+nosave int autojoining = 0;
+void account_autojoin (int attempt) {
     string name = __Settings["autojoin.name"];
     int delay = to_int(__Settings["autojoin.delay"]);
     int n = delay - attempt;
@@ -205,12 +205,9 @@ private void account_autojoin (int attempt) {
     if (attempt >= delay) {
         account_select_character(name);
     } else {
-        autojoined = 1;
         write("Autojoining as "+name+" in "+n+" second"+(n > 1 ? "s" : "")+"...\n");
-        if (attempt > 0) {
-            this_object()->input_prompt();
-        }
-        call_out_walltime((: account_autojoin($(attempt) + 1) :), 1.0);
+        this_object()->input_prompt();
+        autojoining = call_out_walltime("account_autojoin", 1.0, attempt + 1);
     }
 }
 
@@ -245,7 +242,7 @@ private void display_account_menu () {
                 character["last_location"] + ", " + time_ago(character["last_action"]),
             });
         }
-        if (!autojoined) {
+        if (!autojoining) {
             if (__Settings["autojoin.name"]) {
                 autojoinBlurb = "You will automatically join as " + __Settings["autojoin.name"] + " after " + __Settings["autojoin.delay"] + " seconds.";
             } else {
@@ -277,7 +274,7 @@ private void display_account_menu () {
                 "items": bodyItems,
                 "columns": ({ 2, 3, }),
             ]),
-            "footer": autojoined ? 0 : ([
+            "footer": autojoining ? 0 : ([
                 "items": ({
                     autojoinBlurb,
                     format_syntax("<autojoin [name]|[seconds]|off>"),
@@ -435,7 +432,7 @@ protected nomask varargs void account_input (int state, mixed extra, string inpu
                     write("\n\n%^BOLD%^Welcome back, "+query_name()+". Last seen "+time_ago(query_last_on())+".%^RESET%^\n");
                     display_account_menu();
                     if (__Settings["autojoin.name"] && member_array(__Settings["autojoin.name"], query_character_names()) > -1) {
-                        account_autojoin(0);
+                        call_out_walltime("account_autojoin", 1.0, 0);
                     }
                 }
                 set_last_on();
@@ -449,6 +446,10 @@ protected nomask varargs void account_input (int state, mixed extra, string inpu
             }
             break;
         case STATE_ACCOUNT_MENU:
+            if(autojoining) {
+                write("Autojoin canceled.\n");
+                remove_call_out();
+            }
             if (!input || input == "" || !(input = lower_case(input))) {
                 display_account_menu();
             } else if (input == "exit") {
