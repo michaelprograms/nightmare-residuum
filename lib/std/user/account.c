@@ -201,11 +201,12 @@ void account_autojoin (int attempt) {
     string name = __Settings["autojoin.name"];
     int delay = to_int(__Settings["autojoin.delay"]);
     int n = delay - attempt;
-    // @TODO: translate autojoin.name into CapName
+    mapping character = query_character_by_name(name);
+
     if (attempt >= delay) {
         account_select_character(name);
     } else {
-        write("Autojoining as "+name+" in "+n+" second"+(n > 1 ? "s" : "")+"...\n");
+        write("Autojoining as "+character["name"]+" in "+n+" second"+(n > 1 ? "s" : "")+"...\n");
         this_object()->input_prompt();
         autojoining = call_out_walltime("account_autojoin", 1.0, attempt + 1);
     }
@@ -244,7 +245,8 @@ private void display_account_menu () {
         }
         if (!autojoining) {
             if (__Settings["autojoin.name"]) {
-                autojoinBlurb = "You will automatically join as " + __Settings["autojoin.name"] + " after " + __Settings["autojoin.delay"] + " seconds.";
+                mapping character = query_character_by_name(__Settings["autojoin.name"]);
+                autojoinBlurb = "You will automatically join as " + character["name"] + " after " + __Settings["autojoin.delay"] + " seconds.";
             } else {
                 autojoinBlurb = "Automatically join as the named character after a provided delay.";
             }
