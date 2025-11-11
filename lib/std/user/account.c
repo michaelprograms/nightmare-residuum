@@ -246,7 +246,7 @@ private void display_account_menu () {
         if (!autojoining) {
             if (__Settings["autojoin.name"]) {
                 mapping character = query_character_by_name(__Settings["autojoin.name"]);
-                autojoinBlurb = "You will automatically join as " + character["name"] + " after " + __Settings["autojoin.delay"] + " seconds.";
+                autojoinBlurb = "Automatically joining as " + character["name"] + " after " + __Settings["autojoin.delay"] + " seconds.";
             } else {
                 autojoinBlurb = "Automatically join as the named character after a provided delay.";
             }
