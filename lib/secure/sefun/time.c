@@ -80,12 +80,16 @@ varargs string time_ago (int timestamp, int granularity) {
  * Example: #w #d #h #m #s
  *
  * @param seconds number of seconds to convert
+ * @param granularity how many details to report
  * @returns time in simple readable format
  */
-string time_from_seconds (int seconds) {
+varargs string time_from_seconds (int seconds, int granularity) {
     int s = seconds, w, d, h, m;
     string *results = ({ });
 
+    if (undefinedp(granularity)) {
+        granularity = 5;
+    }
     w = s / WEEK_IN_SECS;
     s = s - (w * WEEK_IN_SECS);
     d = s / DAY_IN_SECS;
@@ -95,21 +99,20 @@ string time_from_seconds (int seconds) {
     m = s / MINUTE_IN_SECS;
     s = s - (m * MINUTE_IN_SECS);
 
-    if (w) {
+    if (w && granularity > 0) {
         results += ({ w + "w" });
     }
-    if (d) {
+    if (d && granularity > 1) {
         results += ({ d + "d" });
     }
-    if (h) {
+    if (h && granularity > 2) {
         results += ({ h + "h" });
     }
-    if (m) {
+    if (m && granularity > 3) {
         results += ({ m + "m" });
     }
-    if (s || (!w && !d && !h && !m && !s)) {
+    if (s && granularity > 4 || (!w && !d && !h && !m && !s)) {
         results += ({ s + "s" });
     }
-
     return implode(results, " ");
 }
