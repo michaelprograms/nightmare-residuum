@@ -72,7 +72,7 @@ void test_account_times () {
 void test_account_settings () {
     expect("account settings handles setting and querying", (: ({
         assert_equal(mapp(testOb->query_settings()), 1),
-        assert_equal(sizeof(testOb->query_settings()), 7),
+        assert_equal(sizeof(testOb->query_settings()), 6),
 
         assert_equal(testOb->query_setting("ansi"), "on"),
         testOb->set_setting("ansi", "off"),
@@ -144,7 +144,7 @@ void test_ensure_default_settings () {
     settings = testOb->query_settings();
     expect("ensure_default_settings sets missing settings", (: ({
         // initial
-        assert_equal(sizeof(testOb->query_settings()), 7),
+        assert_equal(sizeof(testOb->query_settings()), 6),
         // remove width
         map_delete($(settings), "width"),
         assert_equal(testOb->query_setting("width"), 0),
@@ -160,17 +160,14 @@ void test_ensure_default_settings () {
         // remove gmcp
         map_delete($(settings), "gmcp"),
         assert_equal(testOb->query_setting("gmcp"), 0),
-        // remove autojoin.name
-        map_delete($(settings), "autojoin.name"),
-        assert_equal(testOb->query_setting("autojoin.name"), 0),
-        // remove autojoin.delay
-        map_delete($(settings), "autojoin.delay"),
-        assert_equal(testOb->query_setting("autojoin.delay"), 0),
+        // remove autojoin
+        map_delete($(settings), "autojoin"),
+        assert_equal(testOb->query_setting("autojoin"), 0),
         // now empty
         assert_equal(sizeof(testOb->query_settings()), 0),
         // restore defaults
         testOb->ensure_default_settings(),
-        assert_equal(sizeof(testOb->query_settings()), 7),
+        assert_equal(sizeof(testOb->query_settings()), 6),
         assert_equal(testOb->query_setting("width"), 80),
         assert_equal(testOb->query_setting("lines"), 40),
         assert_equal(testOb->query_setting("ansi"), "on"),
