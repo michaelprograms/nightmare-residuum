@@ -59,11 +59,8 @@ void ensure_default_settings () {
     if (undefinedp(__Settings["gmcp"])) {
         __Settings["gmcp"] = "off";
     }
-    if (undefinedp(__Settings["autojoin.name"])) {
-        __Settings["autojoin.name"] = "";
-    }
-    if (undefinedp(__Settings["autojoin.delay"])) {
-        __Settings["autojoin.delay"] = 5;
+    if (undefinedp(__Settings["autojoin"])) {
+        __Settings["autojoin"] = "";
     }
 }
 
@@ -198,12 +195,14 @@ private void account_select_character (string name) {
 
 nosave int autojoining = 0;
 void account_autojoin (int attempt) {
-    string name = __Settings["autojoin.name"];
-    int delay = to_int(__Settings["autojoin.delay"]);
-    int n = delay - attempt;
+    string name = __Settings["autojoin"];
+    int n = 5 - attempt;
     mapping character = query_character_by_name(name);
 
-    if (attempt >= delay) {
+    if (!sizeof(name)) {
+        return;
+    }
+    if (attempt >= 5) {
         account_select_character(name);
     } else {
         write("Autojoining as "+character["name"]+" in "+n+" second"+(n > 1 ? "s" : "")+"...\n");
@@ -244,11 +243,16 @@ private void display_account_menu () {
             });
         }
         if (!autojoining) {
-            if (__Settings["autojoin.name"]) {
-                mapping character = query_character_by_name(__Settings["autojoin.name"]);
-                autojoinBlurb = "Automatically joining as " + character["name"] + " after " + __Settings["autojoin.delay"] + " seconds.";
+            if (sizeof(__Settings["autojoin"])) {
+                mapping character = query_character_by_name(__Settings["autojoin"]);
+                if (character) {
+                    write(identify(character));
+                    autojoinBlurb = "Automatically joining as " + character["name"] + " after 5 seconds.";
+                } else {
+                    autojoinBlurb = "Automatically join as the named character after a 5 second delay.";
+                }
             } else {
-                autojoinBlurb = "Automatically join as the named character after a provided delay.";
+                autojoinBlurb = "Automatically join as the named character after a 5 second delay.";
             }
         }
         border(([
@@ -279,7 +283,7 @@ private void display_account_menu () {
             "footer": autojoining ? 0 : ([
                 "items": ({
                     autojoinBlurb,
-                    format_syntax("<autojoin [name]|[seconds]|off>"),
+                    format_syntax("<autojoin [name]|off>"),
                 }),
                 "columns": 1
             ]),
@@ -433,7 +437,7 @@ protected nomask varargs void account_input (int state, mixed extra, string inpu
                 } else {
                     write("\n\n%^BOLD%^Welcome back, "+query_name()+". Last seen "+time_ago(query_last_on())+".%^RESET%^\n");
                     display_account_menu();
-                    if (__Settings["autojoin.name"] && member_array(__Settings["autojoin.name"], query_character_names()) > -1) {
+                    if (__Settings["autojoin"] && member_array(__Settings["autojoin"], query_character_names()) > -1) {
                         call_out_walltime("account_autojoin", 1.0, 0);
                     }
                 }
@@ -480,25 +484,14 @@ protected nomask varargs void account_input (int state, mixed extra, string inpu
                 }
                 account_select_character(input);
             } else if (regexp(input, "^autojoin ")) {
-                string *parts = explode(input, " ");
-                string name;
-                int delay;
-                if (sizeof(parts) > 1 && member_array(parts[1], query_character_names()) > -1) {
-                    name = parts[1];
-                }
-                if (sizeof(parts) > 2) {
-                    delay = to_int(parts[2]);
-                }
-                if (name) {
-                    write("Autojoin set to character '" + name + "'.\n"); // @TODO: put character's formatted name here
-                    __Settings["autojoin.name"] = name;
-                    if (delay < 1) {
-                        delay = 0;
-                    } else if (delay > 30) {
-                        delay = 30;
-                    }
-                    write("Delay is set to " + delay + ".\n");
-                    __Settings["autojoin.delay"] = delay;
+                string name = replace_string(input, "autojoin ", "");
+                if (input == "off") {
+                    __Settings["autojoin"] = "";
+                } else if (name) {
+                    // TODO: verify name exists on account
+                    // TODO: character's real name here
+                    write("Autojoin set to character '" + name + "'.\n");
+                    __Settings["autojoin"] = name;
                 } else {
                     write("Unknown character.\n");
                 }

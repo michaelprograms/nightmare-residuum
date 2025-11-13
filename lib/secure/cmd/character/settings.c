@@ -30,15 +30,7 @@ void command (string input, mapping flags) {
             case "width": case "lines":
                 value = to_int(value);
                 break;
-            case "autojoin.delay":
-                value = to_int(value);
-                if (value > 30 || value < 1) {
-                    message("action", "You must provide a range from 1 to 30 for autojoin.delay.", user);
-                    return;
-                }
-                break;
-            case "autojoin.name":
-                // @TODO: need to make sure member_array(autojoin_name, TU->query_characters()) > -1
+            case "autojoin":
                 if (member_array(value, user->query_character_names()) == -1) {
                     message("action", "You must provide a valid character name for autojoin.name.", user);
                     return;
