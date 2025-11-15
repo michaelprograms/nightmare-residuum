@@ -86,6 +86,7 @@ varargs string time_ago (int timestamp, int granularity) {
 varargs string time_from_seconds (int seconds, int granularity) {
     int s = seconds, w, d, h, m;
     string *results = ({ });
+    int matches;
 
     if (undefinedp(granularity)) {
         granularity = 5;
@@ -99,20 +100,25 @@ varargs string time_from_seconds (int seconds, int granularity) {
     m = s / MINUTE_IN_SECS;
     s = s - (m * MINUTE_IN_SECS);
 
-    if (w && granularity > 0) {
+    if (w && matches < granularity) {
         results += ({ w + "w" });
+        matches ++;
     }
-    if (d && granularity > 1) {
+    if (d && matches < granularity) {
         results += ({ d + "d" });
+        matches ++;
     }
-    if (h && granularity > 2) {
+    if (h && matches < granularity) {
         results += ({ h + "h" });
+        matches ++;
     }
-    if (m && granularity > 3) {
+    if (m && matches < granularity) {
         results += ({ m + "m" });
+        matches ++;
     }
-    if (s && granularity > 4 || (!w && !d && !h && !m && !s)) {
+    if (s && matches < granularity || (!w && !d && !h && !m && !s)) {
         results += ({ s + "s" });
+        matches ++;
     }
     return implode(results, " ");
 }

@@ -68,5 +68,10 @@ void test_time_from_seconds () {
         assert_equal(testOb->time_from_seconds(WEEK_IN_SECS + DAY_IN_SECS + HOUR_IN_SECS + MINUTE_IN_SECS), "1w 1d 1h 1m"),
         assert_equal(testOb->time_from_seconds(MONTH_IN_SECS), "4w 2d 10h"),
         assert_equal(testOb->time_from_seconds(MONTH_IN_SECS + WEEK_IN_SECS + 3 * DAY_IN_SECS + 4 * HOUR_IN_SECS + 17 * MINUTE_IN_SECS + 23), "5w 5d 14h 17m 23s"),
+
+        assert_equal(testOb->time_from_seconds(WEEK_IN_SECS + DAY_IN_SECS + HOUR_IN_SECS + MINUTE_IN_SECS, 3), "1w 1d 1h"),
+        assert_equal(testOb->time_from_seconds(WEEK_IN_SECS + DAY_IN_SECS + HOUR_IN_SECS + MINUTE_IN_SECS, 2), "1w 1d"),
+        assert_equal(testOb->time_from_seconds(WEEK_IN_SECS + DAY_IN_SECS + HOUR_IN_SECS + MINUTE_IN_SECS, 1), "1w"),
+        assert_equal(testOb->time_from_seconds(DAY_IN_SECS + HOUR_IN_SECS + MINUTE_IN_SECS, 1), "1d"),
     }) :));
 }
