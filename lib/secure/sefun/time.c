@@ -88,7 +88,7 @@ varargs string time_from_seconds (int seconds, int granularity) {
     string *results = ({ });
     int matches;
 
-    if (undefinedp(granularity)) {
+    if (undefinedp(granularity) || granularity < 1) {
         granularity = 5;
     }
     w = s / WEEK_IN_SECS;
