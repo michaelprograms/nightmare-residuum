@@ -53,7 +53,7 @@ object *query_hostiles () {
 /* ----- combat ----- */
 
 void handle_combat_miss () {
-    object to = this_object(), env = environment(this_object());
+    object to = this_object(), env = environment();
     string mymsg, yourmsg;
     switch(random(3)) {
     case 0:
