@@ -392,6 +392,9 @@ void test_doors () {
         assert_equal(testOb->query_open("door"), 0),
         assert_equal(r1->query_locked("door"), 0),
         assert_equal(testOb->query_locked("door"), 0),
+
+        assert_equal(r1->query_door_dir("non-existent"), 0),
+        assert_equal(testOb->query_door_dir("non-existent"), 0),
     }) :));
     expect("lockable doors behave", (: ({
         // setup locked door with key
