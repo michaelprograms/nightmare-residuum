@@ -389,7 +389,9 @@ void test_doors () {
         assert_equal(r1->query_door_dir("door"), "east"),
         assert_equal(testOb->query_door_dir("door"), "west"),
         assert_equal(r1->query_open("door"), 0),
+        assert_equal(r1->query_open("east"), 0),
         assert_equal(testOb->query_open("door"), 0),
+        assert_equal(testOb->query_open("west"), 0),
         assert_equal(r1->query_locked("door"), 0),
         assert_equal(testOb->query_locked("door"), 0),
 
