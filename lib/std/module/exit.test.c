@@ -371,8 +371,12 @@ void test_doors () {
         assert_equal(testOb->query_doors(), ({ })),
         assert_equal(r1->query_open("door"), -1),
         assert_equal(testOb->query_open("door"), -1),
+        assert_equal(r1->query_open("east"), -1),
+        assert_equal(testOb->query_open("west"), -1),
         assert_equal(r1->query_locked("door"), -1),
         assert_equal(testOb->query_locked("door"), -1),
+        assert_equal(r1->query_locked("east"), -1),
+        assert_equal(testOb->query_locked("west"), -1),
         assert_equal(r1->query_dir_door("east"), 0),
         assert_equal(testOb->query_dir_door("west"), 0),
 
@@ -394,6 +398,8 @@ void test_doors () {
         assert_equal(testOb->query_open("west"), 0),
         assert_equal(r1->query_locked("door"), 0),
         assert_equal(testOb->query_locked("door"), 0),
+        assert_equal(r1->query_locked("east"), 0),
+        assert_equal(testOb->query_locked("west"), 0),
 
         assert_equal(r1->query_door_dir("non-existent"), 0),
         assert_equal(testOb->query_door_dir("non-existent"), 0),
