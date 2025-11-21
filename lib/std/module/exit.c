@@ -323,10 +323,8 @@ void set_open (string str, int open) {
         dir = query_door_dir(str);
     } else if (member_array(str, keys(doors)) > -1) {   // by exit dir
         dir = str;
-    } else {
-        return;
     }
-    if (!__Exits[dir]["locked"]) {
+    if (dir && !__Exits[dir]["locked"]) {
         __Exits[dir]["open"] = open;
     }
 }
