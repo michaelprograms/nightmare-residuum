@@ -347,6 +347,7 @@ void set_locked (string str, int locked) {
 int handle_open (object ob, string str) {
     mapping doors = map_mapping(filter_mapping(__Exits, (: $2["door"] :)), (: $2["door"] :));
     string dir, door;
+    int result = 0;
 
     if (member_array(str, values(doors)) > -1) {        // doors
         door = str;
@@ -354,25 +355,25 @@ int handle_open (object ob, string str) {
     } else if (member_array(str = format_exit_verbose(str), keys(doors)) > -1) {   // exits
         dir = str;
         door = __Exits[dir]["door"];
-    } else {
-        return 0;
     }
-
-    if (__Exits[dir]["locked"]) {
-        message("action", "The " + door + " to the " + dir + " is locked.", ob);
-        message("action", ob->query_cap_name() + " attempts to open the " + door + " to the " + dir + ".", environment(ob), ob);
-        return -1;
-    } else if (__Exits[dir]["open"]) {
-        message("action", "The " + door + " to the " + dir + " is already open.", ob);
-        return -1;
-    } else {
-        message("action", "You open the " + door + " to the " + dir + ".", ob);
-        message("action", ob->query_cap_name() + " opens the " + door + " to the " + dir + ".", environment(ob), ob);
-        __Exits[dir]["open"] = 1;
-        __Exits[dir]["room"]->set_open(door, 1);
-        message("action", "The " + door + " to the " + format_exit_reverse(dir) + " opens.", load_object(__Exits[dir]["room"]));
-        return 1;
+    if (dir && door) {
+        if (__Exits[dir]["locked"]) {
+            message("action", "The " + door + " to the " + dir + " is locked.", ob);
+            message("action", ob->query_cap_name() + " attempts to open the " + door + " to the " + dir + ".", environment(ob), ob);
+            result = -1;
+        } else if (__Exits[dir]["open"]) {
+            message("action", "The " + door + " to the " + dir + " is already open.", ob);
+            result = -1;
+        } else {
+            message("action", "You open the " + door + " to the " + dir + ".", ob);
+            message("action", ob->query_cap_name() + " opens the " + door + " to the " + dir + ".", environment(ob), ob);
+            __Exits[dir]["open"] = 1;
+            __Exits[dir]["room"]->set_open(door, 1);
+            message("action", "The " + door + " to the " + format_exit_reverse(dir) + " opens.", load_object(__Exits[dir]["room"]));
+            result = 1;
+        }
     }
+    return result;
 }
 
 /**
