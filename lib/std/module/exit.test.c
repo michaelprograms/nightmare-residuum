@@ -495,6 +495,10 @@ void test_doors () {
         // already open
         assert_equal(testOb->handle_open(this_object(), "door"), -1),
         assert_equal(r1->handle_open(this_object(), "door"), -1),
+
+        // close and open testOb door by direction
+        assert_equal(testOb->handle_close(this_object(), "west"), 1),
+        assert_equal(testOb->handle_open(this_object(), "west"), 1),
     }) :));
 
     if (r1) destruct(r1);
