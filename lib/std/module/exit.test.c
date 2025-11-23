@@ -469,6 +469,8 @@ void test_doors () {
         assert_equal(testOb->handle_unlock(this_object(), "door", "test key"), -1),
         // open r1 door
         assert_equal(r1->handle_open(this_object(), "door"), 1),
+        // exit already open
+        assert_equal(r1->handle_open(this_object(), "east"), -1),
         // already open
         assert_equal(r1->handle_open(this_object(), "door"), -1),
         assert_equal(testOb->handle_open(this_object(), "door"), -1),

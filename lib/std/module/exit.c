@@ -349,10 +349,10 @@ int handle_open (object ob, string str) {
     string dir, door;
     int result = 0;
 
-    if (member_array(str, values(doors)) > -1) {        // doors
+    if (member_array(str, values(doors)) > -1) { // doors
         door = str;
         dir = query_door_dir(door);
-    } else if (member_array(str = format_exit_verbose(str), keys(doors)) > -1) {   // exits
+    } else if (member_array(str = format_exit_verbose(str), keys(doors)) > -1) { // exits
         dir = str;
         door = __Exits[dir]["door"];
     }
