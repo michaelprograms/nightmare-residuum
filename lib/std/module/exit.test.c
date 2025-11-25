@@ -462,6 +462,9 @@ void test_doors () {
         // already locked
         assert_equal(r1->handle_lock(this_object(), "door", "test key"), -1),
         assert_equal(testOb->handle_lock(this_object(), "door", "test key"), -1),
+        // can't open because locked
+        assert_equal(testOb->handle_open(this_object(), "door"), -1),
+        assert_equal(r1->handle_open(this_object(), "door"), -1),
         // unlock r1 door
         assert_equal(r1->handle_unlock(this_object(), "door", "test key"), 1),
         // already unlocked
