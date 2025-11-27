@@ -394,7 +394,6 @@ int handle_close (object ob, string str) {
         dir = str;
         door = __Exits[dir]["door"];
     }
-
     if (dir && door) {
         if (!__Exits[dir]["open"]) {
             message("action", "The " + door + " to the " + dir + " is already closed.", ob);
@@ -429,7 +428,6 @@ int handle_lock (object ob, string str, string key) {
         dir = str;
         door = __Exits[dir]["door"];
     }
-
     if (dir && door) {
         if (!__Exits[dir]["key"]) {
             message("action", "The " + door + " to the " + dir + " does not have a lock.", ob);
@@ -461,32 +459,32 @@ int handle_lock (object ob, string str, string key) {
 int handle_unlock (object ob, string str, string key) {
     mapping doors = map_mapping(filter_mapping(__Exits, (: $2["door"] :)), (: $2["door"] :));
     string dir, door;
-
+    int result = 0;
     if (member_array(str, values(doors)) > -1) {        // doors
         door = str;
         dir = query_door_dir(door);
     } else if (member_array(str = format_exit_verbose(str), keys(doors)) > -1) {   // exits
         dir = str;
         door = __Exits[dir]["door"];
-    } else {
-        return 0;
     }
-
-    if (!__Exits[dir]["key"]) {
-        message("action", "The " + door + " to the " + dir + " does not have a lock.", ob);
-        return -1;
-    } else if (__Exits[dir]["open"]) {
-        message("action", "The " + door + " to the " + dir + " cannot be unlocked while open.", ob);
-        return -1;
-    } else if (!__Exits[dir]["locked"]) {
-        message("action", "The " + door + " to the " + dir + " is already unlocked.", ob);
-        return -1;
-    } else if (key == __Exits[dir]["key"]) {
-        message("action", "You unlock the " + door + " to the " + dir + " with a " + key + ".", ob);
-        message("action", ob->query_cap_name() + " unlocks the " + door + " to the " + dir + " with a " + key + ".", environment(ob), ob);
-        __Exits[dir]["locked"] = 0;
-        __Exits[dir]["room"]->set_locked(door, 0);
-        message("action", "The " + door + " to the " + format_exit_reverse(dir) + " clicks unlocked.", load_object(__Exits[dir]["room"]));
-        return 1;
+    if (dir && door) {
+        if (!__Exits[dir]["key"]) {
+            message("action", "The " + door + " to the " + dir + " does not have a lock.", ob);
+            result = -1;
+        } else if (__Exits[dir]["open"]) {
+            message("action", "The " + door + " to the " + dir + " cannot be unlocked while open.", ob);
+            result = -1;
+        } else if (!__Exits[dir]["locked"]) {
+            message("action", "The " + door + " to the " + dir + " is already unlocked.", ob);
+            result = -1;
+        } else if (key == __Exits[dir]["key"]) {
+            message("action", "You unlock the " + door + " to the " + dir + " with a " + key + ".", ob);
+            message("action", ob->query_cap_name() + " unlocks the " + door + " to the " + dir + " with a " + key + ".", environment(ob), ob);
+            __Exits[dir]["locked"] = 0;
+            __Exits[dir]["room"]->set_locked(door, 0);
+            message("action", "The " + door + " to the " + format_exit_reverse(dir) + " clicks unlocked.", load_object(__Exits[dir]["room"]));
+            result = 1;
+        }
     }
+    return result;
 }
