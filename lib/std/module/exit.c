@@ -130,7 +130,7 @@ int query_hidden_exits () {
  */
 mixed handle_go (object ob, string verb, string dir) {
     mapping exit;
-
+    int result = 0;
     dir = format_exit_verbose(dir);
     if (!(exit = __Exits[dir])) {
         if (__Exits["enter " + dir] && !__Exits["out " + dir]) {
@@ -142,28 +142,28 @@ mixed handle_go (object ob, string verb, string dir) {
         }
     }
 
-    if (!exit || environment(ob) != this_object()) {
-        return 0;
-    } else if (exit["before"] && !(evaluate(exit["before"], ob, dir))) {
-        return 0;
-    } else if (exit["room"]) {
-        if ((regexp(exit["room"], "/virtual/")) || (regexp(exit["room"], "#[0-9]+") && find_object(exit["room"])) || (file_size(exit["room"]) > 0)) {
-            if (exit["door"] && !exit["open"]) {
-                message("action", "You bump into the " + exit["door"] + " blocking you from going " + dir + ".", ob);
-                return 0;
+    if (exit && dir) {
+        if (exit["before"] && !(evaluate(exit["before"], ob, dir))) {
+            result = 0;
+        } else if (exit["room"]) {
+            if ((regexp(exit["room"], "/virtual/")) || (regexp(exit["room"], "#[0-9]+") && find_object(exit["room"])) || (file_size(exit["room"]) > 0)) {
+                if (exit["door"] && !exit["open"]) {
+                    message("action", "You bump into the " + exit["door"] + " blocking you from going " + dir + ".", ob);
+                    result = 0;
+                } else {
+                    ob->handle_go(exit["room"], verb, dir, exit["reverse"]);
+                    if (exit["after"]) {
+                        evaluate(exit["after"], ob, dir);
+                    }
+                    result = 1;
+                }
+            } else {
+                message("action", "Something prevents you from going in that direction.", ob);
+                result = 0;
             }
-            ob->handle_go(exit["room"], verb, dir, exit["reverse"]);
-            if (exit["after"]) {
-                evaluate(exit["after"], ob, dir);
-            }
-            return 1;
-        } else {
-            message("action", "Something prevents you from going in that direction.", ob);
-            return 0;
         }
-    } else {
-        return 0;
     }
+    return result;
 }
 
 /* ----- climbs ----- */
