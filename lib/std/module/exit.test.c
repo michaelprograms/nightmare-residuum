@@ -233,7 +233,9 @@ void test_handle_go () {
     }) :));
 
     expect("handle_go doesn't move objects it shouldn't", (: ({
+        // start in room2
         ob->handle_move(r2),
+        // can't move from room1
         assert_equal(r1->handle_go(ob, "walk", "east"), 0),
         assert_equal(sizeof(r1->query_living_contents()), 0),
         assert_equal(sizeof(r2->query_living_contents()), 1),
