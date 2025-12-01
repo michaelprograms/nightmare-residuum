@@ -501,6 +501,8 @@ void test_doors () {
         assert_equal(r1->handle_unlock(this_object(), "door", "test key"), -1),
         // open testOb door
         assert_equal(testOb->handle_open(this_object(), "door"), 1),
+        // already unlocked and opened
+        assert_equal(testOb->handle_unlock(this_object(), "door", "test key"), -1),
         // already open
         assert_equal(testOb->handle_open(this_object(), "door"), -1),
         assert_equal(r1->handle_open(this_object(), "door"), -1),
