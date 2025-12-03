@@ -409,6 +409,9 @@ void test_doors () {
         // try to unlock door with key
         assert_equal(r1->handle_unlock(this_object(), "door", "test key"), -1),
         assert_equal(testOb->handle_unlock(this_object(), "door", "test key"), -1),
+        // try to lock door with key
+        assert_equal(r1->handle_lock(this_object(), "door", "test key"), -1),
+        assert_equal(testOb->handle_lock(this_object(), "door", "test key"), -1),
     }) :));
     expect("lockable doors behave", (: ({
         // setup locked door with key
