@@ -132,7 +132,7 @@ mixed handle_go (object ob, string verb, string dir) {
     mapping exit;
     int result = 0;
     dir = format_exit_verbose(dir);
-    if (environment(ob) == this_object() && !(exit = __Exits[dir])) {
+    if (!(exit = __Exits[dir])) {
         if (__Exits["enter " + dir] && !__Exits["out " + dir]) {
             dir = "enter " + dir;
             exit = __Exits[dir];
@@ -253,7 +253,7 @@ mixed handle_climb (object ob, string verb, string dir) {
         }
     }
 
-    if (!exit || environment(ob) != this_object()) {
+    if (!exit) {
         result = 0;
     } else if (exit["before"] && !(evaluate(exit["before"], ob, dir))) {
         result = 0;
