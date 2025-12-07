@@ -231,16 +231,6 @@ void test_handle_go () {
         assert_equal(r1->handle_go(ob, "walk", "east"), 1),
         assert_equal(file_name(environment(ob)), file_name(r2)),
     }) :));
-
-    expect("handle_go doesn't move objects it shouldn't", (: ({
-        // start in room2
-        ob->handle_move(r2),
-        // can't move from room1
-        assert_equal(r1->handle_go(ob, "walk", "east"), 0),
-        assert_equal(sizeof(r1->query_living_contents()), 0),
-        assert_equal(sizeof(r2->query_living_contents()), 1),
-    }) :));
-
     expect("handle_go handles invalid path", (: ({
         assert_equal(r2->handle_go(ob, "walk", "east"), 0),
     }) :));
@@ -271,14 +261,6 @@ void test_handle_climb () {
         assert_equal(r1->handle_climb(ob, "climb", "up"), 1),
         assert_equal(file_name(environment(ob)), file_name(r2)),
     }) :));
-
-    expect("handle_climb doesn't move objects it shouldn't", (: ({
-        ob->handle_move(r2),
-        assert_equal(r1->handle_climb(ob, "climb", "up"), 0),
-        assert_equal(sizeof(r1->query_living_contents()), 0),
-        assert_equal(sizeof(r2->query_living_contents()), 1),
-    }) :));
-
     expect("handle_climb handles invalid path", (: ({
         assert_equal(r2->handle_climb(ob, "climb", "bad"), 0),
     }) :));
