@@ -211,6 +211,20 @@ void test_exits_before_after () {
 }
 
 void test_handle_go () {
+    testOb->set_exit("up", file_name(testOb));
+    expect("handle_go behaves", (: ({
+        assert_equal(testOb->handle_go(this_object(), "go", "up"), 1),
+    }) :));
+}
+
+void test_handle_climb () {
+    testOb->set_climb("up", file_name(testOb));
+    expect("handle_climb behaves", (: ({
+        assert_equal(testOb->handle_climb(this_object(), "climb", "up"), 1),
+    }) :));
+}
+
+void test_handle_go_old () {
     r1 = new(STD_ROOM);
     r2 = new(STD_ROOM);
     ob = new(STD_NPC);
@@ -240,7 +254,7 @@ void test_handle_go () {
     if (r2) destruct(r2);
 }
 
-void test_handle_climb () {
+void test_handle_climb_room () {
     r1 = new(STD_ROOM);
     r2 = new(STD_ROOM);
     ob = new(STD_NPC);
