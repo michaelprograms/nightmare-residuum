@@ -224,66 +224,6 @@ void test_handle_climb () {
     }) :));
 }
 
-void test_handle_go_old () {
-    r1 = new(STD_ROOM);
-    r2 = new(STD_ROOM);
-    ob = new(STD_NPC);
-
-    r1->set_exit("east", file_name(r2));
-    r2->set_exit("west", file_name(r1));
-    r2->set_exit("east", "/invalid/path.c");
-
-    expect("handle_go moved object", (: ({
-        assert_equal(regexp(r1->query_exit("east"), "/std/room#[0-9]+"), 1),
-        assert_equal(regexp(r2->query_exit("west"), "/std/room#[0-9]+"), 1),
-        assert_equal(sizeof(r1->query_living_contents()), 0),
-        assert_equal(sizeof(r2->query_living_contents()), 0),
-        assert_equal(ob->handle_move(r1), 1),
-        assert_equal(sizeof(r1->query_living_contents()), 1),
-        assert_equal(sizeof(r2->query_living_contents()), 0),
-
-        assert_equal(r1->handle_go(ob, "walk", "east"), 1),
-        assert_equal(file_name(environment(ob)), file_name(r2)),
-    }) :));
-    expect("handle_go handles invalid path", (: ({
-        assert_equal(r2->handle_go(ob, "walk", "east"), 0),
-    }) :));
-
-    if (ob) destruct(ob);
-    if (r1) destruct(r1);
-    if (r2) destruct(r2);
-}
-
-void test_handle_climb_room () {
-    r1 = new(STD_ROOM);
-    r2 = new(STD_ROOM);
-    ob = new(STD_NPC);
-
-    r1->set_climb("up", file_name(r2));
-    r2->set_climb("down", file_name(r1));
-    r2->set_climb("bad", "/invalid/path.c");
-
-    expect("handle_climb moved object", (: ({
-        assert_equal(regexp(r1->query_climb("up"), "/std/room#[0-9]+"), 1),
-        assert_equal(regexp(r2->query_climb("down"), "/std/room#[0-9]+"), 1),
-        assert_equal(sizeof(r1->query_living_contents()), 0),
-        assert_equal(sizeof(r2->query_living_contents()), 0),
-        assert_equal(ob->handle_move(r1), 1),
-        assert_equal(sizeof(r1->query_living_contents()), 1),
-        assert_equal(sizeof(r2->query_living_contents()), 0),
-
-        assert_equal(r1->handle_climb(ob, "climb", "up"), 1),
-        assert_equal(file_name(environment(ob)), file_name(r2)),
-    }) :));
-    expect("handle_climb handles invalid path", (: ({
-        assert_equal(r2->handle_climb(ob, "climb", "bad"), 0),
-    }) :));
-
-    if (ob) destruct(ob);
-    if (r1) destruct(r1);
-    if (r2) destruct(r2);
-}
-
 void test_query_defaults () {
     r1 = new(STD_ROOM);
     r2 = new(STD_ROOM);
