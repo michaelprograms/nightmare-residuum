@@ -212,13 +212,23 @@ void test_exits_before_after () {
 
 void test_handle_go () {
     testOb->set_exit("up", file_name(testOb));
+    testOb->set_exit("enter north", file_name(testOb));
+    testOb->set_exit("out south", file_name(testOb));
+    testOb->set_exit("east", file_name(testOb), 0, 0, 0, "door", 0, 0);
+
     expect("handle_go behaves", (: ({
         assert_equal(testOb->handle_go(this_object(), "go", "up"), 1),
+
+        assert_equal(testOb->handle_go(this_object(), "go", "north"), 1),
+        assert_equal(testOb->handle_go(this_object(), "go", "enter north"), 1),
+        assert_equal(testOb->handle_go(this_object(), "go", "south"), 1),
+        assert_equal(testOb->handle_go(this_object(), "go", "out south"), 1),
     }) :));
 }
 
 void test_handle_climb () {
     testOb->set_climb("up", file_name(testOb));
+
     expect("handle_climb behaves", (: ({
         assert_equal(testOb->handle_climb(this_object(), "climb", "up"), 1),
     }) :));
