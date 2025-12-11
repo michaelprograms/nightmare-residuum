@@ -174,7 +174,7 @@ nosave private object r2;
 /** @type {STD_NPC} ob */
 nosave private object ob;
 
-// TODO: Test this through testOb and mocks
+// TODO: Test this through testOb
 void test_exits_before_after () {
     checkBefore = 0;
     checkAfter = 0;
@@ -211,18 +211,27 @@ void test_exits_before_after () {
 }
 
 void test_handle_go () {
+    // valid exits
     testOb->set_exit("up", file_name(testOb));
     testOb->set_exit("enter north", file_name(testOb));
     testOb->set_exit("out south", file_name(testOb));
     testOb->set_exit("east", file_name(testOb), 0, 0, 0, "door", 0, 0);
+    // blocked exits
+    testOb->set_exit("west", file_name(testOb), 0, 0, 0, "door", "key", 1);
+    testOb->set_exit("down", file_name(testOb), (: 0 :));
+
 
     expect("handle_go behaves", (: ({
+        // valid exits
         assert_equal(testOb->handle_go(this_object(), "go", "up"), 1),
-
         assert_equal(testOb->handle_go(this_object(), "go", "north"), 1),
         assert_equal(testOb->handle_go(this_object(), "go", "enter north"), 1),
         assert_equal(testOb->handle_go(this_object(), "go", "south"), 1),
         assert_equal(testOb->handle_go(this_object(), "go", "out south"), 1),
+
+        // door blocks exit
+        assert_equal(testOb->handle_go(this_object(), "go", "west"), 0),
+        assert_equal(testOb->handle_go(this_object(), "go", "down"), 0),
     }) :));
 }
 
