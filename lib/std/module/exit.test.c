@@ -219,6 +219,8 @@ void test_handle_go () {
     // blocked exits
     testOb->set_exit("west", file_name(testOb), 0, 0, 0, "door", "key", 1);
     testOb->set_exit("down", file_name(testOb), (: 0 :));
+    // invalid exits
+    testOb->set_exit("southeast", "invalid path");
 
 
     expect("handle_go behaves", (: ({
@@ -232,6 +234,9 @@ void test_handle_go () {
         // door blocks exit
         assert_equal(testOb->handle_go(this_object(), "go", "west"), 0),
         assert_equal(testOb->handle_go(this_object(), "go", "down"), 0),
+
+        // invalid exit
+        assert_equal(testOb->handle_go(this_object(), "go", "southeast"), 0),
     }) :));
 }
 
