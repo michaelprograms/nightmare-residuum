@@ -211,40 +211,46 @@ void test_exits_before_after () {
 }
 
 void test_handle_go () {
-    // valid exits
+    // valid go
     testOb->set_exit("up", file_name(testOb));
     testOb->set_exit("enter north", file_name(testOb));
     testOb->set_exit("out south", file_name(testOb));
     testOb->set_exit("east", file_name(testOb), 0, 0, 0, "door", 0, 0);
-    // blocked exits
+    // blocked go
     testOb->set_exit("west", file_name(testOb), 0, 0, 0, "door", "key", 1);
     testOb->set_exit("down", file_name(testOb), (: 0 :));
-    // invalid exits
+    // invalid go
     testOb->set_exit("southeast", "invalid path");
 
-
     expect("handle_go behaves", (: ({
-        // valid exits
+        // valid go
         assert_equal(testOb->handle_go(this_object(), "go", "up"), 1),
         assert_equal(testOb->handle_go(this_object(), "go", "north"), 1),
         assert_equal(testOb->handle_go(this_object(), "go", "enter north"), 1),
         assert_equal(testOb->handle_go(this_object(), "go", "south"), 1),
         assert_equal(testOb->handle_go(this_object(), "go", "out south"), 1),
 
-        // door blocks exit
+        // blocked go
         assert_equal(testOb->handle_go(this_object(), "go", "west"), 0),
         assert_equal(testOb->handle_go(this_object(), "go", "down"), 0),
 
-        // invalid exit
+        // invalid go
         assert_equal(testOb->handle_go(this_object(), "go", "southeast"), 0),
     }) :));
 }
 
 void test_handle_climb () {
+    // valid climb
     testOb->set_climb("up", file_name(testOb));
+    // blocked climb
+    testOb->set_exit("down", file_name(testOb), (: 0 :));
 
     expect("handle_climb behaves", (: ({
+        // valid climb
         assert_equal(testOb->handle_climb(this_object(), "climb", "up"), 1),
+
+        // blocked climb
+        assert_equal(testOb->handle_climb(this_object(), "climb", "down"), 0),
     }) :));
 }
 
