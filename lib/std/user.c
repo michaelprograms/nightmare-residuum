@@ -125,7 +125,7 @@ void set_terminal (string key, mixed value) {
 }
 
 nomask varargs void quit_character (int destructing) {
-    message("system", "Reality "+(random(2)?"explodes into an im":"implodes into an ex")+"plosion of irreality.\n", this_object());
+    message("system", "Reality " + (random(2) ? "explodes into an im" : "implodes into an ex") + "plosion of irreality.\n", this_object());
     character_exit();
     flush_messages();
     if (!destructing) {
