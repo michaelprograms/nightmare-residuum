@@ -244,16 +244,6 @@ mixed handle_climb (object ob, string verb, string dir) {
     dir = format_exit_verbose(dir);
 
     if (!(exit = __Climbs[dir])) {
-        if (__Climbs["enter " + dir] && !__Climbs["out " + dir]) {
-            dir = "enter " + dir;
-            exit = __Climbs[dir];
-        } else if (__Climbs["out " + dir] && !__Climbs["enter " + dir]) {
-            dir = "out " + dir;
-            exit = __Climbs[dir];
-        }
-    }
-
-    if (!exit) {
         result = 0;
     } else if (exit["before"] && !(evaluate(exit["before"], ob, dir))) {
         result = 0;
