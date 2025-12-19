@@ -244,6 +244,8 @@ void test_handle_climb () {
     testOb->set_climb("up", file_name(testOb));
     // blocked climb
     testOb->set_climb("down", file_name(testOb), (: 0 :));
+    // invalid climb
+    testOb->set_climb("bad", "invalid path");
 
     expect("handle_climb behaves", (: ({
         // valid climb
@@ -254,6 +256,8 @@ void test_handle_climb () {
 
         // invalid climb
         assert_equal(testOb->handle_climb(this_object(), "climb", "invalid"), 0),
+        assert_equal(testOb->handle_climb(this_object(), "climb", "bad"), 0),
+
     }) :));
 }
 
