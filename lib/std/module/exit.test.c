@@ -212,7 +212,7 @@ void test_exits_before_after () {
 
 void test_handle_go () {
     // valid go
-    testOb->set_exit("up", file_name(testOb));
+    testOb->set_exit("up", file_name(testOb), (: 1 :), (: 1 :));
     testOb->set_exit("enter north", file_name(testOb));
     testOb->set_exit("out south", file_name(testOb));
     testOb->set_exit("east", file_name(testOb), 0, 0, 0, "door", 0, 0);
@@ -241,7 +241,7 @@ void test_handle_go () {
 
 void test_handle_climb () {
     // valid climb
-    testOb->set_climb("up", file_name(testOb));
+    testOb->set_climb("up", file_name(testOb), (: 1 :), (: 1 :));
     // blocked climb
     testOb->set_climb("down", file_name(testOb), (: 0 :));
     // invalid climb
