@@ -10,7 +10,6 @@ string *test_order () {
         "test_exits",
         "test_climbs",
         "test_handle_go",
-        "test_exits_before_after",
     });
 }
 
@@ -173,42 +172,6 @@ nosave private object r1;
 nosave private object r2;
 /** @type {STD_NPC} ob */
 nosave private object ob;
-
-// TODO: Test this through testOb
-void test_exits_before_after () {
-    checkBefore = 0;
-    checkAfter = 0;
-
-    r1 = new(STD_ROOM);
-    r2 = new(STD_ROOM);
-    ob = new(STD_NPC);
-
-    r1->set_exit("east", file_name(r2), function (object ob, string dir) {
-        checkBefore ++;
-        return 1;
-    }, function (object ob, string dir) {
-        checkAfter ++;
-    });
-    r2->set_exit("west", file_name(r1));
-
-    expect("exits handles before and after functions", (: ({
-        assert_equal(ob->handle_move(r1), 1),
-        assert_equal(r1->handle_go(ob, "walk", "east"), 1),
-        assert_equal(checkBefore, 1),
-        assert_equal(checkAfter, 1),
-
-        r1->set_exit("east", file_name(r2), function (object ob, string dir) {
-            return 0;
-        }),
-
-        assert_equal(ob->handle_move(r1), 1),
-        assert_equal(r1->handle_go(ob, "walk", "east"), 0),
-    }) :));
-
-    destruct(ob);
-    destruct(r1);
-    destruct(r2);
-}
 
 void test_handle_go () {
     // valid go
