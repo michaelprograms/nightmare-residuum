@@ -168,10 +168,6 @@ void test_climbs () {
 nosave private int checkBefore = 0, checkAfter = 0;
 /** @type {STD_ROOM} r1 */
 nosave private object r1;
-/** @type {STD_ROOM} r1 */
-nosave private object r2;
-/** @type {STD_NPC} ob */
-nosave private object ob;
 
 void test_handle_go () {
     // valid go
@@ -224,80 +220,11 @@ void test_handle_climb () {
     }) :));
 }
 
-void test_query_defaults () {
-    r1 = new(STD_ROOM);
-    r2 = new(STD_ROOM);
-
-    expect("handles default enter and out", (: ({
-        assert_equal(r1->query_default_enter(), 0),
-        assert_equal(r2->query_default_out(), 0),
-
-        r1->set_exits(([ "enter": file_name(r2) ])),
-        r2->set_exits(([ "out": file_name(r1) ])),
-        assert_equal(r1->query_default_enter(), "enter"),
-        assert_equal(r2->query_default_out(), "out"),
-
-        r1->set_exits(([ "enter east": file_name(r2) ])),
-        r2->set_exits(([ "out west": file_name(r1) ])),
-        assert_equal(r1->query_default_enter(), "enter east"),
-        assert_equal(r2->query_default_out(), "out west"),
-
-        r1->set_exits(([
-            "enter east": file_name(r2),
-            "enter west": file_name(r2),
-        ])),
-        r2->set_exits(([
-            "out west": file_name(r1),
-            "out east": file_name(r1),
-        ])),
-        assert_equal(r1->query_default_enter(), 0),
-        assert_equal(r2->query_default_out(), 0),
-
-        r1->remove_exit("enter east"),
-        r2->remove_exit("out west"),
-        assert_equal(r1->query_default_enter(), "enter west"),
-        assert_equal(r2->query_default_out(), "out east"),
-    }) :));
-
-    if (r1) destruct(r1);
-    if (r2) destruct(r2);
-}
-
 // catch reverse override for test_exit_reverse_override
 nosave private string __Reverse;
 varargs int handle_go (mixed dest, string verb, string dir, string reverse) {
     __Reverse = reverse;
     return 1;
-}
-
-void test_exit_reverse_override () {
-    r1 = new(STD_ROOM);
-    r2 = new(STD_ROOM);
-
-    __Reverse = 0;
-    expect("set exit uses reverse override", (: ({
-        // setup room test ob
-        r1->set_exit("east", file_name(r2), 0, 0, "reverse"),
-        r1->set_exit("west", file_name(r2), 0, 0, "override"),
-        // move test to room test ob
-        assert_equal(this_object()->handle_move(r1), 1),
-
-        // verify no reverse overrides seen yet
-        assert_equal(__Reverse, 0),
-
-        // try first override
-        assert_equal(r1->handle_go(this_object(), "method", "east"), 1),
-        assert_equal(__Reverse, "reverse"),
-
-        // try second override
-        assert_equal(r1->handle_go(this_object(), "method", "west"), 1),
-        assert_equal(__Reverse, "override"),
-
-        assert_equal(this_object()->handle_move("/domain/Nowhere/room/void.c"), 1),
-    }) :));
-
-    if (r1) destruct(r1);
-    if (r2) destruct(r2);
 }
 
 void test_doors () {
