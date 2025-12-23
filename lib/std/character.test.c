@@ -79,3 +79,32 @@ void test_immortal () {
         assert_equal(rmdir("/realm/testcharacter"), 1),
     }) :));
 }
+
+nosave private string gmcpName;
+nosave private mapping gmcpData;
+void gmcp_send_update(string n, mapping m) {
+    gmcpName = n;
+    gmcpData = m;
+}
+void test_gmcp () {
+
+    expect("gmcp vitals request behaves", (: ({
+        // no user, should fail
+        testOb->gmcp_update_vitals(),
+        assert_equal(gmcpName, UNDEFINED),
+        assert_equal(gmcpData, UNDEFINED),
+
+        // user, should succeed
+        testOb->set_user(this_object()),
+        testOb->gmcp_update_vitals(),
+        assert_equal(gmcpName, "Char.Vitals"),
+        assert_equal(gmcpData, ([
+            "hp": 0,
+            "maxhp": 0,
+            "sp": 0,
+            "maxsp": 0,
+            "mp": 0,
+            "maxmp": 0,
+        ])),
+    }) :));
+}
