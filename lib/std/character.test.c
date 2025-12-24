@@ -22,6 +22,16 @@ void test_user () {
     }) :));
 }
 
+void test_account () {
+    expect("account is settable and queryable", (: ({
+        assert_equal(testOb->query_account(), UNDEFINED),
+        testOb->set_account("test account"),
+        assert_equal(testOb->query_account(), "test account"),
+        testOb->set_account(0),
+        assert_equal(testOb->query_account(), 0),
+    }) :));
+}
+
 void test_times () {
     expect("user has a created time", (: ({
         // creation time is now
@@ -87,7 +97,6 @@ void gmcp_send_update(string n, mapping m) {
     gmcpData = m;
 }
 void test_gmcp () {
-
     expect("gmcp vitals request behaves", (: ({
         // no user, should fail
         testOb->gmcp_update_vitals(),
