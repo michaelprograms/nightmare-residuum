@@ -97,6 +97,9 @@ void gmcp_send_update(string n, mapping m) {
     gmcpData = m;
 }
 void test_gmcp () {
+    testOb->set_level(1);
+    testOb->set_species("human");
+
     expect("gmcp vitals request behaves", (: ({
         // no user, should fail
         testOb->gmcp_update_vitals(),
@@ -107,13 +110,23 @@ void test_gmcp () {
         testOb->set_user(this_object()),
         testOb->gmcp_update_vitals(),
         assert_equal(gmcpName, "Char.Vitals"),
-        assert_equal(gmcpData, ([
-            "hp": 0,
-            "maxhp": 0,
-            "sp": 0,
-            "maxsp": 0,
-            "mp": 0,
-            "maxmp": 0,
-        ])),
+        assert_equal(gmcpData, ([ "hp": 22, "maxhp": 22, "maxmp": 12, "maxsp": 12, "mp": 12, "sp": 12 ])),
+
+        assert_equal(gmcpData = UNDEFINED, UNDEFINED),
+        // vitals functions call gmcp
+        testOb->set_hp(5),
+        assert_equal(gmcpData, ([ "hp": 5, "maxhp": 22, "maxmp": 12, "maxsp": 12, "mp": 12, "sp": 12 ])),
+        testOb->add_hp(5),
+        assert_equal(gmcpData, ([ "hp": 10, "maxhp": 22, "maxmp": 12, "maxsp": 12, "mp": 12, "sp": 12 ])),
+
+        testOb->set_sp(5),
+        assert_equal(gmcpData, ([ "hp": 10, "maxhp": 22, "maxmp": 12, "maxsp": 12, "mp": 12, "sp": 5 ])),
+        testOb->add_sp(5),
+        assert_equal(gmcpData, ([ "hp": 10, "maxhp": 22, "maxmp": 12, "maxsp": 12, "mp": 12, "sp": 10 ])),
+
+        testOb->set_mp(5),
+        assert_equal(gmcpData, ([ "hp": 10, "maxhp": 22, "maxmp": 12, "maxsp": 12, "mp": 5, "sp": 10 ])),
+        testOb->add_mp(5),
+        assert_equal(gmcpData, ([ "hp": 10, "maxhp": 22, "maxmp": 12, "maxsp": 12, "mp": 10, "sp": 10 ])),
     }) :));
 }
