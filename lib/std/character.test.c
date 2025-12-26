@@ -130,3 +130,22 @@ void test_gmcp () {
         assert_equal(gmcpData, ([ "hp": 10, "maxhp": 22, "maxmp": 12, "maxsp": 12, "mp": 10, "sp": 10 ])),
     }) :));
 }
+
+void test_go () {
+    object r1 = new(STD_ROOM);
+    object r2 = new(STD_ROOM);
+
+    r1->set_exit("east", file_name(r2));
+    r2->set_exit("west", file_name(r1));
+
+    testOb->set_name("Test");
+    testOb->set_user(this_object());
+
+    expect("character can go", (: ({
+        assert_equal(testOb->handle_move($(r1)), 1),
+        assert_equal(testOb->handle_go(base_name($(r2)), "walk", "east", ), 1),
+    }) :));
+
+    if (r1) destruct(r1);
+    if (r2) destruct(r2);
+}
