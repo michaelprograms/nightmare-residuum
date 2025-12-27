@@ -72,3 +72,22 @@ void test_parser_applies () {
         assert_equal(testOb->indirect_inject_obj_into_liv(), 1),
     }) :));
 }
+
+void test_heart_beat() {
+    object r = new(STD_ROOM);
+
+    testOb->set_species("human");
+    testOb->set_level(10);
+
+    expect("living heart beat behaves", (: ({
+        assert_equal(testOb->handle_move($(r)), 1),
+
+        assert_equal(testOb->query_hp() == testOb->query_max_hp(), 1),
+
+        testOb->heart_beat(),
+
+        assert_equal(testOb->query_hp() <= testOb->query_max_hp(), 1),
+    }) :));
+
+    if (r) destruct(r);
+}
