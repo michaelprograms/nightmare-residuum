@@ -73,7 +73,7 @@ void test_parser_applies () {
     }) :));
 }
 
-void test_heart_beat() {
+void test_heart_beat () {
     object r = new(STD_ROOM);
 
     testOb->set_species("human");
