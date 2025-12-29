@@ -68,9 +68,22 @@ void test_level () {
 }
 
 void test_parser_applies () {
+    object r = new(STD_ROOM);
+
     expect("inject parser apply behaves", (: ({
         assert_equal(testOb->indirect_inject_obj_into_liv(), 1),
     }) :));
+
+    expect("look at living apply behaves", (: ({
+        // same environment (no environment)
+        assert_equal(testOb->direct_look_at_liv(), 1),
+
+        // different environments (one no env, one room)
+        assert_equal(testOb->handle_move($(r)), 1),
+        assert_equal(testOb->direct_look_at_liv(), 0),
+    }) :));
+
+    if (r) destruct(r);
 }
 
 void test_heart_beat () {
