@@ -104,3 +104,20 @@ void test_heart_beat () {
 
     if (r) destruct(r);
 }
+
+void test_go () {
+    object r1 = new(STD_ROOM);
+    object r2 = new(STD_ROOM);
+
+    r1->set_exit("east", base_name(r2));
+    r2->set_exit("west", base_name(r1));
+
+    expect("handle_go behaves", (: ({
+        assert_equal(testOb->handle_move($(r1)), 1),
+
+        assert_equal(testOb->handle_go($(r2), "go", "east"), 1),
+    }) :));
+
+    if (r1) destruct(r1);
+    if (r2) destruct(r2);
+}
