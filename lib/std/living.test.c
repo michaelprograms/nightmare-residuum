@@ -113,9 +113,17 @@ void test_go () {
     r2->set_exit("west", base_name(r1));
 
     expect("handle_go behaves", (: ({
+        // move to object
         assert_equal(testOb->handle_move($(r1)), 1),
-
         assert_equal(testOb->handle_go($(r2), "go", "east"), 1),
+
+        // move to string path
+        assert_equal(testOb->handle_move($(r1)), 1),
+        assert_equal(testOb->handle_go(base_name($(r2)), "go", "east"), 1),
+
+        // catch bad move
+        assert_equal(testOb->handle_move($(r1)), 1),
+        assert_catch((: testOb->handle_go(0, "go", "east") :), "*Bad argument 1 to living->handle_go\n"),
     }) :));
 
     if (r1) destruct(r1);
