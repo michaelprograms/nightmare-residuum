@@ -77,10 +77,12 @@ void test_parser_applies () {
     expect("look at living apply behaves", (: ({
         // same environment (no environment)
         assert_equal(testOb->direct_look_at_liv(), 1),
+        assert_equal(testOb->direct_look_liv(), 1),
 
         // different environments (one no env, one room)
         assert_equal(testOb->handle_move($(r)), 1),
         assert_equal(testOb->direct_look_at_liv(), 0),
+        assert_equal(testOb->direct_look_liv(), 0),
     }) :));
 
     if (r) destruct(r);
