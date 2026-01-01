@@ -18,7 +18,7 @@ void command (string input, mapping flags) {
     int t = rusage()["utime"] + rusage()["stime"];
 
     object *livs = filter(objects(), (:$1 && $1->is_living():));
-    object *rooms = filter(objects(), (:$1 && $1->is_room():));
+    object *rooms = objects((: member_array("/std/room.c", deep_inherit_list($1)) > -1 :));
     object *obs = objects() - livs - rooms;
     int totalObs = sizeof(obs);
     int totalRooms = sizeof(rooms);
@@ -26,7 +26,7 @@ void command (string input, mapping flags) {
     int totalAll = totalObs + totalRooms + totalLivs;
     int nObsLoaded = sizeof(filter(obs, (:$1 && !environment($1) && !regexp(file_name($1), "#"):)));
     int nObsCloned = sizeof(filter(obs, (:$1 && environment($1) && regexp(file_name($1), "#"):)));
-    object *obsLeaked = filter(obs, (:$1 && !environment($1) && regexp(file_name($1), "#") && base_name($1) != "/secure/std/login":)); // exclude login object
+    object *obsLeaked = filter(obs, (:$1 && !environment($1) && regexp(file_name($1), "#") && base_name($1) != "/std/user":)); // exclude login object
     int nLivsLoaded = sizeof(filter(livs, (:$1 && !environment($1) && !regexp(file_name($1), "#"):)));
     int nLivsCloned = sizeof(filter(livs, (:$1 && environment($1) && regexp(file_name($1), "#"):)));
     object *livsLeaked = filter(livs, (:$1 && !environment($1) && regexp(file_name($1), "#"):));
@@ -45,7 +45,6 @@ void command (string input, mapping flags) {
     if (input == "objects" && sizeof(obsLeaked) > 0) {
         write("\nDangling objects:\n");
         for (int i = 0; i < sizeof(obsLeaked); i ++) {
-            // object->create sets "spawned_by" property containing previous_object(-1) list
             message("no wrap", sprintf("%-4s%O", ""+i, obsLeaked[i]), this_user());
         }
     }
@@ -64,7 +63,7 @@ void command (string input, mapping flags) {
 
     // calculate total time
     t = rusage()["utime"] + rusage()["stime"] - t;
-    write("Done! (%^ORANGE%^"+t+" ms%^RESET%^)");
+    write("Done! (%^ORANGE%^"+t+" ms%^RESET%^)\n");
 }
 
 void help() {
