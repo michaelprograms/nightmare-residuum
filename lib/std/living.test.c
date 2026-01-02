@@ -1,4 +1,6 @@
 inherit M_TEST;
+inherit M_CONTAINER;
+
 /**
  * @var {"/std/living"} testOb
  */
@@ -69,6 +71,7 @@ void test_level () {
 
 void test_parser_applies () {
     object r = new(STD_ROOM);
+    object ob = new(STD_OBJECT);
 
     expect("inject parser apply behaves", (: ({
         assert_equal(testOb->indirect_inject_obj_into_liv(), 1),
@@ -83,6 +86,13 @@ void test_parser_applies () {
         assert_equal(testOb->handle_move($(r)), 1),
         assert_equal(testOb->direct_look_at_liv(), 0),
         assert_equal(testOb->direct_look_liv(), 0),
+    }) :));
+
+    expect("give obj to living behaves", (: ({
+        assert_equal(testOb->indirect_give_obj_to_liv($(ob), this_object(), 0, 0), 1),
+
+        assert_equal($(ob)->handle_move(this_object()), 1),
+        assert_equal(testOb->indirect_give_obj_to_liv($(ob), this_object(), 0, 0), "You already have that."),
     }) :));
 
     if (r) destruct(r);

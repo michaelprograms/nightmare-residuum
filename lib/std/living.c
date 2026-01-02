@@ -16,7 +16,6 @@ inherit "/std/living/stats.c";
 inherit "/std/living/status.c";
 inherit "/std/living/vitals.c";
 
-
 int is_living () {
     return 1;
 }
