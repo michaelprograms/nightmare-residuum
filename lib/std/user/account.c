@@ -204,6 +204,7 @@ void account_autojoin (int attempt) {
     }
     if (attempt >= 5) {
         account_select_character(name);
+        autojoining = 0;
     } else {
         write("Autojoining as "+character["name"]+" in "+n+" second"+(n > 1 ? "s" : "")+"...\n");
         this_object()->input_prompt();
@@ -246,7 +247,6 @@ private void display_account_menu () {
             if (sizeof(__Settings["autojoin"])) {
                 mapping character = query_character_by_name(__Settings["autojoin"]);
                 if (character) {
-                    write(identify(character));
                     autojoinBlurb = "Automatically joining as " + character["name"] + " after 5 seconds.";
                 } else {
                     autojoinBlurb = "Automatically join as the named character after a 5 second delay.";
