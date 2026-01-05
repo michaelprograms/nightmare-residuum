@@ -121,6 +121,10 @@ void test_account_characters () {
         assert_equal(tmpCharacter["deleted"] = 1, 1),
         assert_equal(testOb->query_character_by_name("tester")["deleted"], 0),
 
+        // nothing to update
+        testOb->update_character_data(UNDEFINED), // mock data functions above
+
+        // updates character
         testOb->update_character_data(this_object()), // mock data functions above
         assert_equal(testOb->query_character_by_name("tester")["deleted"], 0),
         assert_equal(testOb->query_character_by_name("tester")["species"], "human"),
