@@ -454,6 +454,7 @@ protected nomask varargs void account_input (int state, mixed extra, string inpu
         case STATE_ACCOUNT_MENU:
             if(autojoining) {
                 write("Autojoin canceled.\n");
+                autojoining = 0;
                 remove_call_out();
             }
             if (!input || input == "" || !(input = lower_case(input))) {
@@ -488,7 +489,10 @@ protected nomask varargs void account_input (int state, mixed extra, string inpu
                 if (input == "off") {
                     __Settings["autojoin"] = "";
                 } else if (name) {
-                    // TODO: verify name exists on account
+                    if (member_array(name, query_character_names()) == -1) {
+                        write("Invalid character selection for autojoin.\n");
+                        return display_account_menu();
+                    }
                     // TODO: character's real name here
                     write("Autojoin set to character '" + name + "'.\n");
                     __Settings["autojoin"] = name;
