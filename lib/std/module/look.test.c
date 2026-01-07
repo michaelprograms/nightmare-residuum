@@ -24,6 +24,7 @@ void test_looks () {
         assert_equal(testOb->query_look("exam"), "Exam."),
         assert_equal(testOb->query_look("test"), "Test."),
         assert_equal(testOb->query_look("quiz"), "Quiz."),
+        assert_equal(testOb->query_look(UNDEFINED), 0),
 
         testOb->remove_look("quiz"),
         assert_equal(testOb->query_looks(), ({ "exam", "test" })),
@@ -42,6 +43,9 @@ void test_looks () {
         assert_equal(testOb->query_look("stone"), "Rocks and stones."),
         assert_equal(testOb->query_look("rocks"), "Rocks and stones."),
         assert_equal(testOb->query_look("stones"), "Rocks and stones."),
+
+        assert_catch((: testOb->set_look(UNDEFINED, UNDEFINED) :), "*Bad argument 1 to look->set_look\n"),
+        assert_catch((: testOb->set_look("bad", UNDEFINED) :), "*Bad argument 2 to look->set_look\n"),
     }) :));
 }
 
