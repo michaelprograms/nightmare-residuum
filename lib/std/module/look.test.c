@@ -10,6 +10,12 @@ string *test_order () {
 }
 
 void test_looks () {
+    expect("null looks are initialized", (: ({
+        assert_equal(testOb->query_looks(), ({ })),
+        store_variable("__Looks", UNDEFINED, testOb),
+        assert_equal(testOb->query_looks(), ({ })),
+    }) :));
+
     expect("look handles setting, querying, and removing", (: ({
         assert_equal(testOb->query_looks(), ({ })),
         testOb->set_look("test", "Test."),

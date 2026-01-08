@@ -1,4 +1,4 @@
-nosave private mapping __Looks = ([ ]);
+nosave mapping __Looks = ([ ]);
 
 private void initialize_looks () {
     if (!mapp(__Looks)) {
@@ -10,9 +10,11 @@ mixed query_look (string look) {
     if (!stringp(look)) {
         return 0;
     }
+    initialize_looks();
     return __Looks[look] || __Looks[look + "s"];
 }
 string *query_looks () {
+    initialize_looks();
     return sort_array(keys(__Looks), 1);
 }
 varargs void set_look (string look, mixed desc) {
