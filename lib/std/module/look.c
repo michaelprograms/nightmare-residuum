@@ -1,5 +1,11 @@
 nosave private mapping __Looks = ([ ]);
 
+private void initialize_looks () {
+    if (!mapp(__Looks)) {
+        __Looks = ([ ]);
+    }
+}
+
 mixed query_look (string look) {
     if (!stringp(look)) {
         return 0;
@@ -17,9 +23,7 @@ varargs void set_look (string look, mixed desc) {
         error("Bad argument 2 to look->set_look");
     }
 
-    if (!mapp(__Looks)) {
-        __Looks = ([ ]);
-    }
+    initialize_looks();
     __Looks[look] = desc;
 }
 void set_looks (mapping looks) {
