@@ -52,6 +52,8 @@ void test_looks () {
 
         assert_catch((: testOb->set_look(UNDEFINED, UNDEFINED) :), "*Bad argument 1 to look->set_look\n"),
         assert_catch((: testOb->set_look("bad", UNDEFINED) :), "*Bad argument 2 to look->set_look\n"),
+        assert_catch((: testOb->set_looks(UNDEFINED) :), "*Bad argument 1 to look->set_looks\n"),
+        assert_catch((: testOb->remove_look(UNDEFINED) :), "*Bad argument 1 to look->remove_look\n"),
     }) :));
 }
 
