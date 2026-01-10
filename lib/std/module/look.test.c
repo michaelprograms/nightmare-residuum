@@ -71,5 +71,9 @@ void test_handle_look () {
         assert_equal(testOb->handle_look("test"), "Test description. 2"),
         assert_equal(LookCounter, 2),
         assert_equal(testOb->handle_look("quiz"), "Quiz description."),
+
+        assert_equal(testOb->handle_look("invalid"), 0),
+
+        assert_catch((: testOb->handle_look(UNDEFINED) :), "*Bad argument 1 to look->handle_look\n"),
     }) :));
 }
