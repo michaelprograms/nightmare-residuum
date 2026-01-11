@@ -134,9 +134,9 @@ void combat_miss_message (object source, object target, mixed weapon) {
 
 #define USELESS_MYMSG ({ "You flop about helplessly.", "You try to look menacing.", "You uselessly dance around." })
 #define USELESS_YOURMSG ({ " flops about helplessly.", " tries to look menacing.", " uselessly dances around." })
+
 /**
- * Display a combat useless message, where the source is unable to
- * initiate an attack.
+ * Display a combat useless message, where the source is unable to initiate an attack.
  *
  * @param {STD_LIVING} source the source of the miss
  */
