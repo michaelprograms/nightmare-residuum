@@ -120,18 +120,34 @@ void combat_heal_message (object source, object target, string limb, int damage)
  * @param {STD_WEAPON|string} weapon the weapon or limb used
  */
 void combat_miss_message (object source, object target, mixed weapon) {
-    string type, name, possessive = SEFUN->possessive(source);
+    string name, possessive = SEFUN->possessive(source);
 
     if (objectp(weapon)) {
-        type = /** @type {STD_WEAPON} */ (weapon)->query_type();
         name = /** @type {STD_WEAPON} */ (weapon)->query_name();
     } else {
-        type = "brawl";
         name = weapon;
     }
     message("combat miss", "You miss " + target->query_cap_name() + " with your " + name + ".", source);
     message("combat miss", source->query_cap_name() + " misses you with " + possessive + " " + name + ".", target);
     message("combat miss", source->query_cap_name() + " misses " + target->query_cap_name() + " with " + possessive + " " + name + ".", environment(source), ({ source, target }));
+}
+
+#define USELESS_MYMSG ({ "You flop about helplessly.", "You try to look menacing.", "You uselessly dance around." })
+#define USELESS_YOURMSG ({ " flops about helplessly.", " tries to look menacing.", " uselessly dances around." })
+/**
+ * Display a combat useless message, where the source is unable to
+ * initiate an attack.
+ *
+ * @param {STD_LIVING} source the source of the miss
+ */
+void combat_useless_message (object source) {
+    object env = environment(source);
+    string mymsg, yourmsg;
+    int i = random(3);
+    mymsg = USELESS_MYMSG[i];
+    yourmsg = source->query_cap_name() + USELESS_YOURMSG[i];
+    message("combat miss", mymsg, source);
+    message("combat miss", yourmsg, env, source);
 }
 
 /**

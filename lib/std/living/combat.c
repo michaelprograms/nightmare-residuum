@@ -52,26 +52,6 @@ object *query_hostiles () {
 
 /* ----- combat ----- */
 
-void handle_combat_miss () {
-    object to = this_object(), env = environment();
-    string mymsg, yourmsg;
-    switch(random(3)) {
-    case 0:
-        mymsg = "You flop about helplessly.";
-        yourmsg = to->query_cap_name()+" flops about helplessly.";
-        break;
-    case 1:
-        mymsg = "You try to look menacing.";
-        yourmsg = to->query_cap_name()+" tries to look menacing.";
-        break;
-    case 2:
-        mymsg = "You uselessly dance around.";
-        yourmsg = to->query_cap_name()+" uselessly dances around.";
-        break;
-    }
-    message("combat miss", mymsg, to);
-    message("combat miss", yourmsg, env, to);
-}
 /**
  * An individual combat hit by this living object to another living target.
  *
@@ -161,7 +141,7 @@ void handle_combat () {
     hits = min + random(max - min + 1);
 
     if (!hits) {
-        handle_combat_miss();
+        combat_useless_message(this_object());
         return;
     }
     for (int h = 0; h < hits; h ++) {
