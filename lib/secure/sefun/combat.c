@@ -138,7 +138,7 @@ void combat_miss_message (object source, object target, mixed weapon) {
 /**
  * Display a combat useless message, where the source is unable to initiate an attack.
  *
- * @param {STD_LIVING} source the source of the miss
+ * @param {STD_LIVING} source the source of the useless attack
  */
 void combat_useless_message (object source) {
     object env = environment(source);
