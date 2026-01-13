@@ -2,14 +2,9 @@ nosave private int __Picks = 0, __MaxPicks = 0;
 nosave private string __Item, __Message;
 
 void reset () {
-    if (!clonep()) {
-        return;
-    }
-    if (__Picks < __MaxPicks) {
+    if (clonep() && __Picks < __MaxPicks) {
         __Picks ++;
-        if (environment()) {
-            message("action", __Message, environment());
-        }
+        message("action", __Message, environment());
     }
 }
 
