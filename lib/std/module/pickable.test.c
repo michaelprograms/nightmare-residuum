@@ -19,6 +19,10 @@ void test_pickable () {
         assert_equal(testOb->query_picks(), 2),
         assert_equal(testOb->query_max_picks(), 2),
         assert_equal(testOb->query_pick_message(), "An item is pickable."),
+
+        assert_catch((: testOb->set_pickable(UNDEFINED, UNDEFINED, UNDEFINED) :), "*Bad argument 1 to pickable->set_pickable\n"),
+        assert_catch((: testOb->set_pickable("item", UNDEFINED, UNDEFINED) :), "*Bad argument 2 to pickable->set_pickable\n"),
+        assert_catch((: testOb->set_pickable("item", 1, UNDEFINED) :), "*Bad argument 3 to pickable->set_pickable\n"),
     }) :));
 
     expect("handles pick and limits", (: ({

@@ -12,7 +12,7 @@ void set_pickable (string item, int max, string message) {
     if (!stringp(item)) {
         error("Bad argument 1 to pickable->set_pickable");
     }
-    if (!intp(max)) {
+    if (!intp(max) || undefinedp(max)) {
         error("Bad argument 2 to pickable->set_pickable");
     }
     if (!stringp(message)) {
