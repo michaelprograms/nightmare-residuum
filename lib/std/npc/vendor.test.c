@@ -64,6 +64,8 @@ void test_vendor_currency () {
 
         testOb->set_vendor_currency("silver"),
         assert_equal(testOb->query_vendor_currency(), "silver"),
+
+        assert_catch((: testOb->set_vendor_currency(UNDEFINED) :), "*Bad argument 1 to vendor->set_vendor_currency\n"),
     }) :));
 }
 
