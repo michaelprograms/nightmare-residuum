@@ -84,6 +84,8 @@ void test_vendor_type () {
 
         testOb->set_vendor_types(({ STD_ARMOR, STD_WEAPON })),
         assert_equal(testOb->query_vendor_types(), ({ STD_ARMOR, STD_WEAPON })),
+
+        assert_catch((: testOb->set_vendor_types(UNDEFINED) :), "*Bad argument 1 to vendor->set_vendor_types\n"),
     }) :));
 }
 
