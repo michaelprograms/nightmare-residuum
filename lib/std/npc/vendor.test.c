@@ -112,12 +112,12 @@ void test_apply_list_verb () {
         // true with same environment
         assert_equal(testOb->handle_move("/domain/Nowhere/room/void.c"), 1),
         assert_equal(this_object()->query_environment_path(), "/domain/Nowhere/room/void.c"),
-        assert_equal(testOb->direct_list_from_obj(testOb), 1),
+        assert_equal(testOb->direct_list_str_from_obj("", testOb), 1),
         // false with no object sent
-        assert_equal(testOb->direct_list_from_obj(), 0),
+        assert_equal(testOb->direct_list_str_from_obj(), 0),
         // false with different environments
         assert_equal(testOb->handle_move($(room)), 1),
-        assert_equal(testOb->direct_list_from_obj(testOb), 0),
+        assert_equal(testOb->direct_list_str_from_obj("", testOb), 0),
     }) :));
 
     testOb->handle_remove();
