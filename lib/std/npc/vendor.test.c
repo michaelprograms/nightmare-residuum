@@ -152,15 +152,22 @@ void test_list () {
     object mockC1 = new("/std/npc.mock.c"); // TODO: this is weird, its not an NPC but this is the functionality we need
     object c1 = new(STD_CHARACTER);
 
-    c1->set_name("test character 1");
+    c1->set_name("testcharacter");
     mockC1->start_shadow(c1);
     c1->handle_move(r);
     testOb->set_name("test vendor");
     testOb->handle_move(r);
 
     expect("vendor handles listing inventory", (: ({
+        // nothing to list
+        testOb->handle_list(0, $(c1)),
+        assert_equal($(mockC1)->query_received_messages()[<1], ({ "say", "Test vendor says: I don't have any items for sale right now, Testcharacter." })),
+
+        // non-existent item
         testOb->handle_list("test", $(c1)),
         assert_equal($(mockC1)->query_received_messages()[<1], ({ "say", "Test vendor says: I don't have any 'test' for sale." })),
+
+        // @TODO: add item, list item
     }) :));
 
     mockC1->stop_shadow();
