@@ -25,6 +25,19 @@ int npcp (mixed ob) {
 }
 
 /**
+ * Checks if an object is an NPC Vendor object.
+ *
+ * @param {STD_VENDOR} ob the object to check
+ * @returns 0 or 1
+ */
+int vendorp (mixed ob) {
+    if (!objectp(ob)) {
+        return 0;
+    }
+    return !!(ob->is_vendor());
+}
+
+/**
  * Checks if an object is a character object.
  *
  * @param {STD_CHARACTER} ob the object to check
