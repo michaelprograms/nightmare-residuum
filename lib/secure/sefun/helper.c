@@ -8,7 +8,7 @@ int livingp (mixed ob) {
     if (!objectp(ob)) {
         return 0;
     }
-    return !!(/** @type {STD_LIVING} */(ob)->is_living());
+    return !!(ob->is_living());
 }
 
 /**
@@ -21,7 +21,7 @@ int npcp (mixed ob) {
     if (!objectp(ob)) {
         return 0;
     }
-    return !!(/** @type {STD_NPC} */(ob)->is_npc());
+    return !!(ob->is_npc());
 }
 
 /**
@@ -34,7 +34,7 @@ int characterp (mixed ob) {
     if (!objectp(ob)) {
         return 0;
     }
-    return !!(/** @type {STD_CHARACTER} */(ob)->is_character());
+    return !!(ob->is_character());
 }
 
 /**
@@ -47,7 +47,7 @@ int immortalp (mixed ob) {
     if (!objectp(ob)) {
         return 0;
     }
-    return !!(/** @type {STD_CHARACTER} */(ob)->query_immortal());
+    return !!(ob->query_immortal());
 }
 
 /**
@@ -60,7 +60,7 @@ int itemp (mixed ob) {
     if (!objectp(ob)) {
         return 0;
     }
-    return !!(/** @type {STD_ITEM} */(ob)->is_item());
+    return !!(ob->is_item());
 }
 
 /**
@@ -73,7 +73,7 @@ int armorp (mixed ob) {
     if (!objectp(ob)) {
         return 0;
     }
-    return !!(/** @type {STD_ARMOR} */(ob)->is_armor());
+    return !!(ob->is_armor());
 }
 
 /**
@@ -86,7 +86,7 @@ int weaponp (mixed ob) {
     if (!objectp(ob)) {
         return 0;
     }
-    return !!(/** @type {STD_WEAPON} */(ob)->is_weapon());
+    return !!(ob->is_weapon());
 }
 
 /**
@@ -99,7 +99,7 @@ int foodp (mixed ob) {
     if (!objectp(ob)) {
         return 0;
     }
-    return !!(/** @type {STD_FOOD} */(ob)->is_food());
+    return !!(ob->is_food());
 }
 
 /**
@@ -112,7 +112,7 @@ int drinkp (mixed ob) {
     if (!objectp(ob)) {
         return 0;
     }
-    return !!(/** @type {STD_DRINK} */(ob)->is_drink());
+    return !!(ob->is_drink());
 }
 
 /**
@@ -125,5 +125,5 @@ int roomp (mixed ob) {
     if (!objectp(ob)) {
         return 0;
     }
-    return !!(/** @type {STD_ROOM} */(ob)->is_room());
+    return !!(ob->is_room());
 }
