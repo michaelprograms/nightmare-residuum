@@ -43,7 +43,7 @@ void do_buy_str (mixed args...) {
     object env = environment(po);
 
     if (env && sizeof(args)) {
-        vendors = filter(env->query_living_contents(), (: $1->is_vendor() :));
+        vendors = filter(env->query_living_contents(), (: vendorp :));
         if (sizeof(vendors) == 1) {
             do_buy_str_from_obj(args[0], vendors[0]);
         } else {

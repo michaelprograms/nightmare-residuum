@@ -67,6 +67,6 @@ void do_say_str (mixed args...) {
 
     po->add_say_history(myMsg);
     /** @type {STD_CHARACTER*} who */
-    chars = filter(who, (: $1->is_character() :));
+    chars = filter(who, (: characterp :));
     chars->add_say_history(yourMsg);
 }
