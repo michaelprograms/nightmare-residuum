@@ -119,7 +119,7 @@ void update_resource () {
     } else if (nResource == 3 || nResource == 4) { // NPC
         string npc;
 
-        if (sizeof(filter(query_living_contents(), (: $1->is_npc() :))) > 0) {
+        if (sizeof(filter(query_living_contents(), (: npcp :))) > 0) {
             return;
         }
 
