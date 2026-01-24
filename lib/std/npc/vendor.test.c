@@ -167,7 +167,12 @@ void test_list () {
         testOb->handle_list("test", $(c1)),
         assert_equal($(mockC1)->query_received_messages()[<1], ({ "say", "Test vendor says: I don't have any 'test' for sale." })),
 
-        // @TODO: add item, list item
+        // one item in list
+        testOb->query_vendor_inventory()->set_reset(([
+            "/std/item/food.c": 1,
+        ])),
+        testOb->handle_list(0, $(c1)),
+        assert_equal($(mockC1)->query_received_messages()[<2..<1], ({ ({ "say", "Test vendor says: I have the following items, Testcharacter." }), ({ "action", "                                0 0" }) })),
     }) :));
 
     mockC1->stop_shadow();
