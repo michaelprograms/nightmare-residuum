@@ -182,7 +182,7 @@ void test_list () {
 }
 
 void test_buy () {
-        object r = new(STD_ROOM);
+    object r = new(STD_ROOM);
     object mockC1 = new("/std/npc.mock.c"); // TODO: this is weird, its not an NPC but this is the functionality we need
     object c1 = new(STD_CHARACTER);
 
@@ -193,9 +193,32 @@ void test_buy () {
     testOb->handle_move(r);
 
     expect("vendor handles listing inventory", (: ({
-        // nothing to list
+        // nothing to buy
         testOb->handle_buy(0, $(c1)),
         assert_equal($(mockC1)->query_received_messages()[<1], ({ "say", "Test vendor says: I don't have any '0' for sale." })),
+    }) :));
+
+    mockC1->stop_shadow();
+    if (mockC1) destruct(mockC1);
+    if (c1) destruct(c1);
+    if (r) destruct(r);
+}
+
+void test_sell () {
+    object r = new(STD_ROOM);
+    object mockC1 = new("/std/npc.mock.c"); // TODO: this is weird, its not an NPC but this is the functionality we need
+    object c1 = new(STD_CHARACTER);
+
+    c1->set_name("testcharacter");
+    mockC1->start_shadow(c1);
+    c1->handle_move(r);
+    testOb->set_name("test vendor");
+    testOb->handle_move(r);
+
+    expect("vendor handles listing inventory", (: ({
+        // nothing to sell
+        testOb->handle_sell(0, $(c1)),
+        assert_equal($(mockC1)->query_received_messages()[<1], ({ "say", "Test vendor says: You don't have an item to sell." })),
     }) :));
 
     mockC1->stop_shadow();
