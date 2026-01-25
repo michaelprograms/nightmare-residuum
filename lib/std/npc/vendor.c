@@ -104,7 +104,7 @@ void handle_buy (string str, object po) {
     object item;
     int value;
 
-    if (!(item = present(str, __VendorInventory))) {
+    if (!str || !(item = present(str, __VendorInventory))) {
         handle_command("say I don't have any '" + str + "' for sale.");
         return;
     }
