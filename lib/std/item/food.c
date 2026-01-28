@@ -11,3 +11,8 @@ string query_use_verb () {
 mixed direct_eat_obj (mixed args...) {
     return (environment() == previous_object());
 }
+
+void create () {
+    ::create();
+    set_type("food");
+}
