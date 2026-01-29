@@ -208,7 +208,7 @@ void test_sell () {
     object r = new(STD_ROOM);
     object mockC1 = new("/std/npc.mock.c"); // TODO: this is weird, its not an NPC but this is the functionality we need
     object c1 = new(STD_CHARACTER);
-    object ob = new(STD_ITEM);
+    object ob = new(STD_FOOD);
 
     c1->set_name("testcharacter");
     mockC1->start_shadow(c1);
@@ -216,9 +216,8 @@ void test_sell () {
     testOb->set_name("test vendor");
     testOb->handle_move(r);
 
-    ob->set_name("test");
+    ob->set_name("junk food");
     ob->set_value(10);
-    ob->set_type("junk");
 
     expect("vendor handles selling items", (: ({
         // nothing to sell
@@ -226,7 +225,14 @@ void test_sell () {
         assert_equal($(mockC1)->query_received_messages()[<1], ({ "say", "Test vendor says: You don't have an item to sell." })),
 
         testOb->handle_sell($(ob), $(c1)),
-        assert_equal($(mockC1)->query_received_messages()[<1], ({ "say", "Test vendor says: I don't buy junk items." })),
+        assert_equal($(mockC1)->query_received_messages()[<1], ({ "say", "Test vendor says: I don't buy food items." })),
+
+        testOb->set_vendor_types(({ STD_FOOD })),
+        assert_equal(testOb->query_vendor_types(), ({ STD_FOOD })),
+        testOb->handle_sell($(ob), $(c1)),
+        assert_equal($(mockC1)->query_received_messages()[<1], ({ "say", "Test vendor says: My shop is full, I can't buy any more items." })),
+
+        // assert_equal($(mockC1)->query_received_messages()[<1], ({ "action", "You sell junk food for 5 copper." })),
     }) :));
 
     if (ob) destruct(ob);

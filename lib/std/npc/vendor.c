@@ -142,11 +142,11 @@ void handle_sell (object item, object po) {
         handle_command("say You don't have an item to sell.");
         return;
     }
-    if (!sizeof(__VendorTypes) || member_array(item->query_type(), __VendorTypes) == -1) {
+    if (!sizeof(__VendorTypes) || sizeof((({ base_name(item) + ".c" }) + deep_inherit_list(item)) & __VendorTypes) == 0) {
         handle_command("say I don't buy " + item->query_type() + " items.");
         return;
     }
-    if (__VendorInventory->query_item_contents() >= __VendorMaxItems) {
+    if (sizeof(__VendorInventory->query_item_contents()) >= __VendorMaxItems) {
         handle_command("say My shop is full, I can't buy any more items.");
         return;
     }
