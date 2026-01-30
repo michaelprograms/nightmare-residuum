@@ -1,5 +1,6 @@
 inherit M_TEST;
 inherit M_MOVE;
+inherit M_CURRENCY;
 
 /**
  * @var {"/std/npc/vendor"} testOb
@@ -217,6 +218,7 @@ void test_sell () {
     testOb->handle_move(r);
 
     ob->set_name("junk food");
+    ob->set_short("junk food");
     ob->set_value(10);
 
     expect("vendor handles selling items", (: ({
@@ -232,7 +234,11 @@ void test_sell () {
         testOb->handle_sell($(ob), $(c1)),
         assert_equal($(mockC1)->query_received_messages()[<1], ({ "say", "Test vendor says: My shop is full, I can't buy any more items." })),
 
-        // assert_equal($(mockC1)->query_received_messages()[<1], ({ "action", "You sell junk food for 5 copper." })),
+        testOb->set_vendor_max_items(1),
+        testOb->set_vendor_currency("copper"),
+        testOb->handle_sell($(ob), $(c1)),
+        assert_equal($(mockC1)->query_received_messages()[<1], ({ "action", "You sell junk food for 5 copper." })),
+        assert_equal($(c1)->query_currency("copper"), 5),
     }) :));
 
     if (ob) destruct(ob);
