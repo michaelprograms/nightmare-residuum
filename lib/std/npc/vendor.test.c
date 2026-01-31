@@ -169,11 +169,20 @@ void test_list () {
         assert_equal($(mockC1)->query_received_messages()[<1], ({ "say", "Test vendor says: I don't have any 'test' for sale." })),
 
         // one item in list
+        testOb->set_vendor_max_items(1),
+        testOb->set_vendor_currency("copper"),
         testOb->query_vendor_inventory()->set_reset(([
             "/std/item/food.c": 1,
         ])),
+        testOb->query_vendor_inventory()->query_item_contents()[0]->set_name("test food"),
+        testOb->query_vendor_inventory()->query_item_contents()[0]->set_short("test food"),
+        testOb->query_vendor_inventory()->query_item_contents()[0]->set_value(10),
+        // full list
         testOb->handle_list(0, $(c1)),
-        assert_equal($(mockC1)->query_received_messages()[<2..<1], ({ ({ "say", "Test vendor says: I have the following items, Testcharacter." }), ({ "action", "                                0 0" }) })),
+        assert_equal($(mockC1)->query_received_messages()[<2..<1], ({ ({ "say", "Test vendor says: I have the following items, Testcharacter." }), ({ "action", "  test food                     10 copper" }) })),
+        // list item
+        testOb->handle_list("test food", $(c1)),
+        assert_equal($(mockC1)->query_received_messages()[<2..<1], ({ ({ "say", "Test vendor says: I have the following 'test food' items, Testcharacter." }), ({ "action", "  test food                     10 copper" }) })),
     }) :));
 
     mockC1->stop_shadow();
