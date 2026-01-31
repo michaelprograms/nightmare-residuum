@@ -204,8 +204,25 @@ void test_buy () {
 
     expect("vendor handles buying items", (: ({
         // nothing to buy
-        testOb->handle_buy(0, $(c1)),
-        assert_equal($(mockC1)->query_received_messages()[<1], ({ "say", "Test vendor says: I don't have any '0' for sale." })),
+        testOb->handle_buy("test food", $(c1)),
+        assert_equal($(mockC1)->query_received_messages()[<1], ({ "say", "Test vendor says: I don't have any 'test food' for sale." })),
+
+        testOb->set_vendor_max_items(1),
+        testOb->set_vendor_currency("copper"),
+        testOb->query_vendor_inventory()->set_reset(([
+            "/std/item/food.c": 1,
+        ])),
+        write(identify(testOb->query_vendor_inventory()->query_item_contents())+"\n"),
+        testOb->query_vendor_inventory()->query_item_contents()[0]->set_id(({ "test food" })),
+        testOb->query_vendor_inventory()->query_item_contents()[0]->set_name("test food"),
+        testOb->query_vendor_inventory()->query_item_contents()[0]->set_short("test food"),
+        testOb->query_vendor_inventory()->query_item_contents()[0]->set_value(10),
+        testOb->handle_buy("test food", $(c1)),
+        assert_equal($(mockC1)->query_received_messages()[<1], ({ "say", "Test vendor says: You can't afford test food." })),
+
+        $(c1)->add_currency("copper", 10),
+        testOb->handle_buy("test food", $(c1)),
+        assert_equal($(mockC1)->query_received_messages()[<2..<1], ({ ({ "say", "Test vendor exclaims: Here's your test food, Testcharacter!" }) , ({ "action", "You buy test food for 10 copper." })})),
     }) :));
 
     mockC1->stop_shadow();
