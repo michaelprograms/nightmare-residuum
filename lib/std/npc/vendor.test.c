@@ -212,7 +212,6 @@ void test_buy () {
         testOb->query_vendor_inventory()->set_reset(([
             "/std/item/food.c": 1,
         ])),
-        write(identify(testOb->query_vendor_inventory()->query_item_contents())+"\n"),
         testOb->query_vendor_inventory()->query_item_contents()[0]->set_id(({ "test food" })),
         testOb->query_vendor_inventory()->query_item_contents()[0]->set_name("test food"),
         testOb->query_vendor_inventory()->query_item_contents()[0]->set_short("test food"),
@@ -222,7 +221,20 @@ void test_buy () {
 
         $(c1)->add_currency("copper", 10),
         testOb->handle_buy("test food", $(c1)),
-        assert_equal($(mockC1)->query_received_messages()[<2..<1], ({ ({ "say", "Test vendor exclaims: Here's your test food, Testcharacter!" }) , ({ "action", "You buy test food for 10 copper." })})),
+        assert_equal($(mockC1)->query_received_messages()[<2..<1], ({ ({ "say", "Test vendor exclaims: Here's your test food, Testcharacter!" }) , ({ "action", "You buy test food for 10 copper." }) })),
+
+        // TODO: need to re-visit this when there's a way to have max inventory size
+        // testOb->query_vendor_inventory()->set_reset(([
+        //     "/std/item/food.c": 1,
+        // ])),
+        // testOb->query_vendor_inventory()->query_item_contents()[0]->set_id(({ "test food" })),
+        // testOb->query_vendor_inventory()->query_item_contents()[0]->set_name("test food"),
+        // testOb->query_vendor_inventory()->query_item_contents()[0]->set_short("test food"),
+        // testOb->query_vendor_inventory()->query_item_contents()[0]->set_value(10),
+        // $(c1)->add_currency("copper", 10),
+        // $(mockC1)->clear_received_messages(),
+        // testOb->handle_buy("test food", $(c1)),
+        // assert_equal($(mockC1)->query_received_messages(), ({ ({ "say", "Test vendor exclaims: Here's your test food, Testcharacter!" }) , ({ "action", "You buy test food for 10 copper." }), ({ "action", "You cannot hold test food and it falls from your grasp." }) })),
     }) :));
 
     mockC1->stop_shadow();
