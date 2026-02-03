@@ -58,9 +58,6 @@ void test_max_items () {
 
 void test_vendor_currency () {
     expect("vendor currency is settable and queryable", (: ({
-        assert_equal(testOb->query_vendor_currency(), 0),
-
-        testOb->set_vendor_currency("copper"),
         assert_equal(testOb->query_vendor_currency(), "copper"),
 
         testOb->set_vendor_currency("silver"),

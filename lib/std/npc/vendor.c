@@ -2,7 +2,7 @@ inherit STD_NPC;
 
 /** @type {/std/vendor_inventory} */
 nosave private object __VendorInventory;
-nosave private string __VendorCurrency;
+nosave private string __VendorCurrency = "copper";
 nosave private string *__VendorTypes;
 nosave private int __VendorMaxItems = 0;
 
