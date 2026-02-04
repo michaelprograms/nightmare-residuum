@@ -452,7 +452,7 @@ protected nomask varargs void account_input (int state, mixed extra, string inpu
             }
             break;
         case STATE_ACCOUNT_MENU:
-            if(autojoining) {
+            if (autojoining) {
                 write("Autojoin canceled.\n");
                 autojoining = 0;
                 remove_call_out();
