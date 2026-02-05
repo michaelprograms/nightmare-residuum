@@ -52,6 +52,13 @@ void test_hostiles () {
     if (mockCharacter) destruct(mockCharacter);
 }
 
+void test_check_lifesigns () {
+    expect("check lifesigns behaves", (: ({
+        testOb->check_lifesigns(),
+        assert_equal(testOb->query_defeated(), 0),
+    }) :));
+}
+
 int is_living () {
     return 1;
 }

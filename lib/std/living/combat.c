@@ -171,7 +171,7 @@ varargs void check_lifesigns (object source) {
         dead = 1;
     }
     if (!dead) {
-        foreach (string limb in this_object()->query_severed_limbs()) {
+        foreach (string limb in this_object()->query_severed_limbs() || ({ })) {
             if (this_object()->query_limb(limb)["type"] == "FATAL") {
                 dead = 1;
             }
