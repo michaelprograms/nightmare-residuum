@@ -53,10 +53,19 @@ void test_hostiles () {
 }
 
 void test_check_lifesigns () {
+    object mockLiving = new("/std/living/combat.mock.c");
+
+    mockLiving->start_shadow(testOb);
+
     expect("check lifesigns behaves", (: ({
+        assert_equal($(mockLiving)->query_defeated(), 0),
         testOb->check_lifesigns(),
-        assert_equal(testOb->query_defeated(), 0),
+        assert_equal($(mockLiving)->query_defeated(), 0),
     }) :));
+
+    mockLiving->stop_shadow();
+
+    if (mockLiving) destruct(mockLiving);
 }
 
 int is_living () {
