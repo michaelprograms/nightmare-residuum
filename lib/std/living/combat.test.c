@@ -61,11 +61,17 @@ void test_check_lifesigns () {
         assert_equal($(mockLiving)->query_defeated(), 0),
         testOb->check_lifesigns(),
         assert_equal($(mockLiving)->query_defeated(), 0),
+        assert_equal($(mockLiving)->query_defeat(), ({})),
+
+        $(mockLiving)->set_hp(-1),
+        testOb->check_lifesigns(),
+        assert_equal(objectp($(mockLiving)), 0),
     }) :));
 
-    mockLiving->stop_shadow();
-
-    if (mockLiving) destruct(mockLiving);
+    if (mockLiving) {
+        mockLiving->stop_shadow();
+        destruct(mockLiving);
+    }
 }
 
 int is_living () {

@@ -167,6 +167,7 @@ varargs void check_lifesigns (object source) {
     if (this_object()->query_defeated()) {
         return;
     }
+    // TODO: this should be 1
     if (this_object()->query_hp() < 0) {
         dead = 1;
     }
