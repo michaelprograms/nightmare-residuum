@@ -16,3 +16,8 @@ inherit "/std/living/status.c";
 inherit "/std/living/vitals.c";
 
 inherit "/std/shadow.c";
+
+void heart_beat () {
+    status::heart_beat();
+    cooldown::heart_beat();
+}
