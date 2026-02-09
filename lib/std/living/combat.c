@@ -113,7 +113,7 @@ void handle_combat_hit (object target, mapping *table, object weapon) {
 void handle_combat () {
     /** @type {STD_LIVING} to */
     object to = this_object(), env = environment(), target, *weapons;
-    int base, min, max, hits;
+    int min, max, hits;
 
     target = present_hostile(to);
     to->check_lifesigns(target);
@@ -135,9 +135,8 @@ void handle_combat () {
     }
 
     weapons = to->query_wielded_weapons() + to->query_wieldable_limbs();
-    base = sizeof(weapons[0..2]) + to->query_stat("agility");
-    min = base / 100;
-    max = base / 50;
+    min = sizeof(weapons) + (to->query_stat("agility") / 50);
+    max = sizeof(weapons) + (to->query_stat("agility") / 25);
     hits = min + random(max - min + 1);
 
     if (!hits) {
