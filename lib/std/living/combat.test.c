@@ -63,6 +63,12 @@ void test_check_lifesigns () {
         assert_equal($(mockLiving)->query_defeated(), 0),
         assert_equal($(mockLiving)->query_defeat(), ({})),
 
+        // already defeated
+        $(mockLiving)->set_defeated(1),
+        testOb->check_lifesigns(),
+        assert_equal(objectp(testOb), 1),
+
+        $(mockLiving)->set_defeated(0),
         $(mockLiving)->set_hp(-1),
         testOb->check_lifesigns(),
         assert_equal(objectp($(mockLiving)), 0),
