@@ -98,6 +98,10 @@ void handle_combat_hit (object target, mapping *table, object weapon) {
             case "regular hit":
                 limb = target->query_random_limb();
                 damage = combat_hit_damage(to, target, limb, weapon, crit);
+                if (damage < 1) {
+                    combat_miss_message(to, target, weapon);
+                    break;
+                }
                 combat_hit_message(to, target, limb, weapon, damage, crit, 0);
                 target->handle_damage(damage, limb);
                 break;
