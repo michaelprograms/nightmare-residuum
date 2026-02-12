@@ -44,6 +44,8 @@ void test_resets () {
         testOb->set_reset_data(([ "/std/item.c": ([ "number": 1, "setup": $(setupFn) ]) ])),
         assert_equal(testOb->query_resets(), 4),
         assert_equal(testOb->query_reset(), ([ "/std/item.c": ([ "number": 1, "setup": $(setupFn) ]) ])),
+
+        assert_catch((: testOb->set_reset_data(([ "": 0 ])) :), "*Bad reset data to reset->set_reset_data\n"),
     }) :));
 }
 
