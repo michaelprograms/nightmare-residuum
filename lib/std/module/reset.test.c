@@ -85,7 +85,7 @@ void test_objects () {
         ]) ])),
 
         // tracking wandering object
-        assert_equal(r1->query_objects(), ([ "/std/npc.c:0": npc ])),
+        assert_equal(r1->query_objects(), ([ "/std/npc.c": ({ npc }) ])),
         assert_equal(r2->query_objects(), ([ ])),
 
         // force NPC to wander to r2
@@ -94,19 +94,19 @@ void test_objects () {
         assert_equal(environment(npc), r2),
 
         // still tracking wandering object
-        assert_equal(r1->query_objects(), ([ "/std/npc.c:0": npc ])),
+        assert_equal(r1->query_objects(), ([ "/std/npc.c": ({ npc }) ])),
         assert_equal(r2->query_objects(), ([ ])),
 
         // reset doesn't spawn another wandering NPC
         r1->reset(),
-        assert_equal(r1->query_objects(), ([ "/std/npc.c:0": npc ])),
+        assert_equal(r1->query_objects(), ([ "/std/npc.c": ({ npc }) ])),
         assert_equal(r2->query_objects(), ([ ])),
 
         // remove wandering NPC
         npc->handle_remove(),
         // force a new NPC to spawn
         r1->reset(),
-        assert_equal(r1->query_objects(), ([ "/std/npc.c:0": npc ])),
+        assert_equal(r1->query_objects(), ([ "/std/npc.c": ({ npc }) ])),
         assert_equal(r2->query_objects(), ([ ])),
     }) :));
 
