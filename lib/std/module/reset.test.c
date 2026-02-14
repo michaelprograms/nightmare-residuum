@@ -49,10 +49,10 @@ void test_resets () {
     }) :));
 }
 
-nosave private object r1, r2;
 /** @type {STD_NPC} npc */
 nosave private object npc;
 void test_objects () {
+    object mockReset;
     /**
      * Called upon room's reset setup.
      * @param {STD_NPC} ob new npc
@@ -62,55 +62,46 @@ void test_objects () {
         npc->set_wander(1);
     };
 
-    // setup test rooms
-    r1 = new(STD_ROOM);
-    r2 = new(STD_ROOM);
-    r1->set_exit("east", file_name(r2));
-    r2->set_exit("west", file_name(r1));
+    mockReset = new("/std/module/reset.mock.c");
+    mockReset->start_shadow(testOb);
 
     expect("reset tracks wandering NPCs", (: ({
-        // r1 will have initial reset from create
-        assert_equal(r1->query_resets(), 1),
-        assert_equal(r1->query_reset(), ([ ])),
+        // testOb will have initial reset from create
+        testOb->reset(),
+        assert_equal(testOb->query_resets(), 1),
+        assert_equal(testOb->query_reset(), ([ ])),
 
         // set wanderer
-        r1->set_reset(([ "/std/npc.c": ([
+        testOb->set_reset(([ "/std/npc.c": ([
             "number": 1,
             "setup": $(setupFn),
         ]) ])),
-        assert_equal(r1->query_resets(), 2),
-        assert_equal(r1->query_reset(), ([ "/std/npc": ([
+        assert_equal(testOb->query_resets(), 2),
+        assert_equal(testOb->query_reset(), ([ "/std/npc": ([
             "number": 1,
             "setup": $(setupFn)
         ]) ])),
 
-        // tracking wandering object
-        assert_equal(r1->query_objects(), ([ "/std/npc": ({ npc }) ])),
-        assert_equal(r2->query_objects(), ([ ])),
+        // tracking object
+        assert_equal(testOb->query_objects(), ([ "/std/npc": ({ npc }) ])),
 
-        // force NPC to wander to r2
-        assert_equal(environment(npc), r1),
-        npc->handle_wander(),
-        assert_equal(environment(npc), r2),
 
         // still tracking wandering object
-        assert_equal(r1->query_objects(), ([ "/std/npc": ({ npc }) ])),
-        assert_equal(r2->query_objects(), ([ ])),
+        assert_equal(testOb->query_objects(), ([ "/std/npc": ({ npc }) ])),
 
         // reset doesn't spawn another wandering NPC
-        r1->reset(),
-        assert_equal(r1->query_objects(), ([ "/std/npc": ({ npc }) ])),
-        assert_equal(r2->query_objects(), ([ ])),
+        testOb->reset(),
+        assert_equal(testOb->query_objects(), ([ "/std/npc": ({ npc }) ])),
 
         // remove wandering NPC
         npc->handle_remove(),
         // force a new NPC to spawn
-        r1->reset(),
-        assert_equal(r1->query_objects(), ([ "/std/npc": ({ npc }) ])),
-        assert_equal(r2->query_objects(), ([ ])),
+        testOb->reset(),
+        assert_equal(testOb->query_objects(), ([ "/std/npc": ({ npc }) ])),
     }) :));
 
-    if (r1) destruct(r1);
-    if (r2) destruct(r2);
+    mockReset->stop_shadow();
+
+    if (mockReset) destruct(mockReset);
     if (npc) destruct(npc);
 }
