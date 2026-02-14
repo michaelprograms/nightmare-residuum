@@ -1,6 +1,15 @@
 nosave private mapping __Reset, __Objects;
 nosave private int __Resets;
 
+private void initialize_reset () {
+    if (!mapp(__Reset)) {
+        __Reset   = ([ ]);
+    }
+    if (!mapp(__Objects)) {
+        __Objects = ([ ]);
+    }
+}
+
 mapping query_reset () {
     return __Reset;
 }
@@ -17,6 +26,8 @@ void handle_reset () {
     string name, key;
     object ob, *tracked;
     mixed val;
+
+    initialize_reset();
 
     __Resets ++;
     if (!sizeof(__Reset)) {
@@ -56,9 +67,7 @@ void handle_reset () {
             }
         } else if (intp(val)) {
             num = val;
-        }
-
-        if (num <= 0) {
+        } else {
             continue;
         }
 
@@ -75,13 +84,11 @@ void handle_reset () {
             if (mapp(val) && functionp(val["setup"])) {
                 evaluate(val["setup"], ob);
             }
-
             // prevent objects from leaking if can't move
             if (!ob->handle_move(this_object())) {
                 destruct(ob);
                 continue;
             }
-
             // track wandering objects
             if (ob->query_wander()) {
                 if (!arrayp(__Objects[key])) {
@@ -95,8 +102,7 @@ void handle_reset () {
 }
 
 void create () {
-    __Reset = ([ ]);
-    __Objects = ([ ]);
+    initialize_reset();
     __Resets = 0;
 }
 
@@ -107,8 +113,11 @@ void reset () {
 void set_reset_data (mapping data) {
     __Reset = ([ ]);
     foreach (string key, mixed val in data) {
-        if (!sizeof(key) || !mapp(val) && !intp(val)) {
+        if (!sizeof(key) || (!mapp(val) && !intp(val))) {
             error("Bad reset data to reset->set_reset_data");
+        }
+        if (key[<2..] == ".c") {
+            key = key[0..<3];
         }
         __Reset[key] = val;
     }
@@ -116,5 +125,5 @@ void set_reset_data (mapping data) {
 
 void set_reset (mapping data) {
     set_reset_data(data);
-    reset();
+    handle_reset();
 }
