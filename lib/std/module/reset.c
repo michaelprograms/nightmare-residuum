@@ -48,13 +48,12 @@ void handle_reset () {
     // count objects in this container
     foreach (ob in all_inventory()) {
         name = base_name(ob);
-        if (undefinedp(__Reset[name])) {
-            continue;
+        if (__Reset[name]) {
+            if (arrayp(__Objects[name]) && sizeof(__Objects[name])) {
+                continue;
+            }
+            counts[name] ++;
         }
-        if (arrayp(__Objects[name]) && sizeof(__Objects[name])) {
-            continue;
-        }
-        counts[name] ++;
     }
     foreach (key, val in __Reset) {
         if (mapp(val)) {
