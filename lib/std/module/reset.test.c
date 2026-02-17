@@ -11,9 +11,7 @@ string *test_order () {
 private int resetFnCalled = 0;
 private int setupFnCalled = 0;
 void test_resets () {
-    function setupFn = function (object ob) {
-        setupFnCalled ++;
-    };
+    function setupFn = (: setupFnCalled ++ :);
 
     expect("resets handle setting, querying, and resetting", (: ({
         // have not set_reset yet
@@ -51,6 +49,7 @@ void test_resets () {
 
 /** @type {STD_NPC} npc */
 nosave private object npc;
+nosave private object item;
 void test_objects () {
     object mockReset;
     /**
@@ -64,6 +63,7 @@ void test_objects () {
 
     mockReset = new("/std/module/reset.mock.c");
     mockReset->start_shadow(testOb);
+    item = new(STD_ITEM);
 
     expect("reset tracks wandering NPCs", (: ({
         // testOb will have initial reset from create
@@ -72,10 +72,12 @@ void test_objects () {
         assert_equal(testOb->query_reset(), ([ ])),
 
         // set wanderer
-        testOb->set_reset(([ "/std/npc.c": ([
-            "number": 1,
-            "setup": $(setupFn),
-        ]) ])),
+        testOb->set_reset(([
+            "/std/npc.c": ([
+                "number": 1,
+                "setup": $(setupFn),
+            ])
+        ])),
         assert_equal(testOb->query_resets(), 2),
         assert_equal(testOb->query_reset(), ([ "/std/npc": ([
             "number": 1,
@@ -84,7 +86,6 @@ void test_objects () {
 
         // tracking object
         assert_equal(testOb->query_objects(), ([ "/std/npc": ({ npc }) ])),
-
 
         // still tracking wandering object
         assert_equal(testOb->query_objects(), ([ "/std/npc": ({ npc }) ])),
@@ -98,10 +99,20 @@ void test_objects () {
         // force a new NPC to spawn
         testOb->reset(),
         assert_equal(testOb->query_objects(), ([ "/std/npc": ({ npc }) ])),
+
+        // existing items are counted when resetting
+        assert_equal(item->handle_move(testOb), 1),
+        testOb->set_reset(([
+            "/std/npc.c": 1,
+            "/std/item.c": 1,
+        ])),
+        testOb->reset(),
+        assert_equal(testOb->query_objects(), ([ "/std/npc": ({ npc }) ])),
     }) :));
 
     mockReset->stop_shadow();
 
     if (mockReset) destruct(mockReset);
     if (npc) destruct(npc);
+    if (item) destruct(item);
 }
