@@ -12,6 +12,10 @@ private int resetFnCalled = 0;
 private int setupFnCalled = 0;
 void test_resets () {
     function setupFn = (: setupFnCalled ++ :);
+    function resetFn = function () {
+        resetFnCalled ++;
+        return 2;
+    };
 
     expect("resets handle setting, querying, and resetting", (: ({
         // have not set_reset yet
@@ -42,6 +46,11 @@ void test_resets () {
         testOb->set_reset_data(([ "/std/item.c": ([ "number": 1, "setup": $(setupFn) ]) ])),
         assert_equal(testOb->query_resets(), 4),
         assert_equal(testOb->query_reset(), ([ "/std/item": ([ "number": 1, "setup": $(setupFn) ]) ])),
+
+        testOb->set_reset(([ "/std/item.c": ([ "number": $(resetFn), "setup": $(setupFn) ]) ])),
+        assert_equal(testOb->query_resets(), 5),
+        assert_equal(testOb->query_reset(), ([ "/std/item": ([ "number": $(resetFn), "setup": $(setupFn) ]) ])),
+        assert_equal(resetFnCalled, 1),
 
         assert_catch((: testOb->set_reset_data(([ "": 0 ])) :), "*Bad reset data to reset->set_reset_data\n"),
     }) :));
