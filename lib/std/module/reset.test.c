@@ -47,10 +47,16 @@ void test_resets () {
         assert_equal(testOb->query_resets(), 4),
         assert_equal(testOb->query_reset(), ([ "/std/item": ([ "number": 1, "setup": $(setupFn) ]) ])),
 
-        testOb->set_reset(([ "/std/item.c": ([ "number": $(resetFn), "setup": $(setupFn) ]) ])),
+        testOb->set_reset(([ "/std/item.c": ([ "number": $(resetFn), "setup": $(setupFn) ]), ])),
         assert_equal(testOb->query_resets(), 5),
         assert_equal(testOb->query_reset(), ([ "/std/item": ([ "number": $(resetFn), "setup": $(setupFn) ]) ])),
         assert_equal(resetFnCalled, 1),
+
+        testOb->set_reset(([ "/std/item.c": ([ "number": "bad number" ]) ])),
+        assert_equal(testOb->query_resets(), 6),
+        assert_equal(testOb->query_reset(), ([ "/std/item": ([ "number": "bad number" ]) ])),
+
+
 
         assert_catch((: testOb->set_reset_data(([ "": 0 ])) :), "*Bad reset data to reset->set_reset_data\n"),
     }) :));
