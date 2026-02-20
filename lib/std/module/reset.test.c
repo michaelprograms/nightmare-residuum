@@ -56,8 +56,6 @@ void test_resets () {
         assert_equal(testOb->query_resets(), 6),
         assert_equal(testOb->query_reset(), ([ "/std/item": ([ "number": "bad number" ]) ])),
 
-
-
         assert_catch((: testOb->set_reset_data(([ "": 0 ])) :), "*Bad reset data to reset->set_reset_data\n"),
     }) :));
 }

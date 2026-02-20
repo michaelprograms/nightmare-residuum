@@ -66,8 +66,6 @@ void handle_reset () {
             }
         } else if (intp(val)) {
             num = val;
-        } else {
-            continue;
         }
 
         tracked = __Objects[key] || ({ });
