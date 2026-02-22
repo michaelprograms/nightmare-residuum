@@ -95,6 +95,11 @@ void test_parser_applies () {
         assert_equal(testOb->indirect_give_obj_to_liv($(ob), this_object(), 0, 0), "You already have that."),
     }) :));
 
+    expect("give word word to living behaves", (: ({
+        assert_equal(testOb->direct_give_wrd_wrd_to_liv(0, 0, this_object()), "You already have that."),
+        assert_equal(testOb->direct_give_wrd_wrd_to_liv(0, 0, 0), 1),
+    }) :));
+
     if (r) destruct(r);
 }
 
