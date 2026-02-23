@@ -6,6 +6,10 @@ nosave private string *__Lines;
 nosave private int __LineNum, __LinesCount;
 nosave private int __ChunkSize = 40;
 
+object query_user () {
+    return __User;
+}
+
 nomask private void done (int focus) {
     __User->input_pop();
     if (focus) {
