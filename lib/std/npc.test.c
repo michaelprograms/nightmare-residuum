@@ -245,3 +245,14 @@ void test_say_response () {
 
     if (mockNPC) destruct(mockNPC);
 }
+
+void test_inventory () {
+    expect("inventory is handled", (: ({
+        assert_equal(testOb->query_inventory(), ([ ])),
+
+        testOb->set_inventory(([ STD_FOOD: 1, ])),
+        assert_equal(testOb->query_inventory(), ([ STD_FOOD: 1, ])),
+
+        assert_catch((: testOb->set_inventory(UNDEFINED) :), "*Bad argument 1 to npc->set_inventory\n"),
+    }) :));
+}
