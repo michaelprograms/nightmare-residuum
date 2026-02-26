@@ -247,12 +247,19 @@ void test_say_response () {
 }
 
 void test_inventory () {
+    object r = new(STD_ROOM);
+
     expect("inventory is handled", (: ({
         assert_equal(testOb->query_inventory(), ([ ])),
 
-        testOb->set_inventory(([ STD_FOOD: 1, ])),
-        assert_equal(testOb->query_inventory(), ([ STD_FOOD: 1, ])),
+        testOb->set_inventory(([ STD_FOOD: "testcommand", ])),
+        assert_equal(testOb->query_inventory(), ([ STD_FOOD: "testcommand", ])),
+
+        testOb->handle_move($(r)),
+        assert_equal(regexp(file_name(testOb->query_item_contents()[0]), STD_FOOD[0..<3] + "#"), 1),
 
         assert_catch((: testOb->set_inventory(UNDEFINED) :), "*Bad argument 1 to npc->set_inventory\n"),
     }) :));
+
+    if (r) destruct(r);
 }
