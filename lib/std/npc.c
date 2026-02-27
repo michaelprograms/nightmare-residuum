@@ -139,6 +139,10 @@ void set_next_wander (int n) {
 int query_wander () {
     return __Wander;
 }
+/**
+ * Enables wandering on this NPC.
+ * @param n the interval of rounds between wander attempts
+ */
 void set_wander (int n) {
     __Wander = n;
     __NextWander = 0;

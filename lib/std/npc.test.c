@@ -50,12 +50,19 @@ void test_aggressive (function done) {
 
         assert_equal(testOb->handle_move(__Room), 1),
         assert_equal(__Character->handle_move(__Room), 1),
+
+        testOb->set_wander(1),
+        assert_equal(testOb->query_wander(), 1),
+        testOb->attempt_wander(),
+        testOb->attempt_wander(),
+        assert_equal(testOb->query_wanders(), 1),
     }) :));
 
     call_out_walltime(function (function done) {
         expect("aggressive initiates combat", (: ({
             assert_equal(testOb->query_hostile(__Character), 1),
             assert_equal(__Character->query_hostile(testOb), 1),
+            assert_equal(testOb->query_wanders(), 0),
         }) :));
 
         if (__Room) destruct(__Room);
