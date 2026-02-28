@@ -110,6 +110,10 @@ void test_wander () {
     r2->set_exit("west", file_name(r1));
 
     expect("wander moves to neighboring room", (: ({
+        // handles no environment yet
+        testOb->handle_wander(),
+        assert_equal(environment(testOb), UNDEFINED),
+
         assert_equal(testOb->handle_move(r1), 1),
 
         // wander not set up, won't move
@@ -157,6 +161,8 @@ void test_wander () {
         assert_equal(testOb->query_next_wander(), 0),
         assert_equal(testOb->query_wanders(), 2),
     }) :));
+
+    // TODO: handle_wander uses a call_out, need to account for that in this test
 
     destruct(r1);
     destruct(r2);
