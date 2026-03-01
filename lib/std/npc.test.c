@@ -160,6 +160,14 @@ void test_wander () {
         // values don't increment
         assert_equal(testOb->query_next_wander(), 0),
         assert_equal(testOb->query_wanders(), 2),
+
+        // heart_beat attempts wander
+        testOb->set_wander(1),
+        // won't wander on first attempt
+        testOb->attempt_wander(),
+        // heart_beat wanders
+        testOb->heart_beat(),
+        assert_equal(environment(testOb), r1),
     }) :));
 
     // TODO: handle_wander uses a call_out, need to account for that in this test
