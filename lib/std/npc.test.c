@@ -164,8 +164,9 @@ void test_wander () {
         // heart_beat attempts wander
         testOb->set_wander(1),
         // won't wander on first attempt
-        testOb->attempt_wander(),
-        // heart_beat wanders
+        testOb->heart_beat(),
+        assert_equal(environment(testOb), r2),
+        // heart_beat wanders on 2nd attempt
         testOb->heart_beat(),
         assert_equal(environment(testOb), r1),
     }) :));

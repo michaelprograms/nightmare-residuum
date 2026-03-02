@@ -195,13 +195,12 @@ void create () {
 }
 
 void heart_beat () {
-    if (!clonep()) {
-        return;
-    }
-    if (random(2) && member_array(query_posture(), ({ "sitting", "laying" })) > -1 && present_hostile(this_object())) {
-        handle_command("stand");
-    }
-    ::heart_beat();
+    if (clonep()) {
+        if (member_array(query_posture(), ({ "sitting", "laying" })) > -1 && present_hostile(this_object())) {
+            handle_command("stand");
+        }
+        ::heart_beat();
 
-    attempt_wander();
+        attempt_wander();
+    }
 }
