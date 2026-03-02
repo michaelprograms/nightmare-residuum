@@ -74,7 +74,7 @@ void test_aggressive (function done) {
 
 nosave private object r1, r2;
 
-void test_wander () {
+void test_wander (function done) {
     expect("wander is queryable and settable", (: ({
         assert_equal(testOb->query_wander(), 0),
 
@@ -169,12 +169,18 @@ void test_wander () {
         // heart_beat wanders on 2nd attempt
         testOb->heart_beat(),
         assert_equal(environment(testOb), r1),
+
+        assert_equal(testOb->query_wandering(), 1),
     }) :));
 
-    // TODO: handle_wander uses a call_out, need to account for that in this test
-
-    destruct(r1);
-    destruct(r2);
+    call_out_walltime(function (function done) {
+        expect("wander turns off after movement", (: ({
+            assert_equal(testOb->query_wandering(), 0),
+        }) :));
+        destruct(r1);
+        destruct(r2);
+        evaluate(done);
+    }, 0.01, done);
 }
 
 void test_abilities () {
