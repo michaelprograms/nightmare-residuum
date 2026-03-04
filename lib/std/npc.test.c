@@ -75,6 +75,8 @@ void test_aggressive (function done) {
 nosave private object r1, r2;
 
 void test_wander (function done) {
+    object living = new(STD_LIVING);
+
     expect("wander is queryable and settable", (: ({
         assert_equal(testOb->query_wander(), 0),
 
@@ -160,21 +162,32 @@ void test_wander (function done) {
         // values don't increment
         assert_equal(testOb->query_next_wander(), 0),
         assert_equal(testOb->query_wanders(), 2),
+    }) :));
 
+    living->handle_move(r2);
+    expect("heart_beat behaves", (: ({
+        // set sitting
+        testOb->set_posture("sitting"),
+        assert_equal(testOb->query_posture(), "sitting"),
+        testOb->add_hostile($(living)),
         // heart_beat attempts wander
         testOb->set_wander(1),
         // won't wander on first attempt
         testOb->heart_beat(),
+        assert_equal(testOb->query_posture(), "standing"),
         assert_equal(environment(testOb), r2),
+    }) :));
+
+    expect("heart_beat wandering mode behaves", (: ({
         // heart_beat wanders on 2nd attempt
         testOb->heart_beat(),
         assert_equal(environment(testOb), r1),
-
+        // wandering mode is enabled
         assert_equal(testOb->query_wandering(), 1),
     }) :));
 
     call_out_walltime(function (function done) {
-        expect("wander turns off after movement", (: ({
+        expect("wandering mode turns off after movement", (: ({
             assert_equal(testOb->query_wandering(), 0),
         }) :));
         destruct(r1);
