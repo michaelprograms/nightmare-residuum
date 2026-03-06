@@ -92,3 +92,11 @@ void test_parser_applies () {
         assert_equal(testOb->direct_aid_liv(), 0),
     }) :));
 }
+
+void test_combat () {
+    expect("combat behaves", (: ({
+        testOb->handle_combat(),
+        assert_equal(objectp(testOb), 1),
+        // TODO: expand
+    }) :));
+}
