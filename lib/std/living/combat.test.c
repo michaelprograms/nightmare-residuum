@@ -94,9 +94,27 @@ void test_parser_applies () {
 }
 
 void test_combat () {
+    object mockLiving = new("/std/living/combat.mock.c");
+    object r = new(STD_ROOM);
+    object npc = new(STD_NPC);
+
+    mockLiving->start_shadow(testOb);
+    npc->add_hostile(testOb);
+    testOb->add_hostile(npc);
+
     expect("combat behaves", (: ({
+        $(mockLiving)->set_posture("meditating"),
+        assert_equal($(mockLiving)->query_posture(), "meditating"),
         testOb->handle_combat(),
+        assert_equal($(mockLiving)->query_posture(), "sitting"),
+
         assert_equal(objectp(testOb), 1),
         // TODO: expand
     }) :));
+
+    if (mockLiving) {
+        mockLiving->stop_shadow();
+        destruct(mockLiving);
+    }
+    if (r) destruct(r);
 }
