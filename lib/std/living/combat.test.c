@@ -95,7 +95,6 @@ void test_parser_applies () {
 
 void test_combat () {
     object mockLiving = new("/std/living/combat.mock.c");
-    object r = new(STD_ROOM);
     object npc = new(STD_NPC);
 
     mockLiving->start_shadow(testOb);
@@ -116,5 +115,4 @@ void test_combat () {
         mockLiving->stop_shadow();
         destruct(mockLiving);
     }
-    if (r) destruct(r);
 }
