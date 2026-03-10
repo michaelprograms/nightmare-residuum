@@ -120,6 +120,7 @@ void combat_heal_message (object source, object target, string limb, int damage)
  * @param {STD_WEAPON|string} weapon the weapon or limb used
  */
 void combat_miss_message (object source, object target, mixed weapon) {
+    object env = environment(source);
     string name, possessive = SEFUN->possessive(source);
 
     if (objectp(weapon)) {
@@ -127,9 +128,11 @@ void combat_miss_message (object source, object target, mixed weapon) {
     } else {
         name = weapon;
     }
-    message("combat miss", "You miss " + target->query_cap_name() + " with your " + name + ".", source);
-    message("combat miss", source->query_cap_name() + " misses you with " + possessive + " " + name + ".", target);
-    message("combat miss", source->query_cap_name() + " misses " + target->query_cap_name() + " with " + possessive + " " + name + ".", environment(source), ({ source, target }));
+    if (env) {
+        message("combat miss", "You miss " + target->query_cap_name() + " with your " + name + ".", source);
+        message("combat miss", source->query_cap_name() + " misses you with " + possessive + " " + name + ".", target);
+        message("combat miss", source->query_cap_name() + " misses " + target->query_cap_name() + " with " + possessive + " " + name + ".", env, ({ source, target }));
+    }
 }
 
 #define USELESS_MYMSG ({ "You flop about helplessly.", "You try to look menacing.", "You uselessly dance around." })

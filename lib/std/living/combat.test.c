@@ -95,11 +95,16 @@ void test_parser_applies () {
 
 void test_combat () {
     object mockLiving = new("/std/living/combat.mock.c");
-    object npc = new(STD_NPC);
+    object npc = new(STD_NPC), mockNpc1;
+    mapping *table;
+
+    mockNpc1 = new("/std/npc.mock.c");
+    mockNpc1->start_shadow(npc);
 
     mockLiving->start_shadow(testOb);
     npc->add_hostile(testOb);
     testOb->add_hostile(npc);
+    table = combat_table(mockLiving, npc, 1),
 
     expect("combat behaves", (: ({
         $(mockLiving)->set_posture("meditating"),
@@ -107,12 +112,18 @@ void test_combat () {
         testOb->handle_combat(),
         assert_equal($(mockLiving)->query_posture(), "sitting"),
 
-        assert_equal(objectp(testOb), 1),
-        // TODO: expand
+        testOb->handle_combat_hit($(npc), $(table), 0),
+
+
     }) :));
+
 
     if (mockLiving) {
         mockLiving->stop_shadow();
         destruct(mockLiving);
+    }
+    if (mockNpc1) {
+        mockNpc1->stop_shadow();
+        destruct(mockNpc1);
     }
 }
