@@ -465,7 +465,7 @@ string create_coverage (string path) {
             __Lines[i+1] = ({ 0 });
         } else if (pcre_match(__RawLines[i], "^\\s+}$")) {
             // End of Construct
-            if(pcre_match(__RawLines[i-1], "^\\s+(?:error\\(|return(?:;|\\s))")) {
+            if (pcre_match(__RawLines[i-1], "^\\s+(?:break|error|return|continue)")) {
                 line = __RawLines[i];
             } else {
                 line = "D_TEST->line_hit(" + (i+1) + "); " + __RawLines[i];

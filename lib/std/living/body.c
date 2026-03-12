@@ -265,7 +265,6 @@ mixed query_can_wear_armor (object armor) {
         if (worn) {
             return "You are already wearing a " + armor->query_type()+ ".";
         }
-        break;
     }
     return 1;
 }
