@@ -48,6 +48,7 @@ void test_applies () {
     }) :));
 }
 
+string tmpDebugLog;
 void test_startup_applies () {
     expect("epilog returns preload array", (: ({
         assert_equal(typeof(testOb->epilog(0)), "array"),
@@ -58,10 +59,14 @@ void test_startup_applies () {
         assert_equal(explode(read_file("/log/debug.log"), "\n")[<1] != "master()->flag: received unknown flag", 1),
 
         testOb->flag("unknown flag"),
-        write("debug.log[<1]: " + identify(explode(read_file("/log/debug.log"), "\n")[<1])+"\n"),
-        write((explode(read_file("/log/debug.log"), "\n")[<1] == "master()->flag: received unknown flag.") + "\n"),
-        assert_equal(regexp(explode(read_file("/log/debug.log"), "\n")[<1], "received unknown flag"), 1),
-        assert_equal(explode(read_file("/log/debug.log"), "\n")[<1], "master()->flag: received unknown flag."),
+
+        tmpDebugLog = explode(read_file("/log/debug.log"), "\n")[<1],
+        write("debug.log[<1]: " + identify(tmpDebugLog)+"\n"),
+        write((tmpDebugLog == "master()->flag: received unknown flag.") + "\n"),
+        write(regexp(tmpDebugLog, "received unknown flag") + "\n"),
+
+        assert_equal(tmpDebugLog, "master()->flag: received unknown flag."),
+        assert_equal(regexp(tmpDebugLog, "received unknown flag"), 1),
     }) :));
 }
 
