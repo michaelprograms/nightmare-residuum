@@ -59,14 +59,8 @@ void test_startup_applies () {
         assert_equal(explode(read_file("/log/debug.log"), "\n")[<1] != "master()->flag: received unknown flag", 1),
 
         testOb->flag("unknown flag"),
-
         tmpDebugLog = explode(read_file("/log/debug.log"), "\n")[<1],
-        write("debug.log[<1]: " + identify(tmpDebugLog)+"\n"),
-        write((tmpDebugLog == "master()->flag: received unknown flag.") + "\n"),
-        write(regexp(tmpDebugLog, "received unknown flag") + "\n"),
-
         assert_equal(tmpDebugLog, "master()->flag: received unknown flag."),
-        assert_equal(regexp(tmpDebugLog, "received unknown flag"), 1),
     }) :));
 }
 
