@@ -11,7 +11,9 @@ string *test_order () {
 private int resetFnCalled = 0;
 private int setupFnCalled = 0;
 void test_resets () {
-    function setupFn = (: setupFnCalled ++ :);
+    function setupFn = function () {
+        setupFnCalled ++;
+    };
     function resetFn = function () {
         resetFnCalled ++;
         return 2;
