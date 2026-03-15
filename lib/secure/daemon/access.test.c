@@ -31,13 +31,16 @@ void test_query_allowed () {
 
     basicOb = new(STD_OBJECT);
     expect("query_allowed handles valid requests", (: ({
-        // query read/write on path with permissions
+        // allow: query read/write on path with permissions
         assert_equal(testOb->query_allowed(testOb, "file_size", "/tmp/path", "read"), 1),
         assert_equal(testOb->query_allowed(testOb, "write_file", "/tmp/path", "write"), 1),
 
-        // query read/write on path without permissions
+        // deny: query read/write on path without permissions
         assert_equal(testOb->query_allowed($(basicOb), "read_file", "/tmp/void/path", "read"), 0),
         assert_equal(testOb->query_allowed($(basicOb), "write_file", "/tmp/void/path", "write"), 0),
+
+        // deny: write.cfg restricts /save/ to SECURE:MUDLIB
+        assert_equal(testOb->query_allowed($(basicOb), "write_file", "/save/account/x", "write"), 0),
     }) :));
     destruct(basicOb);
 }
