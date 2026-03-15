@@ -37,3 +37,62 @@ Basic NPCs that can populate rooms are referenced by [STD_NPC](lib/doc/build/STD
 ## Unit Tests
 
 This project was built with testing in mind from the start with the [M_TEST](lib/doc/build/M_TEST.md) module for writing tests and D_TEST for running tests among the first files to be coded. Objects are broken down into small, easily testable modules that are as independent of other components as possible.
+
+## Security
+
+The access control system is implemented in `D_ACCESS` (`/secure/daemon/access.c`) and enforced via the `valid_read` and `valid_write` master applies in `master.c`.
+
+### How access checks work
+
+When any object performs a file read or write, the driver calls `valid_read` or `valid_write` in `master.c`, which delegates to `D_ACCESS->query_allowed(caller, fn, file, mode)`.
+
+`query_allowed` supports three modes: `"read"`, `"write"`, and `"socket"`. Socket access is a special case — it bypasses config lookup entirely and is permitted only for the object at `/secure/daemon/ipc` or any object inheriting the HTTP module. For read and write modes, `query_allowed` performs three checks in order:
+
+1. **Path lookup** — The target file path is matched against `read.cfg` (for reads) or `write.cfg` (for writes) to find the required privilege level. If the path is marked `ALL`, access is immediately granted without inspecting the call stack. If marked `NONE`, the call stack will be inspected but every object will be denied.
+
+2. **Call stack inspection** — Every object in the call stack (the caller plus all `previous_object(-1)` entries) is evaluated by `check_stack_entry`. If *any* object fails, access is denied.
+
+3. **Per-entry privilege check** (`check_stack_entry`) — For each stack entry, checks in order:
+   - Internal objects (`D_ACCESS`, `MASTER`, `SEFUN`) are always trusted and skipped.
+   - Objects with no `query_privs` result are denied.
+   - Objects reading a path with no `read.cfg` entry are permitted (open read).
+   - Objects with `ACCESS_SECURE` privilege bypass all path restrictions.
+   - Objects whose privilege class matches the target file's class (via `query_file_privs`) are permitted.
+   - Objects writing to a path with no `write.cfg` entry are denied.
+   - Otherwise, the object's privileges must intersect the path's required privileges.
+
+### Access level tiers
+
+| Constant | Value | Assigned to |
+|---|---|---|
+| `ACCESS_ALL` | `"ALL"` | Used in cfg files to mean "any caller permitted" |
+| `ACCESS_CMD` | `"COMMAND"` | Files in `/cmd/` |
+| `ACCESS_ASSIST` | `"ASSIST"` | Files in `/std/` |
+| `ACCESS_MUDLIB` | `"MUDLIB"` | Files in `/daemon/` |
+| `ACCESS_SECURE` | `"SECURE"` | Files in `/secure/` and `/save/`; bypasses all path restrictions |
+
+Realm files get the lowercased realm name as their privilege (e.g., `"player"`).
+Domain files get the capitalized domain name (e.g., `"Midgaard"`).
+
+### Config files
+
+| File | Purpose |
+|---|---|
+| `lib/secure/etc/read.cfg` | Minimum privilege to *read* a path |
+| `lib/secure/etc/write.cfg` | Minimum privilege to *write* a path |
+| `lib/secure/etc/group.cfg` | Privilege group memberships |
+
+Format: `(/path/) PRIV` or `(/path/) PRIV:PRIV2` for multiple accepted privileges.
+
+**Common mistake:** Adding a restriction to `write.cfg` for a path that is `ALL` in `read.cfg` is correct — reads and writes use separate config lookups. A file can be publicly readable but write-restricted.
+
+### Debugging access failures
+
+Enable per-entry debug logging at runtime:
+
+```lpc
+D_ACCESS->set_debug(1);  // enable
+D_ACCESS->set_debug(0);  // disable
+```
+
+Each stack entry evaluation will emit a `debug_message` showing the object, its privileges, the required privileges, and the result.

@@ -2,9 +2,15 @@
 #include <driver/function.h>
 
 private nosave mapping __Group, __Read, __Write;
+nosave private int __Debug = 0;
 
-string query_file_privs (string filename);
-
+/**
+ * Parses a key-value access config file into a mapping.
+ * Each non-comment line must be in the format: (path) PRIV or (path) PRIV:PRIV2
+ *
+ * @param {string} path - absolute path to the config file
+ * @returns {mapping} parsed config — keys are paths, values are string arrays of privileges
+ */
 private mapping load_config (string path) {
     mapping result = ([ ]);
     string file, *lines, key, value;
@@ -25,116 +31,46 @@ private mapping load_config (string path) {
     return result;
 }
 
+/**
+ * Loads the three access config files on daemon startup.
+ */
 void create () {
     __Group = load_config("/secure/etc/group.cfg");
     __Read = load_config("/secure/etc/read.cfg");
     __Write = load_config("/secure/etc/write.cfg");
 }
 
-// -----------------------------------------------------------------------------
-
-// The main function used to check if a caller can perform fn on file in mode.
-int query_allowed (object caller, string fn, string file, string mode) {
-    string *pathPrivs, *privs, priv, tmp;
-    object *stack;
-    int i;
-
-    if (!objectp(caller)) {
-        error("Bad argument 1 to access->query_allowed");
+/**
+ * Enables or disables debug logging for access checks.
+ * When enabled, each stack entry evaluation emits a debug_message to the driver log.
+ *
+ * @param {int} val - 1 to enable debug output, 0 to disable
+ */
+void set_debug (int val) {
+    if (!intp(val)) {
+        error("Bad argument 1 to access->set_debug");
     }
-    if (!stringp(fn)) {
-        error("Bad argument 2 to access->query_allowed");
-    }
-    if (!stringp(file) && mode != "socket") {
-        error("Bad argument 3 to access->query_allowed");
-    }
-    if (!stringp(mode)) {
-        error("Bad argument 4 to access->query_allowed");
-    }
-
-    if (mode == "socket") {
-        // only D_IPC or HTTP module allowed to create sockets
-        return file_name(caller) == "/secure/daemon/ipc" ||
-            inherits("/secure/module/http.c", caller);
-    }
-
-    // attempt to match the target file path to __Read path permissions
-    pathPrivs = match_path(__Read, file);
-
-    // access check passes due to root privilege of matched file path being ALL
-    if (sizeof(pathPrivs) && pathPrivs[0] == ACCESS_ALL) {
-        return 1;
-    }
-
-    // debug_message("! D_ACCESS->query_allowed with " + identify(caller) + ", "+identify(pathPrivs)+", "+file+" fn: "+fn);
-
-    // set all previous objects and caller as the stack
-    i = sizeof(stack = previous_object(-1) + ({ caller }));
-
-    // debug_message("! D_ACCESS->query_allowed stack is: "+identify(stack));
-
-    // go through the stack from the caller down thru possible previous objects
-    while (i--) {
-        // skip invalid stack entry
-        if (!stack[i]) {
-            continue;
-        }
-
-        // skip if stack entry is member of the access system
-        tmp = file_name(stack[i]);
-        if (stack[i] == this_object() || tmp == MASTER || tmp == SEFUN) {
-            continue;
-        }
-
-        // access check fails due to no privs found for stack entry
-        if (!(priv = query_privs(stack[i]))) {
-            return 0;
-        }
-
-        // skip if trying to read with no read privilege
-        if (!pathPrivs && mode == "read") {
-            continue;
-        }
-
-        // prepare list of stack entry's privilege groups
-        privs = explode(priv, ":"); // @TODO when does this receive a : separated list?
-
-        // skip stack entry without SECURE priv
-        if (member_array(ACCESS_SECURE, privs) != -1) {
-            continue;
-        }
-
-        // skip stack entry with privs containing that of target file
-        if (member_array(query_file_privs(file), privs) != -1) {
-            continue;
-        }
-
-        // access check fails due to trying to write with no read privilege
-        if (!pathPrivs && mode == "write") {
-            return 0;
-        }
-
-        // skip stack entry if privs and pathPrivs are identical arrays
-        if (sizeof(privs & pathPrivs)) {
-            continue;
-        }
-
-        // access check fails due to reaching a stack entry without privilege
-        return 0;
-    }
-    // debug_message("! D_ACCESS->query_allowed returning 1\n--------");
-
-    // access check has cleared the stack with privilege
-    return 1;
+    __Debug = val;
 }
 
-// master apply privs_file calls this function
+/**
+ * Returns the privilege class that a file path belongs to.
+ * Called by master.c's privs_file apply to assign object identity when a
+ * file is first compiled. This determines what an object *is*, not what it
+ * can *access* — see query_allowed for runtime access control.
+ *
+ * Realm files return the lowercased realm name. Domain files return the
+ * capitalized domain name. All other paths map to an ACCESS_* constant.
+ *
+ * @param {string} filename - absolute path to the file (leading slash optional)
+ * @returns {string} the privilege class string, or 0 if path is unrecognized
+ */
 string query_file_privs (string filename) {
     string *path, result = 0;
     if (sizeof(path = explode(filename, "/")) > 0) {
         switch (path[0]) {
             case "cmd":
-                result = ACCESS_CMD; // @TODO necessary?
+                result = ACCESS_CMD;
                 break;
             case "etc":
                 result = ACCESS_ALL;
@@ -161,8 +97,155 @@ string query_file_privs (string filename) {
                     result = capitalize(lower_case(path[1]));
                 }
                 break;
-            default: result =  0;
+            default:
+                result = 0;
         }
     }
     return result;
+}
+
+/**
+ * Emits a prefixed debug_message to the driver log if debug mode is enabled.
+ * Called by check_stack_entry at each decision point.
+ *
+ * @param {string} msg - the message to emit (will be prefixed with "ACCESS_D: ")
+ */
+void print_debug_message (string msg) {
+    if (__Debug) {
+        debug_message("ACCESS_D: " + msg);
+    }
+}
+
+/**
+ * Evaluates a single call stack entry against the access requirements for a
+ * file operation. Called once per stack entry by query_allowed.
+ *
+ * Returns 1 if this entry clears (access granted for this entry).
+ * Returns 0 if this entry fails (caller should be denied access).
+ *
+ * Checks in order: internal object skip → no privilege → open read path →
+ * SECURE bypass → file class match → closed write path → privilege intersection.
+ *
+ * @param {object} ob              - the call stack entry being evaluated
+ * @param {string *} requiredPrivs - privileges required by the path config, or 0 if path has no config entry
+ * @param {string} mode            - "read" or "write"
+ * @param {string} file            - the target file path
+ * @returns {int} 1 if entry clears, 0 if access denied
+ */
+private int check_stack_entry (object ob, string *requiredPrivs, string mode, string file) {
+    string entryPriv, entryFile, filePriv;
+    string *entryPrivs;
+
+    // Skip internal security objects — they are always trusted
+    entryFile = file_name(ob);
+    if (ob == this_object() || entryFile == MASTER || entryFile == SEFUN) {
+        print_debug_message(entryFile + " (internal object)");
+        return 1;
+    }
+
+    // Objects without any privilege are never allowed
+    if (!(entryPriv = query_privs(ob))) {
+        print_debug_message(entryFile + " (no privileges)");
+        return 0;
+    }
+
+    // No read.cfg entry matched this path — any privileged object may read
+    if (!requiredPrivs && mode == "read") {
+        print_debug_message(entryFile + " (open read path)");
+        return 1;
+    }
+
+    entryPrivs = explode(entryPriv, ":");
+
+    // SECURE objects bypass all path restrictions
+    if (member_array(ACCESS_SECURE, entryPrivs) != -1) {
+        print_debug_message(entryFile + " (SECURE privilege)");
+        return 1;
+    }
+
+    // Objects whose privilege class matches the file's privilege class are allowed
+    filePriv = query_file_privs(file);
+    if (member_array(filePriv, entryPrivs) != -1) {
+        print_debug_message(entryFile + " (file class match: " + filePriv + ")");
+        return 1;
+    }
+
+    // Unprotected write paths — deny by default
+    if (!requiredPrivs && mode == "write") {
+        print_debug_message(entryFile + " (no write config for path)");
+        return 0;
+    }
+
+    // Object holds at least one privilege listed in the path's required set
+    if (sizeof(entryPrivs & requiredPrivs)) {
+        print_debug_message(entryFile + " (privilege match: " + implode(entryPrivs & requiredPrivs, ":") + ")");
+        return 1;
+    }
+
+    print_debug_message(entryFile + " (needs: " + implode(requiredPrivs, ":") + ", has: " + entryPriv + ")");
+    return 0;
+}
+
+/**
+ * The main runtime access check. Called by master.c's valid_read and
+ * valid_write applies to determine whether a file operation is permitted.
+ *
+ * Paths marked ALL in the config are immediately allowed without stack
+ * inspection. Otherwise, every object in the call stack must pass
+ * check_stack_entry — if any single entry lacks sufficient privilege,
+ * access is denied.
+ *
+ * Socket access bypasses the normal config check and is permitted only
+ * for the object at /secure/daemon/ipc or any inheritor of the HTTP module.
+ *
+ * @param {object} caller    - the object initiating the file operation
+ * @param {string} fn        - the efun being called (e.g., "read_file", "write_file")
+ * @param {string|int} file  - the target file path, or 0 for socket mode
+ * @param {string} mode      - "read", "write", or "socket"
+ * @returns {int} 1 if access is allowed, 0 if denied
+ */
+int query_allowed (object caller, string fn, string file, string mode) {
+    string *requiredPrivs;
+    object *callStack;
+
+    if (!objectp(caller)) {
+        error("Bad argument 1 to access->query_allowed");
+    }
+    if (!stringp(fn)) {
+        error("Bad argument 2 to access->query_allowed");
+    }
+    if (!stringp(file) && mode != "socket") {
+        error("Bad argument 3 to access->query_allowed");
+    }
+    if (!stringp(mode)) {
+        error("Bad argument 4 to access->query_allowed");
+    }
+
+    // Socket access is handled separately
+    if (mode == "socket") {
+        return file_name(caller) == "/secure/daemon/ipc" ||
+            inherits("/secure/module/http.c", caller);
+    }
+
+    // Select required privileges for this path based on the operation mode
+    requiredPrivs = mode == "write"
+        ? match_path(__Write, file)
+        : match_path(__Read, file);
+
+    // Publicly accessible paths are immediately allowed without stack inspection
+    if (sizeof(requiredPrivs) && requiredPrivs[0] == ACCESS_ALL) {
+        return 1;
+    }
+
+    // Every object in the call stack must hold sufficient privilege
+    callStack = ({ caller }) + previous_object(-1);
+    foreach (object ob in callStack) {
+        if (!ob) {
+            continue;
+        }
+        if (!check_stack_entry(ob, requiredPrivs, mode, file)) {
+            return 0;
+        }
+    }
+    return 1;
 }
