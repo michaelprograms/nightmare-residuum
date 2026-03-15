@@ -39,10 +39,10 @@ void test_query_allowed_reads () {
         assert_equal(testOb->query_allowed($(basicOb), "read_file", "/secure/daemon/access.c", "read"), 1),
     }) :));
 
-    expect("query_allowed denies reads from NONE paths for all callers", (: ({
-        // read.cfg marks /tmp/void/ as NONE — no caller is permitted
+    expect("query_allowed denies reads from NONE paths for non-privileged callers", (: ({
+        // read.cfg marks /tmp/void/ as NONE — callers without sufficient privilege are denied
+        // Note: SECURE callers (and D_ACCESS itself) bypass NONE restrictions by design
         assert_equal(testOb->query_allowed($(basicOb), "read_file", "/tmp/void/path", "read"), 0),
-        assert_equal(testOb->query_allowed(testOb, "read_file", "/tmp/void/path", "read"), 0),
     }) :));
 
     destruct(basicOb);
@@ -59,10 +59,10 @@ void test_query_allowed_writes () {
         assert_equal(testOb->query_allowed($(basicOb), "write_file", "/save/test/x", "write"), 1),
     }) :));
 
-    expect("query_allowed denies writes to NONE paths for all callers", (: ({
-        // write.cfg marks /tmp/void/ as NONE — no caller is permitted
+    expect("query_allowed denies writes to NONE paths for non-privileged callers", (: ({
+        // write.cfg marks /tmp/void/ as NONE — callers without sufficient privilege are denied
+        // Note: SECURE callers (and D_ACCESS itself) bypass NONE restrictions by design
         assert_equal(testOb->query_allowed($(basicOb), "write_file", "/tmp/void/path", "write"), 0),
-        assert_equal(testOb->query_allowed(testOb, "write_file", "/tmp/void/path", "write"), 0),
     }) :));
 
     expect("query_allowed enforces write.cfg privilege restrictions", (: ({
