@@ -10,13 +10,13 @@ nosave private mapping __Results = ([ ]);
 
 nosave private int currentTest = 0, totalFiles = 0;
 nosave private int shutdownAfterTests = 0, coverageAfterTests = 0;
-private nosave int testStartTime;
+nosave private int testStartTime;
 
 /** @type {STD_USER} __User */
 nosave private object __User;
 
-mapping __Lines = ([ ]), __TotalLines = ([ ]);
-string *__RawLines = ({ });
+nosave private mapping __Lines = ([ ]), __TotalLines = ([ ]);
+nosave private string *__RawLines = ({ });
 
 /* ----- function prototypes ----- */
 
@@ -147,12 +147,12 @@ void process_file (string file, mapping options) {
     if (t = find_object(file)) {
         destruct(t);
     }
-    tmp = catch (load_object(file));
+    tmp = catch (t = load_object(file));
     if (tmp) {
         message("system", "Error in test: " + tmp + "\n", this_user());
         return;
     }
-    if (!inherits(M_TEST, load_object(file))) {
+    if (!inherits(M_TEST, t)) {
         evaluate(fnDone);
         return;
     }
@@ -500,14 +500,7 @@ void analyze_coverage () {
         string bColor;
         string lineInfo;
 
-        if (!sizeof(__Lines[i+1]) > 1) { // Function
-            if (!__Lines[i+1][0]) {
-                bColor = "B_FFC";
-            } else {
-                bColor = "B_G14";
-            }
-            lineInfo = __Lines[i+1][0] + "x";
-        } else if (!undefinedp(__Lines[i+1])) { // Line
+        if (!undefinedp(__Lines[i+1])) { // Function or Line
             if (!__Lines[i+1][0]) {
                 bColor = "B_FFC";
             } else {
