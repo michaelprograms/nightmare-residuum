@@ -365,7 +365,7 @@ void run (mapping options) {
 
     testStartTime = time_ns();
     write("Scanning for test files...\n");
-    update_test_data("/secure/", "/secure/cmd");
+    update_test_data("/secure/", "/secure/(cmd|daemon/test\\.c)");
     update_test_data("/daemon/");
     update_test_data("/std/");
 
