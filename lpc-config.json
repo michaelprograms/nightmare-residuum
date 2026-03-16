@@ -3,6 +3,11 @@
     "driver": {
         "type": "fluffos"
     },
+    "defines": [
+        { "__VERSION__": "\"fluffos\"" },
+        { "__PORT__": "6666" },
+        { "__USE_SQLITE3__": "2" }
+    ],
     "exclude": [
         "lib/doc",
         "lib/log",
@@ -22,10 +27,5 @@
     "libInclude": [
         "secure/include",
         "include"
-    ],
-    "defines": [
-        { "__VERSION__": "\"fluffos\"" },
-        { "__PORT__": "6666" },
-        { "__USE_SQLITE3__": "2" }
     ]
 }
