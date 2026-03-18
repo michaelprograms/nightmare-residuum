@@ -35,8 +35,6 @@ string wrap_ansi (string str, int width) {
             // find last word in Unknown to the end (includes spaces)
             posUnknown = strsrch(linesUnknown[i], " ", -1);
             lastWord = linesUnknown[i][posUnknown..];
-            posUnknown = strsrch(linesUnknown[i], lastWord, -1);
-            lastWord = linesUnknown[i][posUnknown..];
             if (posUnknown <= 0) {
                 linesANSI[i] += sprintf("%' '*s", diff, "");
             } else {
@@ -73,14 +71,14 @@ int *query_random_color () {
 int color_to_sRGB (float n) {
     float f;
 
-    if (!floatp(n) || undefinedp(n)) {
+    if (undefinedp(n) || !floatp(n)) {
         error("Bad argument 1 to color->color_to_sRGB");
     }
 
     if (n <= 0.0031308) {
         f = 12.92 * n;
     } else {
-        f = (1.055 * pow(n, 1/2.4)) - 0.055;
+        f = (1.055 * pow(n, 1.0 / 2.4)) - 0.055;
     }
 
     return to_int(255.9999 * f);
@@ -90,7 +88,7 @@ int color_to_sRGB (float n) {
 float color_from_sRGB (int n) {
     float x, y;
 
-    if (!intp(n) || undefinedp(n)) {
+    if (undefinedp(n) || !intp(n)) {
         error("Bad argument 1 to color->color_from_sRGB");
     }
 
@@ -101,7 +99,7 @@ float color_from_sRGB (int n) {
         y = pow(((x + 0.055) / 1.055), 2.4);
     }
 
-    return to_float(sprintf("%0.2f", y));
+    return y;
 }
 
 // Linear Interpolation a color between two colors at a ratio
@@ -124,10 +122,10 @@ float color_lerp (float color1, float color2, float ratio) {
 string *color_gradient (mixed *color1, mixed *color2, int steps) {
     string *gradient = allocate(steps);
 
-    if (!arrayp(color1) && sizeof(color1) != 3) {
+    if (!arrayp(color1) || sizeof(color1) != 3) {
         error("Bad argument 1 to color->color_gradient");
     }
-    if (!arrayp(color2) && sizeof(color2) != 3) {
+    if (!arrayp(color2) || sizeof(color2) != 3) {
         error("Bad argument 2 to color->color_gradient");
     }
     if (!intp(steps) || steps < 2) {
@@ -145,7 +143,7 @@ string *color_gradient (mixed *color1, mixed *color2, int steps) {
 }
 
 // Applies the array gradient to the string text.
-// sizeof(gradient) must equal sizeof(text)
+// sizeof(gradient) must be at least sizeof(text)
 string apply_gradient (string text, string *gradient) {
     string *line, result = "";
     int i, l;
@@ -165,6 +163,13 @@ string apply_gradient (string text, string *gradient) {
 }
 
 string format_message_color (string type, string message) {
+    if (undefinedp(type) || !sizeof(type)) {
+        error("Bad argument 1 to color->format_message_color");
+    }
+    if (undefinedp(message)) {
+        error("Bad argument 2 to color->format_message_color");
+    }
+
     if (type == "say") {
         message = "%^CYAN%^" + replace_string(message, ":", ":%^RESET%^");
     } else if (type == "tell") {

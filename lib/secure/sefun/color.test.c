@@ -42,9 +42,9 @@ void test_sRGB () {
 
     expect("color_from_sRGB behaves", (: ({
         assert_equal(testOb->color_from_sRGB(0), 0.0),
-        assert_equal(testOb->color_from_sRGB(137), 0.25),
-        assert_equal(testOb->color_from_sRGB(188), 0.5),
-        assert_equal(testOb->color_from_sRGB(225), 0.75),
+        assert_equal(testOb->color_from_sRGB(137), 0.250158),
+        assert_equal(testOb->color_from_sRGB(188), 0.502886),
+        assert_equal(testOb->color_from_sRGB(225), 0.752942),
         assert_equal(testOb->color_from_sRGB(255), 1.0),
     }) :));
 
@@ -125,6 +125,11 @@ void test_format_message_color () {
         assert_equal(testOb->format_message_color("combat alert", "Combat alert!"), "%^I_YELLOW%^BOLD%^Combat alert!%^RESET%^"),
         assert_equal(testOb->format_message_color("ability hit", "Ability hit!"), "%^I_RED%^BOLD%^Ability hit!%^RESET%^"),
         assert_equal(testOb->format_message_color("ability miss", "Ability miss."), "%^I_WHITE%^BOLD%^Ability miss.%^RESET%^"),
+    }) :));
+
+    expect("format_message_color handles bad arguments", (: ({
+        assert_catch((: testOb->format_message_color(UNDEFINED, UNDEFINED) :), "*Bad argument 1 to color->format_message_color\n"),
+        assert_catch((: testOb->format_message_color("type", UNDEFINED) :), "*Bad argument 2 to color->format_message_color\n"),
     }) :));
 }
 
