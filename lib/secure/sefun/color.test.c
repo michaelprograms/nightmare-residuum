@@ -17,7 +17,7 @@ void test_strip_colour () {
     }) :));
 }
 
-private int *Color;
+nosave private int *Color;
 void test_random_color () {
     Color = testOb->query_random_color();
     expect("query_random_color returns random triplets", (: ({
@@ -35,6 +35,8 @@ void test_sRGB () {
         assert_equal(testOb->color_to_sRGB(0.5), 188),
         assert_equal(testOb->color_to_sRGB(0.75), 225),
         assert_equal(testOb->color_to_sRGB(1.0), 255),
+
+        assert_equal(testOb->color_to_sRGB(testOb->color_from_sRGB(137)), 137),
     }) :));
     expect("color_to_sRGB handles bad input", (: ({
         assert_catch((: testOb->color_to_sRGB(UNDEFINED) :), "*Bad argument 1 to color->color_to_sRGB\n"),
@@ -42,12 +44,13 @@ void test_sRGB () {
 
     expect("color_from_sRGB behaves", (: ({
         assert_equal(testOb->color_from_sRGB(0), 0.0),
-        assert_equal(testOb->color_from_sRGB(137), 0.250158),
-        assert_equal(testOb->color_from_sRGB(188), 0.502886),
-        assert_equal(testOb->color_from_sRGB(225), 0.752942),
+        assert_equal(testOb->color_from_sRGB(137), 0.25),
+        assert_equal(testOb->color_from_sRGB(188), 0.50),
+        assert_equal(testOb->color_from_sRGB(225), 0.75),
         assert_equal(testOb->color_from_sRGB(255), 1.0),
-    }) :));
 
+        assert_equal(testOb->color_from_sRGB(testOb->color_to_sRGB(0.25)), 0.25),
+    }) :));
     expect("color_from_sRGB handles bad input", (: ({
         assert_catch((: testOb->color_from_sRGB(UNDEFINED) :), "*Bad argument 1 to color->color_from_sRGB\n"),
     }) :));
@@ -66,6 +69,8 @@ void test_lerp () {
         assert_catch((: testOb->color_lerp(0.0, 0, 0) :), "*Bad argument 2 to color->color_lerp\n"),
 
         assert_catch((: testOb->color_lerp(0.0, 0.0, 0) :), "*Bad argument 3 to color->color_lerp\n"),
+        assert_catch((: testOb->color_lerp(0.0, 1.0, 1.5) :), "*Bad argument 3 to color->color_lerp\n"),
+        assert_catch((: testOb->color_lerp(0.0, 1.0, -0.1) :), "*Bad argument 3 to color->color_lerp\n"),
     }) :));
 }
 
@@ -76,17 +81,20 @@ void test_color_gradient () {
     }) :));
 
     expect("color_gradient handles bad input", (: ({
-        assert_catch((: testOb->color_gradient(0, 0, UNDEFINED) :), "*Bad argument 1 to color->color_gradient\n"),
+        assert_catch((: testOb->color_gradient(UNDEFINED, UNDEFINED, UNDEFINED) :), "*Bad argument 1 to color->color_gradient\n"),
+        assert_catch((: testOb->color_gradient(({ 0, 0 }), UNDEFINED, UNDEFINED) :), "*Bad argument 1 to color->color_gradient\n"),
 
-        assert_catch((: testOb->color_gradient(({ 0, 0, 0 }), 0, UNDEFINED) :), "*Bad argument 2 to color->color_gradient\n"),
+        assert_catch((: testOb->color_gradient(({ 0, 0, 0 }), UNDEFINED, UNDEFINED) :), "*Bad argument 2 to color->color_gradient\n"),
+        assert_catch((: testOb->color_gradient(({ 0, 0, 0 }), ({ 0, 0 }), UNDEFINED) :), "*Bad argument 2 to color->color_gradient\n"),
 
         assert_catch((: testOb->color_gradient(({ 0, 0, 0 }), ({ 0, 0, 0 }), UNDEFINED) :), "*Bad argument 3 to color->color_gradient\n"),
+        assert_catch((: testOb->color_gradient(({ 0, 0, 0 }), ({ 0, 0, 0 }), 1) :), "*Bad argument 3 to color->color_gradient\n"),
     }) :));
 }
 
 void test_apply_gradient () {
-    mixed *gradient1 = testOb->color_gradient(({ 255, 255, 255 }), ({ 0, 0, 0 }), 3);
-    mixed *gradient2 = testOb->color_gradient(({ 0, 0, 0 }), ({ 255, 255, 255 }), 10);
+    string *gradient1 = testOb->color_gradient(({ 255, 255, 255 }), ({ 0, 0, 0 }), 3);
+    string *gradient2 = testOb->color_gradient(({ 0, 0, 0 }), ({ 255, 255, 255 }), 10);
 
     expect("apply_gradient behaves", (: ({
         assert_equal(testOb->apply_gradient("123", $(gradient1)), "\e[38;2;255;255;255m1\e[38;2;127;127;127m2\e[38;2;0;0;0m3\e[0;37;40m"),

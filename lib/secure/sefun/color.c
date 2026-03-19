@@ -99,7 +99,7 @@ float color_from_sRGB (int n) {
         y = pow(((x + 0.055) / 1.055), 2.4);
     }
 
-    return y;
+    return to_float(sprintf("%0.2f", y));
 }
 
 // Linear Interpolation a color between two colors at a ratio
