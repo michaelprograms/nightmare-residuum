@@ -66,7 +66,7 @@ void test_query_allowed_writes () {
     }) :));
 
     expect("query_allowed enforces write.cfg privilege restrictions", (: ({
-        // write.cfg marks /save/ as SECURE:MUDLIB:ASSIST: ASSIST callers are permitted
+        // write.cfg marks /save/ as SECURE:MUDLIB:ASSIST:COMMAND: ASSIST callers are permitted
         assert_equal(testOb->query_allowed($(basicOb), "write_file", "/save/account/x", "write"), 1),
         // write.cfg restricts /secure/ to SECURE: ASSIST callers are denied
         assert_equal(testOb->query_allowed($(basicOb), "write_file", "/secure/daemon/foo.c", "write"), 0),

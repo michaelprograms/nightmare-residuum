@@ -364,41 +364,59 @@ int save_ed_setup (object user, int config) {
 // --- privileges applies ------------------------------------------------------
 
 /**
- * This apply is called when a new file is created to determine privileges
+ * This apply is called by the driver when an object is compiled to assign its
+ * privilege string. The privilege string determines an object's identity for
+ * all runtime access control checks.
  *
- * @param filename path to check privileges of
- * @returns the path's privileges
+ * Privilege assignment is delegated to D_ACCESS, which maps file paths to
+ * classes: SECURE, MUDLIB, COMMAND, ASSIST, ALL, or a realm/domain name. See
+ * D_ACCESS->query_file_privs for the full mapping.
+ *
+ * @param {string} filename - path of the file being compiled
+ * @returns {string} the privilege class for this file
  */
 string privs_file (string filename) {
     return D_ACCESS->query_file_privs(filename);
 }
 
 /**
- * This apply is called whenever database actions are attempted.
- * actions: connect, exec, fetch, close
+ * This apply is called by the driver whenever an SQLite3 database action is
+ * attempted. Actions: connect, exec, fetch, close.
  *
- * @param ob object requesting database access
- * @param action database action
- * @param info extra info passed by the driver
- * @returns 1
+ * All database access is unconditionally permitted. SQLite is only used
+ * internally by privileged daemons and there is no player-facing SQL exposure.
+ *
+ * @param {object} caller - the object requesting database access
+ * @param {string} action - the database action being attempted
+ * @param {mixed *} info  - extra info passed by the driver
+ * @returns {int} 1 - database access is always permitted
  */
-int valid_database (object ob, string action, mixed *info) {
+int valid_database (object caller, string action, mixed *info) {
+    // TODO: wire this up like valid_socket
+    // return D_ACCESS->query_allowed(caller, action, 0, "database");
     return 1;
 }
 
 /**
- * This apply controls the use of efun:: prefix.
+ * This apply is called by the driver to control use of the efun:: prefix,
+ * which allows an object to bypass overridden efuns and call the driver
+ * built-in directly.
  *
- * @param file the path requesting efun:: prefix
- * @param efun_name the requested efun
- * @param main_file
- * @returns 0 or 1
+ * Only three categories of override are permitted:
+ *   - input_to, get_char  - only from /std/user/input (interactive I/O)
+ *   - parse_*             - only from /std/module/parse (parser integration)
+ *   - all other efun::    - only from /secure/sefun or /secure/daemon/master
+ *
+ * @param {string} file      - path of the file requesting efun:: access
+ * @param {string} fn        - the efun being overridden
+ * @param {string} main_file - the primary file in the inheritance chain
+ * @returns {int} 1 if the override is permitted, 0 otherwise
  */
-varargs int valid_override (string file, string efun_name, string main_file) {
+varargs int valid_override (string file, string fn, string main_file) {
     if (file[0] != '/') {
         return 0;
     }
-    switch (efun_name) {
+    switch (fn) {
         case "input_to":
         case "get_char":
             return regexp(file, "^/std/user/input");
@@ -411,13 +429,17 @@ varargs int valid_override (string file, string efun_name, string main_file) {
 }
 
 /**
- * This apply is called prior to the use of shadow efun.
+ * This apply is called by the driver prior to use of the shadow efun.
+ * Shadows are restricted to the test framework to support object mocking.
  *
- * @param {object} ob the object to be shadowed
- * @returns 0 or 1
+ * Permitted callers:
+ *   - *.mock clones (ex: character.mock#0): lightweight test stand-ins
+ *   - /std/shadow.test: the shadow mechanism test itself
+ *
+ * @param {object} ob - the object to be shadowed
+ * @returns {int} 1 if shadowing is permitted, 0 otherwise
  */
 int valid_shadow (object ob) {
-    // Only mock files or shadow test can use shadows
     if (regexp(file_name(previous_object()), "[a-z]+\\.mock#[0-9]+")) {
         return 1;
     } else if (base_name(ob) == "/std/shadow.test") {
@@ -428,36 +450,43 @@ int valid_shadow (object ob) {
 }
 
 /**
- * This apply is called prior to every socket efun.
+ * This apply is called by the driver prior to every socket efun.
+ * Socket access is delegated to D_ACCESS, which permits only D_IPC and
+ * objects that inherit the HTTP module.
  *
- * @param {object} caller the object requesting a socket
- * @param fn the socket function being requested
- * @param info extra info passed by the driver
- * @returns 0 or 1
+ * @param {object} caller - the object requesting socket access
+ * @param {string} fn     - the socket efun being called
+ * @param {mixed *} info  - extra info passed by the driver
+ * @returns {int} 1 if the caller is D_IPC or inherits the HTTP module, 0 otherwise
  */
 int valid_socket (object caller, string fn, mixed *info) {
     return D_ACCESS->query_allowed(caller, fn, 0, "socket");
 }
 
 /**
- * This apply is called for each of the read efuns.
+ * This apply is called by the driver for each read efun to determine whether
+ * the caller has permission to access the file.
  *
  * Read efuns:
- *    file_size, get_dir, include, load_object, read_bytes, read_file,
- *    restore_object, stat,
+ *   file_size, get_dir, include, load_object, read_bytes, read_file,
+ *   restore_object, stat
  * Read/write efuns:
- *    ed_start, compress_file, move_file,
+ *   ed_start, compress_file, move_file
  *
- * @param file the path being read
- * @param caller the source of the efun call
- * @param fn the efun being called
- * @returns 0 or 1
+ * Master and the access daemon itself bypass stack inspection and are always
+ * permitted to read. All other callers are checked via D_ACCESS->query_allowed.
+ * Denied reads are logged to the driver debug log, except during test runs.
+ *
+ * @param {string} file  - the absolute path being read
+ * @param {mixed} caller - the object (or path string) initiating the read
+ * @param {string} fn    - the efun being called
+ * @returns {int} 1 if read access is granted, 0 otherwise
  */
 int valid_read (string file, mixed caller, string fn) {
     int valid = 0;
     if (stringp(file) && sizeof(file)) {
         file = sanitize_path(file);
-        if (!(valid = regexp(base_name(caller), "^/secure/daemon/[master|access]"))) {
+        if (!(valid = regexp(base_name(caller), "^/secure/daemon/(master|access)"))) {
             valid = D_ACCESS->query_allowed(caller, fn, file, "read");
         }
         if (!valid && !regexp(base_name(previous_object()), "\\.test$")) {
@@ -468,23 +497,28 @@ int valid_read (string file, mixed caller, string fn) {
 }
 
 /**
- * This apply is called for each of the write efuns.
+ * This apply is called by the driver for each write efun to determine whether
+ * the caller has permission to modify the file.
  *
  * Read/write efuns:
- *    ed_start, compress_file, move_file,
+ *   ed_start, compress_file, move_file
  * Write efuns:
- *    debugmalloc, dumpallobj, mkdir, remove_file, rename, rmdir,
- *    save_object, sqlite3_connect, trace_start, write_bytes, write_file,
+ *   debugmalloc, dumpallobj, mkdir, remove_file, rename, rmdir,
+ *   save_object, sqlite3_connect, trace_start, write_bytes, write_file
  *
- * @param file the path being read
- * @param caller the source of the efun call
- * @param fn the efun being called
- * @returns 0 or 1
+ * Master and the access daemon itself bypass stack inspection and are always
+ * permitted to write. All other callers are checked via D_ACCESS->query_allowed.
+ * Denied writes are logged to the driver debug log, except during test runs.
+ *
+ * @param {string} file  - the absolute path being written
+ * @param {mixed} caller - the object (or path string) initiating the write
+ * @param {string} fn    - the efun being called
+ * @returns {int} 1 if write access is granted, 0 otherwise
  */
 int valid_write (string file, mixed caller, string fn) {
     int valid = 0;
     file = sanitize_path(file);
-    if (!(valid = regexp(base_name(caller), "^/secure/daemon/[master|access]"))) {
+    if (!(valid = regexp(base_name(caller), "^/secure/daemon/(master|access)"))) {
         valid = D_ACCESS->query_allowed(caller, fn, file, "write");
     }
     if (!valid && !regexp(base_name(previous_object()), "\\.test$")) {

@@ -1,7 +1,7 @@
 #include <access.h>
 #include <driver/function.h>
 
-private nosave mapping __Group, __Read, __Write;
+private nosave mapping __Read, __Write;
 nosave private int __Debug = 0;
 
 /**
@@ -32,10 +32,9 @@ private mapping load_config (string path) {
 }
 
 /**
- * Loads the three access config files on daemon startup.
+ * Loads the access config files on daemon startup.
  */
 void create () {
-    __Group = load_config("/secure/etc/group.cfg");
     __Read = load_config("/secure/etc/read.cfg");
     __Write = load_config("/secure/etc/write.cfg");
 }
@@ -127,7 +126,7 @@ void print_debug_message (string msg) {
  * SECURE bypass → file class match → closed write path → privilege intersection.
  *
  * @param {object} ob              - the call stack entry being evaluated
- * @param {string *} requiredPrivs - privileges required by the path config, or 0 if path has no config entry
+ * @param {string *|int} requiredPrivs - privileges required by the path config, or 0 if path has no config entry
  * @param {string} mode            - "read" or "write"
  * @param {string} file            - the target file path
  * @returns {int} 1 if entry clears, 0 if access denied
