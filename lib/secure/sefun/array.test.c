@@ -6,10 +6,14 @@ inherit M_TEST;
 
 void test_distinct_array () {
     expect("distinct_array handles inputs", (: ({
-        assert_equal(testOb->distinct_array(({ 1, 2, 2, 3, 2, 1, 3, 2, 1 })), ({ 3, 2, 1 })),
-        assert_equal(testOb->distinct_array(({ 1, 4, 4, 3, 4, 1, 3, 2, 1 })), ({ 4, 3, 2, 1 })),
+        assert_equal(testOb->distinct_array(({ 1, 2, 2, 3, 2, 1, 3, 2, 1 })), ({ 1, 2, 3 })),
+        assert_equal(testOb->distinct_array(({ 1, 4, 4, 3, 4, 1, 3, 2, 1 })), ({ 1, 2, 3, 4 })),
 
         assert_equal(testOb->distinct_array(({ })), ({ })),
+    }) :));
+    expect("distinct_array handles bad inputs", (: ({
+        assert_catch((: testOb->distinct_array(0) :), "*Bad argument 1 to array->distinct_array\n"),
+        assert_catch((: testOb->distinct_array(UNDEFINED) :), "*Bad argument 1 to array->distinct_array\n"),
     }) :));
 }
 
@@ -17,6 +21,9 @@ void test_reduce () {
     expect("reduce handles array", (: ({
         assert_equal(testOb->reduce(({ 1, 2, 3, 4, 5 }), (: $1 + $2 :), 0), 15),
         assert_equal(testOb->reduce(({ 1, 3, 5, 7, 9, }), (: $1 + $2 :), 0), 25),
+        assert_equal(testOb->reduce(({ }), (: $1 + $2 :), 0), 0),
+        assert_equal(testOb->reduce(({ 10, 20, 30 }), (: $1 + $3 :), 0), 3),
+        assert_equal(testOb->reduce(({ "a", "b", "c" }), (: $1 + $2 :), ""), "abc"),
     }) :));
     expect("reduce handles bad inputs", (: ({
         assert_catch((: testOb->reduce(0, 0, UNDEFINED) :), "*Bad argument 1 to array->reduce\n"),
