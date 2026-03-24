@@ -24,6 +24,10 @@ void test_add_article () {
 
         assert_equal(testOb->add_article("thing"), "a thing"),
         assert_equal(testOb->add_article("thing", 1), "the thing"),
+
+        assert_equal(testOb->add_article("the thing"), "a thing"),
+        assert_equal(testOb->add_article("an item"), "an item"),
+        assert_equal(testOb->add_article("the item"), "an item"),
     }) :));
 }
 
@@ -80,7 +84,7 @@ void test_ordinal () {
         assert_equal(testOb->ordinal(9), "ninth"),
     }) :));
 
-    expect("ordinal handles numbers outside 10..14 range", (: ({
+    expect("ordinal handles numbers inside 10..14 range", (: ({
         assert_equal(testOb->ordinal(10), "10th"),
         assert_equal(testOb->ordinal(11), "11th"),
         assert_equal(testOb->ordinal(12), "12th"),
@@ -95,6 +99,13 @@ void test_ordinal () {
         assert_equal(testOb->ordinal(22), "22nd"),
         assert_equal(testOb->ordinal(23), "23rd"),
         assert_equal(testOb->ordinal(24), "24th"),
+    }) :));
+
+    expect("ordinal uses th for higher-order teens (111, 112, 113, etc)", (: ({
+        assert_equal(testOb->ordinal(111), "111th"),
+        assert_equal(testOb->ordinal(112), "112th"),
+        assert_equal(testOb->ordinal(113), "113th"),
+        assert_equal(testOb->ordinal(211), "211th"),
     }) :));
 
     expect("ordinal handles bad inputs", (: ({
@@ -155,12 +166,18 @@ void test_pluralize () {
         assert_equal(testOb->pluralize("blue robes"), "blue robes"),
         assert_equal(testOb->pluralize("canvas shoes"), "canvas shoes"),
     }) :));
+
+    expect("pluralize preserves ansi tail when whole string is abnormal override", (: ({
+        assert_equal(testOb->pluralize("robes%^DEFAULT%^"), "robes%^DEFAULT%^"),
+        assert_equal(testOb->pluralize("die%^RED%^"), "dies%^RED%^"),
+    }) :));
 }
 
 void test_consolidate () {
     expect("consolidate handles basic words", (: ({
         assert_equal(testOb->consolidate(1, "elf"), "elf"),
         assert_equal(testOb->consolidate(1, "a bronze dagger (wielded)"), "a bronze dagger (wielded)"),
+        assert_equal(testOb->consolidate(5, ""), ""),
 
         assert_equal(testOb->consolidate(5, "elf"), "five elves"),
         assert_equal(testOb->consolidate(0, "giraffe"), "zero giraffes"),
@@ -200,7 +217,7 @@ void test_possessive_noun () {
         __TestName = "Chaz",
         assert_equal(testOb->possessive_noun(this_object()), "Chaz'"),
         __TestName = 0,
-        assert_equal(testOb->possessive_noun(this_object()), "It's"),
+        assert_equal(testOb->possessive_noun(this_object()), "Its"),
     }) :));
     expect("possessive_noun handles bad input", (: ({
         assert_catch((: testOb->possessive_noun(1) :), "*Bad argument 1 to grammar->possessive_noun\n"),
