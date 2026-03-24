@@ -47,5 +47,11 @@ void test_int_to_binary () {
         assert_equal(testOb->int_to_binary(2), "10"),
         assert_equal(testOb->int_to_binary(10), "1010"),
         assert_equal(testOb->int_to_binary(-1), "1111111111111111111111111111111111111111111111111111111111111111"),
+        assert_equal(testOb->int_to_binary(-2), "1111111111111111111111111111111111111111111111111111111111111110"),
+        assert_equal(testOb->int_to_binary(2147483648), "10000000000000000000000000000000"),
+    }) :));
+
+    expect("int_to_binary catches bad input", (: ({
+        assert_catch((: testOb->int_to_binary(UNDEFINED) :), "*Bad argument 1 to convert->int_to_binary\n"),
     }) :));
 }
