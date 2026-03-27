@@ -5,9 +5,9 @@
 #define SHARP_ADVERBS ({ 0, 0, "sharply", 0, 0, 0, "horribly", "to pieces", "letting blood", 0, 0, "utterly", })
 
 /**
- * Turn a percent of a target's health into a text description.
+ * Turn a damage percent into a combat tier for verb/adverb selection.
  *
- * @param percent an integer value of 0-100 percent of a target's health
+ * @param percent damage as a percentage of the target's max HP (0-100+)
  */
 int query_combat_tier_from_percent (int percent) {
     if (percent >= 27) {
@@ -160,8 +160,8 @@ void combat_useless_message (object source) {
  * @param {STD_LIVING} target the target of the block
  */
 void combat_block_message (object source, object target) {
-    object shield = source->query_worn_shield();
-    string possessive = SEFUN->possessive(target->query_cap_name());
+    object shield = target->query_worn_shield();
+    string possessive = SEFUN->possessive(target);
     message("combat miss", "You block " + source->query_cap_name() + (shield ? " with your " + shield->query_name() : "") + ".", target);
     message("combat miss", target->query_cap_name() + " blocks you" + (shield ? " with " + possessive + " " + shield->query_name() : "") + ".", source);
     message("combat miss", target->query_cap_name() + " blocks " + source->query_cap_name() + (shield ? " with " + possessive + " " + shield->query_name() : "") + ".", environment(target), ({ source, target }));

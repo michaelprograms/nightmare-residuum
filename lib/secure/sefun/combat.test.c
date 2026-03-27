@@ -55,6 +55,8 @@ void test_combat_messages () {
     npc2 = new(STD_NPC);
     npc1->set_name("npc one");
     npc2->set_name("npc two");
+    npc1->set_species("human");
+    npc2->set_species("human");
     npc1->set_stat("endurance", 10);
     npc2->set_stat("endurance", 10);
     npc1->handle_move(STD_ROOM);
@@ -125,6 +127,26 @@ void test_combat_messages () {
 
     mockNpc1->clear_received_messages();
     mockNpc2->clear_received_messages();
+
+    {
+        object shield = new(STD_ARMOR);
+        shield->set_name("test shield");
+        shield->set_type("shield");
+        shield->set_limbs(({ "left arm", "left hand" }));
+        shield->handle_move(npc2);
+        npc2->handle_wear(shield);
+
+        expect("combat block messages with shield should display", (: ({
+            testOb->combat_block_message($(npc1), $(npc2)),
+            assert_equal($(mockNpc1)->query_received_messages()[<1], ({ "combat miss", "Npc two blocks you with their test shield." })),
+            assert_equal($(mockNpc2)->query_received_messages()[<1], ({ "combat miss", "You block Npc one with your test shield." })),
+        }) :));
+
+        mockNpc1->clear_received_messages();
+        mockNpc2->clear_received_messages();
+        npc2->handle_unwear(shield);
+        if (shield) destruct(shield);
+    }
 
     expect("combat miss messages should display", (: ({
         testOb->combat_miss_message($(npc1), $(npc2), "WEAPON"),
