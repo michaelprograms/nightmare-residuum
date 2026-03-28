@@ -13,11 +13,13 @@ void test_helpers () {
     object weapon = new(STD_WEAPON);
     object food = new(STD_FOOD);
     object drink = new(STD_DRINK);
+    object vendor = new(STD_VENDOR);
     object room = new(STD_ROOM);
 
     expect("undefined handled appropriately", (: ({
         assert_equal(testOb->livingp(UNDEFINED), 0),
         assert_equal(testOb->npcp(UNDEFINED), 0),
+        assert_equal(testOb->vendorp(UNDEFINED), 0),
         assert_equal(testOb->characterp(UNDEFINED), 0),
         assert_equal(testOb->immortalp(UNDEFINED), 0),
         assert_equal(testOb->itemp(UNDEFINED), 0),
@@ -30,6 +32,7 @@ void test_helpers () {
     expect("living handled appropriately", (: ({
         assert_equal(testOb->livingp($(living)), 1),
         assert_equal(testOb->npcp($(living)), 0),
+        assert_equal(testOb->vendorp($(living)), 0),
         assert_equal(testOb->characterp($(living)), 0),
         assert_equal(testOb->immortalp($(living)), 0),
         assert_equal(testOb->itemp($(living)), 0),
@@ -42,6 +45,7 @@ void test_helpers () {
     expect("npc handled appropriately", (: ({
         assert_equal(testOb->livingp($(npc)), 1),
         assert_equal(testOb->npcp($(npc)), 1),
+        assert_equal(testOb->vendorp($(npc)), 0),
         assert_equal(testOb->characterp($(npc)), 0),
         assert_equal(testOb->immortalp($(npc)), 0),
         assert_equal(testOb->itemp($(npc)), 0),
@@ -51,9 +55,23 @@ void test_helpers () {
         assert_equal(testOb->drinkp($(npc)), 0),
         assert_equal(testOb->roomp($(npc)), 0),
     }) :));
+    expect("vendor handled appropriately", (: ({
+        assert_equal(testOb->livingp($(vendor)), 1),
+        assert_equal(testOb->npcp($(vendor)), 1),
+        assert_equal(testOb->vendorp($(vendor)), 1),
+        assert_equal(testOb->characterp($(vendor)), 0),
+        assert_equal(testOb->immortalp($(vendor)), 0),
+        assert_equal(testOb->itemp($(vendor)), 0),
+        assert_equal(testOb->armorp($(vendor)), 0),
+        assert_equal(testOb->weaponp($(vendor)), 0),
+        assert_equal(testOb->foodp($(vendor)), 0),
+        assert_equal(testOb->drinkp($(vendor)), 0),
+        assert_equal(testOb->roomp($(vendor)), 0),
+    }) :));
     expect("character handled appropriately", (: ({
         assert_equal(testOb->livingp($(character)), 1),
         assert_equal(testOb->npcp($(character)), 0),
+        assert_equal(testOb->vendorp($(character)), 0),
         assert_equal(testOb->characterp($(character)), 1),
         assert_equal(testOb->immortalp($(character)), 0),
         $(character)->set_immortal(1),
@@ -68,6 +86,7 @@ void test_helpers () {
     expect("item handled appropriately", (: ({
         assert_equal(testOb->livingp($(item)), 0),
         assert_equal(testOb->npcp($(item)), 0),
+        assert_equal(testOb->vendorp($(item)), 0),
         assert_equal(testOb->characterp($(item)), 0),
         assert_equal(testOb->immortalp($(item)), 0),
         assert_equal(testOb->itemp($(item)), 1),
@@ -80,6 +99,7 @@ void test_helpers () {
     expect("armor handled appropriately", (: ({
         assert_equal(testOb->livingp($(armor)), 0),
         assert_equal(testOb->npcp($(armor)), 0),
+        assert_equal(testOb->vendorp($(armor)), 0),
         assert_equal(testOb->characterp($(armor)), 0),
         assert_equal(testOb->immortalp($(armor)), 0),
         assert_equal(testOb->itemp($(armor)), 1),
@@ -92,6 +112,7 @@ void test_helpers () {
     expect("weapon handled appropriately", (: ({
         assert_equal(testOb->livingp($(weapon)), 0),
         assert_equal(testOb->npcp($(weapon)), 0),
+        assert_equal(testOb->vendorp($(weapon)), 0),
         assert_equal(testOb->characterp($(weapon)), 0),
         assert_equal(testOb->immortalp($(weapon)), 0),
         assert_equal(testOb->itemp($(weapon)), 1),
@@ -104,6 +125,7 @@ void test_helpers () {
     expect("food handled appropriately", (: ({
         assert_equal(testOb->livingp($(food)), 0),
         assert_equal(testOb->npcp($(food)), 0),
+        assert_equal(testOb->vendorp($(food)), 0),
         assert_equal(testOb->characterp($(food)), 0),
         assert_equal(testOb->immortalp($(food)), 0),
         assert_equal(testOb->itemp($(food)), 1),
@@ -116,6 +138,7 @@ void test_helpers () {
     expect("drink handled appropriately", (: ({
         assert_equal(testOb->livingp($(drink)), 0),
         assert_equal(testOb->npcp($(drink)), 0),
+        assert_equal(testOb->vendorp($(drink)), 0),
         assert_equal(testOb->characterp($(drink)), 0),
         assert_equal(testOb->immortalp($(drink)), 0),
         assert_equal(testOb->itemp($(drink)), 1),
@@ -128,6 +151,7 @@ void test_helpers () {
     expect("room handled appropriately", (: ({
         assert_equal(testOb->livingp($(room)), 0),
         assert_equal(testOb->npcp($(room)), 0),
+        assert_equal(testOb->vendorp($(room)), 0),
         assert_equal(testOb->characterp($(room)), 0),
         assert_equal(testOb->immortalp($(room)), 0),
         assert_equal(testOb->itemp($(room)), 0),
@@ -140,6 +164,7 @@ void test_helpers () {
 
     destruct(living);
     destruct(npc);
+    destruct(vendor);
     destruct(character);
     destruct(item);
     destruct(armor);
