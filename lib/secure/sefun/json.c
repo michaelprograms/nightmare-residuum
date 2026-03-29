@@ -28,15 +28,11 @@ varargs string json_encode (mixed value) {
         out = "{" + (sizeof(out) ? out : "") + "}";
     } else if (stringp(value)) {
         out = value;
-        if (strsrch(out, '"') > -1) {
-            out = replace_string(out, "\"", "\\\"");
-        }
-        out = "\"" + out + "\"";
         if (strsrch(out, '\\') > -1) {
             out = replace_string(out, "\\", "\\\\");
-            if (strsrch(out, "\\\"") > -1) {
-                out = replace_string(out, "\\\"", "\"");
-            }
+        }
+        if (strsrch(out, '"') > -1) {
+            out = replace_string(out, "\"", "\\\"");
         }
         if (strsrch(out, '\b') > -1) {
             out = replace_string(out, "\b", "\\b");
@@ -56,6 +52,7 @@ varargs string json_encode (mixed value) {
         if (member_array(0x1b, out) > -1) {
             out = replace_string(out, "\x1b", "\\u001b");
         }
+        out = "\"" + out + "\"";
     } else {
         out = "null";
     }
@@ -159,8 +156,8 @@ private mixed json_decode_object () {
                     error("Unexpected character in json_decode_object: " + sprintf("%c", ch));
                 }
             }
+            out[key] = value;
         }
-        out[key] = value;
     }
     return out;
 }
@@ -348,19 +345,7 @@ private mixed json_decode_number () {
         if (next_ch == '.' || next_ch == 'e' || next_ch == 'E') {
             parsePos ++;
         } else {
-            // consume until next non-whitespace
-            while (1) {
-                parsePos ++;
-                ch = parseText[parsePos];
-                if (ch != ' ' && ch != '\n' && ch != '\r' && ch != '\t') {
-                    return 0;
-                }
-            }
-            next_ch = parseText[parsePos];
-            // can not continue to be number.
-            if ((next_ch >= '0' && next_ch <= '9') || next_ch == '-') {
-                error("Unexpected character in json_decode_number: " + sprintf("%c", next_ch));
-            }
+            parsePos ++;
             return 0;
         }
     }
@@ -455,7 +440,7 @@ private mixed json_decode_value () {
     }
 }
 
-varargs string json_decode (string value) {
+varargs mixed json_decode (string value) {
     mixed out;
 
     if (!value) {

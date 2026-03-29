@@ -12,8 +12,9 @@ void test_json_encode () {
         assert_equal(testOb->json_encode(123.45), "123.450000"),
 
         assert_equal(testOb->json_encode("String"), "\"String\""),
-        assert_equal(testOb->json_encode("\\"), "\"\\\""),
+        assert_equal(testOb->json_encode("\\"), "\"\\\\\""),
         assert_equal(testOb->json_encode("\\\""), "\"\\\\\\\"\""),
+        assert_equal(testOb->json_encode("a\\b\"c"), "\"a\\\\b\\\"c\""),
 
         assert_equal(testOb->json_encode("\b"), "\"\\b\""),
         assert_equal(testOb->json_encode("\n"), "\"\\n\""),
@@ -55,6 +56,11 @@ void test_json_decode () {
         assert_equal(testOb->json_decode("0e0"), 0.0),
         assert_equal(testOb->json_decode("0E12328"), 0.0),
         assert_equal(testOb->json_decode("123E+1"), 1230.0),
+        assert_equal(testOb->json_decode("-1.5"), -1.5),
+
+        assert_equal(testOb->json_decode("true"), 1),
+        assert_equal(testOb->json_decode("false"), 0),
+        assert_equal(testOb->json_decode("null"), 0),
 
         assert_equal(testOb->json_decode("[]"), ({ })),
         assert_equal(testOb->json_decode("[\"a\",\"b\",\"c\"]"), ({ "a", "b", "c" })),
@@ -68,6 +74,7 @@ void test_json_decode () {
         assert_equal(testOb->json_decode("{\"a\":1,\"b\":2,\"c\":3}"), ([ "a": 1, "b": 2, "c": 3 ])),
         assert_equal(testOb->json_decode("{\"1\":\"a\",\"2\":\"b\",\"3\":\"c\"}"), ([ "1": "a", "2": "b", "3": "c" ])),
 
+        assert_equal(testOb->json_decode("\"\\/\""), "/"),
         assert_equal(testOb->json_decode("\"\\ud83d\\ude04\""), "😄"),
         assert_equal(testOb->json_decode("\"🤔\""), "🤔"),
         assert_equal(testOb->json_decode("\"y̖̠͍̘͇͗̏̽̎͞\""), "\u0079\u0316\u0320\u034D\u0318\u0347\u0357\u030F\u033D\u030E\u035E"),
