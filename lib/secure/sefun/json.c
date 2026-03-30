@@ -21,7 +21,7 @@ varargs string json_encode (mixed value) {
         l = sizeof(tmp);
         for (i = 0; i < l; i ++) {
             if (!stringp(tmp[i])) {
-                continue;
+                error("Bad key type in json_encode: mapping keys must be strings");
             }
             out += (i > 0 && sizeof(out) ? "," : "") + json_encode(tmp[i]) + ":" + json_encode(value[tmp[i]]);
         }
@@ -104,6 +104,7 @@ private mixed json_decode_object () {
         }
         key = json_decode_string(0);
         if (!key) {
+            parsePos ++;
             return out;
         }
         found_sep = 0;
@@ -213,7 +214,7 @@ private mixed json_decode_string (int initiator_checked) {
             error("Unexpected end of data in json_decode_string");
         case '}':
             return 0;
-        case '"': case '\n':
+        case '"':
             break;
         default:
             error("Unexpected character in json_decode_string: " + sprintf("%c", parseText[parsePos]));
