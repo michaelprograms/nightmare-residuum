@@ -59,8 +59,8 @@ varargs string json_encode (mixed value) {
     return out;
 }
 
-private buffer parseText;
-private int parsePos;
+nosave private buffer parseText;
+nosave private int parsePos;
 
 private mixed json_decode_value ();
 private mixed json_decode_string (int initiator_checked);
