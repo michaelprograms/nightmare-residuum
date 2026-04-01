@@ -230,6 +230,9 @@ private mixed json_decode_string (int initiator_checked) {
         case 0:
             error("Unexpected end of data in json_decode_string");
         case '\\':
+            if (esc_state) {
+                esc_active ++;
+            }
             esc_state = !esc_state;
             break;
         case '"':
@@ -251,69 +254,74 @@ private mixed json_decode_string (int initiator_checked) {
     }
     out = string_decode(parseText[from..to], "utf-8");
     if (esc_active) {
-        if (strsrch(out, '"') != -1) {
-            out = replace_string(out, "\\\"", "\"");
-        }
-        if (strsrch(out, "\\b") != -1) {
-            out = replace_string(out, "\\b", "\b");
-        }
-        if (strsrch(out, "\\f") != -1) {
-            out = replace_string(out, "\\f", "\x0c");
-        }
-        if (strsrch(out, "\\n") != -1) {
-            out = replace_string(out, "\\n", "\n");
-        }
-        if (strsrch(out, "\\r") != -1) {
-            out = replace_string(out, "\\r", "\r");
-        }
-        if (strsrch(out, "\\t") != -1) {
-            out = replace_string(out, "\\t", "\t");
-        }
-        if (strsrch(out, "\\u") != -1) {
-            for (int i = 0; i < sizeof(out); i ++) {
-                if (out[i] == '\\' && out[i+1] == 'u') {
-                    i += 2;
-                    for (int k = 0; k < 4; k++) {
-                        if (undefinedp(nybbles[k] = SEFUN->hex_to_int(out[i+k..i+k]))) {
-                            error("Invalid hex digit in json_decode_string: " + out[i+k]);
-                        }
-                    }
-                    character = (nybbles[0] << 12) | (nybbles[1] << 8) | (nybbles[2] << 4) | nybbles[3];
-                    // Single codepoint character
-                    if (!(((character)&0xfffff800) == 0xd800)) {
-                        i -= 2;
-                        out[i .. i + 2 + 4 - 1] = sprintf("%c", character);
-                        i = 0;
-                        continue;
-                    } else {
-                        nybbles = allocate(4);
-                        // UTF16 - Surrogate, attempts to parse the second value
-                        i += 4;
-                        if (out[i .. i+1] != "\\u") {
-                            error("Invalid string, missing surrogate pair in json_decode_string");
-                        }
-                        i += 2;
-                        for (int k = 0; k < 4; k ++) {
-                            if (undefinedp(nybbles[k] = SEFUN->hex_to_int(out[i+k..i+k]))) {
-                                error("Invalid hex digit in json_decode_string: " + out[i+k]);
-                            }
-                        }
-                        next_character = (nybbles[0] << 12) | (nybbles[1] << 8) | (nybbles[2] << 4) | (nybbles[3]);
-                        i -= 2 + 4 + 2; // reset to first \u
-                        codepoint = 0x10000 + (character - 0xd800) * 0x400 + (next_character - 0xDC00);
-                        out[i..i+2+4+2+4-1] = sprintf("%c", codepoint);
-                        i = 0;
-                        continue;
+        string result = "";
+        int len = sizeof(out);
+        for (int i = 0; i < len; i ++) {
+            if (out[i] != '\\') {
+                result += out[i..i];
+                continue;
+            }
+            i ++;
+            switch (out[i]) {
+            case '"':
+                result += "\"";
+                break;
+            case '\\':
+                result += "\\";
+                break;
+            case '/':
+                result += "/";
+                break;
+            case 'b':
+                result += "\b";
+                break;
+            case 'f':
+                result += "\x0c";
+                break;
+            case 'n':
+                result += "\n";
+                break;
+            case 'r':
+                result += "\r";
+                break;
+            case 't':
+                result += "\t";
+                break;
+            case 'u':
+                for (int k = 0; k < 4; k ++) {
+                    if (undefinedp(nybbles[k] = SEFUN->hex_to_int(out[i+1+k..i+1+k]))) {
+                        error("Invalid hex digit in json_decode_string: " + out[i+1+k]);
                     }
                 }
+                character = (nybbles[0] << 12) | (nybbles[1] << 8) | (nybbles[2] << 4) | nybbles[3];
+                if (!(((character) & 0xfffff800) == 0xd800)) {
+                    // BMP character
+                    result += sprintf("%c", character);
+                    i += 4;
+                } else {
+                    // UTF-16 surrogate pair
+                    nybbles = allocate(4);
+                    if (out[i+5..i+6] != "\\u") {
+                        error("Invalid string, missing surrogate pair in json_decode_string");
+                    }
+                    for (int k = 0; k < 4; k ++) {
+                        if (undefinedp(nybbles[k] = SEFUN->hex_to_int(out[i+7+k..i+7+k]))) {
+                            error("Invalid hex digit in json_decode_string: " + out[i+7+k]);
+                        }
+                    }
+                    next_character = (nybbles[0] << 12) | (nybbles[1] << 8) | (nybbles[2] << 4) | nybbles[3];
+                    codepoint = 0x10000 + (character - 0xd800) * 0x400 + (next_character - 0xDC00);
+                    result += sprintf("%c", codepoint);
+                    i += 10;
+                }
+                break;
+            default:
+                // Unknown escape: preserve as-is
+                result += "\\" + out[i..i];
+                break;
             }
         }
-        if (strsrch(out, '/') != -1) {
-            out = replace_string(out, "\\/", "/");
-        }
-        if (strsrch(out, '\\') != -1) {
-            out = replace_string(out, "\\\\", "\\");
-        }
+        out = result;
     }
     return out;
 }
