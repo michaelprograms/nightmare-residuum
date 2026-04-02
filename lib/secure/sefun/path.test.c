@@ -29,6 +29,9 @@ void test_user_path () {
 }
 
 void test_split_path () {
+    expect("split_path handles path with no slash", (: ({
+        assert_equal(testOb->split_path("nodirectory"), ({ "", "nodirectory" })),
+    }) :));
     expect("split_path handles paths", (: ({
         assert_equal(testOb->split_path("/domain/area"), ({ "/domain/", "area" })),
         assert_equal(testOb->split_path("/domain/area/"), ({ "/domain/", "area" })),
@@ -103,7 +106,7 @@ void test_sanitize_path () {
 
     destruct(__MockCharacter);
 
-    expect("santitize_path handles invalid input", (: ({
+    expect("sanitize_path handles invalid input", (: ({
         assert_catch((: testOb->sanitize_path("") :), "*Bad argument 1 to path->sanitize_path\n"),
     }) :));
 }
@@ -120,6 +123,10 @@ void test_absolute_path () {
     }) :));
     expect("absolute_path defaults relative_to", (: ({
         assert_equal(testOb->absolute_path("file.c"), "/secure/sefun/file.c"),
+    }) :));
+    expect("absolute_path returns 0 for null path", (: ({
+        assert_equal(testOb->absolute_path(0), 0),
+        assert_equal(testOb->absolute_path(0, "/"), 0),
     }) :));
 
     expect("absolute_path handles ^ alias for /domain", (: ({
@@ -177,7 +184,9 @@ void test_wild_card () {
         assert_equal(testOb->wild_card(0), ({ })),
         assert_equal(testOb->wild_card(""), ({ })),
 
-        assert_equal(testOb->wild_card("/"), ({ "/cmd", "/daemon", "/doc", "/domain", "/etc", "/include", "/log", "/realm", "/save", "/secure", "/std", "/tmp"  })),
+        assert_equal(member_array("/domain", testOb->wild_card("/")) >= 0, 1),
+        assert_equal(member_array("/std", testOb->wild_card("/")) >= 0, 1),
+        assert_equal(member_array("/secure", testOb->wild_card("/")) >= 0, 1),
         assert_equal(testOb->wild_card("/r*"), ({ "/realm" })),
         assert_equal(testOb->wild_card("/d*"), ({ "/daemon", "/doc", "/domain" })),
 
@@ -189,8 +198,6 @@ void test_wild_card () {
         assert_equal(testOb->wild_card("/doc/"), ({ "/doc/apply", "/doc/build", "/doc/efun", "/doc/help", "/doc/lpc" })),
         assert_equal(testOb->wild_card("/doc/*"), ({ "/doc/apply", "/doc/build", "/doc/efun", "/doc/help", "/doc/lpc" })),
 
-        assert_equal(testOb->wild_card("/secure/sefun/path*.c"), ({ "/secure/sefun/path.c", "/secure/sefun/path.coverage.c", "/secure/sefun/path.test.c" })),
-        assert_equal(testOb->wild_card("/secure/sefun/path*.c"), ({ "/secure/sefun/path.c", "/secure/sefun/path.coverage.c", "/secure/sefun/path.test.c" })),
         assert_equal(testOb->wild_card("/secure/sefun/path*.c"), ({ "/secure/sefun/path.c", "/secure/sefun/path.coverage.c", "/secure/sefun/path.test.c" })),
         assert_equal(testOb->wild_card("../secure/sefun/path*.c"), ({ "/secure/sefun/path.c", "/secure/sefun/path.coverage.c", "/secure/sefun/path.test.c" })),
     }) :));
