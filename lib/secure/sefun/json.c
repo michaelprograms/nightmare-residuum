@@ -65,7 +65,7 @@ nosave private int parsePos;
 private mixed json_decode_value ();
 private mixed json_decode_string (int initiator_checked);
 
-private varargs int json_decode_token (string token, int start) {
+private int json_decode_token (string token, int start) {
     int i, j;
     for (i = start, j = sizeof(token); i < j; i ++) {
         if (parseText[parsePos + i] != token[i]) {

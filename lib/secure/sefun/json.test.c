@@ -85,6 +85,7 @@ void test_json_decode () {
         assert_equal(testOb->json_decode("\"🤔\""), "🤔"),
         assert_equal(testOb->json_decode("\"y̖̠͍̘͇͗̏̽̎͞\""), "\u0079\u0316\u0320\u034D\u0318\u0347\u0357\u030F\u033D\u030E\u035E"),
 
+        assert_equal(testOb->json_decode("{\"key\"}"), ([ ])),
         assert_equal(testOb->json_decode("{ \"key1\": true,\r\t\"key2\": false, \"key3\": null }"), ([ "key1": 1, "key2": 0, "key3": 0, ])),
         assert_equal(testOb->json_decode("{ \"key1\" \n: true,\r\t\"key2\": false }"), ([ "key1": 1, "key2": 0, ])),
         assert_equal(testOb->json_decode("{\"k\":1\n}"), ([ "k": 1 ])),
