@@ -46,9 +46,10 @@ void test_json_encode () {
 
 void test_json_decode () {
     expect("json_decode parses correctly", (: ({
-        assert_equal(testOb->json_decode(), UNDEFINED),
+        assert_equal(testOb->json_decode(), 0),
 
         assert_equal(testOb->json_decode("\"test123\""), "test123"),
+        assert_equal(testOb->json_decode("\"he said \\\"hi\\\"!\""), "he said \"hi\"!"),
 
         assert_equal(testOb->json_decode("0"), 0),
         assert_equal(testOb->json_decode("123"), 123),
