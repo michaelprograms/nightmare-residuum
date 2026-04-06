@@ -1,3 +1,12 @@
+/**
+ * Return a human-readable string representation of any value, suitable for
+ * debugging. Strings are quoted and escaped; arrays, mappings, and buffers
+ * are formatted with their contents; objects are shown with their file path;
+ * undefined values return "UNDEFINED".
+ *
+ * @param args the value to identify (variadic; pass zero args for UNDEFINED)
+ * @returns a string representation of the value
+ */
 string identify (mixed args...) {
     mixed a;
     int i, l;
@@ -18,14 +27,12 @@ string identify (mixed args...) {
         }
         return "OBJ(" + ret + file_name(a) + ")";
     } else if (stringp(a)) {
-        a = replace_string(a, "\"", "\\\"");
-        a = "\"" + a + "\"";
         a = replace_string(a, "\\", "\\\\");
-        a = replace_string(a, "\\\"", "\"");
+        a = replace_string(a, "\"", "\\\"");
         a = replace_string(a, "\n", "\\n");
         a = replace_string(a, "\t", "\\t");
         a = replace_string(a, "\r", "\\r");
-        return a;
+        return "\"" + a + "\"";
     } else if (mapp(a)) {
         ret = "([ ";
         RealMap = a;
@@ -68,6 +75,18 @@ string identify (mixed args...) {
     }
 }
 
+/**
+ * Wrap a string to a given column width, translating %^COLOR%^ tags using
+ * the calling object's terminal settings. Strips the default FluffOS ANSI
+ * reset sequence appended after each wrap. Returns an empty string when
+ * str is falsy or not a string.
+ *
+ * @param str the string to wrap
+ * @param width column width to wrap at; defaults to the caller's "width" setting, or 80
+ * @param indent number of spaces to indent continuation lines
+ * @param rawANSI when non-zero, pass %^TAG%^ sequences through without translation
+ * @returns the wrapped string with color codes resolved
+ */
 varargs string wrap (string str, int width, int indent, int rawANSI) {
     mapping term;
     object po = previous_object();
@@ -76,7 +95,7 @@ varargs string wrap (string str, int width, int indent, int rawANSI) {
         return "";
     }
     if (undefinedp(width) || width < 0) {
-        if (!(width = po->query_setting("width"))) {
+        if (!po || !(width = po->query_setting("width"))) {
             width = 80;
         }
     }
@@ -95,8 +114,15 @@ varargs string wrap (string str, int width, int indent, int rawANSI) {
     return str;
 }
 
+/**
+ * Return the number of leading characters that two strings share. Equivalent
+ * to finding the length of their longest common prefix.
+ *
+ * @param a the first string
+ * @param b the second string
+ * @returns the count of matching leading characters (0 when strings share no prefix)
+ */
 int string_compare_same_until (string a, string b) {
-    // Returns n where a[0..n] == b[0..n]
     int n = 0, l;
 
     if ((l = strlen(a)) == strlen(b) && a == b) {
@@ -115,6 +141,13 @@ int string_compare_same_until (string a, string b) {
     return n;
 }
 
+/**
+ * Normalize a name for storage or lookup by stripping spaces, apostrophes,
+ * and hyphens, then converting to lowercase.
+ *
+ * @param name the string to sanitize
+ * @returns the sanitized name
+ */
 string sanitize_name (string name) {
     if (undefinedp(name) || !stringp(name)) {
         error("Bad argument 1 to string->sanitize_name");
@@ -125,11 +158,20 @@ string sanitize_name (string name) {
     return lower_case(name);
 }
 
-// Parse the raw input for any command line flags provided
-// Flags must be at the beginning of raw input and in format:
-// -f           or      -flag
-// -f=text      or      -flag=text
-// -f=123.0     or      -flag=123.0
+/**
+ * Parse command-line style flags from the beginning of a raw input string.
+ * Flags must precede any non-flag words and use one of these formats:
+ *
+ *   -f          -flag         (boolean, stored as 1)
+ *   -f=value    -flag=value   (string value)
+ *
+ * Parsing stops at the first word that does not begin with "-". The remaining
+ * input (after flags) is returned as the first element of the result array.
+ * When rawInput is not a string, it is returned as-is with an empty flags map.
+ *
+ * @param rawInput the raw command input string to parse
+ * @returns a two-element array: ({ remaining_input, flags_mapping })
+ */
 mixed *parse_command_flags (string rawInput) {
     string *args, input = "";
     mapping flags = ([ ]);

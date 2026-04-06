@@ -73,6 +73,11 @@ void test_identify () {
         assert_equal(testOb->identify($(tString)), "\"Here it is: \\\"abc123\\\".\""),
 
         assert_equal(testOb->identify("\t\r\n"), "\"\\t\\r\\n\""),
+
+        assert_equal(testOb->identify("\\"), "\"\\\\\""),
+        assert_equal(testOb->identify("a\\"), "\"a\\\\\""),
+        assert_equal(testOb->identify("a\\b"), "\"a\\\\b\""),
+        assert_equal(testOb->identify("a\\\"b"), "\"a\\\\\\\"b\""),
     }) :));
 
     expect("identify handles map", (: ({
@@ -102,6 +107,7 @@ void test_identify () {
     }) :));
 
     expect("identify handles array", (: ({
+        assert_equal(testOb->identify(({ })), "({ })"),
         assert_equal(testOb->identify(({ 1, 2, 3})), "({ 1, 2, 3 })"),
     }) :));
 
@@ -159,6 +165,10 @@ void test_string_compare_same_until () {
         assert_equal(testOb->string_compare_same_until("abc", "f"), 0),
         assert_equal(testOb->string_compare_same_until("staff", "staves"), 3),
         assert_equal(testOb->string_compare_same_until("staffs", "staves"), 3),
+
+        assert_equal(testOb->string_compare_same_until("", ""), 0),
+        assert_equal(testOb->string_compare_same_until("", "abc"), 0),
+        assert_equal(testOb->string_compare_same_until("abc", ""), 0),
     }) :));
 }
 
@@ -182,6 +192,7 @@ void test_parse_command_flags () {
         // check no flags
         assert_equal(testOb->parse_command_flags("something"), ({ "something", ([ ]) })),
         assert_equal(testOb->parse_command_flags(0), ({ 0, ([ ]) })),
+        assert_equal(testOb->parse_command_flags(""), ({ "", ([ ]) })),
 
         // check flags at front
         assert_equal(testOb->parse_command_flags("-a something"), ({ "something", ([ "a": 1, ]) })),
@@ -190,6 +201,13 @@ void test_parse_command_flags () {
         assert_equal(testOb->parse_command_flags("-a=1 -b=2 -c=3 something"), ({ "something", ([ "a": "1", "b": "2", "c": "3", ]) })),
         assert_equal(testOb->parse_command_flags("-a=x -b=y -c=z something"), ({ "something", ([ "a": "x", "b": "y", "c": "z", ]) })),
         assert_equal(testOb->parse_command_flags("-path=/path/with/special_characters-in.it something else"), ({ "something else", ([ "path": "/path/with/special_characters-in.it", ]) })),
+
+        // check flags with no trailing input
+        assert_equal(testOb->parse_command_flags("-a"), ({ "", ([ "a": 1, ]) })),
+        assert_equal(testOb->parse_command_flags("-a -b"), ({ "", ([ "a": 1, "b": 1, ]) })),
+
+        // check flag with empty value
+        assert_equal(testOb->parse_command_flags("-a= something"), ({ "something", ([ "a": "", ]) })),
     }) :));
 
     expect("parse_command_flags parses invalid flags", (: ({
