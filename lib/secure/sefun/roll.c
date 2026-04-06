@@ -8,10 +8,10 @@
 mixed *roll_die (int times, int sides) {
     int *rolls;
 
-    if (undefinedp(times)) {
-        error("Bad argument 1 to roll_die");
+    if (undefinedp(times) || !intp(times) || times < 1) {
+        error("Bad argument 1 to roll->roll_die");
     } else if (undefinedp(sides) || sides < 2) {
-        error("Bad argument 2 to roll_die");
+        error("Bad argument 2 to roll->roll_die");
     }
 
     rolls = allocate(times, (: 1 + random($(sides)) :));
