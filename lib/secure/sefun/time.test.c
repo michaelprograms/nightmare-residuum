@@ -50,8 +50,14 @@ void test_time_ago () {
 
         // default granularity:
         assert_equal(testOb->time_ago($(now) - (1 * YEAR_IN_SECS) - (7 * MONTH_IN_SECS) - (2 * WEEK_IN_SECS) - (4 * DAY_IN_SECS) - (15 * HOUR_IN_SECS) - (42 * MINUTE_IN_SECS) - 29), "1 year 7 months ago"),
-        // disable granularity:
-        assert_equal(testOb->time_ago($(now) - (1 * YEAR_IN_SECS) - (7 * MONTH_IN_SECS) - (2 * WEEK_IN_SECS) - (4 * DAY_IN_SECS) - (15 * HOUR_IN_SECS) - (42 * MINUTE_IN_SECS) - 29, 0), "1 year 7 months 2 weeks 4 days ago"),
+        // granularity=5 includes hours:
+        assert_equal(testOb->time_ago($(now) - (1 * YEAR_IN_SECS) - (7 * MONTH_IN_SECS) - (2 * WEEK_IN_SECS) - (4 * DAY_IN_SECS) - (15 * HOUR_IN_SECS) - (42 * MINUTE_IN_SECS) - 29, 5), "1 year 7 months 2 weeks 4 days 15 hours ago"),
+        // granularity=6 includes hours and minutes:
+        assert_equal(testOb->time_ago($(now) - (1 * YEAR_IN_SECS) - (7 * MONTH_IN_SECS) - (2 * WEEK_IN_SECS) - (4 * DAY_IN_SECS) - (15 * HOUR_IN_SECS) - (42 * MINUTE_IN_SECS) - 29, 6), "1 year 7 months 2 weeks 4 days 15 hours 42 minutes ago"),
+        // disable granularity - shows all units including hours and minutes:
+        assert_equal(testOb->time_ago($(now) - (1 * YEAR_IN_SECS) - (7 * MONTH_IN_SECS) - (2 * WEEK_IN_SECS) - (4 * DAY_IN_SECS) - (15 * HOUR_IN_SECS) - (42 * MINUTE_IN_SECS) - 29, 0), "1 year 7 months 2 weeks 4 days 15 hours 42 minutes ago"),
+        // day-level + hours with default granularity=2:
+        assert_equal(testOb->time_ago($(now) - DAY_IN_SECS - HOUR_IN_SECS), "1 day 1 hour ago"),
     }) :));
 }
 
