@@ -11,7 +11,7 @@ string query_setting (string name) {
     if (name == "test") {
         return "123";
     } else {
-        return UNDEFINED;
+        return 0;
     }
 }
 object query_character () {
@@ -28,6 +28,8 @@ void test_user () {
     expect("find_user behaves", (: ({
         assert_equal(testOb->find_user("unknown user"), 0),
         assert_equal(testOb->find_user("test"), $(user)),
+
+        assert_catch((: testOb->find_user(UNDEFINED) :), "*Bad argument 1 to user->find_user\n"),
     }) :));
     expect("this_user behaves", (: ({
         assert_equal(objectp(testOb->this_user()), 1),
@@ -35,7 +37,7 @@ void test_user () {
     }) :));
     expect("query_account_setting behaves", (: ({
         assert_equal(testOb->query_account_setting("test"), "123"),
-        assert_equal(testOb->query_account_setting("invalid"), UNDEFINED),
+        assert_equal(testOb->query_account_setting("invalid"), 0),
     }) :));
 
     destruct(user);
@@ -49,6 +51,8 @@ void test_character () {
     expect("find_character behaves", (: ({
         assert_equal(testOb->find_character("unknown character"), 0),
         assert_equal(testOb->find_character("test"), $(char)),
+
+        assert_catch((: testOb->find_character(UNDEFINED) :), "*Bad argument 1 to user->find_character\n"),
     }) :));
     expect("this_character behaves", (: ({
         assert_equal(objectp(testOb->this_character()), 1),

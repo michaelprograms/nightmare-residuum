@@ -5,7 +5,7 @@
  */
 object this_user () {
     object po = previous_object(-1)[<1];
-    if (regexp(base_name(po), D_TEST[0..<3])) {
+    if (base_name(po) == D_TEST[0..<3]) {
         po = previous_object(-1)[<2];
     }
     return po;
@@ -18,6 +18,9 @@ object this_user () {
  * @returns {STD_USER} a matching user
  */
 object find_user (string name) {
+    if (!stringp(name)) {
+        error("Bad argument 1 to user->find_user");
+    }
     object *results = children(STD_USER);
     results = filter(results, (: $1 && $1->query_key_name() == $(name) :));
     return sizeof(results) ? results[0] : 0;
@@ -45,6 +48,9 @@ object this_character () {
  * @returns {STD_CHARACTER} a matching character
  */
 object find_character (string name) {
+    if (!stringp(name)) {
+        error("Bad argument 1 to user->find_character");
+    }
     object *results = children(STD_CHARACTER);
     results = filter(results, (: $1 && $1->query_key_name() == SEFUN->sanitize_name($(name)) && $1->query_user() :));
     return sizeof(results) ? results[0] : 0;
@@ -56,7 +62,7 @@ object find_character (string name) {
  * @returns {STD_CHARACTER *} list of characters
  */
 object *characters () {
-    object users = users() || ({ });
+    object *users = users() || ({ });
     users = filter(users, (: $1 && interactive($1) && $1->query_character() :));
     return map(users, (: $1->query_character() :)) || ({ });
 }
@@ -65,9 +71,9 @@ object *characters () {
  * Query a user account setting.
  *
  * @param setting the setting's name
- * @returns the setting's value
+ * @returns the setting's value, or 0 if no current user
  */
-string query_account_setting (string name) {
+string query_account_setting (string setting) {
     object user = this_user();
-    return user ? user->query_setting(name) : 0;
+    return user ? user->query_setting(setting) : 0;
 }
