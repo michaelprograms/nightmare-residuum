@@ -24,5 +24,5 @@ void command (string input, mapping flags) {
             return;
     }
 
-    write("rm: " + file + " " + (rm(file) ? "removed" : " failed to remove") + ".\n");
+    write("rm: " + file + " " + (rm(file) ? "removed" : "failed to remove") + ".\n");
 }

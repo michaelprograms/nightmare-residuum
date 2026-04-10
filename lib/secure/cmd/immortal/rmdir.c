@@ -2,7 +2,7 @@ inherit STD_COMMAND;
 
 void create () {
     ::create();
-    set_syntax("rmdir [file]");
+    set_syntax("rmdir [directory]");
     set_help_text("The rmdir command is used to remove a directory permanently.");
 }
 
@@ -25,5 +25,5 @@ void command (string input, mapping flags) {
             return;
     }
 
-    write("rmdir: " + dir + " " + (rmdir(dir) ? "removed" : " failed to remove") + ".\n");
+    write("rmdir: " + dir + " " + (rmdir(dir) ? "removed" : "failed to remove") + ".\n");
 }

@@ -2,47 +2,66 @@ inherit STD_COMMAND;
 
 void create () {
     ::create();
-    set_syntax("ed [file]");
-    set_help_text("The ed command is used to enter edit mode on a file.");
+    set_syntax("evolve (-c=class) (-l=[1+]) (-s=[1-100]) ([target])");
+    set_help_text("The evolve command is used to adjust a target's class, level, or stats.");
 }
 
-nosave private mapping __Locks = ([ ]);
-nomask private void unlock (string file) {
-    map_delete(__Locks, file);
+/**
+ * Display the changes that occurred during the evolution.
+ *
+ * @param {STD_CHARACTER} tc this character
+ * @param {STD_CHARACTER} target the recipient of the evolution
+ * @param type what kind of evolution
+ * @param old original value
+ * @param now new value
+ */
+void display (object tc, object target, string type, string old, string now) {
+    if (tc == target) {
+        message("action", "You have changed your " + type + " from " + old + " to " + now + ".", tc);
+    } else {
+        message("action", "You have changed " + possessive_noun(target) + " " + type + " from " + old + " to " + now + ".", tc);
+        message("action", tc->query_cap_name() + " has changed your " + type + " from " + old + " to " + now + ".", target);
+    }
 }
 
 void command (string input, mapping flags) {
-    string cwd, file;
-    int size;
+    object tc = this_character(), target = tc;
+    string tmp;
+    int statMax, statTarget;
 
-    if (!input) {
-        write("Syntax: ed [file]\n");
+    if (!input && !sizeof(flags)) {
+        message("action", "Syntax: evolve (-c=class) (-l=[1+]) (-s=[1-100]) ([target])", tc);
         return;
     }
-    cwd = this_user()->query_variable("cwd");
-    file = absolute_path(input, cwd);
-
-    if (objectp(__Locks[file])) {
-        if (interactive(__Locks[file])) {
-            write("ed: " + file + " locked by " + __Locks[file]->query_name() + ".\n");
+    if (input) {
+        target = determine_immortal_target(tc, input);
+        if (!target) {
             return;
-        } else {
-            __Locks[file] = 0;
         }
     }
 
-    switch (size = file_size(file)) {
-        case -2:
-            write("ed: " + file + ": not a file.\n");
-            return;
-        case -1:
-            write("ed: " + file + ": new file.\n");
-            break;
-        default:
-            write("ed: " + file + ": " + sizeof(explode(read_file(file), "\n")) + " lines, " + size + " bytes.\n");
-            break;
+    if (sizeof(flags["c"]) && target->query_class() != flags["c"]) {
+        tmp = target->query_class();
+        target->set_class(flags["c"]);
+        display(tc, target, "class", tmp, target->query_class());
     }
 
-    __Locks[file] = this_character();
-    new("/secure/std/editor.c")->editor_start(file, (: unlock($(file)) :));
+    if (sizeof(flags["l"]) && target->query_level() != to_int(flags["l"])) {
+        tmp = ""+target->query_level();
+        target->set_level(to_int(flags["l"]));
+        display(tc, target, "level", tmp, ""+target->query_level());
+    }
+
+    if (sizeof(flags["s"]) && to_int(flags["s"]) > 0 && to_int(flags["s"]) <= 100) {
+        statTarget = to_int(flags["s"]);
+    } else {
+        statTarget = 80;
+    }
+    foreach (string stat in ({ "strength", "perception", "endurance", "charisma", "intelligence", "agility", "luck", })) {
+        statMax = D_CLASS->query_max_stat(target->query_class(), stat, target->query_level());
+        target->set_stat(stat, statMax * statTarget / 100);
+    }
+
+
+    message("action", "Evolution complete.", tc);
 }

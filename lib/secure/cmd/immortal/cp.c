@@ -10,7 +10,7 @@ void command (string input, mapping flags) {
     string file1, file2, cwd;
 
     if (!input || sscanf(input, "%s %s", file1, file2) != 2) {
-        write("Syntax: mv [file_location] [new_location]\n");
+        write("Syntax: cp [file_location] [new_location]\n");
         return;
     }
 

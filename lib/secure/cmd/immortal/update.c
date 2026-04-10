@@ -15,7 +15,7 @@ void command (string input, mapping flags) {
     if (!input || input == "") {
         message("action", "Update which file?", this_user());
         return;
-    } if (input == "here") {
+    } else if (input == "here") {
         input = file_name(environment(this_character()));
         if (file_size(input) == -1 && file_size(input + ".c") > 0) input += ".c";
     } else {
