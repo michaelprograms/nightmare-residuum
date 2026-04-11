@@ -1,5 +1,17 @@
 #include <config.h>
 
+/**
+ * Format an array of strings into a paged column grid. Each item fills one
+ * cell; rows wrap automatically. Items longer than their column width are
+ * truncated (multi-column) or word-wrapped (single-column).
+ *
+ * @param items the strings to display; numbers are coerced to strings
+ * @param columns either an int (equal-width columns) or an int array of column width ratios
+ * @param pad padding to subtract from each side of the total width
+ * @param center when non-zero, center-align text within each column
+ * @param ansi when set, use ANSI-aware wrapping for single-column overflow
+ * @returns the formatted grid as a newline-delimited string
+ */
 varargs string format_page (string *items, mixed columns, int pad, int center, string ansi) {
     int totalWidth, width, numItems, numColumns, remainder, ratioSum;
     int i, j, diff;
@@ -17,6 +29,9 @@ varargs string format_page (string *items, mixed columns, int pad, int center, s
     } else if (intp(columns) && !undefinedp(columns)) {
         numColumns = columns;
     } else {
+        error("Bad argument 2 to format->format_page");
+    }
+    if (numColumns < 1) {
         error("Bad argument 2 to format->format_page");
     }
 
@@ -87,6 +102,14 @@ varargs string format_page (string *items, mixed columns, int pad, int center, s
     return implode(rows, "\n");
 }
 
+/**
+ * Wrap a command syntax string in angle brackets and apply ANSI coloring
+ * when the player's ansi setting is "on". Square brackets, parentheses, and
+ * pipe characters each receive distinct colors to aid readability.
+ *
+ * @param text the raw syntax string; returns 0 if not a string
+ * @returns the formatted syntax string, with or without ANSI codes
+ */
 string format_syntax (string text) {
     string s;
 
@@ -113,6 +136,14 @@ string format_syntax (string text) {
     return s;
 }
 
+/**
+ * Convert a direction string from verbose form to abbreviated form
+ * (ex: "north" to "n", "northeast" to "ne", "enter" to "ent"). Unknown
+ * words are passed through unchanged. Handles multi-word directions.
+ *
+ * @param dir the direction string to abbreviate
+ * @returns the abbreviated direction string
+ */
 string format_exit_brief (string dir) {
     string *result = ({ });
     foreach (string part in explode(dir || "", " ")) {
@@ -156,6 +187,15 @@ string format_exit_brief (string dir) {
     }
     return implode(result, " ");
 }
+
+/**
+ * Convert a direction string from abbreviated form to verbose form
+ * (ex: "n" to "north", "ne" to "northeast", "ent" to "enter"). Unknown
+ * words are passed through unchanged. Handles multi-word directions.
+ *
+ * @param dir the direction string to expand
+ * @returns the verbose direction string
+ */
 string format_exit_verbose (string dir) {
     string *result = ({ });
     foreach (string part in explode(dir || "", " ")) {
@@ -199,6 +239,15 @@ string format_exit_verbose (string dir) {
     }
     return implode(result, " ");
 }
+
+/**
+ * Convert a direction string to its opposite (ex: "north" to "south",
+ * "enter" to "out"). Unknown words are passed through unchanged. Handles
+ * multi-word directions.
+ *
+ * @param dir the direction string to reverse
+ * @returns the reversed direction string
+ */
 string format_exit_reverse (string dir) {
     string *result = ({ });
     foreach (string part in explode(dir || "", " ")) {
@@ -246,33 +295,48 @@ string format_exit_reverse (string dir) {
     return implode(result, " ");
 }
 
+/**
+ * Convert a stat name to its 3-letter abbreviation (ex: "strength" to "str").
+ * Accepts either form as input. Returns "" for unrecognized values.
+ *
+ * @param stat the stat name or abbreviation
+ * @returns the 3-letter abbreviation, or "" if unrecognized
+ */
 string format_stat_brief (string stat) {
     string result = "";
     switch (stat) {
-        case "strength": case "str":
-            result = "str";
-            break;
-        case "perception": case "per":
-            result = "per";
-            break;
-        case "endurance": case "end":
-            result = "end";
-            break;
-        case "charisma": case "cha":
-            result = "cha";
-            break;
-        case "intelligence": case "int":
-            result = "int";
-            break;
-        case "agility": case "agi":
-            result = "agi";
-            break;
-        case "luck": case "lck":
-            result = "lck";
-            break;
+    case "strength": case "str":
+        result = "str";
+        break;
+    case "perception": case "per":
+        result = "per";
+        break;
+    case "endurance": case "end":
+        result = "end";
+        break;
+    case "charisma": case "cha":
+        result = "cha";
+        break;
+    case "intelligence": case "int":
+        result = "int";
+        break;
+    case "agility": case "agi":
+        result = "agi";
+        break;
+    case "luck": case "lck":
+        result = "lck";
+        break;
     }
     return result;
 }
+
+/**
+ * Convert a stat abbreviation to its full name (ex: "str" to "strength").
+ * Accepts either form as input. Returns "" for unrecognized values.
+ *
+ * @param stat the stat abbreviation or full name
+ * @returns the full stat name, or "" if unrecognized
+ */
 string format_stat_verbose (string stat) {
     string result = "";
     switch (stat) {
@@ -301,6 +365,13 @@ string format_stat_verbose (string stat) {
     return result;
 }
 
+/**
+ * Format an integer with comma separators (ex: 1234567 to "1,234,567").
+ * Handles negative numbers. Non-integer or undefined values are treated as 0.
+ *
+ * @param num the integer to format
+ * @returns the formatted string with comma separators
+ */
 string format_integer (int num) {
     string *digits, result = "";
     int neg, s;

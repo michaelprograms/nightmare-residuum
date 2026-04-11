@@ -116,10 +116,11 @@ void test_format_page () {
         assert_equal(testOb->format_page(({ "________________________________________________________________________________" }), 1), "____________________\n"),
     }) :));
 
-    expect("format_mage handles bad input", (: ({
+    expect("format_page handles bad input", (: ({
         assert_catch((: testOb->format_page(({ })) :), "*Bad argument 1 to format->format_page\n"),
 
         assert_catch((: testOb->format_page(({ "a", "b", "c" }), 1.0) :), "*Bad argument 2 to format->format_page\n"),
+        assert_catch((: testOb->format_page(({ "a" }), 0) :), "*Bad argument 2 to format->format_page\n"),
     }) :));
 }
 
@@ -198,7 +199,7 @@ void test_format_exit_reverse () {
 }
 
 void test_format_stat_brief () {
-    expect("format_stat_brief handled exits", (: ({
+    expect("format_stat_brief handled stats", (: ({
         assert_equal(testOb->format_stat_brief("strength"), "str"),
         assert_equal(testOb->format_stat_brief("perception"), "per"),
         assert_equal(testOb->format_stat_brief("endurance"), "end"),
@@ -217,7 +218,7 @@ void test_format_stat_brief () {
     }) :));
 }
 void test_format_stat_verbose () {
-    expect("format_stat_brief handled exits", (: ({
+    expect("format_stat_verbose handled stats", (: ({
         assert_equal(testOb->format_stat_verbose("str"), "strength"),
         assert_equal(testOb->format_stat_verbose("per"), "perception"),
         assert_equal(testOb->format_stat_verbose("end"), "endurance"),
