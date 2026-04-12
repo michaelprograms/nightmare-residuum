@@ -16,12 +16,9 @@ void command (string input, mapping flags) {
     } else if (input == "coverage") {
         D_TEST->analyze_coverage();
     } else if (input) {
-        string test = input;
+        string test;
 
-        if (!input || input == "") {
-            message("action", "Update which file?", this_user());
-            return;
-        } else if (input[0] != '/' && input[0] != '~' && input[0] != '^') {
+        if (input[0] != '/' && input[0] != '~' && input[0] != '^') {
             input = this_user()->query_variable("cwd") + "/" + input;
         }
         input = sanitize_path(input);
