@@ -36,5 +36,41 @@ void test_describe_living_item () {
         __Vitals["hp"] = 100,
         set_posture("sitting"),
         assert_equal(testOb->describe_living_item(this_object()), "Test Short (sitting)"),
+
+        __Vitals["hp"] = 75,
+        assert_equal(testOb->describe_living_item(this_object()), "Test Short (bruised) (sitting)"),
+
+        set_posture("flying"),
+        assert_equal(testOb->describe_living_item(this_object()), "Test Short (bruised) (flying)"),
+        set_posture("laying"),
+        assert_equal(testOb->describe_living_item(this_object()), "Test Short (bruised) (laying)"),
+        set_posture("meditating"),
+        assert_equal(testOb->describe_living_item(this_object()), "Test Short (bruised) (meditating)"),
+
+        __Vitals["hp"] = 100,
+        set_posture("standing"),
+        assert_equal(testOb->describe_living_item(this_object()), "Test Short"),
+
+        __Vitals["hpMax"] = 0,
+        __Vitals["hp"] = 0,
+        assert_equal(testOb->describe_living_item(this_object()), "Test Short"),
+        __Vitals["hpMax"] = 100,
+
+        __Vitals["hp"] = 96,
+        assert_equal(testOb->describe_living_item(this_object()), "Test Short"),
+        __Vitals["hp"] = 95,
+        assert_equal(testOb->describe_living_item(this_object()), "Test Short (bruised)"),
+        __Vitals["hp"] = 72,
+        assert_equal(testOb->describe_living_item(this_object()), "Test Short (bruised)"),
+        __Vitals["hp"] = 71,
+        assert_equal(testOb->describe_living_item(this_object()), "Test Short (injured)"),
+        __Vitals["hp"] = 48,
+        assert_equal(testOb->describe_living_item(this_object()), "Test Short (injured)"),
+        __Vitals["hp"] = 47,
+        assert_equal(testOb->describe_living_item(this_object()), "Test Short (bleeding)"),
+        __Vitals["hp"] = 24,
+        assert_equal(testOb->describe_living_item(this_object()), "Test Short (bleeding)"),
+        __Vitals["hp"] = 23,
+        assert_equal(testOb->describe_living_item(this_object()), "Test Short (dying)"),
     }) :));
 }
