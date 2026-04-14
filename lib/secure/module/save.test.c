@@ -30,6 +30,10 @@ void test_save () {
         // no data exists
         assert_equal(file_size(PATH_TEST_SAVE), -1),
 
+        // no path set - save_data() is a no-op
+        testOb->save_data(),
+        assert_equal(file_size(PATH_TEST_SAVE), -1),
+
         testOb->set_save_path(PATH_TEST_SAVE),
         assert_equal(testOb->query_save_path(), PATH_TEST_SAVE),
 
@@ -49,6 +53,10 @@ void test_restore () {
 
         testOb->set_save_path(PATH_TEST_SAVE),
         assert_equal(testOb->query_save_path(), PATH_TEST_SAVE),
+
+        // path set but file absent - restore_data() leaves created unchanged
+        testOb->restore_data(),
+        assert_equal(testOb->query_created() == 1234567890, 0),
 
         // create save with test data
         assert_equal(write_file(PATH_TEST_SAVE, "#/secure/module/save.coverage.c\n__Created 1234567890\n"), 1),
