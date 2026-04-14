@@ -19,6 +19,9 @@ void test_path () {
 
         testOb->set_save_path(0),
         assert_equal(testOb->query_save_path(), 0),
+
+        testOb->set_save_path("/wrong/path"),
+        assert_equal(testOb->query_save_path(), 0),
     }) :));
 }
 
