@@ -51,6 +51,7 @@
 #define M_TEST          "/std/module/test.c"
 
 // secure modules
+#define M_HTTP          "/secure/module/http.c"
 #define M_SAVE          "/secure/module/save.c"
 
 // daemons

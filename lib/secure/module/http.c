@@ -22,28 +22,79 @@ private nosave string server_root;
 
 /* -----  ----- */
 
+/**
+ * @return {int} The port this server is configured to bind on, or 0 if unset.
+ */
 int query_port () {
     return __Port;
 }
+
+/**
+ * @param {int} p - The port to bind on when start() is called.
+ */
 void set_port (int p) {
     __Port = p;
 }
+
+/**
+ * @return {mixed *} Array of ({ pattern, fn }) pairs registered via add_url_pattern().
+ */
 mixed *query_url_patterns () {
     return __URLPatterns;
 }
+
+/**
+ * Register a URL pattern and the handler function to invoke when it matches.
+ *
+ * The fn argument uses dot-notation to locate the handler:
+ *   "func"          - calls this_object()->func(response, args)
+ *   "file.func"     - loads server_root/file and calls func(response, args)
+ *   "dir.file.func" - loads server_root/dir/file and calls func(response, args)
+ *
+ * The pattern is a PCRE regex matched against the request URI. Captured groups
+ * are passed to the handler as the args array.
+ *
+ * @param {string} pattern - PCRE regex matched against the request URI.
+ * @param {string} fn - Dot-notation handler path.
+ */
 void add_url_pattern (string pattern, string fn) {
     __URLPatterns += ({ ({ pattern, fn }) });
 }
+
+/**
+ * @return {int} 1 if static file serving is enabled, 0 otherwise.
+ */
 int query_allow_static_pages () {
     return __AllowStatic;
 }
+
+/**
+ * Enable or disable serving static files from server_root/www/.
+ * When enabled, unmatched requests are checked against the filesystem
+ * before returning 404. URIs containing ".." are always rejected.
+ *
+ * @param {int} allow - 1 to enable, 0 to disable.
+ */
 void allow_static_pages (int allow) {
     __AllowStatic = !!allow;
 }
 
 /* -----  ----- */
 
-protected mapping parse_request (string req) {
+/**
+ * Parse a raw HTTP request string into a structured mapping.
+ *
+ * Returned mapping shape:
+ *   "method"   : int    - HTTP method constant (GET, POST, etc.) or UNDEF_REQUEST (-1)
+ *   "uri"      : string - Request URI
+ *   "protocol" : string - Protocol string (ex: "HTTP/1.0")
+ *   "header"   : mapping - Header field/value pairs; malformed lines are skipped
+ *   "content"  : string - Request body (empty string if none)
+ *
+ * @param {string} req - Raw HTTP request including headers and optional body.
+ * @return {mapping} Parsed request mapping.
+ */
+mapping parse_request (string req) {
     string *headers;
     string *tmp;
     mapping request = ([
@@ -97,20 +148,34 @@ protected mapping parse_request (string req) {
     // parse the headers
     headers = headers[1..];
     l = sizeof(headers);
-    for (int i = 0; i < l; i ++) {
-        int pos = 0;
+    for (int i = 0; i < l; i++) {
+        int pos;
         string field, value;
 
         pos = strsrch(headers[i], ":");
+        if (!sizeof(headers[i]) || pos < 1) {
+            continue;
+        }
         field = headers[i][0..pos-1];
         value = headers[i][pos+2..];
-
         request["header"][field] = value;
     }
 
     return request;
 }
 
+/**
+ * Format a response mapping into a raw HTTP/1.0 response string.
+ *
+ * Expected mapping shape:
+ *   "code"       : string - Status line (ex: "200 OK", "404 Not Found")
+ *   "connection" : string - Connection header value (ex: "close")
+ *   "type"       : string - Content-Type value (ex: "text/html")
+ *   "content"    : string - Response body
+ *
+ * @param {mapping} response - Response mapping to serialize.
+ * @return {string} Raw HTTP response string ready to write to a socket.
+ */
 string format_response (mapping response) {
     string msg = "HTTP/1.0 ";
     msg += response["code"];
@@ -125,6 +190,15 @@ string format_response (mapping response) {
 
 /* -----  ----- */
 
+/**
+ * Resolve a dot-notation handler path, call the handler, and populate the
+ * response mapping. See add_url_pattern() for the dot-notation format.
+ *
+ * @param {mapping} response - Response mapping to populate.
+ * @param {string} path - Dot-notation handler path from add_url_pattern().
+ * @param {string *} args - PCRE capture groups extracted from the request URI.
+ * @return {mapping} Populated response mapping.
+ */
 mapping handle_response (mapping response, string path, string *args) {
     string *tmp = explode(path, ".");
     object ob;
@@ -153,7 +227,7 @@ mapping handle_response (mapping response, string path, string *args) {
         default:
             response["content"] = "Couldn't resolve path.\n";
             response["type"] = "text/json";
-            response["code"] = "200 OK";
+            response["code"] = "500 Internal Server Error";
             response["connection"] = "close";
             break;
     }
@@ -184,16 +258,19 @@ void read_socket (int fd, string msg) {
 
     if (__AllowStatic && !url_match) {
         string path = req["uri"];
-        path = server_root + "www/" + path[1..];
 
-        if (file_size(path) > 0) {
-            res = ([
-                "content": read_file(path),
-                "code": "200 OK",
-                "type": "text/html",
-                "connection": "close",
-            ]);
-            url_match = 1;
+        if (strsrch(path, "..") == -1) {
+            path = server_root + "www/" + path[1..];
+
+            if (file_size(path) > 0) {
+                res = ([
+                    "content": read_file(path),
+                    "code": "200 OK",
+                    "type": "text/html",
+                    "connection": "close",
+                ]);
+                url_match = 1;
+            }
         }
     }
 
@@ -242,6 +319,10 @@ void create () {
     server_root = server_root[0..strsrch(server_root, "/", -1)];
 }
 
+/**
+ * Bind to the configured port and begin listening for connections.
+ * set_port() must be called before start().
+ */
 void start () {
     int socket;
 
@@ -261,6 +342,9 @@ void start () {
     }
 }
 
+/**
+ * Close all open sockets. Called automatically when the object is destructed.
+ */
 void handle_remove () {
     foreach (int socket in __Sockets) {
         socket_close(socket);
