@@ -44,7 +44,6 @@ void test_parse_request () {
     mapping req;
 
     req = testOb->parse_request("GET /foo HTTP/1.0\r\n\r\n");
-    write(identify(req)+"\n");
     expect("parses GET request line", (: ({
         assert_equal($(req["method"]), 1),
         assert_equal($(req["uri"]), "/foo"),
