@@ -14,7 +14,7 @@ mixed *query_character_border_colors () {
     object po = SEFUN->this_character();
     string c;
 
-    if ((c = po->query_class()) && __ClassColors[c]) {
+    if (po && (c = po->query_class()) && __ClassColors[c]) {
         return __ClassColors[c];
     } else {
         return __ClassColors["default"];
@@ -149,6 +149,8 @@ string *format_border_item (mapping item, string ansi, string left, string right
     string *lines = ({ }), line = "", format;
     int columnWidth;
 
+    item = copy(item);
+
     if (undefinedp(item["columns"])) {
         item["columns"] = 2;
     }
@@ -182,7 +184,7 @@ string *format_border (mapping rawData, mapping b, int width, string ansi) {
     int i, l;
     int fTitle = !!(!undefinedp(data["title"]) && data["title"]);
     int fSubtitle = !undefinedp(data["subtitle"]) && sizeof(data["subtitle"]);
-    int lSubtitle = sizeof(SEFUN->strip_colour(data["subtitle"]));
+    int lSubtitle = fSubtitle ? sizeof(SEFUN->strip_colour(data["subtitle"])) : 0;
     int fHeader = !!(!undefinedp(data["header"]) && data["header"]);
     int fBody = !!(!undefinedp(data["body"]) && data["body"]);
     int fFooter = !!(!undefinedp(data["footer"]) && data["footer"]);
