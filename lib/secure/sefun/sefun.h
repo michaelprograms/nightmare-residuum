@@ -118,6 +118,10 @@ int string_compare_same_until (string a, string b);
 string sanitize_name (string name);
 mixed *parse_command_flags (string rawInput);
 
+/* --- test --- */
+string format_string_difference (string actual, string expect);
+varargs string format_array_differences (mixed *actual, mixed *expect);
+
 /* --- time --- */
 varargs string time_ago (int timestamp, int granularity);
 
