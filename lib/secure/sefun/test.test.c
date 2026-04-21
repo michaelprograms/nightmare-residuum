@@ -12,10 +12,10 @@ void test_format_string_difference () {
         assert_equal(testOb->format_string_difference("", ""), "    - '\e[43m\e[0m'\n    + '\e[41m\e[0m'"),
     }) :));
     expect("format_string_difference escapes special characters", (: ({
-        assert_equal(strip_colour(testOb->format_string_difference("foo\nbar", "foo\nbaz")), "    - '\e[42mfoo\\nba\e[0m\e[43mz\e[0m'\n    + '\e[42mfoo\\nba\e[0m\e[41mr\e[0m'"),
+        assert_equal(testOb->format_string_difference("foo\nbar", "foo\nbaz"), "    - '\e[42mfoo\\nba\e[0m\e[43mz\e[0m'\n    + '\e[42mfoo\\nba\e[0m\e[41mr\e[0m'"),
     }) :));
     expect("format_string_difference handles non-string inputs", (: ({
-        assert_equal(strip_colour(testOb->format_string_difference(42, 43)), "    - '\e[42m4\e[0m\e[43m3\e[0m'\n    + '\e[42m4\e[0m\e[41m2\e[0m'"),
+        assert_equal(testOb->format_string_difference("42", "43"), "    - '\e[42m4\e[0m\e[43m3\e[0m'\n    + '\e[42m4\e[0m\e[41m2\e[0m'"),
     }) :));
 }
 
