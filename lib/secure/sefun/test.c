@@ -15,7 +15,7 @@
  * @param expect the expected value
  * @returns two-line string: "    - '<expected>'\n    + '<actual>'"
  */
-string format_string_difference (string actual, string expect) {
+string format_string_difference (mixed actual, mixed expect) {
     int n;
     string shared;
 

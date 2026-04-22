@@ -10,6 +10,8 @@ void test_format_string_difference () {
         assert_equal(testOb->format_string_difference("foo", "bar"), "    - '\e[43mbar\e[0m'\n    + '\e[41mfoo\e[0m'"),
         assert_equal(testOb->format_string_difference("foo", "foo"), "    - '\e[42mfoo\e[0m\e[43m\e[0m'\n    + '\e[42mfoo\e[0m\e[41m\e[0m'"),
         assert_equal(testOb->format_string_difference("", ""), "    - '\e[43m\e[0m'\n    + '\e[41m\e[0m'"),
+
+        assert_equal(testOb->format_string_difference(([ "a": 1, "b": 2, "c": 3, ]), ([ "a": 1, "b": 2, "c": 3, ])), "    - '\e[42m([ \"a\": 1, \"b\": 2, \"c\": 3 ])\e[0m\e[43m\e[0m'\n    + '\e[42m([ \"a\": 1, \"b\": 2, \"c\": 3 ])\e[0m\e[41m\e[0m'"),
     }) :));
     expect("format_string_difference escapes special characters", (: ({
         assert_equal(testOb->format_string_difference("foo\nbar", "foo\nbaz"), "    - '\e[42mfoo\\nba\e[0m\e[43mz\e[0m'\n    + '\e[42mfoo\\nba\e[0m\e[41mr\e[0m'"),
