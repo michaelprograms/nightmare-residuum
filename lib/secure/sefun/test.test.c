@@ -36,4 +36,14 @@ void test_format_array_differences () {
             ({ ({ "1", "2", "3" }), })
         ), "\n       0. - '[42m\"[0m[43m1\",\"2\",\"3\"[0m'\n          + '[42m\"[0m[41ma\",\"b\",\"c\"[0m'"),
     }) :));
+    expect("format_array_differences handles numeric values", (: ({
+        assert_equal(testOb->format_array_differences(
+            ({ 1, 2, 3, }),
+            ({ 1.0, 2.0, 3.0, }),
+        ), "\n       0. - '[42m1[0m[43m.000000[0m'\n          + '[42m1[0m[41m[0m'\n       1. - '[42m2[0m[43m.000000[0m'\n          + '[42m2[0m[41m[0m'\n       2. - '[42m3[0m[43m.000000[0m'\n          + '[42m3[0m[41m[0m'"),
+        assert_equal(testOb->format_array_differences(
+            ({ 1.0, 2.0, 3.0, }),
+            ({ 1, 2, 3, }),
+        ), "\n       0. - '[42m1[0m[43m[0m'\n          + '[42m1[0m[41m.000000[0m'\n       1. - '[42m2[0m[43m[0m'\n          + '[42m2[0m[41m.000000[0m'\n       2. - '[42m3[0m[43m[0m'\n          + '[42m3[0m[41m.000000[0m'"),
+    }) :));
 }
