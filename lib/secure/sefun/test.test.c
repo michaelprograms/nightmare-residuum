@@ -30,4 +30,10 @@ void test_format_array_differences () {
         assert_equal(testOb->format_array_differences(({ "foo", "bar" }), ({ "foo" })), "\n       0. - '[42mfoo[0m[43m[0m'\n          + '[42mfoo[0m[41m[0m'\n       1. - '[43m[0m'\n          + '[41mbar[0m'"),
         assert_equal(testOb->format_array_differences(({ "foo" }), ({ "foo", "bar" })), "\n       0. - '[42mfoo[0m[43m[0m'\n          + '[42mfoo[0m[41m[0m'\n       1. - '[43mbar[0m'\n          + '[41m[0m'"),
     }) :));
+    expect("format_array_differences handles array items", (: ({
+        assert_equal(testOb->format_array_differences(
+            ({ ({ "a", "b", "c" }), }),
+            ({ ({ "1", "2", "3" }), })
+        ), "\n       0. - '[42m\"[0m[43m1\",\"2\",\"3\"[0m'\n          + '[42m\"[0m[41ma\",\"b\",\"c\"[0m'"),
+    }) :));
 }
