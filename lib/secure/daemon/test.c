@@ -469,7 +469,7 @@ string create_coverage (string path) {
             while (prev >= 0 && pcre_match(__RawLines[prev], "^\\s*}\\s*$")) {
                 prev --;
             }
-            if (prev >= 0 && pcre_match(__RawLines[prev], "(?:break|error.*|return.*|continue);$")) {
+            if (prev >= 0 && pcre_match(__RawLines[prev], "(?:break|error.*|return.*|continue|remove.*);$")) {
                 line = __RawLines[i];
             } else {
                 line = "D_TEST->line_hit(" + (i+1) + "); " + __RawLines[i];
