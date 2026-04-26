@@ -225,55 +225,6 @@ private void process_test () {
     }
 }
 
-/* ----- display diff helper functions ----- */
-
-private string format_string_difference (string actual, string expect) {
-    int n;
-    string result;
-
-    if (!stringp(actual)) {
-        actual = identify(actual);
-    }
-    if (!stringp(expect)) {
-        expect = identify(expect);
-    }
-
-    actual = replace_string(replace_string(replace_string(actual, "\n", "\\n"), "\e", "\\e"), "%^", "%%^%^^");
-    expect = replace_string(replace_string(replace_string(expect, "\n", "\\n"), "\e", "\\e"), "%^", "%%^%^^");
-    n = string_compare_same_until(actual, expect);
-    result = "'" + BLACK + (n ? B_GREEN + actual[0..n-1] : "") + B_ORANGE + actual[n..] + B_RED + expect[n..] + RESET + "'";
-    return result;
-}
-
-varargs private string format_array_differences (mixed *actual, mixed *expect) {
-    string result = "", a, e;
-    int l = max(({ sizeof(actual), sizeof(expect) }));
-
-    for (int i = 0; i < l; i ++) {
-        if (i < sizeof(actual)) {
-            if (arrayp(actual[i])) {
-                a = implode(map(actual[i], (: identify($1) :)), ",");
-            } else {
-                a = actual[i];
-            }
-        } else {
-            a = "";
-        }
-        if (i < sizeof(expect)) {
-            if (arrayp(expect[i])) {
-                e = implode(map(expect[i], (: identify($1) :)), ",");
-            } else {
-                e = expect[i];
-            }
-        } else {
-            e = "";
-        }
-
-        result += "\n      " + sprintf("%2d", i) + ". " + format_string_difference(a, e);
-    }
-    return result;
-}
-
 /* ----- expect and assert ----- */
 
 private void validate_expect (mixed value1, mixed value2, string message) {
