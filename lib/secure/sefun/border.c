@@ -183,8 +183,9 @@ string *format_border (mapping rawData, mapping b, int width, string ansi) {
     int headerStart, headerEnd, footerLine;
     int i, l;
     int fTitle = !!(!undefinedp(data["title"]) && data["title"]);
-    int fSubtitle = !undefinedp(data["subtitle"]) && sizeof(data["subtitle"]);
+    int fSubtitle = !!(!undefinedp(data["subtitle"]) && sizeof(data["subtitle"]));
     int lSubtitle = fSubtitle ? sizeof(SEFUN->strip_colour(data["subtitle"])) : 0;
+    int nSubtitle = fSubtitle ? sizeof(data["subtitle"]) : 0;
     int fHeader = !!(!undefinedp(data["header"]) && data["header"]);
     int fBody = !!(!undefinedp(data["body"]) && data["body"]);
     int fFooter = !!(!undefinedp(data["footer"]) && data["footer"]);
@@ -236,15 +237,15 @@ string *format_border (mapping rawData, mapping b, int width, string ansi) {
         n += 5 + sizeof(data["title"]);
         if (fSubtitle) {
             line += ": " + data["subtitle"];
-            n += 2 + fSubtitle;
+            n += 2 + nSubtitle;
         }
         l = n;
         line += " " + b["l"] + b["h"];
         n += 3;
-        line += sprintf("%'"+b["h"]+"'*s", width-2-n + (fSubtitle - lSubtitle), "");
+        line += sprintf("%'"+b["h"]+"'*s", width-2-n + (nSubtitle - lSubtitle), "");
         line += (fHeader ? b["t"] : b["h"]) + b["tr"+radius];
         if (ansi == "256") {
-            line = SEFUN->apply_gradient(line[0..3], colors[0..3]) + "\e[0;37;40;1m" + replace_string(line[4..l], ":", ":\e[22m") + SEFUN->apply_gradient(line[l+1..], colors[l+1-(fSubtitle - lSubtitle)..]);
+            line = SEFUN->apply_gradient(line[0..3], colors[0..3]) + "\e[0;37;40;1m" + replace_string(line[4..l], ":", ":\e[22m") + SEFUN->apply_gradient(line[l+1..], colors[l+1-(nSubtitle - lSubtitle)..]);
         } else if (ansi) {
             line = "\e[36m" + line[0..4] + "\e[0;37;40;1m" + line[5..l-1] + "\e[22;36m" + line[l..] + "\e[0;37;40m";
         }
@@ -253,7 +254,7 @@ string *format_border (mapping rawData, mapping b, int width, string ansi) {
         // Title Line 3
         line = b["v"] + (fHeader ? b["v"] : " ") + " ";
         line += b["bl"+radius] + sprintf("%'"+b["h"]+"'*s", 2 + sizeof(data["title"]) + (lSubtitle ? 2 + lSubtitle : 0), "") + b["br"+radius];
-        line += sprintf("%*s", width - 1 - n + (fSubtitle - lSubtitle), "");
+        line += sprintf("%*s", width - 1 - n + (nSubtitle - lSubtitle), "");
         line += (fHeader ? b["v"] : " ") + b["v"];
         if (ansi == "256") {
             line = SEFUN->apply_gradient(line[0..fHeader], colors[0..fHeader]) + line[1+fHeader..2] + SEFUN->apply_gradient(line[3..l+1], colors[3..l+1]) + line[l+2..<2+fHeader] + SEFUN->apply_gradient(line[<1+fHeader..<1], colors[<1+fHeader..<1]);
