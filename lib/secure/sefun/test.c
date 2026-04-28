@@ -20,10 +20,10 @@ string format_string_difference (mixed actual, mixed expect) {
     string shared;
 
     if (!stringp(actual)) {
-        actual = identify(actual);
+        actual = SEFUN->identify(actual);
     }
     if (!stringp(expect)) {
-        expect = identify(expect);
+        expect = SEFUN->identify(expect);
     }
 
     actual = replace_string(replace_string(replace_string(actual, "\n", "\\n"), "\e", "\\e"), "%^", "%%^%^^");
@@ -51,7 +51,7 @@ varargs string format_array_differences (mixed *actual, mixed *expect) {
     for (i = 0; i < l; i ++) {
         if (i < sizeof(actual)) {
             if (arrayp(actual[i])) {
-                a = implode(map(actual[i], (: identify($1) :)), ",");
+                a = implode(map(actual[i], (: SEFUN->identify($1) :)), ",");
             } else {
                 a = actual[i];
             }
@@ -60,7 +60,7 @@ varargs string format_array_differences (mixed *actual, mixed *expect) {
         }
         if (i < sizeof(expect)) {
             if (arrayp(expect[i])) {
-                e = implode(map(expect[i], (: identify($1) :)), ",");
+                e = implode(map(expect[i], (: SEFUN->identify($1) :)), ",");
             } else {
                 e = expect[i];
             }
@@ -69,10 +69,10 @@ varargs string format_array_differences (mixed *actual, mixed *expect) {
         }
 
         if (!stringp(a)) {
-            a = identify(a);
+            a = SEFUN->identify(a);
         }
         if (!stringp(e)) {
-            e = identify(e);
+            e = SEFUN->identify(e);
         }
         a = replace_string(replace_string(replace_string(a, "\n", "\\n"), "\e", "\\e"), "%^", "%%^%^^");
         e = replace_string(replace_string(replace_string(e, "\n", "\\n"), "\e", "\\e"), "%^", "%%^%^^");
