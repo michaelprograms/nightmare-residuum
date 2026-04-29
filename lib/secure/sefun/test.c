@@ -28,7 +28,7 @@ string format_string_difference (mixed actual, mixed expect) {
 
     actual = replace_string(replace_string(replace_string(actual, "\n", "\\n"), "\e", "\\e"), "%^", "%%^%^^");
     expect = replace_string(replace_string(replace_string(expect, "\n", "\\n"), "\e", "\\e"), "%^", "%%^%^^");
-    n = string_compare_same_until(actual, expect);
+    n = SEFUN->string_compare_same_until(actual, expect);
     shared = n ? B_GREEN + actual[0..n-1] + RESET : "";
     return "    - '" + shared + B_ORANGE + expect[n..] + RESET + "'\n" +
         "    + '" + shared + B_RED + actual[n..] + RESET + "'";
@@ -76,7 +76,7 @@ varargs string format_array_differences (mixed *actual, mixed *expect) {
         }
         a = replace_string(replace_string(replace_string(a, "\n", "\\n"), "\e", "\\e"), "%^", "%%^%^^");
         e = replace_string(replace_string(replace_string(e, "\n", "\\n"), "\e", "\\e"), "%^", "%%^%^^");
-        n = string_compare_same_until(a, e);
+        n = SEFUN->string_compare_same_until(a, e);
         shared = n ? B_GREEN + a[0..n-1] + RESET : "";
         result += "\n      " + sprintf("%2d", i) + ". - '" + shared + B_ORANGE + e[n..] + RESET + "'" +
             "\n          + '" + shared + B_RED + a[n..] + RESET + "'";
