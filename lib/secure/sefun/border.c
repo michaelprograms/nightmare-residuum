@@ -190,7 +190,7 @@ string *format_border (mapping rawData, mapping b, int width, string ansi) {
     int fBody = !!(!undefinedp(data["body"]) && data["body"]);
     int fFooter = !!(!undefinedp(data["footer"]) && data["footer"]);
 
-    string radius = "r";
+    string radius = (data["corners"] == "square") ? "" : "r";
 
     if (fHeader && mapp(data["header"])) {
         data["header"] = ({ data["header"] });
