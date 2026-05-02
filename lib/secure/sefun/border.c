@@ -180,7 +180,7 @@ string *format_border (mapping rawData, mapping b, int width, string ansi) {
     string *lines = ({ }), line;
     string *colors, *colors2;
     mixed *borderColors;
-    int headerStart, headerEnd, footerLine;
+    int headerStart = 0, headerEnd = 0, footerLine = 0;
     int i, nLines;
     int fTitle = !!(!undefinedp(data["title"]) && data["title"]);
     int fSubtitle = !!(!undefinedp(data["subtitle"]) && sizeof(data["subtitle"]));
@@ -332,16 +332,16 @@ string *format_border (mapping rawData, mapping b, int width, string ansi) {
             right += ({ left[i] });
         }
         for (i = headerStart; i < nLines-1; i ++) {
-            if (i < headerEnd || (i > footerLine && footerLine > 0)) {
+            if ((fHeader && i < headerEnd) || (fFooter && i > footerLine)) {
                 lines[i] = "\e[38;2;"+left[i-headerStart]+"m"+lines[i][0..1]+"\e[0;37;40m" + lines[i][2..<3] + "\e[38;2;"+right[i-headerStart]+"m" + lines[i][<2..] + "\e[0;37;40m";
-            } else if (i == headerEnd || i == footerLine) {
+            } else if ((fHeader && i == headerEnd) || (fFooter && i == footerLine)) {
                 mixed *gradient;
                 mixed *lside, *rside;
                 lside = map(explode(left[i-headerStart], ";"), (: to_int($1) :));
                 rside = map(explode(right[i-headerStart], ";"), (: to_int($1) :));
                 gradient = SEFUN->color_gradient(lside, rside, width);
                 lines[i] = SEFUN->apply_gradient(lines[i], gradient);
-            } else if (i < footerLine || !footerLine) {
+            } else if (i < footerLine || !fFooter) {
                 lines[i] = "\e[38;2;"+left[i-headerStart]+"m"+lines[i][0..0]+"\e[0;37;40m" + lines[i][1..<2] + "\e[38;2;"+right[i-headerStart]+"m" + lines[i][<1..] + "\e[0;37;40m";
             }
         }
