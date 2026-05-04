@@ -219,7 +219,7 @@ string *format_border (mapping rawData, mapping b, int width, string ansi) {
     }
 
     if (fTitle) {
-        int n = 0, lTitle;
+        int nTitle = 0, lTitle;
         // Title Line 1
         line = "   " + b["tl"+radius] + sprintf("%'"+b["h"]+"'*s", 2 + sizeof(data["title"]) + (lSubtitle ? 2 + lSubtitle : 0), "") + b["tr"+radius];
         if (ansi == "256") {
@@ -231,15 +231,15 @@ string *format_border (mapping rawData, mapping b, int width, string ansi) {
         // Title Line 2
         line = b["tl"+radius] + (fHeader ? b["t"] : b["h"]) + b["h"];
         line += b["r"] + " " + data["title"];
-        n += 5 + sizeof(data["title"]);
+        nTitle += 5 + sizeof(data["title"]);
         if (fSubtitle) {
             line += ": " + data["subtitle"];
-            n += 2 + nSubtitle;
+            nTitle += 2 + nSubtitle;
         }
-        lTitle = n;
+        lTitle = nTitle;
         line += " " + b["l"] + b["h"];
-        n += 3;
-        line += sprintf("%'"+b["h"]+"'*s", width-2-n + (nSubtitle - lSubtitle), "");
+        nTitle += 3;
+        line += sprintf("%'"+b["h"]+"'*s", width-2-nTitle + (nSubtitle - lSubtitle), "");
         line += (fHeader ? b["t"] : b["h"]) + b["tr"+radius];
         if (ansi == "256") {
             line = SEFUN->apply_gradient(line[0..3], topColors[0..3]) + "\e[0;37;40;1m" + replace_string(line[4..lTitle], ":", ":\e[22m") + SEFUN->apply_gradient(line[lTitle+1..], topColors[lTitle+1-(nSubtitle - lSubtitle)..]);
@@ -251,7 +251,7 @@ string *format_border (mapping rawData, mapping b, int width, string ansi) {
         // Title Line 3
         line = b["v"] + (fHeader ? b["v"] : " ") + " ";
         line += b["bl"+radius] + sprintf("%'"+b["h"]+"'*s", 2 + sizeof(data["title"]) + (lSubtitle ? 2 + lSubtitle : 0), "") + b["br"+radius];
-        line += sprintf("%*s", width - 1 - n + (nSubtitle - lSubtitle), "");
+        line += sprintf("%*s", width - 1 - nTitle + (nSubtitle - lSubtitle), "");
         line += (fHeader ? b["v"] : " ") + b["v"];
         if (ansi == "256") {
             line = SEFUN->apply_gradient(line[0..fHeader], topColors[0..fHeader]) + line[1+fHeader..2] + SEFUN->apply_gradient(line[3..lTitle+1], topColors[3..lTitle+1]) + line[lTitle+2..<2+fHeader] + SEFUN->apply_gradient(line[<1+fHeader..<1], topColors[<1+fHeader..<1]);
