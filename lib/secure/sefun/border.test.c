@@ -117,7 +117,7 @@ void test_format_border () {
     ]);
 
     expect("border is formatted", (: ({
-        assert_equal(__Width, 40),
+        assert_equal(__Width = 40, 40),
 
         // Empty
         assert_equal(testOb->format_border(([]), $(b), __Width, 0), ({
