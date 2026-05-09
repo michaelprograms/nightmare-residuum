@@ -19,6 +19,26 @@ mixed *distinct_array (mixed *arr) {
 }
 
 /**
+ * Return the elements of an array in reverse order.
+ *
+ * @param arr the array to reverse
+ * @returns mixed array with elements in reverse order
+ */
+mixed *reverse_array (mixed *arr) {
+    mixed *result;
+    int i, l;
+    if (!arrayp(arr)) {
+        error("Bad argument 1 to array->reverse_array");
+    }
+    result = ({ });
+    l = sizeof(arr);
+    for (i = l - 1; i >= 0; i --) {
+        result += ({ arr[i] });
+    }
+    return result;
+}
+
+/**
  * Process an array in a reduce pattern.
  *
  * @param arr the array to reduce

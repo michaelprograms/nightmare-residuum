@@ -209,10 +209,7 @@ string *format_border (mapping rawData, mapping b, int width, string ansi) {
     }
     if (borderColors) {
         topColors = SEFUN->color_gradient(borderColors[0], borderColors[1], width);
-        bottomColors = ({ });
-        for (i = sizeof(topColors)-1; i >= 0; i --) {
-            bottomColors += ({ topColors[i] });
-        }
+        bottomColors = SEFUN->reverse_array(topColors);
     } else {
         topColors = allocate(width, "");
         bottomColors = topColors;
@@ -327,10 +324,7 @@ string *format_border (mapping rawData, mapping b, int width, string ansi) {
     // Colorize edges and separators
     if (ansi == "256") {
         string *left = SEFUN->color_gradient(borderColors[0], borderColors[1], nLines - (headerStart-1))[1..<2];
-        string *right = ({ });
-        for (i = sizeof(left)-1; i >= 0; i --) {
-            right += ({ left[i] });
-        }
+        string *right = SEFUN->reverse_array(left);
         for (i = headerStart; i < nLines-1; i ++) {
             if ((fHeader && i < headerEnd) || (fFooter && i > footerLine)) {
                 lines[i] = "\e[38;2;"+left[i-headerStart]+"m"+lines[i][0..1]+"\e[0;37;40m" + lines[i][2..<3] + "\e[38;2;"+right[i-headerStart]+"m" + lines[i][<2..] + "\e[0;37;40m";

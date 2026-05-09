@@ -4,6 +4,19 @@ inherit M_TEST;
  * @var {"/secure/sefun/array"} testOb
  */
 
+void test_reverse_array () {
+    expect("reverse_array handles inputs", (: ({
+        assert_equal(testOb->reverse_array(({ 1, 2, 3 })), ({ 3, 2, 1 })),
+        assert_equal(testOb->reverse_array(({ "a", "b", "c" })), ({ "c", "b", "a" })),
+        assert_equal(testOb->reverse_array(({ 42 })), ({ 42 })),
+        assert_equal(testOb->reverse_array(({ })), ({ })),
+    }) :));
+    expect("reverse_array handles bad inputs", (: ({
+        assert_catch((: testOb->reverse_array(0) :), "*Bad argument 1 to array->reverse_array\n"),
+        assert_catch((: testOb->reverse_array(UNDEFINED) :), "*Bad argument 1 to array->reverse_array\n"),
+    }) :));
+}
+
 void test_distinct_array () {
     expect("distinct_array handles inputs", (: ({
         assert_equal(testOb->distinct_array(({ 1, 2, 2, 3, 2, 1, 3, 2, 1 })), ({ 1, 2, 3 })),
