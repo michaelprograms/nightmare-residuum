@@ -1,6 +1,6 @@
 #include <config.h>
 
-private mapping __ClassColors = ([
+nosave private mapping __ClassColors = ([
     "warrior": ({ ({ 220, 20, 60 }), ({ 192, 192, 192 }) }), // Crimson
     "mystic": ({ ({ 255, 215, 0 }), ({ 192, 192, 192 }) }), // Gold
     "scoundrel": ({ ({ 255, 99, 71 }), ({ 192, 192, 192 }) }), // Tomato
