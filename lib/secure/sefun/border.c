@@ -113,38 +113,6 @@ mapping query_border_charset () {
     return copy(__BorderCharset[type]);
 }
 
-// create a unicode border around action output
-// https://en.wikipedia.org/wiki/Box_Drawing
-//
-// mapping data = ([
-//     "title": "TITLE" || UNDEFINED,
-//     "subtitle": "Subtitle" || UNDEFINED,
-//     "ansi": 1 || UNDEFINED,
-//     "header": ({
-//         ([
-//             "header": ({ /* array of strings */ }),
-//             "items": ({ /* array of strings */ }),
-//             "columns": 2 || ({ /* array of integer ratios */ }),
-//             "align": "left || center",
-//         ]),
-//     }) || UNDEFINED,
-//     "body": ({
-//         ([
-//             "header": ({ /* array of strings */ }),
-//             "items": ({ /* array of strings */ }),
-//             "columns": 2 || ({ /* array of integer ratios */ }),
-//             "align": "left || center",
-//         ]),
-//     }) || UNDEFINED,
-//     "footer": ({
-//         ([
-//             "header": ({ /* array of strings */ }),
-//             "items": ({ /* array of strings */ }),
-//             "columns": 2 || ({ /* array of integer ratios */ }),
-//             "align": "left || center",
-//         ]),
-//     }) || UNDEFINED,
-// ]);
 string *format_border_item (mapping item, string ansi, string left, string right) {
     string *lines = ({ }), line = "", format;
     int columnWidth;
@@ -354,6 +322,24 @@ string *format_border (mapping rawData, mapping b, int width, string ansi) {
     return lines;
 }
 
+/**
+ * Render a unicode box-drawing border around output and send it to the pager.
+ * See https://en.wikipedia.org/wiki/Box_Drawing
+ *
+ * @param data mapping with any of the following keys:
+ *   "title"    - string title displayed in the top border
+ *   "subtitle" - string subtitle displayed beside the title
+ *   "ansi"     - string color mode ("16" or "256"); auto-detected if omitted
+ *   "corners"  - "square" for square corners; rounded by default
+ *   "borderColors" - ({ ({R,G,B}), ({R,G,B}) }) custom gradient colors (256 mode)
+ *   "header"   - mapping or array of mappings, each with:
+ *                  "header"  ({ string array of column headers })
+ *                  "items"   ({ string array of items })
+ *                  "columns" int column count or ({ int array of ratios })
+ *                  "align"   "left" or "center"
+ *   "body"     - same structure as header
+ *   "footer"   - same structure as header
+ */
 void border (mapping data) {
     mapping b = query_border_charset();
     int width = to_int(SEFUN->query_account_setting("width")) || DEFAULT_WIDTH;
