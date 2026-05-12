@@ -329,7 +329,8 @@ string *format_border (mapping rawData, mapping b, int width, string ansi) {
  * @param data mapping with any of the following keys:
  *   "title"    - string title displayed in the top border
  *   "subtitle" - string subtitle displayed beside the title
- *   "ansi"     - string color mode ("16" or "256"); auto-detected if omitted
+ *   "ansi"     - string color mode override ("16" or "256"); omit to auto-detect
+ *                from the user's account and terminal settings
  *   "corners"  - "square" for square corners; rounded by default
  *   "borderColors" - ({ ({R,G,B}), ({R,G,B}) }) custom gradient colors (256 mode)
  *   "header"   - mapping or array of mappings, each with:
@@ -346,7 +347,9 @@ void border (mapping data) {
     string ansi, *result;
     object tu = SEFUN->this_user();
 
-    if (undefinedp(data["ansi"]) && SEFUN->query_account_setting("ansi") == "on") {
+    if (!undefinedp(data["ansi"])) {
+        ansi = data["ansi"];
+    } else if (SEFUN->query_account_setting("ansi") == "on") {
         ansi = tu->query_terminal("color");
     }
 
