@@ -166,6 +166,15 @@ void test_noise_perlin () {
         assert_equal(testOb->noise_perlin_3d(0.0, 0.0, 0.0, $(seedTest), 0, 0), 0.0),
     }) :));
 
+    expect("noise_perlin_2d handles negative coordinates", (: ({
+        assert_equal(testOb->noise_perlin_2d(-0.5, 0.5, $(seedZero), 1, 1.0), 0.125000),
+        assert_equal(testOb->noise_perlin_2d(-1.5, -0.5, $(seedZero), 1, 1.0), 0.375000),
+    }) :));
+    expect("noise_perlin_3d handles negative coordinates", (: ({
+        assert_equal(testOb->noise_perlin_3d(-0.5, 0.5, 0.5, $(seedZero), 1, 1.0), -0.250000),
+        assert_equal(testOb->noise_perlin_3d(-1.5, -0.5, -0.5, $(seedZero), 1, 1.0), -0.125000),
+    }) :));
+
     expect("noise_perlin_2d handles bad inputs", (: ({
         assert_catch((: testOb->noise_perlin_2d(0.0, 0.0, UNDEFINED, UNDEFINED, UNDEFINED) :), "*Bad argument 3 to noise->noise_perlin_2d\n"),
     }) :));

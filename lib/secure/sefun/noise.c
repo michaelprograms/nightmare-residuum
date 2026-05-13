@@ -27,7 +27,7 @@
 // https://stackoverflow.com/questions/34426499/what-is-the-real-definition-of-the-xorshift128-algorithm
 int *noise_generate_permutation (string seed) {
     int i, j, swap;
-    mixed *p;
+    int *p;
     int state0 = 0, state1 = 0, s0, s1;
 
     if (!stringp(seed) || !sizeof(seed)) {
@@ -56,7 +56,7 @@ int *noise_generate_permutation (string seed) {
         s1 ^= s0;
         s1 ^= s0 >> 5;
         state1 = s1;
-        j = state1 % (255 - i + 1);
+        j = state1 % (255 - i + 1); // TODO: uses state1 alone (not state0+state1) intentionally - sufficient for shuffle quality
 
         // swap with random remaining permutation index
         swap   = p[i  ];
@@ -67,6 +67,7 @@ int *noise_generate_permutation (string seed) {
     return p;
 }
 
+// precalculated 4d gradient x,y,z,w arrays - pre-expanded to avoid % 32 * 4 + offset indexing at evaluation time
 nosave private int *GRAD4 = ({
     0,  1,  1,  1,  0,  1,  1,  -1,  0,  1,  -1, 1,  0,  1,  -1, -1,
     0,  -1, 1,  1,  0,  -1, 1,  -1,  0,  -1, -1, 1,  0,  -1, -1, -1,
@@ -77,7 +78,6 @@ nosave private int *GRAD4 = ({
     1,  1,  1,  0,  1,  1,  -1,  0,  1,  -1, 1,  0,  1,  -1, -1, 0,
     -1, 1,  1,  0,  -1, 1,  -1,  0,  -1, -1, 1,  0,  -1, -1, -1, 0,
 });
-// include precalculated 4d gradient x,y,z,w arrays for optimization
 mapping noise_generate_permutation_simplex (string seed) {
     int *pArray = noise_generate_permutation(seed);
     return ([
@@ -134,8 +134,8 @@ float noise_perlin_2d_permutation (float x, float y, int *p) {
     int A, A1, B, B1;
 
     // find unit square that contains point
-    X = to_int(x) & 255;
-    Y = to_int(y) & 255;
+    X = to_int(floor(x)) & 255;
+    Y = to_int(floor(y)) & 255;
 
     // find relative x,y of point in square
     x -= floor(x);
@@ -173,9 +173,9 @@ float noise_perlin_3d_permutation (float x, float y, float z, int *p) {
     int A, AA, AB, B, BA, BB;
 
     // find unit cube that contains point
-    X = to_int(x) & 255;
-    Y = to_int(y) & 255;
-    Z = to_int(z) & 255;
+    X = to_int(floor(x)) & 255;
+    Y = to_int(floor(y)) & 255;
+    Z = to_int(floor(z)) & 255;
 
     // find relative x,y,z of point in cube
     x -= floor(x);
