@@ -47,16 +47,19 @@ int *noise_generate_permutation (string seed) {
     p = PERMUTATION;
 
     for (i = 0; i <= 255; i ++) {
-        // Xorshift128+ PRNG generate next integer
+        // Xorshift128+ PRNG generate next integer (canonical uint64 output)
         s1 = state0;
         s0 = state1;
         state0 = s0;
         s1 ^= s1 << 23;
-        s1 ^= s1 >> 18;
+        s1 ^= (s1 >> 18) & 0x3FFFFFFFFFFF;    // logical right shift: clear top 18 bits (uint64 behavior)
         s1 ^= s0;
-        s1 ^= s0 >> 5;
+        s1 ^= (s0 >> 5) & 0x07FFFFFFFFFFFFFF; // logical right shift: clear top 5 bits (uint64 behavior)
         state1 = s1;
-        j = state1 % (255 - i + 1); // TODO: uses state1 alone (not state0+state1) intentionally - sufficient for shuffle quality
+        j = (state0 + state1) % (255 - i + 1);
+        if (j < 0) {
+            j += (255 - i + 1);
+        }
 
         // swap with random remaining permutation index
         swap   = p[i  ];
