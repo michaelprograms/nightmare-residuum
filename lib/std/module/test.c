@@ -31,7 +31,7 @@ nosave private int expectCatch = 0;
 nosave private string currentTestFn, currentTestMsg, currentTestLog, currentFailLog, totalFailLog;
 nosave private mixed *leftResults, *rightResults;
 nosave private string *testFunctions;
-int timeBefore, timeAfter, timeTotalBefore, timeTotalAfter, failingExpectsBefore, passingExpectsBefore;
+int timeBefore, timeAfter, timeTotalBefore, timeTotalAfter, failingExpectsBefore, passingExpectsBefore, failingAssertsBefore, totalPassingAssertsBefore;
 private function doneTestFn;
 
 /* ----- override functions ----- */
@@ -166,7 +166,7 @@ private void done_current_test () {
     }
     after_each_test();
 
-    if (totalPassingAsserts > 0 && !failingAsserts) {
+    if ((totalPassingAsserts - totalPassingAssertsBefore) > 0 && (failingAsserts - failingAssertsBefore) == 0) {
         status += "\e[32m\u2713 \e[0m";
     } else {
         status += "\e[31m\u2715 \e[0m";
@@ -211,6 +211,8 @@ private void process_test () {
         before_each_test();
         failingExpectsBefore = failingExpects;
         passingExpectsBefore = passingExpects;
+        failingAssertsBefore = failingAsserts;
+        totalPassingAssertsBefore = totalPassingAsserts;
 
         timeBefore = time_ns();
         if (query_async_test_function(currentTestFn)) {
