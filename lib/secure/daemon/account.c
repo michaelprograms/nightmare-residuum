@@ -1,5 +1,7 @@
 #define DIR_SAVE_ACCOUNT "/save/account"
 
+inherit M_CLEAN;
+
 int query_valid_name (string name) {
     int l;
     if (!name || (l = sizeof(name)) < 4 || l > 64) {
