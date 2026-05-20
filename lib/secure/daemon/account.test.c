@@ -38,6 +38,7 @@ void test_save_path () {
         assert_equal(testOb->query_save_path(""), 0),
         assert_equal(testOb->query_save_path("no"), 0),
         assert_equal(testOb->query_save_path("nonononononononononononononononononononononononononononononononom"), 0),
+        assert_equal(testOb->query_save_path("nope!"), 0),
     }) :));
     expect("query_save_path handles valid names", (: ({
         assert_regex(testOb->query_save_path("name"), "^/save/account/n/name"),
