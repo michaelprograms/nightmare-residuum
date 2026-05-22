@@ -52,6 +52,7 @@ void test_exists () {
         assert_equal(testOb->query_exists(""), 0),
         assert_equal(testOb->query_exists("testaccountinvalid"), 0),
         assert_equal(testOb->query_exists("TESTACCOUNTINVALID"), 0),
+        assert_equal(testOb->query_exists("nope!"), 0),
     }) :));
 
     expect("query_exists handles valid accounts", (: ({
