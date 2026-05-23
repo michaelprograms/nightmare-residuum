@@ -154,24 +154,6 @@ void test_wrap () {
     }) :));
 }
 
-void test_string_compare_same_until () {
-    expect("string_compare_same_until handles comparing strings", (: ({
-        assert_equal(testOb->string_compare_same_until("abc", "abc"), 3),
-        assert_equal(testOb->string_compare_same_until("abc", "ab"), 2),
-        assert_equal(testOb->string_compare_same_until("ab", "abc"), 2),
-        assert_equal(testOb->string_compare_same_until("a", "abc"), 1),
-        assert_equal(testOb->string_compare_same_until("abc", "a"), 1),
-        assert_equal(testOb->string_compare_same_until("f", "abc"), 0),
-        assert_equal(testOb->string_compare_same_until("abc", "f"), 0),
-        assert_equal(testOb->string_compare_same_until("staff", "staves"), 3),
-        assert_equal(testOb->string_compare_same_until("staffs", "staves"), 3),
-
-        assert_equal(testOb->string_compare_same_until("", ""), 0),
-        assert_equal(testOb->string_compare_same_until("", "abc"), 0),
-        assert_equal(testOb->string_compare_same_until("abc", ""), 0),
-    }) :));
-}
-
 void test_sanitize_name () {
     expect("sanitize_name handles names", (: ({
         assert_equal(testOb->sanitize_name("test"), "test"),

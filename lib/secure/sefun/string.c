@@ -115,33 +115,6 @@ varargs string wrap (string str, int width, int indent, int rawANSI) {
 }
 
 /**
- * Return the number of leading characters that two strings share. Equivalent
- * to finding the length of their longest common prefix.
- *
- * @param a the first string
- * @param b the second string
- * @returns the count of matching leading characters (0 when strings share no prefix)
- */
-int string_compare_same_until (string a, string b) {
-    int n = 0, l;
-
-    if ((l = strlen(a)) == strlen(b) && a == b) {
-        return l;
-    }
-    if (strlen(a) > strlen(b)) {
-        l = strlen(b);
-    }
-
-    for (int i = 0; i < l; i ++) {
-        if (a[i] != b[i]) {
-            break;
-        }
-        n ++;
-    }
-    return n;
-}
-
-/**
  * Normalize a name for storage or lookup by stripping spaces, apostrophes,
  * and hyphens, then converting to lowercase.
  *

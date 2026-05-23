@@ -114,11 +114,11 @@ string describe_living_item (object ob);
 /* --- string --- */
 string identify (mixed a);
 varargs string wrap (string str, int width, int indent, int rawANSI);
-int string_compare_same_until (string a, string b);
 string sanitize_name (string name);
 mixed *parse_command_flags (string rawInput);
 
 /* --- test --- */
+int string_compare_same_until (string a, string b);
 string format_string_difference (string actual, string expect);
 varargs string format_array_differences (mixed *actual, mixed *expect);
 

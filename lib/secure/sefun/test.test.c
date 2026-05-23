@@ -4,6 +4,24 @@ inherit M_TEST;
  * @var {"/secure/sefun/test"} testOb
  */
 
+void test_string_compare_same_until () {
+    expect("string_compare_same_until handles comparing strings", (: ({
+        assert_equal(testOb->string_compare_same_until("abc", "abc"), 3),
+        assert_equal(testOb->string_compare_same_until("abc", "ab"), 2),
+        assert_equal(testOb->string_compare_same_until("ab", "abc"), 2),
+        assert_equal(testOb->string_compare_same_until("a", "abc"), 1),
+        assert_equal(testOb->string_compare_same_until("abc", "a"), 1),
+        assert_equal(testOb->string_compare_same_until("f", "abc"), 0),
+        assert_equal(testOb->string_compare_same_until("abc", "f"), 0),
+        assert_equal(testOb->string_compare_same_until("staff", "staves"), 3),
+        assert_equal(testOb->string_compare_same_until("staffs", "staves"), 3),
+
+        assert_equal(testOb->string_compare_same_until("", ""), 0),
+        assert_equal(testOb->string_compare_same_until("", "abc"), 0),
+        assert_equal(testOb->string_compare_same_until("abc", ""), 0),
+    }) :));
+}
+
 void test_format_string_difference () {
     expect("format_string_difference labels two lines", (: ({
         assert_equal(testOb->format_string_difference("staffs", "staves"), "    - '\e[42msta\e[0m\e[43mves\e[0m'\n    + '\e[42msta\e[0m\e[41mffs\e[0m'"),
