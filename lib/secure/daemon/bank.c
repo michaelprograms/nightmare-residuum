@@ -25,6 +25,9 @@ private void load_balance (string name) {
 
 string *query_banks (string name) {
     string *ids;
+    if (!stringp(name) || sizeof(name) < 4) {
+        error("Bad argument 1 to bank->query_banks");
+    }
     load_balance(name);
     ids = keys(__Money);
     clear_balance();
@@ -41,9 +44,10 @@ mapping query_balance (string name, string bankID) {
     }
     load_balance(name);
     if (undefinedp(__Money[bankID])) {
-        __Money[bankID] = ([ ]);
+        balance = ([ ]);
+    } else {
+        balance = __Money[bankID];
     }
-    balance = __Money[bankID];
     clear_balance();
     return balance;
 }

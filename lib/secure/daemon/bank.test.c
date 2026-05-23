@@ -4,18 +4,27 @@ inherit M_TEST;
  * @var {"/secure/daemon/bank"} testOb
  */
 
+void after_each_test () {
+    rm("/save/character/t/testcharacter/bank.o");
+}
+
 void test_banks () {
     expect("banks are queryable", (: ({
         assert_equal(testOb->query_banks("testcharacter"), ({ })),
 
         testOb->update_balance("testcharacter", "somewhere", ([ "copper": 123, ])),
-        assert_equal(testOb->query_banks("testcharacter"), ({ "somewhere", })),
+        assert_equal(sort_array(testOb->query_banks("testcharacter"), 1), ({ "somewhere", })),
 
         testOb->update_balance("testcharacter", "elsewhere", ([ "copper": 54321, ])),
-        assert_equal(testOb->query_banks("testcharacter"), ({ "somewhere", "elsewhere", })),
+        assert_equal(sort_array(testOb->query_banks("testcharacter"), 1), ({ "elsewhere", "somewhere", })),
 
         assert_equal(rm("/save/character/t/testcharacter/bank.o"), 1),
         assert_equal(testOb->query_banks("testcharacter"), ({ })),
+    }) :));
+
+    expect("querying banks handles bad arguments", (: ({
+        assert_catch((: testOb->query_banks(UNDEFINED) :), "*Bad argument 1 to bank->query_banks\n"),
+        assert_catch((: testOb->query_banks("123") :), "*Bad argument 1 to bank->query_banks\n"),
     }) :));
 }
 
