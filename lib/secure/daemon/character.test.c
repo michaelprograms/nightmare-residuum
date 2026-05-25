@@ -20,7 +20,8 @@ void test_valid_name () {
 
 void test_save_path () {
     expect("query_save_path handles valid names", (: ({
-        assert_regex(testOb->query_save_path("name", "type"), "^/save/character/n/name/type"),
+        assert_regex(testOb->query_save_path("name", "character"), "^/save/character/n/name/character"),
+        assert_regex(testOb->query_save_path("name", "pet"), "^/save/character/n/name/pet"),
         assert_regex(testOb->query_save_path("tester"), "^/save/character/t/tester/character.o"),
     }) :));
 
@@ -28,6 +29,11 @@ void test_save_path () {
         assert_equal(testOb->query_save_path(""), 0),
         assert_equal(testOb->query_save_path("no"), 0),
         assert_equal(testOb->query_save_path("nonononononononononononononononononononononononononononononononom"), 0),
+    }) :));
+
+    expect("query_save_path handles invalid types", (: ({
+        assert_equal(testOb->query_save_path("name", "invalid"), 0),
+        assert_equal(testOb->query_save_path("name", "../../evil"), 0),
     }) :));
 }
 

@@ -22,6 +22,9 @@ varargs string query_save_path (string name, string type) {
     if (!stringp(type) || !sizeof(type)) {
         type = "character";
     }
+    if (member_array(type, VALID_TYPES) == -1) {
+        return 0;
+    }
     return DIR_SAVE_CHARACTER + "/" + name[0..0] + "/" + name + "/" + type + ".o";
 }
 
