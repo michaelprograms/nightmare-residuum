@@ -10,6 +10,8 @@ void test_valid_name () {
         assert_equal(testOb->query_valid_name("abcdefghijklm"), 1),
         assert_equal(testOb->query_valid_name("nopqrstuvwxyz"), 1),
         assert_equal(testOb->query_valid_name("a'b c-d"), 1), // valid decorators
+        assert_equal(testOb->query_valid_name("abcd"), 1), // exactly 4 chars (minimum)
+        assert_equal(testOb->query_valid_name("abcdefghijklmnopqr"), 1), // exactly 18 chars (maximum)
 
         assert_equal(testOb->query_valid_name(""), 0),
         assert_equal(testOb->query_valid_name("abc"), 0), // too short
@@ -46,6 +48,11 @@ void test_exists () {
         assert_equal(testOb->query_exists("testcharacterinvalid", "character"), 0),
     }) :));
 
+    expect("query_exists handles invalid types", (: ({
+        assert_equal(testOb->query_exists("charactertest", "invalid"), 0),
+        assert_equal(testOb->query_exists("charactertest", "../../evil"), 0),
+    }) :));
+
     expect("query_exists handles valid characters", (: ({
         // create mock character file
         assert_equal(mkdirs("/save/character/c/charactertest"), 1),
@@ -80,7 +87,7 @@ void test_load_character () {
     }) :));
     if (TestCharacter) destruct(TestCharacter);
 
-    expect("query_immortal returns returns truthy", (: ({
+    expect("query_immortal returns truthy", (: ({
         // character isn't immortal / doesn't exist
         assert_equal(testOb->query_immortal("charactertest"), 0),
 

@@ -5,7 +5,7 @@ inherit M_CLEAN;
 
 int query_valid_name (string name) {
     int l;
-    if (!name || (l = strlen(name)) < 4 || l > 18) {
+    if (!name || (l = sizeof(name)) < 4 || l > 18) {
         return 0;
     }
     if (regexp(name, "^[a-zA-Z]+[a-zA-Z\\ \\'\\-]+$")) {
@@ -15,8 +15,7 @@ int query_valid_name (string name) {
 }
 
 varargs string query_save_path (string name, string type) {
-    int l;
-    if (!name || (l = sizeof(name)) < 4 || l > 64) {
+    if (!query_valid_name(name)) {
         return 0;
     }
     if (!stringp(type) || !sizeof(type)) {
@@ -29,17 +28,22 @@ varargs string query_save_path (string name, string type) {
 }
 
 varargs int query_exists (string name, string type) {
+    string path;
     if (!stringp(type) || !sizeof(type)) {
         type = "character";
     }
     name = lower_case(name);
-    return query_valid_name(name) && file_size(query_save_path(name, type)) > -1;
+    path = query_save_path(name, type);
+    if (!path) {
+        return 0;
+    }
+    return file_size(path) > -1;
 }
 
 /**
  * Loads a character's data.
  *
- * @param name which caracter to load
+ * @param name which character to load
  * @returns {STD_CHARACTER}
  */
 private object load_character (string name) {
