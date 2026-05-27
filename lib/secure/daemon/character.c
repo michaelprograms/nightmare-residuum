@@ -41,7 +41,8 @@ varargs int query_exists (string name, string type) {
 }
 
 /**
- * Loads a character's data.
+ * Loads a character's data. Clears the save path on the returned
+ * object to prevent it from auto-saving on destruct.
  *
  * @param name which character to load
  * @returns {STD_CHARACTER}
@@ -60,7 +61,8 @@ private object load_character (string name) {
 }
 
 /**
- * Queries an off-line character's data.
+ * Queries an off-line character's data. The caller is responsible
+ * for destructing the returned object when done.
  *
  * @param name which character to query
  * @returns {STD_CHARACTER}

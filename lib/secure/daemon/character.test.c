@@ -53,53 +53,49 @@ void test_exists () {
         assert_equal(testOb->query_exists("charactertest", "../../evil"), 0),
     }) :));
 
-    expect("query_exists handles valid characters", (: ({
-        // create mock character file
-        assert_equal(mkdirs("/save/character/c/charactertest"), 1),
-        assert_equal(write_file("/save/character/c/charactertest/character.o", "charactertest.o mock save", 1), 1),
+    mkdirs("/save/character/c/charactertest");
+    write_file("/save/character/c/charactertest/character.o", "charactertest.o mock save", 1);
 
-        // test query_exists
+    expect("query_exists handles valid characters", (: ({
         assert_equal(testOb->query_exists("charactertest"), 1),
         assert_equal(testOb->query_exists("Charactertest"), 1),
-
-        // delete mock character file
-        assert_equal(rm("/save/character/c/charactertest/character.o"), 1),
-        assert_equal(rmdir("/save/character/c/charactertest"), 1),
     }) :));
+
+    rm("/save/character/c/charactertest/character.o");
+    rmdir("/save/character/c/charactertest");
 }
 
 object TestCharacter;
-void test_load_character () {
-    expect("query_character returns loaded character", (: ({
-        // character doesn't exist
+void test_query_character () {
+    expect("query_character returns 0 when character does not exist", (: ({
         assert_equal(testOb->query_character("charactertest"), 0),
+    }) :));
 
-        // create mock character file
-        assert_equal(mkdirs("/save/character/c/charactertest"), 1),
-        assert_equal(write_file("/save/character/c/charactertest/character.o", "charactertest.o mock save", 1), 1),
+    mkdirs("/save/character/c/charactertest");
+    write_file("/save/character/c/charactertest/character.o", "charactertest.o mock save", 1);
 
-        // test query_character
+    expect("query_character returns loaded character", (: ({
         assert_regex(TestCharacter = testOb->query_character("charactertest"), "/std/character#"),
-
-        // delete mock character file
-        assert_equal(rm("/save/character/c/charactertest/character.o"), 1),
-        assert_equal(rmdir("/save/character/c/charactertest"), 1),
     }) :));
+
+    rm("/save/character/c/charactertest/character.o");
+    rmdir("/save/character/c/charactertest");
     if (TestCharacter) destruct(TestCharacter);
+    TestCharacter = 0;
+}
 
-    expect("query_immortal returns truthy", (: ({
-        // character isn't immortal / doesn't exist
+void test_query_immortal () {
+    expect("query_immortal returns 0 when character does not exist", (: ({
         assert_equal(testOb->query_immortal("charactertest"), 0),
-
-        // create mock character file
-        assert_equal(mkdirs("/save/character/c/charactertest"), 1),
-        assert_equal(write_file("/save/character/c/charactertest/character.o", "__Immortal 1", 1), 1),
-
-        // test query_immortal again
-        assert_equal(testOb->query_immortal("charactertest"), 1),
-
-        // delete mock character file
-        assert_equal(rm("/save/character/c/charactertest/character.o"), 1),
-        assert_equal(rmdir("/save/character/c/charactertest"), 1),
     }) :));
+
+    mkdirs("/save/character/c/charactertest");
+    write_file("/save/character/c/charactertest/character.o", "__Immortal 1", 1);
+
+    expect("query_immortal returns truthy for immortal character", (: ({
+        assert_equal(testOb->query_immortal("charactertest"), 1),
+    }) :));
+
+    rm("/save/character/c/charactertest/character.o");
+    rmdir("/save/character/c/charactertest");
 }
