@@ -8,7 +8,7 @@ int query_valid_name (string name) {
     if (!name || (l = sizeof(name)) < 4 || l > 18) {
         return 0;
     }
-    if (regexp(name, "^[a-zA-Z]+[a-zA-Z\\ \\'\\-]+$")) {
+    if (regexp(name, "^[a-zA-Z][a-zA-Z\\ \\'\\-]*[a-zA-Z]$")) {
         return 1;
     }
     return 0;
@@ -29,9 +29,6 @@ varargs string query_save_path (string name, string type) {
 
 varargs int query_exists (string name, string type) {
     string path;
-    if (!stringp(type) || !sizeof(type)) {
-        type = "character";
-    }
     name = lower_case(name);
     path = query_save_path(name, type);
     if (!path) {
@@ -71,6 +68,10 @@ object query_character (string name) {
     return load_character(name);
 }
 
+/**
+ * @param name which character to query
+ * @returns 1 if immortal, 0 otherwise
+ */
 int query_immortal (string name) {
     object char;
     int immortal = 0;

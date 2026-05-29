@@ -17,6 +17,8 @@ void test_valid_name () {
         assert_equal(testOb->query_valid_name("abc"), 0), // too short
         assert_equal(testOb->query_valid_name("abcdefghijklmnopqrstuvwxyz"), 0), // too long
         assert_equal(testOb->query_valid_name("!@#$%^&*()"), 0), // invalid chars
+        assert_equal(testOb->query_valid_name("john-"), 0), // trailing hyphen
+        assert_equal(testOb->query_valid_name("john "), 0), // trailing space
     }) :));
 }
 
@@ -31,6 +33,7 @@ void test_save_path () {
         assert_equal(testOb->query_save_path(""), 0),
         assert_equal(testOb->query_save_path("no"), 0),
         assert_equal(testOb->query_save_path("nonononononononononononononononononononononononononononononononom"), 0),
+        assert_equal(testOb->query_save_path("../../evil"), 0), // path traversal
     }) :));
 
     expect("query_save_path handles invalid types", (: ({
@@ -65,7 +68,7 @@ void test_exists () {
     rmdir("/save/character/c/charactertest");
 }
 
-object TestCharacter;
+nosave private object ____TestCharacter;
 void test_query_character () {
     expect("query_character returns 0 when character does not exist", (: ({
         assert_equal(testOb->query_character("charactertest"), 0),
@@ -75,13 +78,13 @@ void test_query_character () {
     write_file("/save/character/c/charactertest/character.o", "charactertest.o mock save", 1);
 
     expect("query_character returns loaded character", (: ({
-        assert_regex(TestCharacter = testOb->query_character("charactertest"), "/std/character#"),
+        assert_regex(__TestCharacter = testOb->query_character("charactertest"), "/std/character#"),
     }) :));
 
     rm("/save/character/c/charactertest/character.o");
     rmdir("/save/character/c/charactertest");
-    if (TestCharacter) destruct(TestCharacter);
-    TestCharacter = 0;
+    if (__TestCharacter) destruct(__TestCharacter);
+    __TestCharacter = 0;
 }
 
 void test_query_immortal () {
