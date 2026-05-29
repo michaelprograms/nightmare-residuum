@@ -68,7 +68,7 @@ void test_exists () {
     rmdir("/save/character/c/charactertest");
 }
 
-nosave private object ____TestCharacter;
+nosave private object __TestCharacter;
 void test_query_character () {
     expect("query_character returns 0 when character does not exist", (: ({
         assert_equal(testOb->query_character("charactertest"), 0),
