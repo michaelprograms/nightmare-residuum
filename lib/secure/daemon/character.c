@@ -1,5 +1,5 @@
 #define DIR_SAVE_CHARACTER "/save/character"
-#define VALID_TYPES ({ "character", "pet", })
+#define VALID_TYPES ({ "bank", "character", "pet", })
 
 inherit M_CLEAN;
 
