@@ -39,3 +39,12 @@ void test_paths_and_files () {
         assert_equal(testOb->query_verb("invalid"), 0),
     }) :));
 }
+
+void test_rescan () {
+    expect("rescan does not duplicate", (: ({
+        testOb->scan_all_paths(),
+        assert_equal(sizeof(testOb->query_abilities("zap")), 1),
+        assert_equal(sizeof(testOb->query_commands("quit")), 1),
+        assert_equal(sizeof(testOb->query_verbs("say")), 1),
+    }) :));
+}

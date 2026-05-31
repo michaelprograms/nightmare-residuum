@@ -37,80 +37,47 @@ string query_verb (string verb) {
 
 /* ----- querying all ----- */
 
-varargs string *query_abilities (string str) {
-    string *abilities, *tmp;
+private varargs string *query_registry (mapping registry, string str) {
+    string *items, *tmp;
     int i;
 
     if (!str) {
-        return keys(__Abilities);
+        return keys(registry);
     }
-    i = sizeof(abilities = keys(__Abilities));
+    i = sizeof(items = keys(registry));
     tmp = ({ });
     while (i--) {
-        if (member_array(str, __Abilities[abilities[i]]) != -1) {
-            tmp += ({ abilities[i] });
+        if (member_array(str, registry[items[i]]) != -1) {
+            tmp += ({ items[i] });
         }
     }
     return tmp;
+}
+varargs string *query_abilities (string str) {
+    return query_registry(__Abilities, str);
 }
 varargs string *query_commands (string str) {
-    string *cmds, *tmp;
-    int i;
-
-    if (!str) {
-        return keys(__Commands);
-    }
-    i = sizeof(cmds = keys(__Commands));
-    tmp = ({ });
-    while (i--) {
-        if (member_array(str, __Commands[cmds[i]]) != -1) {
-            tmp += ({ cmds[i] });
-        }
-    }
-    return tmp;
+    return query_registry(__Commands, str);
 }
 varargs string *query_verbs (string str) {
-    string *verbs, *tmp;
-    int i;
-
-    if (!str) {
-        return keys(__Verbs);
-    }
-    i = sizeof(verbs = keys(__Verbs));
-    tmp = ({ });
-    while (i--) {
-        if (member_array(str, __Verbs[verbs[i]]) != -1) {
-            tmp += ({ verbs[i] });
-        }
-    }
-    return tmp;
+    return query_registry(__Verbs, str);
 }
 
 /* ----- scanning ----- */
 
 private void scan (string *paths, string type) {
     string cmd;
+    mapping target = ([ "ability": __Abilities, "command": __Commands, "verb": __Verbs ])[type];
+    int load = (type == "ability" || type == "verb");
+
     foreach (string path in paths) {
         foreach (string file in get_dir(path + "/*.c")) {
             cmd = file[0..<3];
-            if (type == "ability") {
-                if (!arrayp(__Abilities[cmd])) {
-                    __Abilities[cmd] = ({ });
-                }
-                __Abilities[cmd] += ({ path });
-                // load all verb rules
-                load_object(path + "/" + file);
-            } else if (type == "command") {
-                if (!arrayp(__Commands[cmd])) {
-                    __Commands[cmd] = ({ });
-                }
-                __Commands[cmd] += ({ path });
-            } else if (type == "verb") {
-                if (!arrayp(__Verbs[cmd])) {
-                    __Verbs[cmd] = ({ });
-                }
-                __Verbs[cmd] += ({ path });
-                // load all verb rules
+            if (!arrayp(target[cmd])) {
+                target[cmd] = ({ });
+            }
+            target[cmd] += ({ path });
+            if (load) {
                 load_object(path + "/" + file);
             }
         }
@@ -119,6 +86,11 @@ private void scan (string *paths, string type) {
 }
 
 void scan_all_paths () {
+    __Paths = ({ });
+    __Abilities = ([ ]);
+    __Commands = ([ ]);
+    __Verbs = ([ ]);
+
     scan(({
         "/cmd/ability",
     }), "ability");
@@ -137,10 +109,5 @@ void scan_all_paths () {
 
 void create () {
     set_no_clean(1);
-    __Paths = ({ });
-    __Abilities = ([ ]);
-    __Commands = ([ ]);
-    __Verbs = ([ ]);
-
     scan_all_paths();
 }
