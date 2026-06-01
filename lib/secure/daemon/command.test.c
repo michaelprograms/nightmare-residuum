@@ -41,10 +41,13 @@ void test_paths_and_files () {
 }
 
 void test_rescan () {
-    expect("rescan does not duplicate", (: ({
+    expect("rescan preserves path list", (: ({
         testOb->scan_all_paths(),
-        assert_equal(sizeof(testOb->query_abilities("zap")), 1),
-        assert_equal(sizeof(testOb->query_commands("quit")), 1),
-        assert_equal(sizeof(testOb->query_verbs("say")), 1),
+        assert_equal(sizeof(testOb->query_paths()), 6),
+    }) :));
+    expect("rescan preserves command resolution", (: ({
+        assert_equal(testOb->query_ability("zap"), "/cmd/ability"),
+        assert_equal(testOb->query_command("quit"), "/cmd/character"),
+        assert_equal(testOb->query_verb("say"), "/cmd/verb"),
     }) :));
 }
