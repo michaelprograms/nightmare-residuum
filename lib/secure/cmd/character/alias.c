@@ -1,9 +1,10 @@
 inherit STD_COMMAND;
 
 void create () {
-    command::create();
-    set_syntax("alias ([name] [value])|(remove [name])");
-    set_help_text("The alias command is used to view your current alias list, or if a name is produced, create a new alias if possible, or if remove and a name is provided, attempt to delete an alias.\n\nAliases can be used as shortcuts for longer commands. For example, " + format_syntax("alias bag put $* in bag") + " will allow you to type " + format_syntax("bag [item]") + " instead of " + format_syntax("put [item] in bag") + ".");
+    ::create();
+    set_syntax("alias ([name] [value])");
+    set_help_text("The alias command is used to view your current alias list, or if a name and value are provided, create a new alias.\n\nAliases can be used as shortcuts for longer commands. For example, " + format_syntax("alias bag put $* in bag") + " will allow you to type " + format_syntax("bag [item]") + " instead of " + format_syntax("put [item] in bag") + ". Use " + format_syntax("unalias [name]") + " to remove an alias.");
+    set_help_similar(({ "unalias" }));
 }
 
 /**
