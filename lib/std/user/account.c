@@ -214,7 +214,7 @@ void account_autojoin (int attempt) {
 
 private void display_account_menu () {
     string *bodyItems = ({ });
-    int locked = CONNECTION_LOCKED;
+    int locked = MUD_LOCKED;
     string autojoinBlurb;
 
     if (!query_has_playable_characters()) {
@@ -470,17 +470,17 @@ protected nomask varargs void account_input (int state, mixed extra, string inpu
                 write("Changing password...\n");
                 this_object()->input_next((: account_input, STATE_PASSWORD_NEW, 0 :), PROMPT_PASSWORD_CREATE, 1);
             } else if (input == "new") {
-                if (CONNECTION_LOCKED) {
+                if (MUD_LOCKED) {
                     return display_account_menu();
                 }
                 account_input(STATE_CHARACTER_ENTER);
             } else if (input == "delete") {
-                if (CONNECTION_LOCKED) {
+                if (MUD_LOCKED) {
                     return display_account_menu();
                 }
                 this_object()->input_next((: account_input, STATE_CHARACTER_DELETE, 0 :), PROMPT_CHARACTER_DELETE);
             } else if (member_array(input, query_character_names()) > -1) {
-                if (CONNECTION_LOCKED && !D_CHARACTER->query_immortal(input)) {
+                if (MUD_LOCKED && !D_CHARACTER->query_immortal(input)) {
                     return display_account_menu();
                 }
                 account_select_character(input);
