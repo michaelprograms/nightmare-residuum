@@ -218,13 +218,13 @@ float noise_perlin_3d_permutation (float x, float y, float z, int *p) {
             v,
             noise_perlin_lerp(
                 u,
-                noise_perlin_grad(p[AA+1 & 255], x  , y  , z-1),
-                noise_perlin_grad(p[BA+1 & 255], x-1, y  , z-1)
+                noise_perlin_grad(p[(AA+1) & 255], x  , y  , z-1),
+                noise_perlin_grad(p[(BA+1) & 255], x-1, y  , z-1)
             ),
             noise_perlin_lerp(
                 u,
-                noise_perlin_grad(p[AB+1 & 255], x  , y-1, z-1),
-                noise_perlin_grad(p[BB+1 & 255], x-1, y-1, z-1)
+                noise_perlin_grad(p[(AB+1) & 255], x  , y-1, z-1),
+                noise_perlin_grad(p[(BB+1) & 255], x-1, y-1, z-1)
             )
         )
     );
