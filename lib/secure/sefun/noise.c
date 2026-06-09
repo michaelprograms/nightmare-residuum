@@ -434,6 +434,7 @@ float noise_simplex_4d_permutation (float x, float y, float z, float w, mapping 
         n4 = t4 * t4 * (p["x"][gi4 & 255] * x4 + p["y"][gi4 & 255] * y4 + p["z"][gi4 & 255] * z4 + p["w"][gi4 & 255] * w4);
     }
     // Sum up and scale the result to cover the range [-1,1]
+    // 27.0: empirically derived normalization constant, scales the sum of 5 corner contributions to approximately [-1, 1]
     return 27.0 * (n0 + n1 + n2 + n3 + n4);
 }
 
