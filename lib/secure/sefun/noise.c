@@ -70,7 +70,7 @@ int *noise_generate_permutation (string seed) {
     return p;
 }
 
-// precalculated 4d gradient x,y,z,w arrays - pre-expanded to avoid % 32 * 4 + offset indexing at evaluation time
+// precalculated 4d gradient x,y,z,w arrays: noise_generate_permutation_simplex resolves the (% 32) * 4 + offset indexing once per permutation entry, so noise evaluation can index p["x"/"y"/"z"/"w"] directly
 nosave private int *GRAD4 = ({
     0,  1,  1,  1,  0,  1,  1,  -1,  0,  1,  -1, 1,  0,  1,  -1, -1,
     0,  -1, 1,  1,  0,  -1, 1,  -1,  0,  -1, -1, 1,  0,  -1, -1, -1,
