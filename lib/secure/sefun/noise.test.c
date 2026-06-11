@@ -235,11 +235,11 @@ void test_gradient () {
         assert_equal(testOb->gradient_2d(0, 1, 0, 0, 0.0, 0.75), 0.250000),
         assert_equal(testOb->gradient_2d(0, 1, 0, 0, 0.0, 1.00), 0.000000),
         // (0,1) to (0,0) - x = 1.0, y down
-        assert_equal(testOb->gradient_2d(0, 1, 0, 0, 0.0, 0.00), 1.000000),
-        assert_equal(testOb->gradient_2d(0, 1, 0, 0, 0.0, 0.25), 0.750000),
-        assert_equal(testOb->gradient_2d(0, 1, 0, 0, 0.0, 0.50), 0.500000),
-        assert_equal(testOb->gradient_2d(0, 1, 0, 0, 0.0, 0.75), 0.250000),
-        assert_equal(testOb->gradient_2d(0, 1, 0, 0, 0.0, 1.00), 0.000000),
+        assert_equal(testOb->gradient_2d(0, 1, 0, 0, 1.0, 0.00), 1.000000),
+        assert_equal(testOb->gradient_2d(0, 1, 0, 0, 1.0, 0.25), 0.750000),
+        assert_equal(testOb->gradient_2d(0, 1, 0, 0, 1.0, 0.50), 0.500000),
+        assert_equal(testOb->gradient_2d(0, 1, 0, 0, 1.0, 0.75), 0.250000),
+        assert_equal(testOb->gradient_2d(0, 1, 0, 0, 1.0, 1.00), 0.000000),
         // (-1,1) to (-1,0) - x = 0.0, y down
         assert_equal(testOb->gradient_2d(-1, 1, -1, 0, 0.0, 0.00), 1.000000),
         assert_equal(testOb->gradient_2d(-1, 1, -1, 0, 0.0, 0.25), 0.750000),
@@ -247,11 +247,11 @@ void test_gradient () {
         assert_equal(testOb->gradient_2d(-1, 1, -1, 0, 0.0, 0.75), 0.250000),
         assert_equal(testOb->gradient_2d(-1, 1, -1, 0, 0.0, 1.00), 0.000000),
         // (-1,1) to (-1,0) - x = 1.0, y down
-        assert_equal(testOb->gradient_2d(-1, 1, -1, 0, 0.0, 0.00), 1.000000),
-        assert_equal(testOb->gradient_2d(-1, 1, -1, 0, 0.0, 0.25), 0.750000),
-        assert_equal(testOb->gradient_2d(-1, 1, -1, 0, 0.0, 0.50), 0.500000),
-        assert_equal(testOb->gradient_2d(-1, 1, -1, 0, 0.0, 0.75), 0.250000),
-        assert_equal(testOb->gradient_2d(-1, 1, -1, 0, 0.0, 1.00), 0.000000),
+        assert_equal(testOb->gradient_2d(-1, 1, -1, 0, 1.0, 0.00), 1.000000),
+        assert_equal(testOb->gradient_2d(-1, 1, -1, 0, 1.0, 0.25), 0.750000),
+        assert_equal(testOb->gradient_2d(-1, 1, -1, 0, 1.0, 0.50), 0.500000),
+        assert_equal(testOb->gradient_2d(-1, 1, -1, 0, 1.0, 0.75), 0.250000),
+        assert_equal(testOb->gradient_2d(-1, 1, -1, 0, 1.0, 1.00), 0.000000),
     }) :));
     expect("gradient_2d returns left gradients", (: ({
         // (1,1) to (0,1) - x left, y=0.0
