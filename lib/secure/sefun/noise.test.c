@@ -357,4 +357,10 @@ void test_gradient () {
         assert_equal(testOb->gradient_2d(1, 1, 0, 0, 0.75, 0.25), 0.500000),
         assert_equal(testOb->gradient_2d(1, 1, 0, 0, 1.00, 0.00), 0.500000),
     }) :));
+    expect("gradient_2d returns 0.0 for coincident points", (: ({
+        // a zero-length segment has no gradient direction, must not divide by zero
+        assert_equal(testOb->gradient_2d(1, 1, 1, 1, 0.5, 0.5), 0.000000),
+        assert_equal(testOb->gradient_2d(0, 0, 0, 0, 0.0, 0.0), 0.000000),
+        assert_equal(testOb->gradient_2d(-2, 3, -2, 3, 1.0, 1.0), 0.000000),
+    }) :));
 }

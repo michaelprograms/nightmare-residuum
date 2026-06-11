@@ -470,5 +470,10 @@ float noise_simplex_4d (float x, float y, float z, float w, mapping p, int octav
 float gradient_2d (int x1, int y1, int x2, int y2, float x, float y) {
     float dX = to_float(x2 - x1);
     float dY = to_float(y2 - y1);
-    return ((x - x1) * dX + (y - y1) * dY) / (dX * dX + dY * dY);
+    float denominator = dX * dX + dY * dY;
+    // coincident start and end points describe no gradient direction
+    if (denominator == 0.0) {
+        return 0.0;
+    }
+    return ((x - x1) * dX + (y - y1) * dY) / denominator;
 }
