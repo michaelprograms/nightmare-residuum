@@ -160,13 +160,13 @@ float noise_perlin_2d_permutation (float x, float y, int *p) {
         v,
         noise_perlin_lerp(
             u,
-            noise_perlin_grad(p[A ], x  , y  , 0),
-            noise_perlin_grad(p[B ], x-1, y  , 0)
+            noise_perlin_grad(p[A ], x  , y  , 0.0),
+            noise_perlin_grad(p[B ], x-1, y  , 0.0)
         ),
         noise_perlin_lerp(
             u,
-            noise_perlin_grad(p[A1], x  , y-1, 0),
-            noise_perlin_grad(p[B1], x-1, y-1, 0)
+            noise_perlin_grad(p[A1], x  , y-1, 0.0),
+            noise_perlin_grad(p[B1], x-1, y-1, 0.0)
         )
     );
 }
