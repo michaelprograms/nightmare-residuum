@@ -33,8 +33,9 @@ object *users () {
  * @param msg the text to receive or display
  */
 nomask void write (string msg) {
-    if (SEFUN->this_character() && SEFUN->this_character()->query_key_name() != "test") {
-        SEFUN->this_character()->receive_message("system", msg);
+    object character = SEFUN->this_character();
+    if (character && character->query_key_name() != "test") {
+        character->receive_message("system", msg);
     } else if (efun::this_user()) {
         efun::this_user()->receive_message("system", msg);
     } else {
@@ -54,7 +55,7 @@ nomask void write (string msg) {
  * @param exclude an exclusion list of recipients
  */
 varargs void message (mixed type, string message, mixed target, mixed exclude) {
-    if (!sizeof(message) || (!objectp(target) && !arrayp(target))) {
+    if (!strlen(message) || (!objectp(target) && !arrayp(target))) {
         return;
     }
     if (!arrayp(exclude) && !objectp(exclude)) {
