@@ -51,6 +51,16 @@ void test_message () {
         assert_equal($(mockNpc1)->query_received_messages(), ({ ({ "type", "Message." }), ({ "room", "Room message." }) })),
         assert_equal($(mockNpc2)->query_received_messages(), ({ ({ "room", "Room message." }) })),
 
+        // excluded recipient: target both but exclude mockNpc2
+        testOb->message("type", "Excluded message.", ({ $(mockNpc1), $(mockNpc2) }), $(mockNpc2)),
+        assert_equal($(mockNpc1)->query_received_messages(), ({ ({ "type", "Message." }), ({ "room", "Room message." }), ({ "type", "Excluded message." }) })),
+        assert_equal($(mockNpc2)->query_received_messages(), ({ ({ "room", "Room message." }) })),
+
+        // bad target: non-object/non-array target returns silently, nothing delivered
+        testOb->message("type", "Ignored message.", "not-an-object"),
+        assert_equal($(mockNpc1)->query_received_messages(), ({ ({ "type", "Message." }), ({ "room", "Room message." }), ({ "type", "Excluded message." }) })),
+        assert_equal($(mockNpc2)->query_received_messages(), ({ ({ "room", "Room message." }) })),
+
         assert_equal($(mockNpc1)->stop_shadow(), 1),
         assert_equal($(mockNpc2)->stop_shadow(), 1),
     }) :));
