@@ -45,6 +45,8 @@ jobs:
 
         # Disable external_port_2
         sed -i 's|^external_port_2|# external_port_2|' lib/secure/etc/nightmare-residuum.config
+        # Disable external_port_3
+        sed -i 's|^external_port_3|# external_port_3|' lib/secure/etc/nightmare-residuum.config
       shell: bash
       timeout-minutes: 1
 
