@@ -21,11 +21,12 @@ inherit "/secure/sefun/user.c";
 /**
  * Sefun to access human readable format of driver version.
  *
- * @returns driver version text in YYYY.MM.DD format
+ * @returns driver version text, ex: "fluffos v2024.07.14"
  */
 string version () {
     string v;
     v = explode(__VERSION__, "-")[0];
+    v = replace_string(v, " ", " v");
     v = v[0..<5] + "." + v[<4..<3] + "." + v[<2..];
     return v;
 }
