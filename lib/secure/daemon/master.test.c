@@ -11,8 +11,9 @@ string *test_order () {
         "test_startup_applies",
         "test_build_applies",
         "test_error_applies",
-        // "test_ed_applies",
+        "test_ed_applies",
         "test_security_applies",
+        "test_parsing_applies",
     });
 }
 
@@ -152,6 +153,7 @@ void test_security_applies () {
     }) :));
 
     expect("valid_write handles calls", (: ({
+        assert_equal(testOb->valid_write(0, 0, 0), 0),
         assert_equal(testOb->valid_write("/", testOb, "write_file"), 1),
         assert_equal(testOb->valid_write("/save", basicOb, "write_file"), 0),
         assert_equal(destruct(basicOb), 0),

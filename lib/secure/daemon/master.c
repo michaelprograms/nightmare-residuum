@@ -204,9 +204,39 @@ void crash (string crash_message, object command_giver, object current_object) {
     users()->quit_account();
 }
 
-string trace_line (object obj, string prog, string file, int line) {
+/**
+ * Render a frame's call arguments into a readable, length-capped list.
+ *
+ * @param args the frame's "arguments" array from the trace mapping
+ * @returns a comma-separated argument list, each value capped in length
+ */
+private string trace_args (mixed *args) {
+    string *parts = ({ });
+    foreach (mixed a in args) {
+        string s = identify(a);
+        if (sizeof(s) > 60) { // ponytail: flat 60-char cap; widen if a real arg gets clipped
+            s = s[0..56] + "...";
+        }
+        parts += ({ s });
+    }
+    return implode(parts, ", ");
+}
+
+/**
+ * Format a single stack frame into a human-readable line. When color is set,
+ * the file:line location is wrapped in ANSI; otherwise output is plain text.
+ *
+ * @param {STD_OBJECT} obj the object the frame executed in
+ * @param prog the program (inherited file) the function came from
+ * @param file the source file the line maps to
+ * @param line the line number within file
+ * @param color when truthy, colorize the location for interactive display
+ * @returns a formatted trace line ending in a newline
+ */
+varargs string trace_line (object obj, string prog, string file, int line, int color) {
     string objfn = obj ? file_name(obj) : "<none>";
     string ret = objfn;
+    string loc = color ? "\e[36m" : "", rst = color ? "\e[0m" : "";
     int num;
     sscanf(objfn, "%s#%d", objfn, num);
     objfn += ".c";
@@ -214,23 +244,37 @@ string trace_line (object obj, string prog, string file, int line) {
         ret += sprintf(" (%s)", prog);
     }
     if (file != prog) {
-        ret += sprintf(" at %s:%d\n", file, line);
+        ret += sprintf(" at %s%s:%d%s\n", loc, file, line, rst);
     } else {
-        ret += sprintf(" at line %d\n", line);
+        ret += sprintf(" at %sline %d%s\n", loc, line, rst);
     }
     return ret;
 }
-varargs string standard_trace (mapping e) {
-    string ret, t;
+
+/**
+ * Format a full error mapping into a multi-line stack trace. Each frame is
+ * numbered (#0, #1, ...) and rendered with its call arguments. When color is
+ * set the trace is colorized for interactive display; the plain form (no color)
+ * is what gets written to the log files.
+ *
+ * @param e the error mapping (error, object, program, file, line, trace)
+ * @param color when truthy, colorize the trace for interactive display
+ * @returns the rendered trace, one line per frame
+ */
+varargs string standard_trace (mapping e, int color) {
+    string ret, t, args;
     mapping *trace;
     int i, n;
+    string err = color ? "\e[31;1m" : "", fnc = color ? "\e[33m" : "",
+        dim = color ? "\e[2m" : "", rst = color ? "\e[0m" : "";
 
-    ret = e["error"] + "Object: " + trace_line(e["object"], e["program"], e["file"], e["line"]) + "\n";
+    ret = err + e["error"] + rst + "Object: " + trace_line(e["object"], e["program"], e["file"], e["line"], color) + "\n";
     trace = e["trace"];
     n = sizeof(trace);
     for (i = 0; i < n; i ++) {
-        t = trace_line(trace[i]["object"], trace[i]["program"], trace[i]["file"], trace[i]["line"]);
-        ret += sprintf("'%s' at %s", trace[i]["function"], t);
+        args = arrayp(trace[i]["arguments"]) ? trace_args(trace[i]["arguments"]) : "";
+        t = trace_line(trace[i]["object"], trace[i]["program"], trace[i]["file"], trace[i]["line"], color);
+        ret += sprintf("%s#%d%s %s%s%s(%s) at %s", dim, i, rst, fnc, trace[i]["function"], rst, args, t);
     }
     return ret;
 }
@@ -245,6 +289,8 @@ void error_handler (mapping e, int caught) {
     string ret, file = caught ? "catch" : "runtime";
     /** @type {STD_CHARACTER} */
     object ob;
+    /** @type {STD_USER} */
+    object user;
     /** @type {M_TEST} */
     object test;
 
@@ -261,13 +307,18 @@ void error_handler (mapping e, int caught) {
         rename("/log/" + file, "/log/" + file + "-" + time());
     }
     write_file("/log/" + file, ret);
-    if ((ob = SEFUN->this_character()) && ob->is_character() && !ob->query_immortal()) {
+    ob = SEFUN->this_character();
+    if (ob && ob->is_character() && !ob->query_immortal()) {
         D_CHANNEL->send_system("error", ret);
     }
-    if (ob = efun::this_player(1)) {
-        tell_object(ob, sprintf("%sTrace written to /log/%s\n", e["error"], file));
+    if (user = efun::this_player(1)) {
+        if (ob && ob->is_character() && ob->query_immortal()) {
+            // immortals get the full colored trace inline; mortals just a pointer
+            tell_object(user, "--- \e[31;1mError\e[0m " + ctime(time()) + "\n" + standard_trace(e, 1) + "\n");
+        } else {
+            tell_object(user, sprintf("%sTrace written to /log/%s\n", e["error"], file));
+        }
     }
-    return 0;
 }
 
 // @TODO: deprecate this disable warnings system
@@ -517,12 +568,14 @@ int valid_read (string file, mixed caller, string fn) {
  */
 int valid_write (string file, mixed caller, string fn) {
     int valid = 0;
-    file = sanitize_path(file);
-    if (!(valid = regexp(base_name(caller), "^/secure/daemon/(master|access)"))) {
-        valid = D_ACCESS->query_allowed(caller, fn, file, "write");
-    }
-    if (!valid && !regexp(base_name(previous_object()), "\\.test$")) {
-        debug_message(ctime()+" "+base_name(caller)+" denied write ("+fn+") to "+file);
+    if (stringp(file) && sizeof(file)) {
+        file = sanitize_path(file);
+        if (!(valid = regexp(base_name(caller), "^/secure/daemon/(master|access)"))) {
+            valid = D_ACCESS->query_allowed(caller, fn, file, "write");
+        }
+        if (!valid && !regexp(base_name(previous_object()), "\\.test$")) {
+            debug_message(ctime()+" "+base_name(caller)+" denied write ("+fn+") to "+file);
+        }
     }
     return valid;
 }
