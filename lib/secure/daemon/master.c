@@ -265,8 +265,10 @@ varargs string standard_trace (mapping e, int color) {
     string ret, t, args;
     mapping *trace;
     int i, n;
-    string err = color ? "\e[31;1m" : "", fnc = color ? "\e[33m" : "",
-        dim = color ? "\e[2m" : "", rst = color ? "\e[0m" : "";
+    string err = color ? "\e[31;1m" : "";
+    string fnc = color ? "\e[33m" : "";
+    string dim = color ? "\e[2m" : "";
+    string rst = color ? "\e[0m" : "";
 
     ret = err + e["error"] + rst + "Object: " + trace_line(e["object"], e["program"], e["file"], e["line"], color) + "\n";
     trace = e["trace"];

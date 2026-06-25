@@ -90,13 +90,25 @@ void test_error_applies () {
     expect("trace_line returns a trace", (: ({
         assert_equal(testOb->trace_line(this_object(), "prog", "file", 123), file_name() + " (prog) at file:123\n"),
         assert_equal(testOb->trace_line(this_object(), "progfile", "progfile", 123), file_name() + " (progfile) at line 123\n"),
+        // color wraps the location in ANSI
+        assert_equal(testOb->trace_line(this_object(), "prog", "file", 123, 1), file_name() + " (prog) at \e[36mfile:123\e[0m\n"),
     }) :));
     expect("standard_trace returns trace lines", (: ({
         assert_equal(testOb->standard_trace(([ ])), "0Object: <none> (0) at line 0\n\n"),
 
         assert_equal(testOb->standard_trace(([ "error": "Test Error\n", "object": this_object(), "program": "Test Program", "file": "Test File", "line": 123 ])), "Test Error\nObject: "+file_name()+" (Test Program) at Test File:123\n\n"),
 
-        assert_equal(testOb->standard_trace(([ "error": "Test Error\n", "object": this_object(), "program": "Test Program", "file": "Test File", "line": 123, "trace": ({ ([ "object": this_object(), "program": "Test Program", "file": "Test File", "line": 123, "function": "Test Function" ]) }) ])), "Test Error\nObject: "+file_name()+" (Test Program) at Test File:123\n\n'Test Function' at "+file_name()+" (Test Program) at Test File:123\n"),
+        // numbered frame, no arguments key -> empty arg list
+        assert_equal(testOb->standard_trace(([ "error": "Test Error\n", "object": this_object(), "program": "Test Program", "file": "Test File", "line": 123, "trace": ({ ([ "object": this_object(), "program": "Test Program", "file": "Test File", "line": 123, "function": "Test Function" ]) }) ])), "Test Error\nObject: "+file_name()+" (Test Program) at Test File:123\n\n#0 Test Function() at "+file_name()+" (Test Program) at Test File:123\n"),
+
+        // frame arguments are rendered via identify()
+        assert_equal(testOb->standard_trace(([ "error": "Test Error\n", "object": this_object(), "program": "Test Program", "file": "Test File", "line": 123, "trace": ({ ([ "object": this_object(), "program": "Test Program", "file": "Test File", "line": 123, "function": "Test Function", "arguments": ({ -5, "hi" }) ]) }) ])), "Test Error\nObject: "+file_name()+" (Test Program) at Test File:123\n\n#0 Test Function(-5, \"hi\") at "+file_name()+" (Test Program) at Test File:123\n"),
+
+        // long arguments are length-capped
+        assert_regex(testOb->standard_trace(([ "error": "E\n", "object": this_object(), "program": "p", "file": "f", "line": 1, "trace": ({ ([ "object": this_object(), "program": "p", "file": "f", "line": 1, "function": "Fn", "arguments": ({ implode(allocate(70, "x"), "") }) ]) }) ])), "Fn\\(\"x+\\.\\.\\.\\) at"),
+    }) :));
+    expect("standard_trace colorizes for interactive display", (: ({
+        assert_equal(testOb->standard_trace(([ "error": "Test Error\n", "object": this_object(), "program": "Test Program", "file": "Test File", "line": 123 ]), 1), "\e[31;1mTest Error\n\e[0mObject: "+file_name()+" (Test Program) at \e[36mTest File:123\e[0m\n\n"),
     }) :));
 }
 

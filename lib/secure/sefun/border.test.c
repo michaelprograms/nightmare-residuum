@@ -121,6 +121,14 @@ void test_format_border () {
     ]);
 
     __Width = 40;
+    // the 256-color cases depend on psionist border colors; set up our own mock
+    // rather than relying on test_character_colors having run first (test order
+    // is not guaranteed and the living mock can be cleaned up between tests)
+    if (!objectp(__MockCharacter)) {
+        __MockCharacter = new("/std/living.c");
+        __MockCharacter->set_key_name("test");
+    }
+    __MockCharacter->set_class("psionist");
 
     expect("empty border", (: ({
         assert_equal(testOb->format_border(([]), $(b), __Width, 0), ({
