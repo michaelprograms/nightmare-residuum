@@ -1,5 +1,6 @@
 inherit M_TEST;
 #include "access.h"
+#include <driver/parser_error.h>
 
 /**
  * @var {"/secure/daemon/master"} testOb
@@ -14,6 +15,7 @@ string *test_order () {
         "test_ed_applies",
         "test_security_applies",
         "test_parsing_applies",
+        "test_parser_error_message",
     });
 }
 
@@ -83,6 +85,14 @@ void test_build_applies () {
     expect("object_name handles objects", (: ({
         assert_equal(testOb->object_name(UNDEFINED), "<destructed>"),
         assert_equal(testOb->object_name(this_object()), file_name() + " query_short"),
+    }) :));
+
+    expect("compile_object handles paths", (: ({
+        assert_catch((: testOb->compile_object(0) :), "*Bad argument 1 to master->compile_object\n"),
+        // non-virtual paths return 0 (also exercises the leading-slash normalization)
+        assert_equal(testOb->compile_object("nonexistent"), 0),
+        // matches the virtual room pattern but the source file does not exist
+        assert_equal(testOb->compile_object("/domain/Nowhere/virtual/room/x/"), 0),
     }) :));
 }
 
@@ -170,6 +180,14 @@ void test_security_applies () {
         assert_equal(testOb->valid_write("/save", basicOb, "write_file"), 0),
         assert_equal(destruct(basicOb), 0),
     }) :));
+
+    expect("valid_socket denies non-privileged callers", (: ({
+        assert_equal(testOb->valid_socket(this_object(), "socket_create", 0), 0),
+    }) :));
+
+    expect("valid_shadow denies non-mock callers", (: ({
+        assert_equal(testOb->valid_shadow(this_object()), 0),
+    }) :));
 }
 
 void test_parsing_applies () {
@@ -191,5 +209,45 @@ void test_parsing_applies () {
 
     expect("parse_command_all_word returns all word", (: ({
         assert_equal(testOb->parse_command_all_word(), "all"),
+    }) :));
+
+    expect("parse_command_users returns characters", (: ({
+        assert_equal(typeof(testOb->parse_command_users()), "array"),
+    }) :));
+}
+
+void test_parser_error_message () {
+    expect("type 0 generic failures", (: ({
+        assert_equal(testOb->parser_error_message(0, 0, 0, 0), "It seems you can't do that."),
+        assert_equal(testOb->parser_error_message(0, this_object(), 0, 0), "It seems you can't do that with "+file_name()+" query_short."),
+        assert_equal(testOb->parser_error_message(0, 0, this_object(), 0), "It seems you can't do that to "+file_name()+" query_short."),
+        assert_equal(testOb->parser_error_message(0, this_object(), this_object(), 0), "You can't use "+file_name()+" query_short with "+file_name()+" query_short that way."),
+    }) :));
+
+    expect("ERR_IS_NOT", (: ({
+        assert_equal(testOb->parser_error_message(ERR_IS_NOT, 0, "the sword", 0), "Sword is not here."),
+        // a trailing newline added by the driver is trimmed
+        assert_equal(testOb->parser_error_message(ERR_IS_NOT, 0, "the sword\n", 0), "Sword is not here."),
+        assert_equal(testOb->parser_error_message(ERR_IS_NOT, 0, 0, 1), "It appears you must be more specific."),
+    }) :));
+
+    expect("ERR_NOT_LIVING and ERR_NOT_ACCESSIBLE", (: ({
+        assert_equal(testOb->parser_error_message(ERR_NOT_LIVING, 0, "the guard", 0), "The guard is not alive."),
+        assert_regex(testOb->parser_error_message(ERR_NOT_LIVING, 0, "guard", 1), "None of the .* are alive\\."),
+        assert_equal(testOb->parser_error_message(ERR_NOT_ACCESSIBLE, 0, 0, 0), "You can't get to it."),
+        assert_equal(testOb->parser_error_message(ERR_NOT_ACCESSIBLE, 0, 0, 1), "You can't get to them."),
+    }) :));
+
+    expect("ordinal, allocated, bad multiple", (: ({
+        assert_equal(testOb->parser_error_message(ERR_ORDINAL, 0, 3, 0), "There are only 3 of them."),
+        assert_equal(testOb->parser_error_message(ERR_ORDINAL, 0, 1, 0), "There is only one of them."),
+        assert_equal(testOb->parser_error_message(ERR_ALLOCATED, 0, "custom message", 0), "custom message"),
+        assert_equal(testOb->parser_error_message(ERR_BAD_MULTIPLE, 0, 0, 0), "You can't do that to more than one at a time."),
+    }) :));
+
+    // arg is an array for ERR_AMBIG; this regressed previously because the
+    // debug_message line concatenated the array directly (string + array)
+    expect("ERR_AMBIG with array arg", (: ({
+        assert_regex(testOb->parser_error_message(ERR_AMBIG, 0, ({ this_object() }), 0), "do you mean"),
     }) :));
 }

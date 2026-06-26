@@ -671,7 +671,7 @@ string parser_error_message (int type, object ob, mixed arg, int plural) {
         arg = arg[0..<2];
     }
 
-    debug_message("parser_error_message: "+type+" "+identify(ob)+" "+arg+" "+plural);
+    debug_message("parser_error_message: "+type+" "+identify(ob)+" "+identify(arg)+" "+plural);
     switch (type) {
     case 0:
         if (arg && objectp(arg)) {
