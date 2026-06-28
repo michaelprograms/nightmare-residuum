@@ -33,6 +33,7 @@ void test_character_colors () {
         __MockCharacter->set_class("psionist"),
         assert_equal(testOb->query_character_border_colors(), ({ ({ 65, 105, 225 }), ({ 192, 192, 192 }) })),
     }) :));
+    if (__MockCharacter) destruct(__MockCharacter);
 }
 
 string __Type;
@@ -121,13 +122,8 @@ void test_format_border () {
     ]);
 
     __Width = 40;
-    // the 256-color cases depend on psionist border colors; set up our own mock
-    // rather than relying on test_character_colors having run first (test order
-    // is not guaranteed and the living mock can be cleaned up between tests)
-    if (!objectp(__MockCharacter)) {
-        __MockCharacter = new("/std/living.c");
-        __MockCharacter->set_key_name("test");
-    }
+    __MockCharacter = new("/std/living.c");
+    __MockCharacter->set_key_name("test");
     __MockCharacter->set_class("psionist");
 
     expect("empty border", (: ({
@@ -362,6 +358,8 @@ void test_format_border () {
             "\e[38;2;65;105;225m╰\e[38;2;65;105;225m─\e[38;2;65;105;225m─\e[38;2;65;105;225m─\e[38;2;65;105;225m─\e[38;2;65;105;225m─\e[38;2;65;105;225m─\e[38;2;65;105;225m─\e[38;2;65;105;225m─\e[38;2;65;105;225m─\e[38;2;65;105;225m─\e[38;2;65;105;225m─\e[38;2;65;105;225m─\e[38;2;65;105;225m─\e[38;2;65;105;225m─\e[38;2;65;105;225m─\e[38;2;65;105;225m─\e[38;2;65;105;225m─\e[38;2;65;105;225m─\e[38;2;65;105;225m─\e[38;2;65;105;225m─\e[38;2;65;105;225m─\e[38;2;65;105;225m─\e[38;2;65;105;225m─\e[38;2;65;105;225m─\e[38;2;65;105;225m─\e[38;2;65;105;225m─\e[38;2;65;105;225m─\e[38;2;65;105;225m─\e[38;2;65;105;225m─\e[38;2;65;105;225m─\e[38;2;65;105;225m─\e[38;2;65;105;225m─\e[38;2;65;105;225m─\e[38;2;65;105;225m─\e[38;2;65;105;225m─\e[38;2;65;105;225m─\e[38;2;65;105;225m─\e[38;2;65;105;225m─\e[38;2;65;105;225m╯\e[0;37;40m"
         })),
     }) :));
+
+    if (__MockCharacter) destruct(__MockCharacter);
 }
 
 void test_tree () {
