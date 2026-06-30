@@ -1,3 +1,13 @@
+/**
+ * Clone-per-session wrapper around the FluffOS `ed` line editor.
+ *
+ * Usage: `new(STD_EDITOR)->editor_start(file, endFn)`
+ *
+ * The object self-destructs when the edit session ends (or the connection
+ * drops). `query_ed_setup` / `set_ed_setup` are driver applies that proxy
+ * the user's ed configuration flags through to the user object.
+ */
+
 nosave private function __EndFn;
 /** @type {STD_USER} __User */
 nosave private object __User;
