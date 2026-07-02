@@ -1,11 +1,24 @@
 #include <config.h>
 
-/** @type {STD_USER} */
+/**
+ * Clone-per-session pager for scrolling long output one screenful at a time.
+ *
+ * Usage: `new(STD_PAGER)->start(lines, user)`
+ *
+ * Chunks `lines` into pages sized by the user's "lines" setting (default 40).
+ * Registers a prompt/input pair on the user's input stack; self-destructs when
+ * the user reaches the end or presses `q`.
+ */
+
+/** @type {STD_USER} __User */
 nosave private object __User;
 nosave private string *__Lines;
 nosave private int __LineNum, __LinesCount;
 nosave private int __ChunkSize = 40;
 
+/**
+ * @returns {STD_USER} the user this pager is running for
+ */
 object query_user () {
     return __User;
 }
@@ -26,6 +39,7 @@ nomask private string prompt () {
     if (chunkEnd >= __LinesCount) {
         chunkEnd = __LinesCount;
         percent = 100;
+        // last page already output by handle_page; signal end of paging
         done(1);
         return "";
     } else {
@@ -67,12 +81,12 @@ private void handle_page (mixed arg) {
 /**
  * Start pager mode for the user.
  *
- * @param lines the string array of text to page through
- * @param {STD_USER} user
+ * @param {string *} lines - the lines of text to page through
+ * @param {STD_USER} user - the user to display content to
  */
 void start (string *lines, object user) {
     if (user) {
-        __ChunkSize = to_int(user->query_setting("lines"));
+        __ChunkSize = to_int(user->query_setting("lines")) || __ChunkSize;
         __Lines = lines;
         __LinesCount = sizeof(__Lines);
         __User = user;
