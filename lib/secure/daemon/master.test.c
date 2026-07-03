@@ -65,6 +65,10 @@ void test_startup_applies () {
         tmpDebugLog = explode(read_file("/log/debug.log"), "\n")[<1],
         assert_equal(tmpDebugLog, "master()->flag: received unknown flag."),
     }) :));
+    expect("preload swallows load errors", (: ({
+        // catch() means a bad filename returns cleanly rather than throwing
+        assert_equal(testOb->preload("/nonexistent/does_not_exist"), 0),
+    }) :));
 }
 
 void test_build_applies () {
