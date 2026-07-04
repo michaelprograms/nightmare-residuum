@@ -12,6 +12,8 @@ string *test_order () {
         "test_startup_applies",
         "test_build_applies",
         "test_error_applies",
+        "test_error_handler",
+        "test_log_error",
         "test_ed_applies",
         "test_security_applies",
         "test_parsing_applies",
@@ -126,6 +128,37 @@ void test_error_applies () {
     }) :));
 }
 
+void test_error_handler () {
+    // this_character() and this_player() are 0 during tests, so error_handler
+    // takes only the log-writing path (no channel broadcast, no tell_object)
+    expect("error_handler logs runtime errors", (: ({
+        testOb->error_handler(([ "error": "RuntimeBoom\n", "object": this_object(), "program": "p", "file": "f", "line": 1, "trace": ({ }) ]), 0),
+        assert_regex(read_file("/log/runtime"), "RuntimeBoom"),
+    }) :));
+    expect("error_handler logs caught errors", (: ({
+        // a short trace does not match the in-test early return, so it is logged
+        testOb->error_handler(([ "error": "CaughtBoom\n", "object": this_object(), "program": "p", "file": "f", "line": 1, "trace": ({ }) ]), 1),
+        assert_regex(read_file("/log/catch"), "CaughtBoom"),
+    }) :));
+}
+
+void test_log_error () {
+    expect("log_error routes std/domain compile errors to the syntax log", (: ({
+        testOb->log_error("/std/nonexistent.c", "StdBoom\n"),
+        testOb->log_error("/domain/Nowhere/nonexistent.c", "DomainBoom\n"),
+        assert_regex(read_file("/log/syntax"), "StdBoom"),
+        assert_regex(read_file("/log/syntax"), "DomainBoom"),
+    }) :));
+    expect("log_error routes realm errors to a per-realm log", (: ({
+        testOb->log_error("/realm/tester/thing.c", "RealmBoom\n"),
+        assert_regex(read_file("/log/tester"), "RealmBoom"),
+    }) :));
+    expect("log_error handles warnings without writing an error log", (: ({
+        // warnings are colorized and returned, not written to the syntax log
+        assert_equal(testOb->log_error("/std/nonexistent.c", "Warning: harmless\n"), 0),
+    }) :));
+}
+
 // used for retrieve_ed_setup and save_ed_setup
 private int __EdConfig = 0;
 int query_ed_setup () {
@@ -191,6 +224,8 @@ void test_security_applies () {
 
     expect("valid_shadow denies non-mock callers", (: ({
         assert_equal(testOb->valid_shadow(this_object()), 0),
+        // the shadow mechanism test itself is permitted to shadow
+        assert_equal(testOb->valid_shadow(load_object("/std/shadow.test")), 1),
     }) :));
 }
 
@@ -247,6 +282,7 @@ void test_parser_error_message () {
         assert_equal(testOb->parser_error_message(ERR_ORDINAL, 0, 1, 0), "There is only one of them."),
         assert_equal(testOb->parser_error_message(ERR_ALLOCATED, 0, "custom message", 0), "custom message"),
         assert_equal(testOb->parser_error_message(ERR_BAD_MULTIPLE, 0, 0, 0), "You can't do that to more than one at a time."),
+        assert_equal(testOb->parser_error_message(ERR_THERE_IS_NO, 0, 0, 0), "There is no such thing here."),
     }) :));
 
     // arg is an array for ERR_AMBIG; this regressed previously because the
