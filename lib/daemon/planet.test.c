@@ -230,3 +230,66 @@ void test_creating_and_adjusting_planet (function done) {
         evaluate(done);
     }, 0.1, done, testPlanet, testPlanetFile);
 }
+
+void test_structure_types () {
+    string *types = testOb->query_structure_types();
+    expect("structure types are the expected set", (: ({
+        assert_equal(arrayp($(types)), 1),
+        assert_equal(member_array("crashed_ship", $(types)) >= 0, 1),
+        assert_equal(member_array("ruin", $(types)) >= 0, 1),
+    }) :));
+}
+
+void test_structure_determinism_and_invalid () {
+    expect("query_structure is deterministic and rejects bad planets", (: ({
+        // same coordinates yield the same result (structure mapping or 0)
+        assert_equal(
+            testOb->query_structure("Terra", 250, 250),
+            testOb->query_structure("Terra", 250, 250)
+        ),
+        // unknown planet yields 0
+        assert_equal(testOb->query_structure("no_such_planet_" + time(), 5, 5), 0),
+        // non-string name yields 0
+        assert_equal(testOb->query_structure(0, 5, 5), 0),
+    }) :));
+}
+
+void test_structure_placement () {
+    mapping planet = testOb->query_planet("Terra");
+    mapping p = noise_generate_permutation_simplex("Terra");
+    string *types = testOb->query_structure_types();
+    int found = 0, total = 0, land_ok = 1, shape_ok = 1;
+    int cx = planet["size"] / 2;
+    mapping s, n;
+
+    // scan a 32x32 region centred on the guaranteed central land mass
+    for (int x = cx - 16; x < cx + 16; x ++) {
+        for (int y = cx - 16; y < cx + 16; y ++) {
+            total ++;
+            s = testOb->query_structure("Terra", x, y);
+            if (!s) {
+                continue;
+            }
+            found ++;
+            // invariant: a placed structure sits on land
+            n = testOb->query_noise(p, planet["size"], x, y, planet["heightFactor"], planet["humidityFactor"], planet["heatFactor"]);
+            if (n["height"] <= HEIGHT_SHORE) {
+                land_ok = 0;
+            }
+            // invariant: shape is valid
+            if (member_array(s["type"], types) < 0) {
+                shape_ok = 0;
+            }
+            if (s["level"] < 1 || s["level"] > 20) { // LEVEL_RANGE is 20
+                shape_ok = 0;
+            }
+        }
+    }
+
+    expect("structures are placed sparsely, on land, with valid shape", (: ({
+        assert_equal($(found) > 0, 1),
+        assert_equal($(found) < $(total) / 2, 1),
+        assert_equal($(land_ok), 1),
+        assert_equal($(shape_ok), 1),
+    }) :));
+}

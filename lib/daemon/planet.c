@@ -11,6 +11,8 @@ inherit M_CLEAN;
 
 #define LEVEL_RANGE 20
 
+#define STRUCTURE_RARITY 4  // out of 256: ~1.5% of land cells carry a structure
+
 private mapping __Planet = ([
 /*
     Data Format:
@@ -221,6 +223,45 @@ varargs mapping query_noise (mapping p, int size, int x, int y, float heightFact
         "humidity": nHumidity,
         "heat": nHeat,
         "resource": to_int(nResource * 100.0) % 10,
+    ]);
+}
+
+/* ----- structures ----- */
+
+nosave private string *__StructureTypes = ({ "crashed_ship", "ruin" });
+
+string *query_structure_types () {
+    return __StructureTypes + ({ });
+}
+
+varargs mapping query_structure (string name, int x, int y) {
+    mapping planet, sp, noise;
+    int *p;
+
+    if (!stringp(name)) {
+        return 0;
+    }
+
+    // cheap presence check first: hash the seed permutation per coordinate
+    sp = noise_generate_permutation_simplex(name);
+    p = sp["p"];
+    if (p[(p[x & 255] + (y & 255)) & 255] >= STRUCTURE_RARITY) {
+        return 0;
+    }
+
+    // only would-be structures pay for the planet lookup + noise
+    planet = query_planet(name);
+    if (!mapp(planet) || !planet["size"]) {
+        return 0;
+    }
+    noise = query_noise(sp, planet["size"], x, y, planet["heightFactor"], planet["humidityFactor"], planet["heatFactor"]);
+    if (noise["height"] <= HEIGHT_SHORE) {
+        return 0; // ocean or shore: no structures
+    }
+
+    return ([
+        "type": __StructureTypes[p[(p[y & 255] + (x & 255)) & 255] % sizeof(__StructureTypes)],
+        "level": noise["level"],
     ]);
 }
 
