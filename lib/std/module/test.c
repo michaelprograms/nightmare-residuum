@@ -113,7 +113,7 @@ private void finish_test () {
     destruct();
 }
 
-public void execute_test (function done) {
+void execute_test (function done) {
     timeTotalBefore = time_ns();
     doneTestFn = done;
 
