@@ -11,6 +11,18 @@ int is_virtual_room () { return 1; }
 
 mapping __PCache = ([ ]);   // Permutation Cache
 
+// per-type player-facing wording for enterable structures
+nosave private mapping __StructureMeta = ([
+    "crashed_ship": ([
+        "enter": "wreck",
+        "desc": "The hull of a crashed ship juts from the ground nearby, a breach in its side wide enough to enter.",
+    ]),
+    "ruin": ([
+        "enter": "ruins",
+        "desc": "Crumbling ruins stand close by, a dark entrance yawning open to any who would enter.",
+    ]),
+]);
+
 /**
  * set up this virtual room for a planet surface.
  *
@@ -57,6 +69,7 @@ void setup_exits (object room, mapping planet, int x, int y) {
     string path;
     string name;
     int size, xw, xe, yn, ys;
+    mapping structure, meta;
 
     name = planet["name"];
     size = planet["size"];
@@ -90,6 +103,14 @@ void setup_exits (object room, mapping planet, int x, int y) {
                 room->set_room_bracket_color("%^I_CYAN%^BOLD%^");
             }
         }
+    }
+
+    // seed-derived structures
+    structure = D_PLANET->query_structure(name, x, y);
+    if (structure) {
+        meta = __StructureMeta[structure["type"]];
+        room->set_exit("enter " + meta["enter"], PLANET_V_ROOM + "interior/" + structure["type"] + "/" + name + "." + x + "." + y + "/entrance.c");
+        room->add_terrain_override(meta["desc"]);
     }
 }
 
