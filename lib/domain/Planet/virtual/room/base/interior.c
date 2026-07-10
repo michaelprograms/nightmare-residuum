@@ -34,7 +34,7 @@ void update_contents () {
     if (sizeof(filter(query_living_contents(), (: npcp :))) > 0) {
         return;
     }
-    npc = element_of(({ "feral_cat", "wild_dog", "rabid_rat", "large_ant" }));
+    npc = element_of(({ "feral_cat", "wild_dog", "rabid_rat", "large_ant", "plasma_snail", }));
     set_reset_data(([
         PLANET_NPC + npc + ".c": ([
             "number": 1,
