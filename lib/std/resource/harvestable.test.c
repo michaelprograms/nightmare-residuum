@@ -35,13 +35,17 @@ void test_type () {
     expect("type is queryable and settable", (: ({
         assert_equal(testOb->query_type(), ""),
 
-        // invalid type
+        // invalid types
         testOb->set_type("nothing"),
         assert_equal(testOb->query_type(), ""),
+        testOb->set_type("hide"), // hide drops from NPCs, never a node
+        assert_equal(testOb->query_type(), ""),
 
-        // valid type
+        // valid types
         testOb->set_type("ore"),
         assert_equal(testOb->query_type(), "ore"),
+        testOb->set_type("salvage"),
+        assert_equal(testOb->query_type(), "salvage"),
     }) :));
 }
 
@@ -56,16 +60,29 @@ void test_level () {
         assert_equal(testOb->query_short(), "a resource node"),
         assert_equal(testOb->query_long(), "A resource node."),
 
-        // ore type
+        // ore type: level 1 is tier 1
         testOb->set_type("ore"),
         testOb->set_level(1),
         assert_equal(testOb->query_short(), "a rock containing aluminum ore"),
         assert_equal(testOb->query_long(), "A rock containing a strip of aluminum ore."),
+
+        // tier mapping: level 3 is tier 2, level 20 is tier 10
+        testOb->set_level(3),
+        assert_equal(testOb->query_short(), "a rock containing tin ore"),
+        testOb->set_level(20),
+        assert_equal(testOb->query_short(), "a rock containing titanium ore"),
 
         // wood type
         testOb->set_type("wood"),
         testOb->set_level(1),
         assert_equal(testOb->query_short(), "a log containing balsa wood"),
         assert_equal(testOb->query_long(), "A log containing a strip of balsa wood."),
+
+        // salvage type
+        testOb->set_type("salvage"),
+        testOb->set_level(1),
+        assert_equal(testOb->query_short(), "a pile of debris containing salvaged wiring"),
+        assert_equal(testOb->query_long(), "A pile of debris containing salvageable wiring."),
+        assert_equal(testOb->id("salvage"), 1),
     }) :));
 }

@@ -26,21 +26,39 @@ void update_descriptions () {
 
 /* ----- contents ----- */
 
+private void setup_salvage (object node, int level) {
+    node->set_type("salvage");
+    node->set_level(level);
+}
+
+private void setup_npc (object npc, int level) {
+    object hide = new("/std/resource/resource.c");
+
+    npc->set_level(level);
+    hide->set_type("hide");
+    hide->set_level(level);
+    hide->handle_move(npc);
+}
+
 void update_contents () {
     int level = query_property("level");
     string npc;
+    mapping data;
 
-    set_reset_data(([ ]));
-    if (sizeof(filter(query_living_contents(), (: npcp :))) > 0) {
-        return;
-    }
-    npc = element_of(({ "feral_cat", "wild_dog", "rabid_rat", "large_ant", "plasma_snail", }));
-    set_reset_data(([
-        PLANET_NPC + npc + ".c": ([
+    data = ([
+        "/std/resource/harvestable.c": ([
             "number": 1,
-            "setup": (: $1->set_level($(level)) :),
+            "setup": (: setup_salvage($1, $(level)) :),
         ]),
-    ]));
+    ]);
+    if (sizeof(filter(query_living_contents(), (: npcp :))) < 1) {
+        npc = element_of(({ "feral_cat", "wild_dog", "rabid_rat", "large_ant", "plasma_snail", }));
+        data[PLANET_NPC + npc + ".c"] = ([
+            "number": 1,
+            "setup": (: setup_npc($1, $(level)) :),
+        ]);
+    }
+    set_reset_data(data);
     handle_reset();
 }
 
