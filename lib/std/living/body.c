@@ -352,7 +352,7 @@ string *query_wieldable_limbs () {
             }
         }
     }
-    return wieldable;
+    return sort_array(wieldable, 1);
 }
 /**
  * Accesses the weapon wielded to the limb queried.

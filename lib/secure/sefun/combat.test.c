@@ -300,8 +300,9 @@ void test_combat_table () {
     weapon->set_type("blade");
     weapon->handle_move(living2);
     living2->handle_wield(weapon);
+    // wield defaults to the left hand, so wear the shield on the right so both fit
     armor->set_type("shield");
-    armor->set_limbs(({ "left arm", "left hand" }));
+    armor->set_limbs(({ "right arm", "right hand" }));
     armor->handle_move(living2);
     living2->handle_wear(armor);
 

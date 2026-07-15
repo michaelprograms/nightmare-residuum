@@ -23,18 +23,18 @@ mapping query_exits () {
 }
 // longhand directions
 string *query_exit_directions () {
-    return keys(__Exits);
+    return sort_array(keys(__Exits), 1);
 }
 // shorthand directions
 string *query_exit_dirs () {
-    string *exits = keys(__Exits);
+    string *exits = sort_array(keys(__Exits), 1);
     for (int i = 0; i < sizeof(exits); i ++) {
         exits[i] = format_exit_brief(exits[i]);
     }
     return exits;
 }
 string *query_exit_destinations () {
-    return values(__Exits);
+    return map(sort_array(keys(__Exits), 1), (: __Exits[$1] :));
 }
 string query_exit (string dir) {
     dir = format_exit_verbose (dir);
@@ -171,10 +171,10 @@ mapping query_climbs () {
     return copy(__Climbs);
 }
 string *query_climb_directions () {
-    return keys(__Climbs);
+    return sort_array(keys(__Climbs), 1);
 }
 string *query_climb_destinations () {
-    return values(__Climbs);
+    return map(sort_array(keys(__Climbs), 1), (: __Climbs[$1] :));
 }
 string query_climb (string dir) {
     if (__Climbs[dir]) {

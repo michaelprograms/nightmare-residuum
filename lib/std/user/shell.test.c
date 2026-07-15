@@ -54,7 +54,7 @@ void test_variable_hooks () {
 
 void test_aliases () {
     expect("aliases are queryable, settable, and removable", (: ({
-        assert_equal(testOb->query_alias_names(), ({ "n", "nw", "l", "cl", "ne", "'", "ent", "w", "sw", "u", "e", "d", "se", "s" })),
+        assert_equal(testOb->query_alias_names(), ({ "'", "cl", "d", "e", "ent", "l", "n", "ne", "nw", "s", "se", "sw", "u", "w" })),
         assert_equal(testOb->query_alias("testalias1"), UNDEFINED),
 
         testOb->set_alias("testalias1", "test alias 1 expansion"),

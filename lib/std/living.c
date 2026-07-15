@@ -46,27 +46,28 @@ void heart_beat () {
 
 string query_living_long () {
     string *attributes = ({ }), str = "";
+    mapping attr;
     if (query_gender() != "neither" && query_gender() != "none") {
         str = query_gender() + " ";
     }
     str += query_species();
     str = query_cap_name() + " is " + add_article(str);
-    foreach (string key,string value in query_attributes()) {
-        if (key == "build") {
-            attributes += ({ add_article(value) + " build" });
-        }
-        if (key == "complexion") {
-            attributes += ({ add_article(value) + " complexion" });
-        }
-        if (key == "eye") {
-            attributes += ({ value + " eyes" });
-        }
-        if (key == "hair") {
-            attributes += ({ value + " hair" });
-        }
-        if (key == "height") {
-            attributes += ({ value + " units tall" });
-        }
+    // emit in a fixed order so the description is deterministic regardless of attribute mapping order
+    attr = query_attributes();
+    if (attr["eye"]) {
+        attributes += ({ attr["eye"] + " eyes" });
+    }
+    if (attr["height"]) {
+        attributes += ({ attr["height"] + " units tall" });
+    }
+    if (attr["complexion"]) {
+        attributes += ({ add_article(attr["complexion"]) + " complexion" });
+    }
+    if (attr["build"]) {
+        attributes += ({ add_article(attr["build"]) + " build" });
+    }
+    if (attr["hair"]) {
+        attributes += ({ attr["hair"] + " hair" });
     }
     if (sizeof(attributes)) {
         str += " with " + conjunction(attributes);

@@ -412,7 +412,8 @@ string *tree (mapping value) {
         error("Bad argument 1 to border->tree");
     }
     b = query_border_charset();
-    ids = sort_array(keys(value), (: to_int(explode($1," ")[0]) < to_int(explode($2," ")[0]) ? 0 : 1 :));
+    // Sort keys by their leading number ("10. foo" -> 10), tie-breaking on string order so it stays deterministic.
+    ids = sort_array(keys(value), (: to_int(explode($1," ")[0]) == to_int(explode($2," ")[0]) ? ($1 > $2 ? 1 : ($1 < $2 ? -1 : 0)) : (to_int(explode($1," ")[0]) < to_int(explode($2," ")[0]) ? -1 : 1) :));
     l = sizeof(ids);
     for (i = 0; i < l; i ++) {
         result += format_tree(i + ". " + ids[i], value[ids[i]], b, 0, i, l-1, ([ ]));

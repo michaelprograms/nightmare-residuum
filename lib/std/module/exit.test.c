@@ -41,9 +41,9 @@ void test_exits () {
 
         testOb->set_exit("south", "/southroom.c"),
         assert_equal(testOb->query_exits(), ([ "south": ([ "room": "/southroom.c"]), "north": ([ "room": "/northroom.c" ]) ])),
-        assert_equal(testOb->query_exit_directions(), ({ "south", "north" })),
-        assert_equal(testOb->query_exit_dirs(), ({ "s", "n" })),
-        assert_equal(testOb->query_exit_destinations(), ({ ([ "room": "/southroom.c" ]), ([ "room": "/northroom.c" ]) })),
+        assert_equal(testOb->query_exit_directions(), ({ "north", "south" })),
+        assert_equal(testOb->query_exit_dirs(), ({ "n", "s" })),
+        assert_equal(testOb->query_exit_destinations(), ({ ([ "room": "/northroom.c" ]), ([ "room": "/southroom.c" ]) })),
 
         testOb->remove_exit("north"),
         assert_equal(testOb->query_exits(), ([ "south": ([ "room": "/southroom.c" ]) ])),
@@ -59,8 +59,8 @@ void test_exits () {
         testOb->set_exit("west", "/westroom.c"),
         testOb->set_exit("southeast", "/southeastroom.c"),
         testOb->set_exit("southwest", "/southwestroom.c"),
-        assert_equal(testOb->query_exit_directions(), ({ "north", "south", "east", "southeast", "northeast", "west", "southwest", "northwest" })),
-        assert_equal(testOb->query_exit_dirs(), ({ "n", "s", "e", "se", "ne", "w", "sw", "nw" })),
+        assert_equal(testOb->query_exit_directions(), ({ "east", "north", "northeast", "northwest", "south", "southeast", "southwest", "west" })),
+        assert_equal(testOb->query_exit_dirs(), ({ "e", "n", "ne", "nw", "s", "se", "sw", "w" })),
 
         // overrides existing exits
         testOb->set_exits(([
@@ -69,8 +69,8 @@ void test_exits () {
             "west": "/westroom.c",
             "south": "/southroom.c",
         ])),
-        assert_equal(testOb->query_exit_directions(), ({ "north", "south", "east", "west" })),
-        assert_equal(testOb->query_exit_dirs(), ({ "n", "s", "e", "w" })),
+        assert_equal(testOb->query_exit_directions(), ({ "east", "north", "south", "west" })),
+        assert_equal(testOb->query_exit_dirs(), ({ "e", "n", "s", "w" })),
         assert_equal(testOb->query_exits(), ([ "east": ([ "room": "/eastroom.c" ]), "north": ([ "room": "/northroom.c" ]), "south": ([ "room": "/southroom.c" ]), "west": ([ "room": "/westroom.c" ]) ])),
         // array dir and dests
         testOb->set_exits(([
@@ -145,8 +145,8 @@ void test_climbs () {
             "something": "/somethingroom.c",
         ])),
         assert_equal(testOb->query_climbs(), ([ "down": ([ "room": "/downroom2.c"]), "something": ([ "room": "/somethingroom.c" ]), "up": ([ "room": "/uproom2.c", ]) ])),
-        assert_equal(testOb->query_climb_directions(), ({ "something", "down", "up", })),
-        assert_equal(testOb->query_climb_destinations(), ({ ([ "room": "/somethingroom.c" ]), ([ "room": "/downroom2.c" ]), ([ "room": "/uproom2.c" ]), })),
+        assert_equal(testOb->query_climb_directions(), ({ "down", "something", "up", })),
+        assert_equal(testOb->query_climb_destinations(), ({ ([ "room": "/downroom2.c" ]), ([ "room": "/somethingroom.c" ]), ([ "room": "/uproom2.c" ]), })),
         // array dir and dests
         testOb->set_climbs(([
             ({ "up", }): ({ "/uproom.c", 0, 0, "down" }),

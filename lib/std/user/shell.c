@@ -17,7 +17,7 @@ void initialize_shell ();
 /* ----- aliases ----- */
 
 nomask string *query_alias_names () {
-    return keys(__Aliases);
+    return sort_array(keys(__Aliases), 1);
 }
 nomask mapping query_alias (string alias) {
     return __Aliases[alias];
