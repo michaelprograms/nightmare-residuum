@@ -21,7 +21,7 @@ mixed can_harvest_obj (object ob, string str) {
 /**
  * Harvest a resource from a harvestable item.
  *
- * @param {"/std/resource/harvestable.c"} ob the item to harvest
+ * @param {STD_HARVESTABLE} ob the item to harvest
  * @param str the input text
  */
 void do_harvest_obj (object ob, string str) {

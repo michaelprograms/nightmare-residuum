@@ -1,8 +1,6 @@
 inherit STD_ITEM;
 inherit M_LEVELABLE;
 
-#define RESOURCE "/std/resource/resource.c"
-
 nosave private string *__NodeTypes = ({ "ore", "wood", "salvage" });
 
 void create () {
@@ -29,7 +27,7 @@ void set_level (int l) {
     if (!sizeof(type)) {
         return;
     }
-    material = RESOURCE->query_material(type, query_level());
+    material = STD_RESOURCE->query_material(type, query_level());
     if (!material) {
         return;
     }
@@ -87,7 +85,7 @@ void handle_harvest (object character) {
     message("action", "You harvest " + query_name() + ".", character);
     message("action", character->query_cap_name() + " harvests " + query_name() + ".", environment(character), character);
 
-    ob = new(RESOURCE);
+    ob = new(STD_RESOURCE);
     ob->set_type(type);
     ob->set_level(query_level());
     ob->handle_move(character);

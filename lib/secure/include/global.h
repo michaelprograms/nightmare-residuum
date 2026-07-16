@@ -31,6 +31,10 @@
 // std npc inheritables
 #define STD_VENDOR      "/std/npc/vendor.c"
 
+// std resource inheritables
+#define STD_RESOURCE    "/std/resource/resource.c"
+#define STD_HARVESTABLE "/std/resource/harvestable.c"
+
 // std modules
 #define M_AUTOLOAD      "/std/module/autoload.c"
 #define M_BONUS         "/std/module/bonus.c"

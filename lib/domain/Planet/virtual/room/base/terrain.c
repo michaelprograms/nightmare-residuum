@@ -92,7 +92,7 @@ void add_terrain_override (string text) {
 void update_resource () {
     int nLevel = query_property("level");
     int nResource = query_property("resource");
-    /** @type {"/std/resource/harvestable.c"} obResource */
+    /** @type {STD_HARVESTABLE} obResource */
     object obResource = present("resource_node");
 
     // clear existing reset
@@ -104,14 +104,14 @@ void update_resource () {
 
     if (nResource == 1) { // ore
         if (!obResource) {
-            obResource = new("/std/resource/harvestable.c");
+            obResource = new(STD_HARVESTABLE);
             obResource->set_type("ore");
             obResource->set_level(nLevel);
             obResource->handle_move(this_object());
         }
     } else if (nResource == 2) { // wood
         if (!obResource) {
-            obResource = new("/std/resource/harvestable.c");
+            obResource = new(STD_HARVESTABLE);
             obResource->set_type("wood");
             obResource->set_level(nLevel);
             obResource->handle_move(this_object());

@@ -26,13 +26,22 @@ void update_descriptions () {
 
 /* ----- contents ----- */
 
+/**
+ * @param {STD_RESOURCE} node the salvage node to configure
+ * @param {int} level the level to set on the node
+ */
 private void setup_salvage (object node, int level) {
     node->set_type("salvage");
     node->set_level(level);
 }
 
+/**
+ * @param {STD_NPC} npc the npc to configure
+ * @param {int} level the level to set on the npc and its hide
+ */
 private void setup_npc (object npc, int level) {
-    object hide = new("/std/resource/resource.c");
+    /** @type {STD_RESOURCE} */
+    object hide = new(STD_RESOURCE);
 
     npc->set_level(level);
     hide->set_type("hide");
@@ -46,7 +55,7 @@ void update_contents () {
     mapping data;
 
     data = ([
-        "/std/resource/harvestable.c": ([
+        STD_HARVESTABLE: ([
             "number": 1,
             "setup": (: setup_salvage($1, $(level)) :),
         ]),
