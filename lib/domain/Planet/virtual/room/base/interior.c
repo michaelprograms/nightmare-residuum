@@ -43,6 +43,7 @@ private void setup_npc (object npc, int level) {
     /** @type {STD_RESOURCE} */
     object hide = new(STD_RESOURCE);
 
+    // TODO: DRY this and surface->setup_npc eventually
     npc->set_level(level);
     hide->set_type("hide");
     hide->set_level(level);

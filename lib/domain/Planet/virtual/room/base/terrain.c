@@ -89,6 +89,21 @@ void add_terrain_override (string text) {
     set_long(query_long() + " " + text);
 }
 
+/**
+ * @param {STD_NPC} npc the npc to configure
+ * @param {int} level the level to set on the npc and its hide
+ */
+private void setup_npc (object npc, int level) {
+    /** @type {STD_RESOURCE} */
+    object hide = new(STD_RESOURCE);
+
+    // TODO: DRY this and interior->setup_npc eventually
+    npc->set_level(level);
+    hide->set_type("hide");
+    hide->set_level(level);
+    hide->handle_move(npc);
+}
+
 void update_resource () {
     int nLevel = query_property("level");
     int nResource = query_property("resource");
@@ -142,7 +157,7 @@ void update_resource () {
         set_reset_data(([
             PLANET_NPC + npc + ".c": ([
                 "number": 1,
-                "setup": (: $1->set_level($(nLevel)) :),
+                "setup": (: setup_npc($1, $(nLevel)) :),
             ]),
         ]));
         handle_reset();
