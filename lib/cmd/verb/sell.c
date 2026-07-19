@@ -2,7 +2,7 @@
 
 inherit STD_VERB;
 
-void create () {
+void create() {
     verb::create();
     add_rules(({ "", "OBJ", "OBJ to OBJ", }));
     set_requirements(REQUIREMENT_BUSY | REQUIREMENT_DISABLE);
@@ -13,10 +13,10 @@ void create () {
 
 /* ----- OBJ to OBJ ----- */
 
-mixed can_sell_obj_to_obj (mixed args...) {
+mixed can_sell_obj_to_obj(mixed args...) {
     return 1;
 }
-void do_sell_obj_to_obj (mixed args...) {
+void do_sell_obj_to_obj(mixed args...) {
     object po = previous_object();
     object vendor;
     object ob;
@@ -33,10 +33,10 @@ void do_sell_obj_to_obj (mixed args...) {
 
 /* ----- OBJ ----- */
 
-mixed can_sell_obj (mixed args...) {
+mixed can_sell_obj(mixed args...) {
     return 1;
 }
-void do_sell_obj (mixed args...) {
+void do_sell_obj(mixed args...) {
     object po = previous_object();
     object *vendors;
     /** @type {STD_ROOM} env */
@@ -54,9 +54,9 @@ void do_sell_obj (mixed args...) {
 
 /* ----- no input ----- */
 
-mixed can_sell (mixed args...) {
+mixed can_sell(mixed args...) {
     return 1;
 }
-void do_sell (mixed args...) {
+void do_sell(mixed args...) {
     message("action", "Sell what to which vendor?", previous_object());
 }

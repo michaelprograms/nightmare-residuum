@@ -2,7 +2,7 @@
 
 inherit STD_ROOM;
 
-void create () {
+void create() {
     ::create();
     set_short("a bell tower above a village");
     set_long("A tower above a vaulted roof of a temple. The wooden boards provided a small platform to walk around a large bell hung in the center. The sides of the tower are open. The village street can be seen below. A framework of hexagons glimmer overhead.");
@@ -16,7 +16,10 @@ void create () {
         "street": "The quiet village street passes before the temple.",
         "bell": "A bell hangs from the center of the tower, with another piece of metal for a clapper dangling from inside the bell.",
         "platform": "A creaky wooden platform built into the tower to allow a person passage to operate the bell tower.",
-        ({ "framework", "hexagons"}): "Far above, the hexagons form a geodesic dome.",
+        ({
+            "framework",
+            "hexagons"
+        }): "Far above, the hexagons form a geodesic dome.",
     ]));
     set_reset(([
         HUMAN_NPC + "teen_sightseer.c": 1,

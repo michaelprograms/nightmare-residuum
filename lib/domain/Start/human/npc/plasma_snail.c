@@ -6,9 +6,22 @@ string *colors = ({
     "%^GREEN%^", "%^I_GREEN%^"
 });
 
-void create () {
+void create() {
     string plasmaSnail = "";
-    foreach (string s in ({"p","l","a","s","m","a"," ","s","n","a","i","l"})) {
+    foreach (string s in ({
+        "p",
+        "l",
+        "a",
+        "s",
+        "m",
+        "a",
+        " ",
+        "s",
+        "n",
+        "a",
+        "i",
+        "l"
+    })) {
         plasmaSnail += element_of(colors) + s;
     }
     plasmaSnail += "%^DEFAULT%^";

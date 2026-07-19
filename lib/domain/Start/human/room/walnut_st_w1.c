@@ -2,7 +2,7 @@
 
 inherit STD_ROOM;
 
-void create () {
+void create() {
     ::create();
     set_short("a village street");
     set_long("A small street traveling west to east through brick dwellings covered in dark ivy. Several birch trees branch over the street and dwellings. A wide building that resembles an athletic training center on the north side of the street has its door open. A framework of hexagons glimmer overhead.");
@@ -14,7 +14,10 @@ void create () {
     set_looks(([
         "street": "A street sign is labeled W. Walnut St.",
         "building": "The building looks to be a gym.",
-        ({ "framework", "hexagons"}): "Far above, the hexagons form a geodesic dome.",
+        ({
+            "framework",
+            "hexagons"
+        }): "Far above, the hexagons form a geodesic dome.",
     ]));
     set_reset(([
         HUMAN_NPC + "teen_fighter.c": 2,

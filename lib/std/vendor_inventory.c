@@ -5,25 +5,25 @@ inherit M_MOVE;
 
 nosave private int __MaxItems = 0;
 
-int is_vendor_inventory () {
+int is_vendor_inventory() {
     return 1;
 }
 
-int handle_receive (object ob) {
+int handle_receive(object ob) {
     if (!itemp(ob)) {
         return 0;
     }
     return ::handle_receive(ob);
 }
 
-void create () {
+void create() {
     reset::create();
 }
 
-int clean_up (mixed args...) {
+int clean_up(mixed args...) {
     return clean::clean_up(args);
 }
 
-void clear_inventory () {
+void clear_inventory() {
     map(all_inventory(), (: $1->handle_remove() :));
 }

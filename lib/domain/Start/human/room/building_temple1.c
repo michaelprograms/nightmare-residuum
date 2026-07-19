@@ -2,7 +2,7 @@
 
 inherit STD_ROOM;
 
-void create () {
+void create() {
     ::create();
     set_properties(([
         "indoors": 1,
@@ -16,7 +16,10 @@ void create () {
         "down": HUMAN_ROOM + "building_temple2.c",
     ]));
     set_looks(([
-        ({ "pews", "stations" }): "Wooden pews with which to conduct prayer, along with stations used to lead others through prayer.",
+        ({
+            "pews",
+            "stations"
+        }): "Wooden pews with which to conduct prayer, along with stations used to lead others through prayer.",
         "ceiling": "The high ceilings arch above with strong wooden beams holding it the roof in place.",
         "windows": "The windows are spaced along the side walls and reach towards the base of the arched ceiling. They consist of figures pictured in various positions.",
         "door": "The front of the building consists of a door that swings open to the street, but no window.",

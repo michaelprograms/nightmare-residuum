@@ -4,7 +4,7 @@
  * @param arr the array to make distinct
  * @returns mixed array with distinct elements in ascending order
  */
-mixed *distinct_array (mixed *arr) {
+mixed *distinct_array(mixed *arr) {
     int i, l;
     mapping tmp;
     if (!arrayp(arr)) {
@@ -12,7 +12,7 @@ mixed *distinct_array (mixed *arr) {
     }
     l = sizeof(arr);
     tmp = allocate_mapping(l);
-    for (i = 0; i < l; i ++) {
+    for (i = 0; i < l; i++) {
         tmp[arr[i]] = 1;
     }
     return sort_array(keys(tmp), 1);
@@ -24,15 +24,15 @@ mixed *distinct_array (mixed *arr) {
  * @param arr the array to reverse
  * @returns mixed array with elements in reverse order
  */
-mixed *reverse_array (mixed *arr) {
+mixed *reverse_array(mixed *arr) {
     mixed *result;
     int i, l;
     if (!arrayp(arr)) {
         error("Bad argument 1 to array->reverse_array");
     }
-    result = ({ });
+    result = ({});
     l = sizeof(arr);
-    for (i = l - 1; i >= 0; i --) {
+    for (i = l - 1; i >= 0; i--) {
         result += ({ arr[i] });
     }
     return result;
@@ -46,7 +46,7 @@ mixed *reverse_array (mixed *arr) {
  * @param result initial accumulator value
  * @returns the result of the array being reduced
  */
-mixed reduce (mixed *arr, function fn, mixed result) {
+mixed reduce(mixed *arr, function fn, mixed result) {
     int i, l;
 
     if (!arrayp(arr)) {
@@ -60,7 +60,7 @@ mixed reduce (mixed *arr, function fn, mixed result) {
     }
 
     l = sizeof(arr);
-    for (i = 0; i < l; i ++) {
+    for (i = 0; i < l; i++) {
         result = evaluate(fn, result, arr[i], i);
     }
 

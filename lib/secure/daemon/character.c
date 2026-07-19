@@ -3,7 +3,7 @@
 
 inherit M_CLEAN;
 
-int query_valid_name (string name) {
+int query_valid_name(string name) {
     int l;
     if (!name || (l = sizeof(name)) < 4 || l > 18) {
         return 0;
@@ -14,7 +14,7 @@ int query_valid_name (string name) {
     return 0;
 }
 
-varargs string query_save_path (string name, string type) {
+varargs string query_save_path(string name, string type) {
     if (!query_valid_name(name)) {
         return 0;
     }
@@ -27,7 +27,7 @@ varargs string query_save_path (string name, string type) {
     return DIR_SAVE_CHARACTER + "/" + name[0..0] + "/" + name + "/" + type + ".o";
 }
 
-varargs int query_exists (string name, string type) {
+varargs int query_exists(string name, string type) {
     string path;
     name = lower_case(name);
     path = query_save_path(name, type);
@@ -44,7 +44,7 @@ varargs int query_exists (string name, string type) {
  * @param name which character to load
  * @returns {STD_CHARACTER}
  */
-private object load_character (string name) {
+private object load_character(string name) {
     object char;
 
     if (!query_exists(name)) {
@@ -64,7 +64,7 @@ private object load_character (string name) {
  * @param name which character to query
  * @returns {STD_CHARACTER}
  */
-object query_character (string name) {
+object query_character(string name) {
     return load_character(name);
 }
 
@@ -72,7 +72,7 @@ object query_character (string name) {
  * @param name which character to query
  * @returns 1 if immortal, 0 otherwise
  */
-int query_immortal (string name) {
+int query_immortal(string name) {
     object char;
     int immortal = 0;
 

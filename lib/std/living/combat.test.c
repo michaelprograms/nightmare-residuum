@@ -6,7 +6,7 @@ inherit M_LEVELABLE;
  * @var {"/std/living/combat"} testOb
  */
 
-void test_hostiles () {
+void test_hostiles() {
     object ob1 = new(STD_LIVING), ob2 = new(STD_LIVING);
     object mockCharacter = new("/std/character.mock.c");
 
@@ -52,7 +52,7 @@ void test_hostiles () {
     if (mockCharacter) destruct(mockCharacter);
 }
 
-void test_check_lifesigns () {
+void test_check_lifesigns() {
     object mockLiving = new("/std/living/combat.mock.c");
 
     mockLiving->start_shadow(testOb);
@@ -80,10 +80,10 @@ void test_check_lifesigns () {
     }
 }
 
-int is_living () {
+int is_living() {
     return 1;
 }
-void test_parser_applies () {
+void test_parser_applies() {
     expect("combat applies behave", (: ({
         assert_equal(testOb->direct_attack_liv(), 1),
         assert_equal(testOb->direct_aid_liv(), 1),
@@ -93,7 +93,7 @@ void test_parser_applies () {
     }) :));
 }
 
-void test_combat () {
+void test_combat() {
     object mockLiving = new("/std/living/combat.mock.c");
     object npc = new(STD_NPC), mockNpc1;
     mapping *table;
@@ -106,16 +106,16 @@ void test_combat () {
     testOb->add_hostile(npc);
     table = combat_table(mockLiving, npc, 1),
 
-    expect("combat behaves", (: ({
-        $(mockLiving)->set_posture("meditating"),
-        assert_equal($(mockLiving)->query_posture(), "meditating"),
-        testOb->handle_combat(),
-        assert_equal($(mockLiving)->query_posture(), "sitting"),
+        expect("combat behaves", (: ({
+            $(mockLiving)->set_posture("meditating"),
+            assert_equal($(mockLiving)->query_posture(), "meditating"),
+            testOb->handle_combat(),
+            assert_equal($(mockLiving)->query_posture(), "sitting"),
 
-        testOb->handle_combat_hit($(npc), $(table), 0),
+            testOb->handle_combat_hit($(npc), $(table), 0),
 
 
-    }) :));
+        }) :));
 
 
     if (mockLiving) {

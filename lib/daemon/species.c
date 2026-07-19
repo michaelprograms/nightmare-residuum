@@ -139,7 +139,7 @@ nosave private mapping __Bodies = ([
 */
 nosave private mapping __Species = ([
     /* Character Species */
-    "human":        ([
+    "human": ([
         "body": "biped",
         "stats": ([
             "strength": 2,
@@ -163,7 +163,7 @@ nosave private mapping __Species = ([
             "height": ([ "min": 160, "max": 180 ]),
         ]),
     ]),
-    "zotarian":     ([
+    "zotarian": ([
         "body": "biped",
         "stats": ([
             "strength": 1,
@@ -181,51 +181,51 @@ nosave private mapping __Species = ([
         ]),
     ]),
     /* NPC Species */
-    "ant":          ([ "body": "hexapod" ]),
-    "bee":          ([ "body": "hexapod-winged" ]),
-    "beetle":       ([ "body": "hexapod" ]),
-    "cat":          ([ "body": "quadruped-tail" ]),
-    "crow":         ([ "body": "fowl" ]),
-    "dog":          ([ "body": "quadruped-tail" ]),
-    "fly":          ([ "body": "hexapod-winged" ]),
-    "hamster":      ([ "body": "quadruped" ]),
-    "pigeon":       ([ "body": "fowl" ]),
-    "raccoon":      ([ "body": "quadruped-tail" ]),
-    "rat":          ([ "body": "quadruped-tail" ]),
-    "slug":         ([ "body": "gastropod" ]),
-    "snail":        ([ "body": "gastropod-shelled" ]),
-    "sparrow":      ([ "body": "fowl" ]),
-    "squirrel":     ([ "body": "quadruped-tail" ]),
-    "custodian":    ([ "body": "quadruped-robot" ]),
-    "termite":      ([ "body": "hexapod" ]),
-    "vulture":      ([ "body": "fowl" ]),
-    "wasp":         ([ "body": "hexapod-winged" ]),
+    "ant": ([ "body": "hexapod" ]),
+    "bee": ([ "body": "hexapod-winged" ]),
+    "beetle": ([ "body": "hexapod" ]),
+    "cat": ([ "body": "quadruped-tail" ]),
+    "crow": ([ "body": "fowl" ]),
+    "dog": ([ "body": "quadruped-tail" ]),
+    "fly": ([ "body": "hexapod-winged" ]),
+    "hamster": ([ "body": "quadruped" ]),
+    "pigeon": ([ "body": "fowl" ]),
+    "raccoon": ([ "body": "quadruped-tail" ]),
+    "rat": ([ "body": "quadruped-tail" ]),
+    "slug": ([ "body": "gastropod" ]),
+    "snail": ([ "body": "gastropod-shelled" ]),
+    "sparrow": ([ "body": "fowl" ]),
+    "squirrel": ([ "body": "quadruped-tail" ]),
+    "custodian": ([ "body": "quadruped-robot" ]),
+    "termite": ([ "body": "hexapod" ]),
+    "vulture": ([ "body": "fowl" ]),
+    "wasp": ([ "body": "hexapod-winged" ]),
 ]);
 
-mapping query_bodies () {
+mapping query_bodies() {
     return __Bodies;
 }
-mapping query_species () {
+mapping query_species() {
     return __Species;
 }
 
 /* ----- species adjustments ----- */
 
-int query_adjust_hp (string s) {
+int query_adjust_hp(string s) {
     if (__Species[s] && __Species[s]["vitals"]) {
         return __Species[s]["vitals"]["hp"];
     } else {
         return 0;
     }
 }
-int query_adjust_sp (string s) {
+int query_adjust_sp(string s) {
     if (__Species[s] && __Species[s]["vitals"]) {
         return __Species[s]["vitals"]["sp"];
     } else {
         return 0;
     }
 }
-int query_adjust_mp (string s) {
+int query_adjust_mp(string s) {
     if (__Species[s] && __Species[s]["vitals"]) {
         return __Species[s]["vitals"]["mp"];
     } else {
@@ -233,7 +233,7 @@ int query_adjust_mp (string s) {
     }
 }
 
-int query_adjust_stat (string s, string stat) {
+int query_adjust_stat(string s, string stat) {
     if (__Species[s] && __Species[s]["stats"]) {
         return __Species[s]["stats"][stat];
     } else {
@@ -248,10 +248,18 @@ int query_adjust_stat (string s, string stat) {
  *
  * @param {STD_CHARACTER} ob the character object
  */
-void setup_stats (object ob) {
+void setup_stats(object ob) {
     string s = ob->query_species();
     int adjust;
-    foreach (string stat in ({ "strength", "perception", "endurance", "charisma", "intelligence", "agility", "luck" })) {
+    foreach (string stat in ({
+        "strength",
+        "perception",
+        "endurance",
+        "charisma",
+        "intelligence",
+        "agility",
+        "luck"
+    })) {
         adjust = query_adjust_stat(s, stat);
         ob->set_stat(stat, 5 + (adjust * 2));
     }
@@ -264,8 +272,8 @@ void setup_stats (object ob) {
  * @param {STD_LIVING} ob the living object
  * @returns the body's attributes in a mapping
  */
-mapping setup_body (object ob) {
-    mapping newBody = ([ ]);
+mapping setup_body(object ob) {
+    mapping newBody = ([]);
     mapping limbs;
     string species, body;
 
@@ -278,7 +286,7 @@ mapping setup_body (object ob) {
     limbs = __Bodies[body];
 
     foreach (string limb in keys(limbs)) {
-        newBody[limb] = ([ ]);
+        newBody[limb] = ([]);
         if (limbs[limb]["type"]) {
             newBody[limb]["type"] = limbs[limb]["type"];
         }
@@ -296,6 +304,6 @@ mapping setup_body (object ob) {
 
 /* ----- applies ----- */
 
-void create () {
+void create() {
     set_no_clean(1);
 }

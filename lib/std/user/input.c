@@ -15,14 +15,14 @@ Data format:
     "lock": int
     "type": int
 */
-nosave private mapping *__InputStack = ({ });
+nosave private mapping *__InputStack = ({});
 
-private nomask mapping get_top_handler (int require_handler);
-private nomask mapping get_bottom_handler ();
-nomask void input_pop ();
-nomask void input_focus ();
+private nomask mapping get_top_handler(int require_handler);
+private nomask mapping get_bottom_handler();
+nomask void input_pop();
+nomask void input_focus();
 
-private nomask void dispatch_input (mixed str) {
+private nomask void dispatch_input(mixed str) {
     mapping input;
 
     if (str[0] == '!' && !__InputStack[<1]["lock"]) {
@@ -44,7 +44,7 @@ private nomask void dispatch_input (mixed str) {
     }
 }
 
-private nomask string process_input (string str) {
+private nomask string process_input(string str) {
     if (!this_object()->query_terminal("type")) {
         this_object()->handle_remove();
     }
@@ -52,8 +52,15 @@ private nomask string process_input (string str) {
     return 0;
 }
 
-private nomask void stack_push (function inputFn, mixed prompt, int secure, function callbackFn, int lock, int type) {
-    mapping input = ([ ]);
+private nomask void stack_push(
+    function inputFn,
+    mixed prompt,
+    int secure,
+    function callbackFn,
+    int lock,
+    int type
+) {
+    mapping input = ([]);
 
     input["inputFn"] = inputFn;
     if (prompt) {
@@ -72,13 +79,29 @@ private nomask void stack_push (function inputFn, mixed prompt, int secure, func
     }
 }
 
-varargs nomask void input_push (function inputFn, mixed prompt, int secure, function callbackFn, int lock) {
+varargs nomask void input_push(
+    function inputFn,
+    mixed prompt,
+    int secure,
+    function callbackFn,
+    int lock
+) {
     stack_push(inputFn, prompt, secure, callbackFn, lock, STATE_INPUT_NORMAL);
 }
-varargs nomask void input_single (function inputFn, mixed prompt, int secure, int lock) {
+varargs nomask void input_single(
+    function inputFn,
+    mixed prompt,
+    int secure,
+    int lock
+) {
     stack_push(inputFn, prompt, secure, 0, lock, STATE_INPUT_SINGLE);
 }
-varargs nomask void input_next (function inputFn, mixed prompt, int secure, int lock) {
+varargs nomask void input_next(
+    function inputFn,
+    mixed prompt,
+    int secure,
+    int lock
+) {
     if (!sizeof(__InputStack)) {
         return;
     }
@@ -89,15 +112,15 @@ varargs nomask void input_next (function inputFn, mixed prompt, int secure, int 
     __InputStack[<1]["secure"] = secure;
     __InputStack[<1]["lock"] = lock;
 }
-nomask void input_pop () {
+nomask void input_pop() {
     mapping input;
 
-    __InputStack = __InputStack[0..<2]; // remove last element
+    __InputStack = __InputStack[0..<2];  // remove last element
     if ((input = get_top_handler(0)) && input["callbackFn"]) {
         evaluate(input["callbackFn"]);
     }
 }
-nomask varargs void input_prompt (mapping input) {
+nomask varargs void input_prompt(mapping input) {
     string prompt;
     int go_ahead;
 
@@ -121,7 +144,7 @@ nomask varargs void input_prompt (mapping input) {
         }
     }
 }
-nomask void input_focus () {
+nomask void input_focus() {
     mapping input;
 
     if (!(input = get_top_handler(1))) {
@@ -135,7 +158,7 @@ nomask void input_focus () {
     }
 }
 
-private nomask int create_handler () {
+private nomask int create_handler() {
     if (!this_object()) {
         return 0;
     }
@@ -150,7 +173,7 @@ private nomask int create_handler () {
     return 0;
 }
 
-private nomask mapping get_top_handler (int require_handler) {
+private nomask mapping get_top_handler(int require_handler) {
     int some_popped = 0;
 
     while (sizeof(__InputStack)) {
@@ -172,7 +195,7 @@ private nomask mapping get_top_handler (int require_handler) {
     return __InputStack[<1];
 }
 
-private nomask mapping get_bottom_handler () {
+private nomask mapping get_bottom_handler() {
     while (sizeof(__InputStack)) {
         mapping input = __InputStack[0];
         if (!(functionp(input["inputFn"]) & FP_OWNER_DESTED)) {

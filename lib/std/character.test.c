@@ -4,7 +4,7 @@ inherit M_TEST;
  * @var {"/std/character"} testOb
  */
 
-void test_npc () {
+void test_npc() {
     expect("is_character behaves", (: ({
         assert_equal(livingp(testOb), 1),
         assert_equal(characterp(testOb), 1),
@@ -12,7 +12,7 @@ void test_npc () {
     }) :));
 }
 
-void test_user () {
+void test_user() {
     expect("user is settable and queryable", (: ({
         assert_equal(testOb->query_user(), UNDEFINED),
         testOb->set_user(this_object()),
@@ -22,7 +22,7 @@ void test_user () {
     }) :));
 }
 
-void test_account () {
+void test_account() {
     expect("account is settable and queryable", (: ({
         assert_equal(testOb->query_account(), UNDEFINED),
         testOb->set_account("test account"),
@@ -32,7 +32,7 @@ void test_account () {
     }) :));
 }
 
-void test_times () {
+void test_times() {
     expect("user has a created time", (: ({
         // creation time is now
         assert_equal(testOb->query_created(), time()),
@@ -49,7 +49,7 @@ void test_times () {
     }) :));
 }
 
-void test_name () {
+void test_name() {
     expect("name handles character setup", (: ({
         assert_equal(testOb->query_name(), UNDEFINED),
 
@@ -59,11 +59,14 @@ void test_name () {
         assert_equal(testOb->query_cap_name(), "Testcharacter"),
         assert_equal(testOb->query_short(), "Testcharacter the character"),
         assert_equal(testOb->query_long(), "Testcharacter is an unknown."),
-        assert_equal(testOb->query_save_path(), "/save/character/t/testcharacter/character.o"),
+        assert_equal(
+            testOb->query_save_path(),
+            "/save/character/t/testcharacter/character.o"
+        ),
     }) :));
 }
 
-void test_immortal () {
+void test_immortal() {
     expect("immortal is settable and queryable", (: ({
         assert_equal(testOb->query_immortal(), UNDEFINED),
 
@@ -96,7 +99,7 @@ void gmcp_send_update(string n, mapping m) {
     gmcpName = n;
     gmcpData = m;
 }
-void test_gmcp () {
+void test_gmcp() {
     testOb->set_level(1);
     testOb->set_species("human");
 
@@ -110,28 +113,98 @@ void test_gmcp () {
         testOb->set_user(this_object()),
         testOb->gmcp_update_vitals(),
         assert_equal(gmcpName, "Char.Vitals"),
-        assert_equal(gmcpData, ([ "hp": 22, "maxhp": 22, "maxmp": 12, "maxsp": 12, "mp": 12, "sp": 12 ])),
+        assert_equal(
+            gmcpData,
+            ([
+                "hp": 22,
+                "maxhp": 22,
+                "maxmp": 12,
+                "maxsp": 12,
+                "mp": 12,
+                "sp": 12
+            ])
+        ),
 
         assert_equal(gmcpData = UNDEFINED, UNDEFINED),
         // vitals functions call gmcp
         testOb->set_hp(5),
-        assert_equal(gmcpData, ([ "hp": 5, "maxhp": 22, "maxmp": 12, "maxsp": 12, "mp": 12, "sp": 12 ])),
+        assert_equal(
+            gmcpData,
+            ([
+                "hp": 5,
+                "maxhp": 22,
+                "maxmp": 12,
+                "maxsp": 12,
+                "mp": 12,
+                "sp": 12
+            ])
+        ),
         testOb->add_hp(5),
-        assert_equal(gmcpData, ([ "hp": 10, "maxhp": 22, "maxmp": 12, "maxsp": 12, "mp": 12, "sp": 12 ])),
+        assert_equal(
+            gmcpData,
+            ([
+                "hp": 10,
+                "maxhp": 22,
+                "maxmp": 12,
+                "maxsp": 12,
+                "mp": 12,
+                "sp": 12
+            ])
+        ),
 
         testOb->set_sp(5),
-        assert_equal(gmcpData, ([ "hp": 10, "maxhp": 22, "maxmp": 12, "maxsp": 12, "mp": 12, "sp": 5 ])),
+        assert_equal(
+            gmcpData,
+            ([
+                "hp": 10,
+                "maxhp": 22,
+                "maxmp": 12,
+                "maxsp": 12,
+                "mp": 12,
+                "sp": 5
+            ])
+        ),
         testOb->add_sp(5),
-        assert_equal(gmcpData, ([ "hp": 10, "maxhp": 22, "maxmp": 12, "maxsp": 12, "mp": 12, "sp": 10 ])),
+        assert_equal(
+            gmcpData,
+            ([
+                "hp": 10,
+                "maxhp": 22,
+                "maxmp": 12,
+                "maxsp": 12,
+                "mp": 12,
+                "sp": 10
+            ])
+        ),
 
         testOb->set_mp(5),
-        assert_equal(gmcpData, ([ "hp": 10, "maxhp": 22, "maxmp": 12, "maxsp": 12, "mp": 5, "sp": 10 ])),
+        assert_equal(
+            gmcpData,
+            ([
+                "hp": 10,
+                "maxhp": 22,
+                "maxmp": 12,
+                "maxsp": 12,
+                "mp": 5,
+                "sp": 10
+            ])
+        ),
         testOb->add_mp(5),
-        assert_equal(gmcpData, ([ "hp": 10, "maxhp": 22, "maxmp": 12, "maxsp": 12, "mp": 10, "sp": 10 ])),
+        assert_equal(
+            gmcpData,
+            ([
+                "hp": 10,
+                "maxhp": 22,
+                "maxmp": 12,
+                "maxsp": 12,
+                "mp": 10,
+                "sp": 10
+            ])
+        ),
     }) :));
 }
 
-void test_go () {
+void test_go() {
     object r1 = new(STD_ROOM);
     object r2 = new(STD_ROOM);
 
@@ -143,7 +216,7 @@ void test_go () {
 
     expect("character can go", (: ({
         assert_equal(testOb->handle_move($(r1)), 1),
-        assert_equal(testOb->handle_go(base_name($(r2)), "walk", "east", ), 1),
+        assert_equal(testOb->handle_go(base_name($(r2)), "walk", "east",), 1),
     }) :));
 
     if (r1) destruct(r1);

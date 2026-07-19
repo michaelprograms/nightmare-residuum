@@ -4,22 +4,25 @@ inherit M_TEST;
  * @var {"/secure/sefun/override"} testOb
  */
 
-void test_disabled_efuns () {
+void test_disabled_efuns() {
     expect("input_to throws error", (: ({
         assert_catch((: testOb->input_to() :), "*efun::input_to disabled\n"),
     }) :));
     expect("this_player throws error", (: ({
-        assert_catch((: testOb->this_player() :), "*efun::this_player disabled\n"),
+        assert_catch(
+            (: testOb->this_player() :),
+            "*efun::this_player disabled\n"
+        ),
     }) :));
 }
 
-void test_efuns () {
+void test_efuns() {
     expect("users returns an array", (: ({
         assert_equal(arrayp(testOb->users()), 1),
     }) :));
 }
 
-void test_message () {
+void test_message() {
     object r1;
     object npc1, npc2;
     object mockNpc1, mockNpc2;
@@ -38,28 +41,62 @@ void test_message () {
 
         // blank msg
         testOb->message("type", "", ({ $(mockNpc1), $(mockNpc1) })),
-        assert_equal($(mockNpc1)->query_received_messages(), ({ })),
-        assert_equal($(mockNpc2)->query_received_messages(), ({ })),
+        assert_equal($(mockNpc1)->query_received_messages(), ({})),
+        assert_equal($(mockNpc2)->query_received_messages(), ({})),
 
         // target msg
         testOb->message("type", "Message.", $(mockNpc1)),
-        assert_equal($(mockNpc1)->query_received_messages(), ({ ({ "type", "Message." }) })),
-        assert_equal($(mockNpc2)->query_received_messages(), ({ })),
+        assert_equal(
+            $(mockNpc1)->query_received_messages(),
+            ({ ({ "type", "Message." }) })
+        ),
+        assert_equal($(mockNpc2)->query_received_messages(), ({})),
 
         // room msg
         testOb->message("room", "Room message.", $(r1)),
-        assert_equal($(mockNpc1)->query_received_messages(), ({ ({ "type", "Message." }), ({ "room", "Room message." }) })),
-        assert_equal($(mockNpc2)->query_received_messages(), ({ ({ "room", "Room message." }) })),
+        assert_equal(
+            $(mockNpc1)->query_received_messages(),
+            ({ ({ "type", "Message." }), ({ "room", "Room message." }) })
+        ),
+        assert_equal(
+            $(mockNpc2)->query_received_messages(),
+            ({ ({ "room", "Room message." }) })
+        ),
 
         // excluded recipient: target both but exclude mockNpc2
-        testOb->message("type", "Excluded message.", ({ $(mockNpc1), $(mockNpc2) }), $(mockNpc2)),
-        assert_equal($(mockNpc1)->query_received_messages(), ({ ({ "type", "Message." }), ({ "room", "Room message." }), ({ "type", "Excluded message." }) })),
-        assert_equal($(mockNpc2)->query_received_messages(), ({ ({ "room", "Room message." }) })),
+        testOb->message(
+            "type",
+            "Excluded message.",
+            ({ $(mockNpc1), $(mockNpc2) }),
+            $(mockNpc2)
+        ),
+        assert_equal(
+            $(mockNpc1)->query_received_messages(),
+            ({
+                ({ "type", "Message." }),
+                ({ "room", "Room message." }),
+                ({ "type", "Excluded message." })
+            })
+        ),
+        assert_equal(
+            $(mockNpc2)->query_received_messages(),
+            ({ ({ "room", "Room message." }) })
+        ),
 
         // bad target: non-object/non-array target returns silently, nothing delivered
         testOb->message("type", "Ignored message.", "not-an-object"),
-        assert_equal($(mockNpc1)->query_received_messages(), ({ ({ "type", "Message." }), ({ "room", "Room message." }), ({ "type", "Excluded message." }) })),
-        assert_equal($(mockNpc2)->query_received_messages(), ({ ({ "room", "Room message." }) })),
+        assert_equal(
+            $(mockNpc1)->query_received_messages(),
+            ({
+                ({ "type", "Message." }),
+                ({ "room", "Room message." }),
+                ({ "type", "Excluded message." })
+            })
+        ),
+        assert_equal(
+            $(mockNpc2)->query_received_messages(),
+            ({ ({ "room", "Room message." }) })
+        ),
 
         assert_equal($(mockNpc1)->stop_shadow(), 1),
         assert_equal($(mockNpc2)->stop_shadow(), 1),

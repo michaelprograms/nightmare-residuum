@@ -13,14 +13,14 @@ nosave private int calloutConnect;
 
 nosave private mapping __Terminal;
 
-void receive_message (string type, string message);
-nomask varargs void handle_remove (string message);
+void receive_message(string type, string message);
+nomask varargs void handle_remove(string message);
 
-int is_user () {
+int is_user() {
     return 1;
 }
 
-private void initialize_terminal () {
+private void initialize_terminal() {
     if (!mapp(__Terminal)) {
         __Terminal = ([
             "ip": 0,
@@ -35,27 +35,27 @@ private void initialize_terminal () {
     }
 }
 
-nomask void logon_banner () {
+nomask void logon_banner() {
     receive_message("system", query_banner() + "\n");
     account_input(STATE_ACCOUNT_ENTER);
     if (this_user() && interactive(this_user())) {
-        telnet_ga(); // telnet go ahead for prompt to not line return
+        telnet_ga();  // telnet go ahead for prompt to not line return
     }
 }
 
 /* ----- interactive apply ----- */
 
-nomask void logon () {
+nomask void logon() {
     initialize_terminal();
     __Terminal["ip"] = query_ip_number();
     __Terminal["encoding"] = query_encoding();
     D_LOG->log("connect", ctime() + " " + __Terminal["ip"]);
 
     receive_message("system", "%^RESET%^Connected...\n");
-    call_out_walltime((: logon_banner :), 0.5); // allow time for terminal_type apply to be called
+    call_out_walltime((: logon_banner :), 0.5);  // allow time for terminal_type apply to be called
 }
 
-void terminal_type (string term) {
+void terminal_type(string term) {
     D_LOG->log_unique("term", term);
     term = lower_case(explode(term, " ")[0]);
     __Terminal["type"] = term;
@@ -67,40 +67,40 @@ void terminal_type (string term) {
     }
 }
 
-void receive_environ (string key, string value) {
+void receive_environ(string key, string value) {
     switch (key) {
-    case "IPADDRESS":
-        __Terminal["ip"] = value + " (" + __Terminal["ip"] + ")";
-        break;
-    case "CLIENT_NAME":
-        __Terminal["client"] = value;
-        break;
-    case "CLIENT_VERSION":
-        __Terminal["version"] = replace_string(value, "/", ".");
-        break;
+        case "IPADDRESS":
+            __Terminal["ip"] = value + " (" + __Terminal["ip"] + ")";
+            break;
+        case "CLIENT_NAME":
+            __Terminal["client"] = value;
+            break;
+        case "CLIENT_VERSION":
+            __Terminal["version"] = replace_string(value, "/", ".");
+            break;
     }
 }
 
-void window_size (int width, int height) {
+void window_size(int width, int height) {
     __Terminal["width"] = width;
     __Terminal["height"] = height;
 }
 
-nomask void net_dead () {
+nomask void net_dead() {
     if (valid_character()) {
         character_linkdead();
     }
     destruct();
 }
 
-void receive_message (string type, string message) {
+void receive_message(string type, string message) {
     type = lower_case(type);
     if (type == "raw ansi") {
         message = replace_string(message, "%^", "%%^^");
         receive(wrap(message, 0, 0, 1));
     } else if (type == "system") {
         if (sizeof(message) > __LARGEST_PRINTABLE_STRING__) {
-            message = message[0..__LARGEST_PRINTABLE_STRING__-1];
+            message = message[0..__LARGEST_PRINTABLE_STRING__ - 1];
         }
         receive(wrap(message, 0, 0));
     } else if (type == "prompt") {
@@ -115,17 +115,21 @@ void receive_message (string type, string message) {
 
 /* ----- interactive non-apply ----- */
 
-mixed query_terminal (string key) {
+mixed query_terminal(string key) {
     initialize_terminal();
     return __Terminal[key];
 }
-void set_terminal (string key, mixed value) {
+void set_terminal(string key, mixed value) {
     initialize_terminal();
     __Terminal[key] = value;
 }
 
-nomask varargs void quit_character (int destructing) {
-    message("system", "Reality " + (random(2) ? "explodes into an im" : "implodes into an ex") + "plosion of irreality.\n", this_object());
+nomask varargs void quit_character(int destructing) {
+    message(
+        "system",
+        "Reality " + (random(2) ? "explodes into an im" : "implodes into an ex") + "plosion of irreality.\n",
+        this_object()
+    );
     character_exit();
     flush_messages();
     if (!destructing) {
@@ -133,21 +137,24 @@ nomask varargs void quit_character (int destructing) {
     }
 }
 
-nomask void quit_account () {
+nomask void quit_account() {
     if (valid_character()) {
         quit_character(1);
     }
     handle_remove();
 }
 
-nomask void reset_connect_timeout () {
+nomask void reset_connect_timeout() {
     if (!undefinedp(calloutConnect)) {
         remove_call_out(calloutConnect);
     }
-    calloutConnect = call_out((: handle_remove, "\nTime exceeded. Connection terminated.\n" :), CONNECT_TIMEOUT);
+    calloutConnect = call_out(
+        (: handle_remove, "\nTime exceeded. Connection terminated.\n" :),
+        CONNECT_TIMEOUT
+    );
 }
 
-nomask varargs void handle_remove (string message) {
+nomask varargs void handle_remove(string message) {
     if (!undefinedp(calloutConnect)) {
         remove_call_out(calloutConnect);
     }
@@ -163,7 +170,7 @@ nomask varargs void handle_remove (string message) {
     destruct();
 }
 
-void create () {
+void create() {
     account::create();
     shell::create();
 }

@@ -5,19 +5,19 @@
 ** If a 1 was returned, then nothing more needs to be done.
 ** If the result is -1 or -2, the parser figured something was wrong.
 */
-int query_unknown_command (int result) {
+int query_unknown_command(int result) {
     switch (result) {
-    case 0:
-        return 0; // Parser found no verb, fall through
-    case 1:
-        return 1; // Parser called verb
-    case -1: case -2: default:
-        message("action", "You aren't able to do that.", this_object());
-        return 1;
+        case 0:
+            return 0;  // Parser found no verb, fall through
+        case 1:
+            return 1;  // Parser called verb
+        case -1: case -2: default:
+            message("action", "You aren't able to do that.", this_object());
+            return 1;
     }
 }
 
-varargs int handle_command (string command, int debug) {
+varargs int handle_command(string command, int debug) {
     string *split, action, input;
     string cmdPath;
     mixed result, resultGo;
@@ -28,7 +28,11 @@ varargs int handle_command (string command, int debug) {
         return 0;
     }
     if (this_object()->query_immobile()) {
-        message("action", "You are unable to take any actions right now.", this_object());
+        message(
+            "action",
+            "You are unable to take any actions right now.",
+            this_object()
+        );
         return 1;
     }
 
@@ -40,10 +44,15 @@ varargs int handle_command (string command, int debug) {
 
     split = explode(command, " ") - ({ "" });
     action = split[0];
-    input = sizeof(split) > 1 ? command[(strlen(action)+1)..] : 0;
+    input = sizeof(split) > 1 ? command[(strlen(action) + 1)..] : 0;
     if (cmdPath = D_COMMAND->query_command(action)) {
         mixed *parse = parse_command_flags(input);
-        catch(call_other(cmdPath + "/" + action, "command", parse[0], parse[1]));
+        catch(call_other(
+            cmdPath + "/" + action,
+            "command",
+            parse[0],
+            parse[1]
+        ));
         return 1;
     }
 

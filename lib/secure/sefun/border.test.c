@@ -5,13 +5,13 @@ inherit M_TEST;
  */
 
 object __MockCharacter;
-object query_character () {
+object query_character() {
     return __MockCharacter;
 }
 
 private nosave string __ANSI = "on", __Screenreader = "off";
 private nosave int __Width = 80;
-mixed query_setting (string setting) {
+mixed query_setting(string setting) {
     if (setting == "ansi") {
         return __ANSI;
     }
@@ -23,22 +23,28 @@ mixed query_setting (string setting) {
     }
 }
 
-void test_character_colors () {
+void test_character_colors() {
     __MockCharacter = new("/std/living.c");
-    __MockCharacter->set_key_name("test"); // must be named test
+    __MockCharacter->set_key_name("test");  // must be named test
 
     expect("colors are returned", (: ({
-        assert_equal(testOb->query_character_border_colors(), ({ ({ 191, 63, 191 }), ({ 63, 191, 191 }) })),
+        assert_equal(
+            testOb->query_character_border_colors(),
+            ({ ({ 191, 63, 191 }), ({ 63, 191, 191 }) })
+        ),
 
         __MockCharacter->set_class("psionist"),
-        assert_equal(testOb->query_character_border_colors(), ({ ({ 65, 105, 225 }), ({ 192, 192, 192 }) })),
+        assert_equal(
+            testOb->query_character_border_colors(),
+            ({ ({ 65, 105, 225 }), ({ 192, 192, 192 }) })
+        ),
     }) :));
     if (__MockCharacter) destruct(__MockCharacter);
 }
 
 string __Type;
 string __Color;
-string query_terminal (string key) {
+string query_terminal(string key) {
     if (key == "type") {
         return __Type;
     }
@@ -47,10 +53,10 @@ string query_terminal (string key) {
     }
 }
 
-void test_border_charset () {
+void test_border_charset() {
     expect("border_charset is returned", (: ({
-        assert_equal(testOb->query_border_charset()["h"],  "─"),
-        assert_equal(testOb->query_border_charset()["v"],  "│"),
+        assert_equal(testOb->query_border_charset()["h"], "─"),
+        assert_equal(testOb->query_border_charset()["v"], "│"),
 
         __Screenreader = "on",
         assert_equal(testOb->query_border_charset()["h"], " "),
@@ -64,22 +70,73 @@ void test_border_charset () {
     }) :));
 }
 
-void test_format_border_item () {
+void test_format_border_item() {
     expect("border header is formatted", (: ({
         assert_equal(__Width = 80, 80),
-        assert_equal(testOb->format_border_item(([ "header": ({ "Header1", "Header2" }), "columns": 2 ]), "256", "L", "R"), ({ "L  %^RESET%^BOLD%^UNDERLINE%^Header1%^RESET%^                             %^RESET%^BOLD%^UNDERLINE%^Header2%^RESET%^                               R" })),
-        assert_equal(testOb->format_border_item(([ "header": ({ "A123456789", "B123456789", "C123456789", "D123456789", "E123456789", "F123456789", "G123456789", "H123456789", "I123456789", "J123456789", "K123456789", "L123456789" }), "columns": 10 ]), "256", "L", "R"), ({ "L  A123456B123456C123456D123456E123456F123456G123456H123456I123456J123456    R" })),
+        assert_equal(
+            testOb->format_border_item(
+                ([ "header": ({ "Header1", "Header2" }), "columns": 2 ]),
+                "256",
+                "L",
+                "R"
+            ),
+            ({ "L  %^RESET%^BOLD%^UNDERLINE%^Header1%^RESET%^                             %^RESET%^BOLD%^UNDERLINE%^Header2%^RESET%^                               R" })
+        ),
+        assert_equal(
+            testOb->format_border_item(
+                ([
+                    "header": ({
+                        "A123456789",
+                        "B123456789",
+                        "C123456789",
+                        "D123456789",
+                        "E123456789",
+                        "F123456789",
+                        "G123456789",
+                        "H123456789",
+                        "I123456789",
+                        "J123456789",
+                        "K123456789",
+                        "L123456789"
+                    }),
+                    "columns": 10
+                ]),
+                "256",
+                "L",
+                "R"
+            ),
+            ({ "L  A123456B123456C123456D123456E123456F123456G123456H123456I123456J123456    R" })
+        ),
     }) :));
     expect("border item is formatted", (: ({
         assert_equal(__Width = 20, 20),
-        assert_equal(testOb->format_border_item(([ "items": ({ "1", "2", "3", }) ]), "256", "L", "R"), ({  "L  1     2       R", "L  3             R" })),
+        assert_equal(
+            testOb->format_border_item(
+                ([ "items": ({ "1", "2", "3", }) ]),
+                "256",
+                "L",
+                "R"
+            ),
+            ({ "L  1     2       R", "L  3             R" })
+        ),
 
         assert_equal(__Width = 40, 40),
-        assert_equal(testOb->format_border_item(([ "items": ({ "1", "2", "3", }) ]), "256", "L", "R"), ({ "L  1               2                 R", "L  3                                 R" })),
+        assert_equal(
+            testOb->format_border_item(
+                ([ "items": ({ "1", "2", "3", }) ]),
+                "256",
+                "L",
+                "R"
+            ),
+            ({
+                "L  1               2                 R",
+                "L  3                                 R"
+            })
+        ),
     }) :));
 }
 
-void test_format_border () {
+void test_format_border() {
     mapping b = testOb->query_border_charset();
     mapping dataTitle = ([
         "title": "TITLE",
@@ -89,11 +146,19 @@ void test_format_border () {
         "header": ({
             ([
                 "header": ({ "Header Header 1", "Header Header 2" }),
-                "items": ({ "Header Item 1", "Header Item 2", "Header Item 3", }),
+                "items": ({
+                    "Header Item 1",
+                    "Header Item 2",
+                    "Header Item 3",
+                }),
             ]),
             ([
                 "header": ({ "Header Header 1", "Header Header 2" }),
-                "items": ({ "Header Item 1", "Header Item 2", "Header Item 3", }),
+                "items": ({
+                    "Header Item 1",
+                    "Header Item 2",
+                    "Header Item 3",
+                }),
             ]),
         })
     ]);
@@ -113,11 +178,19 @@ void test_format_border () {
         "footer": ({
             ([
                 "header": ({ "Footer Header 1", "Footer Header 2" }),
-                "items": ({ "Footer Item 1", "Footer Item 2", "Footer Item 3", }),
+                "items": ({
+                    "Footer Item 1",
+                    "Footer Item 2",
+                    "Footer Item 3",
+                }),
             ]),
             ([
                 "header": ({ "Footer Header 1", "Footer Header 2" }),
-                "items": ({ "Footer Item 1", "Footer Item 2", "Footer Item 3", }),
+                "items": ({
+                    "Footer Item 1",
+                    "Footer Item 2",
+                    "Footer Item 3",
+                }),
             ]),
         }),
     ]);
@@ -143,11 +216,21 @@ void test_format_border () {
     }) :));
 
     expect("square corners", (: ({
-        assert_equal(testOb->format_border(([ "corners": "square" ]), $(b), __Width, 0), ({
+        assert_equal(testOb->format_border(
+            ([ "corners": "square" ]),
+            $(b),
+            __Width,
+            0
+        ), ({
             "┌──────────────────────────────────────┐",
             "└──────────────────────────────────────┘"
         })),
-        assert_equal(testOb->format_border(([ "corners": "square", "title": "TITLE", "subtitle": "subtitle" ]), $(b), __Width, 0), ({
+        assert_equal(testOb->format_border(
+            ([ "corners": "square", "title": "TITLE", "subtitle": "subtitle" ]),
+            $(b),
+            __Width,
+            0
+        ), ({
             "   ┌─────────────────┐",
             "┌──┤ TITLE: subtitle ├─────────────────┐",
             "│  └─────────────────┘                 │",
@@ -162,13 +245,23 @@ void test_format_border () {
             "│  ╰─────────────────╯                 │",
             "╰──────────────────────────────────────╯"
         })),
-        assert_equal(testOb->format_border($(dataTitle), $(b), __Width, "16"), ({
+        assert_equal(testOb->format_border(
+            $(dataTitle),
+            $(b),
+            __Width,
+            "16"
+        ), ({
             "   \e[36m╭─────────────────╮\e[0;37;40m",
             "\e[36m╭──┤ \e[0;37;40;1mTITLE: subtitle\e[22;36m ├─────────────────╮\e[0;37;40m",
             "\e[36m│\e[0;37;40m  \e[36m╰─────────────────╯\e[0;37;40m                 \e[36m│\e[0;37;40m",
             "\e[36m╰──────────────────────────────────────╯\e[0;37;40m"
         })),
-        assert_equal(testOb->format_border($(dataTitle), $(b), __Width, "256"), ({
+        assert_equal(testOb->format_border(
+            $(dataTitle),
+            $(b),
+            __Width,
+            "256"
+        ), ({
             "   \e[38;2;65;105;225m╭\e[38;2;68;107;224m─\e[38;2;71;109;223m─\e[38;2;74;111;222m─\e[38;2;78;113;221m─\e[38;2;81;116;220m─\e[38;2;84;118;219m─\e[38;2;87;120;219m─\e[38;2;91;122;218m─\e[38;2;94;125;217m─\e[38;2;97;127;216m─\e[38;2;100;129;215m─\e[38;2;104;131;214m─\e[38;2;107;134;214m─\e[38;2;110;136;213m─\e[38;2;113;138;212m─\e[38;2;117;140;211m─\e[38;2;120;142;210m─\e[38;2;123;145;209m╮\e[0;37;40m",
             "\e[38;2;65;105;225m╭\e[38;2;68;107;224m─\e[38;2;71;109;223m─\e[38;2;74;111;222m┤\e[0;37;40m\e[0;37;40;1m TITLE:\e[22m subtitle \e[38;2;133;151;207m├\e[38;2;136;154;206m─\e[38;2;139;156;205m─\e[38;2;143;158;204m─\e[38;2;146;160;203m─\e[38;2;149;163;203m─\e[38;2;152;165;202m─\e[38;2;156;167;201m─\e[38;2;159;169;200m─\e[38;2;162;171;199m─\e[38;2;165;174;198m─\e[38;2;169;176;197m─\e[38;2;172;178;197m─\e[38;2;175;180;196m─\e[38;2;178;183;195m─\e[38;2;182;185;194m─\e[38;2;185;187;193m─\e[38;2;188;189;192m─\e[38;2;192;192;192m╮\e[0;37;40m",
             "\e[38;2;65;105;225m│\e[0;37;40m  \e[38;2;74;111;222m╰\e[38;2;78;113;221m─\e[38;2;81;116;220m─\e[38;2;84;118;219m─\e[38;2;87;120;219m─\e[38;2;91;122;218m─\e[38;2;94;125;217m─\e[38;2;97;127;216m─\e[38;2;100;129;215m─\e[38;2;104;131;214m─\e[38;2;107;134;214m─\e[38;2;110;136;213m─\e[38;2;113;138;212m─\e[38;2;117;140;211m─\e[38;2;120;142;210m─\e[38;2;123;145;209m─\e[38;2;126;147;208m─\e[38;2;130;149;208m─\e[38;2;133;151;207m╯\e[0;37;40m                 \e[38;2;192;192;192m│\e[0;37;40m",
@@ -177,7 +270,12 @@ void test_format_border () {
     }) :));
 
     expect("header", (: ({
-        assert_equal(testOb->format_border(([ "header": $(dataHeader)["header"][0] ]), $(b), __Width, 0), ({
+        assert_equal(testOb->format_border(
+            ([ "header": $(dataHeader)["header"][0] ]),
+            $(b),
+            __Width,
+            0
+        ), ({
             "╭┬────────────────────────────────────┬╮",
             "││  Header Header 1 Header Header 2   ││",
             "││  Header Item 1   Header Item 2     ││",
@@ -197,7 +295,12 @@ void test_format_border () {
             "│╰────────────────────────────────────╯│",
             "╰──────────────────────────────────────╯"
         })),
-        assert_equal(testOb->format_border($(dataHeader), $(b), __Width, "16"), ({
+        assert_equal(testOb->format_border(
+            $(dataHeader),
+            $(b),
+            __Width,
+            "16"
+        ), ({
             "\e[36m╭┬────────────────────────────────────┬╮\e[0;37;40m",
             "\e[36m││\e[0;37;40m  %^RESET%^BOLD%^UNDERLINE%^Header Header 1%^RESET%^ %^RESET%^BOLD%^UNDERLINE%^Header Header 2%^RESET%^   \e[36m││\e[0;37;40m",
             "\e[36m││\e[0;37;40m  Header Item 1   Header Item 2     \e[36m││\e[0;37;40m",
@@ -209,7 +312,12 @@ void test_format_border () {
             "\e[36m│╰────────────────────────────────────╯│\e[0;37;40m",
             "\e[36m╰──────────────────────────────────────╯\e[0;37;40m"
         })),
-        assert_equal(testOb->format_border($(dataHeader), $(b), __Width, "256"), ({
+        assert_equal(testOb->format_border(
+            $(dataHeader),
+            $(b),
+            __Width,
+            "256"
+        ), ({
             "\e[38;2;65;105;225m╭\e[38;2;68;107;224m┬\e[38;2;71;109;223m─\e[38;2;74;111;222m─\e[38;2;78;113;221m─\e[38;2;81;116;220m─\e[38;2;84;118;219m─\e[38;2;87;120;219m─\e[38;2;91;122;218m─\e[38;2;94;125;217m─\e[38;2;97;127;216m─\e[38;2;100;129;215m─\e[38;2;104;131;214m─\e[38;2;107;134;214m─\e[38;2;110;136;213m─\e[38;2;113;138;212m─\e[38;2;117;140;211m─\e[38;2;120;142;210m─\e[38;2;123;145;209m─\e[38;2;126;147;208m─\e[38;2;130;149;208m─\e[38;2;133;151;207m─\e[38;2;136;154;206m─\e[38;2;139;156;205m─\e[38;2;143;158;204m─\e[38;2;146;160;203m─\e[38;2;149;163;203m─\e[38;2;152;165;202m─\e[38;2;156;167;201m─\e[38;2;159;169;200m─\e[38;2;162;171;199m─\e[38;2;165;174;198m─\e[38;2;169;176;197m─\e[38;2;172;178;197m─\e[38;2;175;180;196m─\e[38;2;178;183;195m─\e[38;2;182;185;194m─\e[38;2;185;187;193m─\e[38;2;188;189;192m┬\e[38;2;192;192;192m╮\e[0;37;40m",
             "\e[38;2;79;114;221m││\e[0;37;40m  %^RESET%^BOLD%^UNDERLINE%^Header Header 1%^RESET%^ %^RESET%^BOLD%^UNDERLINE%^Header Header 2%^RESET%^   \e[38;2;177;182;195m││\e[0;37;40m",
             "\e[38;2;93;124;217m││\e[0;37;40m  Header Item 1   Header Item 2     \e[38;2;163;172;199m││\e[0;37;40m",
@@ -224,7 +332,12 @@ void test_format_border () {
     }) :));
 
     expect("body", (: ({
-        assert_equal(testOb->format_border(([ "body": $(dataBody)["body"][0] ]), $(b), __Width, 0), ({
+        assert_equal(testOb->format_border(
+            ([ "body": $(dataBody)["body"][0] ]),
+            $(b),
+            __Width,
+            0
+        ), ({
             "╭──────────────────────────────────────╮",
             "│                                      │",
             "│   Body Header 1   Body Header 2      │",
@@ -259,7 +372,12 @@ void test_format_border () {
             "\e[36m│ \e[0;37;40m                                    \e[36m │\e[0;37;40m",
             "\e[36m╰──────────────────────────────────────╯\e[0;37;40m"
         })),
-        assert_equal(testOb->format_border($(dataBody), $(b), __Width, "256"), ({
+        assert_equal(testOb->format_border(
+            $(dataBody),
+            $(b),
+            __Width,
+            "256"
+        ), ({
             "\e[38;2;65;105;225m╭\e[38;2;68;107;224m─\e[38;2;71;109;223m─\e[38;2;74;111;222m─\e[38;2;78;113;221m─\e[38;2;81;116;220m─\e[38;2;84;118;219m─\e[38;2;87;120;219m─\e[38;2;91;122;218m─\e[38;2;94;125;217m─\e[38;2;97;127;216m─\e[38;2;100;129;215m─\e[38;2;104;131;214m─\e[38;2;107;134;214m─\e[38;2;110;136;213m─\e[38;2;113;138;212m─\e[38;2;117;140;211m─\e[38;2;120;142;210m─\e[38;2;123;145;209m─\e[38;2;126;147;208m─\e[38;2;130;149;208m─\e[38;2;133;151;207m─\e[38;2;136;154;206m─\e[38;2;139;156;205m─\e[38;2;143;158;204m─\e[38;2;146;160;203m─\e[38;2;149;163;203m─\e[38;2;152;165;202m─\e[38;2;156;167;201m─\e[38;2;159;169;200m─\e[38;2;162;171;199m─\e[38;2;165;174;198m─\e[38;2;169;176;197m─\e[38;2;172;178;197m─\e[38;2;175;180;196m─\e[38;2;178;183;195m─\e[38;2;182;185;194m─\e[38;2;185;187;193m─\e[38;2;188;189;192m─\e[38;2;192;192;192m╮\e[0;37;40m",
             "\e[38;2;77;113;221m│\e[0;37;40m                                      \e[38;2;179;183;195m│\e[0;37;40m",
             "\e[38;2;90;122;218m│\e[0;37;40m   %^RESET%^BOLD%^UNDERLINE%^Body Header 1%^RESET%^   %^RESET%^BOLD%^UNDERLINE%^Body Header 2%^RESET%^      \e[38;2;166;174;198m│\e[0;37;40m",
@@ -275,7 +393,12 @@ void test_format_border () {
     }) :));
 
     expect("footer", (: ({
-        assert_equal(testOb->format_border(([ "footer": $(dataFooter)["footer"][0] ]), $(b), __Width, 0), ({
+        assert_equal(testOb->format_border(
+            ([ "footer": $(dataFooter)["footer"][0] ]),
+            $(b),
+            __Width,
+            0
+        ), ({
             "╭──────────────────────────────────────╮",
             "│╭────────────────────────────────────╮│",
             "││  Footer Header 1 Footer Header 2   ││",
@@ -295,7 +418,12 @@ void test_format_border () {
             "││  Footer Item 3                     ││",
             "╰┴────────────────────────────────────┴╯"
         })),
-        assert_equal(testOb->format_border($(dataFooter), $(b), __Width, "16"), ({
+        assert_equal(testOb->format_border(
+            $(dataFooter),
+            $(b),
+            __Width,
+            "16"
+        ), ({
             "\e[36m╭──────────────────────────────────────╮\e[0;37;40m",
             "\e[36m│╭────────────────────────────────────╮│\e[0;37;40m",
             "\e[36m││\e[0;37;40m  %^RESET%^BOLD%^UNDERLINE%^Footer Header 1%^RESET%^ %^RESET%^BOLD%^UNDERLINE%^Footer Header 2%^RESET%^   \e[36m││\e[0;37;40m",
@@ -307,7 +435,12 @@ void test_format_border () {
             "\e[36m││\e[0;37;40m  Footer Item 3                     \e[36m││\e[0;37;40m",
             "\e[36m╰┴────────────────────────────────────┴╯\e[0;37;40m"
         })),
-        assert_equal(testOb->format_border($(dataFooter), $(b), __Width, "256"), ({
+        assert_equal(testOb->format_border(
+            $(dataFooter),
+            $(b),
+            __Width,
+            "256"
+        ), ({
             "\e[38;2;65;105;225m╭\e[38;2;68;107;224m─\e[38;2;71;109;223m─\e[38;2;74;111;222m─\e[38;2;78;113;221m─\e[38;2;81;116;220m─\e[38;2;84;118;219m─\e[38;2;87;120;219m─\e[38;2;91;122;218m─\e[38;2;94;125;217m─\e[38;2;97;127;216m─\e[38;2;100;129;215m─\e[38;2;104;131;214m─\e[38;2;107;134;214m─\e[38;2;110;136;213m─\e[38;2;113;138;212m─\e[38;2;117;140;211m─\e[38;2;120;142;210m─\e[38;2;123;145;209m─\e[38;2;126;147;208m─\e[38;2;130;149;208m─\e[38;2;133;151;207m─\e[38;2;136;154;206m─\e[38;2;139;156;205m─\e[38;2;143;158;204m─\e[38;2;146;160;203m─\e[38;2;149;163;203m─\e[38;2;152;165;202m─\e[38;2;156;167;201m─\e[38;2;159;169;200m─\e[38;2;162;171;199m─\e[38;2;165;174;198m─\e[38;2;169;176;197m─\e[38;2;172;178;197m─\e[38;2;175;180;196m─\e[38;2;178;183;195m─\e[38;2;182;185;194m─\e[38;2;185;187;193m─\e[38;2;188;189;192m─\e[38;2;192;192;192m╮\e[0;37;40m",
             "\e[38;2;79;114;221m│\e[38;2;81;115;220m╭\e[38;2;84;117;219m─\e[38;2;86;119;219m─\e[38;2;89;120;218m─\e[38;2;91;122;217m─\e[38;2;94;124;217m─\e[38;2;96;126;216m─\e[38;2;99;127;215m─\e[38;2;101;129;215m─\e[38;2;104;131;214m─\e[38;2;106;133;213m─\e[38;2;109;134;213m─\e[38;2;111;136;212m─\e[38;2;114;138;211m─\e[38;2;116;140;211m─\e[38;2;119;141;210m─\e[38;2;121;143;209m─\e[38;2;124;145;209m─\e[38;2;126;147;208m─\e[38;2;129;148;207m─\e[38;2;131;150;207m─\e[38;2;134;152;206m─\e[38;2;136;154;205m─\e[38;2;139;155;205m─\e[38;2;141;157;204m─\e[38;2;144;159;203m─\e[38;2;146;161;203m─\e[38;2;149;162;202m─\e[38;2;151;164;201m─\e[38;2;154;166;201m─\e[38;2;156;168;200m─\e[38;2;159;169;199m─\e[38;2;161;171;199m─\e[38;2;164;173;198m─\e[38;2;166;175;197m─\e[38;2;169;176;197m─\e[38;2;171;178;196m─\e[38;2;174;180;195m╮\e[38;2;177;182;195m│\e[0;37;40m",
             "\e[38;2;93;124;217m││\e[0;37;40m  %^RESET%^BOLD%^UNDERLINE%^Footer Header 1%^RESET%^ %^RESET%^BOLD%^UNDERLINE%^Footer Header 2%^RESET%^   \e[38;2;163;172;199m││\e[0;37;40m",
@@ -322,7 +455,12 @@ void test_format_border () {
     }) :));
 
     expect("combined sections", (: ({
-        assert_equal(testOb->format_border($(dataHeader) + $(dataBody) + $(dataFooter), $(b), __Width, "16"), ({
+        assert_equal(testOb->format_border(
+            $(dataHeader) + $(dataBody) + $(dataFooter),
+            $(b),
+            __Width,
+            "16"
+        ), ({
             "\e[36m╭┬────────────────────────────────────┬╮\e[0;37;40m",
             "\e[36m││\e[0;37;40m  %^RESET%^BOLD%^UNDERLINE%^Header Header 1%^RESET%^ %^RESET%^BOLD%^UNDERLINE%^Header Header 2%^RESET%^   \e[36m││\e[0;37;40m",
             "\e[36m││\e[0;37;40m  Header Item 1   Header Item 2     \e[36m││\e[0;37;40m",
@@ -354,7 +492,12 @@ void test_format_border () {
     }) :));
 
     expect("custom border colors", (: ({
-        assert_equal(testOb->format_border(([ "borderColors": ({ ({ 65, 105, 225 }), ({ 65, 105, 225 }) }) ]), $(b), __Width, "256"), ({
+        assert_equal(testOb->format_border(
+            ([ "borderColors": ({ ({ 65, 105, 225 }), ({ 65, 105, 225 }) }) ]),
+            $(b),
+            __Width,
+            "256"
+        ), ({
             "\e[38;2;65;105;225m╭\e[38;2;65;105;225m─\e[38;2;65;105;225m─\e[38;2;65;105;225m─\e[38;2;65;105;225m─\e[38;2;65;105;225m─\e[38;2;65;105;225m─\e[38;2;65;105;225m─\e[38;2;65;105;225m─\e[38;2;65;105;225m─\e[38;2;65;105;225m─\e[38;2;65;105;225m─\e[38;2;65;105;225m─\e[38;2;65;105;225m─\e[38;2;65;105;225m─\e[38;2;65;105;225m─\e[38;2;65;105;225m─\e[38;2;65;105;225m─\e[38;2;65;105;225m─\e[38;2;65;105;225m─\e[38;2;65;105;225m─\e[38;2;65;105;225m─\e[38;2;65;105;225m─\e[38;2;65;105;225m─\e[38;2;65;105;225m─\e[38;2;65;105;225m─\e[38;2;65;105;225m─\e[38;2;65;105;225m─\e[38;2;65;105;225m─\e[38;2;65;105;225m─\e[38;2;65;105;225m─\e[38;2;65;105;225m─\e[38;2;65;105;225m─\e[38;2;65;105;225m─\e[38;2;65;105;225m─\e[38;2;65;105;225m─\e[38;2;65;105;225m─\e[38;2;65;105;225m─\e[38;2;65;105;225m─\e[38;2;65;105;225m╮\e[0;37;40m",
             "\e[38;2;65;105;225m╰\e[38;2;65;105;225m─\e[38;2;65;105;225m─\e[38;2;65;105;225m─\e[38;2;65;105;225m─\e[38;2;65;105;225m─\e[38;2;65;105;225m─\e[38;2;65;105;225m─\e[38;2;65;105;225m─\e[38;2;65;105;225m─\e[38;2;65;105;225m─\e[38;2;65;105;225m─\e[38;2;65;105;225m─\e[38;2;65;105;225m─\e[38;2;65;105;225m─\e[38;2;65;105;225m─\e[38;2;65;105;225m─\e[38;2;65;105;225m─\e[38;2;65;105;225m─\e[38;2;65;105;225m─\e[38;2;65;105;225m─\e[38;2;65;105;225m─\e[38;2;65;105;225m─\e[38;2;65;105;225m─\e[38;2;65;105;225m─\e[38;2;65;105;225m─\e[38;2;65;105;225m─\e[38;2;65;105;225m─\e[38;2;65;105;225m─\e[38;2;65;105;225m─\e[38;2;65;105;225m─\e[38;2;65;105;225m─\e[38;2;65;105;225m─\e[38;2;65;105;225m─\e[38;2;65;105;225m─\e[38;2;65;105;225m─\e[38;2;65;105;225m─\e[38;2;65;105;225m─\e[38;2;65;105;225m─\e[38;2;65;105;225m╯\e[0;37;40m"
         })),
@@ -363,30 +506,55 @@ void test_format_border () {
     if (__MockCharacter) destruct(__MockCharacter);
 }
 
-void test_tree () {
+void test_tree() {
     expect("tree behaves", (: ({
-        assert_equal(testOb->tree(([ "00": "abcdefghi", "01": "abcdefghi" ])), ({ "0. 00abcdefghi", "1. 01abcdefghi" })),
-        assert_equal(testOb->tree(([ "A": ([ "1": ([ "a": ([ ]), "b": ([ ]) ]), "2": ([ ]), ]), "B": ([ ]), "C": ([ "1": ([ ]), "2": ([ "a": ([ ]), "b": ([ ]) ]) ]) ]), ), ({  "0. A", "├─0. 1", "│ ├─0. a", "│ └─1. b", "└─1. 2", "1. B", "2. C", "├─0. 1", "└─1. 2", "  ├─0. a", "  └─1. b" })),
+        assert_equal(
+            testOb->tree(([ "00": "abcdefghi", "01": "abcdefghi" ])),
+            ({ "0. 00abcdefghi", "1. 01abcdefghi" })
+        ),
+        assert_equal(
+            testOb->tree(([
+                "A": ([ "1": ([ "a": ([]), "b": ([]) ]), "2": ([]), ]),
+                "B": ([]),
+                "C": ([ "1": ([]), "2": ([ "a": ([]), "b": ([]) ]) ])
+            ]),),
+            ({
+                "0. A",
+                "├─0. 1",
+                "│ ├─0. a",
+                "│ └─1. b",
+                "└─1. 2",
+                "1. B",
+                "2. C",
+                "├─0. 1",
+                "└─1. 2",
+                "  ├─0. a",
+                "  └─1. b"
+            })
+        ),
 
-        assert_catch((: testOb->tree(UNDEFINED) :), "*Bad argument 1 to border->tree\n"),
+        assert_catch(
+            (: testOb->tree(UNDEFINED) :),
+            "*Bad argument 1 to border->tree\n"
+        ),
     }) :));
 }
 
 string *Result;
-void handle_pager (string *result) {
+void handle_pager(string *result) {
     Result = result;
 }
-void test_border () {
+void test_border() {
     expect("border behaves", (: ({
         assert_equal(__Width = 80, 80),
-        testOb->border(([ ])),
+        testOb->border(([])),
         assert_equal(Result, ({
             "╭──────────────────────────────────────────────────────────────────────────────╮",
             "╰──────────────────────────────────────────────────────────────────────────────╯"
         })),
 
         __Color = "16",
-        testOb->border(([ ])),
+        testOb->border(([])),
         assert_equal(Result, ({
             "\e[36m╭──────────────────────────────────────────────────────────────────────────────╮\e[0;37;40m",
             "\e[36m╰──────────────────────────────────────────────────────────────────────────────╯\e[0;37;40m"

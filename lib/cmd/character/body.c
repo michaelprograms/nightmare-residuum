@@ -1,14 +1,14 @@
 inherit STD_COMMAND;
 
-void create () {
+void create() {
     ::create();
     set_syntax("body");
     set_help_text("The body command is used to view the limbs of your character's body.");
 }
 
-void command (string input, mapping flags) {
+void command(string input, mapping flags) {
     object tc = this_character(), target = tc;
-    string *items = ({ }), *limbs, *severedLimbs;
+    string *items = ({}), *limbs, *severedLimbs;
     mapping footer;
 
     if (input && tc->query_immortal()) {
@@ -22,13 +22,19 @@ void command (string input, mapping flags) {
         "arm", "hand", "leg", "foot",
         "paw", "wing", "tail",
     })) {
-        foreach (string l in sort_array(filter(limbs, (: regexp($1, $(type)) :)), 1)) {
+        foreach (string l in sort_array(
+            filter(limbs, (: regexp($1, $(type)) :)),
+            1
+        )) {
             mapping limb = target->query_limb(l);
             items += ({
                 l,
-                limb["damage"]+"/"+limb["maxdamage"] + " " + (limb["damage"]*100/limb["maxdamage"])+"%",
+                limb["damage"] + "/" + limb["maxdamage"] + " " + (limb["damage"] * 100 / limb["maxdamage"]) + "%",
                 limb["type"] ? limb["type"] : "",
-                limb["attach"] && member_array(limb["attach"], severedLimbs) == -1 ? limb["attach"] : "",
+                limb["attach"] && member_array(
+                    limb["attach"],
+                    severedLimbs
+                ) == -1 ? limb["attach"] : "",
             });
             limbs -= ({ l });
         }
@@ -37,7 +43,7 @@ void command (string input, mapping flags) {
         mapping limb = target->query_limb(l);
         items += ({
             l,
-            limb["damage"]+"/"+limb["maxdamage"] + " " + (limb["damage"]*100/limb["maxdamage"])+"%",
+            limb["damage"] + "/" + limb["maxdamage"] + " " + (limb["damage"] * 100 / limb["maxdamage"]) + "%",
             limb["type"] ? limb["type"] : "",
             limb["attach"] ? limb["attach"] : "",
         });

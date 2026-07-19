@@ -1,19 +1,22 @@
 inherit STD_COMMAND;
 
-void create () {
+void create() {
     ::create();
     set_syntax("sockets");
     set_help_text("The sockets command is used to view the entire list of sockets.");
 }
 
-void command (string input, mapping flags) {
-    string *sockets = ({ }), *netStats = ({ });
+void command(string input, mapping flags) {
+    string *sockets = ({}), *netStats = ({});
 
     foreach (mixed *s in socket_status()) {
         sockets += ({ s[0], s[1], s[2], s[3], s[4] });
     }
 
-    foreach (string key, int value in filter(network_stats(), (: regexp($1, "socket") :))) {
+    foreach (
+        string key,
+        int value in filter(network_stats(), (: regexp($1, "socket") :))
+    ) {
         key = replace_string(key, " sockets", "");
         netStats += ({ sprintf("%20s", key) + " : " + value });
     }

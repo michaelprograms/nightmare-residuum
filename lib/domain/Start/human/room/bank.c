@@ -5,7 +5,7 @@ inherit STD_ROOM;
 nosave private string __BankID = "start";
 nosave private string __BankDefault = "copper";
 
-void create () {
+void create() {
     ::create();
     set_properties(([
         "no attack": 1,
@@ -18,7 +18,7 @@ void create () {
     ]));
     set_looks(([
         "vault": "A closed and secured vault door with no way to see through.",
-        "sign": "The bank offers the following services here: "+format_syntax("balance")+", "+format_syntax("deposit [number] [currency]")+", and "+format_syntax("withdraw [number] [currency]")+".",
+        "sign": "The bank offers the following services here: " + format_syntax("balance") + ", " + format_syntax("deposit [number] [currency]") + ", and " + format_syntax("withdraw [number] [currency]") + ".",
     ]));
 
     parse_init();
@@ -30,38 +30,47 @@ void create () {
 
 /* ----- balance ----- */
 
-void display_balance (string name, mapping balance, object char) {
+void display_balance(string name, mapping balance, object char) {
     if (undefinedp(balance[__BankDefault])) {
         balance[__BankDefault] = 0;
     }
     message("action", "Account balance for " + name + ":", char);
-    foreach (string key,int value in balance) {
-        message("action", "  " + capitalize(key) + ": "+value, char);
+    foreach (string key, int value in balance) {
+        message("action", "  " + capitalize(key) + ": " + value, char);
     }
 }
 
-mixed can_balance () {
+mixed can_balance() {
     return environment(this_character()) == this_object();
 }
-void do_balance () {
+void do_balance() {
     object tc = this_character();
     mapping balance = D_BANK->query_balance(tc->query_name(), __BankID);
     message("action", "You query your bank account information...", tc);
-    message("action", tc->query_cap_name() + " queries " + possessive(tc) + " bank account information.", environment(tc), tc);
+    message(
+        "action",
+        tc->query_cap_name() + " queries " + possessive(tc) + " bank account information.",
+        environment(tc),
+        tc
+    );
     display_balance(tc->query_cap_name(), balance, tc);
 }
 
-mixed can_balance_wrd (mixed args...) {
+mixed can_balance_wrd(mixed args...) {
     return environment(this_character()) == this_object() && previous_object()->query_immortal();
 }
-void do_balance_wrd (mixed args...) {
+void do_balance_wrd(mixed args...) {
     string name;
     mapping balance;
 
     if (!arrayp(args) || !sizeof(args) || !(name = args[0])) return;
 
     if (!D_CHARACTER->query_exists(name)) {
-        message("action", "No character found by the name of " + name + ".", this_character());
+        message(
+            "action",
+            "No character found by the name of " + name + ".",
+            this_character()
+        );
         return;
     }
     balance = D_BANK->query_balance(name, __BankID);
@@ -70,10 +79,10 @@ void do_balance_wrd (mixed args...) {
 
 /* ----- ----- */
 
-mixed can_deposit_wrd_wrd (mixed args...) {
+mixed can_deposit_wrd_wrd(mixed args...) {
     return environment(this_character()) == this_object();
 }
-void do_deposit_wrd_wrd (mixed args...) {
+void do_deposit_wrd_wrd(mixed args...) {
     string currency;
     int amount;
     object tc = this_character();
@@ -86,7 +95,11 @@ void do_deposit_wrd_wrd (mixed args...) {
         return;
     }
     if (amount < 1 || tc->query_currency(currency) < amount) {
-        message("action", "You do not have enough " + currency + " to deposit.", tc);
+        message(
+            "action",
+            "You do not have enough " + currency + " to deposit.",
+            tc
+        );
         return;
     }
 
@@ -96,15 +109,20 @@ void do_deposit_wrd_wrd (mixed args...) {
     D_BANK->update_balance(tc->query_name(), __BankID, balance);
 
     message("action", "You deposit " + amount + " " + currency + ".", tc);
-    message("action", tc->query_cap_name() + " deposits some " + currency + ".", environment(tc), tc);
+    message(
+        "action",
+        tc->query_cap_name() + " deposits some " + currency + ".",
+        environment(tc),
+        tc
+    );
 }
 
 /* ----- ----- */
 
-mixed can_withdraw_wrd_wrd (mixed args...) {
+mixed can_withdraw_wrd_wrd(mixed args...) {
     return environment(this_character()) == this_object();
 }
-void do_withdraw_wrd_wrd (mixed args...) {
+void do_withdraw_wrd_wrd(mixed args...) {
     string currency;
     int amount;
     object tc = this_character();
@@ -115,11 +133,19 @@ void do_withdraw_wrd_wrd (mixed args...) {
     balance = D_BANK->query_balance(tc->query_name(), __BankID);
 
     if (member_array(currency, keys(balance)) == -1) {
-        message("action", "Your account has no currency named " + currency + ".", tc);
+        message(
+            "action",
+            "Your account has no currency named " + currency + ".",
+            tc
+        );
         return;
     }
     if (amount < 1 || balance[currency] < amount) {
-        message("action", "Your account does not have enough " + currency + " to withdraw.", tc);
+        message(
+            "action",
+            "Your account does not have enough " + currency + " to withdraw.",
+            tc
+        );
         return;
     }
 
@@ -128,5 +154,10 @@ void do_withdraw_wrd_wrd (mixed args...) {
     D_BANK->update_balance(tc->query_name(), __BankID, balance);
 
     message("action", "You withdraw " + amount + " " + currency + ".", tc);
-    message("action", tc->query_cap_name() + " withdraws some " + currency + ".", environment(tc), tc);
+    message(
+        "action",
+        tc->query_cap_name() + " withdraws some " + currency + ".",
+        environment(tc),
+        tc
+    );
 }

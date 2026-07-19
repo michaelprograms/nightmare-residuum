@@ -4,11 +4,11 @@ inherit M_TEST;
  * @var {"/std/living/vitals"} testOb
  */
 
-string *test_order () {
+string *test_order() {
     return ({ "test_update_vitals", "test_hp", "test_sp", "test_mp" });
 }
 
-void test_update_vitals () {
+void test_update_vitals() {
     expect("update_vitals handles base and max hp/sp/mp", (: ({
         // initial values
         assert_equal(testOb->query_hp(), 0),
@@ -53,7 +53,7 @@ void test_update_vitals () {
     }) :));
 }
 
-void test_hp () {
+void test_hp() {
     expect("hp handles set/query/query_max", (: ({
         testOb->update_vitals(1),
 
@@ -61,7 +61,7 @@ void test_hp () {
         assert_equal(testOb->query_hp(), 20),
         assert_equal(testOb->query_max_hp(), 20),
 
-        testOb->set_hp(100), // can't go above max
+        testOb->set_hp(100),  // can't go above max
         assert_equal(testOb->query_hp(), 20),
 
         testOb->add_hp(-10),
@@ -70,7 +70,7 @@ void test_hp () {
         assert_equal(testOb->query_hp(), 15),
         testOb->add_hp(0),
         assert_equal(testOb->query_hp(), 15),
-        testOb->add_hp(10), // attempt to go over max
+        testOb->add_hp(10),  // attempt to go over max
         assert_equal(testOb->query_hp(), 20),
 
         testOb->set_hp(5),
@@ -81,7 +81,7 @@ void test_hp () {
     }) :));
 }
 
-void test_sp () {
+void test_sp() {
     expect("sp handles set/query/query_max", (: ({
         testOb->update_vitals(1),
 
@@ -89,7 +89,7 @@ void test_sp () {
         assert_equal(testOb->query_sp(), 10),
         assert_equal(testOb->query_max_sp(), 10),
 
-        testOb->set_sp(100), // can't go above max
+        testOb->set_sp(100),  // can't go above max
         assert_equal(testOb->query_sp(), 10),
 
         testOb->add_sp(-5),
@@ -98,7 +98,7 @@ void test_sp () {
         assert_equal(testOb->query_sp(), 7),
         testOb->add_sp(0),
         assert_equal(testOb->query_sp(), 7),
-        testOb->add_sp(5), // attempt to go over max
+        testOb->add_sp(5),  // attempt to go over max
         assert_equal(testOb->query_sp(), 10),
 
         testOb->set_sp(5),
@@ -109,7 +109,7 @@ void test_sp () {
     }) :));
 }
 
-void test_mp () {
+void test_mp() {
     expect("mp handles set/query/query_max", (: ({
         testOb->update_vitals(1),
 
@@ -117,7 +117,7 @@ void test_mp () {
         assert_equal(testOb->query_mp(), 10),
         assert_equal(testOb->query_max_mp(), 10),
 
-        testOb->set_mp(100), // can't go above max
+        testOb->set_mp(100),  // can't go above max
         assert_equal(testOb->query_mp(), 10),
 
         testOb->add_mp(-5),
@@ -126,7 +126,7 @@ void test_mp () {
         assert_equal(testOb->query_mp(), 7),
         testOb->add_mp(0),
         assert_equal(testOb->query_mp(), 7),
-        testOb->add_mp(5), // attempt to go over max
+        testOb->add_mp(5),  // attempt to go over max
         assert_equal(testOb->query_mp(), 10),
 
         testOb->set_mp(5),

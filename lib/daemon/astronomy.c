@@ -7,7 +7,7 @@
 inherit M_CLEAN;
 
 mapping __Astronomy = ([
-/*
+    /*
     "astronomy file": ([
         "SECONDS_PER_MINUTE": integer
         "MINUTES_PER_HOUR": integer
@@ -30,74 +30,77 @@ mapping __Astronomy = ([
 ]);
 
 // for debug
-mapping query_astronomy () {
+mapping query_astronomy() {
     return __Astronomy;
 }
 
 /* -----  ----- */
 
-string format_minute (int m) {
+string format_minute(int m) {
     return sprintf("%2'0's", "" + m)[0..1];
 }
 
 /* -----  ----- */
 
-int query_now (int t) {
+int query_now(int t) {
     return NOW(t);
 }
 
-int query_second (int t, mapping a) {
+int query_second(int t, mapping a) {
     return NOW(t) % a["MINUTE"];
 }
-int query_minute (int t, mapping a) {
+int query_minute(int t, mapping a) {
     return NOW(t) % a["HOUR"] / a["MINUTE"];
 }
-int query_hour (int t, mapping a) {
+int query_hour(int t, mapping a) {
     return NOW(t) % a["DAY"] / a["HOUR"];
 }
-int query_day (int t, mapping a) {
+int query_day(int t, mapping a) {
     return NOW(t) % a["WEEK"] / a["DAY"];
 }
-int query_week (int t, mapping a) {
+int query_week(int t, mapping a) {
     return NOW(t) % a["MONTH"] / a["WEEK"];
 }
-int query_month (int t, mapping a) {
+int query_month(int t, mapping a) {
     return NOW(t) % a["YEAR"] / a["MONTH"];
 }
-int query_year (int t, mapping a) {
+int query_year(int t, mapping a) {
     return NOW(t) / a["YEAR"];
 }
 
-string query_day_name (int t, mapping a) {
+string query_day_name(int t, mapping a) {
     return a["DAY_NAMES"][query_day(t, a)];
 }
-string query_month_name (int t, mapping a) {
+string query_month_name(int t, mapping a) {
     return a["MONTH_NAMES"][query_month(t, a)];
 }
 
 /* -----  ----- */
 
-varargs string query_localtime (mapping a, int t) {
+varargs string query_localtime(mapping a, int t) {
     if (!a) return 0;
 
     if (undefinedp(t)) t = time();
 
     return query_hour(t, a) + ":" + format_minute(query_minute(t, a));
 }
-varargs string query_localdate (mapping a, int t) {
+varargs string query_localdate(mapping a, int t) {
     string day, month, year;
 
     if (!a) return 0;
 
     if (undefinedp(t)) t = time();
 
-    day = "" + (query_week(t, a)*(a["WEEK"]/a["DAY"]) + query_day(t, a) + 1);
+    day = "" + (query_week(
+        t,
+        a
+    ) * (a["WEEK"] / a["DAY"]) + query_day(t, a) + 1);
     month = "" + a["MONTH_NAMES"][query_month(t, a)];
     year = "" + (query_year(t, a) + 1);
 
     return day + " of " + month + " " + year;
 }
-string query_localsky (mapping a, string str) {
+string query_localsky(mapping a, string str) {
     string desc;
 
     if (!a) return 0;
@@ -112,14 +115,14 @@ string query_localsky (mapping a, string str) {
         } else if (a["DAY_PHASE"] == "night") {
             string moons = "";
             desc = "%^BLUE%^BOLD%^The sky is darkened with night.%^RESET%^";
-            foreach (string key,mapping moon in a["MOONS"]) {
+            foreach (string key, mapping moon in a["MOONS"]) {
                 if (moon["phase"] > 0) {
-                    moons += "\n" + "There is a %^" + upper_case(moon["color"]) + "%^" + PHASES[moon["phase"]]+" "+moon["color"]+" moon%^RESET%^ in the sky.%^RESET%^";
+                    moons += "\n" + "There is a %^" + upper_case(moon["color"]) + "%^" + PHASES[moon["phase"]] + " " + moon["color"] + " moon%^RESET%^ in the sky.%^RESET%^";
                 }
             }
             desc += moons;
         }
-    } else  if (str == "sun") {
+    } else if (str == "sun") {
         if (a["DAY_PHASE"] == "dawn") {
             desc = "%^ORANGE%^The sun is hanging low in the dawning eastern sky.%^RESET%^";
         } else if (a["DAY_PHASE"] == "day") {
@@ -132,22 +135,25 @@ string query_localsky (mapping a, string str) {
     return desc;
 }
 
-int query_day_of_year (int t, mapping a) {
+int query_day_of_year(int t, mapping a) {
     int dpw, dpm;
     dpw = a["DAYS_PER_WEEK"];
     dpm = dpw * a["WEEKS_PER_MONTH"];
-    return (query_month(t, a) * dpm) + (query_week(t, a) * dpw) + query_day(t, a);
+    return (query_month(
+        t,
+        a
+    ) * dpm) + (query_week(t, a) * dpw) + query_day(t, a);
 }
 
 /* -----  ----- */
 
-private mixed *format_almanac (int d, string prepend) {
-    int hour = to_int((prepend+d)[0..1]);
-    int min = to_int((prepend+d)[2..3]) * 60 / 100;
-    return ({ hour, min, }); // sprintf("%s:%'0'2s", ""+hour, ""+min) });
+private mixed *format_almanac(int d, string prepend) {
+    int hour = to_int((prepend + d)[0..1]);
+    int min = to_int((prepend + d)[2..3]) * 60 / 100;
+    return ({ hour, min, });  // sprintf("%s:%'0'2s", ""+hour, ""+min) });
 }
-mapping query_calculate_almanac (int t, mapping a) {
-    mapping almanac = ([ ]);
+mapping query_calculate_almanac(int t, mapping a) {
+    mapping almanac = ([]);
     int days = query_day_of_year(t, a);
 
     if (days == a["SHORTEST_DAY"]) almanac["equinox"] = "fall";
@@ -164,10 +170,10 @@ mapping query_calculate_almanac (int t, mapping a) {
 
     return almanac;
 }
-void update_almanac (int t, mapping a) {
+void update_almanac(int t, mapping a) {
     a["ALMANAC"] = query_calculate_almanac(t, a);
 }
-void update_dayphase (int t, mapping a) {
+void update_dayphase(int t, mapping a) {
     int h = query_hour(t, a), m = query_minute(t, a);
     int dawnH, dawnM, dayH, dayM;
     int duskH, duskM, nightH, nightM;
@@ -194,7 +200,7 @@ void update_dayphase (int t, mapping a) {
 
 /* -----  ----- */
 
-mapping query_astronomy_from_room (mixed dest) {
+mapping query_astronomy_from_room(mixed dest) {
     string roomPath, aPath;
 
     if (objectp(dest) && roomp(dest)) {
@@ -213,11 +219,11 @@ mapping query_astronomy_from_room (mixed dest) {
     return aPath ? __Astronomy[aPath] : 0;
 }
 
-void handle_room_create (object room) {
+void handle_room_create(object room) {
     query_astronomy_from_room(room);
 }
 
-private void process (int t, string key, mapping a) {
+private void process(int t, string key, mapping a) {
     int now, next, total, nextPhase;
     string dayPhase, newPhase;
     int days;
@@ -226,7 +232,7 @@ private void process (int t, string key, mapping a) {
     nextPhase = a["NEXT_PHASE"];
 
     days = query_day_of_year(t, a);
-    foreach (string k,mapping moon in a["MOONS"]) {
+    foreach (string k, mapping moon in a["MOONS"]) {
         if (!moon["phase"]) {
             moon["phase"] = to_int(days % moon["orbit"] / (1.0 * moon["orbit"] / sizeof(PHASES)));
         }
@@ -234,19 +240,41 @@ private void process (int t, string key, mapping a) {
 
     if (nextPhase > 0) {
         if (t >= nextPhase) {
-            object *characters = filter(characters(), (: regexp($1->query_environment_path(), "^"+$(key)) && /** @type {STD_ROOM} */ (environment($1))->query_property("indoors") == 0 :));
+            object *characters = filter(
+                characters(),
+                (: regexp(
+                    $1->query_environment_path(),
+                    "^" + $(key)
+                ) && /** @type {STD_ROOM} */ (environment($1))->query_property("indoors") == 0 :)
+            );
             if (dayPhase == "night") {
                 dayPhase = "dawn";
-                message("astronomy", "%^ORANGE%^BOLD%^The sun appears over the horizon.%^RESET%^", characters);
+                message(
+                    "astronomy",
+                    "%^ORANGE%^BOLD%^The sun appears over the horizon.%^RESET%^",
+                    characters
+                );
             } else if (dayPhase == "dawn") {
                 dayPhase = "day";
-                message("astronomy", "%^I_YELLOW%^BOLD%^The sun now shines on a new day.%^RESET%^", characters);
+                message(
+                    "astronomy",
+                    "%^I_YELLOW%^BOLD%^The sun now shines on a new day.%^RESET%^",
+                    characters
+                );
             } else if (dayPhase == "day") {
                 dayPhase = "dusk";
-                message("astronomy", "%^I_CYAN%^BOLD%^The sun falls away into twilight.%^RESET%^", characters);
+                message(
+                    "astronomy",
+                    "%^I_CYAN%^BOLD%^The sun falls away into twilight.%^RESET%^",
+                    characters
+                );
             } else if (dayPhase == "dusk") {
                 dayPhase = "night";
-                message("astronomy", "%^I_BLUE%^BOLD%^The sun disappears below the horizon.%^RESET%^", characters);
+                message(
+                    "astronomy",
+                    "%^I_BLUE%^BOLD%^The sun disappears below the horizon.%^RESET%^",
+                    characters
+                );
             }
             a["DAY_PHASE"] = dayPhase;
         } else {
@@ -282,27 +310,27 @@ private void process (int t, string key, mapping a) {
 
 /* ----- life cycle ----- */
 
-void scan () {
+void scan() {
     object *characters = characters();
     // load any existing environments
     if (sizeof(characters)) {
         int t = time();
         map(characters, (: handle_room_create(environment($1)) :));
         // process immediately
-        foreach (string key,mapping a in __Astronomy) {
+        foreach (string key, mapping a in __Astronomy) {
             process(t, key, a);
         }
     }
 }
 
-void heart_beat () {
+void heart_beat() {
     int t = time();
-    foreach (string key,mapping a in __Astronomy) {
+    foreach (string key, mapping a in __Astronomy) {
         process(t, key, a);
     }
 }
 
-void create () {
+void create() {
     if (!clonep()) {
         scan();
         set_heart_beat(1);

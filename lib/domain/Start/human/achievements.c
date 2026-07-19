@@ -1,4 +1,4 @@
-mapping *query_achievements () {
+mapping *query_achievements() {
     return ({
         ([
             "name": "Art Appreciation",

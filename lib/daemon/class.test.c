@@ -4,7 +4,7 @@ inherit M_TEST;
  * @var {"/daemon/class"} testOb
  */
 
-void test_query_adjust_vitals () {
+void test_query_adjust_vitals() {
     expect("hp adjustments are queryable", (: ({
         assert_equal(testOb->query_adjust_hp("warrior"), 3),
         assert_equal(testOb->query_adjust_hp("mystic"), 2),
@@ -39,7 +39,7 @@ void test_query_adjust_vitals () {
     }) :));
 }
 
-void test_query_adjust_stats () {
+void test_query_adjust_stats() {
     expect("stat adjustments are queryable", (: ({
         assert_equal(testOb->query_adjust_stat("warrior", "strength"), 3),
         assert_equal(testOb->query_adjust_stat("mystic", "strength"), 2),
@@ -49,11 +49,14 @@ void test_query_adjust_stats () {
         assert_equal(testOb->query_adjust_stat("paladin", "strength"), 2),
 
         assert_equal(testOb->query_adjust_stat("nonexistant", "strength"), 0),
-        assert_equal(testOb->query_adjust_stat("nonexistant", "nonexistant"), 0),
+        assert_equal(
+            testOb->query_adjust_stat("nonexistant", "nonexistant"),
+            0
+        ),
     }) :));
 }
 
-void test_query_max_stats () {
+void test_query_max_stats() {
     expect("stat adjustments are queryable", (: ({
         assert_equal(testOb->query_max_stat("warrior", "strength", 1), 5),
         assert_equal(testOb->query_max_stat("mystic", "strength", 1), 4),
@@ -70,22 +73,37 @@ void test_query_max_stats () {
         assert_equal(testOb->query_max_stat("paladin", "strength", 10), 40),
 
         assert_equal(testOb->query_max_stat("nonexistant", "strength", 0), 0),
-        assert_equal(testOb->query_max_stat("nonexistant", "nonexistant", 0), 0),
+        assert_equal(
+            testOb->query_max_stat("nonexistant", "nonexistant", 0),
+            0
+        ),
         assert_equal(testOb->query_max_stat("nonexistant", "strength", 1), 2),
-        assert_equal(testOb->query_max_stat("nonexistant", "nonexistant", 1), 2),
+        assert_equal(
+            testOb->query_max_stat("nonexistant", "nonexistant", 1),
+            2
+        ),
     }) :));
 }
 
-void test_query_adjust_skills () {
+void test_query_adjust_skills() {
     expect("skill adjustments are queryable", (: ({
         assert_equal(testOb->query_adjust_skill("warrior", "blade attack"), 3),
         assert_equal(testOb->query_adjust_skill("mystic", "blade attack"), 1),
-        assert_equal(testOb->query_adjust_skill("scoundrel", "blade attack"), 3),
+        assert_equal(
+            testOb->query_adjust_skill("scoundrel", "blade attack"),
+            3
+        ),
         assert_equal(testOb->query_adjust_skill("ranger", "blade attack"), 2),
         assert_equal(testOb->query_adjust_skill("psionist", "blade attack"), 0),
         assert_equal(testOb->query_adjust_skill("paladin", "blade attack"), 1),
 
-        assert_equal(testOb->query_adjust_skill("nonexistant", "blade attack"), 0),
-        assert_equal(testOb->query_adjust_skill("nonexistant", "nonexistant"), 0),
+        assert_equal(
+            testOb->query_adjust_skill("nonexistant", "blade attack"),
+            0
+        ),
+        assert_equal(
+            testOb->query_adjust_skill("nonexistant", "nonexistant"),
+            0
+        ),
     }) :));
 }

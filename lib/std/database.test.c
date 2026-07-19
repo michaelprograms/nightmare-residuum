@@ -4,17 +4,31 @@ inherit M_TEST;
  */
 
 nosave private object db;
-void test_connect () {
+void test_connect() {
     expect("connect returns a handle", (: ({
-        assert_catch((: testOb->connect(UNDEFINED) :), "*Bad argument 1 to database->connect\n"),
-        assert_catch((: testOb->connect(([ ])) :), "*Bad argument 1 to database->connect: missing db\n"),
+        assert_catch(
+            (: testOb->connect(UNDEFINED) :),
+            "*Bad argument 1 to database->connect\n"
+        ),
+        assert_catch(
+            (: testOb->connect(([])) :),
+            "*Bad argument 1 to database->connect: missing db\n"
+        ),
 
         // connect
-        db = testOb->connect(([ "host": "", "db": "/save/test/database.db", "user": "", "type": __USE_SQLITE3__, ])),
+        db = testOb->connect(([
+            "host": "",
+            "db": "/save/test/database.db",
+            "user": "",
+            "type": __USE_SQLITE3__,
+        ])),
         assert_equal(objectp(db), 1),
         assert_equal(testOb->query_handle() > 0, 1),
 
-        assert_catch((: testOb->connect(([ "db": "/save/test/database.db", ])) :), "*Database already connected\n"),
+        assert_catch(
+            (: testOb->connect(([ "db": "/save/test/database.db", ])) :),
+            "*Database already connected\n"
+        ),
     }) :));
     expect("handle is queryable", (: ({
         // query non-existant
@@ -31,7 +45,10 @@ void test_connect () {
         testOb->query("INSERT INTO `Test` (thing) VALUES ('another thing')"),
 
         // table has records
-        assert_equal(testOb->query("SELECT * FROM `Test`"), ({ ({ 1, "some thing" }), ({ 2, "another thing" }) })),
+        assert_equal(
+            testOb->query("SELECT * FROM `Test`"),
+            ({ ({ 1, "some thing" }), ({ 2, "another thing" }) })
+        ),
 
         // delete table records
         assert_equal(testOb->query("DELETE FROM `Test`"), UNDEFINED),
@@ -48,7 +65,10 @@ void test_connect () {
         assert_equal(testOb->query_handle(), 0),
 
         // can't query when closed
-        assert_catch((: testOb->query("SELECT * FROM `Test`") :), "*Database not connected\n"),
+        assert_catch(
+            (: testOb->query("SELECT * FROM `Test`") :),
+            "*Database not connected\n"
+        ),
     }) :));
 
     if (file_size("/save/test/database.db")) {

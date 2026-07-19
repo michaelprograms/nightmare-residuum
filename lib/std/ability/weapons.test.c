@@ -4,18 +4,33 @@ inherit M_TEST;
  * @var {"/std/ability/weapons"} testOb
  */
 
-void test_weapons () {
+void test_weapons() {
     expect("set_weapons handles bad inputs", (: ({
-        assert_catch((: testOb->set_weapons(UNDEFINED) :), "*Bad argument 1 to weapon->set_weapons\n"),
-        assert_catch((: testOb->set_weapons(0) :), "*Bad argument 1 to weapon->set_weapons\n"),
+        assert_catch(
+            (: testOb->set_weapons(UNDEFINED) :),
+            "*Bad argument 1 to weapon->set_weapons\n"
+        ),
+        assert_catch(
+            (: testOb->set_weapons(0) :),
+            "*Bad argument 1 to weapon->set_weapons\n"
+        ),
 
-        assert_catch((: testOb->set_weapons(([ "bad": ([ ]) ])) :), "*Bad argument (keys) to weapon->set_weapons\n"),
+        assert_catch(
+            (: testOb->set_weapons(([ "bad": ([]) ])) :),
+            "*Bad argument (keys) to weapon->set_weapons\n"
+        ),
 
-        assert_catch((: testOb->set_weapons(([ "blade": ({ 0 }) ])) :), "*Bad argument (values) to weapon->set_weapons\n"),
-        assert_catch((: testOb->set_weapons(([ "blade": ({ 3 }) ])) :), "*Bad argument (values) to weapon->set_weapons\n"),
+        assert_catch(
+            (: testOb->set_weapons(([ "blade": ({ 0 }) ])) :),
+            "*Bad argument (values) to weapon->set_weapons\n"
+        ),
+        assert_catch(
+            (: testOb->set_weapons(([ "blade": ({ 3 }) ])) :),
+            "*Bad argument (values) to weapon->set_weapons\n"
+        ),
     }) :));
     expect("weapons are settable and queryable", (: ({
-        assert_equal(testOb->query_weapons(), ([ ])),
+        assert_equal(testOb->query_weapons(), ([])),
 
         testOb->set_weapons(([ "blade": ({ 1 }) ])),
         assert_equal(testOb->query_weapons(), ([ "blade": ({ 1 }), ])),
@@ -25,12 +40,12 @@ void test_weapons () {
     }) :));
 }
 
-private object *__WieldedWeapons = ({ });
-object *query_wielded_weapons () {
+private object *__WieldedWeapons = ({});
+object *query_wielded_weapons() {
     return __WieldedWeapons;
 }
 
-void test_best_weapon () {
+void test_best_weapon() {
     object w1 = new(STD_WEAPON), w2 = new(STD_WEAPON);
 
     w1->set_name("blade weapon");
@@ -62,7 +77,7 @@ void test_best_weapon () {
 
     __WieldedWeapons = ({ w1, w2 });
     expect("best weapon finds best weapon", (: ({
-        testOb->set_weapons(([ ])),
+        testOb->set_weapons(([])),
         assert_equal(testOb->query_best_weapon(this_object()), $(w1)),
     }) :));
 

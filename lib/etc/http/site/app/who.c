@@ -1,5 +1,5 @@
-mapping data (mapping response, string *args) {
-    mapping data = ([ ]);
+mapping data(mapping response, string *args) {
+    mapping data = ([]);
 
     foreach (object character in characters()) {
         data[character->query_name()] = ([

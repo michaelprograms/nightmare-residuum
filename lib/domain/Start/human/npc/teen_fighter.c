@@ -2,7 +2,7 @@
 
 inherit STD_NPC;
 
-void create () {
+void create() {
     ::create();
     set_id(({ "teen", "fighting teen", "human" }));
     set_name("teen fighter");
@@ -21,22 +21,22 @@ void create () {
     add_currency("copper", 1 + random(10));
 }
 
-void handle_receive_living_in_env (object living) {
+void handle_receive_living_in_env(object living) {
     ::handle_receive_living_in_env(living);
     if (!characterp(living)) return;
     if (random(2)) return;
     switch (random(4)) {
-    case 0:
-        handle_command("say Get a load of this wimp!");
-        break;
-    case 1:
-        handle_command("say You think you can take me on?");
-        break;
-    case 2:
-        handle_command("say " + capitalize(subjective(living)) + " thinks " + subjective(living) + " can fight?");
-        break;
-    case 3:
-        handle_command("say Check out this limp noodle.");
-        break;
+        case 0:
+            handle_command("say Get a load of this wimp!");
+            break;
+        case 1:
+            handle_command("say You think you can take me on?");
+            break;
+        case 2:
+            handle_command("say " + capitalize(subjective(living)) + " thinks " + subjective(living) + " can fight?");
+            break;
+        case 3:
+            handle_command("say Check out this limp noodle.");
+            break;
     }
 }

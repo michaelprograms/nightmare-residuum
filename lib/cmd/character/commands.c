@@ -1,15 +1,15 @@
 inherit STD_COMMAND;
 
-void create () {
+void create() {
     ::create();
     set_syntax("commands");
     set_help_text("The commands command is used to view the list of possible actions your character can make.");
 }
 
-void command (string input, mapping flags) {
-    mapping actions = ([ ]);
+void command(string input, mapping flags) {
+    mapping actions = ([]);
     string subtitle;
-    mixed *body = ({ });
+    mixed *body = ({});
     mapping header;
 
     if (flags["r"]) {
@@ -26,7 +26,7 @@ void command (string input, mapping flags) {
     foreach (string path in D_COMMAND->query_paths()) {
         string type = split_path(path)[<1];
         if (!actions[type]) {
-            actions[type] = ({ });
+            actions[type] = ({});
         }
         if (type == "immortal" || type == "character") {
             foreach (string action in D_COMMAND->query_commands(path)) {
@@ -46,7 +46,7 @@ void command (string input, mapping flags) {
         mapping b = ([
             "header": ({ capitalize(type) }),
             "columns": 4,
-            "items": ({ }),
+            "items": ({}),
         ]);
         foreach (string a in sort_array(actions[type], 1)) {
             b["items"] += ({ a });

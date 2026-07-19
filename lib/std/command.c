@@ -3,17 +3,17 @@ nosave private string __Syntax;
 nosave private string __HelpText;
 nosave private string *__HelpSimilar;
 
-string query_name () {
+string query_name() {
     return __Name;
 }
 
-void set_syntax (string str) {
+void set_syntax(string str) {
     if (!sizeof(str)) {
         error("Bad argument 1 to command->set_syntax");
     }
     __Syntax = format_syntax(str);
 }
-string query_syntax () {
+string query_syntax() {
     return __Syntax;
 }
 
@@ -26,7 +26,7 @@ string query_syntax () {
  * @param input the text input being targeted
  * @returns {STD_CHARACTER} the character target
  */
-object determine_immortal_target (object source, string input) {
+object determine_immortal_target(object source, string input) {
     object target;
     if (!(target = find_character(input))) {
         target = present(input, environment(source));
@@ -40,20 +40,20 @@ object determine_immortal_target (object source, string input) {
 
 /* ----- help ----- */
 
-string query_help_text () {
+string query_help_text() {
     return __HelpText;
 }
-void set_help_text (string str) {
+void set_help_text(string str) {
     if (!sizeof(str)) {
         error("Bad argument 1 to command->set_help_text");
     }
 
     __HelpText = str;
 }
-string *query_help_similar () {
+string *query_help_similar() {
     return __HelpSimilar;
 }
-void set_help_similar (string *similar) {
+void set_help_similar(string *similar) {
     if (!arrayp(similar) || !sizeof(similar)) {
         error("Bad argument 1 to command->set_help_similar");
     }
@@ -61,22 +61,28 @@ void set_help_similar (string *similar) {
     __HelpSimilar = similar;
 }
 
-string handle_help (object char) {
+string handle_help(object char) {
     string result;
 
-    result = "\n%^I_CYAN%^BOLD%^" + sprintf("%-12s", "Syntax") + "%^RESET%^\n" + query_syntax() + "\n";
+    result = "\n%^I_CYAN%^BOLD%^" + sprintf(
+        "%-12s",
+        "Syntax"
+    ) + "%^RESET%^\n" + query_syntax() + "\n";
 
     if (sizeof(__HelpText) > 0) {
         result += "\n%^I_CYAN%^BOLD%^Description%^RESET%^\n" + __HelpText + "\n";
     }
     if (sizeof(__HelpSimilar) > 0) {
-        result += "\n%^I_CYAN%^BOLD%^Similar Actions%^RESET%^\n" + implode(__HelpSimilar, ", ") + "\n";
+        result += "\n%^I_CYAN%^BOLD%^Similar Actions%^RESET%^\n" + implode(
+            __HelpSimilar,
+            ", "
+        ) + "\n";
     }
     return result;
 }
 
 /* ----- applies ----- */
 
-void create () {
+void create() {
     __Name = split_path(base_name())[1];
 }

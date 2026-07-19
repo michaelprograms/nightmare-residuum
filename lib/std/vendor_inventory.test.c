@@ -6,14 +6,14 @@
 inherit M_TEST;
 inherit M_CONTAINER;
 
-void test_is_vendor_inventory () {
+void test_is_vendor_inventory() {
     expect("is_item returns true", (: ({
         assert_equal(testOb->is_vendor_inventory(), 1),
         assert_equal(itemp(testOb), 0),
     }) :));
 }
 
-void test_receive () {
+void test_receive() {
     object living, item;
 
     // create test items
@@ -29,7 +29,7 @@ void test_receive () {
     if (item) destruct(item);
 }
 
-void test_clean_up () {
+void test_clean_up() {
     expect("clean up behaves", (: ({
         assert_equal($(testOb)->handle_move(this_object()), 1),
         assert_equal($(testOb)->clean_up(), 0),
@@ -37,18 +37,18 @@ void test_clean_up () {
     }) :));
 }
 
-void test_clear_inventory () {
+void test_clear_inventory() {
     object item = new(STD_ITEM);
 
     expect("clear inventory removes all items", (: ({
-        assert_equal(all_inventory(testOb), ({ })),
+        assert_equal(all_inventory(testOb), ({})),
 
         assert_equal($(item)->handle_move(testOb), 1),
 
         assert_equal(all_inventory(testOb), ({ $(item) })),
 
         testOb->clear_inventory(),
-        assert_equal(all_inventory(testOb), ({ })),
+        assert_equal(all_inventory(testOb), ({})),
     }) :));
 
     if (item) destruct(item);

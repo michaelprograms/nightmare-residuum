@@ -6,7 +6,7 @@ inherit M_TEST;
  * @var {"/secure/daemon/master"} testOb
  */
 
-string *test_order () {
+string *test_order() {
     return ({
         "test_applies",
         "test_startup_applies",
@@ -21,15 +21,18 @@ string *test_order () {
     });
 }
 
-string query_short () {
+string query_short() {
     return file_name() + " query_short";
 }
 
 object userOb;
 mapping mudStats;
-void test_applies () {
+void test_applies() {
     expect("connect returns a valid user object", (: ({
-        assert_regex(file_name(userOb = testOb->connect(0)), STD_USER[0..<3]+"#[0-9]+"),
+        assert_regex(
+            file_name(userOb = testOb->connect(0)),
+            STD_USER[0..<3] + "#[0-9]+"
+        ),
         assert_equal(userOb->query_character(), 0),
         assert_equal(destruct(userOb), 0),
     }) :));
@@ -45,23 +48,35 @@ void test_applies () {
         assert_equal(testOb->privs_file("/etc/welcome"), ACCESS_ALL),
         assert_equal(testOb->privs_file("/daemon/ansi.c"), ACCESS_MUDLIB),
         assert_equal(testOb->privs_file("/std/object.c"), ACCESS_ASSIST),
-        assert_equal(testOb->privs_file("/secure/daemon/access.c"), ACCESS_SECURE),
+        assert_equal(
+            testOb->privs_file("/secure/daemon/access.c"),
+            ACCESS_SECURE
+        ),
         assert_equal(testOb->privs_file("/realm/user/workroom.c"), "user"),
         assert_equal(testOb->privs_file("/domain/Area/room/room1.c"), "Area"),
-        assert_equal(testOb->privs_file("/domain/CAPITALIZED/file.c"), "Capitalized"),
+        assert_equal(
+            testOb->privs_file("/domain/CAPITALIZED/file.c"),
+            "Capitalized"
+        ),
         assert_equal(testOb->privs_file("/"), 0),
     }) :));
 }
 
 string tmpDebugLog;
-void test_startup_applies () {
+void test_startup_applies() {
     expect("epilog returns preload array", (: ({
         assert_equal(typeof(testOb->epilog(0)), "array"),
         assert_equal(sizeof(testOb->epilog(0)) > 0, 1),
         assert_equal(sizeof(testOb->epilog(1)) > 0, 0),
     }) :));
     expect("flag handles unknown flag", (: ({
-        assert_equal(explode(read_file("/log/debug.log"), "\n")[<1] != "master()->flag: received unknown flag", 1),
+        assert_equal(
+            explode(
+                read_file("/log/debug.log"),
+                "\n"
+            )[<1] != "master()->flag: received unknown flag",
+            1
+        ),
 
         testOb->flag("unknown flag"),
         tmpDebugLog = explode(read_file("/log/debug.log"), "\n")[<1],
@@ -73,76 +88,212 @@ void test_startup_applies () {
     }) :));
 }
 
-void test_build_applies () {
+void test_build_applies() {
     expect("get_include_path handles paths", (: ({
         assert_equal(testOb->get_include_path("/test/Test"), ({ ":DEFAULT:" })),
-        assert_equal(testOb->get_include_path("/std/module"), ({ ":DEFAULT:" })),
-        assert_equal(testOb->get_include_path("/secure/module"), ({ ":DEFAULT:" })),
+        assert_equal(
+            testOb->get_include_path("/std/module"),
+            ({ ":DEFAULT:" })
+        ),
+        assert_equal(
+            testOb->get_include_path("/secure/module"),
+            ({ ":DEFAULT:" })
+        ),
 
-        assert_equal(testOb->get_include_path("/domain/Name"), ({ ":DEFAULT:", "/domain/Name/include" })),
-        assert_equal(testOb->get_include_path("/domain/Name/test"), ({ ":DEFAULT:", "/domain/Name/include" })),
-        assert_equal(testOb->get_include_path("/domain/Name/test/dir"), ({ ":DEFAULT:", "/domain/Name/include" })),
+        assert_equal(
+            testOb->get_include_path("/domain/Name"),
+            ({ ":DEFAULT:", "/domain/Name/include" })
+        ),
+        assert_equal(
+            testOb->get_include_path("/domain/Name/test"),
+            ({ ":DEFAULT:", "/domain/Name/include" })
+        ),
+        assert_equal(
+            testOb->get_include_path("/domain/Name/test/dir"),
+            ({ ":DEFAULT:", "/domain/Name/include" })
+        ),
 
-        assert_equal(testOb->get_include_path("/realm/Name"), ({ ":DEFAULT:", "/realm/Name/include" })),
-        assert_equal(testOb->get_include_path("/realm/Name/test"), ({ ":DEFAULT:", "/realm/Name/include" })),
-        assert_equal(testOb->get_include_path("/realm/Name/test/dir"), ({ ":DEFAULT:", "/realm/Name/include" })),
+        assert_equal(
+            testOb->get_include_path("/realm/Name"),
+            ({ ":DEFAULT:", "/realm/Name/include" })
+        ),
+        assert_equal(
+            testOb->get_include_path("/realm/Name/test"),
+            ({ ":DEFAULT:", "/realm/Name/include" })
+        ),
+        assert_equal(
+            testOb->get_include_path("/realm/Name/test/dir"),
+            ({ ":DEFAULT:", "/realm/Name/include" })
+        ),
     }) :));
 
     expect("object_name handles objects", (: ({
         assert_equal(testOb->object_name(UNDEFINED), "<destructed>"),
-        assert_equal(testOb->object_name(this_object()), file_name() + " query_short"),
+        assert_equal(
+            testOb->object_name(this_object()),
+            file_name() + " query_short"
+        ),
     }) :));
 
     expect("compile_object handles paths", (: ({
-        assert_catch((: testOb->compile_object(0) :), "*Bad argument 1 to master->compile_object\n"),
+        assert_catch(
+            (: testOb->compile_object(0) :),
+            "*Bad argument 1 to master->compile_object\n"
+        ),
         // non-virtual paths return 0 (also exercises the leading-slash normalization)
         assert_equal(testOb->compile_object("nonexistent"), 0),
         // matches the virtual room pattern but the source file does not exist
-        assert_equal(testOb->compile_object("/domain/Nowhere/virtual/room/x/"), 0),
+        assert_equal(
+            testOb->compile_object("/domain/Nowhere/virtual/room/x/"),
+            0
+        ),
     }) :));
 }
 
-void test_error_applies () {
+void test_error_applies() {
     expect("trace_line returns a trace", (: ({
-        assert_equal(testOb->trace_line(this_object(), "prog", "file", 123), file_name() + " (prog) at file:123\n"),
-        assert_equal(testOb->trace_line(this_object(), "progfile", "progfile", 123), file_name() + " (progfile) at line 123\n"),
+        assert_equal(
+            testOb->trace_line(this_object(), "prog", "file", 123),
+            file_name() + " (prog) at file:123\n"
+        ),
+        assert_equal(
+            testOb->trace_line(this_object(), "progfile", "progfile", 123),
+            file_name() + " (progfile) at line 123\n"
+        ),
         // color wraps the location in ANSI
-        assert_equal(testOb->trace_line(this_object(), "prog", "file", 123, 1), file_name() + " (prog) at \e[36mfile:123\e[0m\n"),
+        assert_equal(
+            testOb->trace_line(this_object(), "prog", "file", 123, 1),
+            file_name() + " (prog) at \e[36mfile:123\e[0m\n"
+        ),
     }) :));
     expect("standard_trace returns trace lines", (: ({
-        assert_equal(testOb->standard_trace(([ ])), "0Object: <none> (0) at line 0\n\n"),
+        assert_equal(
+            testOb->standard_trace(([])),
+            "0Object: <none> (0) at line 0\n\n"
+        ),
 
-        assert_equal(testOb->standard_trace(([ "error": "Test Error\n", "object": this_object(), "program": "Test Program", "file": "Test File", "line": 123 ])), "Test Error\nObject: "+file_name()+" (Test Program) at Test File:123\n\n"),
+        assert_equal(
+            testOb->standard_trace(([
+                "error": "Test Error\n",
+                "object": this_object(),
+                "program": "Test Program",
+                "file": "Test File",
+                "line": 123
+            ])),
+            "Test Error\nObject: " + file_name() + " (Test Program) at Test File:123\n\n"
+        ),
 
         // numbered frame, no arguments key -> empty arg list
-        assert_equal(testOb->standard_trace(([ "error": "Test Error\n", "object": this_object(), "program": "Test Program", "file": "Test File", "line": 123, "trace": ({ ([ "object": this_object(), "program": "Test Program", "file": "Test File", "line": 123, "function": "Test Function" ]) }) ])), "Test Error\nObject: "+file_name()+" (Test Program) at Test File:123\n\n#0 Test Function() at "+file_name()+" (Test Program) at Test File:123\n"),
+        assert_equal(
+            testOb->standard_trace(([
+                "error": "Test Error\n",
+                "object": this_object(),
+                "program": "Test Program",
+                "file": "Test File",
+                "line": 123,
+                "trace": ({ ([
+                    "object": this_object(),
+                    "program": "Test Program",
+                    "file": "Test File",
+                    "line": 123,
+                    "function": "Test Function"
+                ]) })
+            ])),
+            "Test Error\nObject: " + file_name() + " (Test Program) at Test File:123\n\n#0 Test Function() at " + file_name() + " (Test Program) at Test File:123\n"
+        ),
 
         // frame arguments are rendered via identify()
-        assert_equal(testOb->standard_trace(([ "error": "Test Error\n", "object": this_object(), "program": "Test Program", "file": "Test File", "line": 123, "trace": ({ ([ "object": this_object(), "program": "Test Program", "file": "Test File", "line": 123, "function": "Test Function", "arguments": ({ -5, "hi" }) ]) }) ])), "Test Error\nObject: "+file_name()+" (Test Program) at Test File:123\n\n#0 Test Function(-5, \"hi\") at "+file_name()+" (Test Program) at Test File:123\n"),
+        assert_equal(
+            testOb->standard_trace(([
+                "error": "Test Error\n",
+                "object": this_object(),
+                "program": "Test Program",
+                "file": "Test File",
+                "line": 123,
+                "trace": ({ ([
+                    "object": this_object(),
+                    "program": "Test Program",
+                    "file": "Test File",
+                    "line": 123,
+                    "function": "Test Function",
+                    "arguments": ({ -5, "hi" })
+                ]) })
+            ])),
+            "Test Error\nObject: " + file_name() + " (Test Program) at Test File:123\n\n#0 Test Function(-5, \"hi\") at " + file_name() + " (Test Program) at Test File:123\n"
+        ),
 
         // long arguments are length-capped
-        assert_regex(testOb->standard_trace(([ "error": "E\n", "object": this_object(), "program": "p", "file": "f", "line": 1, "trace": ({ ([ "object": this_object(), "program": "p", "file": "f", "line": 1, "function": "Fn", "arguments": ({ implode(allocate(70, "x"), "") }) ]) }) ])), "Fn\\(\"x+\\.\\.\\.\\) at"),
+        assert_regex(
+            testOb->standard_trace(([
+                "error": "E\n",
+                "object": this_object(),
+                "program": "p",
+                "file": "f",
+                "line": 1,
+                "trace": ({ ([
+                    "object": this_object(),
+                    "program": "p",
+                    "file": "f",
+                    "line": 1,
+                    "function": "Fn",
+                    "arguments": ({ implode(allocate(70, "x"), "") })
+                ]) })
+            ])),
+            "Fn\\(\"x+\\.\\.\\.\\) at"
+        ),
     }) :));
     expect("standard_trace colorizes for interactive display", (: ({
-        assert_equal(testOb->standard_trace(([ "error": "Test Error\n", "object": this_object(), "program": "Test Program", "file": "Test File", "line": 123 ]), 1), "\e[31;1mTest Error\n\e[0mObject: "+file_name()+" (Test Program) at \e[36mTest File:123\e[0m\n\n"),
+        assert_equal(
+            testOb->standard_trace(
+                ([
+                    "error": "Test Error\n",
+                    "object": this_object(),
+                    "program": "Test Program",
+                    "file": "Test File",
+                    "line": 123
+                ]),
+                1
+            ),
+            "\e[31;1mTest Error\n\e[0mObject: " + file_name() + " (Test Program) at \e[36mTest File:123\e[0m\n\n"
+        ),
     }) :));
 }
 
-void test_error_handler () {
+void test_error_handler() {
     // this_character() and this_player() are 0 during tests, so error_handler
     // takes only the log-writing path (no channel broadcast, no tell_object)
     expect("error_handler logs runtime errors", (: ({
-        testOb->error_handler(([ "error": "RuntimeBoom\n", "object": this_object(), "program": "p", "file": "f", "line": 1, "trace": ({ }) ]), 0),
+        testOb->error_handler(
+            ([
+                "error": "RuntimeBoom\n",
+                "object": this_object(),
+                "program": "p",
+                "file": "f",
+                "line": 1,
+                "trace": ({})
+            ]),
+            0
+        ),
         assert_regex(read_file("/log/runtime"), "RuntimeBoom"),
     }) :));
     expect("error_handler logs caught errors", (: ({
         // a short trace does not match the in-test early return, so it is logged
-        testOb->error_handler(([ "error": "CaughtBoom\n", "object": this_object(), "program": "p", "file": "f", "line": 1, "trace": ({ }) ]), 1),
+        testOb->error_handler(
+            ([
+                "error": "CaughtBoom\n",
+                "object": this_object(),
+                "program": "p",
+                "file": "f",
+                "line": 1,
+                "trace": ({})
+            ]),
+            1
+        ),
         assert_regex(read_file("/log/catch"), "CaughtBoom"),
     }) :));
 }
 
-void test_log_error () {
+void test_log_error() {
     expect("log_error routes std/domain compile errors to the syntax log", (: ({
         testOb->log_error("/std/nonexistent.c", "StdBoom\n"),
         testOb->log_error("/domain/Nowhere/nonexistent.c", "DomainBoom\n"),
@@ -155,20 +306,23 @@ void test_log_error () {
     }) :));
     expect("log_error handles warnings without writing an error log", (: ({
         // warnings are colorized and returned, not written to the syntax log
-        assert_equal(testOb->log_error("/std/nonexistent.c", "Warning: harmless\n"), 0),
+        assert_equal(
+            testOb->log_error("/std/nonexistent.c", "Warning: harmless\n"),
+            0
+        ),
     }) :));
 }
 
 // used for retrieve_ed_setup and save_ed_setup
 private int __EdConfig = 0;
-int query_ed_setup () {
+int query_ed_setup() {
     return __EdConfig;
 }
-void set_ed_setup (int config) {
+void set_ed_setup(int config) {
     __EdConfig = config;
 }
 
-void test_ed_applies () {
+void test_ed_applies() {
     expect("make_path_absolute handles . and ..", (: ({
         assert_equal(testOb->make_path_absolute("."), "/"),
         assert_equal(testOb->make_path_absolute("/path"), "/path"),
@@ -182,16 +336,25 @@ void test_ed_applies () {
 }
 
 object basicOb;
-void test_security_applies () {
+void test_security_applies() {
     expect("valid_override handles requests", (: ({
         assert_equal(testOb->valid_override("/secure/sefun/override"), 1),
 
         assert_equal(testOb->valid_override("/std/user/input", "input_to"), 1),
         assert_equal(testOb->valid_override("/std/user/input", "get_char"), 1),
 
-        assert_equal(testOb->valid_override("/std/module/parse", "parse_add_rule"), 1),
-        assert_equal(testOb->valid_override("/std/module/parse", "parse_add_synonym"), 1),
-        assert_equal(testOb->valid_override("/std/module/parse", "parse_init"), 1),
+        assert_equal(
+            testOb->valid_override("/std/module/parse", "parse_add_rule"),
+            1
+        ),
+        assert_equal(
+            testOb->valid_override("/std/module/parse", "parse_add_synonym"),
+            1
+        ),
+        assert_equal(
+            testOb->valid_override("/std/module/parse", "parse_init"),
+            1
+        ),
 
         assert_equal(testOb->valid_override("/insecure"), 0),
         assert_equal(testOb->valid_override("invalid"), 0),
@@ -202,13 +365,19 @@ void test_security_applies () {
     }) :));
 
     expect("valid_read handles calls", (: ({
-        assert_regex(file_name(basicOb = new(STD_OBJECT)), STD_OBJECT[0..<3]+"#[0-9]+"),
+        assert_regex(
+            file_name(basicOb = new(STD_OBJECT)),
+            STD_OBJECT[0..<3] + "#[0-9]+"
+        ),
 
         assert_equal(testOb->valid_read(0, 0, 0), 0),
         assert_equal(testOb->valid_read(0, testOb, "read_file"), 0),
 
         assert_equal(testOb->valid_read("/", testOb, "read_file"), 1),
-        assert_equal(testOb->valid_read("/tmp/void/doesntexist", basicOb, "read_file"), 0),
+        assert_equal(
+            testOb->valid_read("/tmp/void/doesntexist", basicOb, "read_file"),
+            0
+        ),
     }) :));
 
     expect("valid_write handles calls", (: ({
@@ -219,7 +388,10 @@ void test_security_applies () {
     }) :));
 
     expect("valid_socket denies non-privileged callers", (: ({
-        assert_equal(testOb->valid_socket(this_object(), "socket_create", 0), 0),
+        assert_equal(
+            testOb->valid_socket(this_object(), "socket_create", 0),
+            0
+        ),
     }) :));
 
     expect("valid_shadow denies non-mock callers", (: ({
@@ -229,17 +401,23 @@ void test_security_applies () {
     }) :));
 }
 
-void test_parsing_applies () {
+void test_parsing_applies() {
     expect("parse_command_id_list returns list of nouns", (: ({
         assert_equal(implode(testOb->parse_command_id_list(), ","), "thing"),
     }) :));
 
     expect("parse_command_adjectiv_id_list returns list of adjectives", (: ({
-        assert_equal(implode(testOb->parse_command_adjectiv_id_list(), ","), "a,an,the"),
+        assert_equal(
+            implode(testOb->parse_command_adjectiv_id_list(), ","),
+            "a,an,the"
+        ),
     }) :));
 
     expect("parse_command_plural_id_list returns list of plurals", (: ({
-        assert_equal(implode(testOb->parse_command_plural_id_list(), ","), "things,them,everything"),
+        assert_equal(
+            implode(testOb->parse_command_plural_id_list(), ","),
+            "things,them,everything"
+        ),
     }) :));
 
     expect("parse_command_prepos_list returns list of prepositions", (: ({
@@ -255,39 +433,90 @@ void test_parsing_applies () {
     }) :));
 }
 
-void test_parser_error_message () {
+void test_parser_error_message() {
     expect("type 0 generic failures", (: ({
-        assert_equal(testOb->parser_error_message(0, 0, 0, 0), "It seems you can't do that."),
-        assert_equal(testOb->parser_error_message(0, this_object(), 0, 0), "It seems you can't do that with "+file_name()+" query_short."),
-        assert_equal(testOb->parser_error_message(0, 0, this_object(), 0), "It seems you can't do that to "+file_name()+" query_short."),
-        assert_equal(testOb->parser_error_message(0, this_object(), this_object(), 0), "You can't use "+file_name()+" query_short with "+file_name()+" query_short that way."),
+        assert_equal(
+            testOb->parser_error_message(0, 0, 0, 0),
+            "It seems you can't do that."
+        ),
+        assert_equal(
+            testOb->parser_error_message(0, this_object(), 0, 0),
+            "It seems you can't do that with " + file_name() + " query_short."
+        ),
+        assert_equal(
+            testOb->parser_error_message(0, 0, this_object(), 0),
+            "It seems you can't do that to " + file_name() + " query_short."
+        ),
+        assert_equal(
+            testOb->parser_error_message(0, this_object(), this_object(), 0),
+            "You can't use " + file_name() + " query_short with " + file_name() + " query_short that way."
+        ),
     }) :));
 
     expect("ERR_IS_NOT", (: ({
-        assert_equal(testOb->parser_error_message(ERR_IS_NOT, 0, "the sword", 0), "Sword is not here."),
+        assert_equal(
+            testOb->parser_error_message(ERR_IS_NOT, 0, "the sword", 0),
+            "Sword is not here."
+        ),
         // a trailing newline added by the driver is trimmed
-        assert_equal(testOb->parser_error_message(ERR_IS_NOT, 0, "the sword\n", 0), "Sword is not here."),
-        assert_equal(testOb->parser_error_message(ERR_IS_NOT, 0, 0, 1), "It appears you must be more specific."),
+        assert_equal(
+            testOb->parser_error_message(ERR_IS_NOT, 0, "the sword\n", 0),
+            "Sword is not here."
+        ),
+        assert_equal(
+            testOb->parser_error_message(ERR_IS_NOT, 0, 0, 1),
+            "It appears you must be more specific."
+        ),
     }) :));
 
     expect("ERR_NOT_LIVING and ERR_NOT_ACCESSIBLE", (: ({
-        assert_equal(testOb->parser_error_message(ERR_NOT_LIVING, 0, "the guard", 0), "The guard is not alive."),
-        assert_regex(testOb->parser_error_message(ERR_NOT_LIVING, 0, "guard", 1), "None of the .* are alive\\."),
-        assert_equal(testOb->parser_error_message(ERR_NOT_ACCESSIBLE, 0, 0, 0), "You can't get to it."),
-        assert_equal(testOb->parser_error_message(ERR_NOT_ACCESSIBLE, 0, 0, 1), "You can't get to them."),
+        assert_equal(
+            testOb->parser_error_message(ERR_NOT_LIVING, 0, "the guard", 0),
+            "The guard is not alive."
+        ),
+        assert_regex(
+            testOb->parser_error_message(ERR_NOT_LIVING, 0, "guard", 1),
+            "None of the .* are alive\\."
+        ),
+        assert_equal(
+            testOb->parser_error_message(ERR_NOT_ACCESSIBLE, 0, 0, 0),
+            "You can't get to it."
+        ),
+        assert_equal(
+            testOb->parser_error_message(ERR_NOT_ACCESSIBLE, 0, 0, 1),
+            "You can't get to them."
+        ),
     }) :));
 
     expect("ordinal, allocated, bad multiple", (: ({
-        assert_equal(testOb->parser_error_message(ERR_ORDINAL, 0, 3, 0), "There are only 3 of them."),
-        assert_equal(testOb->parser_error_message(ERR_ORDINAL, 0, 1, 0), "There is only one of them."),
-        assert_equal(testOb->parser_error_message(ERR_ALLOCATED, 0, "custom message", 0), "custom message"),
-        assert_equal(testOb->parser_error_message(ERR_BAD_MULTIPLE, 0, 0, 0), "You can't do that to more than one at a time."),
-        assert_equal(testOb->parser_error_message(ERR_THERE_IS_NO, 0, 0, 0), "There is no such thing here."),
+        assert_equal(
+            testOb->parser_error_message(ERR_ORDINAL, 0, 3, 0),
+            "There are only 3 of them."
+        ),
+        assert_equal(
+            testOb->parser_error_message(ERR_ORDINAL, 0, 1, 0),
+            "There is only one of them."
+        ),
+        assert_equal(
+            testOb->parser_error_message(ERR_ALLOCATED, 0, "custom message", 0),
+            "custom message"
+        ),
+        assert_equal(
+            testOb->parser_error_message(ERR_BAD_MULTIPLE, 0, 0, 0),
+            "You can't do that to more than one at a time."
+        ),
+        assert_equal(
+            testOb->parser_error_message(ERR_THERE_IS_NO, 0, 0, 0),
+            "There is no such thing here."
+        ),
     }) :));
 
     // arg is an array for ERR_AMBIG; this regressed previously because the
     // debug_message line concatenated the array directly (string + array)
     expect("ERR_AMBIG with array arg", (: ({
-        assert_regex(testOb->parser_error_message(ERR_AMBIG, 0, ({ this_object() }), 0), "do you mean"),
+        assert_regex(
+            testOb->parser_error_message(ERR_AMBIG, 0, ({ this_object() }), 0),
+            "do you mean"
+        ),
     }) :));
 }

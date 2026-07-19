@@ -1,6 +1,6 @@
 inherit STD_VERB;
 
-void create () {
+void create() {
     verb::create();
     add_rules(({ "", "STR", }));
     set_syntax("open [door|direction]");
@@ -10,17 +10,17 @@ void create () {
 
 /* ----- rule: "" ----- */
 
-mixed can_open () {
+mixed can_open() {
     return "Open what?";
 }
 
 /* ----- rule: "STR" ----- */
 
-mixed can_open_str (mixed args...) {
+mixed can_open_str(mixed args...) {
     return 1;
 }
 
-mixed do_open_str (mixed args...) {
+mixed do_open_str(mixed args...) {
     object po = previous_object();
     /** @type {STD_ROOM} env */
     object env = environment(po);

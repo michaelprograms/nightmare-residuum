@@ -5,19 +5,19 @@ inherit M_MOVE;
  * @var {"/std/module/look"} testOb
  */
 
-string *test_order () {
+string *test_order() {
     return ({ "test_looks", "test_handle_look" });
 }
 
-void test_looks () {
+void test_looks() {
     expect("null looks are initialized", (: ({
-        assert_equal(testOb->query_looks(), ({ })),
+        assert_equal(testOb->query_looks(), ({})),
         store_variable("__Looks", UNDEFINED, testOb),
-        assert_equal(testOb->query_looks(), ({ })),
+        assert_equal(testOb->query_looks(), ({})),
     }) :));
 
     expect("look handles setting, querying, and removing", (: ({
-        assert_equal(testOb->query_looks(), ({ })),
+        assert_equal(testOb->query_looks(), ({})),
         testOb->set_look("test", "Test."),
         assert_equal(testOb->query_looks(), ({ "test" })),
 
@@ -50,18 +50,30 @@ void test_looks () {
         assert_equal(testOb->query_look("rocks"), "Rocks and stones."),
         assert_equal(testOb->query_look("stones"), "Rocks and stones."),
 
-        assert_catch((: testOb->set_look(UNDEFINED, UNDEFINED) :), "*Bad argument 1 to look->set_look\n"),
-        assert_catch((: testOb->set_look("bad", UNDEFINED) :), "*Bad argument 2 to look->set_look\n"),
-        assert_catch((: testOb->set_looks(UNDEFINED) :), "*Bad argument 1 to look->set_looks\n"),
-        assert_catch((: testOb->remove_look(UNDEFINED) :), "*Bad argument 1 to look->remove_look\n"),
+        assert_catch(
+            (: testOb->set_look(UNDEFINED, UNDEFINED) :),
+            "*Bad argument 1 to look->set_look\n"
+        ),
+        assert_catch(
+            (: testOb->set_look("bad", UNDEFINED) :),
+            "*Bad argument 2 to look->set_look\n"
+        ),
+        assert_catch(
+            (: testOb->set_looks(UNDEFINED) :),
+            "*Bad argument 1 to look->set_looks\n"
+        ),
+        assert_catch(
+            (: testOb->remove_look(UNDEFINED) :),
+            "*Bad argument 1 to look->remove_look\n"
+        ),
     }) :));
 }
 
 nosave private int LookCounter = 0;
-void test_handle_look () {
+void test_handle_look() {
     expect("handle_look returns description", (: ({
-        testOb->set_look("test", function (object character) {
-            LookCounter ++;
+        testOb->set_look("test", function(object character) {
+            LookCounter++;
             return "Test description. " + LookCounter;
         }),
         testOb->set_look("quiz", "Quiz description."),
@@ -74,6 +86,9 @@ void test_handle_look () {
 
         assert_equal(testOb->handle_look("invalid"), 0),
 
-        assert_catch((: testOb->handle_look(UNDEFINED) :), "*Bad argument 1 to look->handle_look\n"),
+        assert_catch(
+            (: testOb->handle_look(UNDEFINED) :),
+            "*Bad argument 1 to look->handle_look\n"
+        ),
     }) :));
 }

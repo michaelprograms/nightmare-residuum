@@ -1,6 +1,6 @@
 inherit STD_VERB;
 
-void create () {
+void create() {
     verb::create();
     add_rules(({ "", "OBS to LIV", "WRD WRD to LIV" }));
     set_syntax("give [item] to [target]");
@@ -8,11 +8,11 @@ void create () {
     set_help_similar(({ "drop", "get", "put", }));
 }
 
-mixed can_give () {
+mixed can_give() {
     return "Give what to who?";
 }
 
-mixed can_give_obj_to_liv (mixed args...) {
+mixed can_give_obj_to_liv(mixed args...) {
     return 1;
 }
 /**
@@ -21,15 +21,24 @@ mixed can_give_obj_to_liv (mixed args...) {
  * @param {STD_ITEM} ob the object being given
  * @param {STD_LIVING} liv the receiver of the object
  */
-void do_give_obj_to_liv (object ob, object liv, mixed args...) {
+void do_give_obj_to_liv(object ob, object liv, mixed args...) {
     object tc = this_character();
     message("action", "You give " + ob->query_name() + " to " +
-    liv->query_cap_name() + ".", tc);
-    message("action", tc->query_cap_name() + " gives " + ob->query_name() + " to you.", liv);
-    message("action", tc->query_cap_name() + " gives " + ob->query_name() + " to " + liv->query_cap_name() + ".", environment(tc), ({ tc, liv }));
+        liv->query_cap_name() + ".", tc);
+    message(
+        "action",
+        tc->query_cap_name() + " gives " + ob->query_name() + " to you.",
+        liv
+    );
+    message(
+        "action",
+        tc->query_cap_name() + " gives " + ob->query_name() + " to " + liv->query_cap_name() + ".",
+        environment(tc),
+        ({ tc, liv })
+    );
     ob->handle_move(liv);
 }
-void do_give_obs_to_liv (mixed *info, object liv) {
+void do_give_obs_to_liv(mixed *info, object liv) {
     foreach (mixed item in info) {
         if (stringp(item)) {
             write(item + "\n");
@@ -39,7 +48,7 @@ void do_give_obs_to_liv (mixed *info, object liv) {
     }
 }
 
-mixed can_give_wrd_wrd_to_liv (mixed args...) {
+mixed can_give_wrd_wrd_to_liv(mixed args...) {
     int amount = to_int(args[0]), n;
     string currency = args[1];
 
@@ -54,21 +63,34 @@ mixed can_give_wrd_wrd_to_liv (mixed args...) {
     }
     return 1;
 }
-mixed do_give_wrd_wrd_to_liv (mixed args...) {
+mixed do_give_wrd_wrd_to_liv(mixed args...) {
     int amount = to_int(args[0]);
     string currency = args[1];
     object liv = args[2];
     object env = environment(this_character());
 
     if (!liv) {
-        return "You can't give " + amount + " " + currency + " to that."; // default parser response
+        return "You can't give " + amount + " " + currency + " to that.";  // default parser response
     }
 
     liv->add_currency(currency, amount);
     this_character()->add_currency(currency, amount);
 
-    message("action", "You give " + amount + " " + currency + " to " + liv->query_cap_name() + ".", this_character());
-    message("action", this_character()->query_cap_name() + " gives you " + amount + " " + currency + ".", liv);
-    message("action", this_character()->query_cap_name() + " gives " + liv->query_cap_name() + " some " + currency + ".", env, ({ this_character(), liv }));
+    message(
+        "action",
+        "You give " + amount + " " + currency + " to " + liv->query_cap_name() + ".",
+        this_character()
+    );
+    message(
+        "action",
+        this_character()->query_cap_name() + " gives you " + amount + " " + currency + ".",
+        liv
+    );
+    message(
+        "action",
+        this_character()->query_cap_name() + " gives " + liv->query_cap_name() + " some " + currency + ".",
+        env,
+        ({ this_character(), liv })
+    );
     return 1;
 }

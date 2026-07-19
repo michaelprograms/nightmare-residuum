@@ -52,13 +52,13 @@ nosave private mapping __Resource = ([
     ]),
 ]);
 
-int is_resource () {
+int is_resource() {
     return 1;
 }
 
 /* ----- tiers ----- */
 
-private int calculate_tier (int level) {
+private int calculate_tier(int level) {
     int tier;
 
     tier = (level + 1) / 2;
@@ -71,11 +71,11 @@ private int calculate_tier (int level) {
     return tier;
 }
 
-string *query_types () {
+string *query_types() {
     return keys(__Resource);
 }
 
-string query_material (string type, int level) {
+string query_material(string type, int level) {
     if (!stringp(type) || !mapp(__Resource[type])) {
         return 0;
     }
@@ -84,7 +84,7 @@ string query_material (string type, int level) {
 
 /* ----- description ----- */
 
-private void update_resource_description () {
+private void update_resource_description() {
     string type = query_type();
     string material;
 
@@ -119,7 +119,7 @@ private void update_resource_description () {
     }
 }
 
-void set_type (string type) {
+void set_type(string type) {
     if (!stringp(type) || member_array(type, keys(__Resource)) == -1) {
         error("Bad argument 1 to resource->set_type");
     }
@@ -127,12 +127,12 @@ void set_type (string type) {
     update_resource_description();
 }
 
-void set_level (int l) {
+void set_level(int l) {
     levelable::set_level(l);
     update_resource_description();
 }
 
-void create () {
+void create() {
     ::create();
     set_name("resource");
     set_id(({ "resource", }));

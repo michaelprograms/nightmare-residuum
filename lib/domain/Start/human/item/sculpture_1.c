@@ -2,7 +2,7 @@
 
 inherit STD_ITEM;
 
-string sculpture_long () {
+string sculpture_long() {
     string desc = "";
     object tc = this_character();
 
@@ -45,7 +45,7 @@ string sculpture_long () {
     return desc;
 }
 
-void create () {
+void create() {
     ::create();
     set_id(({ "sculpture", "david", }));
     set_name("sculpture");

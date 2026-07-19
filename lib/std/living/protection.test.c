@@ -4,7 +4,7 @@ inherit M_TEST;
  * @var {"/std/living/protection"} testOb
  */
 
-void test_query_and_set_protection () {
+void test_query_and_set_protection() {
     expect("protection is queryable", (: ({
         // initial values
         assert_equal(testOb->query_protection(), 0),
@@ -16,7 +16,7 @@ void test_query_and_set_protection () {
         assert_equal(testOb->query_protection(), 123),
     }) :));
 }
-void test_add_protection () {
+void test_add_protection() {
     expect("protection is addable", (: ({
         // initial value
         assert_equal(testOb->query_protection(), 0),
@@ -29,7 +29,7 @@ void test_add_protection () {
     }) :));
 }
 
-void test_remove_protection () {
+void test_remove_protection() {
     expect("protection is removable", (: ({
         // initial value
         assert_equal(testOb->add_protection(10, 0), 10),
@@ -43,7 +43,7 @@ void test_remove_protection () {
     }) :));
 }
 
-void test_clear_protection () {
+void test_clear_protection() {
     expect("protection is clearable", (: ({
         assert_equal(testOb->add_protection(10, 1), 10),
         assert_equal(testOb->query_protection(), 10),

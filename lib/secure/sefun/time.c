@@ -8,7 +8,7 @@
  * @param granularity how many details to display (defaults to 2)
  * @returns time in human readable format
  */
-varargs string time_ago (int timestamp, int granularity) {
+varargs string time_ago(int timestamp, int granularity) {
     int Years, Months, Weeks, Days, Hours, Minutes;
     int diff = time() - timestamp;
     int matches;
@@ -32,42 +32,42 @@ varargs string time_ago (int timestamp, int granularity) {
 
     if (Years > 0) {
         msg += Years + " year" + (Years > 1 ? "s" : "");
-        matches ++;
+        matches++;
     }
     if (granularity > 0 && matches >= granularity) {
         return msg + " ago";
     }
     if (Months > 0) {
         msg += (sizeof(msg) > 0 ? " " : "") + Months + " month" + (Months > 1 ? "s" : "");
-        matches ++;
+        matches++;
     }
     if (granularity > 0 && matches >= granularity) {
         return msg + " ago";
     }
     if (Weeks > 0) {
         msg += (sizeof(msg) > 0 ? " " : "") + Weeks + " week" + (Weeks > 1 ? "s" : "");
-        matches ++;
+        matches++;
     }
     if (granularity > 0 && matches >= granularity) {
         return msg + " ago";
     }
     if (Days > 0) {
         msg += (sizeof(msg) > 0 ? " " : "") + Days + " day" + (Days > 1 ? "s" : "");
-        matches ++;
+        matches++;
     }
     if (granularity > 0 && matches >= granularity) {
         return msg + " ago";
     }
     if (Hours > 0) {
         msg += (sizeof(msg) > 0 ? " " : "") + Hours + " hour" + (Hours > 1 ? "s" : "");
-        matches ++;
+        matches++;
     }
     if (granularity > 0 && matches >= granularity) {
         return msg + " ago";
     }
     if (Minutes > 0) {
         msg += (sizeof(msg) > 0 ? " " : "") + Minutes + " minute" + (Minutes > 1 ? "s" : "");
-        matches ++;
+        matches++;
     }
     if (sizeof(msg) > 0) {
         return msg + " ago";
@@ -84,9 +84,9 @@ varargs string time_ago (int timestamp, int granularity) {
  * @param granularity how many details to report
  * @returns time in simple readable format
  */
-varargs string time_from_seconds (int seconds, int granularity) {
+varargs string time_from_seconds(int seconds, int granularity) {
     int s = seconds, w, d, h, m;
-    string *results = ({ });
+    string *results = ({});
     int matches;
 
     if (undefinedp(granularity) || granularity < 1) {
@@ -103,23 +103,23 @@ varargs string time_from_seconds (int seconds, int granularity) {
 
     if (w && matches < granularity) {
         results += ({ w + "w" });
-        matches ++;
+        matches++;
     }
     if (d && matches < granularity) {
         results += ({ d + "d" });
-        matches ++;
+        matches++;
     }
     if (h && matches < granularity) {
         results += ({ h + "h" });
-        matches ++;
+        matches++;
     }
     if (m && matches < granularity) {
         results += ({ m + "m" });
-        matches ++;
+        matches++;
     }
     if (s && matches < granularity || (!w && !d && !h && !m && !s)) {
         results += ({ s + "s" });
-        matches ++;
+        matches++;
     }
     return implode(results, " ");
 }

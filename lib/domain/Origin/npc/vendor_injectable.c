@@ -2,7 +2,7 @@
 
 inherit STD_VENDOR;
 
-void create () {
+void create() {
     ::create();
     set_name("R-1001001");
     set_id(({ "synthetic creature", "synthetic", "creature", "vendor", }));

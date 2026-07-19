@@ -7,7 +7,7 @@
  * @param args the value to identify (variadic; pass zero args for UNDEFINED)
  * @returns a string representation of the value
  */
-string identify (mixed args...) {
+string identify(mixed args...) {
     mixed a;
     int i, l;
     string ret;
@@ -38,7 +38,7 @@ string identify (mixed args...) {
         RealMap = a;
         a = sort_array(keys(RealMap), 1);
         l = sizeof(a);
-        for (i = 0 ; i < l ; i ++) {
+        for (i = 0; i < l; i++) {
             if (i) {
                 ret += ", ";
             }
@@ -52,7 +52,7 @@ string identify (mixed args...) {
     } else if (arrayp(a)) {
         ret = "({ ";
         l = sizeof(a);
-        for (i = 0; i < l; i ++) {
+        for (i = 0; i < l; i++) {
             if (i) {
                 ret += ", ";
             }
@@ -62,9 +62,9 @@ string identify (mixed args...) {
     } else if (bufferp(a)) {
         l = sizeof(a);
         ret = "BUFFER (";
-        for (i = 0; i < l; i ++) {
+        for (i = 0; i < l; i++) {
             ret += "0x" + sprintf("%X", a[i]);
-            if (i < l-1) {
+            if (i < l - 1) {
                 ret += ", ";
             }
         }
@@ -87,7 +87,7 @@ string identify (mixed args...) {
  * @param rawANSI when non-zero, pass %^TAG%^ sequences through without translation
  * @returns the wrapped string with color codes resolved
  */
-varargs string wrap (string str, int width, int indent, int rawANSI) {
+varargs string wrap(string str, int width, int indent, int rawANSI) {
     mapping term;
     object po = previous_object();
 
@@ -101,7 +101,7 @@ varargs string wrap (string str, int width, int indent, int rawANSI) {
     }
 
     if (rawANSI) {
-        term = ([ ]);
+        term = ([]);
     } else if (po && po->query_setting("ansi") == "on") {
         term = D_ANSI->query_ansi_term();
     } else {
@@ -110,7 +110,7 @@ varargs string wrap (string str, int width, int indent, int rawANSI) {
     str = terminal_colour(str, term, width, indent);
     // strip default ANSI reset color tag added by fluffos
     str = replace_string(str, "\e[49;49m\e[0;10m", "");
-    str = str[0..__LARGEST_PRINTABLE_STRING__-1];
+    str = str[0..__LARGEST_PRINTABLE_STRING__ - 1];
     return str;
 }
 
@@ -121,7 +121,7 @@ varargs string wrap (string str, int width, int indent, int rawANSI) {
  * @param name the string to sanitize
  * @returns the sanitized name
  */
-string sanitize_name (string name) {
+string sanitize_name(string name) {
     if (undefinedp(name) || !stringp(name)) {
         error("Bad argument 1 to string->sanitize_name");
     }
@@ -145,9 +145,9 @@ string sanitize_name (string name) {
  * @param rawInput the raw command input string to parse
  * @returns a two-element array: ({ remaining_input, flags_mapping })
  */
-mixed *parse_command_flags (string rawInput) {
+mixed *parse_command_flags(string rawInput) {
     string *args, input = "";
-    mapping flags = ([ ]);
+    mapping flags = ([]);
     int x, y, l;
 
     if (!stringp(rawInput)) {
@@ -156,11 +156,11 @@ mixed *parse_command_flags (string rawInput) {
         args = explode(rawInput, " ");
         l = sizeof(args);
 
-        for (int i = 0; i < l; i ++) {
+        for (int i = 0; i < l; i++) {
             if (regexp(args[i], "^-")) {
                 if ((x = strlen(args[i])) > 1) {
                     if ((y = strsrch(args[i], "=")) > -1) {
-                        flags[args[i][1..y-1]] = args[i][y+1..];
+                        flags[args[i][1..y - 1]] = args[i][y + 1..];
                     } else {
                         flags[args[i][1..]] = 1;
                     }

@@ -15,13 +15,13 @@ nosave private int __Cooldown = 1;
 
 /* ----- ability cooldown ----- */
 
-void set_cooldown (int n) {
+void set_cooldown(int n) {
     if (undefinedp(n) || !intp(n) || n < 0) {
         error("Bad argument 1 to ability->set_cooldown");
     }
     __Cooldown = n;
 }
-int query_cooldown () {
+int query_cooldown() {
     return __Cooldown;
 }
 
@@ -35,7 +35,7 @@ int query_cooldown () {
  * @param limb the targeted limb if any
  * @returns integer amount of heal
  */
-int calculate_heal (object source, object target, string limb) {
+int calculate_heal(object source, object target, string limb) {
     int damage;
     int sourceStat, targetStat;
     int n;
@@ -46,17 +46,17 @@ int calculate_heal (object source, object target, string limb) {
 
     // skill powers
     // @TODO: skills were removed
-    foreach (string key,int value in query_powers()) {
+    foreach (string key, int value in query_powers()) {
         switch (key) {
-        case "theurgy":
-            n = 1;
-            break;
-        case "medicine": default:
-            n = 2;
-            break;
+            case "theurgy":
+                n = 1;
+                break;
+            case "medicine": default:
+                n = 2;
+                break;
         }
         sourceStat = source->query_stat("intelligence");
-        damage += sourceStat * n / 4 + random(sourceStat * (4-n) / 4);
+        damage += sourceStat * n / 4 + random(sourceStat * (4 - n) / 4);
     }
 
     targetStat = target->query_stat("charisma");
@@ -73,7 +73,7 @@ int calculate_heal (object source, object target, string limb) {
  * @param limb the targeted limb if any
  * @returns integer amount of damage
  */
-int calculate_damage (object source, object target, string limb) {
+int calculate_damage(object source, object target, string limb) {
     int dice, damage, tmp;
     int sourceDieSides = query_die_sides(source);
     int targetDieSides = query_die_sides(target);
@@ -126,13 +126,13 @@ int calculate_damage (object source, object target, string limb) {
 
 nosave private int __DifficultyFactor;
 
-void set_difficulty_factor (int factor) {
+void set_difficulty_factor(int factor) {
     if (undefinedp(factor) || !intp(factor)) {
         error("Bad argument 1 to ability->set_difficulty_factor");
     }
     __DifficultyFactor = factor;
 }
-int query_difficulty_factor () {
+int query_difficulty_factor() {
     if (!__DifficultyFactor) {
         __DifficultyFactor = 100;
     }
@@ -141,7 +141,7 @@ int query_difficulty_factor () {
 
 /* ----- utility ----- */
 
-void handle_utility (object source, object target, string limb) {
+void handle_utility(object source, object target, string limb) {
     // @TODO: refactor this to be std/ability inheritable and more automatic
     // override this function for utility abilities
     message("ability utility", "Nothing happens.", source);
@@ -156,7 +156,7 @@ void handle_utility (object source, object target, string limb) {
  * @param {STD_LIVING} target the target of the ability
  * @returns 0 or 1 for success
  */
-int is_ability_successful (object source, object target) {
+int is_ability_successful(object source, object target) {
     int sourceN = 0, targetN = 0;
     int chance = 100;
     int powerTotal = query_total_skill_power();
@@ -164,7 +164,7 @@ int is_ability_successful (object source, object target) {
     // @TODO if (target->query_paralyzed()) return 100;
 
     if (query_type() == "attack") {
-        foreach (string key,int value in query_powers()) {
+        foreach (string key, int value in query_powers()) {
             if (key == "psionic") {
                 sourceN += source->query_stat("intelligence") * value / powerTotal;
                 targetN += target->query_stat("perception") * value / powerTotal;
@@ -182,7 +182,7 @@ int is_ability_successful (object source, object target) {
             chance = sourceN * 100 / targetN;
             chance = max(({ 0, min(({ 100, chance })) }));
         }
-        return (1+random(100)) <= chance;
+        return (1 + random(100)) <= chance;
     } else if (query_type() == "heal" || query_type() == "utility") {
         return 1;
     }
@@ -198,7 +198,7 @@ int is_ability_successful (object source, object target) {
  * @param {STD_LIVING} source the source of the ability use
  * @param {STD_LIVING*} targets the target(s) of the ability use
  */
-void handle_ability_use (object source, object *targets) {
+void handle_ability_use(object source, object *targets) {
     mapping cost;
     int damage;
     /** @type {STD_WEAPON} weapon */
@@ -206,7 +206,7 @@ void handle_ability_use (object source, object *targets) {
     string limb;
 
     if (!query_type()) {
-        error("Ability "+query_name()+" does not have an ability type set");
+        error("Ability " + query_name() + " does not have an ability type set");
     }
 
     if (!verify_ability_requirements(source)) {
@@ -215,12 +215,20 @@ void handle_ability_use (object source, object *targets) {
     }
 
     if (__Cooldown && source->query_cooldown(query_name()) > 0) {
-        message("action", "You are not yet ready to " + query_name() + " again.", source);
+        message(
+            "action",
+            "You are not yet ready to " + query_name() + " again.",
+            source
+        );
         return;
     }
 
     if (!(targets = verify_targets(source, targets))) {
-        message("action", "You have no " + (query_type() == "attack" ? "hostile" : "friendly") + " targets present.", source);
+        message(
+            "action",
+            "You have no " + (query_type() == "attack" ? "hostile" : "friendly") + " targets present.",
+            source
+        );
         return;
     }
 
@@ -230,7 +238,11 @@ void handle_ability_use (object source, object *targets) {
             return;
         }
     } else if (sizeof(__Weapons) && !(weapon = query_best_weapon(source))) {
-        message("action", "You are not wielding the correct type of weapon.", source);
+        message(
+            "action",
+            "You are not wielding the correct type of weapon.",
+            source
+        );
         return;
     }
 
@@ -250,7 +262,7 @@ void handle_ability_use (object source, object *targets) {
         source->set_cooldown(query_name(), __Cooldown);
     }
 
-    targets = targets[0..query_targets()-1];
+    targets = targets[0..query_targets() - 1];
     // send attempt messages
     this_object()->ability_message_attempt(source, targets);
 
@@ -268,7 +280,15 @@ void handle_ability_use (object source, object *targets) {
             if (query_type() == "attack") {
                 // determine damage
                 damage = calculate_damage(source, target, limb);
-                combat_hit_message(source, target, limb, query_name(), damage, 0, 1);
+                combat_hit_message(
+                    source,
+                    target,
+                    limb,
+                    query_name(),
+                    damage,
+                    0,
+                    1
+                );
                 target->handle_damage(damage, limb);
 
                 ability_debug_message(source, target, damage);
@@ -291,26 +311,26 @@ void handle_ability_use (object source, object *targets) {
 
 /* ----- help ----- */
 
-string handle_help (object char) {
+string handle_help(object char) {
     string result, *tmp;
     int n;
 
     result = ::handle_help(char);
     result += "\n%^I_CYAN%^BOLD%^Type%^RESET%^\n" + capitalize(query_type()) + "\n";
     if (sizeof(__Reqs)) {
-        foreach (string key,mapping value in __Reqs) {
+        foreach (string key, mapping value in __Reqs) {
             result += "\n%^I_CYAN%^BOLD%^" + capitalize(key) + " Requirements%^RESET%^\n";
-            tmp = ({ });
+            tmp = ({});
             if (!undefinedp(value["level"]) && intp(value["level"])) {
                 tmp += ({ "Level " + value["level"] });
             }
             if (mapp(value["stats"])) {
-                foreach (string stat,int num in value["stats"]) {
+                foreach (string stat, int num in value["stats"]) {
                     tmp += ({ num + " " + stat });
                 }
             }
             if (mapp(value["skills"])) {
-                foreach (string skill,int num in value["skills"]) {
+                foreach (string skill, int num in value["skills"]) {
                     tmp += ({ num + " " + skill });
                 }
             }
@@ -323,8 +343,11 @@ string handle_help (object char) {
     }
     if (n = sizeof(__Weapons)) {
         result += "\n%^I_CYAN%^BOLD%^Weapons%^RESET%^\n";
-        foreach (string key,int *value in __Weapons) {
-            result += implode(map(value, (: cardinal($1)+" handed "+$(key) :)), ", ") + "\n";
+        foreach (string key, int *value in __Weapons) {
+            result += implode(
+                map(value, (: cardinal($1) + " handed " + $(key) :)),
+                ", "
+            ) + "\n";
         }
     }
     return result;
@@ -332,7 +355,7 @@ string handle_help (object char) {
 
 /* ----- applies ----- */
 
-int direct_verb_liv (mixed args...) {
+int direct_verb_liv(mixed args...) {
     /** @type {STD_LIVING} living */
     object living;
 
@@ -355,18 +378,18 @@ int direct_verb_liv (mixed args...) {
     return 0;
 }
 
-mixed can_verb_lvs (mixed args...) {
+mixed can_verb_lvs(mixed args...) {
     return can_verb_rule(args);
 }
-mixed can_verb_liv (mixed args...) {
+mixed can_verb_liv(mixed args...) {
     return can_verb_rule(args);
 }
-mixed can_verb (mixed args...) {
+mixed can_verb(mixed args...) {
     return can_verb_rule(args);
 }
 
 // Handle multiple target input
-void do_verb_lvs (mixed args...) {
+void do_verb_lvs(mixed args...) {
     object *targets;
 
     if (sizeof(args) < 2) {
@@ -377,12 +400,12 @@ void do_verb_lvs (mixed args...) {
     if (sizeof(targets) && query_targets() == 1) {
         handle_ability_use(previous_object(), ({ targets[0] }));
     } else if (query_targets() > 1) {
-        handle_ability_use(previous_object(), targets[0..query_targets()-1]);
+        handle_ability_use(previous_object(), targets[0..query_targets() - 1]);
     }
 }
 
 // Handle single target input
-void do_verb_liv (mixed args...) {
+void do_verb_liv(mixed args...) {
     object target;
 
     // verify target
@@ -394,17 +417,17 @@ void do_verb_liv (mixed args...) {
 }
 
 // Handle no input
-void do_verb_rule (mixed args...) {
+void do_verb_rule(mixed args...) {
     handle_ability_use(previous_object(), ({ 0 }));
 }
 
-void create () {
+void create() {
     ::create();
-    __Reqs = ([ ]);
+    __Reqs = ([]);
     set_targets(1);
     if (query_name() != "ability") {
         add_rules(({ "", "LIV", "LVS", }));
     }
     set_requirements(REQUIREMENT_BUSY | REQUIREMENT_DISABLE);
-    set_syntax(query_name()+" ([target])");
+    set_syntax(query_name() + " ([target])");
 }

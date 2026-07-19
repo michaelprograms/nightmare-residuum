@@ -25,7 +25,7 @@
 
 // uses Xorshift128+ to generate a seeded permutation array
 // https://stackoverflow.com/questions/34426499/what-is-the-real-definition-of-the-xorshift128-algorithm
-int *noise_generate_permutation (string seed) {
+int *noise_generate_permutation(string seed) {
     int i, j, swap;
     int *p;
     int state0 = 0, state1 = 0, s0, s1;
@@ -37,7 +37,7 @@ int *noise_generate_permutation (string seed) {
     // Xorshift128+ PRNG initialize: turn seed into positive integer in state0
     p = map(explode(seed, ""), (: $1[0] :));
     j = sizeof(p);
-    for (i = 0; i < j; i ++) {
+    for (i = 0; i < j; i++) {
         state0 += p[i];
     }
     state0 &= 0x7fffffff;
@@ -46,7 +46,7 @@ int *noise_generate_permutation (string seed) {
     // set default permutation
     p = PERMUTATION;
 
-    for (i = 0; i <= 255; i ++) {
+    for (i = 0; i <= 255; i++) {
         // Xorshift128+ PRNG generate next integer (canonical uint64 output)
         s1 = state0;
         s0 = state1;
@@ -54,7 +54,7 @@ int *noise_generate_permutation (string seed) {
         s1 ^= s1 << 23;
         s1 ^= (s1 >> 18) & 0x3FFFFFFFFFFF;    // logical right shift: clear top 18 bits (uint64 behavior)
         s1 ^= s0;
-        s1 ^= (s0 >> 5) & 0x07FFFFFFFFFFFFFF; // logical right shift: clear top 5 bits (uint64 behavior)
+        s1 ^= (s0 >> 5) & 0x07FFFFFFFFFFFFFF;  // logical right shift: clear top 5 bits (uint64 behavior)
         state1 = s1;
         j = (state0 + state1) % (255 - i + 1);
         if (j < 0) {
@@ -62,9 +62,9 @@ int *noise_generate_permutation (string seed) {
         }
 
         // swap with random remaining permutation index
-        swap   = p[i  ];
-        p[i  ] = p[i+j];
-        p[i+j] = swap;
+        swap = p[i];
+        p[i] = p[i + j];
+        p[i + j] = swap;
     }
 
     return p;
@@ -72,19 +72,19 @@ int *noise_generate_permutation (string seed) {
 
 // precalculated 4d gradient x,y,z,w arrays: noise_generate_permutation_simplex resolves the (% 32) * 4 + offset indexing once per permutation entry, so noise evaluation can index p["x"/"y"/"z"/"w"] directly
 nosave private int *GRAD4 = ({
-    0,  1,  1,  1,  0,  1,  1,  -1,  0,  1,  -1, 1,  0,  1,  -1, -1,
-    0,  -1, 1,  1,  0,  -1, 1,  -1,  0,  -1, -1, 1,  0,  -1, -1, -1,
-    1,  0,  1,  1,  1,  0,  1,  -1,  1,  0,  -1, 1,  1,  0,  -1, -1,
-    -1, 0,  1,  1,  -1, 0,  1,  -1,  -1, 0,  -1, 1,  -1, 0,  -1, -1,
-    1,  1,  0,  1,  1,  1,  0,  -1,  1,  -1, 0,  1,  1,  -1, 0,  -1,
-    -1, 1,  0,  1,  -1, 1,  0,  -1,  -1, -1, 0,  1,  -1, -1, 0,  -1,
-    1,  1,  1,  0,  1,  1,  -1,  0,  1,  -1, 1,  0,  1,  -1, -1, 0,
-    -1, 1,  1,  0,  -1, 1,  -1,  0,  -1, -1, 1,  0,  -1, -1, -1, 0,
+    0, 1, 1, 1, 0, 1, 1, -1, 0, 1, -1, 1, 0, 1, -1, -1,
+    0, -1, 1, 1, 0, -1, 1, -1, 0, -1, -1, 1, 0, -1, -1, -1,
+    1, 0, 1, 1, 1, 0, 1, -1, 1, 0, -1, 1, 1, 0, -1, -1,
+    -1, 0, 1, 1, -1, 0, 1, -1, -1, 0, -1, 1, -1, 0, -1, -1,
+    1, 1, 0, 1, 1, 1, 0, -1, 1, -1, 0, 1, 1, -1, 0, -1,
+    -1, 1, 0, 1, -1, 1, 0, -1, -1, -1, 0, 1, -1, -1, 0, -1,
+    1, 1, 1, 0, 1, 1, -1, 0, 1, -1, 1, 0, 1, -1, -1, 0,
+    -1, 1, 1, 0, -1, 1, -1, 0, -1, -1, 1, 0, -1, -1, -1, 0,
 });
-mapping noise_generate_permutation_simplex (string seed) {
+mapping noise_generate_permutation_simplex(string seed) {
     int *pArray = noise_generate_permutation(seed);
     return ([
-        "x": map(pArray, (: GRAD4[($1 % 32) * 4    ] :)),
+        "x": map(pArray, (: GRAD4[($1 % 32) * 4] :)),
         "y": map(pArray, (: GRAD4[($1 % 32) * 4 + 1] :)),
         "z": map(pArray, (: GRAD4[($1 % 32) * 4 + 2] :)),
         "w": map(pArray, (: GRAD4[($1 % 32) * 4 + 3] :)),
@@ -95,32 +95,32 @@ mapping noise_generate_permutation_simplex (string seed) {
 /* ----- noise helper functions ----- */
 
 // Fade eases & smooths coordinate values towards integral values
-float noise_perlin_fade (float t) {
+float noise_perlin_fade(float t) {
     return t * t * t * (t * (t * 6.0 - 15.0) + 10.0);
 }
 // Source: http://riven8192.blogspot.com/2010/08/calculate-perlinnoise-twice-as-fast.html
-float noise_perlin_grad (int hash, float x, float y, float z) {
+float noise_perlin_grad(int hash, float x, float y, float z) {
     switch (hash & 0xF) {
-        case 0x0: return  x + y;
+        case 0x0: return x + y;
         case 0x1: return -x + y;
-        case 0x2: return  x - y;
+        case 0x2: return x - y;
         case 0x3: return -x - y;
-        case 0x4: return  x + z;
+        case 0x4: return x + z;
         case 0x5: return -x + z;
-        case 0x6: return  x - z;
+        case 0x6: return x - z;
         case 0x7: return -x - z;
-        case 0x8: return  y + z;
+        case 0x8: return y + z;
         case 0x9: return -y + z;
-        case 0xA: return  y - z;
+        case 0xA: return y - z;
         case 0xB: return -y - z;
-        case 0xC: return  y + x;
+        case 0xC: return y + x;
         case 0xD: return -y + z;
-        case 0xE: return  y - x;
+        case 0xE: return y - x;
         case 0xF: return -y - z;
     }
 }
 // Linear interpolation: blend values a and b based on weight t [0.0-1.0]
-float noise_perlin_lerp (float t, float a, float b) {
+float noise_perlin_lerp(float t, float a, float b) {
     if (0.0 > t) {
         return a;
     } else if (1.0 < t) {
@@ -131,7 +131,7 @@ float noise_perlin_lerp (float t, float a, float b) {
 
 /* ----- noise permutation functions ----- */
 
-float noise_perlin_2d_permutation (float x, float y, int *p) {
+float noise_perlin_2d_permutation(float x, float y, int *p) {
     int X, Y;
     float u, v;
     int A, A1, B, B1;
@@ -150,27 +150,27 @@ float noise_perlin_2d_permutation (float x, float y, int *p) {
 
     // hash coordinates of the 4 corners
     // https://saturncloud.io/blog/producing-2d-perlin-noise-with-numpy-a-comprehensive-guide-for-data-scientists
-    A  = (p[X          ] + Y) & 255;
-    A1 = (A + 1             ) & 255;
-    B  = (p[(X+1) & 255] + Y) & 255;
-    B1 = (B + 1             ) & 255;
+    A = (p[X] + Y) & 255;
+    A1 = (A + 1) & 255;
+    B = (p[(X + 1) & 255] + Y) & 255;
+    B1 = (B + 1) & 255;
 
     // add blended results from the 4 corners
     return noise_perlin_lerp(
         v,
         noise_perlin_lerp(
             u,
-            noise_perlin_grad(p[A ], x  , y  , 0.0),
-            noise_perlin_grad(p[B ], x-1, y  , 0.0)
+            noise_perlin_grad(p[A], x, y, 0.0),
+            noise_perlin_grad(p[B], x - 1, y, 0.0)
         ),
         noise_perlin_lerp(
             u,
-            noise_perlin_grad(p[A1], x  , y-1, 0.0),
-            noise_perlin_grad(p[B1], x-1, y-1, 0.0)
+            noise_perlin_grad(p[A1], x, y - 1, 0.0),
+            noise_perlin_grad(p[B1], x - 1, y - 1, 0.0)
         )
     );
 }
-float noise_perlin_3d_permutation (float x, float y, float z, int *p) {
+float noise_perlin_3d_permutation(float x, float y, float z, int *p) {
     int X, Y, Z;
     float u, v, w;
     int A, AA, AB, B, BA, BB;
@@ -191,12 +191,12 @@ float noise_perlin_3d_permutation (float x, float y, float z, int *p) {
     w = noise_perlin_fade(z);
 
     // hash coordinates of the 8 cube corners
-    A  = (p[X          ] + Y) & 255;
-    AA = (p[A          ] + Z) & 255;
-    AB = (p[(A+1) & 255] + Z) & 255;
-    B  = (p[(X+1) & 255] + Y) & 255;
-    BA = (p[B          ] + Z) & 255;
-    BB = (p[(B+1) & 255] + Z) & 255;
+    A = (p[X] + Y) & 255;
+    AA = (p[A] + Z) & 255;
+    AB = (p[(A + 1) & 255] + Z) & 255;
+    B = (p[(X + 1) & 255] + Y) & 255;
+    BA = (p[B] + Z) & 255;
+    BB = (p[(B + 1) & 255] + Z) & 255;
 
     // add blended results from 8 corners of cube
     return noise_perlin_lerp(
@@ -205,26 +205,26 @@ float noise_perlin_3d_permutation (float x, float y, float z, int *p) {
             v,
             noise_perlin_lerp(
                 u,
-                noise_perlin_grad(p[AA        ], x  , y  , z  ),
-                noise_perlin_grad(p[BA        ], x-1, y  , z  )
+                noise_perlin_grad(p[AA], x, y, z),
+                noise_perlin_grad(p[BA], x - 1, y, z)
             ),
             noise_perlin_lerp(
                 u,
-                noise_perlin_grad(p[AB        ], x  , y-1, z  ),
-                noise_perlin_grad(p[BB        ], x-1, y-1, z  )
+                noise_perlin_grad(p[AB], x, y - 1, z),
+                noise_perlin_grad(p[BB], x - 1, y - 1, z)
             )
         ),
         noise_perlin_lerp(
             v,
             noise_perlin_lerp(
                 u,
-                noise_perlin_grad(p[(AA+1) & 255], x  , y  , z-1),
-                noise_perlin_grad(p[(BA+1) & 255], x-1, y  , z-1)
+                noise_perlin_grad(p[(AA + 1) & 255], x, y, z - 1),
+                noise_perlin_grad(p[(BA + 1) & 255], x - 1, y, z - 1)
             ),
             noise_perlin_lerp(
                 u,
-                noise_perlin_grad(p[(AB+1) & 255], x  , y-1, z-1),
-                noise_perlin_grad(p[(BB+1) & 255], x-1, y-1, z-1)
+                noise_perlin_grad(p[(AB + 1) & 255], x, y - 1, z - 1),
+                noise_perlin_grad(p[(BB + 1) & 255], x - 1, y - 1, z - 1)
             )
         )
     );
@@ -233,7 +233,7 @@ float noise_perlin_3d_permutation (float x, float y, float z, int *p) {
 /* ----- noise_perlin functions ----- */
 
 // generate noise at coordinates x,y using a permutation, octaves, and scale
-float noise_perlin_2d (float x, float y, int *p, int octaves, float scale) {
+float noise_perlin_2d(float x, float y, int *p, int octaves, float scale) {
     float total = 0.0;
     float amplitude = 1.0;
 
@@ -247,8 +247,12 @@ float noise_perlin_2d (float x, float y, int *p, int octaves, float scale) {
         scale = 1.0;
     }
 
-    for (int i = 0; i < octaves; i ++) {
-        total += noise_perlin_2d_permutation(x * scale, y * scale, p) * amplitude;
+    for (int i = 0; i < octaves; i++) {
+        total += noise_perlin_2d_permutation(
+            x * scale,
+            y * scale,
+            p
+        ) * amplitude;
         scale *= 2.0;
         amplitude *= 0.5;
     }
@@ -257,7 +261,14 @@ float noise_perlin_2d (float x, float y, int *p, int octaves, float scale) {
 }
 
 // generate noise at coordinates x,y,z using a permutation, octaves, and scale
-float noise_perlin_3d (float x, float y, float z, int *p, int octaves, float scale) {
+float noise_perlin_3d(
+    float x,
+    float y,
+    float z,
+    int *p,
+    int octaves,
+    float scale
+) {
     float total = 0.0;
     float amplitude = 1.0;
 
@@ -271,8 +282,13 @@ float noise_perlin_3d (float x, float y, float z, int *p, int octaves, float sca
         scale = 1.0;
     }
 
-    for (int i = 0; i < octaves; i ++) {
-        total += noise_perlin_3d_permutation(x * scale, y * scale, z * scale, p) * amplitude;
+    for (int i = 0; i < octaves; i++) {
+        total += noise_perlin_3d_permutation(
+            x * scale,
+            y * scale,
+            z * scale,
+            p
+        ) * amplitude;
         scale *= 2.0;
         amplitude *= 0.5;
     }
@@ -283,17 +299,23 @@ float noise_perlin_3d (float x, float y, float z, int *p, int octaves, float sca
 /* ----- simplex permutation functions ----- */
 
 // https://github.com/jwagner/simplex-noise.js
-float noise_simplex_4d_permutation (float x, float y, float z, float w, mapping p) {
-    float n0, n1, n2, n3, n4; // Noise contributions from the five corners
+float noise_simplex_4d_permutation(
+    float x,
+    float y,
+    float z,
+    float w,
+    mapping p
+) {
+    float n0, n1, n2, n3, n4;  // Noise contributions from the five corners
 
     // Skew the (x,y,z,w) space to determine which cell of 24 simplices we're in
-    float s = (x + y + z + w) * 0.309017; // Factor for 4D skewing: (sqrt(5.0)-1)/4
+    float s = (x + y + z + w) * 0.309017;  // Factor for 4D skewing: (sqrt(5.0)-1)/4
     int i = to_int(floor(x + s));
     int j = to_int(floor(y + s));
     int k = to_int(floor(z + s));
     int l = to_int(floor(w + s));
-    float t = (i + j + k + l) * 0.138197; // Factor for 4D unskewing: (5-sqrt(5.0))/20
-    float x0 = x - (i - t); // The x,y,z,w distances from the cell origin
+    float t = (i + j + k + l) * 0.138197;  // Factor for 4D unskewing: (5-sqrt(5.0))/20
+    float x0 = x - (i - t);  // The x,y,z,w distances from the cell origin
     float y0 = y - (j - t);
     float z0 = z - (k - t);
     float w0 = w - (l - t);
@@ -315,34 +337,34 @@ float noise_simplex_4d_permutation (float x, float y, float z, float w, mapping 
     int gi0, gi1, gi2, gi3, gi4;
 
     if (x0 > y0) {
-        rankx ++;
+        rankx++;
     } else {
-        ranky ++;
+        ranky++;
     }
     if (x0 > z0) {
-        rankx ++;
+        rankx++;
     } else {
-        rankz ++;
+        rankz++;
     }
     if (x0 > w0) {
-        rankx ++;
+        rankx++;
     } else {
-        rankw ++;
+        rankw++;
     }
     if (y0 > z0) {
-        ranky ++;
+        ranky++;
     } else {
-        rankz ++;
+        rankz++;
     }
     if (y0 > w0) {
-        ranky ++;
+        ranky++;
     } else {
-        rankw ++;
+        rankw++;
     }
     if (z0 > w0) {
-        rankz ++;
+        rankz++;
     } else {
-        rankw ++;
+        rankw++;
     }
 
     // simplex[c] is a 4-vector with the numbers 0, 1, 2 and 3 in some order.
@@ -369,19 +391,19 @@ float noise_simplex_4d_permutation (float x, float y, float z, float w, mapping 
     l3 = rankw >= 1 ? 1 : 0;
 
     // The fifth corner has all coordinate offsets = 1, so no need to compute that.
-    x1 = x0 - i1 + 0.138197; // Offsets for second corner in (x,y,z,w) coords
+    x1 = x0 - i1 + 0.138197;  // Offsets for second corner in (x,y,z,w) coords
     y1 = y0 - j1 + 0.138197;
     z1 = z0 - k1 + 0.138197;
     w1 = w0 - l1 + 0.138197;
-    x2 = x0 - i2 + 2.0 * 0.138197; // Offsets for third corner in (x,y,z,w) coords
+    x2 = x0 - i2 + 2.0 * 0.138197;  // Offsets for third corner in (x,y,z,w) coords
     y2 = y0 - j2 + 2.0 * 0.138197;
     z2 = z0 - k2 + 2.0 * 0.138197;
     w2 = w0 - l2 + 2.0 * 0.138197;
-    x3 = x0 - i3 + 3.0 * 0.138197; // Offsets for fourth corner in (x,y,z,w) coords
+    x3 = x0 - i3 + 3.0 * 0.138197;  // Offsets for fourth corner in (x,y,z,w) coords
     y3 = y0 - j3 + 3.0 * 0.138197;
     z3 = z0 - k3 + 3.0 * 0.138197;
     w3 = w0 - l3 + 3.0 * 0.138197;
-    x4 = x0 - 1.0 + 4.0 * 0.138197; // Offsets for last corner in (x,y,z,w) coords
+    x4 = x0 - 1.0 + 4.0 * 0.138197;  // Offsets for last corner in (x,y,z,w) coords
     y4 = y0 - 1.0 + 4.0 * 0.138197;
     z4 = z0 - 1.0 + 4.0 * 0.138197;
     w4 = w0 - 1.0 + 4.0 * 0.138197;
@@ -440,7 +462,15 @@ float noise_simplex_4d_permutation (float x, float y, float z, float w, mapping 
 
 /* ----- noise_simplex functions ----- */
 
-float noise_simplex_4d (float x, float y, float z, float w, mapping p, int octaves, float scale) {
+float noise_simplex_4d(
+    float x,
+    float y,
+    float z,
+    float w,
+    mapping p,
+    int octaves,
+    float scale
+) {
     float total = 0.0;
     float t = 0.0;
     int f = 1;
@@ -455,8 +485,14 @@ float noise_simplex_4d (float x, float y, float z, float w, mapping p, int octav
         scale = 1.0;
     }
 
-    for (int i = 0; i < octaves; i ++) {
-        total += noise_simplex_4d_permutation(x * scale * f, y * scale * f, z * scale * f, w * scale * f, p) / f;
+    for (int i = 0; i < octaves; i++) {
+        total += noise_simplex_4d_permutation(
+            x * scale * f,
+            y * scale * f,
+            z * scale * f,
+            w * scale * f,
+            p
+        ) / f;
         t += 1.0 / f;
         f *= 2;
     }
@@ -467,7 +503,7 @@ float noise_simplex_4d (float x, float y, float z, float w, mapping p, int octav
 /* ----- gradient functions ----- */
 
 // calculate the gradient of x,y on plane x1,y1 to x2,y2
-float gradient_2d (int x1, int y1, int x2, int y2, float x, float y) {
+float gradient_2d(int x1, int y1, int x2, int y2, float x, float y) {
     float dX = to_float(x2 - x1);
     float dY = to_float(y2 - y1);
     float denominator = dX * dX + dY * dY;

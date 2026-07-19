@@ -2,11 +2,11 @@
 
 inherit STD_ROOM;
 
-int is_virtual_room () { return 1; }
+int is_virtual_room() { return 1; }
 
 /* ----- description ----- */
 
-void update_descriptions () {
+void update_descriptions() {
     string type = query_property("type");
 
     switch (type) {
@@ -30,7 +30,7 @@ void update_descriptions () {
  * @param {STD_RESOURCE} node the salvage node to configure
  * @param {int} level the level to set on the node
  */
-private void setup_salvage (object node, int level) {
+private void setup_salvage(object node, int level) {
     node->set_type("salvage");
     node->set_level(level);
 }
@@ -39,7 +39,7 @@ private void setup_salvage (object node, int level) {
  * @param {STD_NPC} npc the npc to configure
  * @param {int} level the level to set on the npc and its hide
  */
-private void setup_npc (object npc, int level) {
+private void setup_npc(object npc, int level) {
     /** @type {STD_RESOURCE} */
     object hide = new(STD_RESOURCE);
 
@@ -50,7 +50,7 @@ private void setup_npc (object npc, int level) {
     hide->handle_move(npc);
 }
 
-void update_contents () {
+void update_contents() {
     int level = query_property("level");
     string npc;
     mapping data;
@@ -62,7 +62,13 @@ void update_contents () {
         ]),
     ]);
     if (sizeof(filter(query_living_contents(), (: npcp :))) < 1) {
-        npc = element_of(({ "feral_cat", "wild_dog", "rabid_rat", "large_ant", "plasma_snail", }));
+        npc = element_of(({
+            "feral_cat",
+            "wild_dog",
+            "rabid_rat",
+            "large_ant",
+            "plasma_snail",
+        }));
         data[PLANET_NPC + npc + ".c"] = ([
             "number": 1,
             "setup": (: setup_npc($1, $(level)) :),
@@ -74,14 +80,14 @@ void update_contents () {
 
 /* ----- applies ----- */
 
-void create () {
+void create() {
     ::create();
     set_properties(([ "indoors": 1, ]));
     set_short("the interior of a structure");
     set_long("The interior of a structure.");
 }
 
-void reset () {
+void reset() {
     if (query_property("type")) {
         update_contents();
     }

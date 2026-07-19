@@ -1,12 +1,12 @@
 inherit STD_COMMAND;
 
-void create () {
+void create() {
     ::create();
     set_syntax("memory");
     set_help_text("The memory command is used to view the total memory used by the driver.");
 }
 
-void command (string input, mapping flags) {
+void command(string input, mapping flags) {
     border(([
         "title": "MEMORY",
         "subtitle": mud_name(),

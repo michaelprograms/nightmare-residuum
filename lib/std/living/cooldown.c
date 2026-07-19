@@ -1,17 +1,17 @@
 // @this_object /std/living.c
 
-mapping __Cooldown = ([ ]);
+mapping __Cooldown = ([]);
 
-private void initialize_cooldowns () {
+private void initialize_cooldowns() {
     if (!mapp(__Cooldown)) {
-        __Cooldown = ([ ]);
+        __Cooldown = ([]);
     }
 }
 
 /*
     type can be "heart_beat" or "timed"
 */
-varargs void set_cooldown (string name, mixed value, string type) {
+varargs void set_cooldown(string name, mixed value, string type) {
     initialize_cooldowns();
     if (!stringp(name)) {
         error("Bad argument 1 to cooldown->set_cooldown");
@@ -37,26 +37,26 @@ varargs void set_cooldown (string name, mixed value, string type) {
         }
     }
 }
-int query_cooldown (string name) {
+int query_cooldown(string name) {
     initialize_cooldowns();
     return __Cooldown[name] && __Cooldown[name]["value"] || 0;
 }
-mapping query_cooldowns () {
+mapping query_cooldowns() {
     initialize_cooldowns();
     return __Cooldown;
 }
 
-void cooldown_timed_expire (string name) {
+void cooldown_timed_expire(string name) {
     map_delete(__Cooldown, name);
 }
 
 /* ----- applies ----- */
 
-void heart_beat () {
-    foreach (string name, mapping data in __Cooldown || ([ ])) {
+void heart_beat() {
+    foreach (string name, mapping data in __Cooldown || ([])) {
         if (data["type"] == "heart_beat") {
             if (data["value"] > 0) {
-                data["value"] --;
+                data["value"]--;
                 if (data["value"] == 0) {
                     map_delete(__Cooldown, name);
                 }

@@ -5,9 +5,9 @@ inherit M_TEST;
  */
 
 nosave private string __MockClass;
-string query_class () { return __MockClass; }
+string query_class() { return __MockClass; }
 
-void test_die_sides () {
+void test_die_sides() {
     expect("handles die sides", (: ({
         // default
         assert_equal(testOb->query_die_sides(this_object()), 6),

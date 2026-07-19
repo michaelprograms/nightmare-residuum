@@ -1,6 +1,6 @@
 inherit STD_VERB;
 
-void create () {
+void create() {
     verb::create();
     add_rules(({ "", "STR", }));
     set_syntax("smell ([scent])");
@@ -10,11 +10,11 @@ void create () {
 
 /* ----- rule: "" ----- */
 
-mixed can_smell () {
+mixed can_smell() {
     if (!environment(previous_object())) return "There is nothing.";
     else return 1;
 }
-mixed do_smell () {
+mixed do_smell() {
     object po = previous_object();
     /** @type {STD_ROOM} env */
     object env = environment(po);
@@ -29,10 +29,10 @@ mixed do_smell () {
 
 /* ----- rule: "STR" and "at STR" ----- */
 
-mixed can_smell_str (string str, string verb) {
+mixed can_smell_str(string str, string verb) {
     return 1;
 }
-void do_smell_str (mixed args...) {
+void do_smell_str(mixed args...) {
     object po = previous_object();
     /** @type {STD_ROOM} env */
     object env = environment(po);

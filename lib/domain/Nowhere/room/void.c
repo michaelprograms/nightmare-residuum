@@ -1,6 +1,6 @@
 inherit STD_ROOM;
 
-void create () {
+void create() {
     ::create();
     set_short("the void");
     set_long("A vast expanse of nothing.");

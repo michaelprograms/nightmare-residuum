@@ -1,6 +1,6 @@
 inherit STD_COMMAND;
 
-void create () {
+void create() {
     ::create();
     set_syntax("settings ([setting] [value])|([player])");
     set_help_text("The settings command is used to view or change your account's settings. Immortals may view another player's settings by providing a player name.");
@@ -12,9 +12,9 @@ void create () {
  * @param {STD_USER} user the user whose settings to display
  * @param {STD_CHARACTER} target the character for the subtitle
  */
-private void display_settings (object user, object target) {
-    mixed *settings = ({ });
-    string *list = ({ });
+private void display_settings(object user, object target) {
+    mixed *settings = ({});
+    string *list = ({});
 
     foreach (string key, mixed value in user->query_settings()) {
         settings += ({ ({ key, value }) });
@@ -41,7 +41,7 @@ private void display_settings (object user, object target) {
  * @param key the setting key
  * @param value the setting value
  */
-private void apply_setting (object user, string key, string value) {
+private void apply_setting(object user, string key, string value) {
     mixed converted = value;
 
     if (member_array(key, keys(user->query_settings())) == -1) {
@@ -53,29 +53,45 @@ private void apply_setting (object user, string key, string value) {
         case "width": case "lines":
             converted = to_int(value);
             if (converted < 1) {
-                message("action", "Setting '" + key + "' must be a positive number.", user);
+                message(
+                    "action",
+                    "Setting '" + key + "' must be a positive number.",
+                    user
+                );
                 return;
             }
             break;
         case "autojoin":
             if (member_array(value, user->query_character_names()) == -1) {
-                message("action", "You must provide a valid character name for autojoin.", user);
+                message(
+                    "action",
+                    "You must provide a valid character name for autojoin.",
+                    user
+                );
                 return;
             }
             break;
         case "ansi": case "gmcp": case "screenreader":
             if (member_array(value, ({ "on", "off" })) == -1) {
-                message("action", "Setting '" + key + "' must be 'on' or 'off'.", user);
+                message(
+                    "action",
+                    "Setting '" + key + "' must be 'on' or 'off'.",
+                    user
+                );
                 return;
             }
             break;
     }
 
     user->set_setting(key, converted);
-    message("action", "Setting %^BOLD%^" + key + "%^BOLD_OFF%^ to %^BOLD%^" + converted + "%^BOLD_OFF%^.", user);
+    message(
+        "action",
+        "Setting %^BOLD%^" + key + "%^BOLD_OFF%^ to %^BOLD%^" + converted + "%^BOLD_OFF%^.",
+        user
+    );
 }
 
-void command (string input, mapping flags) {
+void command(string input, mapping flags) {
     object tc = this_character(), user;
     string *split;
 

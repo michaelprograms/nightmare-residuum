@@ -2,16 +2,16 @@ inherit STD_COMMAND;
 
 #define ABILITY_DIR "/cmd/ability"
 
-void create () {
+void create() {
     ::create();
     set_syntax("abilities (mine|npc|[class])");
     set_help_text("The abilities command is used to view the list of abilities, with filters for abilities your character can use, the generic NPC ability list, or the list of abilities for a class.");
 }
 
-void command (string input, mapping flags) {
+void command(string input, mapping flags) {
     object po = previous_object();
-    mixed *body = ({ });
-    string *abilities = ({ });
+    mixed *body = ({});
+    string *abilities = ({});
     mapping b;
     string subtitle;
     string mode;
@@ -21,7 +21,18 @@ void command (string input, mapping flags) {
         if (input == "mine") {
             subtitle = "mine";
             mode = "mine";
-        } else if (member_array(input, ({ "warrior", "mystic", "scoundrel", "ranger", "psionist", "paladin", "NPC" })) > -1) {
+        } else if (member_array(
+            input,
+            ({
+                "warrior",
+                "mystic",
+                "scoundrel",
+                "ranger",
+                "psionist",
+                "paladin",
+                "NPC"
+            })
+        ) > -1) {
             subtitle = input;
             mode = "class";
         }
@@ -47,7 +58,7 @@ void command (string input, mapping flags) {
 
     b = ([
         "columns": 4,
-        "items": ({ }),
+        "items": ({}),
     ]);
     foreach (string a in sort_array(abilities, 1)) {
         b["items"] += ({ a });

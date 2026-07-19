@@ -1,16 +1,16 @@
-mapping __Properties = ([ ]);
+mapping __Properties = ([]);
 
-private void initialize_properties () {
+private void initialize_properties() {
     if (!mapp(__Properties)) {
-        __Properties = ([ ]);
+        __Properties = ([]);
     }
 }
 
-mapping query_properties () {
+mapping query_properties() {
     initialize_properties();
     return __Properties;
 }
-mixed query_property (string key) {
+mixed query_property(string key) {
     if (!stringp(key) || key == "") {
         error("Bad argument 1 to property->query_property");
     }
@@ -18,7 +18,7 @@ mixed query_property (string key) {
     return __Properties[key];
 }
 
-mixed set_property (string key, mixed value) {
+mixed set_property(string key, mixed value) {
     if (!stringp(key) || key == "") {
         error("Bad argument 1 to property->set_property");
     }
@@ -31,7 +31,7 @@ mixed set_property (string key, mixed value) {
     initialize_properties();
     return __Properties[key] = value;
 }
-mixed add_property (string key, mixed value) {
+mixed add_property(string key, mixed value) {
     if (!stringp(key) || key == "") {
         error("Bad argument 1 to property->add_property");
     }
@@ -49,7 +49,7 @@ mixed add_property (string key, mixed value) {
     }
     return __Properties[key];
 }
-mapping set_properties (mapping properties) {
+mapping set_properties(mapping properties) {
     if (!mapp(properties) || !sizeof(properties)) {
         error("Bad argument 1 to property->set_properties");
     }
@@ -58,7 +58,7 @@ mapping set_properties (mapping properties) {
     return __Properties;
 }
 
-int remove_property (string key) {
+int remove_property(string key) {
     if (!stringp(key) || key == "") {
         error("Bad argument 1 to property->remove_property");
     }
@@ -68,6 +68,6 @@ int remove_property (string key) {
     }
     return !__Properties[key];
 }
-mapping remove_properties () {
-    return __Properties = ([ ]);
+mapping remove_properties() {
+    return __Properties = ([]);
 }

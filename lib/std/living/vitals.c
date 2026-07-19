@@ -9,65 +9,65 @@ mapping __Vitals = ([
     "mpMax": 0,
 ]);
 
-int query_hp () {
+int query_hp() {
     return __Vitals["hp"];
 }
-int query_sp () {
+int query_sp() {
     return __Vitals["sp"];
 }
-int query_mp () {
+int query_mp() {
     return __Vitals["mp"];
 }
 
-int query_max_hp () {
+int query_max_hp() {
     return __Vitals["hpMax"];
 }
-int query_max_sp () {
+int query_max_sp() {
     return __Vitals["spMax"];
 }
-int query_max_mp () {
+int query_max_mp() {
     return __Vitals["mpMax"];
 }
 
-void add_hp (int n) {
+void add_hp(int n) {
     __Vitals["hp"] += n;
     if (__Vitals["hp"] > __Vitals["hpMax"]) {
         __Vitals["hp"] = __Vitals["hpMax"];
     }
 }
-void add_sp (int n) {
+void add_sp(int n) {
     __Vitals["sp"] += n;
     if (__Vitals["sp"] > __Vitals["spMax"]) {
         __Vitals["sp"] = __Vitals["spMax"];
     }
 }
-void add_mp (int n) {
+void add_mp(int n) {
     __Vitals["mp"] += n;
     if (__Vitals["mp"] > __Vitals["mpMax"]) {
         __Vitals["mp"] = __Vitals["mpMax"];
     }
 }
 
-void set_hp (int n) {
+void set_hp(int n) {
     __Vitals["hp"] = n;
     if (__Vitals["hp"] > __Vitals["hpMax"]) {
         __Vitals["hp"] = __Vitals["hpMax"];
     }
 }
-void set_sp (int n) {
+void set_sp(int n) {
     __Vitals["sp"] = n;
     if (__Vitals["sp"] > __Vitals["spMax"]) {
         __Vitals["sp"] = __Vitals["spMax"];
     }
 }
-void set_mp (int n) {
+void set_mp(int n) {
     __Vitals["mp"] = n;
     if (__Vitals["mp"] > __Vitals["mpMax"]) {
         __Vitals["mp"] = __Vitals["mpMax"];
     }
 }
 
-varargs void update_vitals (int heal) {
+varargs void update_vitals(int heal) {
     string c = this_object()->query_class();
     string s = this_object()->query_species();
     int level = this_object()->query_level() || 1;
@@ -80,8 +80,8 @@ varargs void update_vitals (int heal) {
     int adjMP = D_CLASS->query_adjust_mp(c) + D_SPECIES->query_adjust_mp(s);
 
     int maxHP = (1 + level + statHP) * (10 + adjHP);
-    int maxSP = (1 + level + statSP) * ( 5 + adjSP);
-    int maxMP = (1 + level + statMP) * ( 5 + adjMP);
+    int maxSP = (1 + level + statSP) * (5 + adjSP);
+    int maxMP = (1 + level + statMP) * (5 + adjMP);
 
     if (!__Vitals) {
         __Vitals = ([

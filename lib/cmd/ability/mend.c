@@ -2,7 +2,7 @@
 
 inherit STD_ABILITY;
 
-void create () {
+void create() {
     ::create();
     set_type("heal");
     set_ability_requirements(([

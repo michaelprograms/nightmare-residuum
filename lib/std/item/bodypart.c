@@ -3,12 +3,12 @@ inherit M_DUSTABLE;
 
 nosave private string __Owner, __Limb;
 
-void create () {
+void create() {
     ::create();
     set_id(({ "bodypart", "body part", "limb", }));
 }
 
-void handle_received (object env) {
+void handle_received(object env) {
     dustable::handle_received(env);
 }
 
@@ -18,7 +18,7 @@ void handle_received (object env) {
  * @param {STD_LIVING} owner whose bodypart this is
  * @param limb the name of the limb
  */
-void setup_bodypart (object owner, string limb) {
+void setup_bodypart(object owner, string limb) {
     string possOwner;
     __Owner = owner->query_cap_name();
     __Limb = limb;

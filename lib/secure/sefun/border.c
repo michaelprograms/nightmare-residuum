@@ -1,16 +1,16 @@
 #include <config.h>
 
 nosave private mapping __ClassColors = ([
-    "warrior": ({ ({ 220, 20, 60 }), ({ 192, 192, 192 }) }), // Crimson
-    "mystic": ({ ({ 255, 215, 0 }), ({ 192, 192, 192 }) }), // Gold
-    "scoundrel": ({ ({ 255, 99, 71 }), ({ 192, 192, 192 }) }), // Tomato
-    "ranger": ({ ({ 34, 139, 34 }), ({ 192, 192, 192 }) }), // Forest Green
-    "psionist": ({ ({ 65, 105, 225 }), ({ 192, 192, 192 }) }), // Royal Blue
-    "paladin": ({ ({ 148, 0, 211 }), ({ 192, 192, 192 }) }), // Dark Violet
+    "warrior": ({ ({ 220, 20, 60 }), ({ 192, 192, 192 }) }),  // Crimson
+    "mystic": ({ ({ 255, 215, 0 }), ({ 192, 192, 192 }) }),  // Gold
+    "scoundrel": ({ ({ 255, 99, 71 }), ({ 192, 192, 192 }) }),  // Tomato
+    "ranger": ({ ({ 34, 139, 34 }), ({ 192, 192, 192 }) }),  // Forest Green
+    "psionist": ({ ({ 65, 105, 225 }), ({ 192, 192, 192 }) }),  // Royal Blue
+    "paladin": ({ ({ 148, 0, 211 }), ({ 192, 192, 192 }) }),  // Dark Violet
     "default": ({ ({ 191, 63, 191 }), ({ 63, 191, 191 }) }),
 ]);
 
-mixed *query_character_border_colors () {
+mixed *query_character_border_colors() {
     object po = SEFUN->this_character();
     string c;
 
@@ -95,26 +95,31 @@ nosave private mapping __BorderCharset = ([
         "+": " ",
     ]),
 ]);
-mapping query_border_charset () {
+mapping query_border_charset() {
     object user;
     string type = "utf-8";
     if (SEFUN->query_account_setting("screenreader") == "on") {
         type = "screenreader";
     } else if (user = SEFUN->this_user()) {
         switch (user->query_terminal("type")) {
-        case "cmud": case "zmud":
-            type = "US-ASCII";
-            break;
-        default:
-            type = query_encoding();
-            break;
+            case "cmud": case "zmud":
+                type = "US-ASCII";
+                break;
+            default:
+                type = query_encoding();
+                break;
         }
     }
     return copy(__BorderCharset[type]);
 }
 
-string *format_border_item (mapping item, string ansi, string left, string right) {
-    string *lines = ({ }), line = "", format;
+string *format_border_item(
+    mapping item,
+    string ansi,
+    string left,
+    string right
+) {
+    string *lines = ({}), line = "", format;
     int columnWidth;
 
     item = copy(item);
@@ -127,58 +132,93 @@ string *format_border_item (mapping item, string ansi, string left, string right
     if (arrayp(item["header"])) {
         columnWidth = arrayp(item["columns"]) ? sizeof(item["columns"]) : item["columns"];
         if (sizeof(item["header"]) > columnWidth) {
-            item["header"] = item["header"][0..columnWidth-1];
+            item["header"] = item["header"][0..columnWidth - 1];
         }
         if (ansi) {
-            item["header"] = map(item["header"], (: "%^RESET%^BOLD%^UNDERLINE%^"+$1+"%^RESET%^" :));
+            item["header"] = map(
+                item["header"],
+                (: "%^RESET%^BOLD%^UNDERLINE%^" + $1 + "%^RESET%^" :)
+            );
         }
-        line = left + "  " + SEFUN->format_page(item["header"], item["columns"], 4, (item["align"] == "center"), ansi) + "  " + right;
+        line = left + "  " + SEFUN->format_page(
+            item["header"],
+            item["columns"],
+            4,
+            (item["align"] == "center"),
+            ansi
+        ) + "  " + right;
         lines += ({ line });
     }
     // items
-    format = sizeof(item["items"]) > 0 ? SEFUN->format_page(item["items"], item["columns"], 4, (item["align"] == "center"), ansi) : "";
-    foreach (string l in explode(format, "\n") - ({""})) {
+    format = sizeof(item["items"]) > 0 ? SEFUN->format_page(
+        item["items"],
+        item["columns"],
+        4,
+        (item["align"] == "center"),
+        ansi
+    ) : "";
+    foreach (string l in explode(format, "\n") - ({ "" })) {
         lines += ({ left + "  " + l + "  " + right });
     }
 
     return lines;
 }
-private void colorize_border_edges (string *lines, string ansi, int headerStart, int headerEnd, int footerLine, int fHeader, int fFooter, mixed *borderColors, int width) {
+private void colorize_border_edges(
+    string *lines,
+    string ansi,
+    int headerStart,
+    int headerEnd,
+    int footerLine,
+    int fHeader,
+    int fFooter,
+    mixed *borderColors,
+    int width
+) {
     string *left, *right;
     mixed *gradient, *lside, *rside;
     int i, nLines;
 
     nLines = sizeof(lines);
     if (ansi == "256") {
-        left = SEFUN->color_gradient(borderColors[0], borderColors[1], nLines - (headerStart-1))[1..<2];
+        left = SEFUN->color_gradient(
+            borderColors[0],
+            borderColors[1],
+            nLines - (headerStart - 1)
+        )[1..<2];
         right = SEFUN->reverse_array(left);
-        for (i = headerStart; i < nLines-1; i ++) {
+        for (i = headerStart; i < nLines - 1; i++) {
             if ((fHeader && i < headerEnd) || (fFooter && i > footerLine)) {
-                lines[i] = "\e[38;2;"+left[i-headerStart]+"m"+lines[i][0..1]+"\e[0;37;40m" + lines[i][2..<3] + "\e[38;2;"+right[i-headerStart]+"m" + lines[i][<2..] + "\e[0;37;40m";
+                lines[i] = "\e[38;2;" + left[i - headerStart] + "m" + lines[i][0..1] + "\e[0;37;40m" + lines[i][2..<3] + "\e[38;2;" + right[i - headerStart] + "m" + lines[i][<2..] + "\e[0;37;40m";
             } else if ((fHeader && i == headerEnd) || (fFooter && i == footerLine)) {
-                lside = map(explode(left[i-headerStart], ";"), (: to_int($1) :));
-                rside = map(explode(right[i-headerStart], ";"), (: to_int($1) :));
+                lside = map(
+                    explode(left[i - headerStart], ";"),
+                    (: to_int($1) :)
+                );
+                rside = map(
+                    explode(right[i - headerStart], ";"),
+                    (: to_int($1) :)
+                );
                 gradient = SEFUN->color_gradient(lside, rside, width);
                 lines[i] = SEFUN->apply_gradient(lines[i], gradient);
             } else if (i < footerLine || !fFooter) {
-                lines[i] = "\e[38;2;"+left[i-headerStart]+"m"+lines[i][0..0]+"\e[0;37;40m" + lines[i][1..<2] + "\e[38;2;"+right[i-headerStart]+"m" + lines[i][<1..] + "\e[0;37;40m";
+                lines[i] = "\e[38;2;" + left[i - headerStart] + "m" + lines[i][0..0] + "\e[0;37;40m" + lines[i][1..<2] + "\e[38;2;" + right[i - headerStart] + "m" + lines[i][<1..] + "\e[0;37;40m";
             }
         }
     } else if (ansi) {
-        for (i = headerStart; i < nLines-1; i ++) {
+        for (i = headerStart; i < nLines - 1; i++) {
             if (i == headerEnd || i == footerLine) {
                 lines[i] = "\e[36m" + lines[i] + "\e[0;37;40m";
             } else if (i < headerEnd || i > footerLine) {
-                lines[i] = "\e[36m"+lines[i][0..1]+"\e[0;37;40m" + lines[i][2..<3] + "\e[36m" + lines[i][<2..] + "\e[0;37;40m";
+                lines[i] = "\e[36m" + lines[i][0..1] + "\e[0;37;40m" + lines[i][2..<3] + "\e[36m" + lines[i][<2..] + "\e[0;37;40m";
             } else if (i < footerLine) {
-                lines[i] = "\e[36m"+lines[i][0..0]+"\e[0;37;40m" + lines[i][1..<2] + "\e[36m" + lines[i][<1..] + "\e[0;37;40m";
+                lines[i] = "\e[36m" + lines[i][0..0] + "\e[0;37;40m" + lines[i][1..<2] + "\e[36m" + lines[i][<1..] + "\e[0;37;40m";
             }
         }
     }
 }
-string *format_border (mapping rawData, mapping b, int width, string ansi) {
+string *format_border(mapping rawData, mapping b, int width, string ansi) {
     mapping data = copy(rawData);
-    string *lines = ({ }), line;
+    string *lines = ({}), line;
     string *topColors, *bottomColors;
     mixed *borderColors;
     int headerStart = 0, headerEnd = 0, footerLine = 0;
@@ -206,7 +246,11 @@ string *format_border (mapping rawData, mapping b, int width, string ansi) {
         borderColors = query_character_border_colors();
     }
     if (borderColors) {
-        topColors = SEFUN->color_gradient(borderColors[0], borderColors[1], width);
+        topColors = SEFUN->color_gradient(
+            borderColors[0],
+            borderColors[1],
+            width
+        );
         bottomColors = SEFUN->reverse_array(topColors);
     } else {
         topColors = allocate(width, "");
@@ -219,7 +263,11 @@ string *format_border (mapping rawData, mapping b, int width, string ansi) {
         int nSubtitle = fSubtitle ? sizeof(data["subtitle"]) : 0;
         int nTitle = 0, lTitle;
         // Title Line 1
-        line = "   " + b["tl"+radius] + sprintf("%'"+b["h"]+"'*s", 2 + sizeof(data["title"]) + (lSubtitle ? 2 + lSubtitle : 0), "") + b["tr"+radius];
+        line = "   " + b["tl" + radius] + sprintf(
+            "%'" + b["h"] + "'*s",
+            2 + sizeof(data["title"]) + (lSubtitle ? 2 + lSubtitle : 0),
+            ""
+        ) + b["tr" + radius];
         if (ansi == "256") {
             line = line[0..2] + SEFUN->apply_gradient(line[3..], topColors);
         } else if (ansi) {
@@ -227,7 +275,7 @@ string *format_border (mapping rawData, mapping b, int width, string ansi) {
         }
         lines += ({ line });
         // Title Line 2
-        line = b["tl"+radius] + (fHeader ? b["t"] : b["h"]) + b["h"];
+        line = b["tl" + radius] + (fHeader ? b["t"] : b["h"]) + b["h"];
         line += b["r"] + " " + data["title"];
         nTitle += 5 + sizeof(data["title"]);
         if (fSubtitle) {
@@ -237,33 +285,64 @@ string *format_border (mapping rawData, mapping b, int width, string ansi) {
         lTitle = nTitle;
         line += " " + b["l"] + b["h"];
         nTitle += 3;
-        line += sprintf("%'"+b["h"]+"'*s", width-2-nTitle + (nSubtitle - lSubtitle), "");
-        line += (fHeader ? b["t"] : b["h"]) + b["tr"+radius];
+        line += sprintf(
+            "%'" + b["h"] + "'*s",
+            width - 2 - nTitle + (nSubtitle - lSubtitle),
+            ""
+        );
+        line += (fHeader ? b["t"] : b["h"]) + b["tr" + radius];
         if (ansi == "256") {
-            line = SEFUN->apply_gradient(line[0..3], topColors[0..3]) + "\e[0;37;40;1m" + replace_string(line[4..lTitle], ":", ":\e[22m") + SEFUN->apply_gradient(line[lTitle+1..], topColors[lTitle+1-(nSubtitle - lSubtitle)..]);
+            line = SEFUN->apply_gradient(
+                line[0..3],
+                topColors[0..3]
+            ) + "\e[0;37;40;1m" + replace_string(
+                line[4..lTitle],
+                ":",
+                ":\e[22m"
+            ) + SEFUN->apply_gradient(
+                line[lTitle + 1..],
+                topColors[lTitle + 1 - (nSubtitle - lSubtitle)..]
+            );
         } else if (ansi) {
-            line = "\e[36m" + line[0..4] + "\e[0;37;40;1m" + line[5..lTitle-1] + "\e[22;36m" + line[lTitle..] + "\e[0;37;40m";
+            line = "\e[36m" + line[0..4] + "\e[0;37;40;1m" + line[5..lTitle - 1] + "\e[22;36m" + line[lTitle..] + "\e[0;37;40m";
         }
         lines += ({ line });
 
         // Title Line 3
         line = b["v"] + (fHeader ? b["v"] : " ") + " ";
-        line += b["bl"+radius] + sprintf("%'"+b["h"]+"'*s", 2 + sizeof(data["title"]) + (lSubtitle ? 2 + lSubtitle : 0), "") + b["br"+radius];
-        line += sprintf("%*s", width - 1 - nTitle + (nSubtitle - lSubtitle), "");
+        line += b["bl" + radius] + sprintf(
+            "%'" + b["h"] + "'*s",
+            2 + sizeof(data["title"]) + (lSubtitle ? 2 + lSubtitle : 0),
+            ""
+        ) + b["br" + radius];
+        line += sprintf(
+            "%*s",
+            width - 1 - nTitle + (nSubtitle - lSubtitle),
+            ""
+        );
         line += (fHeader ? b["v"] : " ") + b["v"];
         if (ansi == "256") {
-            line = SEFUN->apply_gradient(line[0..fHeader], topColors[0..fHeader]) + line[1+fHeader..2] + SEFUN->apply_gradient(line[3..lTitle+1], topColors[3..lTitle+1]) + line[lTitle+2..<2+fHeader] + SEFUN->apply_gradient(line[<1+fHeader..<1], topColors[<1+fHeader..<1]);
+            line = SEFUN->apply_gradient(
+                line[0..fHeader],
+                topColors[0..fHeader]
+            ) + line[1 + fHeader..2] + SEFUN->apply_gradient(
+                line[3..lTitle + 1],
+                topColors[3..lTitle + 1]
+            ) + line[lTitle + 2..<2 + fHeader] + SEFUN->apply_gradient(
+                line[<1 + fHeader..<1],
+                topColors[<1 + fHeader..<1]
+            );
         } else if (ansi) {
-            line = "\e[36m" + line[0..fHeader] + "\e[0;37;40m" +
-                line[1+fHeader..2] +
-                "\e[36m" + line[3..lTitle+1] + "\e[0;37;40m" +
-                line[lTitle+2..<2+fHeader] +
-                "\e[36m" + line[<1+fHeader..<1] + "\e[0;37;40m";
+            line = "\e[36m" + line[0..fHeader] + "\e[0;37;40m" + line[1 + fHeader..2] + "\e[36m" + line[3..lTitle + 1] + "\e[0;37;40m" + line[lTitle + 2..<2 + fHeader] + "\e[36m" + line[<1 + fHeader..<1] + "\e[0;37;40m";
         }
         lines += ({ line });
 
     } else { /* no title */
-        line = b["tl"+radius] + (fHeader ? b["t"] : b["h"]) + sprintf("%'"+b["h"]+"'*s", width-4, "") + (fHeader ? b["t"] : b["h"]) + b["tr"+radius];
+        line = b["tl" + radius] + (fHeader ? b["t"] : b["h"]) + sprintf(
+            "%'" + b["h"] + "'*s",
+            width - 4,
+            ""
+        ) + (fHeader ? b["t"] : b["h"]) + b["tr" + radius];
         if (ansi == "256") {
             line = SEFUN->apply_gradient(line, topColors);
         } else if (ansi) {
@@ -274,45 +353,84 @@ string *format_border (mapping rawData, mapping b, int width, string ansi) {
     headerStart = sizeof(lines);
 
     if (fHeader) {
-        for (i = 0; i < sizeof(data["header"]); i ++) {
-            lines += format_border_item(data["header"][i], ansi, b["v"]+b["v"], b["v"]+b["v"]);
-            if (i < sizeof(data["header"])-1) {
-                lines += ({ b["v"] + b["v"] + sprintf("%*s", width-4, "") + b["v"] + b["v"] });
+        for (i = 0; i < sizeof(data["header"]); i++) {
+            lines += format_border_item(
+                data["header"][i],
+                ansi,
+                b["v"] + b["v"],
+                b["v"] + b["v"]
+            );
+            if (i < sizeof(data["header"]) - 1) {
+                lines += ({ b["v"] + b["v"] + sprintf(
+                    "%*s",
+                    width - 4,
+                    ""
+                ) + b["v"] + b["v"] });
             }
         }
         // Header bottom line
-        line = b["v"] + b["bl"+radius] + sprintf("%'"+b["h"]+"'*s", width-4, "") + b["br"+radius] + b["v"];
+        line = b["v"] + b["bl" + radius] + sprintf(
+            "%'" + b["h"] + "'*s",
+            width - 4,
+            ""
+        ) + b["br" + radius] + b["v"];
         lines += ({ line });
         headerEnd = sizeof(lines) - 1;
     }
 
     if (fBody) {
         // Body top line
-        line = b["v"] + sprintf("%*s", width-2, "") + b["v"];
+        line = b["v"] + sprintf("%*s", width - 2, "") + b["v"];
         lines += ({ line });
         foreach (mapping child in data["body"]) {
-            lines += format_border_item(child, ansi, b["v"]+" ", " "+b["v"]);
-            lines += ({ b["v"] + sprintf("%*s", width-2, "") + b["v"] });
+            lines += format_border_item(
+                child,
+                ansi,
+                b["v"] + " ",
+                " " + b["v"]
+            );
+            lines += ({ b["v"] + sprintf("%*s", width - 2, "") + b["v"] });
         }
     }
 
     if (fFooter) {
         // Footer top line
-        line = b["v"] + b["tl"+radius] + sprintf("%'"+b["h"]+"'*s", width-4, "") + b["tr"+radius] + b["v"];
+        line = b["v"] + b["tl" + radius] + sprintf(
+            "%'" + b["h"] + "'*s",
+            width - 4,
+            ""
+        ) + b["tr" + radius] + b["v"];
         lines += ({ line });
         footerLine = sizeof(lines) - 1;
         // Footer Items
-        for (i = 0; i < sizeof(data["footer"]); i ++) {
+        for (i = 0; i < sizeof(data["footer"]); i++) {
             if (i > 0) {
-                lines += ({ b["v"] + b["v"] + sprintf("%*s", width-4, "") + b["v"] + b["v"] });
+                lines += ({ b["v"] + b["v"] + sprintf(
+                    "%*s",
+                    width - 4,
+                    ""
+                ) + b["v"] + b["v"] });
             }
-            lines += format_border_item(data["footer"][i], ansi, b["v"]+b["v"], b["v"]+b["v"]);
+            lines += format_border_item(
+                data["footer"][i],
+                ansi,
+                b["v"] + b["v"],
+                b["v"] + b["v"]
+            );
         }
         // Footer Bottom line
-        line = b["bl"+radius] + b["b"] + sprintf("%'"+b["h"]+"'*s", width-4, "") + b["b"] + b["br"+radius];
+        line = b["bl" + radius] + b["b"] + sprintf(
+            "%'" + b["h"] + "'*s",
+            width - 4,
+            ""
+        ) + b["b"] + b["br" + radius];
     } else {
         // Footer Bottom line
-        line = b["bl"+radius] + sprintf("%'"+b["h"]+"'*s", width-2, "") + b["br"+radius];
+        line = b["bl" + radius] + sprintf(
+            "%'" + b["h"] + "'*s",
+            width - 2,
+            ""
+        ) + b["br" + radius];
     }
     if (ansi == "256") {
         line = SEFUN->apply_gradient(line, bottomColors);
@@ -322,7 +440,17 @@ string *format_border (mapping rawData, mapping b, int width, string ansi) {
     lines += ({ line });
 
     // Colorize edges and separators
-    colorize_border_edges(lines, ansi, headerStart, headerEnd, footerLine, fHeader, fFooter, borderColors, width);
+    colorize_border_edges(
+        lines,
+        ansi,
+        headerStart,
+        headerEnd,
+        footerLine,
+        fHeader,
+        fFooter,
+        borderColors,
+        width
+    );
 
     return lines;
 }
@@ -346,7 +474,7 @@ string *format_border (mapping rawData, mapping b, int width, string ansi) {
  *   "body"     - same structure as header
  *   "footer"   - same structure as header
  */
-void border (mapping data) {
+void border(mapping data) {
     mapping b = query_border_charset();
     int width = to_int(SEFUN->query_account_setting("width")) || DEFAULT_WIDTH;
     string ansi, *result;
@@ -362,13 +490,21 @@ void border (mapping data) {
     tu->handle_pager(result);
 }
 
-private varargs string *format_tree (string key, mixed value, mapping b, int indent, int index, int maxIndex, mapping prefix) {
-    string *result = ({ }), tmp = "";
+private varargs string *format_tree(
+    string key,
+    mixed value,
+    mapping b,
+    int indent,
+    int index,
+    int maxIndex,
+    mapping prefix
+) {
+    string *result = ({}), tmp = "";
     string *ids;
     int i, l;
 
     if (indent > 0) {
-        for (i = 0; i < indent; i ++) {
+        for (i = 0; i < indent; i++) {
             if (i > 0) {
                 if (prefix[i]) {
                     tmp += "  ";
@@ -387,7 +523,7 @@ private varargs string *format_tree (string key, mixed value, mapping b, int ind
     }
 
     tmp += key;
-    indent ++;
+    indent++;
     if (stringp(value)) {
         tmp += value;
     }
@@ -396,16 +532,24 @@ private varargs string *format_tree (string key, mixed value, mapping b, int ind
     if (mapp(value)) {
         ids = sort_array(keys(value), 1);
         l = sizeof(ids);
-        for (i = 0; i < l; i ++) {
-            result += format_tree(i + ". " + ids[i], value[ids[i]], b, indent, i, l-1, prefix);
+        for (i = 0; i < l; i++) {
+            result += format_tree(
+                i + ". " + ids[i],
+                value[ids[i]],
+                b,
+                indent,
+                i,
+                l - 1,
+                prefix
+            );
             prefix[indent] = 0;
         }
     }
 
     return result;
 }
-string *tree (mapping value) {
-    string *result = ({ }), *ids;
+string *tree(mapping value) {
+    string *result = ({}), *ids;
     mapping b;
     int i, l;
     if (!mapp(value) || !sizeof(value)) {
@@ -413,10 +557,30 @@ string *tree (mapping value) {
     }
     b = query_border_charset();
     // Sort keys by their leading number ("10. foo" -> 10), tie-breaking on string order so it stays deterministic.
-    ids = sort_array(keys(value), (: to_int(explode($1," ")[0]) == to_int(explode($2," ")[0]) ? ($1 > $2 ? 1 : ($1 < $2 ? -1 : 0)) : (to_int(explode($1," ")[0]) < to_int(explode($2," ")[0]) ? -1 : 1) :));
+    ids = sort_array(
+        keys(value),
+        (: to_int(explode(
+            $1,
+            " "
+        )[0]) == to_int(explode(
+            $2,
+            " "
+        )[0]) ? ($1 > $2 ? 1 : ($1 < $2 ? -1 : 0)) : (to_int(explode(
+            $1,
+            " "
+        )[0]) < to_int(explode($2, " ")[0]) ? -1 : 1) :)
+    );
     l = sizeof(ids);
-    for (i = 0; i < l; i ++) {
-        result += format_tree(i + ". " + ids[i], value[ids[i]], b, 0, i, l-1, ([ ]));
+    for (i = 0; i < l; i++) {
+        result += format_tree(
+            i + ". " + ids[i],
+            value[ids[i]],
+            b,
+            0,
+            i,
+            l - 1,
+            ([])
+        );
     }
     return result;
 }

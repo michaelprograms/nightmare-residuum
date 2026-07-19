@@ -5,11 +5,11 @@ inherit M_TEST;
  */
 
 nosave private int __ImmortalFlag = 0;
-int query_immortal () {
+int query_immortal() {
     return __ImmortalFlag;
 }
 
-void test_paths_and_files () {
+void test_paths_and_files() {
     expect("daemon has paths", (: ({
         assert_equal(sizeof(testOb->query_paths()) > 0, 1),
     }) :));
@@ -40,7 +40,7 @@ void test_paths_and_files () {
     }) :));
 }
 
-void test_rescan () {
+void test_rescan() {
     expect("rescan preserves path list", (: ({
         testOb->scan_all_paths(),
         assert_equal(sizeof(testOb->query_paths()), 6),

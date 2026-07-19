@@ -4,7 +4,7 @@ inherit M_TEST;
  * @var {"/secure/sefun/helper"} testOb
  */
 
-void test_helpers () {
+void test_helpers() {
     object living = new(STD_LIVING);
     object npc = new(STD_NPC);
     object character = new(STD_CHARACTER);

@@ -6,7 +6,7 @@ inherit M_TEST;
 
 #define CONFIG_MOCK "/std/ability/target.c" & "/std/ability/config.mock.c"
 
-void test_targets () {
+void test_targets() {
     expect("handles setting and querying targets", (: ({
         // default
         assert_equal(testOb->query_targets(), 1),
@@ -17,11 +17,14 @@ void test_targets () {
         testOb->set_targets(10),
         assert_equal(testOb->query_targets(), 10),
 
-        assert_catch((: testOb->set_targets(0) :), "*Bad argument 1 to ability->set_targets\n"),
+        assert_catch(
+            (: testOb->set_targets(0) :),
+            "*Bad argument 1 to ability->set_targets\n"
+        ),
     }) :));
 }
 
-void test_verify_targets () {
+void test_verify_targets() {
     object npc1, npc2, room;
     object mockConfig = new("/std/ability/config.mock.c");
 
@@ -38,7 +41,10 @@ void test_verify_targets () {
         /** @type {CONFIG_MOCK} */ (testOb)->set_type("attack"),
         $(npc1)->handle_move($(room)),
         $(npc2)->handle_move($(room)),
-        assert_equal(testOb->verify_targets($(npc1), ({ $(npc2) })), ({ $(npc2) })),
+        assert_equal(
+            testOb->verify_targets($(npc1), ({ $(npc2) })),
+            ({ $(npc2) })
+        ),
 
         // attack type, no supplied targets, no present hostiles
         assert_equal(testOb->verify_targets($(npc1), 0), 0),

@@ -1,17 +1,17 @@
 inherit STD_VERB;
 
-void create () {
+void create() {
     verb::create();
     add_rules(({ "", "STR" }));
     set_syntax("go [direction]");
     set_help_text("Your character will attempt to move in the provided direction.");
 }
 
-mixed can_go () {
+mixed can_go() {
     return "Go where?";
 }
 
-varargs mixed can_go_str (string dir) {
+varargs mixed can_go_str(string dir) {
     object po = previous_object();
     /** @type {STD_ROOM} env */
     object env;
@@ -34,7 +34,7 @@ varargs mixed can_go_str (string dir) {
 
     return 1;
 }
-varargs void do_go_str (string dir) {
+varargs void do_go_str(string dir) {
     object po = previous_object();
     /** @type {STD_ROOM} env */
     object env = environment(po);

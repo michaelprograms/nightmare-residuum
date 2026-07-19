@@ -1,14 +1,14 @@
 inherit STD_COMMAND;
 
-void create () {
+void create() {
     ::create();
     set_syntax("hostiles");
     set_help_text("The hostiles command is used to view the list of things that are in combat with your character, even if they are in another location.");
 }
 
-void command (string input, mapping flags) {
+void command(string input, mapping flags) {
     object tc = this_character(), target = tc;
-    string *items = ({ });
+    string *items = ({});
 
     if (input && tc->query_immortal()) {
         target = determine_immortal_target(tc, input);

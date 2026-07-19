@@ -14,7 +14,7 @@
 
 /* -----  ----- */
 
-nosave private int *__Sockets = ({ });
+nosave private int *__Sockets = ({});
 private nosave int __Port;
 private nosave int __AllowStatic;
 private nosave mixed *__URLPatterns;
@@ -25,21 +25,21 @@ private nosave string server_root;
 /**
  * @return {int} The port this server is configured to bind on, or 0 if unset.
  */
-int query_port () {
+int query_port() {
     return __Port;
 }
 
 /**
  * @param {int} p - The port to bind on when start() is called.
  */
-void set_port (int p) {
+void set_port(int p) {
     __Port = p;
 }
 
 /**
  * @return {mixed *} Array of ({ pattern, fn }) pairs registered via add_url_pattern().
  */
-mixed *query_url_patterns () {
+mixed *query_url_patterns() {
     return __URLPatterns;
 }
 
@@ -57,14 +57,14 @@ mixed *query_url_patterns () {
  * @param {string} pattern - PCRE regex matched against the request URI.
  * @param {string} fn - Dot-notation handler path.
  */
-void add_url_pattern (string pattern, string fn) {
+void add_url_pattern(string pattern, string fn) {
     __URLPatterns += ({ ({ pattern, fn }) });
 }
 
 /**
  * @return {int} 1 if static file serving is enabled, 0 otherwise.
  */
-int query_allow_static_pages () {
+int query_allow_static_pages() {
     return __AllowStatic;
 }
 
@@ -75,7 +75,7 @@ int query_allow_static_pages () {
  *
  * @param {int} allow - 1 to enable, 0 to disable.
  */
-void allow_static_pages (int allow) {
+void allow_static_pages(int allow) {
     __AllowStatic = !!allow;
 }
 
@@ -94,52 +94,52 @@ void allow_static_pages (int allow) {
  * @param {string} req - Raw HTTP request including headers and optional body.
  * @return {mapping} Parsed request mapping.
  */
-mapping parse_request (string req) {
+mapping parse_request(string req) {
     string *headers;
     string *tmp;
     mapping request = ([
         "method": 0,
         "uri": "",
         "protocol": "",
-        "header": ([ ]),
+        "header": ([]),
         "content": "",
     ]);
     int l;
 
-    tmp = explode(req, "\r\n\r\n"); // 2 linebreaks marks divider
-    if (sizeof(tmp) > 1) { // content was ""
+    tmp = explode(req, "\r\n\r\n");  // 2 linebreaks marks divider
+    if (sizeof(tmp) > 1) {  // content was ""
         request["content"] = tmp[1];
     }
 
     // parse request line
     headers = explode(tmp[0], "\r\n");
-    tmp = explode(headers[0], " "); // METHOD URI PROTOCOL
+    tmp = explode(headers[0], " ");  // METHOD URI PROTOCOL
     if (sizeof(tmp) == 3) {
         switch (tmp[0]) {
-        case "GET":
-            request["method"] = GET;
-            break;
-        case "POST":
-            request["method"] = POST;
-            break;
-        case "HEAD":
-            request["method"] = HEAD;
-            break;
-        case "PUT":
-            request["method"] = PUT;
-            break;
-        case "DELETE":
-            request["method"] = DELETE;
-            break;
-        case "TRACE":
-            request["method"] = TRACE;
-            break;
-        case "CONNECT":
-            request["method"] = CONNECT;
-            break;
-        default:
-            request["method"] = UNDEF_REQUEST;
-            break;
+            case "GET":
+                request["method"] = GET;
+                break;
+            case "POST":
+                request["method"] = POST;
+                break;
+            case "HEAD":
+                request["method"] = HEAD;
+                break;
+            case "PUT":
+                request["method"] = PUT;
+                break;
+            case "DELETE":
+                request["method"] = DELETE;
+                break;
+            case "TRACE":
+                request["method"] = TRACE;
+                break;
+            case "CONNECT":
+                request["method"] = CONNECT;
+                break;
+            default:
+                request["method"] = UNDEF_REQUEST;
+                break;
         }
         request["uri"] = tmp[1];
         request["protocol"] = tmp[2];
@@ -156,8 +156,8 @@ mapping parse_request (string req) {
         if (!sizeof(headers[i]) || pos < 1) {
             continue;
         }
-        field = headers[i][0..pos-1];
-        value = headers[i][pos+2..];
+        field = headers[i][0..pos - 1];
+        value = headers[i][pos + 2..];
         request["header"][field] = value;
     }
 
@@ -176,7 +176,7 @@ mapping parse_request (string req) {
  * @param {mapping} response - Response mapping to serialize.
  * @return {string} Raw HTTP response string ready to write to a socket.
  */
-string format_response (mapping response) {
+string format_response(mapping response) {
     string msg = "HTTP/1.0 ";
     msg += response["code"];
     msg += "\r\n";
@@ -199,27 +199,42 @@ string format_response (mapping response) {
  * @param {string *} args - PCRE capture groups extracted from the request URI.
  * @return {mapping} Populated response mapping.
  */
-mapping handle_response (mapping response, string path, string *args) {
+mapping handle_response(mapping response, string path, string *args) {
     string *tmp = explode(path, ".");
     object ob;
 
     switch (sizeof(tmp)) {
-        case 1: // add_url_pattern(path, "func")
-            response["content"] = json_encode(call_other(this_object(), path, response, args));
+        case 1:  // add_url_pattern(path, "func")
+            response["content"] = json_encode(call_other(
+                this_object(),
+                path,
+                response,
+                args
+            ));
             response["type"] = "text/json";
             response["code"] = "200 OK";
             response["connection"] = "close";
             break;
-        case 2: // add_url_pattern(path, "file.func")
+        case 2:  // add_url_pattern(path, "file.func")
             ob = load_object(server_root + tmp[0]);
-            response["content"] = json_encode(call_other(ob, tmp[1], response, args));
+            response["content"] = json_encode(call_other(
+                ob,
+                tmp[1],
+                response,
+                args
+            ));
             response["type"] = "text/json";
             response["code"] = "200 OK";
             response["connection"] = "close";
             break;
-        case 3: // add_url_pattern(path, "dir.file.func")
+        case 3:  // add_url_pattern(path, "dir.file.func")
             ob = load_object(server_root + tmp[0] + "/" + tmp[1]);
-            response["content"] = json_encode(call_other(ob, tmp[2], response, args));
+            response["content"] = json_encode(call_other(
+                ob,
+                tmp[2],
+                response,
+                args
+            ));
             response["type"] = "text/json";
             response["code"] = "200 OK";
             response["connection"] = "close";
@@ -235,9 +250,9 @@ mapping handle_response (mapping response, string path, string *args) {
     return response;
 }
 
-void read_socket (int fd, string msg) {
+void read_socket(int fd, string msg) {
     mapping req;
-    mapping res = ([ ]);
+    mapping res = ([]);
     int url_match = 0;
     string result;
     int t = time_ns();
@@ -286,20 +301,24 @@ void read_socket (int fd, string msg) {
 
     result = format_response(res);
     t = time_ns() - t;
-    D_LOG->log("http", ctime() + " response (" + sprintf("%.1f", (t / 1000000.0)) + " ms) " + identify(res));
+    D_LOG->log(
+        "http",
+        ctime() + " response (" + sprintf(
+            "%.1f",
+            (t / 1000000.0)
+        ) + " ms) " + identify(res)
+    );
 
     socket_write(fd, result);
     socket_close(fd);
 }
-void write_socket (int fd) {
+void write_socket(int fd) {}
 
-}
-
-void close_socket (int socket) {
+void close_socket(int socket) {
     __Sockets -= ({ socket });
 }
 
-void listen_socket (int fd) {
+void listen_socket(int fd) {
     int socket = socket_accept(fd, "read_socket", "write_socket");
     if (socket < 0) {
         error("http: Couldn't perform socket_accept.");
@@ -309,11 +328,11 @@ void listen_socket (int fd) {
 
 /* ----- applies ----- */
 
-void create () {
-    __Sockets = ({ });
+void create() {
+    __Sockets = ({});
     __Port = 0;
     __AllowStatic = 0;
-    __URLPatterns = ({ });
+    __URLPatterns = ({});
 
     server_root = file_name();
     server_root = server_root[0..strsrch(server_root, "/", -1)];
@@ -323,7 +342,7 @@ void create () {
  * Bind to the configured port and begin listening for connections.
  * set_port() must be called before start().
  */
-void start () {
+void start() {
     int socket;
 
     if (!__Port) {
@@ -345,7 +364,7 @@ void start () {
 /**
  * Close all open sockets. Called automatically when the object is destructed.
  */
-void handle_remove () {
+void handle_remove() {
     foreach (int socket in __Sockets) {
         socket_close(socket);
     }

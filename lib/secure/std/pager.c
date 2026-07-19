@@ -19,11 +19,11 @@ nosave private int __ChunkSize = 40;
 /**
  * @returns {STD_USER} the user this pager is running for
  */
-object query_user () {
+object query_user() {
     return __User;
 }
 
-nomask private void done (int focus) {
+nomask private void done(int focus) {
     __User->input_pop();
     if (focus) {
         __User->input_focus();
@@ -31,7 +31,7 @@ nomask private void done (int focus) {
     destruct();
 }
 
-nomask private string prompt () {
+nomask private string prompt() {
     int chunkEnd = __LineNum + __ChunkSize;
     int percent;
     string prompt = "";
@@ -45,13 +45,19 @@ nomask private string prompt () {
     } else {
         int width = to_int(query_account_setting("width")) || DEFAULT_WIDTH;
         percent = chunkEnd * 100 / __LinesCount;
-        prompt = sprintf("Lines %s to %s of %s (%i%%) --- press <enter> or <q>", format_integer(__LineNum + 1), format_integer(chunkEnd), format_integer(__LinesCount), percent);
+        prompt = sprintf(
+            "Lines %s to %s of %s (%i%%) --- press <enter> or <q>",
+            format_integer(__LineNum + 1),
+            format_integer(chunkEnd),
+            format_integer(__LinesCount),
+            percent
+        );
         prompt = sprintf("%|*s", width, prompt);
         return "%^B_WHITE%^BLACK%^" + prompt + "%^RESET%^";
     }
 }
 
-private void handle_page (mixed arg) {
+private void handle_page(mixed arg) {
     int i, l;
 
     if (arg == -1) {
@@ -61,18 +67,18 @@ private void handle_page (mixed arg) {
         switch (arg[0]) {
             case 'q':
                 done(0);
-                return; // to prompt
+                return;  // to prompt
             default:
                 __LineNum += __ChunkSize;
         }
     }
 
     l = __LinesCount;
-    for (i = __LineNum; i < l && i < __LineNum + __ChunkSize; i ++) {
+    for (i = __LineNum; i < l && i < __LineNum + __ChunkSize; i++) {
         message("system", __Lines[i] + "\n", __User);
     }
     if (__LinesCount >= __ChunkSize) {
-        return; // to prompt
+        return;  // to prompt
     }
 
     done(0);
@@ -84,14 +90,14 @@ private void handle_page (mixed arg) {
  * @param {string *} lines - the lines of text to page through
  * @param {STD_USER} user - the user to display content to
  */
-void start (string *lines, object user) {
+void start(string *lines, object user) {
     if (user) {
         __ChunkSize = to_int(user->query_setting("lines")) || __ChunkSize;
         __Lines = lines;
         __LinesCount = sizeof(__Lines);
         __User = user;
         __User->input_push((: handle_page :), (: prompt :));
-        if (catch (handle_page(0))) {
+        if (catch(handle_page(0))) {
             __User->input_pop();
             __User->input_focus();
         }

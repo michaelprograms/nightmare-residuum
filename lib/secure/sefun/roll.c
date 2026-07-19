@@ -5,7 +5,7 @@
  * @param sides the number of sides that each dice has
  * @returns an array containing total and all the dice rolls
  */
-mixed *roll_die (int times, int sides) {
+mixed *roll_die(int times, int sides) {
     int *rolls;
 
     if (undefinedp(times) || !intp(times) || times < 1) {

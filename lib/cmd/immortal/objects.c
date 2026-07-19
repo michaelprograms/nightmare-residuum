@@ -1,8 +1,8 @@
 inherit STD_COMMAND;
 
-mapping format_data (object ob);
+mapping format_data(object ob);
 
-void create () {
+void create() {
     set_syntax("objects (all|[name filter]|[file filter])");
     set_help_text("The objects command is used to view the list of objects in your current environment.\n\nUsing the all argument will show the entire list of objects.\n\nUsing a name or file filter will show the list of objects that match either filter.");
 }
@@ -13,7 +13,7 @@ void create () {
  * @param result by reference mapping used to store the data
  * @param {STD_ITEM} ob the item to format
  */
-private void set_data (mapping result, object ob) {
+private void set_data(mapping result, object ob) {
     mapping tmp = format_data(ob);
     string key;
 
@@ -27,9 +27,9 @@ private void set_data (mapping result, object ob) {
     }
     result[key] = tmp;
 }
-private mapping format_data (object ob) {
-    mapping result = ([ ]);
-    object *contents = ({ });
+private mapping format_data(object ob) {
+    mapping result = ([]);
+    object *contents = ({});
     int l;
 
     if (!ob) return 0;
@@ -45,19 +45,19 @@ private mapping format_data (object ob) {
     }
 
     l = sizeof(contents);
-    for (int i = 0; i < l; i ++) {
+    for (int i = 0; i < l; i++) {
         set_data(result, contents[i]);
     }
 
     return result;
 }
-private void format_type (mapping data, object *obs) {
+private void format_type(mapping data, object *obs) {
     int i, l;
     string key;
     mapping tmp;
 
     l = sizeof(obs);
-    for (i = 0; i < l; i ++) {
+    for (i = 0; i < l; i++) {
         tmp = format_data(obs[i]);
         key = file_name(obs[i]);
         if (sizeof(tmp)) {
@@ -67,16 +67,22 @@ private void format_type (mapping data, object *obs) {
     }
 }
 
-void command (string input, mapping flags) {
+void command(string input, mapping flags) {
     object *obs, *rooms, *containers;
-    mapping data = ([ ]);
+    mapping data = ([]);
 
     if (!input) {
         obs = ({ environment(this_character()) });
     } else if (input == "all") {
         obs = objects();
     } else {
-        obs = filter(objects(), (: $1 && ($1->query_key_name() == $(input) || regexp(file_name($1), $(input))) :));
+        obs = filter(
+            objects(),
+            (: $1 && ($1->query_key_name() == $(input) || regexp(
+                file_name($1),
+                $(input)
+            )) :)
+        );
     }
 
     // format rooms first

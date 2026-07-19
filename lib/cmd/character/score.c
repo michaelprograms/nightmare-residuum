@@ -1,12 +1,12 @@
 inherit STD_COMMAND;
 
-void create () {
+void create() {
     ::create();
     set_syntax("score");
     set_help_text("The score command is used to view the attributes about your character.");
 }
 
-void command (string input, mapping flags) {
+void command(string input, mapping flags) {
     object tc = this_character(), target = tc;
 
     if (input && tc->query_immortal()) {
@@ -18,8 +18,14 @@ void command (string input, mapping flags) {
         "subtitle": target->query_cap_name(),
         "header": ([
             "items": ({
-                sprintf("%12s", "Account") + ": " + target->query_user()->query_name(),
-                sprintf("%12s", "Created") + ": " + strftime("%Y/%m/%u", target->query_created()),
+                sprintf(
+                    "%12s",
+                    "Account"
+                ) + ": " + target->query_user()->query_name(),
+                sprintf(
+                    "%12s",
+                    "Created"
+                ) + ": " + strftime("%Y/%m/%u", target->query_created()),
             }),
             "columns": 2,
         ]),

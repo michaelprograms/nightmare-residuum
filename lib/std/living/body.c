@@ -2,37 +2,37 @@
 
 private string __Gender = "neither";
 private string __Species = "unknown";
-mapping __Limbs = ([ ]);
-nosave mapping __Wielded = ([ ]);
-nosave mapping __Worn = ([ ]);
+mapping __Limbs = ([]);
+nosave mapping __Wielded = ([]);
+nosave mapping __Worn = ([]);
 nosave int __NextHeal;
-nosave private mapping __Injections = ([ ]);
+nosave private mapping __Injections = ([]);
 
 /* ----- function prototypes ----- */
 
-void update_limbs ();
-varargs mixed handle_unwear (object ob);
-varargs mixed handle_unwield (object ob);
+void update_limbs();
+varargs mixed handle_unwear(object ob);
+varargs mixed handle_unwield(object ob);
 
 /* ----- gender and species ----- */
 
-string query_gender () {
+string query_gender() {
     return __Gender;
 }
-void set_gender (string str) {
+void set_gender(string str) {
     switch (str) {
-    case "male": case "female": case "neither":
-        __Gender = str;
-        break;
-    default:
-        __Gender = "none";
+        case "male": case "female": case "neither":
+            __Gender = str;
+            break;
+        default:
+            __Gender = "none";
     }
 }
 
-string query_species () {
+string query_species() {
     return stringp(__Species) ? __Species : "unknown";
 }
-void set_species (string species) {
+void set_species(string species) {
     if (!stringp(species)) {
         error("Bad argument 1 to body->set_species");
     }
@@ -43,10 +43,10 @@ void set_species (string species) {
 
 /* ----- limbs ----- */
 
-void update_limbs () {
+void update_limbs() {
     mapping newLimbs = D_SPECIES->setup_body(this_object());
 
-    foreach (string limb,mapping value in newLimbs || ([ ])) {
+    foreach (string limb, mapping value in newLimbs || ([])) {
         if (__Limbs[limb]) {
             value["damage"] = __Limbs[limb]["damage"];
             value["status"] = __Limbs[limb]["status"];
@@ -54,23 +54,23 @@ void update_limbs () {
         __Limbs[limb] = value;
     }
 }
-string *query_limbs () {
-    string *limbs = keys(__Limbs || ([ ]));
+string *query_limbs() {
+    string *limbs = keys(__Limbs || ([]));
     limbs = filter(limbs, (: __Limbs[$1]["status"] != "severed" :));
     return limbs;
 }
-string *query_severed_limbs () {
-    string *limbs = keys(__Limbs || ([ ]));
+string *query_severed_limbs() {
+    string *limbs = keys(__Limbs || ([]));
     limbs = filter(limbs, (: __Limbs[$1]["status"] == "severed" :));
     return limbs;
 }
-mapping query_limb (string limb) {
+mapping query_limb(string limb) {
     if (limb && __Limbs[limb]) {
         return __Limbs[limb];
     }
     return 0;
 }
-string query_random_limb () {
+string query_random_limb() {
     string *limbs = query_limbs();
     if (sizeof(limbs)) {
         return limbs[random(sizeof(limbs))];
@@ -78,7 +78,7 @@ string query_random_limb () {
     return 0;
 }
 
-void handle_limb_sever (string limb) {
+void handle_limb_sever(string limb) {
     object limbOb;
 
     // non-fatal limbs can't be severed multiple times
@@ -87,11 +87,25 @@ void handle_limb_sever (string limb) {
     }
 
     if (__Limbs[limb]["type"] == "FATAL") {
-        message("combat alert", "Your "+limb+" receives a mortal blow!", this_object());
-        message("combat info", possessive_noun(this_object())+" "+limb+" receives a mortal blow!", environment(), this_object());
+        message(
+            "combat alert",
+            "Your " + limb + " receives a mortal blow!",
+            this_object()
+        );
+        message(
+            "combat info",
+            possessive_noun(this_object()) + " " + limb + " receives a mortal blow!",
+            environment(),
+            this_object()
+        );
     } else {
-        message("combat alert", "Your "+limb+" is severed!", this_object());
-        message("combat info", possessive_noun(this_object())+" "+limb+" is severed!", environment(), this_object());
+        message("combat alert", "Your " + limb + " is severed!", this_object());
+        message(
+            "combat info",
+            possessive_noun(this_object()) + " " + limb + " is severed!",
+            environment(),
+            this_object()
+        );
     }
 
     // remove wielded weapon
@@ -114,7 +128,10 @@ void handle_limb_sever (string limb) {
     limbOb->setup_bodypart(this_object(), limb);
 
     // deal half limb damage as HP damage
-    this_object()->handle_damage(max(({ __Limbs[limb]["damage"], __Limbs[limb]["maxdamage"] }))/2, 0);
+    this_object()->handle_damage(
+        max(({ __Limbs[limb]["damage"], __Limbs[limb]["maxdamage"] })) / 2,
+        0
+    );
     if (__Limbs[limb]["attach"] && __Limbs[limb]["attach"] != limb) {
         handle_limb_sever(__Limbs[limb]["attach"]);
     }
@@ -127,12 +144,15 @@ void handle_limb_sever (string limb) {
  * @returns 1 for success restoring, 0 for failure to restore because it wasn't
  * severed, and -1 for unable to restore because the attached limb is severed
  */
-int handle_limb_restore (string limb) {
+int handle_limb_restore(string limb) {
     string *attach;
     if (__Limbs[limb]["status"] != "severed") {
         return 0;
     }
-    attach = filter(__Limbs, (: __Limbs[$1]["attach"] == $(limb) && __Limbs[$1]["status"] == "severed" :));
+    attach = filter(
+        __Limbs,
+        (: __Limbs[$1]["attach"] == $(limb) && __Limbs[$1]["status"] == "severed" :)
+    );
     if (sizeof(attach) > 0) {
         return -1;
     }
@@ -141,7 +161,7 @@ int handle_limb_restore (string limb) {
     return 1;
 }
 
-void handle_limb_heal (string limb, int n) {
+void handle_limb_heal(string limb, int n) {
     if (__Limbs[limb]["status"] == "severed") {
         return;
     }
@@ -153,27 +173,48 @@ void handle_limb_heal (string limb, int n) {
 
 /* ----- damage ----- */
 
-varargs int handle_damage (int damage, string limb) {
+varargs int handle_damage(int damage, string limb) {
     int beforeHp = this_object()->query_hp();
     this_object()->add_hp(-damage);
     if (characterp(this_object())) {
         // @TODO move to vitals
-        message("system", sprintf("hp: %d (%d) sp: %d    mp: %d\n", this_object()->query_hp(), this_object()->query_hp() - beforeHp, this_object()->query_sp(), this_object()->query_mp()), this_object());
+        message(
+            "system",
+            sprintf(
+                "hp: %d (%d) sp: %d    mp: %d\n",
+                this_object()->query_hp(),
+                this_object()->query_hp() - beforeHp,
+                this_object()->query_sp(),
+                this_object()->query_mp()
+            ),
+            this_object()
+        );
     }
 
     if (stringp(limb) && limb != "" && query_limb(limb)) {
         int limbDamagePct;
 
         __Limbs[limb]["damage"] += damage / 2;
-        __Limbs[limb]["damage"] = min(({ __Limbs[limb]["damage"], max(({ __Limbs[limb]["maxdamage"], 0 })) }));
+        __Limbs[limb]["damage"] = min(({
+            __Limbs[limb]["damage"],
+            max(({ __Limbs[limb]["maxdamage"], 0 }))
+        }));
         limbDamagePct = __Limbs[limb]["damage"] * 100 / __Limbs[limb]["maxdamage"];
 
         if (limbDamagePct >= 100) {
             handle_limb_sever(limb);
         } else if (limbDamagePct >= 75) {
-            message("combat alert", "Your "+limb+" is badly damaged!", this_object());
+            message(
+                "combat alert",
+                "Your " + limb + " is badly damaged!",
+                this_object()
+            );
         } else if (limbDamagePct >= 50) {
-            message("combat alert", "Your "+limb+" is injured!", this_object());
+            message(
+                "combat alert",
+                "Your " + limb + " is injured!",
+                this_object()
+            );
         }
     }
 
@@ -182,23 +223,23 @@ varargs int handle_damage (int damage, string limb) {
 
 /* ----- wearing ----- */
 
-private void initialize_worn () {
+private void initialize_worn() {
     if (!mapp(__Worn)) {
-        __Worn = ([ ]);
+        __Worn = ([]);
     }
 }
 
-int query_limb_armor (string limb) {
+int query_limb_armor(string limb) {
     int ac = 0;
 
     initialize_worn();
-    foreach (object ob in __Worn[limb] || ({ })) {
+    foreach (object ob in __Worn[limb] || ({})) {
         ac += ob->query_ac();
     }
     return ac;
 }
-object *query_all_armor () {
-    object *worn = ({ });
+object *query_all_armor() {
+    object *worn = ({});
 
     initialize_worn();
     foreach (string limb in keys(__Worn)) {
@@ -215,7 +256,7 @@ object *query_all_armor () {
  *
  * @returns {STD_ARMOR} the shield item being worn if any
  */
-object query_worn_shield () {
+object query_worn_shield() {
     object shield;
 
     initialize_worn();
@@ -234,7 +275,7 @@ object query_worn_shield () {
  * @param {STD_ARMOR} armor the item attempting to be worn
  * @returns text failure description or 1 for success
  */
-mixed query_can_wear_armor (object armor) {
+mixed query_can_wear_armor(object armor) {
     int worn;
     string wielded;
 
@@ -247,24 +288,24 @@ mixed query_can_wear_armor (object armor) {
         }
         foreach (object ob in __Worn[limb]) {
             if (armor->query_type() == ob->query_type()) {
-                worn ++;
+                worn++;
             }
         }
     }
 
     switch (armor->query_type()) {
-    case "shield":
-        if (worn || member_array("shield", query_all_armor()) > -1) {
-            return "You are already wearing a " + armor->query_type()+ ".";
-        }
-        if (wielded) {
-            return "You cannot wear a shield while wielding a weapon in your " + wielded + ".";
-        }
-        break;
-    default:
-        if (worn) {
-            return "You are already wearing a " + armor->query_type()+ ".";
-        }
+        case "shield":
+            if (worn || member_array("shield", query_all_armor()) > -1) {
+                return "You are already wearing a " + armor->query_type() + ".";
+            }
+            if (wielded) {
+                return "You cannot wear a shield while wielding a weapon in your " + wielded + ".";
+            }
+            break;
+        default:
+            if (worn) {
+                return "You are already wearing a " + armor->query_type() + ".";
+            }
     }
     return 1;
 }
@@ -275,7 +316,7 @@ mixed query_can_wear_armor (object armor) {
  * @param {STD_ARMOR} ob the armor item to be worn
  * @returns text failure description or 1 for success
  */
-mixed handle_wear (object ob) {
+mixed handle_wear(object ob) {
     string limbConj, result;
 
     initialize_worn();
@@ -289,15 +330,24 @@ mixed handle_wear (object ob) {
 
     foreach (string limb in ob->query_limbs()) {
         if (!arrayp(__Worn[limb])) {
-            __Worn[limb] = ({ });
+            __Worn[limb] = ({});
         }
         __Worn[limb] += ({ ob });
     }
     ob->set_worn(this_object());
 
     limbConj = conjunction(ob->query_limbs());
-    message("action", "You wear " + ob->query_name() + " on your " + limbConj + ".", this_object());
-    message("action", this_object()->query_cap_name() + " wears " + ob->query_name() + " on " + possessive(this_object()) + " " + limbConj + ".", environment(), this_object());
+    message(
+        "action",
+        "You wear " + ob->query_name() + " on your " + limbConj + ".",
+        this_object()
+    );
+    message(
+        "action",
+        this_object()->query_cap_name() + " wears " + ob->query_name() + " on " + possessive(this_object()) + " " + limbConj + ".",
+        environment(),
+        this_object()
+    );
 
     return 1;
 }
@@ -308,7 +358,7 @@ mixed handle_wear (object ob) {
  * @param {STD_ARMOR} ob the armor item to be removed
  * @returns text failure description or 1 for success
  */
-mixed handle_unwear (object ob) {
+mixed handle_unwear(object ob) {
     string limbConj;
     initialize_worn();
     if (!ob->query_worn()) {
@@ -322,16 +372,25 @@ mixed handle_unwear (object ob) {
     }
     ob->remove_worn(this_object());
     limbConj = conjunction(ob->query_limbs());
-    message("action", "You remove " + ob->query_name() + " from your " + limbConj + ".", this_object());
-    message("action", this_object()->query_cap_name() + " removes " + ob->query_name() + " from " + possessive(this_object()) + " " + limbConj + ".", environment(), this_object());
+    message(
+        "action",
+        "You remove " + ob->query_name() + " from your " + limbConj + ".",
+        this_object()
+    );
+    message(
+        "action",
+        this_object()->query_cap_name() + " removes " + ob->query_name() + " from " + possessive(this_object()) + " " + limbConj + ".",
+        environment(),
+        this_object()
+    );
     return 1;
 }
 
 /* ----- wielding ----- */
 
-private void initialize_wielded () {
+private void initialize_wielded() {
     if (!mapp(__Wielded)) {
-        __Wielded = ([ ]);
+        __Wielded = ([]);
     }
 }
 
@@ -341,13 +400,16 @@ private void initialize_wielded () {
  *
  * @returns {string*} the possible limbs that can wield a weapon
  */
-string *query_wieldable_limbs () {
-    string *wieldable = ({ });
+string *query_wieldable_limbs() {
+    string *wieldable = ({});
     object shield = query_worn_shield();
     initialize_wielded();
     foreach (string l in query_limbs()) {
         if (__Limbs[l]["type"] == "WIELD" && !__Wielded[l]) {
-            if (!shield || (shield && member_array(l, shield->query_limbs()) == -1)) {
+            if (!shield || (shield && member_array(
+                l,
+                shield->query_limbs()
+            ) == -1)) {
                 wieldable += ({ l });
             }
         }
@@ -360,7 +422,7 @@ string *query_wieldable_limbs () {
  * @param l the limb to query
  * @returns {STD_WEAPON} the possible weapon wielded to this limb
  */
-object query_wielded (string l) {
+object query_wielded(string l) {
     initialize_wielded();
     if (l && __Limbs[l]["type"] == "WIELD" && __Wielded[l]) {
         return __Wielded[l];
@@ -372,8 +434,8 @@ object query_wielded (string l) {
  *
  * @returns {STD_WEAPON*} list of weapons
  */
-object *query_wielded_weapons () {
-    object *weapons = ({ });
+object *query_wielded_weapons() {
+    object *weapons = ({});
     initialize_wielded();
     foreach (string l in query_limbs()) {
         if (__Limbs[l]["type"] == "WIELD" && __Wielded[l]) {
@@ -384,8 +446,8 @@ object *query_wielded_weapons () {
     }
     return weapons;
 }
-string *query_wielded_limbs (object ob) {
-    string *limbs = ({ });
+string *query_wielded_limbs(object ob) {
+    string *limbs = ({});
     initialize_wielded();
     foreach (string l in query_limbs()) {
         if (__Limbs[l]["type"] == "WIELD" && __Wielded[l] == ob) {
@@ -401,7 +463,7 @@ string *query_wielded_limbs (object ob) {
  * @param {STD_WEAPON} ob the weapon item to be wielded
  * @returns text failure description or 1 for success
  */
-mixed handle_wield (object ob) {
+mixed handle_wield(object ob) {
     string *limbs = query_wieldable_limbs(), *hands, limbConj;
 
     initialize_wielded();
@@ -427,8 +489,17 @@ mixed handle_wield (object ob) {
     ob->set_wielded(this_object());
 
     limbConj = conjunction(query_wielded_limbs(ob));
-    message("action", "You wield " + ob->query_name() + " in your " + limbConj + ".", this_object());
-    message("action", this_object()->query_cap_name() + " wields " + ob->query_name() + " in " + possessive(this_object()) + " " + limbConj + ".", environment(), this_object());
+    message(
+        "action",
+        "You wield " + ob->query_name() + " in your " + limbConj + ".",
+        this_object()
+    );
+    message(
+        "action",
+        this_object()->query_cap_name() + " wields " + ob->query_name() + " in " + possessive(this_object()) + " " + limbConj + ".",
+        environment(),
+        this_object()
+    );
 
     return 1;
 }
@@ -438,7 +509,7 @@ mixed handle_wield (object ob) {
  * @param {STD_WEAPON} ob the weapon item to be unwielded
  * @returns text failure description or 1 for success
  */
-mixed handle_unwield (object ob) {
+mixed handle_unwield(object ob) {
     string *limbs, limbConj;
 
     initialize_wielded();
@@ -453,14 +524,23 @@ mixed handle_unwield (object ob) {
         __Wielded[limb] = 0;
     }
 
-    message("action", "You unwield " + ob->query_name() + " from your " + limbConj + ".", this_object());
-    message("action", this_object()->query_cap_name() + " unwields " + ob->query_name() + " from " + possessive(this_object()) + " " + limbConj + ".", environment(), this_object());
+    message(
+        "action",
+        "You unwield " + ob->query_name() + " from your " + limbConj + ".",
+        this_object()
+    );
+    message(
+        "action",
+        this_object()->query_cap_name() + " unwields " + ob->query_name() + " from " + possessive(this_object()) + " " + limbConj + ".",
+        environment(),
+        this_object()
+    );
     return 1;
 }
 
 /* ----- healing ----- */
 
-void heal (int n) {
+void heal(int n) {
     if (n < 0) {
         return;
     }
@@ -475,7 +555,7 @@ void heal (int n) {
     }
 }
 
-void handle_passive_heal () {
+void handle_passive_heal() {
     int amt, t = time();
 
     if (!__NextHeal) {
@@ -491,13 +571,13 @@ void handle_passive_heal () {
 
 /* ----- injectable ----- */
 
-mapping query_injections () {
+mapping query_injections() {
     return __Injections;
 }
-int query_injection (string type) {
+int query_injection(string type) {
     return __Injections[type];
 }
-void add_injection (string type, int strength) {
+void add_injection(string type, int strength) {
     if (undefinedp(__Injections[type])) {
         __Injections[type] = 0;
     }
@@ -506,7 +586,7 @@ void add_injection (string type, int strength) {
         map_delete(__Injections, type);
     }
 }
-private void handle_injections () {
+private void handle_injections() {
     int n, amt;
 
     // remove any injections that are zero
@@ -524,7 +604,11 @@ private void handle_injections () {
         if (n > amt) {
             n = amt;
         }
-        message("status", "The damaging nanites diminish your health: -"+n+" hp.", this_object());
+        message(
+            "status",
+            "The damaging nanites diminish your health: -" + n + " hp.",
+            this_object()
+        );
         this_object()->add_hp(-n);
         __Injections["damaging nanites"] = max(({ 0, amt - n }));
     } else if (
@@ -538,7 +622,11 @@ private void handle_injections () {
         if (n > amt) {
             n = amt;
         }
-        message("status", "The healing nanites recover your health: +"+n+" hp.", this_object());
+        message(
+            "status",
+            "The healing nanites recover your health: +" + n + " hp.",
+            this_object()
+        );
         this_object()->add_hp(n);
         __Injections["healing nanites"] = max(({ 0, amt - n }));
     }
@@ -546,7 +634,7 @@ private void handle_injections () {
 
 /* ----- object applies ----- */
 
-void heart_beat () {
+void heart_beat() {
     handle_passive_heal();
     handle_injections();
 }

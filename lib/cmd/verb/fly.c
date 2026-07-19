@@ -2,7 +2,7 @@
 
 inherit STD_VERB;
 
-void create () {
+void create() {
     verb::create();
     add_rules(({ "" }));
     set_requirements(REQUIREMENT_BUSY | REQUIREMENT_DISABLE);
@@ -11,11 +11,11 @@ void create () {
     set_help_similar(({ "land", "lay", "meditate", "sit", "stand", }));
 }
 
-mixed can_fly () {
+mixed can_fly() {
     return 1;
 }
 
-void do_fly () {
+void do_fly() {
     object po = previous_object();
     string *wings, *sWings;
 
@@ -37,10 +37,20 @@ void do_fly () {
 
     if (po->query_posture() == "laying") {
         message("action", "You sit up and take to flight.", po);
-        message("action", po->query_cap_name() + " sits up and takes to the air in flight.", environment(po), po);
+        message(
+            "action",
+            po->query_cap_name() + " sits up and takes to the air in flight.",
+            environment(po),
+            po
+        );
     } else {
         message("action", "You take to the air in flight.", po);
-        message("action", po->query_cap_name() + " takes to the air in flight.", environment(po), po);
+        message(
+            "action",
+            po->query_cap_name() + " takes to the air in flight.",
+            environment(po),
+            po
+        );
     }
     po->set_posture("flying");
 }

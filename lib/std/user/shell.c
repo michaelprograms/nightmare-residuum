@@ -7,23 +7,28 @@ private mapping __Aliases = ([
         "n": int
     */
 ]);
-private string *__XAliases = ({ });
-private mapping __Variables = ([ ]);
-nosave private mapping __VariableHooks = ([ ]);
-nosave private string *__History = ({ });
+private string *__XAliases = ({});
+private mapping __Variables = ([]);
+nosave private mapping __VariableHooks = ([]);
+nosave private string *__History = ({});
 
-void initialize_shell ();
+void initialize_shell();
 
 /* ----- aliases ----- */
 
-nomask string *query_alias_names () {
+nomask string *query_alias_names() {
     return sort_array(keys(__Aliases), 1);
 }
-nomask mapping query_alias (string alias) {
+nomask mapping query_alias(string alias) {
     return __Aliases[alias];
 }
 
-varargs void set_alias (string name, string template, string *defaults, int xverb) {
+varargs void set_alias(
+    string name,
+    string template,
+    string *defaults,
+    int xverb
+) {
     int i;
     string *tmp;
     mapping new_alias;
@@ -42,7 +47,7 @@ varargs void set_alias (string name, string template, string *defaults, int xver
     new_alias = ([
         "t": template,
         "d": defaults,
-        "n": max(map(tmp, function (string s) {
+        "n": max(map(tmp, function(string s) {
             int d;
             sscanf(s, "%d%s", d, s);
             return d;
@@ -50,7 +55,7 @@ varargs void set_alias (string name, string template, string *defaults, int xver
     ]);
 
     if (!arrayp(new_alias["d"])) {
-        new_alias["d"] = ({ });
+        new_alias["d"] = ({});
     }
     i = new_alias["n"] - (sizeof(defaults) - 1);
     while (i--) {
@@ -64,12 +69,12 @@ varargs void set_alias (string name, string template, string *defaults, int xver
     this_object()->save_data();
 }
 
-nomask void unset_alias (string name) {
+nomask void unset_alias(string name) {
     map_delete(__Aliases, name);
     __XAliases -= ({ name });
 }
 
-mixed expand_alias (string input) {
+mixed expand_alias(string input) {
     string *argv = explode(input, " ");
     mapping currentAlias;
     string *xverbMatches, expandedInput;
@@ -77,15 +82,22 @@ mixed expand_alias (string input) {
 
     initialize_shell();
     numArgs = sizeof(argv) - 1;
-    xverbMatches = filter(__XAliases || ({ }), (: strsrch($2, $1) == 0 :), argv[0]);
+    xverbMatches = filter(
+        __XAliases || ({}),
+        (: strsrch($2, $1) == 0 :),
+        argv[0]
+    );
     if (sizeof(xverbMatches) > 1) {
-        error("Alias conflict: can't distinguish between " + implode(xverbMatches, ", "));
+        error("Alias conflict: can't distinguish between " + implode(
+            xverbMatches,
+            ", "
+        ));
     } else if (sizeof(xverbMatches) == 1) {
         sscanf(argv[0], xverbMatches[0] + "%s", argv[0]);
         if (argv[0] == "") {
             argv[0] = xverbMatches[0];
         } else {
-            numArgs ++;
+            numArgs++;
             argv = xverbMatches + argv;
         }
     }
@@ -94,19 +106,39 @@ mixed expand_alias (string input) {
         return trim(implode(argv, " "));
     }
 
-    expandedInput = replace_string(currentAlias["t"], "\\\\$", sprintf("%c", 255));
+    expandedInput = replace_string(
+        currentAlias["t"],
+        "\\\\$",
+        sprintf("%c", 255)
+    );
 
-    for (i = 1, j = numArgs; i <= currentAlias["n"]; i ++, j --) {
+    for (i = 1, j = numArgs; i <= currentAlias["n"]; i++, j--) {
         if (j < 1) {
-            expandedInput = replace_string(expandedInput, sprintf("$%d", i), currentAlias["d"][i]);
+            expandedInput = replace_string(
+                expandedInput,
+                sprintf("$%d", i),
+                currentAlias["d"][i]
+            );
         } else {
-            expandedInput = replace_string(expandedInput, sprintf("$%d", i), argv[i]);
+            expandedInput = replace_string(
+                expandedInput,
+                sprintf("$%d", i),
+                argv[i]
+            );
         }
     }
     if (j > 0) {
-        expandedInput = replace_string(expandedInput, "$*", implode(argv[i..], " "));
+        expandedInput = replace_string(
+            expandedInput,
+            "$*",
+            implode(argv[i..], " ")
+        );
     } else {
-        expandedInput = replace_string(expandedInput, "$*", currentAlias["d"][0]);
+        expandedInput = replace_string(
+            expandedInput,
+            "$*",
+            currentAlias["d"][0]
+        );
     }
 
     return trim(replace_string(expandedInput, sprintf("%c", 255), "$"));
@@ -114,10 +146,10 @@ mixed expand_alias (string input) {
 
 /* ----- variables ----- */
 
-mixed query_variable (string v) {
+mixed query_variable(string v) {
     return __Variables && __Variables[v];
 }
-varargs mixed set_variable (string v, mixed value, int set_if_undefined) {
+varargs mixed set_variable(string v, mixed value, int set_if_undefined) {
     int changed = 0;
     if (undefinedp(set_if_undefined) || (set_if_undefined && !__Variables[v])) {
         changed = (__Variables[v] != value);
@@ -131,19 +163,19 @@ varargs mixed set_variable (string v, mixed value, int set_if_undefined) {
     }
     return __Variables[v];
 }
-int unset_variable (string v) {
+int unset_variable(string v) {
     map_delete(__Variables, v);
     this_object()->save_data();
     return !__Variables[v];
 }
 
-void set_variable_hook (string v, function fn) {
+void set_variable_hook(string v, function fn) {
     __VariableHooks[v] = fn;
 }
 
 /* ----- shell ----- */
 
-void execute_command (string command) {
+void execute_command(string command) {
     string *split, action, input;
     object character;
 
@@ -153,7 +185,7 @@ void execute_command (string command) {
 
     split = explode(command, " ") - ({ "" });
     action = split[0];
-    input = sizeof(split) > 1 ? command[(sizeof(action)+1)..] : 0;
+    input = sizeof(split) > 1 ? command[(sizeof(action) + 1)..] : 0;
 
     if (D_CHANNEL->query_valid_channel(action)) {
         return D_CHANNEL->send(action, this_object()->query_character(), input);
@@ -167,7 +199,7 @@ void execute_command (string command) {
     }
 }
 
-protected void shell_input (mixed input) {
+protected void shell_input(mixed input) {
     if (input == -1) {
         return;
     }
@@ -193,7 +225,7 @@ protected void shell_input (mixed input) {
     }
 }
 
-protected mixed query_prompt () {
+protected mixed query_prompt() {
     object tc = this_object()->query_character();
     string prompt = query_variable("prompt") || "";
     int i;
@@ -202,24 +234,24 @@ protected mixed query_prompt () {
         if (i + 2 > sizeof(prompt) - 1) {
             break;
         }
-        switch (prompt[i+1..i+2]) {
+        switch (prompt[i + 1..i + 2]) {
             case "hp":
-                prompt = replace_string(prompt, "$hp", ""+tc->query_hp());
+                prompt = replace_string(prompt, "$hp", "" + tc->query_hp());
                 break;
             case "sp":
-                prompt = replace_string(prompt, "$sp", ""+tc->query_sp());
+                prompt = replace_string(prompt, "$sp", "" + tc->query_sp());
                 break;
             case "mp":
-                prompt = replace_string(prompt, "$mp", ""+tc->query_mp());
+                prompt = replace_string(prompt, "$mp", "" + tc->query_mp());
                 break;
             case "HP":
-                prompt = replace_string(prompt, "$HP", ""+tc->query_max_hp());
+                prompt = replace_string(prompt, "$HP", "" + tc->query_max_hp());
                 break;
             case "SP":
-                prompt = replace_string(prompt, "$SP", ""+tc->query_max_sp());
+                prompt = replace_string(prompt, "$SP", "" + tc->query_max_sp());
                 break;
             case "MP":
-                prompt = replace_string(prompt, "$MP", ""+tc->query_max_mp());
+                prompt = replace_string(prompt, "$MP", "" + tc->query_max_mp());
                 break;
             case "cd":
                 prompt = replace_string(prompt, "$cd", query_variable("cwd"));
@@ -231,26 +263,26 @@ protected mixed query_prompt () {
     return prompt + " ";
 }
 
-string *query_history () {
+string *query_history() {
     return __History;
 }
 
 /* ----- applies ----- */
 
-void initialize_shell () {
+void initialize_shell() {
     if (!mapp(__Variables)) {
-        __Variables = ([ ]);
+        __Variables = ([]);
         set_variable("cwd", "/", 1);
         set_variable("prompt", "$hp/$HP hp $sp/$SP sp $mp/$MP mp > ", 1);
     }
     if (!mapp(__VariableHooks)) {
-        __VariableHooks = ([ ]);
+        __VariableHooks = ([]);
     }
     if (!sizeof(__XAliases)) {
-        __XAliases = ({ });
+        __XAliases = ({});
     }
     if (!sizeof(__Aliases)) {
-        __Aliases = ([ ]);
+        __Aliases = ([]);
         set_alias("l", "look");
         set_alias("n", "go north");
         set_alias("ne", "go northeast");
@@ -268,10 +300,10 @@ void initialize_shell () {
     }
 }
 
-void create () {
+void create() {
     initialize_shell();
 }
 
-protected nomask void shell_start () {
+protected nomask void shell_start() {
     this_object()->input_push((: shell_input :), (: query_prompt :));
 }

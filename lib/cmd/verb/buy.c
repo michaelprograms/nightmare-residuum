@@ -2,7 +2,7 @@
 
 inherit STD_VERB;
 
-void create () {
+void create() {
     verb::create();
     add_rules(({ "", "STR from OBJ", "STR", }));
     set_requirements(REQUIREMENT_BUSY | REQUIREMENT_DISABLE);
@@ -13,10 +13,10 @@ void create () {
 
 /* ----- STR from OBJ ----- */
 
-mixed can_buy_str_from_obj (mixed args...) {
+mixed can_buy_str_from_obj(mixed args...) {
     return 1;
 }
-void do_buy_str_from_obj (mixed args...) {
+void do_buy_str_from_obj(mixed args...) {
     object po = previous_object();
     object vendor;
     string str;
@@ -33,10 +33,10 @@ void do_buy_str_from_obj (mixed args...) {
 
 /* ----- STR ----- */
 
-mixed can_buy_str (mixed args...) {
+mixed can_buy_str(mixed args...) {
     return 1;
 }
-void do_buy_str (mixed args...) {
+void do_buy_str(mixed args...) {
     object po = previous_object();
     object *vendors;
     /** @type {STD_ROOM} env */
@@ -54,9 +54,9 @@ void do_buy_str (mixed args...) {
 
 /* ----- no input ----- */
 
-mixed can_buy (mixed args...) {
+mixed can_buy(mixed args...) {
     return 1;
 }
-void do_buy (mixed args...) {
+void do_buy(mixed args...) {
     message("action", "Buy what from which vendor?", previous_object());
 }

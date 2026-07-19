@@ -4,11 +4,17 @@ inherit M_TEST;
  * @var {"/secure/module/http"} testOb
  */
 
-string *test_order () {
-    return ({ "test_config", "test_response", "test_parse_request", "test_handle_response", "test_static_and_404" });
+string *test_order() {
+    return ({
+        "test_config",
+        "test_response",
+        "test_parse_request",
+        "test_handle_response",
+        "test_static_and_404"
+    });
 }
 
-void test_config () {
+void test_config() {
     expect("port is queryable and settable", (: ({
         assert_equal(testOb->query_port(), 0),
 
@@ -17,7 +23,7 @@ void test_config () {
     }) :));
 
     expect("url patterns are queryable and settable", (: ({
-        assert_equal(testOb->query_url_patterns(), ({ })),
+        assert_equal(testOb->query_url_patterns(), ({})),
 
         testOb->add_url_pattern("^/app", "app"),
         assert_equal(testOb->query_url_patterns(), ({ ({ "^/app", "app" }) })),
@@ -34,13 +40,21 @@ void test_config () {
     }) :));
 }
 
-void test_response () {
+void test_response() {
     expect("response is formatted", (: ({
-        assert_equal(testOb->format_response(([ "code": "code", "connection": "connection", "type": "type", "content": "content" ])), "HTTP/1.0 code\r\nConnection: connection\r\nServer: lpc-http 0.1\r\nContent-Type: type\r\n\r\ncontent")
+        assert_equal(
+            testOb->format_response(([
+                "code": "code",
+                "connection": "connection",
+                "type": "type",
+                "content": "content"
+            ])),
+            "HTTP/1.0 code\r\nConnection: connection\r\nServer: lpc-http 0.1\r\nContent-Type: type\r\n\r\ncontent"
+        )
     }) :));
 }
 
-void test_parse_request () {
+void test_parse_request() {
     mapping req;
 
     req = testOb->parse_request("GET /foo HTTP/1.0\r\n\r\n");
@@ -98,17 +112,17 @@ void test_parse_request () {
     }) :));
 }
 
-void test_handle_response () {
+void test_handle_response() {
     mapping res;
 
-    res = testOb->handle_response(([ ]), "a.b.c.d", ({ }));
+    res = testOb->handle_response(([]), "a.b.c.d", ({}));
     expect("default case (4+ dot segments) returns 500", (: ({
         assert_equal($(res["code"]), "500 Internal Server Error"),
         assert_equal($(res["connection"]), "close"),
     }) :));
 }
 
-void test_static_and_404 () {
+void test_static_and_404() {
     string out;
 
     out = testOb->format_response(([

@@ -1,15 +1,15 @@
 inherit STD_COMMAND;
 
-void create () {
+void create() {
     ::create();
     set_syntax("astronomy");
     set_help_text("The astronomy command is used to view the state of the astronomy daemon.");
 }
 
-void command (string input, mapping flags) {
-    mapping *items = ({ });
+void command(string input, mapping flags) {
+    mapping *items = ({});
 
-    foreach (string key,mapping a in D_ASTRONOMY->query_astronomy()) {
+    foreach (string key, mapping a in D_ASTRONOMY->query_astronomy()) {
         items += ({
             ([
                 "header": key,
@@ -56,7 +56,10 @@ void command (string input, mapping flags) {
                     "MOONS",
                     "",
                     "",
-                }) + map(keys(a["MOONS"]), (: capitalize($1)+" ["+$(a)["MOONS"][$1]["phase"]+"], "+$(a)["MOONS"][$1]["orbit"]+" days" :)),
+                }) + map(
+                    keys(a["MOONS"]),
+                    (: capitalize($1) + " [" + $(a)["MOONS"][$1]["phase"] + "], " + $(a)["MOONS"][$1]["orbit"] + " days" :)
+                ),
                 "columns": 3,
             ])
         });

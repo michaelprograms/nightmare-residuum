@@ -2,8 +2,8 @@
 
 nosave private object *__Hostiles;
 
-void create () {
-    __Hostiles = ({ });
+void create() {
+    __Hostiles = ({});
 }
 
 /* ----- hostiles ----- */
@@ -14,7 +14,7 @@ void create () {
  * @param {STD_LIVING} ob the living object that is hostile
  * @returns 0 or 1 for success
  */
-int add_hostile (object ob) {
+int add_hostile(object ob) {
     if (!ob || !ob->is_living() || member_array(ob, __Hostiles) > -1) {
         return 0;
     }
@@ -29,14 +29,14 @@ int add_hostile (object ob) {
  * @param {STD_LIVING} ob the living object to remove
  * @returns 0 or 1 for success
  */
-int remove_hostile (object ob) {
+int remove_hostile(object ob) {
     if (!ob || !ob->is_living() || member_array(ob, __Hostiles) == -1) {
         return 0;
     }
     __Hostiles -= ({ ob });
     return 1;
 }
-int query_hostile (object ob) {
+int query_hostile(object ob) {
     return member_array(ob, __Hostiles) > -1;
 }
 /**
@@ -45,7 +45,7 @@ int query_hostile (object ob) {
  *
  * @returns {STD_LIVING*} the list of hostiles
  */
-object *query_hostiles () {
+object *query_hostiles() {
     __Hostiles = filter(__Hostiles, (: !undefinedp($1) :));
     return __Hostiles;
 }
@@ -59,7 +59,7 @@ object *query_hostiles () {
  * @param table the combat table for hit/miss/etc chances
  * @param {STD_WEAPON} weapon the wielded weapon, if any
  */
-void handle_combat_hit (object target, mapping *table, object weapon) {
+void handle_combat_hit(object target, mapping *table, object weapon) {
     object to = this_object();
     int d100, sum, crit, damage;
     string limb;
@@ -79,32 +79,40 @@ void handle_combat_hit (object target, mapping *table, object weapon) {
         sum = min(({ 100, sum + m["value"], }));
         if (d100 <= sum) {
             switch (m["id"]) {
-            case "miss":
-                combat_miss_message(to, target, weapon);
-                break;
-            // case "resist": // @TODO
-            //     break;
-            case "block":
-                combat_block_message(to, target);
-                break;
-            case "parry":
-                combat_parry_message(to, target, weapon);
-                break;
-            case "evade":
-                combat_evade_message(to, target);
-                break;
-            case "critical hit":
-                crit = 1;
-            case "regular hit":
-                limb = target->query_random_limb();
-                damage = combat_hit_damage(to, target, limb, weapon, crit);
-                if (damage < 1) {
+                case "miss":
                     combat_miss_message(to, target, weapon);
                     break;
-                }
-                combat_hit_message(to, target, limb, weapon, damage, crit, 0);
-                target->handle_damage(damage, limb);
-                break;
+                    // case "resist": // @TODO
+                    //     break;
+                case "block":
+                    combat_block_message(to, target);
+                    break;
+                case "parry":
+                    combat_parry_message(to, target, weapon);
+                    break;
+                case "evade":
+                    combat_evade_message(to, target);
+                    break;
+                case "critical hit":
+                    crit = 1;
+                case "regular hit":
+                    limb = target->query_random_limb();
+                    damage = combat_hit_damage(to, target, limb, weapon, crit);
+                    if (damage < 1) {
+                        combat_miss_message(to, target, weapon);
+                        break;
+                    }
+                    combat_hit_message(
+                        to,
+                        target,
+                        limb,
+                        weapon,
+                        damage,
+                        crit,
+                        0
+                    );
+                    target->handle_damage(damage, limb);
+                    break;
             }
             break;
         }
@@ -114,7 +122,7 @@ void handle_combat_hit (object target, mapping *table, object weapon) {
  * The main combat handler, this will be called by the living object's
  * heartbeat.
  */
-void handle_combat () {
+void handle_combat() {
     /** @type {STD_LIVING} to */
     object to = this_object(), env = environment(), target, *weapons;
     int min, max, hits;
@@ -129,7 +137,11 @@ void handle_combat () {
         to->set_posture("sitting");
     }
     if (member_array(to->query_posture(), ({ "sitting", "laying" })) > -1) {
-        message("combat info", "You cannot fight while " + to->query_posture() + " down!", to);
+        message(
+            "combat info",
+            "You cannot fight while " + to->query_posture() + " down!",
+            to
+        );
         return;
     }
     target->add_hostile(to);
@@ -147,11 +159,15 @@ void handle_combat () {
         combat_useless_message(this_object());
         return;
     }
-    for (int h = 0; h < hits; h ++) {
+    for (int h = 0; h < hits; h++) {
         if (!target) {
             break;
         }
-        handle_combat_hit(target, combat_table(to, target, h), element_of(weapons));
+        handle_combat_hit(
+            target,
+            combat_table(to, target, h),
+            element_of(weapons)
+        );
     }
     to->add_sp(-(random(hits) + 1));
     if (target) {
@@ -164,7 +180,7 @@ void handle_combat () {
  *
  * @param {STD_LIVING} source the optional living object requesting this check
  */
-varargs void check_lifesigns (object source) {
+varargs void check_lifesigns(object source) {
     int dead = 0;
 
     if (this_object()->query_defeated()) {
@@ -175,15 +191,24 @@ varargs void check_lifesigns (object source) {
         dead = 1;
     }
     if (!dead) {
-        foreach (string limb in this_object()->query_severed_limbs() || ({ })) {
+        foreach (string limb in this_object()->query_severed_limbs() || ({})) {
             if (this_object()->query_limb(limb)["type"] == "FATAL") {
                 dead = 1;
             }
         }
     }
     if (dead) {
-        message("defeat", "\nYou have been %^I_RED%^BOLD%^defeated%^RESET%^!\n", this_object());
-        message("defeat", "\n" + this_object()->query_cap_name() + " has been %^I_RED%^BOLD%^defeated%^RESET%^!\n", environment(), this_object());
+        message(
+            "defeat",
+            "\nYou have been %^I_RED%^BOLD%^defeated%^RESET%^!\n",
+            this_object()
+        );
+        message(
+            "defeat",
+            "\n" + this_object()->query_cap_name() + " has been %^I_RED%^BOLD%^defeated%^RESET%^!\n",
+            environment(),
+            this_object()
+        );
         if (source) {
             source->handle_victory(this_object());
         }
@@ -193,10 +218,10 @@ varargs void check_lifesigns (object source) {
 
 /* ----- parser applies ----- */
 
-mixed direct_attack_liv (mixed args...) {
+mixed direct_attack_liv(mixed args...) {
     object po = previous_object();
     return environment() == environment(po) && po != this_object() && !query_hostile(po);
 }
-mixed direct_aid_liv (mixed args...) {
+mixed direct_aid_liv(mixed args...) {
     return direct_attack_liv(args);
 }

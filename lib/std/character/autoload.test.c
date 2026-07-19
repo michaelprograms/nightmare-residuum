@@ -4,7 +4,7 @@ inherit M_TEST;
  * @var {"/std/character/autoload"} testOb
  */
 
-void test_autoload () {
+void test_autoload() {
     object mockBody = new("/std/living/body.mock.c");
     object mockItem1 = new("/std/item.mock.c");
     object ob1, ob2, ob3;
@@ -22,10 +22,17 @@ void test_autoload () {
     ob2->handle_move(testOb);
     ob3->handle_move(testOb);
     mockItem1->start_shadow(ob1);
-    /** @type {"/std/item.mock"} */ (ob1)->set_autoload_data(({ "test", "123", "abc" }));
+    /** @type {"/std/item.mock"} */ (ob1)->set_autoload_data(({
+        "test",
+        "123",
+        "abc"
+    }));
 
     expect("autoload updates and restores", (: ({
-        assert_equal(/** @type {"/std/living/body.mock"} */ (testOb)->query_level(), 1),
+        assert_equal(
+            /** @type {"/std/living/body.mock"} */ (testOb)->query_level(),
+            1
+        ),
         assert_equal(sizeof(all_inventory(testOb)), 3),
         assert_equal(sizeof(testOb->query_autoload_items()), 0),
 

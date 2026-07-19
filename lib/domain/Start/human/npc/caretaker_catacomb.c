@@ -2,7 +2,7 @@
 
 inherit STD_NPC;
 
-void create () {
+void create() {
     ::create();
     set_id(({ "caretaker", "catacomb caretaker", "human" }));
     set_name("catacomb caretaker");

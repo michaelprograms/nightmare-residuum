@@ -7,7 +7,7 @@ inherit M_TEST;
  * @var {"/std/user/account"} testOb
  */
 
-void after_each_test () {
+void after_each_test() {
     if (file_size(PATH_accounttest) > -1) {
         rm(PATH_accounttest);
     }
@@ -16,7 +16,7 @@ void after_each_test () {
     }
 }
 
-void test_account_name () {
+void test_account_name() {
     expect("account name is settable and queryable", (: ({
         assert_equal(testOb->query_name(), UNDEFINED),
         testOb->set_name("accounttest"),
@@ -30,9 +30,12 @@ void test_account_name () {
     }) :));
 }
 
-void test_account_password () {
+void test_account_password() {
     expect("account password is not settable", (: ({
-        assert_catch((: testOb->set_password("test") :), "*Illegal attempt to account->set_password\n"),
+        assert_catch(
+            (: testOb->set_password("test") :),
+            "*Illegal attempt to account->set_password\n"
+        ),
     }) :));
     expect("account test password is blank", (: ({
         assert_equal(testOb->query_password(), 0),
@@ -41,7 +44,7 @@ void test_account_password () {
 
 nosave private int now;
 
-void test_account_times () {
+void test_account_times() {
     expect("account times are valid", (: ({
         // verify current time exists
         assert_equal((now = time()) > 0, 1),
@@ -54,7 +57,10 @@ void test_account_times () {
         assert_equal(testOb->query_last_on(), now),
 
         // read in accounttest.o and modify the __LastOn
-        write_file(PATH_accounttest, implode(map(explode(read_file(PATH_accounttest), "\n"), function (string line) {
+        write_file(PATH_accounttest, implode(map(explode(
+            read_file(PATH_accounttest),
+            "\n"
+        ), function(string line) {
             if (regexp(line, "^__LastOn ")) {
                 return "__LastOn " + (now - 100);
             }
@@ -69,7 +75,7 @@ void test_account_times () {
     }) :));
 }
 
-void test_account_settings () {
+void test_account_settings() {
     expect("account settings handles setting and querying", (: ({
         assert_equal(mapp(testOb->query_settings()), 1),
         assert_equal(sizeof(testOb->query_settings()), 6),
@@ -90,51 +96,75 @@ void test_account_settings () {
 
 nosave private mapping tmpCharacter;
 nosave private string __KeyName = "accounttest";
-string query_key_name () { return __KeyName; }
-string query_species () { return "human"; }
-int query_level () { return 123; }
-int query_last_action () { return 123456; }
+string query_key_name() { return __KeyName; }
+string query_species() { return "human"; }
+int query_level() { return 123; }
+int query_last_action() { return 123456; }
 nosave private string __LastEnvShort;
-string query_environment_short () { return __LastEnvShort; }
+string query_environment_short() { return __LastEnvShort; }
 
-void test_account_characters () {
+void test_account_characters() {
     __KeyName = "tester";
     __LastEnvShort = "somewhere";
 
     expect("account characters can be added and deleted", (: ({
-        assert_equal(testOb->query_character_names(), ({ })),
+        assert_equal(testOb->query_character_names(), ({})),
         assert_equal(testOb->query_has_playable_characters(), 0),
 
         testOb->add_character("Tester", "tester", "custodian"),
 
         assert_equal(testOb->query_has_playable_characters(), 1),
         assert_equal(testOb->query_character_names(), ({ "tester" })),
-        assert_equal(testOb->query_character_by_name("tester")["name"], "Tester"),
+        assert_equal(
+            testOb->query_character_by_name("tester")["name"],
+            "Tester"
+        ),
         assert_equal(testOb->query_character_by_name("tester")["deleted"], 0),
-        assert_equal(testOb->query_character_by_name("tester")["species"], "custodian"),
-        assert_equal(testOb->query_character_by_name("tester")["last_action"], 0),
-        assert_equal(testOb->query_character_by_name("tester")["last_location"], 0),
+        assert_equal(
+            testOb->query_character_by_name("tester")["species"],
+            "custodian"
+        ),
+        assert_equal(
+            testOb->query_character_by_name("tester")["last_action"],
+            0
+        ),
+        assert_equal(
+            testOb->query_character_by_name("tester")["last_location"],
+            0
+        ),
         assert_equal(testOb->query_character_by_name("tester")["level"], 0),
 
         // ensure character mapping data is a copy and not by reference
-        assert_equal(mapp(tmpCharacter = testOb->query_character_by_name("tester")), 1),
+        assert_equal(
+            mapp(tmpCharacter = testOb->query_character_by_name("tester")),
+            1
+        ),
         assert_equal(tmpCharacter["deleted"] = 1, 1),
         assert_equal(testOb->query_character_by_name("tester")["deleted"], 0),
 
         // nothing to update
-        testOb->update_character_data(UNDEFINED), // mock data functions above
+        testOb->update_character_data(UNDEFINED),  // mock data functions above
 
         // updates character
-        testOb->update_character_data(this_object()), // mock data functions above
+        testOb->update_character_data(this_object()),  // mock data functions above
         assert_equal(testOb->query_character_by_name("tester")["deleted"], 0),
-        assert_equal(testOb->query_character_by_name("tester")["species"], "human"),
-        assert_equal(testOb->query_character_by_name("tester")["last_action"], 123456),
-        assert_equal(testOb->query_character_by_name("tester")["last_location"], "somewhere"),
+        assert_equal(
+            testOb->query_character_by_name("tester")["species"],
+            "human"
+        ),
+        assert_equal(
+            testOb->query_character_by_name("tester")["last_action"],
+            123456
+        ),
+        assert_equal(
+            testOb->query_character_by_name("tester")["last_location"],
+            "somewhere"
+        ),
         assert_equal(testOb->query_character_by_name("tester")["level"], 123),
 
         testOb->set_deleted("tester"),
         assert_equal(testOb->query_character_by_name("tester")["deleted"], 1),
-        assert_equal(testOb->query_character_names(), ({ })),
+        assert_equal(testOb->query_character_names(), ({})),
         assert_equal(testOb->query_has_playable_characters(), 0),
     }) :));
 
@@ -142,7 +172,7 @@ void test_account_characters () {
     __LastEnvShort = 0;
 }
 
-void test_ensure_default_settings () {
+void test_ensure_default_settings() {
     mapping settings;
 
     settings = testOb->query_settings();
@@ -179,7 +209,7 @@ void test_ensure_default_settings () {
     }) :));
 }
 
-void test_ed_setup () {
+void test_ed_setup() {
     expect("ed setup is settable and queryable", (: ({
         assert_equal(testOb->query_ed_setup(), UNDEFINED),
 

@@ -3,7 +3,7 @@
 inherit STD_ITEM;
 inherit M_PICKABLE;
 
-void create () {
+void create() {
     ::create();
     set_name("plum tree");
     set_id(({ "tree", "plum tree" }));
@@ -15,6 +15,6 @@ void create () {
     set_pickable(HUMAN_ITEM + "plum_fruit.c", 5, "A plum ripens on the tree.");
 }
 
-void reset () {
+void reset() {
     ::reset();
 }

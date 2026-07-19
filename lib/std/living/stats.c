@@ -19,7 +19,7 @@ nosave mapping __StatBonus = ([
     "luck": 0,
 ]);
 
-private void initialize_stats () {
+private void initialize_stats() {
     if (!mapp(__Stat)) {
         __Stat = ([
             "strength": 0,
@@ -44,20 +44,20 @@ private void initialize_stats () {
     }
 }
 
-int query_stat_base (string stat) {
+int query_stat_base(string stat) {
     initialize_stats();
     return __Stat[stat];
 }
-int query_stat_bonus (string stat) {
+int query_stat_bonus(string stat) {
     initialize_stats();
     return __StatBonus[stat];
 }
-int query_stat (string stat) {
+int query_stat(string stat) {
     initialize_stats();
     return __Stat[stat] + query_stat_bonus(stat);
 }
 
-void set_stat (string stat, int n) {
+void set_stat(string stat, int n) {
     if (member_array(stat, keys(__Stat)) == -1) {
         return;
     }
@@ -65,7 +65,7 @@ void set_stat (string stat, int n) {
     this_object()->update_vitals();
     this_object()->update_limbs();
 }
-void add_stat_bonus (string stat, int n) {
+void add_stat_bonus(string stat, int n) {
     initialize_stats();
     if (member_array(stat, keys(__StatBonus)) == -1) {
         return;

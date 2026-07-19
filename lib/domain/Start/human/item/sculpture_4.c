@@ -2,21 +2,21 @@
 
 inherit STD_ITEM;
 
-string sculpture_long () {
+string sculpture_long() {
     string desc = "";
     object tc = this_character();
 
     // if (query_account_setting("screenreader") == "on") {
-        desc += "It depicts a sculpture.";
+    desc += "It depicts a sculpture.";
     // } else {
-        // @TODO
+    // @TODO
     // }
 
     D_ACHIEVEMENTS->flag(tc, "Art Appreciation", "s4");
     return desc;
 }
 
-void create () {
+void create() {
     ::create();
     set_id(({ "sculpture", "david", }));
     set_name("sculpture");

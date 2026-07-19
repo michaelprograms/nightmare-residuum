@@ -5,7 +5,7 @@ nosave private int __NoClean = 0;
  *
  * @returns 0 or 1
  */
-int query_no_clean () {
+int query_no_clean() {
     return __NoClean;
 }
 /**
@@ -13,7 +13,7 @@ int query_no_clean () {
  *
  * @param value 0 or 1
  */
-void set_no_clean (int value) {
+void set_no_clean(int value) {
     __NoClean = value;
 }
 
@@ -22,7 +22,7 @@ void set_no_clean (int value) {
  *
  * @returns 0
  */
-nomask int clean_never () {
+nomask int clean_never() {
     return 0;
 }
 /**
@@ -30,7 +30,7 @@ nomask int clean_never () {
  *
  * @returns 1
  */
-nomask int clean_later () {
+nomask int clean_later() {
     return 1;
 }
 
@@ -39,7 +39,7 @@ nomask int clean_later () {
  *
  * @returns 0 or 1 for success
  */
-protected int internal_remove () {
+protected int internal_remove() {
     object env;
     if (env = environment()) {
         map(all_inventory(), (: $1->handle_move($(env)) :));
@@ -53,7 +53,7 @@ protected int internal_remove () {
  *
  * @returns 0 or 1 for success
  */
-int handle_remove () {
+int handle_remove() {
     return internal_remove();
 }
 
@@ -65,7 +65,7 @@ int handle_remove () {
  *
  * @param args an integer argument of number of inherited blueprints (do not trust this value)
  */
-int clean_up (mixed args...) {
+int clean_up(mixed args...) {
     // Objects never lose environment, let environment handle clean_up
     if (environment()) {
         return clean_never();

@@ -1,6 +1,6 @@
 inherit STD_ROOM;
 
-void create () {
+void create() {
     ::create();
     set_short("a freezer");
     set_long("A frozen confinement.");

@@ -2,7 +2,7 @@
 
 inherit STD_VENDOR;
 
-void create () {
+void create() {
     string name, capName;
     ::create();
 
@@ -14,7 +14,14 @@ void create () {
         set_gender("female");
     }
     capName = capitalize(name);
-    set_id(({ name, "clone", "attendant", "museum attendant", "entrance attendant", "museum entrance attendant" }));
+    set_id(({
+        name,
+        "clone",
+        "attendant",
+        "museum attendant",
+        "entrance attendant",
+        "museum entrance attendant"
+    }));
     set_name(capName);
     set_short(capName + " the museum entrance attendant");
     set_long("A cloned human by the name of " + capName + ", working as an entrance attendant in the museum.");
@@ -36,14 +43,14 @@ void create () {
     set_say_response("buy", "You need to buy a ticket to enter the museum.");
 }
 
-string *names = ({ });
+string *names = ({});
 
 /**
  * The STD_NPC hook for receiving a living object in this object's environment.
  *
  * @param {STD_LIVING} living the living object entering the environment
  */
-void handle_receive_living_in_env (object living) {
+void handle_receive_living_in_env(object living) {
     string name;
     ::handle_receive_living_in_env(living);
 

@@ -5,14 +5,14 @@ inherit M_TEST;
  */
 
 nosave private int __MockLiving;
-int is_living () { return __MockLiving; }
+int is_living() { return __MockLiving; }
 
 nosave private string __MockClass;
-string query_class () { return __MockClass; }
+string query_class() { return __MockClass; }
 
 // @TODO: clean this up with real test mock stats
 int MockCharisma = 0, MockIntelligence = 0, MockPerception = 0;
-int query_stat (string key) {
+int query_stat(string key) {
     if (key == "charisma") {
         return MockCharisma;
     } else if (key == "intelligence") {
@@ -24,18 +24,18 @@ int query_stat (string key) {
     }
 }
 int MockLevel = 0;
-int query_level () {
+int query_level() {
     return MockLevel;
 }
 
-void test_name () {
+void test_name() {
     expect("handles ability name", (: ({
         assert_equal(testOb->query_name(), "ability.coverage"),
     }) :));
 }
 
 int cValue1 = 0, cValue2 = 0;
-void test_calculate () {
+void test_calculate() {
     MockIntelligence = 10;
     MockCharisma = 10;
     MockLevel = 10;
@@ -56,34 +56,57 @@ void test_calculate () {
 
     expect("damage is calculated", (: ({
         testOb->set_powers(([ "psionic": 10, "ranged": 10, "brawl": 10, ])),
-        cValue1 = testOb->calculate_damage(this_object(), this_object(), "head"),
+        cValue1 = testOb->calculate_damage(
+            this_object(),
+            this_object(),
+            "head"
+        ),
         assert_equal(cValue1 > 0, 1),
 
         testOb->set_powers(([ "psionic": 123, "ranged": 123, "brawl": 123, ])),
-        cValue2 = testOb->calculate_damage(this_object(), this_object(), "head"),
+        cValue2 = testOb->calculate_damage(
+            this_object(),
+            this_object(),
+            "head"
+        ),
         assert_equal(cValue2 > cValue1, 1),
 
         __MockClass = "psionist",
-        cValue1 = testOb->calculate_damage(this_object(), this_object(), "head"),
+        cValue1 = testOb->calculate_damage(
+            this_object(),
+            this_object(),
+            "head"
+        ),
         assert_equal(cValue1 > 0, 1),
 
         __MockClass = "mystic",
-        cValue1 = testOb->calculate_damage(this_object(), this_object(), "head"),
+        cValue1 = testOb->calculate_damage(
+            this_object(),
+            this_object(),
+            "head"
+        ),
         assert_equal(cValue1 > 0, 1),
     }) :));
 }
 
-void test_weapons () {
+void test_weapons() {
     object liv, weaponBlade, weaponBlunt;
 
     expect("handles setting and querying weapons", (: ({
-        assert_equal(testOb->query_weapons(), ([ ])),
+        assert_equal(testOb->query_weapons(), ([])),
 
         testOb->set_weapons(([ "brawl": ({ 1 }), ])),
         assert_equal(testOb->query_weapons(), ([ "brawl": ({ 1 }), ])),
 
-        testOb->set_weapons(([ "brawl": ({ 1 }), "blade": ({ 1, 2 }), "blunt": ({ 1, 2 }), ])),
-        assert_equal(testOb->query_weapons(), ([ "brawl": ({ 1 }), "blade": ({ 1, 2 }), "blunt": ({ 1, 2 }), ])),
+        testOb->set_weapons(([
+            "brawl": ({ 1 }),
+            "blade": ({ 1, 2 }),
+            "blunt": ({ 1, 2 }),
+        ])),
+        assert_equal(
+            testOb->query_weapons(),
+            ([ "brawl": ({ 1 }), "blade": ({ 1, 2 }), "blunt": ({ 1, 2 }), ])
+        ),
     }) :));
 
     liv = new(STD_LIVING);
@@ -99,7 +122,7 @@ void test_weapons () {
 
     expect("handles setting and querying weapons", (: ({
         assert_equal($(liv)->query_species(), "human"),
-        assert_equal($(liv)->query_wielded_weapons(), ({ })),
+        assert_equal($(liv)->query_wielded_weapons(), ({})),
 
         testOb->set_weapons(([ "brawl": ({ 1 }), ])),
         assert_equal(testOb->query_best_weapon($(liv)), UNDEFINED),
@@ -130,37 +153,52 @@ void test_weapons () {
     if (weaponBlunt) weaponBlunt->handle_remove();
 }
 
-void test_ability_success () {
+void test_ability_success() {
     expect("is_ability_successful behaves", (: ({
         // no type, fails
-        assert_equal(testOb->is_ability_successful(this_object(), this_object()), 0),
+        assert_equal(
+            testOb->is_ability_successful(this_object(), this_object()),
+            0
+        ),
 
         // attack type, should succeed
         testOb->set_type("attack"),
         testOb->set_powers(([ "psionic": 123, "ranged": 123, "brawl": 123 ])),
-        assert_equal(testOb->is_ability_successful(this_object(), this_object()), 1),
+        assert_equal(
+            testOb->is_ability_successful(this_object(), this_object()),
+            1
+        ),
 
         // attack type, should be 0-1
         MockIntelligence = 100,
         MockPerception = 10000,
         testOb->set_difficulty_factor(200),
-        assert_equal(testOb->is_ability_successful(this_object(), this_object()) <= 1, 1),
+        assert_equal(
+            testOb->is_ability_successful(this_object(), this_object()) <= 1,
+            1
+        ),
         MockIntelligence = 0,
         MockPerception = 0,
 
         // utilities always pass
         testOb->set_type("utility"),
-        assert_equal(testOb->is_ability_successful(this_object(), this_object()), 1),
+        assert_equal(
+            testOb->is_ability_successful(this_object(), this_object()),
+            1
+        ),
 
         // utilities always pass
         testOb->set_type("heal"),
-        assert_equal(testOb->is_ability_successful(this_object(), this_object()), 1),
+        assert_equal(
+            testOb->is_ability_successful(this_object(), this_object()),
+            1
+        ),
     }) :));
 }
 
-void test_ability_use () {
+void test_ability_use() {
     object char = new(STD_CHARACTER);
-    object mockC1 = new("/std/npc.mock.c"); // TODO: this is weird, its not an NPC but this is the functionality we need
+    object mockC1 = new("/std/npc.mock.c");  // TODO: this is weird, its not an NPC but this is the functionality we need
     object npc1 = new(STD_NPC);
     object weapon1 = new(STD_WEAPON);
     object room = new(STD_ROOM);
@@ -189,28 +227,43 @@ void test_ability_use () {
         // doesn't meet requirements
         $(char)->set_level(1),
         testOb->handle_ability_use($(char), 0),
-        assert_equal($(mockC1)->query_received_messages()[<1], ({ "action", "You cannot do that." })),
+        assert_equal(
+            $(mockC1)->query_received_messages()[<1],
+            ({ "action", "You cannot do that." })
+        ),
 
         // meet requirements. but cooldown
         $(char)->set_level(10),
         $(char)->set_cooldown(testOb->query_name(), 1),
         testOb->handle_ability_use($(char), 0),
-        assert_equal($(mockC1)->query_received_messages()[<1], ({ "action", "You are not yet ready to ability.coverage again." })),
+        assert_equal(
+            $(mockC1)->query_received_messages()[<1],
+            ({ "action", "You are not yet ready to ability.coverage again." })
+        ),
 
         // requires targets, but no targets provided
         $(char)->cooldown_timed_expire(testOb->query_name()),
         testOb->set_targets(1),
         testOb->handle_ability_use($(char), 0),
-        assert_equal($(mockC1)->query_received_messages()[<1], ({ "action", "You have no hostile targets present." })),
+        assert_equal(
+            $(mockC1)->query_received_messages()[<1],
+            ({ "action", "You have no hostile targets present." })
+        ),
 
         testOb->set_weapons(([ "brawl": ({ 2 }), ])),
         assert_equal($(char)->handle_wield($(weapon1)), 1),
         testOb->handle_ability_use($(char), ({ $(npc1) })),
-        assert_equal($(mockC1)->query_received_messages()[<1], ({ "action", "You do not have any free hands." })),
+        assert_equal(
+            $(mockC1)->query_received_messages()[<1],
+            ({ "action", "You do not have any free hands." })
+        ),
 
         testOb->set_weapons(([ "blunt": ({ 1 }), ])),
         testOb->handle_ability_use($(char), ({ $(npc1) })),
-        assert_equal($(mockC1)->query_received_messages()[<1], ({ "action", "You are not wielding the correct type of weapon." })),
+        assert_equal(
+            $(mockC1)->query_received_messages()[<1],
+            ({ "action", "You are not wielding the correct type of weapon." })
+        ),
 
         testOb->set_weapons(([ "blade": ({ 1 }), ])),
         testOb->set_powers(([
@@ -218,7 +271,10 @@ void test_ability_use () {
         ])),
         $(char)->set_sp(0),
         testOb->handle_ability_use($(char), ({ $(npc1) })),
-        assert_equal($(mockC1)->query_received_messages()[<1], ({ "action", "You are too drained to ability.coverage." })),
+        assert_equal(
+            $(mockC1)->query_received_messages()[<1],
+            ({ "action", "You are too drained to ability.coverage." })
+        ),
 
         // success
         $(char)->set_sp($(char)->query_max_sp()),
@@ -226,7 +282,10 @@ void test_ability_use () {
         $(char)->set_stat("strength", 50),
         $(npc1)->set_stat("endurance", 10),
         testOb->handle_ability_use($(char), ({ $(npc1) })),
-        assert_equal($(mockC1)->query_received_messages()[<1][0], "ability hit"),
+        assert_equal(
+            $(mockC1)->query_received_messages()[<1][0],
+            "ability hit"
+        ),
         assert_equal($(char)->query_cooldown(testOb->query_name()), 1),
 
         // failure
@@ -236,22 +295,34 @@ void test_ability_use () {
         $(char)->set_stat("strength", 10),
         $(npc1)->set_stat("endurance", 50),
         testOb->handle_ability_use($(char), ({ $(npc1) })),
-        assert_equal($(mockC1)->query_received_messages()[<1][0], "ability miss"),
+        assert_equal(
+            $(mockC1)->query_received_messages()[<1][0],
+            "ability miss"
+        ),
 
         testOb->set_difficulty_factor(100),
         $(char)->set_stat("strength", 50),
         $(npc1)->set_stat("endurance", 10),
         testOb->handle_ability_use($(char), ({ $(npc1) })),
-        assert_equal($(mockC1)->query_received_messages()[<1][0], "ability hit"),
+        assert_equal(
+            $(mockC1)->query_received_messages()[<1][0],
+            "ability hit"
+        ),
 
         testOb->set_type("heal"),
         $(npc1)->set_hp(1),
         testOb->handle_ability_use($(char), ({ $(npc1) })),
-        assert_equal($(mockC1)->query_received_messages()[<1][0], "combat heal"),
+        assert_equal(
+            $(mockC1)->query_received_messages()[<1][0],
+            "combat heal"
+        ),
 
         testOb->set_type("utility"),
         testOb->handle_ability_use($(char), ({ $(npc1) })),
-        assert_equal($(mockC1)->query_received_messages()[<1][0], "ability utility"),
+        assert_equal(
+            $(mockC1)->query_received_messages()[<1][0],
+            "ability utility"
+        ),
     }) :));
 
     mockC1->stop_shadow();
@@ -262,7 +333,7 @@ void test_ability_use () {
     if (room) destruct(room);
 }
 
-void test_cooldown () {
+void test_cooldown() {
     expect("handles setting and querying cooldown", (: ({
         // default
         assert_equal(testOb->query_cooldown(), 1),
@@ -276,11 +347,14 @@ void test_cooldown () {
         testOb->set_cooldown(0),
         assert_equal(testOb->query_cooldown(), 0),
 
-        assert_catch((: testOb->set_cooldown(-1) :), "*Bad argument 1 to ability->set_cooldown\n"),
+        assert_catch(
+            (: testOb->set_cooldown(-1) :),
+            "*Bad argument 1 to ability->set_cooldown\n"
+        ),
     }) :));
 }
 
-void test_difficulty_factor () {
+void test_difficulty_factor() {
     expect("handles difficulty factor", (: ({
         // defaults to 100
         assert_equal(testOb->query_difficulty_factor(), 100),
@@ -293,11 +367,14 @@ void test_difficulty_factor () {
         testOb->set_difficulty_factor(110),
         assert_equal(testOb->query_difficulty_factor(), 110),
 
-        assert_catch((: testOb->set_difficulty_factor(UNDEFINED) :), "*Bad argument 1 to ability->set_difficulty_factor\n"),
+        assert_catch(
+            (: testOb->set_difficulty_factor(UNDEFINED) :),
+            "*Bad argument 1 to ability->set_difficulty_factor\n"
+        ),
     }) :));
 }
 
-void test_direct_verb_liv () {
+void test_direct_verb_liv() {
     object ob;
 
     // setup test living object
@@ -349,7 +426,7 @@ void test_direct_verb_liv () {
     destruct(ob);
 }
 
-void test_can_verb_rule () {
+void test_can_verb_rule() {
     // these functions call verb->can_verb_rule which is tested in verb.test.c
     expect("can_verb_rule should handle can_verb_* applies", (: ({
         assert_equal(testOb->can_verb_lvs("verb", "rule"), 1),
@@ -358,10 +435,13 @@ void test_can_verb_rule () {
     }) :));
 }
 
-void test_do_verb_applies () {
+void test_do_verb_applies() {
     expect("do_verb_liv is handled", (: ({
         // this error signifies that handle_ability_use was called
-        assert_catch((: testOb->do_verb_liv(0, this_object()) :), "*Ability ability.coverage does not have an ability type set\n"),
+        assert_catch(
+            (: testOb->do_verb_liv(0, this_object()) :),
+            "*Ability ability.coverage does not have an ability type set\n"
+        ),
     }) :));
 
     expect("do_verb_lvs is handled", (: ({
@@ -370,35 +450,53 @@ void test_do_verb_applies () {
 
         testOb->set_targets(1),
         // this error signifies that handle_ability_use was called
-        assert_catch((: testOb->do_verb_lvs(0, ({ this_object() })) :), "*Ability ability.coverage does not have an ability type set\n"),
+        assert_catch(
+            (: testOb->do_verb_lvs(0, ({ this_object() })) :),
+            "*Ability ability.coverage does not have an ability type set\n"
+        ),
 
         testOb->set_targets(3),
         // this error signifies that handle_ability_use was called
-        assert_catch((: testOb->do_verb_lvs(0, ({ this_object(), this_object(), this_object() })) :), "*Ability ability.coverage does not have an ability type set\n"),
+        assert_catch(
+            (: testOb->do_verb_lvs(
+                0,
+                ({ this_object(), this_object(), this_object() })
+            ) :),
+            "*Ability ability.coverage does not have an ability type set\n"
+        ),
     }) :));
 
     expect("do_verb_rule is handled", (: ({
         // this error signifies that handle_ability_use was called
-        assert_catch((: testOb->do_verb_rule() :), "*Ability ability.coverage does not have an ability type set\n"),
+        assert_catch(
+            (: testOb->do_verb_rule() :),
+            "*Ability ability.coverage does not have an ability type set\n"
+        ),
     }) :));
 }
 
-void test_ability_requirements () {
+void test_ability_requirements() {
     expect("handles setting and querying requirements", (: ({
         // default value
-        assert_equal(testOb->query_ability_requirements(), ([ ])),
+        assert_equal(testOb->query_ability_requirements(), ([])),
 
         // check updated
         testOb->set_ability_requirements(([ "anyone": ([ "level": 1, ]), ])),
-        assert_equal(testOb->query_ability_requirements(), ([ "anyone": ([ "level": 1, ]), ])),
+        assert_equal(
+            testOb->query_ability_requirements(),
+            ([ "anyone": ([ "level": 1, ]), ])
+        ),
 
         // check updated
         testOb->set_ability_requirements(([ "scoundrel": ([ "level": 5, ]), ])),
-        assert_equal(testOb->query_ability_requirements(), ([ "scoundrel": ([ "level": 5, ]), ])),
+        assert_equal(
+            testOb->query_ability_requirements(),
+            ([ "scoundrel": ([ "level": 5, ]), ])
+        ),
     }) :));
 }
 
-void test_handle_help () {
+void test_handle_help() {
     expect("handles additional formatting help file", (: ({
         // command.test.c tests basic formatting
 
@@ -409,19 +507,44 @@ void test_handle_help () {
         assert_equal(regexp(testOb->handle_help(this_object()), "Utility"), 1),
 
         // should contain ability requirements
-        assert_equal(regexp(testOb->handle_help(this_object()), "Anyone Requirements"), 0),
-        testOb->set_ability_requirements(([ "anyone": ([ "level": 1, "stats": ([ "strength": 1, ]), "skills": ([ "brawl attack": 1, ]) ]), ])),
-        assert_equal(regexp(testOb->handle_help(this_object()), "Anyone Requirements"), 1),
-        assert_equal(regexp(testOb->handle_help(this_object()), "Level 1, 1 strength, 1 brawl attack"), 1),
+        assert_equal(
+            regexp(testOb->handle_help(this_object()), "Anyone Requirements"),
+            0
+        ),
+        testOb->set_ability_requirements(([ "anyone": ([
+            "level": 1,
+            "stats": ([ "strength": 1, ]),
+            "skills": ([ "brawl attack": 1, ])
+        ]), ])),
+        assert_equal(
+            regexp(testOb->handle_help(this_object()), "Anyone Requirements"),
+            1
+        ),
+        assert_equal(
+            regexp(
+                testOb->handle_help(this_object()),
+                "Level 1, 1 strength, 1 brawl attack"
+            ),
+            1
+        ),
 
         // should contain weapon requirements
         assert_equal(regexp(testOb->handle_help(this_object()), "Weapons"), 0),
         testOb->set_weapons(([ "brawl": ({ 1 }), ])),
         assert_equal(regexp(testOb->handle_help(this_object()), "Weapons"), 1),
-        assert_equal(regexp(testOb->handle_help(this_object()), "one handed brawl"), 1),
+        assert_equal(
+            regexp(testOb->handle_help(this_object()), "one handed brawl"),
+            1
+        ),
         // updated weapon requirements
         testOb->set_weapons(([ "blunt": ({ 1, 2 }), ])),
-        assert_equal(regexp(testOb->handle_help(this_object()), "one handed blunt, two handed blunt"), 1),
+        assert_equal(
+            regexp(
+                testOb->handle_help(this_object()),
+                "one handed blunt, two handed blunt"
+            ),
+            1
+        ),
 
         // cooldown
         testOb->set_cooldown(2),

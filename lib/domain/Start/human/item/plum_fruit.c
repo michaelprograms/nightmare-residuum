@@ -1,6 +1,6 @@
 inherit STD_FOOD;
 
-void create () {
+void create() {
     ::create();
     set_name("plum");
     set_id(({ "plum" }));

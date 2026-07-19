@@ -1,18 +1,18 @@
 inherit STD_CONSUMABLE;
 
-int is_food () {
+int is_food() {
     return 1;
 }
 
-string query_use_verb () {
+string query_use_verb() {
     return "eat";
 }
 
-mixed direct_eat_obj (mixed args...) {
+mixed direct_eat_obj(mixed args...) {
     return (environment() == previous_object());
 }
 
-void create () {
+void create() {
     ::create();
     set_type("food");
 }

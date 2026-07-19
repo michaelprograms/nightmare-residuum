@@ -4,7 +4,7 @@ inherit M_TEST;
  * @var {"/secure/sefun/grammar"} testOb
  */
 
-void test_remove_article () {
+void test_remove_article() {
     expect("articles are trimmed", (: ({
         assert_equal(testOb->remove_article(""), ""),
 
@@ -15,7 +15,7 @@ void test_remove_article () {
         assert_equal(testOb->remove_article("an item"), "item"),
     }) :));
 }
-void test_add_article () {
+void test_add_article() {
     expect("articles are prepended", (: ({
         assert_equal(testOb->add_article(""), ""),
 
@@ -31,25 +31,51 @@ void test_add_article () {
     }) :));
 }
 
-void test_conjunction () {
+void test_conjunction() {
     expect("conjunction handles list with default 'and'", (: ({
         assert_equal(testOb->conjunction(({ "1" })), "1"),
         assert_equal(testOb->conjunction(({ "1", "2" })), "1 and 2"),
         assert_equal(testOb->conjunction(({ "1", "2", "3" })), "1, 2, and 3"),
-        assert_equal(testOb->conjunction(({ "1", "2", "3", "4", "5", "6", "7", "8", "9", "10" })), "1, 2, 3, 4, 5, 6, 7, 8, 9, and 10"),
+        assert_equal(
+            testOb->conjunction(({
+                "1",
+                "2",
+                "3",
+                "4",
+                "5",
+                "6",
+                "7",
+                "8",
+                "9",
+                "10"
+            })),
+            "1, 2, 3, 4, 5, 6, 7, 8, 9, and 10"
+        ),
     }) :));
     expect("conjunction handles list with 'or'", (: ({
         assert_equal(testOb->conjunction(({ "1" }), "or"), "1"),
         assert_equal(testOb->conjunction(({ "1", "2" }), "or"), "1 or 2"),
-        assert_equal(testOb->conjunction(({ "1", "2", "3" }), "or"), "1, 2, or 3"),
-        assert_equal(testOb->conjunction(({ "1", "2", "3", "4", "5", "6", "7", "8", "9", "10" }), "or"), "1, 2, 3, 4, 5, 6, 7, 8, 9, or 10"),
+        assert_equal(
+            testOb->conjunction(({ "1", "2", "3" }), "or"),
+            "1, 2, or 3"
+        ),
+        assert_equal(
+            testOb->conjunction(
+                ({ "1", "2", "3", "4", "5", "6", "7", "8", "9", "10" }),
+                "or"
+            ),
+            "1, 2, 3, 4, 5, 6, 7, 8, 9, or 10"
+        ),
     }) :));
     expect("conjunction handles bad input", (: ({
-        assert_catch((: testOb->conjunction(({ })) :), "*Bad argument 1 to grammar->conjunction\n"),
+        assert_catch(
+            (: testOb->conjunction(({})) :),
+            "*Bad argument 1 to grammar->conjunction\n"
+        ),
     }) :));
 }
 
-void test_cardinal () {
+void test_cardinal() {
     expect("cardinal handles numbers", (: ({
         assert_equal(testOb->cardinal(0), "zero"),
         assert_equal(testOb->cardinal(1), "one"),
@@ -59,18 +85,27 @@ void test_cardinal () {
         assert_equal(testOb->cardinal(100), "one hundred"),
         assert_equal(testOb->cardinal(1000), "one thousand"),
         assert_equal(testOb->cardinal(10000), "ten thousand"),
-        assert_equal(testOb->cardinal(12345), "twelve thousand, three hundred and forty-five"),
-        assert_equal(testOb->cardinal(-12345), "negative twelve thousand, three hundred and forty-five"),
+        assert_equal(
+            testOb->cardinal(12345),
+            "twelve thousand, three hundred and forty-five"
+        ),
+        assert_equal(
+            testOb->cardinal(-12345),
+            "negative twelve thousand, three hundred and forty-five"
+        ),
         assert_equal(testOb->cardinal(100000), "many"),
         assert_equal(testOb->cardinal(-100000), "negative many"),
     }) :));
 
     expect("cardinal handles bad inputs", (: ({
-        assert_catch((: testOb->cardinal(UNDEFINED) :), "*Bad argument 1 to grammar->cardinal\n"),
+        assert_catch(
+            (: testOb->cardinal(UNDEFINED) :),
+            "*Bad argument 1 to grammar->cardinal\n"
+        ),
     }) :));
 }
 
-void test_ordinal () {
+void test_ordinal() {
     expect("ordinal handles words for 0..9 range", (: ({
         assert_equal(testOb->ordinal(0), "zeroth"),
         assert_equal(testOb->ordinal(1), "first"),
@@ -109,12 +144,18 @@ void test_ordinal () {
     }) :));
 
     expect("ordinal handles bad inputs", (: ({
-        assert_catch((: testOb->ordinal(UNDEFINED) :), "*Bad argument 1 to grammar->ordinal\n"),
-        assert_catch((: testOb->ordinal(-1) :), "*Bad argument 1 to grammar->ordinal\n"),
+        assert_catch(
+            (: testOb->ordinal(UNDEFINED) :),
+            "*Bad argument 1 to grammar->ordinal\n"
+        ),
+        assert_catch(
+            (: testOb->ordinal(-1) :),
+            "*Bad argument 1 to grammar->ordinal\n"
+        ),
     }) :));
 }
 
-void test_pluralize () {
+void test_pluralize() {
     object ob;
 
     expect("pluralize handles strings", (: ({
@@ -138,10 +179,16 @@ void test_pluralize () {
         assert_equal(testOb->pluralize("flooblecrank"), "flooblecranks"),
         assert_equal(testOb->pluralize("bloobleyank"), "bloobleyanks"),
 
-        assert_equal(testOb->pluralize("an %^RED%^apple%^DEFAULT%^"), "%^RED%^apples%^DEFAULT%^"),
+        assert_equal(
+            testOb->pluralize("an %^RED%^apple%^DEFAULT%^"),
+            "%^RED%^apples%^DEFAULT%^"
+        ),
     }) :));
     expect("pluralize handles bad input", (: ({
-        assert_catch((: testOb->pluralize(0) :), "*Bad argument 1 to grammar->pluralize\n"),
+        assert_catch(
+            (: testOb->pluralize(0) :),
+            "*Bad argument 1 to grammar->pluralize\n"
+        ),
     }) :));
 
     ob = new(STD_OBJECT);
@@ -173,23 +220,41 @@ void test_pluralize () {
     }) :));
 }
 
-void test_consolidate () {
+void test_consolidate() {
     expect("consolidate handles basic words", (: ({
         assert_equal(testOb->consolidate(1, "elf"), "elf"),
-        assert_equal(testOb->consolidate(1, "a bronze dagger (wielded)"), "a bronze dagger (wielded)"),
+        assert_equal(
+            testOb->consolidate(1, "a bronze dagger (wielded)"),
+            "a bronze dagger (wielded)"
+        ),
         assert_equal(testOb->consolidate(5, ""), ""),
 
         assert_equal(testOb->consolidate(5, "elf"), "five elves"),
         assert_equal(testOb->consolidate(0, "giraffe"), "zero giraffes"),
         assert_equal(testOb->consolidate(25, "cat"), "twenty-five cats"),
-        assert_equal(testOb->consolidate(54321, "dog"), "fifty-four thousand, three hundred and twenty-one dogs"),
-        assert_equal(testOb->consolidate(-54321, "care"), "negative fifty-four thousand, three hundred and twenty-one cares"),
+        assert_equal(
+            testOb->consolidate(54321, "dog"),
+            "fifty-four thousand, three hundred and twenty-one dogs"
+        ),
+        assert_equal(
+            testOb->consolidate(-54321, "care"),
+            "negative fifty-four thousand, three hundred and twenty-one cares"
+        ),
         assert_equal(testOb->consolidate(2, "Paul"), "two Pauls"),
     }) :));
     expect("consolidate handles parenthesis tags after words", (: ({
-        assert_equal(testOb->consolidate(2, "a bronze dagger (wielded)"), "two bronze daggers (wielded)"),
-        assert_equal(testOb->consolidate(2, "a bronze ring (worn)"), "two bronze rings (worn)"),
-        assert_equal(testOb->consolidate(3, "a monster (injured)"), "three monsters (injured)"),
+        assert_equal(
+            testOb->consolidate(2, "a bronze dagger (wielded)"),
+            "two bronze daggers (wielded)"
+        ),
+        assert_equal(
+            testOb->consolidate(2, "a bronze ring (worn)"),
+            "two bronze rings (worn)"
+        ),
+        assert_equal(
+            testOb->consolidate(3, "a monster (injured)"),
+            "three monsters (injured)"
+        ),
     }) :));
 }
 
@@ -198,7 +263,7 @@ string query_cap_name() {
     return __TestName;
 }
 
-void test_possessive_noun () {
+void test_possessive_noun() {
     expect("possessive_noun handles names", (: ({
         assert_equal(testOb->possessive_noun(0), "Its"),
         assert_equal(testOb->possessive_noun("Name"), "Name's"),
@@ -220,11 +285,14 @@ void test_possessive_noun () {
         assert_equal(testOb->possessive_noun(this_object()), "Its"),
     }) :));
     expect("possessive_noun handles bad input", (: ({
-        assert_catch((: testOb->possessive_noun(1) :), "*Bad argument 1 to grammar->possessive_noun\n"),
+        assert_catch(
+            (: testOb->possessive_noun(1) :),
+            "*Bad argument 1 to grammar->possessive_noun\n"
+        ),
     }) :));
 }
 
-void test_subjective () {
+void test_subjective() {
     object ob;
 
     expect("subjective handles names", (: ({
@@ -249,7 +317,7 @@ void test_subjective () {
     destruct(ob);
 }
 
-void test_objective () {
+void test_objective() {
     object ob;
 
     expect("objective handles names", (: ({
@@ -274,7 +342,7 @@ void test_objective () {
     destruct(ob);
 }
 
-void test_possessive () {
+void test_possessive() {
     object ob;
 
     expect("possessive handles names", (: ({
@@ -299,7 +367,7 @@ void test_possessive () {
     destruct(ob);
 }
 
-void test_reflexive () {
+void test_reflexive() {
     object ob;
 
     expect("reflexive handles names", (: ({

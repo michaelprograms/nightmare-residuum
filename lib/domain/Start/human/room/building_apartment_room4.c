@@ -2,7 +2,7 @@
 
 inherit STD_ROOM;
 
-void create () {
+void create() {
     ::create();
     set_short("an apartment room");
     set_long("This is a small studio apartment with a bed in one corner and a compact kitchen along one wall. A table and chair sit near a window.");

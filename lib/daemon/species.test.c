@@ -4,7 +4,7 @@ inherit M_TEST;
  * @var {"/daemon/species"} testOb
  */
 
-void test_species_bodies () {
+void test_species_bodies() {
     expect("bodies exist", (: ({
         assert_equal(mapp(testOb->query_bodies()), 1),
         assert_equal(sizeof(testOb->query_bodies()) > 0, 1),
@@ -20,9 +20,9 @@ void test_species_bodies () {
     }) :));
 }
 
-void test_setup_body () {
+void test_setup_body() {
     object ob, npc;
-    mapping limbs = ([ ]);
+    mapping limbs = ([]);
 
     // setting a species will setup the body
     ob = new(STD_LIVING);
@@ -50,17 +50,20 @@ void test_setup_body () {
     destruct(npc);
 }
 
-void test_adjust_stat () {
+void test_adjust_stat() {
     expect("stats adjustments are queryable", (: ({
         assert_equal(testOb->query_adjust_stat("human", "strength"), 2),
 
-        assert_equal(testOb->query_adjust_stat("unknown species", "strength"), 0),
+        assert_equal(
+            testOb->query_adjust_stat("unknown species", "strength"),
+            0
+        ),
 
         assert_equal(testOb->query_adjust_stat("human", "unknown stat"), 0),
     }) :));
 }
 
-void test_adjust_vitals () {
+void test_adjust_vitals() {
     expect("hp adjustments are queryable", (: ({
         assert_equal(testOb->query_adjust_hp("human"), 1),
 
@@ -80,7 +83,7 @@ void test_adjust_vitals () {
     }) :));
 }
 
-void test_setup_stats () {
+void test_setup_stats() {
     object ob;
 
     ob = new(STD_LIVING);

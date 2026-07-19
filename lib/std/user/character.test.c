@@ -4,7 +4,7 @@ inherit M_TEST;
  * @var {"/std/user/character"} testOb
  */
 
-void test_character_name () {
+void test_character_name() {
     expect("character name sets up character", (: ({
         assert_equal(testOb->query_character(), UNDEFINED),
 

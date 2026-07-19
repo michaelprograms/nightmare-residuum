@@ -1,6 +1,6 @@
 inherit STD_VERB;
 
-void create () {
+void create() {
     verb::create();
     add_rules(({ "", "STR with OBJ", }));
     set_syntax("unlock [door|direction] with [key]");
@@ -10,17 +10,17 @@ void create () {
 
 /* ----- rule: "" ----- */
 
-mixed can_unlock () {
+mixed can_unlock() {
     return "Unlock what?";
 }
 
 /* ----- rule: "STR with OBJ" ----- */
 
-mixed can_unlock_str_with_obj (mixed args...) {
+mixed can_unlock_str_with_obj(mixed args...) {
     return 1;
 }
 
-mixed do_unlock_str_with_obj (mixed args...) {
+mixed do_unlock_str_with_obj(mixed args...) {
     object po = previous_object();
     /** @type {STD_KEY} key */
     object key;

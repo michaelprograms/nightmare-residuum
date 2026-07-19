@@ -5,7 +5,7 @@ inherit M_TEST;
  */
 
 mapping term;
-void test_ansi_terms () {
+void test_ansi_terms() {
     int fail;
 
     term = testOb->query_ansi_term();
@@ -16,7 +16,7 @@ void test_ansi_terms () {
 
     foreach (string key in keys(term)) {
         if (term[key] == "") {
-            fail ++;
+            fail++;
         }
     }
     expect("query_ansi_term has definitions", (: ({
@@ -24,7 +24,7 @@ void test_ansi_terms () {
     }) :));
 }
 
-void test_unknown_terms () {
+void test_unknown_terms() {
     int fail = 0;
 
     term = testOb->query_unknown_term();
@@ -35,7 +35,7 @@ void test_unknown_terms () {
 
     foreach (string key in keys(term)) {
         if (term[key] != "") {
-            fail ++;
+            fail++;
         }
     }
     expect("query_unknown_term has no definitions", (: ({
@@ -43,14 +43,20 @@ void test_unknown_terms () {
     }) :));
 }
 
-void test_keys () {
+void test_keys() {
     expect("query_keys matches terms", (: ({
-        assert_equal(sizeof(testOb->query_keys()), sizeof(testOb->query_ansi_term())),
-        assert_equal(sizeof(testOb->query_keys()), sizeof(testOb->query_unknown_term())),
+        assert_equal(
+            sizeof(testOb->query_keys()),
+            sizeof(testOb->query_ansi_term())
+        ),
+        assert_equal(
+            sizeof(testOb->query_keys()),
+            sizeof(testOb->query_unknown_term())
+        ),
     }) :));
 }
 
-void test_parse () {
+void test_parse() {
     expect("parse parses all basic colors", (: ({
         assert_equal(testOb->parse("%^RESET%^"), "\e[0;37;40m"),
         assert_equal(testOb->parse("%^BOLD%^"), "\e[1m"),

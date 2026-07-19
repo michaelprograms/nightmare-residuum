@@ -2,7 +2,7 @@
 
 inherit STD_VERB;
 
-void create () {
+void create() {
     verb::create();
     add_rules(({ "", "OBJ", "OBS", }));
     set_requirements(REQUIREMENT_BUSY | REQUIREMENT_DISABLE);
@@ -11,7 +11,7 @@ void create () {
     set_help_similar(({ "unwear", "unwield", "wear", }));
 }
 
-mixed can_wield () {
+mixed can_wield() {
     return "Wield what?";
 }
 
@@ -21,7 +21,7 @@ mixed can_wield () {
  * @param {STD_WEAPON} ob the weapon item to be equipped
  * @param str the input text from the player (ex, 'staff' or 'sword')
  */
-void do_wield_obj (object ob, string str) {
+void do_wield_obj(object ob, string str) {
     mixed result;
     object po = previous_object();
 
@@ -30,10 +30,14 @@ void do_wield_obj (object ob, string str) {
     } else if (stringp(result)) {
         message("action", result, po);
     } else {
-        message("action", "You try to wield " + ob->query_name() + " but fail for some reason.", po);
+        message(
+            "action",
+            "You try to wield " + ob->query_name() + " but fail for some reason.",
+            po
+        );
     }
 }
-void do_wield_obs (mixed *info, string str) {
+void do_wield_obs(mixed *info, string str) {
     foreach (object ob in info) {
         do_wield_obj(ob, str);
     }

@@ -2,11 +2,11 @@
 
 inherit STD_ROOM;
 
-int is_virtual_room () { return 1; }
+int is_virtual_room() { return 1; }
 
 /* ----- biome ----- */
 
-void update_descriptions () {
+void update_descriptions() {
     string biome = query_property("biome");
     string color = D_PLANET->query_biome_color_ansi(biome);
 
@@ -85,7 +85,7 @@ void update_descriptions () {
     }
 }
 
-void add_terrain_override (string text) {
+void add_terrain_override(string text) {
     set_long(query_long() + " " + text);
 }
 
@@ -93,7 +93,7 @@ void add_terrain_override (string text) {
  * @param {STD_NPC} npc the npc to configure
  * @param {int} level the level to set on the npc and its hide
  */
-private void setup_npc (object npc, int level) {
+private void setup_npc(object npc, int level) {
     /** @type {STD_RESOURCE} */
     object hide = new(STD_RESOURCE);
 
@@ -104,34 +104,34 @@ private void setup_npc (object npc, int level) {
     hide->handle_move(npc);
 }
 
-void update_resource () {
+void update_resource() {
     int nLevel = query_property("level");
     int nResource = query_property("resource");
     /** @type {STD_HARVESTABLE} obResource */
     object obResource = present("resource_node");
 
     // clear existing reset
-    set_reset_data(([ ]));
+    set_reset_data(([]));
 
     if (query_property("no resource")) {
         return;
     }
 
-    if (nResource == 1) { // ore
+    if (nResource == 1) {  // ore
         if (!obResource) {
             obResource = new(STD_HARVESTABLE);
             obResource->set_type("ore");
             obResource->set_level(nLevel);
             obResource->handle_move(this_object());
         }
-    } else if (nResource == 2) { // wood
+    } else if (nResource == 2) {  // wood
         if (!obResource) {
             obResource = new(STD_HARVESTABLE);
             obResource->set_type("wood");
             obResource->set_level(nLevel);
             obResource->handle_move(this_object());
         }
-    } else if (nResource == 3 || nResource == 4) { // NPC
+    } else if (nResource == 3 || nResource == 4) {  // NPC
         string npc;
 
         if (sizeof(filter(query_living_contents(), (: npcp :))) > 0) {
@@ -139,20 +139,20 @@ void update_resource () {
         }
 
         switch (random(2)) {
-        case 0:
-            npc = element_of(({
-                "curious_raccoon",
-                "feral_cat",
-                "large_ant",
-                "lurking_vulture",
-                "rabid_rat",
-                "watchful_crow",
-                "wild_dog",
-            }));
-            break;
-        case 1:
-            npc = "plasma_snail.c";
-            break;
+            case 0:
+                npc = element_of(({
+                    "curious_raccoon",
+                    "feral_cat",
+                    "large_ant",
+                    "lurking_vulture",
+                    "rabid_rat",
+                    "watchful_crow",
+                    "wild_dog",
+                }));
+                break;
+            case 1:
+                npc = "plasma_snail.c";
+                break;
         }
         set_reset_data(([
             PLANET_NPC + npc + ".c": ([
@@ -176,7 +176,7 @@ void update_resource () {
  * @param verb
  * @param dir
  */
-mixed handle_go (object ob, string verb, string dir) {
+mixed handle_go(object ob, string verb, string dir) {
     if (ob->query_cooldown("go")) {
         message("action", "You cannot go anywhere yet.", ob);
     } else {
@@ -187,18 +187,27 @@ mixed handle_go (object ob, string verb, string dir) {
 
 /* ----- map override ----- */
 
-string query_room_bracket_color () {
+string query_room_bracket_color() {
     string name;
     int x, y;
     mapping planet;
 
-    if (sscanf(file_name(), PLANET_V_ROOM + "surface/%s/%d.%d", name, x, y) != 3) {
+    if (sscanf(
+        file_name(),
+        PLANET_V_ROOM + "surface/%s/%d.%d",
+        name,
+        x,
+        y
+    ) != 3) {
         return 0;
     }
 
     planet = D_PLANET->query_planet(name);
     if (arrayp(planet["overrides"])) {
-        foreach (mapping override in filter(planet["overrides"], (: $1["x"] == $(x) && $1["y"] == $(y) :))) {
+        foreach (mapping override in filter(
+            planet["overrides"],
+            (: $1["x"] == $(x) && $1["y"] == $(y) :)
+        )) {
             if (override["type"] == "dome") {
                 return "%^AFF%^";
             }
@@ -207,8 +216,8 @@ string query_room_bracket_color () {
 
     return ::query_room_bracket_color();
 }
-string *query_room_map () {
-    string *result = ({ });
+string *query_room_map() {
+    string *result = ({});
     mapping planet;
     string name, path, line, symbol;
     int size, radius = 2;
@@ -216,7 +225,13 @@ string *query_room_map () {
     /** @type {STD_ROOM} room */
     object room;
 
-    if (sscanf(file_name(), PLANET_V_ROOM + "surface/%s/%d.%d", name, x, y) != 3) {
+    if (sscanf(
+        file_name(),
+        PLANET_V_ROOM + "surface/%s/%d.%d",
+        name,
+        x,
+        y
+    ) != 3) {
         return 0;
     }
 
@@ -224,9 +239,9 @@ string *query_room_map () {
     planet = D_PLANET->query_planet(name);
     size = D_PLANET->query_planet_size(name);
 
-    for (yy = -radius; yy <= radius; yy ++) {
+    for (yy = -radius; yy <= radius; yy++) {
         line = "";
-        for (xx = -radius; xx <= radius; xx ++) {
+        for (xx = -radius; xx <= radius; xx++) {
             // if (sqrt(xx * xx + yy * yy) - 0.5 > radius) {
             //     line += "   ";
             //     continue;
@@ -254,13 +269,13 @@ string *query_room_map () {
 
 /* ----- applies ----- */
 
-void create () {
+void create() {
     ::create();
     set_short("a planet somewhere");
     set_long("The terrain of a planet.");
 }
 
-void reset () {
+void reset() {
     if (
         !query_property("no resource") &&
         query_property("name") &&
@@ -277,7 +292,7 @@ void reset () {
 
 /* ----- container override ----- */
 
-int can_receive (object ob) {
+int can_receive(object ob) {
     if (query_property("no receive")) {
         return 0;
     } else {

@@ -4,13 +4,13 @@ inherit M_TEST;
  * @var {"/std/module/senses"} testOb
  */
 
-void test_listen () {
-    function fn = function () { return "Function sound."; };
+void test_listen() {
+    function fn = function() { return "Function sound."; };
 
     expect("null listens are initialized", (: ({
-        assert_equal(testOb->query_listens(), ([ ])),
+        assert_equal(testOb->query_listens(), ([])),
         store_variable("__Listens", UNDEFINED, testOb),
-        assert_equal(testOb->query_listens(), ([ ])),
+        assert_equal(testOb->query_listens(), ([])),
     }) :));
 
     expect("listens are settable and queryable", (: ({
@@ -28,13 +28,13 @@ void test_listen () {
     }) :));
 }
 
-void test_smell () {
-    function fn = function () { return "Function scent."; };
+void test_smell() {
+    function fn = function() { return "Function scent."; };
 
     expect("null smells are initialized", (: ({
-        assert_equal(testOb->query_smells(), ([ ])),
+        assert_equal(testOb->query_smells(), ([])),
         store_variable("__Smells", UNDEFINED, testOb),
-        assert_equal(testOb->query_smells(), ([ ])),
+        assert_equal(testOb->query_smells(), ([])),
     }) :));
 
     expect("smells are settable and queryable", (: ({

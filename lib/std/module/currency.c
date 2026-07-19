@@ -2,18 +2,18 @@
 
 mapping __Currency;
 
-private void initialize_currencies () {
+private void initialize_currencies() {
     if (!mapp(__Currency)) {
-        __Currency = ([ ]);
+        __Currency = ([]);
     }
 }
 
-string *query_currencies () {
+string *query_currencies() {
     initialize_currencies();
     return keys(filter(__Currency, (: $2 > 0 :)));
 }
 
-int query_currency (string type) {
+int query_currency(string type) {
     initialize_currencies();
     if (!stringp(type)) {
         error("Bad argument 1 to currency->query_currency");
@@ -28,7 +28,7 @@ int query_currency (string type) {
     }
 }
 
-int add_currency (string type, int amount) {
+int add_currency(string type, int amount) {
     int result = 0;
 
     initialize_currencies();

@@ -1,12 +1,12 @@
 inherit STD_COMMAND;
 
-void create () {
+void create() {
     ::create();
     set_syntax("help [command]");
     set_help_text("The help command is used to view more information about a command.");
 }
 
-void command (string input, mapping flags) {
+void command(string input, mapping flags) {
     string path;
     object ob;
     string result, *parts, *items;
@@ -34,7 +34,11 @@ void command (string input, mapping flags) {
             result = "";
             parts[0..<2] = map(parts[0..<2], (: $1 + ">" :));
             foreach (string part in parts) {
-                result += pcre_replace_callback(part, "(<[a-z]+\\s?.+>)", (: format_syntax($1) :));
+                result += pcre_replace_callback(
+                    part,
+                    "(<[a-z]+\\s?.+>)",
+                    (: format_syntax($1) :)
+                );
             }
         }
     }

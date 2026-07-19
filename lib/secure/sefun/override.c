@@ -3,7 +3,7 @@
  *
  * @param args
  */
-nomask varargs int input_to (mixed args...) {
+nomask varargs int input_to(mixed args...) {
     error("efun::input_to disabled");
 }
 
@@ -13,7 +13,7 @@ nomask varargs int input_to (mixed args...) {
  *
  * @param flag
  */
-nomask varargs object this_player (int flag) {
+nomask varargs object this_player(int flag) {
     error("efun::this_player disabled");
 }
 
@@ -23,7 +23,7 @@ nomask varargs object this_player (int flag) {
  *
  * @returns {STD_USER} an array of interactive user accounts
  */
-object *users () {
+object *users() {
     return filter(efun::users(), (: $1 && $1->query_name() :));
 }
 
@@ -32,7 +32,7 @@ object *users () {
  *
  * @param msg the text to receive or display
  */
-nomask void write (string msg) {
+nomask void write(string msg) {
     object character = SEFUN->this_character();
     if (character && character->query_key_name() != "test") {
         character->receive_message("system", msg);
@@ -54,12 +54,12 @@ nomask void write (string msg) {
  * @param target the recipient(s) of message
  * @param exclude an exclusion list of recipients
  */
-varargs void message (mixed type, string message, mixed target, mixed exclude) {
+varargs void message(mixed type, string message, mixed target, mixed exclude) {
     if (!strlen(message) || (!objectp(target) && !arrayp(target))) {
         return;
     }
     if (!arrayp(exclude) && !objectp(exclude)) {
-        exclude = ({ });
+        exclude = ({});
     }
     efun::message(type, message, target, exclude);
 }

@@ -1,14 +1,14 @@
 inherit STD_COMMAND;
 
-void create () {
+void create() {
     ::create();
     set_syntax("species (type)");
     set_help_text("The species command can be used to view the supported bodytypes and species. Supplying an optional type will filter.");
 }
 
-void command (string input, mapping flags) {
+void command(string input, mapping flags) {
     string subtitle;
-    mapping *items = ({ });
+    mapping *items = ({});
 
     if (input) {
         if (member_array(input, keys(D_SPECIES->query_species())) > -1) {
@@ -19,7 +19,7 @@ void command (string input, mapping flags) {
                     "header": capitalize(input),
                     "items": map(keys(m), (:
                         capitalize($1) + ": " + $(m)[$1]
-                    :)),
+                        :)),
                     "columns": 3,
                 ])
             });
@@ -29,9 +29,12 @@ void command (string input, mapping flags) {
             string *limbs = keys(m);
             subtitle = input + " bodytype";
 
-            for (int i = 0; i < sizeof(limbs); i ++) {
+            for (int i = 0; i < sizeof(limbs); i++) {
                 string limb = limbs[i];
-                limbs[i] = capitalize(limb) + ": " + implode(map(keys(m[limb]), (: $(m)[$(limb)][$1] + " " + $1 :)), ", ");
+                limbs[i] = capitalize(limb) + ": " + implode(
+                    map(keys(m[limb]), (: $(m)[$(limb)][$1] + " " + $1 :)),
+                    ", "
+                );
             }
             items += ({
                 ([

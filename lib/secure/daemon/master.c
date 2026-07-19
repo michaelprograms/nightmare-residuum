@@ -10,7 +10,7 @@
  * @param port The port the user has connected on
  * @returns {STD_USER} the new user object
  */
-object connect (int port) {
+object connect(int port) {
     object ob;
     string err;
 
@@ -34,10 +34,13 @@ object connect (int port) {
  * @param load_empty
  * @returns returns filenames to preload
  */
-varargs string *epilog (int load_empty) {
-    string *preload = ({ });
+varargs string *epilog(int load_empty) {
+    string *preload = ({});
     if (!load_empty && file_size(CFG_PRELOAD) > 0) {
-        preload = filter(explode(read_file(CFG_PRELOAD), "\n") - ({ "" }), (: $1[0] != '#' :));
+        preload = filter(
+            explode(read_file(CFG_PRELOAD), "\n") - ({ "" }),
+            (: $1[0] != '#' :)
+        );
     }
     return preload;
 }
@@ -47,9 +50,12 @@ varargs string *epilog (int load_empty) {
  *
  * @param flag a command line option passed to driver
  */
-void flag (string flag) {
+void flag(string flag) {
     if (flag == "test") {
-        call_out_walltime((: D_TEST->run(([ "coverage": 1, "shutdown": 1 ])) :), 0.1);
+        call_out_walltime(
+            (: D_TEST->run(([ "coverage": 1, "shutdown": 1 ])) :),
+            0.1
+        );
     } else {
         debug_message("master()->flag: received unknown flag.");
     }
@@ -60,8 +66,8 @@ void flag (string flag) {
  *
  * @param filename the path to load
  */
-void preload (string filename) {
-    catch (load_object(filename));
+void preload(string filename) {
+    catch(load_object(filename));
 }
 
 /**
@@ -69,34 +75,34 @@ void preload (string filename) {
  *
  * @returns key:value pairs of mud stats
  */
-mapping get_mud_stats () {
+mapping get_mud_stats() {
     return ([
         /* --- Required --- */
-        "NAME"              : mud_name(),
-        "PLAYERS"           : ""+(sizeof(users())),
-        "UPTIME"            : ""+(time() - uptime()),
+        "NAME": mud_name(),
+        "PLAYERS": "" + (sizeof(users())),
+        "UPTIME": "" + (time() - uptime()),
 
         /* --- Generic --- */
-        "CODEBASE"          : mudlib_version(),
+        "CODEBASE": mudlib_version(),
         // "CONTACT"           : "",
-        "CRAWL DELAY"       : "-1",
-        "CREATED"           : "2021",
+        "CRAWL DELAY": "-1",
+        "CREATED": "2021",
         // "HOSTNAME"          : "",
         // "ICON"              : "",
         // "IP"                : "",
         // "IPV6"              : "",
-        "LANGUAGE"          : "English",
-        "LOCATION"          : "US",
-        "PORT"              : ""+(driver_port()),
+        "LANGUAGE": "English",
+        "LOCATION": "US",
+        "PORT": "" + (driver_port()),
         // "WEBSITE"           : "",
 
         /* --- Generic --- */
-        "FAMILY"            : "LPMud",
-        "GAMEPLAY"          : "Player versus Environment",
-        "GENRE"             : "Science Fiction",
-        "SUBGENRE"          : "Space and Planets",
-        "STATUS"            : "Alpha",
-        "GAMESYSTEM"        : "Custom",
+        "FAMILY": "LPMud",
+        "GAMEPLAY": "Player versus Environment",
+        "GENRE": "Science Fiction",
+        "SUBGENRE": "Space and Planets",
+        "STATUS": "Alpha",
+        "GAMESYSTEM": "Custom",
         // "INTERMUD"          : "",
 
         /* --- World --- */
@@ -111,20 +117,20 @@ mapping get_mud_stats () {
         // "SKILLS"            : "",
 
         /* --- Protocols --- */
-        "ANSI"              : "1",
+        "ANSI": "1",
         // "MSP"               : "",
-        "UTF-8"             : "1",
-        "VT100"             : "0",
-        "XTERM 256 COLORS"  : "0",
-        "XTERM TRUE COLORS" : "0",
+        "UTF-8": "1",
+        "VT100": "0",
+        "XTERM 256 COLORS": "0",
+        "XTERM TRUE COLORS": "0",
 
         /* --- Commercial --- */
-        "PAY TO PLAY"       : "0",
-        "PAY FOR PERKS"     : "U0",
+        "PAY TO PLAY": "0",
+        "PAY FOR PERKS": "U0",
 
         /* --- Hiring --- */
-        "HIRING BUILDERS"   : "0",
-        "HIRING CODERS"     : "0",
+        "HIRING BUILDERS": "0",
+        "HIRING CODERS": "0",
     ]);
 }
 
@@ -136,7 +142,7 @@ mapping get_mud_stats () {
  * @param path file path to check for virtual create
  * @returns loaded object or 0
  */
-object compile_object (string path) {
+object compile_object(string path) {
     string area, room, vpath;
 
     if (!stringp(path) || !sizeof(path)) {
@@ -161,7 +167,7 @@ object compile_object (string path) {
  * @param {STD_OBJECT} ob object to name
  * @returns name of the object
  */
-string object_name (object ob) {
+string object_name(object ob) {
     if (!ob) {
         return "<destructed>";
     } else if (interactive(ob)) {
@@ -176,7 +182,7 @@ string object_name (object ob) {
  * @param file path to be checked for additional include paths
  * @returns paths to check for header files
  */
-string *get_include_path (string file) {
+string *get_include_path(string file) {
     string *path = explode(file, "/") - ({ "" }), *paths = ({ ":DEFAULT:" });
     switch (path[0]) {
         case "domain":
@@ -198,9 +204,13 @@ string *get_include_path (string file) {
  * @param command_giver
  * @param current_object
  */
-void crash (string crash_message, object command_giver, object current_object) {
+void crash(string crash_message, object command_giver, object current_object) {
     debug_message(ctime() + " crashed because " + crash_message + " " + identify(call_stack()) + " " + identify(previous_object(-1)));
-    message("system", "Everything is suddenly nothing as irreality takes control.\n", users());
+    message(
+        "system",
+        "Everything is suddenly nothing as irreality takes control.\n",
+        users()
+    );
     users()->quit_account();
 }
 
@@ -210,11 +220,11 @@ void crash (string crash_message, object command_giver, object current_object) {
  * @param args the frame's "arguments" array from the trace mapping
  * @returns a comma-separated argument list, each value capped in length
  */
-private string trace_args (mixed *args) {
-    string *parts = ({ });
+private string trace_args(mixed *args) {
+    string *parts = ({});
     foreach (mixed a in args) {
         string s = identify(a);
-        if (sizeof(s) > 60) { // ponytail: flat 60-char cap; widen if a real arg gets clipped
+        if (sizeof(s) > 60) {  // ponytail: flat 60-char cap; widen if a real arg gets clipped
             s = s[0..56] + "...";
         }
         parts += ({ s });
@@ -233,7 +243,13 @@ private string trace_args (mixed *args) {
  * @param color when truthy, colorize the location for interactive display
  * @returns a formatted trace line ending in a newline
  */
-varargs string trace_line (object obj, string prog, string file, int line, int color) {
+varargs string trace_line(
+    object obj,
+    string prog,
+    string file,
+    int line,
+    int color
+) {
     string objfn = obj ? file_name(obj) : "<none>";
     string ret = objfn;
     string loc = color ? "\e[36m" : "", rst = color ? "\e[0m" : "";
@@ -261,7 +277,7 @@ varargs string trace_line (object obj, string prog, string file, int line, int c
  * @param color when truthy, colorize the trace for interactive display
  * @returns the rendered trace, one line per frame
  */
-varargs string standard_trace (mapping e, int color) {
+varargs string standard_trace(mapping e, int color) {
     string ret, t, args;
     mapping *trace;
     int i, n;
@@ -270,13 +286,35 @@ varargs string standard_trace (mapping e, int color) {
     string dim = color ? "\e[2m" : "";
     string rst = color ? "\e[0m" : "";
 
-    ret = err + e["error"] + rst + "Object: " + trace_line(e["object"], e["program"], e["file"], e["line"], color) + "\n";
+    ret = err + e["error"] + rst + "Object: " + trace_line(
+        e["object"],
+        e["program"],
+        e["file"],
+        e["line"],
+        color
+    ) + "\n";
     trace = e["trace"];
     n = sizeof(trace);
-    for (i = 0; i < n; i ++) {
+    for (i = 0; i < n; i++) {
         args = arrayp(trace[i]["arguments"]) ? trace_args(trace[i]["arguments"]) : "";
-        t = trace_line(trace[i]["object"], trace[i]["program"], trace[i]["file"], trace[i]["line"], color);
-        ret += sprintf("%s#%d%s %s%s%s(%s) at %s", dim, i, rst, fnc, trace[i]["function"], rst, args, t);
+        t = trace_line(
+            trace[i]["object"],
+            trace[i]["program"],
+            trace[i]["file"],
+            trace[i]["line"],
+            color
+        );
+        ret += sprintf(
+            "%s#%d%s %s%s%s(%s) at %s",
+            dim,
+            i,
+            rst,
+            fnc,
+            trace[i]["function"],
+            rst,
+            args,
+            t
+        );
     }
     return ret;
 }
@@ -287,7 +325,7 @@ varargs string standard_trace (mapping e, int color) {
  * @param e error info
  * @param caught flag for runtime vs catch
  */
-void error_handler (mapping e, int caught) {
+void error_handler(mapping e, int caught) {
     string ret, file = caught ? "catch" : "runtime";
     /** @type {STD_CHARACTER} */
     object ob;
@@ -296,7 +334,10 @@ void error_handler (mapping e, int caught) {
     /** @type {M_TEST} */
     object test;
 
-    if (caught && sizeof(e["trace"]) > 1 && regexp(e["trace"][1]["program"], D_TEST+"|\\.test\\.c")) {
+    if (caught && sizeof(e["trace"]) > 1 && regexp(
+        e["trace"][1]["program"],
+        D_TEST + "|\\.test\\.c"
+    )) {
         test = filter(e["trace"], (: $1["file"] == M_TEST :))[0]["object"];
         if (test && !test->query_expect_catch()) {
             write("--- CAUGHT DURING TEST:\n" + standard_trace(e) + "\n---\n");
@@ -305,7 +346,7 @@ void error_handler (mapping e, int caught) {
     }
 
     ret = "--- " + ctime(time()) + "\n" + standard_trace(e) + "\n";
-    if (file_size("/log/" + file) > 20000) { // 20 kb
+    if (file_size("/log/" + file) > 20000) {  // 20 kb
         rename("/log/" + file, "/log/" + file + "-" + time());
     }
     write_file("/log/" + file, ret);
@@ -316,18 +357,27 @@ void error_handler (mapping e, int caught) {
     if (user = efun::this_player(1)) {
         if (ob && ob->is_character() && ob->query_immortal()) {
             // immortals get the full colored trace inline; mortals just a pointer
-            tell_object(user, "--- \e[31;1mError\e[0m " + ctime(time()) + "\n" + standard_trace(e, 1) + "\n");
+            tell_object(
+                user,
+                "--- \e[31;1mError\e[0m " + ctime(time()) + "\n" + standard_trace(
+                    e,
+                    1
+                ) + "\n"
+            );
         } else {
-            tell_object(user, sprintf("%sTrace written to /log/%s\n", e["error"], file));
+            tell_object(
+                user,
+                sprintf("%sTrace written to /log/%s\n", e["error"], file)
+            );
         }
     }
 }
 
 // @TODO: deprecate this disable warnings system
-private string *read_file_disabled_warnings (string file) {
-    string *lines = file_size(file) > 0 ? explode(read_file(file), "\n") : ({ });
-    lines = filter(lines, (: regexp($1,"// disable warning:") :));
-    return map_array(lines, (: $1[strsrch($1, ": ")+2..<1] :));
+private string *read_file_disabled_warnings(string file) {
+    string *lines = file_size(file) > 0 ? explode(read_file(file), "\n") : ({});
+    lines = filter(lines, (: regexp($1, "// disable warning:") :));
+    return map_array(lines, (: $1[strsrch($1, ": ") + 2..<1] :));
 }
 
 /**
@@ -336,7 +386,7 @@ private string *read_file_disabled_warnings (string file) {
  * @param file path to write to
  * @param msg message to log
  */
-void log_error (string file, string msg) {
+void log_error(string file, string msg) {
     string dest, lcMsg, nom, tmp;
 
     if (file[0] != '/') {
@@ -365,7 +415,7 @@ void log_error (string file, string msg) {
         }
         msg = replace_string(msg, "Warning: ", "\e[33mWarning\e[0m: ", 1);
     } else {
-        if (file_size("/log/" + dest) > 20000) { // 20 kb
+        if (file_size("/log/" + dest) > 20000) {  // 20 kb
             rename("/log/" + dest, "/log/" + dest + "-" + time());
         }
         write_file("/log/" + dest, ctime() + " " + msg);
@@ -388,7 +438,7 @@ void log_error (string file, string msg) {
  * @param rel_path the relative path to make absolute
  * @returns absolute sanitized path of the relative path
  */
-string make_path_absolute (string rel_path) {
+string make_path_absolute(string rel_path) {
     return sanitize_path(rel_path);
 }
 
@@ -398,7 +448,7 @@ string make_path_absolute (string rel_path) {
  * @param {STD_USER} user the user to query
  * @returns the integer bitmask of the user's ed setup
  */
-int retrieve_ed_setup (object user) {
+int retrieve_ed_setup(object user) {
     return user->query_ed_setup();
 }
 
@@ -409,7 +459,7 @@ int retrieve_ed_setup (object user) {
  * @param config the integer bitmask of the user's ed setup
  * @returns 1
  */
-int save_ed_setup (object user, int config) {
+int save_ed_setup(object user, int config) {
     user->set_ed_setup(config);
     return 1;
 }
@@ -428,7 +478,7 @@ int save_ed_setup (object user, int config) {
  * @param {string} filename - path of the file being compiled
  * @returns {string} the privilege class for this file
  */
-string privs_file (string filename) {
+string privs_file(string filename) {
     return D_ACCESS->query_file_privs(filename);
 }
 
@@ -444,7 +494,7 @@ string privs_file (string filename) {
  * @param {mixed *} info  - extra info passed by the driver
  * @returns {int} 1 - database access is always permitted
  */
-int valid_database (object caller, string action, mixed *info) {
+int valid_database(object caller, string action, mixed *info) {
     // TODO: wire this up like valid_socket
     // return D_ACCESS->query_allowed(caller, action, 0, "database");
     return 1;
@@ -465,7 +515,7 @@ int valid_database (object caller, string action, mixed *info) {
  * @param {string} main_file - the primary file in the inheritance chain
  * @returns {int} 1 if the override is permitted, 0 otherwise
  */
-varargs int valid_override (string file, string fn, string main_file) {
+varargs int valid_override(string file, string fn, string main_file) {
     if (file[0] != '/') {
         return 0;
     }
@@ -492,7 +542,7 @@ varargs int valid_override (string file, string fn, string main_file) {
  * @param {object} ob - the object to be shadowed
  * @returns {int} 1 if shadowing is permitted, 0 otherwise
  */
-int valid_shadow (object ob) {
+int valid_shadow(object ob) {
     if (regexp(file_name(previous_object()), "[a-z]+\\.mock#[0-9]+")) {
         return 1;
     } else if (base_name(ob) == "/std/shadow.test") {
@@ -512,7 +562,7 @@ int valid_shadow (object ob) {
  * @param {mixed *} info  - extra info passed by the driver
  * @returns {int} 1 if the caller is D_IPC or inherits the HTTP module, 0 otherwise
  */
-int valid_socket (object caller, string fn, mixed *info) {
+int valid_socket(object caller, string fn, mixed *info) {
     return D_ACCESS->query_allowed(caller, fn, 0, "socket");
 }
 
@@ -535,15 +585,18 @@ int valid_socket (object caller, string fn, mixed *info) {
  * @param {string} fn    - the efun being called
  * @returns {int} 1 if read access is granted, 0 otherwise
  */
-int valid_read (string file, mixed caller, string fn) {
+int valid_read(string file, mixed caller, string fn) {
     int valid = 0;
     if (stringp(file) && sizeof(file)) {
         file = sanitize_path(file);
-        if (!(valid = regexp(base_name(caller), "^/secure/daemon/(master|access)"))) {
+        if (!(valid = regexp(
+            base_name(caller),
+            "^/secure/daemon/(master|access)"
+        ))) {
             valid = D_ACCESS->query_allowed(caller, fn, file, "read");
         }
         if (!valid && !regexp(base_name(previous_object()), "\\.test$")) {
-            debug_message(ctime()+" "+base_name(caller)+" denied read ("+fn+") to "+file);
+            debug_message(ctime() + " " + base_name(caller) + " denied read (" + fn + ") to " + file);
         }
     }
     return valid;
@@ -568,15 +621,18 @@ int valid_read (string file, mixed caller, string fn) {
  * @param {string} fn    - the efun being called
  * @returns {int} 1 if write access is granted, 0 otherwise
  */
-int valid_write (string file, mixed caller, string fn) {
+int valid_write(string file, mixed caller, string fn) {
     int valid = 0;
     if (stringp(file) && sizeof(file)) {
         file = sanitize_path(file);
-        if (!(valid = regexp(base_name(caller), "^/secure/daemon/(master|access)"))) {
+        if (!(valid = regexp(
+            base_name(caller),
+            "^/secure/daemon/(master|access)"
+        ))) {
             valid = D_ACCESS->query_allowed(caller, fn, file, "write");
         }
         if (!valid && !regexp(base_name(previous_object()), "\\.test$")) {
-            debug_message(ctime()+" "+base_name(caller)+" denied write ("+fn+") to "+file);
+            debug_message(ctime() + " " + base_name(caller) + " denied write (" + fn + ") to " + file);
         }
     }
     return valid;
@@ -589,7 +645,7 @@ int valid_write (string file, mixed caller, string fn) {
  *
  * @returns string array containing base identifiers
  */
-string *parse_command_id_list () {
+string *parse_command_id_list() {
     return ({ "thing" });
 }
 
@@ -598,7 +654,7 @@ string *parse_command_id_list () {
  *
  * @returns string array containing adjectives
  */
-string *parse_command_adjectiv_id_list () {
+string *parse_command_adjectiv_id_list() {
     return ({ "a", "an", "the" });
 }
 
@@ -607,7 +663,7 @@ string *parse_command_adjectiv_id_list () {
  *
  * @returns string array containing plural identifiers
  */
-string *parse_command_plural_id_list () {
+string *parse_command_plural_id_list() {
     return ({ "things", "them", "everything" });
 }
 
@@ -616,7 +672,7 @@ string *parse_command_plural_id_list () {
  *
  * @returns string array containing prepositions
  */
-string *parse_command_prepos_list () {
+string *parse_command_prepos_list() {
     return ({ "in", "from", "on", "under", "behind", "beside", "of", "for",
         "to", "with", "at", "off", "out", "down", "up", "around", "over",
         "into", "onto", "about", "out of", "aboard", "above", "against",
@@ -632,7 +688,7 @@ string *parse_command_prepos_list () {
  *
  * @returns string "all" word
  */
-string parse_command_all_word () {
+string parse_command_all_word() {
     return "all";
 }
 
@@ -641,7 +697,7 @@ string parse_command_all_word () {
  *
  * @returns {STD_CHARACTER} list of characters
  */
-object *parse_command_users () {
+object *parse_command_users() {
     return users()->query_character();
 }
 
@@ -653,7 +709,7 @@ object *parse_command_users () {
  * @param arg
  * @param plural
  */
-string parser_error_message (int type, object ob, mixed arg, int plural) {
+string parser_error_message(int type, object ob, mixed arg, int plural) {
     string err;
     object tmpob;
     string wut;
@@ -671,114 +727,120 @@ string parser_error_message (int type, object ob, mixed arg, int plural) {
         arg = arg[0..<2];
     }
 
-    debug_message("parser_error_message: "+type+" "+identify(ob)+" "+identify(arg)+" "+plural);
+    debug_message("parser_error_message: " + type + " " + identify(ob) + " " + identify(arg) + " " + plural);
     switch (type) {
-    case 0:
-        if (arg && objectp(arg)) {
-            wat = arg;
-        }
-        if (!wat && arg && arrayp(arg) && sizeof(arg)) {
-            foreach (mixed element in arg) {
-                if (objectp(element)) {
-                    wat = element;
+        case 0:
+            if (arg && objectp(arg)) {
+                wat = arg;
+            }
+            if (!wat && arg && arrayp(arg) && sizeof(arg)) {
+                foreach (mixed element in arg) {
+                    if (objectp(element)) {
+                        wat = element;
+                    }
                 }
             }
-        }
-        if (ob && wat) {
-            err = "You can't use " + ob->query_short() + " with " + wat->query_short() + " that way.";
-        } else if (ob) {
-            err = "It seems you can't do that with " + ob->query_short() + ".";
-        } else if (wat) {
-            err = "It seems you can't do that to " + wat->query_short() + ".";
-        } else {
-            err = "It seems you can't do that.";
-        }
-        break;
-
-    case ERR_IS_NOT:
-        if (plural || (arg && stringp(arg))) {
-            if (plural) { // || get_object(arg, this_player())) {
-                return "It appears you must be more specific.";
-            } else if (arg && stringp(arg)) {
-                wut = remove_article(arg);
-            }
-        } else {
-            wut = "that";
-        }
-        err = capitalize(wut) +" is not here.";
-        break;
-
-    case ERR_NOT_LIVING:
-        if (plural) {
-            err = "None of the " + pluralize(remove_article(arg)) +" are alive.";
-        } else {
-            err = "The " + remove_article(arg) + " is not alive.";
-        }
-        break;
-
-    case ERR_NOT_ACCESSIBLE:
-        if (plural) {
-            err = "You can't get to them.";
-        } else {
-            err = "You can't get to it.";
-        }
-        break;
-
-    case ERR_AMBIG:
-        {
-            mixed *obs;
-            int i;
-
-            obs = unique_array(arg, (: $1->query_short() :));
-            if (sizeof(obs) == 1) {
-                err = "Which of the " + consolidate(sizeof(arg), obs[0][0]->query_short()) + " do you mean?";
+            if (ob && wat) {
+                err = "You can't use " + ob->query_short() + " with " + wat->query_short() + " that way.";
+            } else if (ob) {
+                err = "It seems you can't do that with " + ob->query_short() + ".";
+            } else if (wat) {
+                err = "It seems you can't do that to " + wat->query_short() + ".";
             } else {
-                err = "Do you mean ";
-                for (i = 0; i < sizeof(obs); i ++) {
-                    if (sizeof(obs[i]) > 1) {
-                        err += "one of the " + consolidate(sizeof(obs[i]), obs[i][0]->query_short());
-                    } else {
-                        err += obs[i][0]->query_short();
-                    }
-                    if (i == (sizeof(obs) - 2)) {
-                        err += " or ";
-                    } else if (i < sizeof(obs) - 1) {
-                        err += ", ";
-                    }
+                err = "It seems you can't do that.";
+            }
+            break;
+
+        case ERR_IS_NOT:
+            if (plural || (arg && stringp(arg))) {
+                if (plural) {  // || get_object(arg, this_player())) {
+                    return "It appears you must be more specific.";
+                } else if (arg && stringp(arg)) {
+                    wut = remove_article(arg);
                 }
-                err += "?";
+            } else {
+                wut = "that";
             }
-            return err;
-        }
+            err = capitalize(wut) + " is not here.";
+            break;
 
-    case ERR_ORDINAL:
-        if (arg > 1) {
-            err = "There are only " + arg + " of them.";
-        } else {
-            err = "There is only one of them.";
-        }
-        break;
-
-    case ERR_ALLOCATED:
-        return arg;
-
-    case ERR_THERE_IS_NO:
-        if (plural || (arg && stringp(arg)) && environment(this_character())) {
-            // ???
-            if (tmpob = present(arg, environment(this_character()))) {
-                return "It seems you must be more specific.";
-            } else if (arg && stringp(arg)) {
-                wut = remove_article(arg);
+        case ERR_NOT_LIVING:
+            if (plural) {
+                err = "None of the " + pluralize(remove_article(arg)) + " are alive.";
+            } else {
+                err = "The " + remove_article(arg) + " is not alive.";
             }
-        } else {
-            wut = "such thing";
-        }
-        err = "There is no "+ wut +" here.";
-        break;
+            break;
 
-    case ERR_BAD_MULTIPLE:
-        err = "You can't do that to more than one at a time.";
-        break;
+        case ERR_NOT_ACCESSIBLE:
+            if (plural) {
+                err = "You can't get to them.";
+            } else {
+                err = "You can't get to it.";
+            }
+            break;
+
+        case ERR_AMBIG:
+            {
+                mixed *obs;
+                int i;
+
+                obs = unique_array(arg, (: $1->query_short() :));
+                if (sizeof(obs) == 1) {
+                    err = "Which of the " + consolidate(
+                        sizeof(arg),
+                        obs[0][0]->query_short()
+                    ) + " do you mean?";
+                } else {
+                    err = "Do you mean ";
+                    for (i = 0; i < sizeof(obs); i++) {
+                        if (sizeof(obs[i]) > 1) {
+                            err += "one of the " + consolidate(
+                                sizeof(obs[i]),
+                                obs[i][0]->query_short()
+                            );
+                        } else {
+                            err += obs[i][0]->query_short();
+                        }
+                        if (i == (sizeof(obs) - 2)) {
+                            err += " or ";
+                        } else if (i < sizeof(obs) - 1) {
+                            err += ", ";
+                        }
+                    }
+                    err += "?";
+                }
+                return err;
+            }
+
+        case ERR_ORDINAL:
+            if (arg > 1) {
+                err = "There are only " + arg + " of them.";
+            } else {
+                err = "There is only one of them.";
+            }
+            break;
+
+        case ERR_ALLOCATED:
+            return arg;
+
+        case ERR_THERE_IS_NO:
+            if (plural || (arg && stringp(arg)) && environment(this_character())) {
+                // ???
+                if (tmpob = present(arg, environment(this_character()))) {
+                    return "It seems you must be more specific.";
+                } else if (arg && stringp(arg)) {
+                    wut = remove_article(arg);
+                }
+            } else {
+                wut = "such thing";
+            }
+            err = "There is no " + wut + " here.";
+            break;
+
+        case ERR_BAD_MULTIPLE:
+            err = "You can't do that to more than one at a time.";
+            break;
     }
     return err;
 }
@@ -786,7 +848,7 @@ string parser_error_message (int type, object ob, mixed arg, int plural) {
 /**
  * This function is called whenever characters enter or exit the world.
  */
-void handle_parse_refresh () {
+void handle_parse_refresh() {
     parse_refresh();
 }
 
@@ -795,23 +857,23 @@ void handle_parse_refresh () {
 /**
  * Upon create, if this is not a clone, attempt to make save directories.
  */
-void create () {
+void create() {
     int i;
     string s = " ";
     if (clonep()) {
         return;
     }
-    for (i = 'a'; i <= 'z'; i ++) {
+    for (i = 'a'; i <= 'z'; i++) {
         s[0] = i;
         mkdirs("/save/account/" + s);
         mkdirs("/save/character/" + s);
         mkdirs("/save/planet/" + s);
     }
-    for (i = 'A'; i <= 'Z'; i ++) {
+    for (i = 'A'; i <= 'Z'; i++) {
         s[0] = i;
         mkdirs("/save/account/" + s);
     }
-    for (i = 0; i <= 9; i ++) {
+    for (i = 0; i <= 9; i++) {
         s = "" + i;
         mkdirs("/save/account/" + s);
     }

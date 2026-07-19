@@ -7,7 +7,7 @@ inherit "/std/living/vitals";
  * @var {"/std/ability/cost"} testOb
  */
 
-void test_cost () {
+void test_cost() {
     mapping cost = ([ "sp": 100, "mp": 100 ]);
     object mockBody = new("/std/living/body.mock.c");
     object mockConfig = new("/std/ability/config.mock.c");

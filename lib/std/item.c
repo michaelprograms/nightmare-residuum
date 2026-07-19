@@ -8,25 +8,25 @@ nosave private string __Type = "";
 
 /* -----  ----- */
 
-int is_item () {
+int is_item() {
     return 1;
 }
 
 /* ----- type ----- */
 
-void set_type (string type) {
+void set_type(string type) {
     __Type = type;
 }
-string query_type () {
+string query_type() {
     return __Type;
 }
 
 /* ----- value ----- */
 
-int query_value () {
+int query_value() {
     return __Value;
 }
-void set_value (int v) {
+void set_value(int v) {
     if (undefinedp(v) || !intp(v) || v < 0) {
         error("Bad argument 1 to item->set_value");
     }
@@ -35,10 +35,10 @@ void set_value (int v) {
 
 /* ----- no get ----- */
 
-mixed query_no_get () {
+mixed query_no_get() {
     return __NoGet;
 }
-void set_no_get (mixed condition) {
+void set_no_get(mixed condition) {
     if (!stringp(condition) && !intp(condition) && !functionp(condition)) {
         error("Bad argument 1 to item->set_no_get");
     }
@@ -47,19 +47,19 @@ void set_no_get (mixed condition) {
 
 /* ----- parser applies ----- */
 
-mixed direct_look_at_obj (mixed args...) {
+mixed direct_look_at_obj(mixed args...) {
     return environment() && (environment() == environment(previous_object()) || environment() == previous_object());
 }
-mixed direct_look_obj (mixed args...) {
+mixed direct_look_obj(mixed args...) {
     return direct_look_at_obj(args);
 }
-mixed direct_drop_obj (mixed args...) {
+mixed direct_drop_obj(mixed args...) {
     return environment() == previous_object();
 }
-mixed direct_give_obj_to_liv (mixed args...) {
+mixed direct_give_obj_to_liv(mixed args...) {
     return environment() == previous_object();
 }
-mixed direct_get_obj (mixed args...) {
+mixed direct_get_obj(mixed args...) {
     object env = environment();
     if (env != environment(previous_object())) {
         if (env == previous_object()) {
@@ -74,12 +74,12 @@ mixed direct_get_obj (mixed args...) {
         } else if (stringp(__NoGet)) {
             return __NoGet;
         } else if (intp(__NoGet)) {
-            return "You can't get the "+ query_name() + ".";
+            return "You can't get the " + query_name() + ".";
         }
     }
     return 1;
 }
-mixed direct_get_obj_from_obj (mixed args...) {
+mixed direct_get_obj_from_obj(mixed args...) {
     object env = environment();
     if (env == previous_object()) {
         return 0;
@@ -88,7 +88,7 @@ mixed direct_get_obj_from_obj (mixed args...) {
     }
     return 1;
 }
-mixed direct_put_obj_in_obj (mixed args...) {
+mixed direct_put_obj_in_obj(mixed args...) {
     if (!sizeof(args) || !args[0]) {
         return 0;
     }
@@ -97,7 +97,7 @@ mixed direct_put_obj_in_obj (mixed args...) {
     }
     return 1;
 }
-mixed direct_sell_obj (mixed args...) {
+mixed direct_sell_obj(mixed args...) {
     if (!sizeof(args) || !args[0]) {
         return 0;
     }

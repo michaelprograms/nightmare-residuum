@@ -2,7 +2,7 @@
 
 inherit STD_NPC;
 
-void create () {
+void create() {
     ::create();
     set_gender(({ "male", "female" })[random(2)]);
     set_id(({ "archer", }));

@@ -4,7 +4,7 @@ inherit M_TEST;
  * @var {"/std/module/levelable"} testOb
  */
 
-void test_level () {
+void test_level() {
     expect("level settable and queryable", (: ({
         assert_equal(testOb->query_level(), 1),
 

@@ -4,11 +4,11 @@ inherit M_TEST;
  * @var {"/std/living/attribute"} testOb
  */
 
-void test_attributes () {
+void test_attributes() {
     expect("null attributes are initialized", (: ({
-        assert_equal(testOb->query_attributes(), ([ ])),
+        assert_equal(testOb->query_attributes(), ([])),
         store_variable("__Attribute", UNDEFINED, testOb),
-        assert_equal(testOb->query_attributes(), ([ ])),
+        assert_equal(testOb->query_attributes(), ([])),
     }) :));
 
     expect("setting and querying attributes are handled", (: ({
@@ -17,7 +17,7 @@ void test_attributes () {
         assert_equal(testOb->query_attribute("eye"), UNDEFINED),
         assert_equal(testOb->query_attribute("hair"), UNDEFINED),
         assert_equal(testOb->query_attribute("height"), UNDEFINED),
-        assert_equal(testOb->query_attributes(), ([ ])),
+        assert_equal(testOb->query_attributes(), ([])),
 
         testOb->set_attribute("build", "test build"),
         assert_equal(testOb->query_attribute("build"), "test build"),
@@ -34,7 +34,16 @@ void test_attributes () {
         testOb->set_attribute("height", "test height"),
         assert_equal(testOb->query_attribute("height"), "test height"),
 
-        assert_equal(testOb->query_attributes(), ([ "build": "test build", "complexion": "test complexion", "eye": "test eye", "hair": "test hair", "height": "test height" ])),
+        assert_equal(
+            testOb->query_attributes(),
+            ([
+                "build": "test build",
+                "complexion": "test complexion",
+                "eye": "test eye",
+                "hair": "test hair",
+                "height": "test height"
+            ])
+        ),
     }) :));
 
     expect("setting invalid attributes is handled", (: ({

@@ -2,7 +2,7 @@
 
 inherit STD_VERB;
 
-void create () {
+void create() {
     verb::create();
     add_rules(({ "" }));
     set_requirements(REQUIREMENT_BUSY | REQUIREMENT_DISABLE);
@@ -11,11 +11,11 @@ void create () {
     set_help_similar(({ "fly", "land", "lay", "sit", "stand", }));
 }
 
-mixed can_meditate () {
+mixed can_meditate() {
     return 1;
 }
 
-void do_meditate () {
+void do_meditate() {
     object po = previous_object();
 
     if (po->query_posture() == "sitting") {
@@ -25,10 +25,20 @@ void do_meditate () {
 
     if (po->query_posture() == "laying") {
         message("action", "You sit up and meditate.", po);
-        message("action", po->query_cap_name() + " sits up and meditates.", environment(po), po);
+        message(
+            "action",
+            po->query_cap_name() + " sits up and meditates.",
+            environment(po),
+            po
+        );
     } else {
         message("action", "You sit down and meditate.", po);
-        message("action", po->query_cap_name() + " sits down and meditates.", environment(po), po);
+        message(
+            "action",
+            po->query_cap_name() + " sits down and meditates.",
+            environment(po),
+            po
+        );
     }
     po->set_posture("meditating");
 }

@@ -6,7 +6,7 @@ inherit M_TEST;
 
 private nosave string __ANSI = "on";
 private nosave int __Width = 80;
-mixed query_setting (string setting) {
+mixed query_setting(string setting) {
     if (setting == "ansi") {
         return __ANSI;
     }
@@ -15,132 +15,382 @@ mixed query_setting (string setting) {
     }
 }
 
-void test_format_page () {
+void test_format_page() {
     string row;
 
     expect("format_page handled width=80", (: ({
         assert_equal(__Width, 80),
         assert_regex(testOb->format_page(({ "a", "b" }), 2), "^a +b +$"),
-        assert_regex(testOb->format_page(({ "a", "b", "c" }), 2), "^a +b +\nc +$"),
-        assert_regex(testOb->format_page(({ "a", "b", "c" }), 1), "^a +\nb +\nc +$"),
-        assert_regex(testOb->format_page(({ "a", "b", "c" }), 2), "^a +b +\nc +$"),
-        assert_regex(testOb->format_page(({ "a", "b", "c" }), 3), "^a +b +c +$"),
-        assert_equal(strlen(explode(testOb->format_page(({ "a", }), 2), "\n")[0]), 80),
-        assert_equal(strlen(explode(testOb->format_page(({ "a", }), 2, 1), "\n")[0]), 78),
-        assert_equal(strlen(explode(testOb->format_page(({ "a", }), 2, -1), "\n")[0]), 82),
-        assert_equal(strlen(explode(testOb->format_page(({ "a", "b", "c" }), 2), "\n")[0]), 80),
-        assert_equal(strlen(explode(testOb->format_page(({ "a", "b", "c" }), 2, 1), "\n")[0]), 78),
-        assert_equal(strlen(explode(testOb->format_page(({ "a", "b", "c" }), 2, -1), "\n")[0]), 82),
+        assert_regex(
+            testOb->format_page(({ "a", "b", "c" }), 2),
+            "^a +b +\nc +$"
+        ),
+        assert_regex(
+            testOb->format_page(({ "a", "b", "c" }), 1),
+            "^a +\nb +\nc +$"
+        ),
+        assert_regex(
+            testOb->format_page(({ "a", "b", "c" }), 2),
+            "^a +b +\nc +$"
+        ),
+        assert_regex(
+            testOb->format_page(({ "a", "b", "c" }), 3),
+            "^a +b +c +$"
+        ),
+        assert_equal(
+            strlen(explode(testOb->format_page(({ "a", }), 2), "\n")[0]),
+            80
+        ),
+        assert_equal(
+            strlen(explode(testOb->format_page(({ "a", }), 2, 1), "\n")[0]),
+            78
+        ),
+        assert_equal(
+            strlen(explode(testOb->format_page(({ "a", }), 2, -1), "\n")[0]),
+            82
+        ),
+        assert_equal(
+            strlen(explode(
+                testOb->format_page(({ "a", "b", "c" }), 2),
+                "\n"
+            )[0]),
+            80
+        ),
+        assert_equal(
+            strlen(explode(
+                testOb->format_page(({ "a", "b", "c" }), 2, 1),
+                "\n"
+            )[0]),
+            78
+        ),
+        assert_equal(
+            strlen(explode(
+                testOb->format_page(({ "a", "b", "c" }), 2, -1),
+                "\n"
+            )[0]),
+            82
+        ),
     }) :));
 
     expect("format_page handled width=60", (: ({
         assert_equal(__Width = 60, 60),
         assert_regex(testOb->format_page(({ "a", "b" }), 2), "^a +b +$"),
-        assert_regex(testOb->format_page(({ "a", "b", "c" }), 2), "^a +b +\nc +$"),
-        assert_regex(testOb->format_page(({ "a", "b", "c" }), 1), "^a +\nb +\nc +$"),
-        assert_regex(testOb->format_page(({ "a", "b", "c" }), 3), "^a +b +c +$"),
-        assert_regex(testOb->format_page(({ "a", "b", "c" }), 2), "^a +b +\nc +$"),
-        assert_equal(strlen(explode(testOb->format_page(({ "a", }), 2), "\n")[0]), 60),
-        assert_equal(strlen(explode(testOb->format_page(({ "a", }), 2, 1), "\n")[0]), 58),
-        assert_equal(strlen(explode(testOb->format_page(({ "a", }), 2, -1), "\n")[0]), 62),
-        assert_equal(strlen(explode(testOb->format_page(({ "a", "b", "c" }), 2), "\n")[0]), 60),
-        assert_equal(strlen(explode(testOb->format_page(({ "a", "b", "c" }), 2, 1), "\n")[0]), 58),
-        assert_equal(strlen(explode(testOb->format_page(({ "a", "b", "c" }), 2, -1), "\n")[0]), 62),
+        assert_regex(
+            testOb->format_page(({ "a", "b", "c" }), 2),
+            "^a +b +\nc +$"
+        ),
+        assert_regex(
+            testOb->format_page(({ "a", "b", "c" }), 1),
+            "^a +\nb +\nc +$"
+        ),
+        assert_regex(
+            testOb->format_page(({ "a", "b", "c" }), 3),
+            "^a +b +c +$"
+        ),
+        assert_regex(
+            testOb->format_page(({ "a", "b", "c" }), 2),
+            "^a +b +\nc +$"
+        ),
+        assert_equal(
+            strlen(explode(testOb->format_page(({ "a", }), 2), "\n")[0]),
+            60
+        ),
+        assert_equal(
+            strlen(explode(testOb->format_page(({ "a", }), 2, 1), "\n")[0]),
+            58
+        ),
+        assert_equal(
+            strlen(explode(testOb->format_page(({ "a", }), 2, -1), "\n")[0]),
+            62
+        ),
+        assert_equal(
+            strlen(explode(
+                testOb->format_page(({ "a", "b", "c" }), 2),
+                "\n"
+            )[0]),
+            60
+        ),
+        assert_equal(
+            strlen(explode(
+                testOb->format_page(({ "a", "b", "c" }), 2, 1),
+                "\n"
+            )[0]),
+            58
+        ),
+        assert_equal(
+            strlen(explode(
+                testOb->format_page(({ "a", "b", "c" }), 2, -1),
+                "\n"
+            )[0]),
+            62
+        ),
     }) :));
 
     expect("format_page handled remainder of width/columns", (: ({
         assert_equal(__Width = 80, 80),
-        assert_equal(strlen(testOb->format_page(({ "a", "b", "c", "d", "e", }), 5, 4)), 72), // remainder = 2
-        assert_equal(strlen(testOb->format_page(({ "a", "b", "c" }), 3, 0)), 80), // remainder = 2
-        assert_equal(strlen(testOb->format_page(({ "1", "2", "3", "4", "5", "6", "7" }), 7, 0)), 80), // remainder = 3
+        assert_equal(
+            strlen(testOb->format_page(({ "a", "b", "c", "d", "e", }), 5, 4)),
+            72
+        ),  // remainder = 2
+        assert_equal(
+            strlen(testOb->format_page(({ "a", "b", "c" }), 3, 0)),
+            80
+        ),  // remainder = 2
+        assert_equal(
+            strlen(testOb->format_page(
+                ({ "1", "2", "3", "4", "5", "6", "7" }),
+                7,
+                0
+            )),
+            80
+        ),  // remainder = 3
     }) :));
 
     expect("format_page trimmed longer strings when more than 1 column", (: ({
-        assert_equal(strlen(testOb->format_page(({ "111111111111111111111111111111", "222222222222222222222222222222", "333333333333333333333333333333", "444444444444444444444444444444", }), 4, 0)), 80), // 30 * 4 = 120
-        assert_equal(strlen(testOb->format_page(({ "111111111111111111111111111111", "2", "3", "4", }), 4, 0)), 80), // 30 + 25 * 3 = 85
+        assert_equal(
+            strlen(testOb->format_page(
+                ({
+                    "111111111111111111111111111111",
+                    "222222222222222222222222222222",
+                    "333333333333333333333333333333",
+                    "444444444444444444444444444444",
+                }),
+                4,
+                0
+            )),
+            80
+        ),  // 30 * 4 = 120
+        assert_equal(
+            strlen(testOb->format_page(
+                ({ "111111111111111111111111111111", "2", "3", "4", }),
+                4,
+                0
+            )),
+            80
+        ),  // 30 + 25 * 3 = 85
     }) :));
 
-    row = testOb->format_page(({"123456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789"}), 1, 0, 0, 0);
+    row = testOb->format_page(
+        ({ "123456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789" }),
+        1,
+        0,
+        0,
+        0
+    );
     expect("format_page wrapped longer strings when 1 column with no ansi flag", (: ({
-        assert_equal($(row), "123456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789 \n123456789 123456789                                                             \n"),
-        assert_equal(strlen($(row)), 162), // 80 + 1 + 80 + 1
+        assert_equal(
+            $(row),
+            "123456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789 \n123456789 123456789                                                             \n"
+        ),
+        assert_equal(strlen($(row)), 162),  // 80 + 1 + 80 + 1
     }) :));
 
-    row = testOb->format_page(({"123456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789"}), 1, 0, 0, "256");
+    row = testOb->format_page(
+        ({ "123456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789" }),
+        1,
+        0,
+        0,
+        "256"
+    );
     expect("format_page wrapped longer strings when 1 column with ansi flag", (: ({
-        assert_equal($(row), "123456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789 \e[0;37;40m\n123456789 123456789                                                             \n"),
-        assert_equal(strlen($(row)), 172), // 80 + 10 + 1 + 80 + 1
+        assert_equal(
+            $(row),
+            "123456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789 \e[0;37;40m\n123456789 123456789                                                             \n"
+        ),
+        assert_equal(strlen($(row)), 172),  // 80 + 10 + 1 + 80 + 1
     }) :));
 
     expect("format_page left aligns strings", (: ({
         assert_equal(__Width = 20, 20),
-        assert_equal(testOb->format_page(({ "1", "2", "3", "4" }), 4, 0), "1    2    3    4    "),
-        assert_equal(testOb->format_page(({ "1", "2", "3", "4" }), 4, 0, 0), "1    2    3    4    "),
-        assert_equal(testOb->format_page(({ "1" }), 1, 0, 0), "1                   "),
-        assert_equal(testOb->format_page(({ "1", "2" }), 1, 0, 0), "1                   \n2                   "),
+        assert_equal(
+            testOb->format_page(({ "1", "2", "3", "4" }), 4, 0),
+            "1    2    3    4    "
+        ),
+        assert_equal(
+            testOb->format_page(({ "1", "2", "3", "4" }), 4, 0, 0),
+            "1    2    3    4    "
+        ),
+        assert_equal(
+            testOb->format_page(({ "1" }), 1, 0, 0),
+            "1                   "
+        ),
+        assert_equal(
+            testOb->format_page(({ "1", "2" }), 1, 0, 0),
+            "1                   \n2                   "
+        ),
     }) :));
     expect("format_page center aligns strings", (: ({
-        assert_equal(testOb->format_page(({ "1", "2", "3", "4" }), 4, 0, 1), "  1    2    3    4  "),
-        assert_equal(testOb->format_page(({ "1", "2", "3", "4" }), 4, 0, 1), "  1    2    3    4  "),
-        assert_equal(testOb->format_page(({ "1" }), 1, 0, 1), "          1         "),
-        assert_equal(testOb->format_page(({ "1", "2" }), 1, 0, 1), "          1         \n          2         "),
+        assert_equal(
+            testOb->format_page(({ "1", "2", "3", "4" }), 4, 0, 1),
+            "  1    2    3    4  "
+        ),
+        assert_equal(
+            testOb->format_page(({ "1", "2", "3", "4" }), 4, 0, 1),
+            "  1    2    3    4  "
+        ),
+        assert_equal(
+            testOb->format_page(({ "1" }), 1, 0, 1),
+            "          1         "
+        ),
+        assert_equal(
+            testOb->format_page(({ "1", "2" }), 1, 0, 1),
+            "          1         \n          2         "
+        ),
     }) :));
 
     expect("format_page handles column ratios", (: ({
-        assert_equal(testOb->format_page(({ "1", "2", "3" }), ({ 2, 1, 1 }), 0, 0), "1         2    3    "),
-        assert_equal(testOb->format_page(({ "1", "2", "3", "4" }), ({ 2, 1, 1, 1 }), 0, 0), "1       2   3   4   "),
-        assert_equal(testOb->format_page(({ "1", "2", "3" }), ({ 1, 1, 1 }), 0, 0), "1     2     3       "), // remainder of 2
+        assert_equal(
+            testOb->format_page(({ "1", "2", "3" }), ({ 2, 1, 1 }), 0, 0),
+            "1         2    3    "
+        ),
+        assert_equal(
+            testOb->format_page(
+                ({ "1", "2", "3", "4" }),
+                ({ 2, 1, 1, 1 }),
+                0,
+                0
+            ),
+            "1       2   3   4   "
+        ),
+        assert_equal(
+            testOb->format_page(({ "1", "2", "3" }), ({ 1, 1, 1 }), 0, 0),
+            "1     2     3       "
+        ),  // remainder of 2
 
-        assert_equal(testOb->format_page(({ "1", "2", "3" }), ({ 2, 1, 1 }), 0, 1), "     1      2    3  "),
-        assert_equal(testOb->format_page(({ "1", "2", "3", "4" }), ({ 2, 1, 1, 1 }), 0, 1), "    1     2   3   4 "),
-        assert_equal(testOb->format_page(({ "1", "2", "3" }), ({ 1, 1, 1 }), 0, 1), "   1     2     3    "), // remainder of 2
+        assert_equal(
+            testOb->format_page(({ "1", "2", "3" }), ({ 2, 1, 1 }), 0, 1),
+            "     1      2    3  "
+        ),
+        assert_equal(
+            testOb->format_page(
+                ({ "1", "2", "3", "4" }),
+                ({ 2, 1, 1, 1 }),
+                0,
+                1
+            ),
+            "    1     2   3   4 "
+        ),
+        assert_equal(
+            testOb->format_page(({ "1", "2", "3" }), ({ 1, 1, 1 }), 0, 1),
+            "   1     2     3    "
+        ),  // remainder of 2
     }) :));
 
     expect("format_page displays ANSI strings with proper string length", (: ({
         // Items display properly left aligned
-        assert_equal(testOb->format_page(({ "%^RED%^Red text%^RESET%^", "%^BLUE%^Blue text%^RESET%^", }), 2), "%^RED%^Red text%^RESET%^  %^BLUE%^Blue text%^RESET%^ "),
+        assert_equal(
+            testOb->format_page(
+                ({ "%^RED%^Red text%^RESET%^", "%^BLUE%^Blue text%^RESET%^", }),
+                2
+            ),
+            "%^RED%^Red text%^RESET%^  %^BLUE%^Blue text%^RESET%^ "
+        ),
         // First item has a RESET appended
-        assert_equal(testOb->format_page(({ "%^RED%^No reset", "%^BLUE%^Blue text%^RESET%^", }), 2), "%^RED%^No reset  %^RESET%^%^BLUE%^Blue text%^RESET%^ "),
+        assert_equal(
+            testOb->format_page(
+                ({ "%^RED%^No reset", "%^BLUE%^Blue text%^RESET%^", }),
+                2
+            ),
+            "%^RED%^No reset  %^RESET%^%^BLUE%^Blue text%^RESET%^ "
+        ),
         // First item is stripped of color due to exceeding column width
-        assert_equal(testOb->format_page(({ "%^RED%^Trimmed Red text%^RESET%^", "%^BLUE%^Blue text%^RESET%^", }), 2), "Trimmed Re%^BLUE%^Blue text%^RESET%^ "),
+        assert_equal(
+            testOb->format_page(
+                ({
+                    "%^RED%^Trimmed Red text%^RESET%^",
+                    "%^BLUE%^Blue text%^RESET%^",
+                }),
+                2
+            ),
+            "Trimmed Re%^BLUE%^Blue text%^RESET%^ "
+        ),
 
         // Items display properly centered
-        assert_equal(testOb->format_page(({ "%^RED%^Red text%^RESET%^", "%^BLUE%^Blue text%^RESET%^", }), 2, 0, 1), " %^RED%^Red text%^RESET%^  %^BLUE%^Blue text%^RESET%^"),
-        assert_equal(testOb->format_page(({ "%^RED%^Red%^RESET%^", "%^BLUE%^Blue%^RESET%^", }), 2, 0, 1), "    %^RED%^Red%^RESET%^      %^BLUE%^Blue%^RESET%^   "),
+        assert_equal(
+            testOb->format_page(
+                ({ "%^RED%^Red text%^RESET%^", "%^BLUE%^Blue text%^RESET%^", }),
+                2,
+                0,
+                1
+            ),
+            " %^RED%^Red text%^RESET%^  %^BLUE%^Blue text%^RESET%^"
+        ),
+        assert_equal(
+            testOb->format_page(
+                ({ "%^RED%^Red%^RESET%^", "%^BLUE%^Blue%^RESET%^", }),
+                2,
+                0,
+                1
+            ),
+            "    %^RED%^Red%^RESET%^      %^BLUE%^Blue%^RESET%^   "
+        ),
     }) :));
 
     expect("format_page trims long lines of all singular character", (: ({
         assert_equal(__Width = 80, 80),
-        assert_equal(testOb->format_page(({ "________________________________________________________________________________" }), 1), "________________________________________________________________________________"),
+        assert_equal(
+            testOb->format_page(
+                ({ "________________________________________________________________________________" }),
+                1
+            ),
+            "________________________________________________________________________________"
+        ),
         assert_equal(__Width = 20, 20),
-        assert_equal(testOb->format_page(({ "________________________________________________________________________________" }), 1), "____________________\n"),
+        assert_equal(
+            testOb->format_page(
+                ({ "________________________________________________________________________________" }),
+                1
+            ),
+            "____________________\n"
+        ),
     }) :));
 
     expect("format_page handles bad input", (: ({
-        assert_catch((: testOb->format_page(({ })) :), "*Bad argument 1 to format->format_page\n"),
+        assert_catch(
+            (: testOb->format_page(({})) :),
+            "*Bad argument 1 to format->format_page\n"
+        ),
 
-        assert_catch((: testOb->format_page(({ "a", "b", "c" }), 1.0) :), "*Bad argument 2 to format->format_page\n"),
-        assert_catch((: testOb->format_page(({ "a" }), 0) :), "*Bad argument 2 to format->format_page\n"),
+        assert_catch(
+            (: testOb->format_page(({ "a", "b", "c" }), 1.0) :),
+            "*Bad argument 2 to format->format_page\n"
+        ),
+        assert_catch(
+            (: testOb->format_page(({ "a" }), 0) :),
+            "*Bad argument 2 to format->format_page\n"
+        ),
     }) :));
 }
 
-void test_format_syntax () {
+void test_format_syntax() {
     expect("format_syntax handles syntaxes with ANSI off", (: ({
         assert_equal(__ANSI = "off", "off"),
         assert_equal(testOb->format_syntax(0), 0),
         assert_equal(testOb->format_syntax("syntax"), "<syntax>"),
-        assert_equal(testOb->format_syntax("verb [target] ([limb]) (with [thing])"), "<verb [target] ([limb]) (with [thing])>"),
+        assert_equal(
+            testOb->format_syntax("verb [target] ([limb]) (with [thing])"),
+            "<verb [target] ([limb]) (with [thing])>"
+        ),
     }) :));
 
     expect("format_syntax handles syntaxes with ANSI on", (: ({
         assert_equal(__ANSI = "on", "on"),
-        assert_equal(testOb->format_syntax("syntax"), "%^CYAN%^<%^I_CYAN%^syntax%^CYAN%^>%^RESET%^"),
-        assert_equal(testOb->format_syntax("syntax [target] (optional1|optional2)"), "%^CYAN%^<%^I_CYAN%^syntax %^BOLD%^[%^BOLD_OFF%^target%^BOLD%^]%^BOLD_OFF%^ %^RESET%^(%^CYAN%^optional1%^RESET%^|%^CYAN%^optional2%^RESET%^)%^CYAN%^>%^RESET%^"),
-        assert_equal(strip_colour(testOb->format_syntax("syntax target")), "<syntax target>"),
+        assert_equal(
+            testOb->format_syntax("syntax"),
+            "%^CYAN%^<%^I_CYAN%^syntax%^CYAN%^>%^RESET%^"
+        ),
+        assert_equal(
+            testOb->format_syntax("syntax [target] (optional1|optional2)"),
+            "%^CYAN%^<%^I_CYAN%^syntax %^BOLD%^[%^BOLD_OFF%^target%^BOLD%^]%^BOLD_OFF%^ %^RESET%^(%^CYAN%^optional1%^RESET%^|%^CYAN%^optional2%^RESET%^)%^CYAN%^>%^RESET%^"
+        ),
+        assert_equal(
+            strip_colour(testOb->format_syntax("syntax target")),
+            "<syntax target>"
+        ),
     }) :));
 }
 
-void test_format_exit_brief () {
+void test_format_exit_brief() {
     expect("format_exit_brief handled exits", (: ({
         assert_equal(testOb->format_exit_brief("north"), "n"),
         assert_equal(testOb->format_exit_brief("northeast"), "ne"),
@@ -159,7 +409,7 @@ void test_format_exit_brief () {
         assert_equal(testOb->format_exit_brief("exit"), "exit"),
     }) :));
 }
-void test_format_exit_verbose () {
+void test_format_exit_verbose() {
     expect("format_exit_verbose handled exits", (: ({
         assert_equal(testOb->format_exit_verbose("n"), "north"),
         assert_equal(testOb->format_exit_verbose("ne"), "northeast"),
@@ -178,7 +428,7 @@ void test_format_exit_verbose () {
         assert_equal(testOb->format_exit_verbose("exit"), "exit"),
     }) :));
 }
-void test_format_exit_reverse () {
+void test_format_exit_reverse() {
     expect("format_exit_reverse handled exits", (: ({
         assert_equal(testOb->format_exit_reverse("south"), "north"),
         assert_equal(testOb->format_exit_reverse("southwest"), "northeast"),
@@ -198,7 +448,7 @@ void test_format_exit_reverse () {
     }) :));
 }
 
-void test_format_stat_brief () {
+void test_format_stat_brief() {
     expect("format_stat_brief handled stats", (: ({
         assert_equal(testOb->format_stat_brief("strength"), "str"),
         assert_equal(testOb->format_stat_brief("perception"), "per"),
@@ -217,7 +467,7 @@ void test_format_stat_brief () {
         assert_equal(testOb->format_stat_brief("lck"), "lck"),
     }) :));
 }
-void test_format_stat_verbose () {
+void test_format_stat_verbose() {
     expect("format_stat_verbose handled stats", (: ({
         assert_equal(testOb->format_stat_verbose("str"), "strength"),
         assert_equal(testOb->format_stat_verbose("per"), "perception"),
@@ -231,13 +481,16 @@ void test_format_stat_verbose () {
         assert_equal(testOb->format_stat_verbose("perception"), "perception"),
         assert_equal(testOb->format_stat_verbose("endurance"), "endurance"),
         assert_equal(testOb->format_stat_verbose("charisma"), "charisma"),
-        assert_equal(testOb->format_stat_verbose("intelligence"), "intelligence"),
+        assert_equal(
+            testOb->format_stat_verbose("intelligence"),
+            "intelligence"
+        ),
         assert_equal(testOb->format_stat_verbose("agility"), "agility"),
         assert_equal(testOb->format_stat_verbose("luck"), "luck"),
     }) :));
 }
 
-void test_format_integer () {
+void test_format_integer() {
     expect("format_integer handled integers", (: ({
         // positives
         assert_equal(testOb->format_integer(0), "0"),

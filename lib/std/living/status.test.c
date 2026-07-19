@@ -6,7 +6,7 @@ inherit M_TEST;
 
 #define STATUS_MOCK "/std/living/status.c" & "/std/living/status.mock.c"
 
-void test_busy () {
+void test_busy() {
     expect("busy should be settable and queryable", (: ({
         assert_equal(testOb->query_busy(), 0),
 
@@ -17,11 +17,11 @@ void test_busy () {
         testOb->heart_beat(),
         assert_equal(testOb->query_busy(), 0),
         testOb->heart_beat(),
-        assert_equal(testOb->query_busy(), 0), // still zero
+        assert_equal(testOb->query_busy(), 0),  // still zero
     }) :));
 }
 
-void test_disable () {
+void test_disable() {
     expect("disable should be settable and queryable", (: ({
         assert_equal(testOb->query_disable(), 0),
 
@@ -32,11 +32,11 @@ void test_disable () {
         testOb->heart_beat(),
         assert_equal(testOb->query_disable(), 0),
         testOb->heart_beat(),
-        assert_equal(testOb->query_disable(), 0), // still zero
+        assert_equal(testOb->query_disable(), 0),  // still zero
     }) :));
 }
 
-void test_immobile () {
+void test_immobile() {
     object r1, r2;
 
     expect("immobile should be settable and queryable", (: ({
@@ -49,7 +49,7 @@ void test_immobile () {
         testOb->heart_beat(),
         assert_equal(testOb->query_immobile(), 0),
         testOb->heart_beat(),
-        assert_equal(testOb->query_immobile(), 0), // still zero
+        assert_equal(testOb->query_immobile(), 0),  // still zero
     }) :));
 
     destruct(testOb);
@@ -65,8 +65,11 @@ void test_immobile () {
 
         testOb->set_immobile(2),
         assert_equal(testOb->query_immobile(), 2),
-        assert_equal(/** @type {STD_LIVING} */ (testOb)->handle_command("go east"), 1), // command to move to r2
-        assert_equal(environment(testOb), $(r1)), // still r1
+        assert_equal(
+            /** @type {STD_LIVING} */ (testOb)->handle_command("go east"),
+            1
+        ),  // command to move to r2
+        assert_equal(environment(testOb), $(r1)),  // still r1
     }) :));
 
     destruct(testOb);
@@ -74,7 +77,7 @@ void test_immobile () {
     destruct(r2);
 }
 
-void test_posture () {
+void test_posture() {
     object mockBody;
 
     expect("posture should be settable and queryable", (: ({
@@ -87,7 +90,10 @@ void test_posture () {
         testOb->set_posture("standing"),
         assert_equal(testOb->query_posture(), "standing"),
 
-        assert_catch((: testOb->set_posture("unknown") :), "*Bad argument 1 to status->set_posture\n"),
+        assert_catch(
+            (: testOb->set_posture("unknown") :),
+            "*Bad argument 1 to status->set_posture\n"
+        ),
     }) :));
 
     mockBody = new("/std/living/status.mock.c");
@@ -97,24 +103,36 @@ void test_posture () {
         testOb->set_posture("sitting"),
         assert_equal(testOb->query_posture(), "sitting"),
         testOb->heart_beat(),
-        assert_equal(/** @type {STATUS_MOCK} */ (testOb)->query_mock_heals(), ({ 1 })),
+        assert_equal(
+            /** @type {STATUS_MOCK} */ (testOb)->query_mock_heals(),
+            ({ 1 })
+        ),
         /** @type {STATUS_MOCK} */ (testOb)->reset_mock_heals(),
 
         // laying
         testOb->set_posture("laying"),
         assert_equal(testOb->query_posture(), "laying"),
         testOb->heart_beat(),
-        assert_equal(/** @type {STATUS_MOCK} */ (testOb)->query_mock_heals(), ({ 2 })),
+        assert_equal(
+            /** @type {STATUS_MOCK} */ (testOb)->query_mock_heals(),
+            ({ 2 })
+        ),
         /** @type {STATUS_MOCK} */ (testOb)->reset_mock_heals(),
 
         // meditating
         testOb->set_posture("meditating"),
         assert_equal(testOb->query_posture(), "meditating"),
         testOb->heart_beat(),
-        assert_equal(/** @type {STATUS_MOCK} */ (testOb)->query_mock_heals(), ({ 2 })),
+        assert_equal(
+            /** @type {STATUS_MOCK} */ (testOb)->query_mock_heals(),
+            ({ 2 })
+        ),
         /** @type {STATUS_MOCK} */ (testOb)->reset_mock_heals(),
         // verify we gain mp
-        assert_equal(/** @type {STATUS_MOCK} */ (testOb)->query_mock_add_vitals()["mp"] > 0, 1),
+        assert_equal(
+            /** @type {STATUS_MOCK} */ (testOb)->query_mock_add_vitals()["mp"] > 0,
+            1
+        ),
         /** @type {STATUS_MOCK} */ (testOb)->query_mock_add_vitals(),
 
         // flying
@@ -122,7 +140,10 @@ void test_posture () {
         assert_equal(testOb->query_posture(), "flying"),
         testOb->heart_beat(),
         // verify we lost sp
-        assert_equal(/** @type {STATUS_MOCK} */ (testOb)->query_mock_add_vitals()["sp"] < 0, 1),
+        assert_equal(
+            /** @type {STATUS_MOCK} */ (testOb)->query_mock_add_vitals()["sp"] < 0,
+            1
+        ),
         /** @type {STATUS_MOCK} */ (testOb)->query_mock_add_vitals(),
     }) :));
 

@@ -2,7 +2,7 @@
 
 inherit STD_VERB;
 
-void create () {
+void create() {
     verb::create();
     add_rules(({ "" }));
     set_requirements(REQUIREMENT_BUSY | REQUIREMENT_DISABLE);
@@ -11,16 +11,20 @@ void create () {
     set_help_similar(({ "fly", "lay", "meditate", "sit", "stand", }));
 }
 
-mixed can_fly () {
+mixed can_fly() {
     return 1;
 }
 
-void do_fly () {
+void do_fly() {
     object po = previous_object();
 
     if (po->query_posture() == "flying") {
         message("action", "You land on your feet.", po);
-        message("action", po->query_cap_name() + " lands on " + possessive(po) + " feet.", po);
+        message(
+            "action",
+            po->query_cap_name() + " lands on " + possessive(po) + " feet.",
+            po
+        );
         po->set_posture("standing");
         return;
     } else {

@@ -1,12 +1,12 @@
 inherit STD_COMMAND;
 
-void create () {
+void create() {
     ::create();
     set_syntax("time");
     set_help_text("The time command is used to view the current, local, server, and up time.");
 }
 
-void command (string input, mapping flags) {
+void command(string input, mapping flags) {
     string localtime, localdate;
     mapping a;
 

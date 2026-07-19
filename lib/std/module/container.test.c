@@ -4,7 +4,7 @@ inherit M_TEST;
  * @var {"/std/module/container"} testOb
  */
 
-void test_receive () {
+void test_receive() {
     object ob = new(STD_OBJECT);
 
     expect("receive and release behaves", (: ({
@@ -18,14 +18,14 @@ void test_receive () {
     }) :));
 }
 
-void test_inventory () {
+void test_inventory() {
     expect("inventory behaves", (: ({
         assert_equal(testOb->inventory_visible(), 1),
         assert_equal(testOb->inventory_accessible(), 1),
     }) :));
 }
 
-void test_query_contents () {
+void test_query_contents() {
     object living, item;
 
     // create test items

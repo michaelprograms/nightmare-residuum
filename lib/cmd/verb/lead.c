@@ -1,17 +1,17 @@
 inherit STD_VERB;
 
-void create () {
+void create() {
     verb::create();
     add_rules(({ "", "LIV", }));
     set_syntax("lead [target]");
     set_help_text("Your character will attempt to lead the provided follower target so that they begin to follow you.");
 }
 
-mixed can_lead () {
+mixed can_lead() {
     return "Lead whom?";
 }
 
-mixed can_lead_liv (object lv, string str) {
+mixed can_lead_liv(object lv, string str) {
     return 1;
 }
 
@@ -21,11 +21,15 @@ mixed can_lead_liv (object lv, string str) {
  * @param {"/std/npc/pet.c"} ob the living object being lead
  * @param str
  */
-void do_lead_liv (object ob, string str) {
+void do_lead_liv(object ob, string str) {
     object po = previous_object();
 
     if (ob->query_following()) {
-        message("action", "You are already leading " + ob->query_cap_name() + ".", po);
+        message(
+            "action",
+            "You are already leading " + ob->query_cap_name() + ".",
+            po
+        );
         return;
     }
 

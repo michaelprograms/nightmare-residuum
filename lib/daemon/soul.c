@@ -1,10 +1,26 @@
 inherit M_SAVE;
 
-private mapping __Emotes = ([ ]);
-nosave private mapping __EmotesDefault = ([ ]);
+private mapping __Emotes = ([]);
+nosave private mapping __EmotesDefault = ([]);
 
-private void generate_defaults () {
-    string *list = ({ "smile", "frown", "nod", "cheer", "scream", "fingerguns", "laugh", "grin", "scowl", "chuckle", "point", "wave", "cry", "clap", "spin", });
+private void generate_defaults() {
+    string *list = ({
+        "smile",
+        "frown",
+        "nod",
+        "cheer",
+        "scream",
+        "fingerguns",
+        "laugh",
+        "grin",
+        "scowl",
+        "chuckle",
+        "point",
+        "wave",
+        "cry",
+        "clap",
+        "spin",
+    });
 
     foreach (string emote in list) {
         __EmotesDefault[emote] = ([
@@ -16,7 +32,7 @@ private void generate_defaults () {
     }
 }
 
-void create () {
+void create() {
     parse_init();
     set_save_path("/save/daemon/soul.o");
     restore_data();
@@ -25,15 +41,15 @@ void create () {
 
     foreach (string verb, mapping value in __EmotesDefault + __Emotes) {
         foreach (string rule, mixed ignore in value) {
-            catch (parse_add_rule(verb, rule));
+            catch(parse_add_rule(verb, rule));
         }
     }
 }
 
-mapping query_emote (string verb) {
+mapping query_emote(string verb) {
     return __Emotes[verb] || __EmotesDefault[verb];
 }
-string *query_emotes () {
+string *query_emotes() {
     return keys(__Emotes) + keys(__EmotesDefault);
 }
 
@@ -44,18 +60,18 @@ string *query_emotes () {
 //     LVS - matches one or more living objects
 //     WRD - matches a single word
 //     STR - matches one or more words
-int add_emote (string verb, mixed rule, string format) {
+int add_emote(string verb, mixed rule, string format) {
     parse_add_rule(verb, rule);
 
     if (!__Emotes[verb]) {
-        __Emotes[verb] = ([ ]);
+        __Emotes[verb] = ([]);
     }
     __Emotes[verb][rule] = format;
     save_data();
     return !!query_emote(verb);
 }
 
-int remove_emote (string verb, string rule) {
+int remove_emote(string verb, string rule) {
     if (!__Emotes[verb]) {
         return 0;
     }
@@ -79,10 +95,10 @@ int remove_emote (string verb, string rule) {
 // R/r: Reflexive   your/him/her/them/it + self
 // V/v: pluralize word
 // P/p: Possessive
-varargs string parse_emote (object target, string msg, object *who, mixed args) {
+varargs string parse_emote(object target, string msg, object *who, mixed args) {
     mixed *fmt, obs;
     string emote = "", tmp, names;
-    mapping has = ([ ]);
+    mapping has = ([]);
 
     // find msg's replacement flags
     fmt = reg_assoc(msg, ({ "\\$[OoTtNnRrVvPp][a-z0-9]*" }), ({ 1 }));
@@ -90,7 +106,7 @@ varargs string parse_emote (object target, string msg, object *who, mixed args) 
 
     // loop thru all replacement flags
     for (int i = 1; i < sizeof(fmt); i += 2) {
-        int c = fmt[i][1]; // grab first character of this flag
+        int c = fmt[i][1];  // grab first character of this flag
         int num, subj;
 
         if (fmt[i][2] && fmt[i][2] < 'a') {
@@ -105,84 +121,86 @@ varargs string parse_emote (object target, string msg, object *who, mixed args) 
             }
         } else {
             subj = 0;
-            num = (c == 't' || c == 'T') ? 1 : 0; // target defaults to 1, not zero
+            num = (c == 't' || c == 'T') ? 1 : 0;  // target defaults to 1, not zero
             tmp = fmt[i][2..<0];
         }
 
         switch (c) {
-        case 'O': case 'o': // O/o: Object list
-            obs = args[num];
-            if (objectp(obs)) obs = ({ obs });
-            names = conjunction(map(obs, (: $1 ? ($1->is_living() ? ($1 == $(target) ? "you" : $1->query_cap_name()) : $1->query_name()) : 0 :)));
-            break;
-        case 'T': case 't': // T/t: Objective Name?
-            if (tmp == "") tmp = "o"; // default to objective
-        case 'N': case 'n': // N/n: You/Name
-            if (tmp == "") tmp = "s"; // default to subjective
-            if (tmp != "p") {
-                if (tmp != "d") {
-                    // Reflexification
-                    if (subj < sizeof(who) && who[subj] == who[num] && has[who[subj]]) {
-                        if (tmp == "o") { // Objective: You verb yourself. Name verbs himself.
-                            names = target == who[subj] ? "yourself" : reflexive(who[subj]);
-                        } else if (tmp == "s") { // Subjective: You verb you adjective. Name verbs he adjective.
-                            names = target == who[subj] ? "you" : subjective(who[subj]);
+            case 'O': case 'o':  // O/o: Object list
+                obs = args[num];
+                if (objectp(obs)) obs = ({ obs });
+                names = conjunction(map(
+                    obs,
+                    (: $1 ? ($1->is_living() ? ($1 == $(target) ? "you" : $1->query_cap_name()) : $1->query_name()) : 0 :)
+                ));
+                break;
+            case 'T': case 't':  // T/t: Objective Name?
+                if (tmp == "") tmp = "o";  // default to objective
+            case 'N': case 'n':  // N/n: You/Name
+                if (tmp == "") tmp = "s";  // default to subjective
+                if (tmp != "p") {
+                    if (tmp != "d") {
+                        // Reflexification
+                        if (subj < sizeof(who) && who[subj] == who[num] && has[who[subj]]) {
+                            if (tmp == "o") {  // Objective: You verb yourself. Name verbs himself.
+                                names = target == who[subj] ? "yourself" : reflexive(who[subj]);
+                            } else if (tmp == "s") {  // Subjective: You verb you adjective. Name verbs he adjective.
+                                names = target == who[subj] ? "you" : subjective(who[subj]);
+                            }
+                            break;
                         }
+                        // Other pronouns
+                        if (who[num] == target) {
+                            names = "you";
+                            has[who[num]]++;
+                            break;
+                        }
+                        if (has[who[num]]) {
+                            names = tmp[0] == 'o' ? objective(who[num]) : subjective(who[num]);
+                            break;
+                        }
+                        has[who[num]]++;
+                        names = who[num]->query_cap_name();
                         break;
                     }
-                    // Other pronouns
-                    if (who[num] == target) {
-                        names = "you";
-                        has[who[num]] ++;
-                        break;
-                    }
-                    if (has[who[num]]) {
-                        names = tmp[0] == 'o' ? objective(who[num]) : subjective(who[num]);
-                        break;
-                    }
-                    has[who[num]]++;
-                    names = who[num]->query_cap_name();
+                }
+                has[who[num]]++;
+                names = who[num]->query_cap_name();
+                break;
+            case 'R': case 'r':  // R/r: Reflexive   your/him/her/them/it + self
+                if (target == who[num]) {
+                    tmp = "yourself";
+                } else
+                    tmp = who[num]->query_reflexive();
+                break;
+            case 'V': case 'v':  // V/v: pluralize word
+                if (num >= sizeof(who) || who[num] != target) {
+                    names = pluralize(tmp);
+                } else {
+                    names = tmp;
+                }
+                break;
+            case 'P': case 'p':  // P/p: Possessive
+                if (target == who[num]) {
+                    tmp = "your";
                     break;
                 }
-            }
-            has[who[num]]++;
-            names = who[num]->query_cap_name();
-            break;
-        case 'R': case 'r': // R/r: Reflexive   your/him/her/them/it + self
-            if (target == who[num]) {
-                tmp = "yourself";
-            }
-        else
-            tmp = who[num]->query_reflexive();
-            break;
-        case 'V': case 'v': // V/v: pluralize word
-            if (num >= sizeof(who) || who[num] != target) {
-                names = pluralize(tmp);
-            } else {
-                names = tmp;
-            }
-            break;
-        case 'P': case 'p': // P/p: Possessive
-            if (target == who[num]) {
-                tmp = "your";
+                if (has[who[num]]) {
+                    tmp = possessive(who[num]);
+                    break;
+                }
+                tmp = possessive_noun(who[num]);
+                has[who[num]]++;
                 break;
-            }
-            if (has[who[num]]) {
-                tmp = possessive(who[num]);
-                break;
-            }
-            tmp = possessive_noun(who[num]);
-            has[who[num]]++;
-            break;
         }
         // when flag is uppercase we want to capitalize ('A'=65 < 'a'=97)
         if (c < 'a') names = capitalize(names);
-        emote += (names ? names : "") + fmt[i+1];
+        emote += (names ? names : "") + fmt[i + 1];
     }
     return emote;
 }
 
-varargs private mapping prepare_emote (string verb, string rule, mixed args) {
+varargs private mapping prepare_emote(string verb, string rule, mixed args) {
     mapping result, rules;
     mixed ruleFormat;
     object *who;
@@ -215,23 +233,28 @@ varargs private mapping prepare_emote (string verb, string rule, mixed args) {
         "env": env->query_living_contents() - ({ tc }),
     ]);
 
-    for (int i = 0; i < sizeof(who); i ++) {
+    for (int i = 0; i < sizeof(who); i++) {
         result["msgs"][i] = parse_emote(who[i], ruleFormat, who, args);
     }
 
     if (!result["msgs"][<1]) {
-        result["msgs"][<1] = parse_emote(0, stringp(ruleFormat) ? ruleFormat : ruleFormat[1], who, args);
+        result["msgs"][<1] = parse_emote(
+            0,
+            stringp(ruleFormat) ? ruleFormat : ruleFormat[1],
+            who,
+            args
+        );
     }
 
     return result;
 }
 
-private void display_emote (object *who, string *msgs, mixed others) {
-    mapping done = ([ ]);
+private void display_emote(object *who, string *msgs, mixed others) {
+    mapping done = ([]);
 
-    for (int i = 0; i < sizeof(who); i ++) {
+    for (int i = 0; i < sizeof(who); i++) {
         if (done[who[i]]) continue;
-        done[who[i]] ++;
+        done[who[i]]++;
         message("soul", msgs[i], who[i]);
     }
     if (arrayp(others)) {
@@ -243,7 +266,7 @@ private void display_emote (object *who, string *msgs, mixed others) {
 
 /* ----- parser applies ----- */
 
-mixed can_verb_rule (mixed args...) {
+mixed can_verb_rule(mixed args...) {
     string verb, rule;
     mapping emote;
 
@@ -255,7 +278,7 @@ mixed can_verb_rule (mixed args...) {
     return !undefinedp(emote[rule]);
 }
 
-mixed direct_verb_rule (mixed args...) {
+mixed direct_verb_rule(mixed args...) {
     string verb, rule;
 
     if (sizeof(args) < 2) return 0;
@@ -275,7 +298,7 @@ mixed direct_verb_rule (mixed args...) {
     return !undefinedp(query_emote(verb)[rule]);
 }
 
-void do_verb_rule (mixed args...) {
+void do_verb_rule(mixed args...) {
     string verb, rule;
     mapping emote;
 

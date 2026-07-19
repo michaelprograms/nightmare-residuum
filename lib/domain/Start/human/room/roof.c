@@ -2,7 +2,7 @@
 
 inherit STD_ROOM;
 
-void create () {
+void create() {
     ::create();
     set_short("on a building's roof");
     set_long("Atop a building with a flat roof. A street passes by to the south and north. Ivy grows over the lip of the roof. Atop a building on its roof. A framework of hexagons glimmer overhead.");
@@ -12,7 +12,10 @@ void create () {
     ]));
     set_looks(([
         "ivy": "The ivy looks sturdy enough to climb.",
-        ({ "framework", "hexagons"}): "Far above, the hexagons form a geodesic dome.",
+        ({
+            "framework",
+            "hexagons"
+        }): "Far above, the hexagons form a geodesic dome.",
     ]));
     set_reset(([
         HUMAN_NPC + "pigeon.c": ([

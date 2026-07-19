@@ -1,12 +1,12 @@
 inherit STD_COMMAND;
 
-void create () {
+void create() {
     ::create();
     set_syntax("mkdir [directory]");
     set_help_text("The mkdir command is used to create a new directory.");
 }
 
-void command (string input, mapping flags) {
+void command(string input, mapping flags) {
     string cwd, dir;
     if (!input) {
         write("Syntax: mkdir [directory]\n");

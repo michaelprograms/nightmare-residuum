@@ -2,7 +2,7 @@
 
 inherit STD_ROOM;
 
-void create () {
+void create() {
     ::create();
     set_short("a school classroom");
     set_long("A classroom in a simple school building with scuffed floors from "
@@ -13,10 +13,10 @@ void create () {
     ]));
     set_looks(([
         ({ "hallway", "door" }): "A door leads to the hallway which connects "
-            "several classrooms and leads outside.",
+        "several classrooms and leads outside.",
         "floors": "The floors are scuffed from travel.",
         "desks": "Student desks facing the front of the classroom where a "
-            "teacher's desk faces them.",
+        "teacher's desk faces them.",
         "chalkboard": "The chalkboard contains some elementary math.",
     ]));
     set_reset(([

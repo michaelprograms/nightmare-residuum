@@ -1,13 +1,13 @@
 inherit STD_COMMAND;
 
-void create () {
+void create() {
     ::create();
     set_syntax("tree (-fn=function) [file]|(-file=file) [dir]");
     set_help_text("The tree command can be used to view a directory structure, or an object's inheritables. Search flags can also be passed.");
 }
 
-mapping tree_file (string file, string fn, int index, int maxIndex) {
-    mapping result = ([ ]), tmp;
+mapping tree_file(string file, string fn, int index, int maxIndex) {
+    mapping result = ([]), tmp;
     string *inherits, err, key;
     object ob;
     int l, searchFlag = 0;
@@ -18,7 +18,7 @@ mapping tree_file (string file, string fn, int index, int maxIndex) {
 
     ob = find_object(file);
     if (!ob) {
-        err = catch (ob = load_object(file));
+        err = catch(ob = load_object(file));
         if (err) return 0;
     }
 
@@ -32,9 +32,9 @@ mapping tree_file (string file, string fn, int index, int maxIndex) {
     }
 
     if (!mapp(result[key])) {
-        result[key] = ([ ]);
+        result[key] = ([]);
     }
-    for (int i = 0; i < l; i ++) {
+    for (int i = 0; i < l; i++) {
         tmp = tree_file(inherits[i], fn, i, l);
         result[key] += tmp;
     }
@@ -42,8 +42,8 @@ mapping tree_file (string file, string fn, int index, int maxIndex) {
     return result;
 }
 
-mapping tree_directory (string file, string search, int index, int maxIndex) {
-    mapping result = ([ ]), tmp;
+mapping tree_directory(string file, string search, int index, int maxIndex) {
+    mapping result = ([]), tmp;
     string *files, key;
     int l, searchFlag = 0;
 
@@ -61,9 +61,9 @@ mapping tree_directory (string file, string search, int index, int maxIndex) {
     }
 
     if (!mapp(result[key])) {
-        result[key] = ([ ]);
+        result[key] = ([]);
     }
-    for (int i = 0; i < l; i ++) {
+    for (int i = 0; i < l; i++) {
         tmp = tree_directory(file + "/" + files[i], search, i, l);
         result[key] += tmp;
     }
@@ -71,13 +71,17 @@ mapping tree_directory (string file, string search, int index, int maxIndex) {
     return result;
 }
 
-void command (string input, mapping flags) {
+void command(string input, mapping flags) {
     string file, tmp;
-    mapping data = ([ ]);
+    mapping data = ([]);
     string subtitle;
 
     if (!input) {
-        message("action", "Syntax: tree (-fn=function) [file]|(-file=file) [dir]", this_user());
+        message(
+            "action",
+            "Syntax: tree (-fn=function) [file]|(-file=file) [dir]",
+            this_user()
+        );
         return;
     }
 
@@ -86,24 +90,24 @@ void command (string input, mapping flags) {
         file = file[0..<2];
     }
     switch (file_size(file)) {
-    case -2:
-        if (tmp = flags["file"]) {
-            subtitle = "Searching for '" + tmp + "'";
-        }
-        data = tree_directory(file, tmp, 0, 1);
-        break;
-    case -1:
-        message("action", "tree: no such file.", this_user());
-        return;
-    case 0:
-        message("action", "tree: file is empty.", this_user());
-        return;
-    default:
-        if (tmp = flags["fn"]) {
-            subtitle = "Searching for '" + tmp + "'";
-        }
-        data = tree_file(file, tmp, 0, 1);
-        break;
+        case -2:
+            if (tmp = flags["file"]) {
+                subtitle = "Searching for '" + tmp + "'";
+            }
+            data = tree_directory(file, tmp, 0, 1);
+            break;
+        case -1:
+            message("action", "tree: no such file.", this_user());
+            return;
+        case 0:
+            message("action", "tree: file is empty.", this_user());
+            return;
+        default:
+            if (tmp = flags["fn"]) {
+                subtitle = "Searching for '" + tmp + "'";
+            }
+            data = tree_file(file, tmp, 0, 1);
+            break;
     }
 
     border(([

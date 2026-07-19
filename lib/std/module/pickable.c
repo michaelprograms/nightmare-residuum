@@ -1,14 +1,14 @@
 nosave private int __Picks = 0, __MaxPicks = 0;
 nosave private string __Item, __Message;
 
-void reset () {
+void reset() {
     if (clonep() && __Picks < __MaxPicks) {
-        __Picks ++;
+        __Picks++;
         message("action", __Message, environment());
     }
 }
 
-void set_pickable (string item, int max, string message) {
+void set_pickable(string item, int max, string message) {
     if (!stringp(item)) {
         error("Bad argument 1 to pickable->set_pickable");
     }
@@ -24,28 +24,28 @@ void set_pickable (string item, int max, string message) {
     __Message = message;
 }
 
-string query_pick_item () {
+string query_pick_item() {
     return __Item;
 }
-string query_pick_message () {
+string query_pick_message() {
     return __Message;
 }
-int query_max_picks () {
+int query_max_picks() {
     return __MaxPicks;
 }
-int query_picks () {
+int query_picks() {
     return __Picks;
 }
 
-int handle_pick () {
+int handle_pick() {
     if (__Picks > 0) {
-        __Picks --;
+        __Picks--;
         return 1;
     }
     return 0;
 }
 
-mixed direct_pick_obj (mixed args...) {
+mixed direct_pick_obj(mixed args...) {
     object ob;
     if (sizeof(args)) {
         ob = args[0];

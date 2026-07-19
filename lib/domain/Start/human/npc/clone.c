@@ -2,7 +2,7 @@
 
 inherit STD_NPC;
 
-void create () {
+void create() {
     string name, capName;
     ::create();
     if (random(2)) {

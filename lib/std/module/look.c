@@ -1,23 +1,23 @@
-nosave mapping __Looks = ([ ]);
+nosave mapping __Looks = ([]);
 
-private void initialize_looks () {
+private void initialize_looks() {
     if (!mapp(__Looks)) {
-        __Looks = ([ ]);
+        __Looks = ([]);
     }
 }
 
-mixed query_look (string look) {
+mixed query_look(string look) {
     if (!stringp(look)) {
         return 0;
     }
     initialize_looks();
     return __Looks[look] || __Looks[look + "s"];
 }
-string *query_looks () {
+string *query_looks() {
     initialize_looks();
     return sort_array(keys(__Looks), 1);
 }
-varargs void set_look (string look, mixed desc) {
+varargs void set_look(string look, mixed desc) {
     if (!stringp(look)) {
         error("Bad argument 1 to look->set_look");
     }
@@ -28,12 +28,12 @@ varargs void set_look (string look, mixed desc) {
     initialize_looks();
     __Looks[look] = desc;
 }
-void set_looks (mapping looks) {
+void set_looks(mapping looks) {
     if (!mapp(looks)) {
         error("Bad argument 1 to look->set_looks");
     }
 
-    __Looks = ([ ]);
+    __Looks = ([]);
     foreach (mixed look, mixed desc in looks) {
         if (arrayp(look)) {
             foreach (string real_look in look) {
@@ -44,14 +44,14 @@ void set_looks (mapping looks) {
         }
     }
 }
-void remove_look (string look) {
+void remove_look(string look) {
     if (!stringp(look)) {
         error("Bad argument 1 to look->remove_look");
     }
     map_delete(__Looks, look);
 }
 
-mixed handle_look (string look) {
+mixed handle_look(string look) {
     mixed desc;
 
     if (!stringp(look)) {

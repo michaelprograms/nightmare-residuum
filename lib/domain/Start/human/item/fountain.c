@@ -1,6 +1,6 @@
 inherit STD_ITEM;
 
-void create () {
+void create() {
     ::create();
     set_name("fountain");
     set_id(({ "fountain", "basin", "fountain basin", }));

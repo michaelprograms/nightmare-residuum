@@ -1,12 +1,12 @@
 inherit STD_COMMAND;
 
-void create () {
+void create() {
     ::create();
     set_syntax("more [file]");
     set_help_text("The more command can be used to view the contents of the specified file using the pager system.");
 }
 
-void command (string input, mapping flags) {
+void command(string input, mapping flags) {
     string cwd, file, *lines;
 
     if (!input) {
@@ -19,10 +19,18 @@ void command (string input, mapping flags) {
     file = absolute_path(input, cwd);
     switch (file_size(file)) {
         case -2:
-            message("action", "more: " + file + ": not a file.", this_character());
+            message(
+                "action",
+                "more: " + file + ": not a file.",
+                this_character()
+            );
             return;
         case -1:
-            message("action", "more: " + file + ": no such file.", this_character());
+            message(
+                "action",
+                "more: " + file + ": no such file.",
+                this_character()
+            );
             return;
     }
 

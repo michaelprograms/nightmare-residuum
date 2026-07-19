@@ -1,14 +1,14 @@
 inherit STD_COMMAND;
 
-void create () {
+void create() {
     ::create();
     set_syntax("callouts");
     set_help_text("The callouts command is used to view the entire list of callouts.");
 }
 
-void command (string input, mapping flags) {
+void command(string input, mapping flags) {
     mixed *callouts;
-    string *items = ({ });
+    string *items = ({});
     int n;
 
     if (n = sizeof(callouts = call_out_info())) {

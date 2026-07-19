@@ -1,43 +1,46 @@
 inherit STD_COMMAND;
 
-void create () {
+void create() {
     ::create();
     set_syntax("who");
     set_help_text("The who command is used to view connected characters.");
 }
 
-void command (string input, mapping flags) {
+void command(string input, mapping flags) {
     mapping data = ([
         "title": "WHO",
         "subtitle": mud_name(),
         "footer": ([
-            "items": ({ }),
+            "items": ({}),
             "columns": 1,
             "align": "center",
         ]),
     ]);
     int nImm = 0, nChar = 0;
     /** @type {STD_CHARACTER*} immList */
-    object *immList = ({ });
+    object *immList = ({});
     /** @type {STD_CHARACTER*} charList */
-    object *charList = ({ });
-    string *bodyItems = ({ }), *footerItems = ({ });
+    object *charList = ({});
+    string *bodyItems = ({}), *footerItems = ({});
 
     foreach (object user in users()) {
         object char;
         if (char = user->query_character()) {
             if (char->query_immortal()) {
-                nImm ++;
+                nImm++;
                 immList += ({ char });
             } else {
-                nChar ++;
+                nChar++;
                 charList += ({ char });
             }
         }
     }
 
     if (sizeof(immList) > 0) {
-        immList = sort_array(immList, (: strcmp($1->query_name(), $2->query_name()) :));
+        immList = sort_array(
+            immList,
+            (: strcmp($1->query_name(), $2->query_name()) :)
+        );
         foreach (object imm in immList) {
             bodyItems += ({
                 imm->query_level(),
@@ -49,7 +52,10 @@ void command (string input, mapping flags) {
         footerItems += ({ nImm + " immortal" + (nImm > 1 ? "s" : "") });
     }
 
-    charList = sort_array(charList, (: strcmp($1->query_name(), $2->query_name()) :));
+    charList = sort_array(
+        charList,
+        (: strcmp($1->query_name(), $2->query_name()) :)
+    );
     foreach (object char in charList) {
         bodyItems += ({
             char->query_level(),

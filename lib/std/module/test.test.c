@@ -15,24 +15,24 @@ int query_skip_coverage() {
     return 1;
 }
 
-void before_all_tests () {
-    nBeforeAll ++;
+void before_all_tests() {
+    nBeforeAll++;
 }
-void after_all_tests () {
-    nAfterAll ++;
+void after_all_tests() {
+    nAfterAll++;
 }
-void before_each_test () {
-    nBeforeEach ++;
+void before_each_test() {
+    nBeforeEach++;
 }
-void after_each_test () {
-    nAfterEach ++;
+void after_each_test() {
+    nAfterEach++;
 }
-string *test_order () {
-    nTestOrder ++;
+string *test_order() {
+    nTestOrder++;
     return testOrder;
 }
 
-void test_expects_passing () {
+void test_expects_passing() {
     expect("assert_equal should pass", (: ({
         assert_equal(1, 1),
         assert_equal(1.0, 1.0),
@@ -54,7 +54,7 @@ void test_expects_passing () {
     }) :));
 }
 
-void test_expects_failing () {
+void test_expects_failing() {
     expect_next_failure();
     expect("expect without asserts should fail", (: ({
         // no asserts should fail
@@ -84,8 +84,8 @@ void test_expects_failing () {
     }) :));
 }
 
-void test_async_test (function done) {
-    call_out_walltime(function (function done) {
+void test_async_test(function done) {
+    call_out_walltime(function(function done) {
         expect("async function completes", (: ({
             assert_equal(1, 1),
         }) :));
@@ -93,16 +93,16 @@ void test_async_test (function done) {
     }, 0.01, done);
 }
 
-void test_lifecycle_events () {
+void test_lifecycle_events() {
     expect("lifecycle events execute in order", (: ({
-        assert_equal(nBeforeAll, 1), // before_all_tests
-        assert_equal(nBeforeEach, sizeof(testOrder)), // before_each_test
+        assert_equal(nBeforeAll, 1),  // before_all_tests
+        assert_equal(nBeforeEach, sizeof(testOrder)),  // before_each_test
 
-        assert_equal(nAfterEach, sizeof(testOrder) - 1), // after_each_test not called for this test
+        assert_equal(nAfterEach, sizeof(testOrder) - 1),  // after_each_test not called for this test
 
-        assert_equal(nTestOrder, 1), // test_order
+        assert_equal(nTestOrder, 1),  // test_order
 
-        assert_equal(nAfterAll, 0), // after_all_tests not called yet
+        assert_equal(nAfterAll, 0),  // after_all_tests not called yet
     }) :));
 
     expect("query_expect_catch is enabled during assert 'catch'", (: ({

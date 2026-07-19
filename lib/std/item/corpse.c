@@ -1,11 +1,11 @@
 inherit STD_STORAGE;
 inherit M_DUSTABLE;
 
-int is_corpse () {
+int is_corpse() {
     return 1;
 }
 
-void create () {
+void create() {
     storage::create();
     set_name("corpse");
     set_id(({ "corpse" }));
@@ -13,7 +13,7 @@ void create () {
     set_long("A corpse.");
 }
 
-void handle_received (object env) {
+void handle_received(object env) {
     storage::handle_received(env);
     dustable::handle_received(env);
 }
@@ -23,7 +23,7 @@ void handle_received (object env) {
  *
  * @param {STD_LIVING} ob the living object that is being defeated
  */
-void setup_body (object ob) {
+void setup_body(object ob) {
     string *currencies;
 
     if (!ob) {
@@ -31,7 +31,11 @@ void setup_body (object ob) {
     }
 
     set_name("corpse of " + ob->query_name());
-    set_id(({ "corpse", "corpse of " + ob->query_short(), "corpse of " + ob->query_name() }));
+    set_id(({
+        "corpse",
+        "corpse of " + ob->query_short(),
+        "corpse of " + ob->query_name()
+    }));
     set_short("corpse of " + ob->query_short("%^DEFAULT%^"));
     set_long("Here lies the body of " + ob->query_cap_name() + ".");
 

@@ -5,7 +5,7 @@ inherit M_MOVE;
  * @var {"/std/module/pickable"} testOb
  */
 
-void test_pickable () {
+void test_pickable() {
     expect("handles initializing with zeroes", (: ({
         assert_equal(testOb->query_picks(), 0),
         assert_equal(testOb->query_max_picks(), 0),
@@ -20,9 +20,18 @@ void test_pickable () {
         assert_equal(testOb->query_max_picks(), 2),
         assert_equal(testOb->query_pick_message(), "An item is pickable."),
 
-        assert_catch((: testOb->set_pickable(UNDEFINED, UNDEFINED, UNDEFINED) :), "*Bad argument 1 to pickable->set_pickable\n"),
-        assert_catch((: testOb->set_pickable("item", UNDEFINED, UNDEFINED) :), "*Bad argument 2 to pickable->set_pickable\n"),
-        assert_catch((: testOb->set_pickable("item", 1, UNDEFINED) :), "*Bad argument 3 to pickable->set_pickable\n"),
+        assert_catch(
+            (: testOb->set_pickable(UNDEFINED, UNDEFINED, UNDEFINED) :),
+            "*Bad argument 1 to pickable->set_pickable\n"
+        ),
+        assert_catch(
+            (: testOb->set_pickable("item", UNDEFINED, UNDEFINED) :),
+            "*Bad argument 2 to pickable->set_pickable\n"
+        ),
+        assert_catch(
+            (: testOb->set_pickable("item", 1, UNDEFINED) :),
+            "*Bad argument 3 to pickable->set_pickable\n"
+        ),
     }) :));
 
     expect("handles pick and limits", (: ({
@@ -46,12 +55,15 @@ void test_pickable () {
     }) :));
 }
 
-void test_apply_pick_obj () {
+void test_apply_pick_obj() {
     expect("direct_pick_obj returns true when same environment", (: ({
         // true with same environment (no env)
         assert_equal(testOb->direct_pick_obj(this_object()), 1),
         // false with different environments (one env)
-        assert_equal(this_object()->handle_move("/domain/Nowhere/room/void.c"), 1),
+        assert_equal(
+            this_object()->handle_move("/domain/Nowhere/room/void.c"),
+            1
+        ),
         assert_equal(testOb->direct_pick_obj(this_object()), 0),
         // false with no object sent
         assert_equal(testOb->direct_pick_obj(), 0),

@@ -1,10 +1,10 @@
 nosave private mapping __Class = ([
     "warrior": ([       // str
-        "vitals": ([
-            "hp": 3,
-            "sp": 1,
-            "mp": 0,
-        ]),
+    "vitals": ([
+        "hp": 3,
+        "sp": 1,
+        "mp": 0,
+    ]),
         "stats": ([
             "strength": 3,
             "perception": 1,
@@ -30,11 +30,11 @@ nosave private mapping __Class = ([
         ]),
     ]),
     "mystic": ([       // str and agi
-        "vitals": ([
-            "hp": 2,
-            "sp": 2,
-            "mp": 0,
-        ]),
+    "vitals": ([
+        "hp": 2,
+        "sp": 2,
+        "mp": 0,
+    ]),
         "stats": ([
             "strength": 2,
             "perception": 1,
@@ -60,11 +60,11 @@ nosave private mapping __Class = ([
         ]),
     ]),
     "scoundrel": ([     // agi
-        "vitals": ([
-            "hp": 1,
-            "sp": 3,
-            "mp": 0,
-        ]),
+    "vitals": ([
+        "hp": 1,
+        "sp": 3,
+        "mp": 0,
+    ]),
         "stats": ([
             "strength": 1,
             "perception": 2,
@@ -90,11 +90,11 @@ nosave private mapping __Class = ([
         ]),
     ]),
     "ranger": ([        // agi and int
-        "vitals": ([
-            "hp": 0,
-            "sp": 2,
-            "mp": 2,
-        ]),
+    "vitals": ([
+        "hp": 0,
+        "sp": 2,
+        "mp": 2,
+    ]),
         "stats": ([
             "strength": 1,
             "perception": 1,
@@ -120,11 +120,11 @@ nosave private mapping __Class = ([
         ]),
     ]),
     "psionist": ([      // int
-        "vitals": ([
-            "hp": 0,
-            "sp": 1,
-            "mp": 3,
-        ]),
+    "vitals": ([
+        "hp": 0,
+        "sp": 1,
+        "mp": 3,
+    ]),
         "stats": ([
             "strength": 0,
             "perception": 2,
@@ -150,11 +150,11 @@ nosave private mapping __Class = ([
         ]),
     ]),
     "paladin": ([       // int and str
-        "vitals": ([
-            "hp": 2,
-            "sp": 0,
-            "mp": 2,
-        ]),
+    "vitals": ([
+        "hp": 2,
+        "sp": 0,
+        "mp": 2,
+    ]),
         "stats": ([
             "strength": 2,
             "perception": 1,
@@ -181,21 +181,21 @@ nosave private mapping __Class = ([
     ]),
 ]);
 
-int query_adjust_hp (string c) {
+int query_adjust_hp(string c) {
     if (__Class[c] && __Class[c]["vitals"]) {
         return __Class[c]["vitals"]["hp"];
     } else {
         return 0;
     }
 }
-int query_adjust_sp (string c) {
+int query_adjust_sp(string c) {
     if (__Class[c] && __Class[c]["vitals"]) {
         return __Class[c]["vitals"]["sp"];
     } else {
         return 0;
     }
 }
-int query_adjust_mp (string c) {
+int query_adjust_mp(string c) {
     if (__Class[c] && __Class[c]["vitals"]) {
         return __Class[c]["vitals"]["mp"];
     } else {
@@ -203,7 +203,7 @@ int query_adjust_mp (string c) {
     }
 }
 
-int query_adjust_stat (string c, string stat) {
+int query_adjust_stat(string c, string stat) {
     if (__Class[c] && __Class[c]["stats"]) {
         return __Class[c]["stats"][stat];
     } else {
@@ -211,7 +211,7 @@ int query_adjust_stat (string c, string stat) {
     }
 }
 
-int query_adjust_skill (string c, string skill) {
+int query_adjust_skill(string c, string skill) {
     if (__Class[c] && __Class[c]["skills"]) {
         return __Class[c]["skills"][skill];
     } else {
@@ -219,6 +219,6 @@ int query_adjust_skill (string c, string skill) {
     }
 }
 
-int query_max_stat (string c, string stat, int level) {
+int query_max_stat(string c, string stat, int level) {
     return level * (2 + query_adjust_stat(c, stat));
 }

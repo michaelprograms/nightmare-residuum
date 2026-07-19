@@ -2,7 +2,7 @@
 
 inherit STD_ROOM;
 
-void create () {
+void create() {
     ::create();
     set_properties(([
         "indoors": 1,
@@ -14,8 +14,14 @@ void create () {
         "arranged around a table in the living area. The room is lit by a "
         "ceiling light fixture, and a small window near the front door lets "
         "in some light.");
-    set_listen("default", "You hear the faint sounds of the neighborhood outside.");
-    set_smell("default", "The air smells faintly of cleaning products and wood polish.");
+    set_listen(
+        "default",
+        "You hear the faint sounds of the neighborhood outside."
+    );
+    set_smell(
+        "default",
+        "The air smells faintly of cleaning products and wood polish."
+    );
     set_exits(([
         "out east": HUMAN_ROOM + "first_st_n2.c",
     ]));

@@ -5,13 +5,13 @@ inherit M_TEST;
  */
 
 string __TermColor;
-string query_terminal (string type) {
+string query_terminal(string type) {
     if (type == "color") {
         return __TermColor;
     }
 }
 
-void test_banner () {
+void test_banner() {
     string banner;
 
     banner = testOb->query_banner();

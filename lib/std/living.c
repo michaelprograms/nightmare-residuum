@@ -16,21 +16,21 @@ inherit "/std/living/stats.c";
 inherit "/std/living/status.c";
 inherit "/std/living/vitals.c";
 
-int is_living () {
+int is_living() {
     return 1;
 }
 
-void create () {
+void create() {
     combat::create();
     object::create();
 }
 
-int handle_remove () {
+int handle_remove() {
     protection::clear_protection();
     return clean::handle_remove();
 }
 
-void heart_beat () {
+void heart_beat() {
     /** @type {STD_ROOM} env */
     object env = environment();
     status::heart_beat();
@@ -44,8 +44,8 @@ void heart_beat () {
     }
 }
 
-string query_living_long () {
-    string *attributes = ({ }), str = "";
+string query_living_long() {
+    string *attributes = ({}), str = "";
     mapping attr;
     if (query_gender() != "neither" && query_gender() != "none") {
         str = query_gender() + " ";
@@ -76,18 +76,18 @@ string query_living_long () {
     return str;
 }
 
-void set_name (string name) {
+void set_name(string name) {
     object::set_name(name);
     set_long((: query_living_long :));
 }
 
-void set_level (int l) {
+void set_level(int l) {
     levelable::set_level(l);
     vitals::update_vitals(1);
-    body::update_limbs(); // limbs require vitals
+    body::update_limbs();  // limbs require vitals
 }
 
-varargs int handle_go (mixed dest, string verb, string dir, string reverse) {
+varargs int handle_go(mixed dest, string verb, string dir, string reverse) {
     string verbs, article, formatReverse;
     /** @type {STD_ROOM} oldEnv  */
     object oldEnv;
@@ -105,34 +105,65 @@ varargs int handle_go (mixed dest, string verb, string dir, string reverse) {
     }
     verbs = pluralize(verb);
     formatReverse = reverse ? reverse : format_exit_reverse(dir);
-    article = member_array(formatReverse, ({ "north", "northeast", "east", "southeast", "south", "southwest", "west", "northwest" })) > -1 ? "the " : "";
+    article = member_array(
+        formatReverse,
+        ({
+            "north",
+            "northeast",
+            "east",
+            "southeast",
+            "south",
+            "southwest",
+            "west",
+            "northwest"
+        })
+    ) > -1 ? "the " : "";
 
     move = handle_move(newEnv);
-    message("go", "You " + verb + " %^DIR%^" + dir + "%^DEFAULT%^.", this_object());
-    message("go", query_cap_name() + " " + verbs + " %^DIR%^in%^DEFAULT%^ from " + article + "%^DIR%^" + formatReverse + "%^DEFAULT%^.", newEnv->query_living_contents(), this_object());
-    message("go", query_cap_name() + " " + verbs + " %^DIR%^" + dir + "%^DEFAULT%^.", oldEnv->query_living_contents(), this_object());
+    message(
+        "go",
+        "You " + verb + " %^DIR%^" + dir + "%^DEFAULT%^.",
+        this_object()
+    );
+    message(
+        "go",
+        query_cap_name() + " " + verbs + " %^DIR%^in%^DEFAULT%^ from " + article + "%^DIR%^" + formatReverse + "%^DEFAULT%^.",
+        newEnv->query_living_contents(),
+        this_object()
+    );
+    message(
+        "go",
+        query_cap_name() + " " + verbs + " %^DIR%^" + dir + "%^DEFAULT%^.",
+        oldEnv->query_living_contents(),
+        this_object()
+    );
     return move;
 }
 
-mixed direct_look_at_liv (mixed args...) {
+mixed direct_look_at_liv(mixed args...) {
     return environment() == environment(previous_object());
 }
-mixed direct_look_liv (mixed args...) {
+mixed direct_look_liv(mixed args...) {
     return direct_look_at_liv(args);
 }
-mixed indirect_give_obj_to_liv (object ob, object liv, string obStr, mixed livStr) {
+mixed indirect_give_obj_to_liv(
+    object ob,
+    object liv,
+    string obStr,
+    mixed livStr
+) {
     if (previous_object() == liv && environment(ob) == liv) {
         return "You already have that.";
     }
     return 1;
 }
-mixed direct_give_wrd_wrd_to_liv (mixed args...) {
+mixed direct_give_wrd_wrd_to_liv(mixed args...) {
     object liv = args[2];
     if (previous_object() == liv) {
         return "You already have that.";
     }
     return 1;
 }
-mixed indirect_inject_obj_into_liv (mixed args...) {
+mixed indirect_inject_obj_into_liv(mixed args...) {
     return 1;
 }

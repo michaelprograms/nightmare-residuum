@@ -8,13 +8,13 @@ nosave mixed dbHandle;
 
 #define UNDEFINED ([ ])[0]
 
-mixed query_handle () {
+mixed query_handle() {
     return dbHandle;
 }
 
 /* -----  ----- */
 
-mixed connect (mapping config) {
+mixed connect(mapping config) {
     if (!mapp(config)) {
         error("Bad argument 1 to database->connect");
     }
@@ -43,7 +43,7 @@ mixed connect (mapping config) {
     return this_object();
 }
 
-mixed close () {
+mixed close() {
     mixed result;
     if (dbHandle || (dbHandle == 0 && dbHandle != UNDEFINED)) {
         result = db_close(dbHandle);
@@ -52,7 +52,7 @@ mixed close () {
     return result;
 }
 
-mixed query (string sql) {
+mixed query(string sql) {
     mixed response, *result;
 
     if (!dbHandle) {
@@ -65,8 +65,8 @@ mixed query (string sql) {
         error(response);
     } else if (intp(response) && response > 0) {
         result = allocate(response);
-        for (int i = 0; i < response; i ++) {
-            result[i] = db_fetch(dbHandle, i+1);
+        for (int i = 0; i < response; i++) {
+            result[i] = db_fetch(dbHandle, i + 1);
         }
     }
     return result;
@@ -74,7 +74,7 @@ mixed query (string sql) {
 
 /* -----  ----- */
 
-int handle_remove () {
+int handle_remove() {
     close();
     return ::handle_remove();
 }

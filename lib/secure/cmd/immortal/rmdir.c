@@ -1,12 +1,12 @@
 inherit STD_COMMAND;
 
-void create () {
+void create() {
     ::create();
     set_syntax("rmdir [directory]");
     set_help_text("The rmdir command is used to remove a directory permanently.");
 }
 
-void command (string input, mapping flags) {
+void command(string input, mapping flags) {
     string cwd, dir;
     if (!input) {
         write("Syntax: rmdir [directory]\n");

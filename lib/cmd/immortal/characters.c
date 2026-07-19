@@ -1,13 +1,18 @@
-void command (string input, mapping flags) {
+void command(string input, mapping flags) {
     mapping data = ([
         "title": "CHARACTERS",
         "subtitle": mud_name(),
     ]);
-    string *items = ({ });
+    string *items = ({});
 
     foreach (object char in characters()) {
         items += ({
-            sprintf("%-12s%-16s%s", time_from_seconds(query_idle(char->query_user())), char->query_cap_name(), file_name(environment(char)))
+            sprintf(
+                "%-12s%-16s%s",
+                time_from_seconds(query_idle(char->query_user())),
+                char->query_cap_name(),
+                file_name(environment(char))
+            )
         });
     }
 

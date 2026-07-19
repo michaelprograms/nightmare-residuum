@@ -1,7 +1,7 @@
 inherit M_SAVE;
 
 private mapping __Money = ([
-/*
+    /*
     "bankID": ([
         "type": integer,
         ...
@@ -12,10 +12,10 @@ private mapping __Money = ([
 
 /* ----- ----- */
 
-private void clear_balance () {
-    __Money = ([ ]);
+private void clear_balance() {
+    __Money = ([]);
 }
-private void load_balance (string name) {
+private void load_balance(string name) {
     clear_balance();
     set_save_path(D_CHARACTER->query_save_path(name, "bank"));
     restore_data();
@@ -23,7 +23,7 @@ private void load_balance (string name) {
 
 /* ----- ----- */
 
-string *query_banks (string name) {
+string *query_banks(string name) {
     string *ids;
     if (!stringp(name) || sizeof(name) < 4) {
         error("Bad argument 1 to bank->query_banks");
@@ -34,7 +34,7 @@ string *query_banks (string name) {
     return ids;
 }
 
-mapping query_balance (string name, string bankID) {
+mapping query_balance(string name, string bankID) {
     mapping balance;
     if (!stringp(name) || sizeof(name) < 4) {
         error("Bad argument 1 to bank->query_balance");
@@ -44,7 +44,7 @@ mapping query_balance (string name, string bankID) {
     }
     load_balance(name);
     if (undefinedp(__Money[bankID])) {
-        balance = ([ ]);
+        balance = ([]);
     } else {
         balance = __Money[bankID];
     }
@@ -52,7 +52,7 @@ mapping query_balance (string name, string bankID) {
     return balance;
 }
 
-void update_balance (string name, string bankID, mapping balance) {
+void update_balance(string name, string bankID, mapping balance) {
     if (!stringp(name) || sizeof(name) < 4) {
         error("Bad argument 1 to bank->update_balance");
     }

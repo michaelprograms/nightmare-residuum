@@ -1,12 +1,12 @@
 inherit STD_COMMAND;
 
-void create () {
+void create() {
     ::create();
     set_syntax("test -b(rief) -c(overage) [file]");
     set_help_text("The test command is used to run the tests of a file, if they exist.");
 }
 
-void command (string input, mapping flags) {
+void command(string input, mapping flags) {
     if (input == "all") {
         message("action", "Running all tests...", this_user());
         D_TEST->run(([
@@ -33,7 +33,11 @@ void command (string input, mapping flags) {
                 "reset": 1
             ]));
         } else {
-            message("action", "Unable to find test file for " + input + ".", this_user());
+            message(
+                "action",
+                "Unable to find test file for " + input + ".",
+                this_user()
+            );
         }
     } else {
         message("action", "Test what?", this_user());

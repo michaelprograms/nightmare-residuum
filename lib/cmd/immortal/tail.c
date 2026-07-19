@@ -1,12 +1,12 @@
 inherit STD_COMMAND;
 
-void create () {
+void create() {
     ::create();
     set_syntax("tail (-n=15) [file]");
     set_help_text("The tail command can be used to view the last n (default 15) lines of the specified file.");
 }
 
-void command (string input, mapping flags) {
+void command(string input, mapping flags) {
     string cwd, file, *lines;
     int n = 15;
 
@@ -20,10 +20,18 @@ void command (string input, mapping flags) {
     file = absolute_path(input, cwd);
     switch (file_size(file)) {
         case -2:
-            message("action", "tail: " + file + ": not a file.", this_character());
+            message(
+                "action",
+                "tail: " + file + ": not a file.",
+                this_character()
+            );
             return;
         case -1:
-            message("action", "tail: " + file + ": no such file.", this_character());
+            message(
+                "action",
+                "tail: " + file + ": no such file.",
+                this_character()
+            );
             return;
     }
 

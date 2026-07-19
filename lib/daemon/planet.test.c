@@ -6,10 +6,16 @@ inherit M_TEST;
  * @var {"/daemon/planet"} testOb
  */
 
-void test_biome_colors () {
+void test_biome_colors() {
     expect("biome ANSI colors returned", (: ({
-        assert_equal(testOb->query_biome_color_ansi("invalid"), "\e[38;2;128;0;0m"),
-        assert_equal(testOb->query_biome_color_ansi("ice"), "\e[38;2;255;255;255m"),
+        assert_equal(
+            testOb->query_biome_color_ansi("invalid"),
+            "\e[38;2;128;0;0m"
+        ),
+        assert_equal(
+            testOb->query_biome_color_ansi("ice"),
+            "\e[38;2;255;255;255m"
+        ),
     }) :));
     expect("biome hex colors returned", (: ({
         assert_equal(testOb->query_biome_color_hex("invalid"), "#800000"),
@@ -18,8 +24,14 @@ void test_biome_colors () {
 
     expect("humidity hex colors returned", (: ({
         assert_equal(testOb->query_humidity_color_hex(UNDEFINED), "#000000"),
-        assert_equal(testOb->query_humidity_color_hex(HUMIDITY_DRYEST), "#FF8B11"),
-        assert_equal(testOb->query_humidity_color_hex(HUMIDITY_WETTER), "#1446FF"),
+        assert_equal(
+            testOb->query_humidity_color_hex(HUMIDITY_DRYEST),
+            "#FF8B11"
+        ),
+        assert_equal(
+            testOb->query_humidity_color_hex(HUMIDITY_WETTER),
+            "#1446FF"
+        ),
     }) :));
 
     expect("heat hex colors returned", (: ({
@@ -34,158 +46,515 @@ void test_biome_colors () {
         assert_equal(testOb->query_resource_color_hex(2), "#A47449"),
     }) :));
 }
-void test_humidity () {
+void test_humidity() {
     expect("humidity ANSI colors returned", (: ({
-        assert_equal(testOb->query_biome(HEIGHT_DEEPER, HEAT_COLDEST, HUMIDITY_DRYEST), "frozen water"),
+        assert_equal(
+            testOb->query_biome(HEIGHT_DEEPER, HEAT_COLDEST, HUMIDITY_DRYEST),
+            "frozen water"
+        ),
     }) :));
 }
 
-void test_noise () {
+void test_noise() {
     mapping p = noise_generate_permutation_simplex("test");
     expect("noise initializes all values", (: ({
         // UNDEFINED values report different then defined values (different than defaults)
-        assert_equal(testOb->query_noise($(p), 100, 49, 49, UNDEFINED, UNDEFINED, UNDEFINED, UNDEFINED) != testOb->query_noise($(p), 100, 49, 49, 0.1, 0.1, 0.1, 1717171717), 1),
+        assert_equal(
+            testOb->query_noise(
+                $(p),
+                100,
+                49,
+                49,
+                UNDEFINED,
+                UNDEFINED,
+                UNDEFINED,
+                UNDEFINED
+            ) != testOb->query_noise(
+                $(p),
+                100,
+                49,
+                49,
+                0.1,
+                0.1,
+                0.1,
+                1717171717
+            ),
+            1
+        ),
     }) :));
 
     expect("noise ensures central land mass", (: ({
         assert_equal(
             testOb->query_noise($(p), 100, 49, 49, 0.1, 0.1, 0.1, 1717171717),
-            ([ "heat": 0.034061, "height": 0.500000, "humidity": 0.126456, "level": 1, "resource": 0 ])
+            ([
+                "heat": 0.034061,
+                "height": 0.500000,
+                "humidity": 0.126456,
+                "level": 1,
+                "resource": 0
+            ])
         ),
     }) :));
 
     expect("noise returns different values for x,y coordinates", (: ({
         assert_equal(
-            testOb->query_noise($(p), 100, 49, 49, UNDEFINED, UNDEFINED, UNDEFINED, 1717171717),
-            ([ "heat": 0.405221, "height": 0.710818, "humidity": 0.335642, "level": 1, "resource": 8 ])
+            testOb->query_noise(
+                $(p),
+                100,
+                49,
+                49,
+                UNDEFINED,
+                UNDEFINED,
+                UNDEFINED,
+                1717171717
+            ),
+            ([
+                "heat": 0.405221,
+                "height": 0.710818,
+                "humidity": 0.335642,
+                "level": 1,
+                "resource": 8
+            ])
         ),
         assert_equal(
-            testOb->query_noise($(p), 100, 49, 50, UNDEFINED, UNDEFINED, UNDEFINED, 1717171717),
-            ([ "heat": 0.642297, "height": 0.400000, "humidity": 1.923840, "level": 1, "resource": 0 ])
+            testOb->query_noise(
+                $(p),
+                100,
+                49,
+                50,
+                UNDEFINED,
+                UNDEFINED,
+                UNDEFINED,
+                1717171717
+            ),
+            ([
+                "heat": 0.642297,
+                "height": 0.400000,
+                "humidity": 1.923840,
+                "level": 1,
+                "resource": 0
+            ])
         ),
         assert_equal(
-            testOb->query_noise($(p), 100, 50, 49, UNDEFINED, UNDEFINED, UNDEFINED, 1717171717),
-            ([ "heat": 0.487084, "height": 0.677214, "humidity": 0.414065, "level": 1, "resource": 1 ])
+            testOb->query_noise(
+                $(p),
+                100,
+                50,
+                49,
+                UNDEFINED,
+                UNDEFINED,
+                UNDEFINED,
+                1717171717
+            ),
+            ([
+                "heat": 0.487084,
+                "height": 0.677214,
+                "humidity": 0.414065,
+                "level": 1,
+                "resource": 1
+            ])
         ),
         assert_equal(
-            testOb->query_noise($(p), 100, 50, 50, UNDEFINED, UNDEFINED, UNDEFINED, 1717171717),
-            ([ "heat": 0.556462, "height": 0.683646, "humidity": 0.387248, "level": 1, "resource": 9 ])
+            testOb->query_noise(
+                $(p),
+                100,
+                50,
+                50,
+                UNDEFINED,
+                UNDEFINED,
+                UNDEFINED,
+                1717171717
+            ),
+            ([
+                "heat": 0.556462,
+                "height": 0.683646,
+                "humidity": 0.387248,
+                "level": 1,
+                "resource": 9
+            ])
         ),
     }) :));
 
     expect("noise returns water adjustments", (: ({
         // water - lake
         assert_equal(
-            testOb->query_noise($(p), 100, 70, 0, UNDEFINED, UNDEFINED, UNDEFINED, 1717171717),
-            ([ "heat": 0.000000, "height": 0.586605, "humidity": 0.229419, "level": 20, "resource": 6 ])
+            testOb->query_noise(
+                $(p),
+                100,
+                70,
+                0,
+                UNDEFINED,
+                UNDEFINED,
+                UNDEFINED,
+                1717171717
+            ),
+            ([
+                "heat": 0.000000,
+                "height": 0.586605,
+                "humidity": 0.229419,
+                "level": 20,
+                "resource": 6
+            ])
         ),
         // water - height below height shallow
         assert_equal(
-            testOb->query_noise($(p), 100, 8, 0, UNDEFINED, UNDEFINED, UNDEFINED, 1717171717),
-            ([ "heat": 0.000000, "height": 0.622579, "humidity": 0.380266, "level": 20, "resource": 4 ])
+            testOb->query_noise(
+                $(p),
+                100,
+                8,
+                0,
+                UNDEFINED,
+                UNDEFINED,
+                UNDEFINED,
+                1717171717
+            ),
+            ([
+                "heat": 0.000000,
+                "height": 0.622579,
+                "humidity": 0.380266,
+                "level": 20,
+                "resource": 4
+            ])
         ),
         // water - height above height shallow
         assert_equal(
-            testOb->query_noise($(p), 100, 14, 0, UNDEFINED, UNDEFINED, UNDEFINED, 1717171717),
-            ([ "heat": 0.000000, "height": 0.610453, "humidity": 0.236256, "level": 20, "resource": 4 ])
+            testOb->query_noise(
+                $(p),
+                100,
+                14,
+                0,
+                UNDEFINED,
+                UNDEFINED,
+                UNDEFINED,
+                1717171717
+            ),
+            ([
+                "heat": 0.000000,
+                "height": 0.610453,
+                "humidity": 0.236256,
+                "level": 20,
+                "resource": 4
+            ])
         ),
     }) :));
 
     expect("noise returns humidity adjustments", (: ({
         // humidity - height below height deeper
         assert_equal(
-            testOb->query_noise($(p), 100, 46, 0, UNDEFINED, UNDEFINED, UNDEFINED, 1717171717),
-            ([ "heat": 0.000000, "height": 0.351678, "humidity": 1.784100, "level": 20, "resource": 0 ])
+            testOb->query_noise(
+                $(p),
+                100,
+                46,
+                0,
+                UNDEFINED,
+                UNDEFINED,
+                UNDEFINED,
+                1717171717
+            ),
+            ([
+                "heat": 0.000000,
+                "height": 0.351678,
+                "humidity": 1.784100,
+                "level": 20,
+                "resource": 0
+            ])
         ),
         // humidity - height below height deep
         assert_equal(
-            testOb->query_noise($(p), 100, 45, 0, UNDEFINED, UNDEFINED, UNDEFINED, 1717171717),
-            ([ "heat": 0.000000, "height": 0.344870, "humidity": 2.114431, "level": 20, "resource": 0 ])
+            testOb->query_noise(
+                $(p),
+                100,
+                45,
+                0,
+                UNDEFINED,
+                UNDEFINED,
+                UNDEFINED,
+                1717171717
+            ),
+            ([
+                "heat": 0.000000,
+                "height": 0.344870,
+                "humidity": 2.114431,
+                "level": 20,
+                "resource": 0
+            ])
         ),
         // humidity - height below height shallow
         assert_equal(
-            testOb->query_noise($(p), 100, 44, 0, UNDEFINED, UNDEFINED, UNDEFINED, 1717171717),
-            ([ "heat": 0.000000, "height": 0.419358, "humidity": 1.542528, "level": 20, "resource": 0 ])
+            testOb->query_noise(
+                $(p),
+                100,
+                44,
+                0,
+                UNDEFINED,
+                UNDEFINED,
+                UNDEFINED,
+                1717171717
+            ),
+            ([
+                "heat": 0.000000,
+                "height": 0.419358,
+                "humidity": 1.542528,
+                "level": 20,
+                "resource": 0
+            ])
         ),
         // humidity - height below height shore
         assert_equal(
-            testOb->query_noise($(p), 100, 38, 0, UNDEFINED, UNDEFINED, UNDEFINED, 1717171717),
-            ([ "heat": 0.000000, "height": 0.382510, "humidity": 2.246161, "level": 20, "resource": 0 ])
+            testOb->query_noise(
+                $(p),
+                100,
+                38,
+                0,
+                UNDEFINED,
+                UNDEFINED,
+                UNDEFINED,
+                1717171717
+            ),
+            ([
+                "heat": 0.000000,
+                "height": 0.382510,
+                "humidity": 2.246161,
+                "level": 20,
+                "resource": 0
+            ])
         ),
     }) :));
 
     expect("noise returns heat adjustments", (: ({
         // north 40%
         assert_equal(
-            testOb->query_noise($(p), 100, 0, 99, UNDEFINED, UNDEFINED, UNDEFINED, 1717171717),
-            ([ "heat": 0.000000, "height": 0.621600, "humidity": 0.442500, "level": 20, "resource": 1 ])
+            testOb->query_noise(
+                $(p),
+                100,
+                0,
+                99,
+                UNDEFINED,
+                UNDEFINED,
+                UNDEFINED,
+                1717171717
+            ),
+            ([
+                "heat": 0.000000,
+                "height": 0.621600,
+                "humidity": 0.442500,
+                "level": 20,
+                "resource": 1
+            ])
         ),
         // center 20%
         assert_equal(
-            testOb->query_noise($(p), 100, 95, 50, UNDEFINED, UNDEFINED, UNDEFINED, 1717171717),
-            ([ "heat": 0.773610, "height": 0.400000, "humidity": 2.444506, "level": 18, "resource": 0 ])
+            testOb->query_noise(
+                $(p),
+                100,
+                95,
+                50,
+                UNDEFINED,
+                UNDEFINED,
+                UNDEFINED,
+                1717171717
+            ),
+            ([
+                "heat": 0.773610,
+                "height": 0.400000,
+                "humidity": 2.444506,
+                "level": 18,
+                "resource": 0
+            ])
         ),
         // south 40%
         assert_equal(
-            testOb->query_noise($(p), 100, 99, 99, UNDEFINED, UNDEFINED, UNDEFINED, 1717171717),
-            ([ "heat": 0.000000, "height": 0.632431, "humidity": 0.438998, "level": 20, "resource": 2 ])
+            testOb->query_noise(
+                $(p),
+                100,
+                99,
+                99,
+                UNDEFINED,
+                UNDEFINED,
+                UNDEFINED,
+                1717171717
+            ),
+            ([
+                "heat": 0.000000,
+                "height": 0.632431,
+                "humidity": 0.438998,
+                "level": 20,
+                "resource": 2
+            ])
         ),
         // heat capped at 1.0
         assert_equal(
-            testOb->query_noise($(p), 100, 49, 45, UNDEFINED, UNDEFINED, UNDEFINED, 1717171717),
-            ([ "heat": 0.306450, "height": 0.623245, "humidity": 0.237010, "level": 2, "resource": 4 ])
+            testOb->query_noise(
+                $(p),
+                100,
+                49,
+                45,
+                UNDEFINED,
+                UNDEFINED,
+                UNDEFINED,
+                1717171717
+            ),
+            ([
+                "heat": 0.306450,
+                "height": 0.623245,
+                "humidity": 0.237010,
+                "level": 2,
+                "resource": 4
+            ])
         ),
     }) :));
 }
 
-void test_biome () {
+void test_biome() {
     expect("biomes are returned", (: ({
-        assert_equal(testOb->query_biome(HEIGHT_DEEPER, HEAT_COLDEST, HUMIDITY_DRYEST), "frozen water"),
-        assert_equal(testOb->query_biome(HEIGHT_DEEPER, HEAT_COLDER, HUMIDITY_DRYEST), "icy water"),
-        assert_equal(testOb->query_biome(HEIGHT_DEEPER, HEAT_COLD, HUMIDITY_DRYEST), "deeper water"),
-        assert_equal(testOb->query_biome(HEIGHT_DEEPER, HEAT_HOT, HUMIDITY_DRYEST), "deeper water"),
-        assert_equal(testOb->query_biome(HEIGHT_DEEPER, HEAT_HOTTER, HUMIDITY_DRYEST), "deeper water"),
-        assert_equal(testOb->query_biome(HEIGHT_DEEPER, HEAT_HOTTEST, HUMIDITY_DRYEST), "deeper water"),
+        assert_equal(
+            testOb->query_biome(HEIGHT_DEEPER, HEAT_COLDEST, HUMIDITY_DRYEST),
+            "frozen water"
+        ),
+        assert_equal(
+            testOb->query_biome(HEIGHT_DEEPER, HEAT_COLDER, HUMIDITY_DRYEST),
+            "icy water"
+        ),
+        assert_equal(
+            testOb->query_biome(HEIGHT_DEEPER, HEAT_COLD, HUMIDITY_DRYEST),
+            "deeper water"
+        ),
+        assert_equal(
+            testOb->query_biome(HEIGHT_DEEPER, HEAT_HOT, HUMIDITY_DRYEST),
+            "deeper water"
+        ),
+        assert_equal(
+            testOb->query_biome(HEIGHT_DEEPER, HEAT_HOTTER, HUMIDITY_DRYEST),
+            "deeper water"
+        ),
+        assert_equal(
+            testOb->query_biome(HEIGHT_DEEPER, HEAT_HOTTEST, HUMIDITY_DRYEST),
+            "deeper water"
+        ),
 
-        assert_equal(testOb->query_biome(HEIGHT_DEEP, HEAT_COLDEST, HUMIDITY_DRYEST), "frozen water"),
-        assert_equal(testOb->query_biome(HEIGHT_DEEP, HEAT_COLDER, HUMIDITY_DRYEST), "icy water"),
-        assert_equal(testOb->query_biome(HEIGHT_DEEP, HEAT_COLD, HUMIDITY_DRYEST), "deep water"),
-        assert_equal(testOb->query_biome(HEIGHT_DEEP, HEAT_HOT, HUMIDITY_DRYEST), "deep water"),
-        assert_equal(testOb->query_biome(HEIGHT_DEEP, HEAT_HOTTER, HUMIDITY_DRYEST), "deep water"),
-        assert_equal(testOb->query_biome(HEIGHT_DEEP, HEAT_HOTTEST, HUMIDITY_DRYEST), "deep water"),
+        assert_equal(
+            testOb->query_biome(HEIGHT_DEEP, HEAT_COLDEST, HUMIDITY_DRYEST),
+            "frozen water"
+        ),
+        assert_equal(
+            testOb->query_biome(HEIGHT_DEEP, HEAT_COLDER, HUMIDITY_DRYEST),
+            "icy water"
+        ),
+        assert_equal(
+            testOb->query_biome(HEIGHT_DEEP, HEAT_COLD, HUMIDITY_DRYEST),
+            "deep water"
+        ),
+        assert_equal(
+            testOb->query_biome(HEIGHT_DEEP, HEAT_HOT, HUMIDITY_DRYEST),
+            "deep water"
+        ),
+        assert_equal(
+            testOb->query_biome(HEIGHT_DEEP, HEAT_HOTTER, HUMIDITY_DRYEST),
+            "deep water"
+        ),
+        assert_equal(
+            testOb->query_biome(HEIGHT_DEEP, HEAT_HOTTEST, HUMIDITY_DRYEST),
+            "deep water"
+        ),
 
-        assert_equal(testOb->query_biome(HEIGHT_SHALLOW, HEAT_COLDEST, HUMIDITY_DRYEST), "frozen water"),
-        assert_equal(testOb->query_biome(HEIGHT_SHALLOW, HEAT_COLDER, HUMIDITY_DRYEST), "icy water"),
-        assert_equal(testOb->query_biome(HEIGHT_SHALLOW, HEAT_COLD, HUMIDITY_DRYEST), "shallow water"),
-        assert_equal(testOb->query_biome(HEIGHT_SHALLOW, HEAT_HOT, HUMIDITY_DRYEST), "shallow water"),
-        assert_equal(testOb->query_biome(HEIGHT_SHALLOW, HEAT_HOTTER, HUMIDITY_DRYEST), "shallow water"),
-        assert_equal(testOb->query_biome(HEIGHT_SHALLOW, HEAT_HOTTEST, HUMIDITY_DRYEST), "shallow water"),
+        assert_equal(
+            testOb->query_biome(HEIGHT_SHALLOW, HEAT_COLDEST, HUMIDITY_DRYEST),
+            "frozen water"
+        ),
+        assert_equal(
+            testOb->query_biome(HEIGHT_SHALLOW, HEAT_COLDER, HUMIDITY_DRYEST),
+            "icy water"
+        ),
+        assert_equal(
+            testOb->query_biome(HEIGHT_SHALLOW, HEAT_COLD, HUMIDITY_DRYEST),
+            "shallow water"
+        ),
+        assert_equal(
+            testOb->query_biome(HEIGHT_SHALLOW, HEAT_HOT, HUMIDITY_DRYEST),
+            "shallow water"
+        ),
+        assert_equal(
+            testOb->query_biome(HEIGHT_SHALLOW, HEAT_HOTTER, HUMIDITY_DRYEST),
+            "shallow water"
+        ),
+        assert_equal(
+            testOb->query_biome(HEIGHT_SHALLOW, HEAT_HOTTEST, HUMIDITY_DRYEST),
+            "shallow water"
+        ),
 
-        assert_equal(testOb->query_biome(HEIGHT_SHORE, HEAT_COLDEST, HUMIDITY_DRYEST), "ice"),
-        assert_equal(testOb->query_biome(HEIGHT_SHORE, HEAT_COLDEST, HUMIDITY_WETTER), "ice"),
+        assert_equal(
+            testOb->query_biome(HEIGHT_SHORE, HEAT_COLDEST, HUMIDITY_DRYEST),
+            "ice"
+        ),
+        assert_equal(
+            testOb->query_biome(HEIGHT_SHORE, HEAT_COLDEST, HUMIDITY_WETTER),
+            "ice"
+        ),
 
-        assert_equal(testOb->query_biome(HEIGHT_SHORE, HEAT_COLDER, HUMIDITY_DRYEST), "tundra"),
-        assert_equal(testOb->query_biome(HEIGHT_SHORE, HEAT_COLDER, HUMIDITY_WETTER), "tundra"),
+        assert_equal(
+            testOb->query_biome(HEIGHT_SHORE, HEAT_COLDER, HUMIDITY_DRYEST),
+            "tundra"
+        ),
+        assert_equal(
+            testOb->query_biome(HEIGHT_SHORE, HEAT_COLDER, HUMIDITY_WETTER),
+            "tundra"
+        ),
 
-        assert_equal(testOb->query_biome(HEIGHT_SHORE, HEAT_COLD, HUMIDITY_DRYER), "grassland"),
-        assert_equal(testOb->query_biome(HEIGHT_SHORE, HEAT_COLD, HUMIDITY_DRY), "woodland"),
-        assert_equal(testOb->query_biome(HEIGHT_SHORE, HEAT_COLD, HUMIDITY_WET), "boreal forest"),
+        assert_equal(
+            testOb->query_biome(HEIGHT_SHORE, HEAT_COLD, HUMIDITY_DRYER),
+            "grassland"
+        ),
+        assert_equal(
+            testOb->query_biome(HEIGHT_SHORE, HEAT_COLD, HUMIDITY_DRY),
+            "woodland"
+        ),
+        assert_equal(
+            testOb->query_biome(HEIGHT_SHORE, HEAT_COLD, HUMIDITY_WET),
+            "boreal forest"
+        ),
 
-        assert_equal(testOb->query_biome(HEIGHT_SHORE, HEAT_HOT, HUMIDITY_DRYER), "desert"),
-        assert_equal(testOb->query_biome(HEIGHT_SHORE, HEAT_HOT, HUMIDITY_DRY), "woodland"),
-        assert_equal(testOb->query_biome(HEIGHT_SHORE, HEAT_HOT, HUMIDITY_WET), "temperate rainforest"),
+        assert_equal(
+            testOb->query_biome(HEIGHT_SHORE, HEAT_HOT, HUMIDITY_DRYER),
+            "desert"
+        ),
+        assert_equal(
+            testOb->query_biome(HEIGHT_SHORE, HEAT_HOT, HUMIDITY_DRY),
+            "woodland"
+        ),
+        assert_equal(
+            testOb->query_biome(HEIGHT_SHORE, HEAT_HOT, HUMIDITY_WET),
+            "temperate rainforest"
+        ),
 
-        assert_equal(testOb->query_biome(HEIGHT_SHORE, HEAT_HOTTER, HUMIDITY_DRYER), "desert"),
-        assert_equal(testOb->query_biome(HEIGHT_SHORE, HEAT_HOTTER, HUMIDITY_WET), "savanna"),
-        assert_equal(testOb->query_biome(HEIGHT_SHORE, HEAT_HOTTER, HUMIDITY_WETTER), "tropical rainforest"),
+        assert_equal(
+            testOb->query_biome(HEIGHT_SHORE, HEAT_HOTTER, HUMIDITY_DRYER),
+            "desert"
+        ),
+        assert_equal(
+            testOb->query_biome(HEIGHT_SHORE, HEAT_HOTTER, HUMIDITY_WET),
+            "savanna"
+        ),
+        assert_equal(
+            testOb->query_biome(HEIGHT_SHORE, HEAT_HOTTER, HUMIDITY_WETTER),
+            "tropical rainforest"
+        ),
 
-        assert_equal(testOb->query_biome(HEIGHT_SHORE, HEAT_HOTTEST, HUMIDITY_DRYER), "desert"),
-        assert_equal(testOb->query_biome(HEIGHT_SHORE, HEAT_HOTTEST, HUMIDITY_WET), "savanna"),
-        assert_equal(testOb->query_biome(HEIGHT_SHORE, HEAT_HOTTEST, HUMIDITY_WETTER), "tropical rainforest"),
+        assert_equal(
+            testOb->query_biome(HEIGHT_SHORE, HEAT_HOTTEST, HUMIDITY_DRYER),
+            "desert"
+        ),
+        assert_equal(
+            testOb->query_biome(HEIGHT_SHORE, HEAT_HOTTEST, HUMIDITY_WET),
+            "savanna"
+        ),
+        assert_equal(
+            testOb->query_biome(HEIGHT_SHORE, HEAT_HOTTEST, HUMIDITY_WETTER),
+            "tropical rainforest"
+        ),
     }) :));
 }
 
-void test_querying_planets () {
+void test_querying_planets() {
     expect("querying all is an array", (: ({
         assert_equal(arrayp(testOb->query_all_planets()), 1),
     }) :));
@@ -197,32 +566,48 @@ void test_querying_planets () {
     }) :));
 }
 
-void test_creating_and_adjusting_planet (function done) {
+void test_creating_and_adjusting_planet(function done) {
     string testPlanet = "test_" + time();
-    string testPlanetFile = "/save/planet/t/"+testPlanet+".o";
+    string testPlanetFile = "/save/planet/t/" + testPlanet + ".o";
     expect("create_planet behaves", (: ({
         // planet doesn't exist yet
         assert_equal(file_size($(testPlanetFile)), -1),
-        assert_equal(testOb->query_planet($(testPlanet)), ([ ])),
+        assert_equal(testOb->query_planet($(testPlanet)), ([])),
         // create test planet
-        assert_equal(testOb->create_planet($(testPlanet), ([ "size": 123 ])), 1),
+        assert_equal(
+            testOb->create_planet($(testPlanet), ([ "size": 123 ])),
+            1
+        ),
         // planet exists
-        assert_equal(testOb->query_planet($(testPlanet)), ([ "name": $(testPlanet), "size": 123 ])),
+        assert_equal(
+            testOb->query_planet($(testPlanet)),
+            ([ "name": $(testPlanet), "size": 123 ])
+        ),
         // planet was already created
-        assert_equal(testOb->create_planet($(testPlanet), ([ ])), 0),
+        assert_equal(testOb->create_planet($(testPlanet), ([])), 0),
     }) :));
     expect("adjust_planet behaves", (: ({
         // adjust planet size
-        assert_equal(testOb->adjust_planet($(testPlanet), ([ "size": 321 ])), 1),
+        assert_equal(
+            testOb->adjust_planet($(testPlanet), ([ "size": 321 ])),
+            1
+        ),
         // can't adjust non-existent planet
-        assert_equal(testOb->adjust_planet($(testPlanet+"-bad"), ([ "size": 321 ])), 0),
+        assert_equal(
+            testOb->adjust_planet($(testPlanet + "-bad"), ([ "size": 321 ])),
+            0
+        ),
     }) :));
 
     testOb->adjust_planet(testPlanet, ([ "size": 10 ]));
     testOb->generate_json(testPlanet, UNDEFINED);
-    call_out_walltime(function (function done, string testPlanet, string testPlanetFile) {
+    call_out_walltime(function(
+        function done,
+        string testPlanet,
+        string testPlanetFile
+    ) {
         expect("planet is generated", (: ({
-            assert_equal(file_size("/tmp/"+$(testPlanet)+".json") > 0, 1),
+            assert_equal(file_size("/tmp/" + $(testPlanet) + ".json") > 0, 1),
             rm($(testPlanetFile)),
             assert_equal(file_size($(testPlanetFile)), -1),
         }) :));
@@ -231,7 +616,7 @@ void test_creating_and_adjusting_planet (function done) {
     }, 0.1, done, testPlanet, testPlanetFile);
 }
 
-void test_structure_types () {
+void test_structure_types() {
     string *types = testOb->query_structure_types();
     expect("structure types are the expected set", (: ({
         assert_equal(arrayp($(types)), 1),
@@ -240,7 +625,7 @@ void test_structure_types () {
     }) :));
 }
 
-void test_structure_determinism_and_invalid () {
+void test_structure_determinism_and_invalid() {
     expect("query_structure is deterministic and rejects bad planets", (: ({
         // same coordinates yield the same result (structure mapping or 0)
         assert_equal(
@@ -248,13 +633,16 @@ void test_structure_determinism_and_invalid () {
             testOb->query_structure("Terra", 250, 250)
         ),
         // unknown planet yields 0
-        assert_equal(testOb->query_structure("no_such_planet_" + time(), 5, 5), 0),
+        assert_equal(
+            testOb->query_structure("no_such_planet_" + time(), 5, 5),
+            0
+        ),
         // non-string name yields 0
         assert_equal(testOb->query_structure(0, 5, 5), 0),
     }) :));
 }
 
-void test_structure_placement () {
+void test_structure_placement() {
     mapping planet = testOb->query_planet("Terra");
     mapping p = noise_generate_permutation_simplex("Terra");
     string *types = testOb->query_structure_types();
@@ -263,16 +651,24 @@ void test_structure_placement () {
     mapping s, n;
 
     // scan a 32x32 region centred on the guaranteed central land mass
-    for (int x = cx - 16; x < cx + 16; x ++) {
-        for (int y = cx - 16; y < cx + 16; y ++) {
-            total ++;
+    for (int x = cx - 16; x < cx + 16; x++) {
+        for (int y = cx - 16; y < cx + 16; y++) {
+            total++;
             s = testOb->query_structure("Terra", x, y);
             if (!s) {
                 continue;
             }
-            found ++;
+            found++;
             // invariant: a placed structure sits on land
-            n = testOb->query_noise(p, planet["size"], x, y, planet["heightFactor"], planet["humidityFactor"], planet["heatFactor"]);
+            n = testOb->query_noise(
+                p,
+                planet["size"],
+                x,
+                y,
+                planet["heightFactor"],
+                planet["humidityFactor"],
+                planet["heatFactor"]
+            );
             if (n["height"] <= HEIGHT_SHORE) {
                 land_ok = 0;
             }
@@ -280,7 +676,7 @@ void test_structure_placement () {
             if (member_array(s["type"], types) < 0) {
                 shape_ok = 0;
             }
-            if (s["level"] < 1 || s["level"] > 20) { // LEVEL_RANGE is 20
+            if (s["level"] < 1 || s["level"] > 20) {  // LEVEL_RANGE is 20
                 shape_ok = 0;
             }
         }

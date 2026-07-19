@@ -2,13 +2,13 @@
 
 inherit STD_COMMAND;
 
-void create () {
+void create() {
     ::create();
     set_syntax("advance");
     set_help_text("The advance command is used to spend experience points to permanently increase your character's level.");
 }
 
-void command (string input, mapping flags) {
+void command(string input, mapping flags) {
     object tc = this_character();
     int cost;
 
@@ -25,7 +25,18 @@ void command (string input, mapping flags) {
 
     tc->add_experience(-cost);
     tc->set_level(tc->query_level() + 1);
-    message("action", "You advance your level to " + tc->query_level() + ".", tc);
-    message("action", tc->query_cap_name() + " advances " + possessive(tc) + " level.", tc);
-    D_LOG->log("character/advance", ctime() + " " + tc->query_key_name() + " to " + tc->query_level());
+    message(
+        "action",
+        "You advance your level to " + tc->query_level() + ".",
+        tc
+    );
+    message(
+        "action",
+        tc->query_cap_name() + " advances " + possessive(tc) + " level.",
+        tc
+    );
+    D_LOG->log(
+        "character/advance",
+        ctime() + " " + tc->query_key_name() + " to " + tc->query_level()
+    );
 }

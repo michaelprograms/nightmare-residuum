@@ -2,7 +2,7 @@
 
 inherit STD_ROOM;
 
-void create () {
+void create() {
     ::create();
     set_properties(([ "indoors": 1, ]));
     set_short("a balcony over a lobby");
@@ -13,10 +13,17 @@ void create () {
         "down": HUMAN_ROOM + "museum_1.c",
     ]));
     set_looks(([
-        ({ "building", "ceiling", "walls" }): "A building of large proportions. The lobby is a large room with high ceilings and distant walls.",
+        ({
+            "building",
+            "ceiling",
+            "walls"
+        }): "A building of large proportions. The lobby is a large room with high ceilings and distant walls.",
         "floor": "The floor is a polished white stone in large blocks.",
         "staircase": "The staircase is in the back of the lobby. The steps are wide stones with a short wall as a railing.",
-        ({ "hallways", "wings" }): "Two hallways branch off from the main lobby to the north and west, leading to the wings of the building.",
+        ({
+            "hallways",
+            "wings"
+        }): "Two hallways branch off from the main lobby to the north and west, leading to the wings of the building.",
     ]));
     set_reset(([
         HUMAN_NPC + "museum_attendant.c": 1,

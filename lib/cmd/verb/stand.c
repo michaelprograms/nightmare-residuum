@@ -2,7 +2,7 @@
 
 inherit STD_VERB;
 
-void create () {
+void create() {
     verb::create();
     add_rules(({ "" }));
     set_requirements(REQUIREMENT_BUSY | REQUIREMENT_DISABLE);
@@ -11,11 +11,11 @@ void create () {
     set_help_similar(({ "fly", "land", "lay", "meditate", "sit", }));
 }
 
-mixed can_stand () {
+mixed can_stand() {
     return 1;
 }
 
-void do_stand () {
+void do_stand() {
     object po = previous_object();
 
     if (po->query_posture() == "standing") {
@@ -23,7 +23,12 @@ void do_stand () {
         return;
     } else {
         message("action", "You stand up.", po);
-        message("action", po->query_cap_name() + " stands up.", environment(po), po);
+        message(
+            "action",
+            po->query_cap_name() + " stands up.",
+            environment(po),
+            po
+        );
         po->set_posture("standing");
     }
 }

@@ -6,7 +6,7 @@ inherit M_STORY;
  *
  * @param {STD_CHARACTER} target the defeated character
  */
-void story_action_final (object target) {
+void story_action_final(object target) {
     if (target->query_defeated()) {
         target->set_defeated(0);
     }
@@ -19,7 +19,7 @@ void story_action_final (object target) {
  *
  * @param {STD_CHARACTER} ob the character entering the room
  */
-int handle_receive (object ob) {
+int handle_receive(object ob) {
     int result = ::handle_receive(ob);
     if (result && ob->is_character()) {
         story_start(ob);
@@ -30,7 +30,7 @@ int handle_receive (object ob) {
     return result;
 }
 
-void create () {
+void create() {
     ::create();
     set_short("defeated");
     set_long("A heavy darkness that impedes all senses.");

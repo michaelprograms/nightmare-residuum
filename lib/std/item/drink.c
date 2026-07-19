@@ -1,19 +1,19 @@
 inherit STD_CONSUMABLE;
 
-int is_drink () {
+int is_drink() {
     return 1;
 }
 
-string query_use_verb () {
+string query_use_verb() {
     return "drink";
 }
 
-mixed direct_drink_obj (mixed args...) {
+mixed direct_drink_obj(mixed args...) {
     return environment() == previous_object();
 }
 
 
-void create () {
+void create() {
     ::create();
     set_type("drink");
 }

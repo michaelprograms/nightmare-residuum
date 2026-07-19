@@ -2,7 +2,7 @@
 
 inherit STD_VERB;
 
-void create () {
+void create() {
     verb::create();
     add_rules(({ "", "OBJ", "OBS", }));
     set_requirements(REQUIREMENT_BUSY | REQUIREMENT_DISABLE);
@@ -11,7 +11,7 @@ void create () {
     set_help_similar(({ "unwear", "unwield", "wield", }));
 }
 
-mixed can_wear () {
+mixed can_wear() {
     return "Wear what?";
 }
 
@@ -21,7 +21,7 @@ mixed can_wear () {
  * @param {STD_ARMOR} ob the armor item to be equipped
  * @param str the input text from the player (ex, 'all' or 'helmet')
  */
-void do_wear_obj (object ob, string str) {
+void do_wear_obj(object ob, string str) {
     mixed result;
     object po = previous_object();
 
@@ -30,10 +30,14 @@ void do_wear_obj (object ob, string str) {
     } else if (stringp(result)) {
         message("action", result, po);
     } else {
-        message("action", "You try to wear " + ob->query_name() + " but fail for some reason.", po);
+        message(
+            "action",
+            "You try to wear " + ob->query_name() + " but fail for some reason.",
+            po
+        );
     }
 }
-void do_wear_obs (mixed *info, string str) {
+void do_wear_obs(mixed *info, string str) {
     foreach (object ob in info) {
         do_wear_obj(ob, str);
     }

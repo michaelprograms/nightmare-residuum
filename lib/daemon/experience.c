@@ -12,7 +12,7 @@
 #define LEVEL_BASE   100
 
 
-varargs int query_stat_cost (string stat, int level, string c, string s) {
+varargs int query_stat_cost(string stat, int level, string c, string s) {
     int bonus = 0;
 
     if (!stringp(stat)) error("Bad argument 1 to experience->query_stat_cost");
@@ -35,7 +35,7 @@ varargs int query_stat_cost (string stat, int level, string c, string s) {
     );
 }
 
-int query_level_cost (int level) {
+int query_level_cost(int level) {
     if (!intp(level)) error("Bad argument 1 to experience->query_level_cost");
 
     if (level < 1) return 1;
@@ -48,7 +48,7 @@ int query_level_cost (int level) {
     );
 }
 
-int query_value (mixed m) {
+int query_value(mixed m) {
     float lvl, exp;
 
     if (livingp(m)) {

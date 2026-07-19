@@ -6,7 +6,7 @@ inherit "/std/living/vitals";
  * @var {"/std/consumable"} testOb
  */
 
-void test_is_consumable () {
+void test_is_consumable() {
     expect("is_consumable returns true", (: ({
         assert_equal(itemp(testOb), 1),
         assert_equal(testOb->is_consumable(), 1),
@@ -19,7 +19,7 @@ void test_is_consumable () {
     }) :));
 }
 
-void test_strength () {
+void test_strength() {
     expect("consumable handles strength", (: ({
         assert_equal(testOb->query_strength(), 0),
         testOb->set_strength(5),
@@ -33,7 +33,7 @@ void test_strength () {
     }) :));
 }
 
-void test_handle_consume () {
+void test_handle_consume() {
     object r = new(STD_ROOM);
 
     expect("consumable handle_consume behaves", (: ({
@@ -43,7 +43,7 @@ void test_handle_consume () {
 
         // setup test object
         assert_equal(this_object()->handle_move($(r)), 1),
-        assert_equal(this_object()->update_vitals(), 0), // initialize vitals
+        assert_equal(this_object()->update_vitals(), 0),  // initialize vitals
         assert_equal(this_object()->add_hp(5), 0),
         assert_equal(this_object()->query_hp(), 5),
         assert_equal(this_object()->add_sp(5), 0),
@@ -57,7 +57,7 @@ void test_handle_consume () {
         assert_equal(this_object()->query_sp(), 10),
         assert_equal(this_object()->query_mp(), 10),
 
-        assert_equal(objectp(testOb), 0), // consumable was removed
+        assert_equal(objectp(testOb), 0),  // consumable was removed
     }) :));
 
     // cleanup

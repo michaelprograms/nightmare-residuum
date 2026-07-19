@@ -1,13 +1,12 @@
-
 nosave private int __LevelReq = 0;
 
-void set_autoload (int level) {
+void set_autoload(int level) {
     __LevelReq = level;
 }
 
-mixed *query_autoload_data () {
+mixed *query_autoload_data() {
     // override
-    return ({ });
+    return ({});
 }
 
 /**
@@ -15,7 +14,7 @@ mixed *query_autoload_data () {
  *
  * @param {STD_CHARACTER} character the target of requirements
  */
-mixed *query_autoload (object character) {
+mixed *query_autoload(object character) {
     if (character && character->query_level() >= __LevelReq && __LevelReq > 0) {
         return ({ base_name(), this_object()->query_autoload_data()... });
     } else {
@@ -23,6 +22,6 @@ mixed *query_autoload (object character) {
     }
 }
 
-void restore_autoload (mixed *data) {
+void restore_autoload(mixed *data) {
     // override
 }

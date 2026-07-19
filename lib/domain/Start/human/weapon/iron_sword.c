@@ -1,6 +1,6 @@
 inherit STD_WEAPON;
 
-void create () {
+void create() {
     ::create();
     set_name("iron sword");
     set_id(({ "iron sword", "sword" }));

@@ -6,12 +6,12 @@ inherit M_CURRENCY;
  * @var {"/std/npc/vendor"} testOb
  */
 
-void after_each_test () {
+void after_each_test() {
     // vendor handle_remove to destruct vendor inventory
     if (testOb) testOb->handle_remove();
 }
 
-void test_vendor () {
+void test_vendor() {
     expect("is_vendor behaves", (: ({
         assert_equal(testOb->is_living(), 1),
         assert_equal(testOb->is_vendor(), 1),
@@ -19,7 +19,7 @@ void test_vendor () {
     }) :));
 }
 
-void test_vendor_inventory () {
+void test_vendor_inventory() {
     object vi, ob;
 
     // grab reference to vendor inventory
@@ -43,7 +43,7 @@ void test_vendor_inventory () {
     if (ob) destruct(ob);
 }
 
-void test_max_items () {
+void test_max_items() {
     expect("vendor max items behaves", (: ({
         // verify default max items
         assert_equal(testOb->query_vendor_max_items(), 0),
@@ -56,18 +56,21 @@ void test_max_items () {
     }) :));
 }
 
-void test_vendor_currency () {
+void test_vendor_currency() {
     expect("vendor currency is settable and queryable", (: ({
         assert_equal(testOb->query_vendor_currency(), "copper"),
 
         testOb->set_vendor_currency("silver"),
         assert_equal(testOb->query_vendor_currency(), "silver"),
 
-        assert_catch((: testOb->set_vendor_currency(UNDEFINED) :), "*Bad argument 1 to vendor->set_vendor_currency\n"),
+        assert_catch(
+            (: testOb->set_vendor_currency(UNDEFINED) :),
+            "*Bad argument 1 to vendor->set_vendor_currency\n"
+        ),
     }) :));
 }
 
-void test_vendor_type () {
+void test_vendor_type() {
     expect("vendor type is settable and queryable", (: ({
         assert_equal(testOb->query_vendor_types(), 0),
 
@@ -83,11 +86,14 @@ void test_vendor_type () {
         testOb->set_vendor_types(({ STD_ARMOR, STD_WEAPON })),
         assert_equal(testOb->query_vendor_types(), ({ STD_ARMOR, STD_WEAPON })),
 
-        assert_catch((: testOb->set_vendor_types(UNDEFINED) :), "*Bad argument 1 to vendor->set_vendor_types\n"),
+        assert_catch(
+            (: testOb->set_vendor_types(UNDEFINED) :),
+            "*Bad argument 1 to vendor->set_vendor_types\n"
+        ),
     }) :));
 }
 
-void test_apply_list_verb () {
+void test_apply_list_verb() {
     object room;
 
     room = new(STD_ROOM);
@@ -97,7 +103,10 @@ void test_apply_list_verb () {
     expect("direct_list_from_obj returns true when same environment", (: ({
         // true with same environment
         assert_equal(testOb->handle_move("/domain/Nowhere/room/void.c"), 1),
-        assert_equal(this_object()->query_environment_path(), "/domain/Nowhere/room/void.c"),
+        assert_equal(
+            this_object()->query_environment_path(),
+            "/domain/Nowhere/room/void.c"
+        ),
         assert_equal(testOb->direct_list_from_obj(testOb), 1),
         // false with no object sent
         assert_equal(testOb->direct_list_from_obj(), 0),
@@ -109,7 +118,10 @@ void test_apply_list_verb () {
     expect("direct_list_str_from_obj returns true when same environment", (: ({
         // true with same environment
         assert_equal(testOb->handle_move("/domain/Nowhere/room/void.c"), 1),
-        assert_equal(this_object()->query_environment_path(), "/domain/Nowhere/room/void.c"),
+        assert_equal(
+            this_object()->query_environment_path(),
+            "/domain/Nowhere/room/void.c"
+        ),
         assert_equal(testOb->direct_list_str_from_obj("", testOb), 1),
         // false with no object sent
         assert_equal(testOb->direct_list_str_from_obj(), 0),
@@ -122,7 +134,7 @@ void test_apply_list_verb () {
     room->handle_remove();
 }
 
-void test_apply_buy_verb () {
+void test_apply_buy_verb() {
     object room;
 
     room = new(STD_ROOM);
@@ -131,7 +143,10 @@ void test_apply_buy_verb () {
     expect("direct_buy_str_from_obj returns true when same environment", (: ({
         // true with same environment
         assert_equal(testOb->handle_move("/domain/Nowhere/room/void.c"), 1),
-        assert_equal(this_object()->query_environment_path(), "/domain/Nowhere/room/void.c"),
+        assert_equal(
+            this_object()->query_environment_path(),
+            "/domain/Nowhere/room/void.c"
+        ),
         assert_equal(testOb->direct_buy_str_from_obj("", testOb), 1),
         // false with no object sent
         assert_equal(testOb->direct_buy_str_from_obj(""), 0),
@@ -145,9 +160,9 @@ void test_apply_buy_verb () {
     room->handle_remove();
 }
 
-void test_list () {
+void test_list() {
     object r = new(STD_ROOM);
-    object mockC1 = new("/std/npc.mock.c"); // TODO: this is weird, its not an NPC but this is the functionality we need
+    object mockC1 = new("/std/npc.mock.c");  // TODO: this is weird, its not an NPC but this is the functionality we need
     object c1 = new(STD_CHARACTER);
 
     c1->set_name("testcharacter");
@@ -159,11 +174,20 @@ void test_list () {
     expect("vendor handles listing inventory", (: ({
         // nothing to list
         testOb->handle_list(0, $(c1)),
-        assert_equal($(mockC1)->query_received_messages()[<1], ({ "say", "Test vendor says: I don't have any items for sale right now, Testcharacter." })),
+        assert_equal(
+            $(mockC1)->query_received_messages()[<1],
+            ({
+                "say",
+                "Test vendor says: I don't have any items for sale right now, Testcharacter."
+            })
+        ),
 
         // non-existent item
         testOb->handle_list("test", $(c1)),
-        assert_equal($(mockC1)->query_received_messages()[<1], ({ "say", "Test vendor says: I don't have any 'test' for sale." })),
+        assert_equal(
+            $(mockC1)->query_received_messages()[<1],
+            ({ "say", "Test vendor says: I don't have any 'test' for sale." })
+        ),
 
         // one item in list
         testOb->set_vendor_max_items(1),
@@ -176,10 +200,28 @@ void test_list () {
         testOb->query_vendor_inventory()->query_item_contents()[0]->set_value(10),
         // full list
         testOb->handle_list(0, $(c1)),
-        assert_equal($(mockC1)->query_received_messages()[<2..<1], ({ ({ "say", "Test vendor says: I have the following items, Testcharacter." }), ({ "action", "  test food                     10 copper" }) })),
+        assert_equal(
+            $(mockC1)->query_received_messages()[<2..<1],
+            ({
+                ({
+                    "say",
+                    "Test vendor says: I have the following items, Testcharacter."
+                }),
+                ({ "action", "  test food                     10 copper" })
+            })
+        ),
         // list item
         testOb->handle_list("test food", $(c1)),
-        assert_equal($(mockC1)->query_received_messages()[<2..<1], ({ ({ "say", "Test vendor says: I have the following 'test food' items, Testcharacter." }), ({ "action", "  test food                     10 copper" }) })),
+        assert_equal(
+            $(mockC1)->query_received_messages()[<2..<1],
+            ({
+                ({
+                    "say",
+                    "Test vendor says: I have the following 'test food' items, Testcharacter."
+                }),
+                ({ "action", "  test food                     10 copper" })
+            })
+        ),
     }) :));
 
     mockC1->stop_shadow();
@@ -188,9 +230,9 @@ void test_list () {
     if (r) destruct(r);
 }
 
-void test_buy () {
+void test_buy() {
     object r = new(STD_ROOM);
-    object mockC1 = new("/std/npc.mock.c"); // TODO: this is weird, its not an NPC but this is the functionality we need
+    object mockC1 = new("/std/npc.mock.c");  // TODO: this is weird, its not an NPC but this is the functionality we need
     object c1 = new(STD_CHARACTER);
 
     c1->set_name("testcharacter");
@@ -202,7 +244,13 @@ void test_buy () {
     expect("vendor handles buying items", (: ({
         // nothing to buy
         testOb->handle_buy("test food", $(c1)),
-        assert_equal($(mockC1)->query_received_messages()[<1], ({ "say", "Test vendor says: I don't have any 'test food' for sale." })),
+        assert_equal(
+            $(mockC1)->query_received_messages()[<1],
+            ({
+                "say",
+                "Test vendor says: I don't have any 'test food' for sale."
+            })
+        ),
 
         testOb->set_vendor_max_items(1),
         testOb->set_vendor_currency("copper"),
@@ -214,11 +262,23 @@ void test_buy () {
         testOb->query_vendor_inventory()->query_item_contents()[0]->set_short("test food"),
         testOb->query_vendor_inventory()->query_item_contents()[0]->set_value(10),
         testOb->handle_buy("test food", $(c1)),
-        assert_equal($(mockC1)->query_received_messages()[<1], ({ "say", "Test vendor says: You can't afford test food." })),
+        assert_equal(
+            $(mockC1)->query_received_messages()[<1],
+            ({ "say", "Test vendor says: You can't afford test food." })
+        ),
 
         $(c1)->add_currency("copper", 10),
         testOb->handle_buy("test food", $(c1)),
-        assert_equal($(mockC1)->query_received_messages()[<2..<1], ({ ({ "say", "Test vendor exclaims: Here's your test food, Testcharacter!" }) , ({ "action", "You buy test food for 10 copper." }) })),
+        assert_equal(
+            $(mockC1)->query_received_messages()[<2..<1],
+            ({
+                ({
+                    "say",
+                    "Test vendor exclaims: Here's your test food, Testcharacter!"
+                }),
+                ({ "action", "You buy test food for 10 copper." })
+            })
+        ),
 
         // TODO: need to re-visit this when there's a way to have max inventory size
         // testOb->query_vendor_inventory()->set_reset(([
@@ -240,9 +300,9 @@ void test_buy () {
     if (r) destruct(r);
 }
 
-void test_sell () {
+void test_sell() {
     object r = new(STD_ROOM);
-    object mockC1 = new("/std/npc.mock.c"); // TODO: this is weird, its not an NPC but this is the functionality we need
+    object mockC1 = new("/std/npc.mock.c");  // TODO: this is weird, its not an NPC but this is the functionality we need
     object c1 = new(STD_CHARACTER);
     object ob = new(STD_FOOD);
 
@@ -259,20 +319,35 @@ void test_sell () {
     expect("vendor handles selling items", (: ({
         // nothing to sell
         testOb->handle_sell(0, $(c1)),
-        assert_equal($(mockC1)->query_received_messages()[<1], ({ "say", "Test vendor says: You don't have an item to sell." })),
+        assert_equal(
+            $(mockC1)->query_received_messages()[<1],
+            ({ "say", "Test vendor says: You don't have an item to sell." })
+        ),
 
         testOb->handle_sell($(ob), $(c1)),
-        assert_equal($(mockC1)->query_received_messages()[<1], ({ "say", "Test vendor says: I don't buy food items." })),
+        assert_equal(
+            $(mockC1)->query_received_messages()[<1],
+            ({ "say", "Test vendor says: I don't buy food items." })
+        ),
 
         testOb->set_vendor_types(({ STD_FOOD })),
         assert_equal(testOb->query_vendor_types(), ({ STD_FOOD })),
         testOb->handle_sell($(ob), $(c1)),
-        assert_equal($(mockC1)->query_received_messages()[<1], ({ "say", "Test vendor says: My shop is full, I can't buy any more items." })),
+        assert_equal(
+            $(mockC1)->query_received_messages()[<1],
+            ({
+                "say",
+                "Test vendor says: My shop is full, I can't buy any more items."
+            })
+        ),
 
         testOb->set_vendor_max_items(1),
         testOb->set_vendor_currency("copper"),
         testOb->handle_sell($(ob), $(c1)),
-        assert_equal($(mockC1)->query_received_messages()[<1], ({ "action", "You sell junk food for 5 copper." })),
+        assert_equal(
+            $(mockC1)->query_received_messages()[<1],
+            ({ "action", "You sell junk food for 5 copper." })
+        ),
         assert_equal($(c1)->query_currency("copper"), 5),
     }) :));
 

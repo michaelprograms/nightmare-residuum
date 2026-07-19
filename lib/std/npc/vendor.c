@@ -6,7 +6,7 @@ nosave private string __VendorCurrency = "copper";
 nosave private string *__VendorTypes;
 nosave private int __VendorMaxItems = 0;
 
-int is_vendor () {
+int is_vendor() {
     return 1;
 }
 
@@ -15,38 +15,38 @@ int is_vendor () {
  *
  * @returns {"/std/vendor_inventory.c"}
  */
-object query_vendor_inventory () {
+object query_vendor_inventory() {
     return __VendorInventory;
 }
 
-void set_vendor_max_items (int n) {
+void set_vendor_max_items(int n) {
     __VendorMaxItems = n;
 }
-int query_vendor_max_items () {
+int query_vendor_max_items() {
     return __VendorMaxItems;
 }
 
-string query_vendor_currency () {
+string query_vendor_currency() {
     return __VendorCurrency;
 }
-void set_vendor_currency (string c) {
+void set_vendor_currency(string c) {
     if (!stringp(c)) {
         error("Bad argument 1 to vendor->set_vendor_currency");
     }
     __VendorCurrency = c;
 }
 
-string *query_vendor_types () {
+string *query_vendor_types() {
     return __VendorTypes;
 }
-void set_vendor_types (string *types) {
+void set_vendor_types(string *types) {
     if (!arrayp(types) || !sizeof(types)) {
         error("Bad argument 1 to vendor->set_vendor_types");
     }
     __VendorTypes = types;
 }
 
-int handle_remove () {
+int handle_remove() {
     if (__VendorInventory) {
         __VendorInventory->clear_inventory();
         __VendorInventory->handle_remove();
@@ -62,12 +62,18 @@ int handle_remove () {
  * @param str the text to filter inventory items by
  * @param {STD_LIVING} po the previous object requesting the list
  */
-void handle_list (string str, object po) {
+void handle_list(string str, object po) {
     /** @type {STD_ITEM*} items */
-    object *items = ({ });
+    object *items = ({});
 
     if (str) {
-        items = filter(__VendorInventory->query_item_contents(), (: $1 && (strsrch($1->query_name(), $(str)) > -1 || $1->query_type() == $(str)) :));
+        items = filter(
+            __VendorInventory->query_item_contents(),
+            (: $1 && (strsrch(
+                $1->query_name(),
+                $(str)
+            ) > -1 || $1->query_type() == $(str)) :)
+        );
     } else {
         items = __VendorInventory->query_item_contents();
     }
@@ -87,7 +93,16 @@ void handle_list (string str, object po) {
         handle_command("say I have the following items, " + po->query_cap_name() + ".");
     }
     foreach (object ob in items) {
-        message("action", sprintf("  %-30s%s %s", ob->query_short(), format_integer(ob->query_value()), query_vendor_currency()), po);
+        message(
+            "action",
+            sprintf(
+                "  %-30s%s %s",
+                ob->query_short(),
+                format_integer(ob->query_value()),
+                query_vendor_currency()
+            ),
+            po
+        );
     }
 }
 
@@ -99,7 +114,7 @@ void handle_list (string str, object po) {
  * @param str the text to filter inventory items by
  * @param {STD_LIVING} po the previous object requesting the list
  */
-void handle_buy (string str, object po) {
+void handle_buy(string str, object po) {
     /** @type {STD_ITEM} */
     object item;
     int value;
@@ -116,13 +131,31 @@ void handle_buy (string str, object po) {
     }
 
     handle_command("say Here's your " + item->query_short() + ", " + po->query_cap_name() + "!");
-    message("action", "You buy " + item->query_short() + " for " + value + " " + __VendorCurrency + ".", po);
-    message("action", po->query_cap_name() + " buys " + item->query_short() + ".", environment(po), po);
+    message(
+        "action",
+        "You buy " + item->query_short() + " for " + value + " " + __VendorCurrency + ".",
+        po
+    );
+    message(
+        "action",
+        po->query_cap_name() + " buys " + item->query_short() + ".",
+        environment(po),
+        po
+    );
 
     po->add_currency(__VendorCurrency, -value);
     if (!item->handle_move(po)) {
-        message("action", "You cannot hold " + item->query_short() + " and it falls from your grasp.", po);
-        message("action", po->query_cap_name() + " cannot hold " + item->query_short() + " and it falls from " + possessive(po) + " grasp.", environment(po), po);
+        message(
+            "action",
+            "You cannot hold " + item->query_short() + " and it falls from your grasp.",
+            po
+        );
+        message(
+            "action",
+            po->query_cap_name() + " cannot hold " + item->query_short() + " and it falls from " + possessive(po) + " grasp.",
+            environment(po),
+            po
+        );
         item->handle_move(environment(po));
     }
 }
@@ -135,7 +168,7 @@ void handle_buy (string str, object po) {
  * @param {STD_ITEM} item the object being sold to the vendor
  * @param {STD_LIVING} po the previous object selling the item
  */
-void handle_sell (object item, object po) {
+void handle_sell(object item, object po) {
     int value;
 
     if (!item) {
@@ -152,13 +185,22 @@ void handle_sell (object item, object po) {
     }
     value = item->query_value() * 50 / 100;
     po->add_currency(__VendorCurrency, value);
-    message("action", "You sell " + item->query_short() + " for " + value + " " + __VendorCurrency + ".", po);
-    message("action", po->query_cap_name() + " sells " + item->query_short() + ".", environment(po), po);
+    message(
+        "action",
+        "You sell " + item->query_short() + " for " + value + " " + __VendorCurrency + ".",
+        po
+    );
+    message(
+        "action",
+        po->query_cap_name() + " sells " + item->query_short() + ".",
+        environment(po),
+        po
+    );
 }
 
 /* ----- object applies ----- */
 
-void create () {
+void create() {
     ::create();
     if (clonep()) {
         __VendorInventory = new("/std/vendor_inventory.c");
@@ -168,7 +210,7 @@ void create () {
 
 /* ----- parser applies ----- */
 
-mixed direct_list_from_obj (mixed args...) {
+mixed direct_list_from_obj(mixed args...) {
     object po = previous_object();
     object ob;
     if (sizeof(args)) {
@@ -178,7 +220,7 @@ mixed direct_list_from_obj (mixed args...) {
         return 0;
     }
 }
-mixed direct_list_str_from_obj (mixed args...) {
+mixed direct_list_str_from_obj(mixed args...) {
     object po = previous_object();
     object ob;
     if (sizeof(args) > 1) {
@@ -188,7 +230,7 @@ mixed direct_list_str_from_obj (mixed args...) {
         return 0;
     }
 }
-mixed direct_buy_str_from_obj (mixed args...) {
+mixed direct_buy_str_from_obj(mixed args...) {
     object po = previous_object();
     object ob;
     if (sizeof(args) > 1) {

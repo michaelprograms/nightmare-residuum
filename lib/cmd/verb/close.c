@@ -1,6 +1,6 @@
 inherit STD_VERB;
 
-void create () {
+void create() {
     verb::create();
     add_rules(({ "", "STR", }));
     set_syntax("close [door|direction]");
@@ -10,17 +10,17 @@ void create () {
 
 /* ----- rule: "" ----- */
 
-mixed can_close () {
+mixed can_close() {
     return "Close what?";
 }
 
 /* ----- rule: "STR" ----- */
 
-mixed can_close_str (mixed args...) {
+mixed can_close_str(mixed args...) {
     return 1;
 }
 
-mixed do_close_str (mixed args...) {
+mixed do_close_str(mixed args...) {
     object po = previous_object();
     /** @type {STD_ROOM} env */
     object env = environment(po);

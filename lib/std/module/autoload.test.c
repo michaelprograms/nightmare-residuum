@@ -5,9 +5,9 @@ inherit M_TEST;
  */
 
 nosave private int __MockLevel;
-int query_level () { return __MockLevel; }
+int query_level() { return __MockLevel; }
 
-void test_autoload () {
+void test_autoload() {
     expect("set_autoload should set requirements", (: ({
         // items don't autoload by default
         assert_equal(arrayp(testOb->query_autoload(this_object())), 0),
@@ -27,10 +27,10 @@ void test_autoload () {
     }) :));
 
     expect("query_autoload_data should return an array", (: ({
-        assert_equal(testOb->query_autoload_data(), ({ })),
+        assert_equal(testOb->query_autoload_data(), ({})),
     }) :));
 
     expect("restore_autoload does nothing", (: ({
-        assert_equal(testOb->restore_autoload(({ })), UNDEFINED),
+        assert_equal(testOb->restore_autoload(({})), UNDEFINED),
     }) :));
 }

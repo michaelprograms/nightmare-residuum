@@ -1,6 +1,6 @@
 inherit STD_VERB;
 
-void create () {
+void create() {
     verb::create();
     add_rules(({ "", "STR", }));
     set_syntax("listen ([sound])");
@@ -10,11 +10,11 @@ void create () {
 
 /* ----- rule: "" ----- */
 
-mixed can_listen () {
+mixed can_listen() {
     if (!environment(previous_object())) return "There is nothing.";
     else return 1;
 }
-mixed do_listen () {
+mixed do_listen() {
     object po = previous_object();
     /** @type {STD_ROOM} env */
     object env = environment(po);
@@ -29,10 +29,10 @@ mixed do_listen () {
 
 /* ----- rule: "STR" and "at STR" ----- */
 
-mixed can_listen_str (string str, string verb) {
+mixed can_listen_str(string str, string verb) {
     return 1;
 }
-void do_listen_str (mixed args...) {
+void do_listen_str(mixed args...) {
     object po = previous_object();
     /** @type {STD_ROOM} env */
     object env = environment(po);

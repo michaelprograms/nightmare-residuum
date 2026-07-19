@@ -1,13 +1,13 @@
 inherit STD_COMMAND;
 
-void create () {
+void create() {
     ::create();
     set_syntax("tell");
     set_help_text("The tell command is used to send a message from your character to another connected character.");
     set_help_similar(({ "channels", "last", "reply", }));
 }
 
-void command (string input, mapping flags) {
+void command(string input, mapping flags) {
     object tc = this_character(), target;
     string name, msg, myMsg, yourMsg;
 

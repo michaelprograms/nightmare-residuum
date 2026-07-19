@@ -2,7 +2,7 @@
 
 inherit STD_VENDOR;
 
-void create () {
+void create() {
     string name, capName;
     ::create();
 

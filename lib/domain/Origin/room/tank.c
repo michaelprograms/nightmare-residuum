@@ -24,17 +24,20 @@ nosave private mapping syntax = ([
  *
  * @param {STD_CHARACTER} tc the character being randomized
  */
-private void randomize_attributes (object tc) {
+private void randomize_attributes(object tc) {
     mapping attributes = D_SPECIES->query_species()["human"]["attributes"];
 
     tc->set_attribute("build", element_of(attributes["build"]));
     tc->set_attribute("complexion", element_of(attributes["complexion"]));
     tc->set_attribute("eye", element_of(attributes["eye"]));
     tc->set_attribute("hair", element_of(attributes["hair"]));
-    tc->set_attribute("height", "" + (attributes["height"]["min"] + random(attributes["height"]["max"] - attributes["height"]["min"] + 1)));
+    tc->set_attribute(
+        "height",
+        "" + (attributes["height"]["min"] + random(attributes["height"]["max"] - attributes["height"]["min"] + 1))
+    );
 }
 
-void prepare_long_footer () {
+void prepare_long_footer() {
     object tc = this_character();
     string fmt = "%-14s %-20s";
     border(([
@@ -44,19 +47,35 @@ void prepare_long_footer () {
                 "header": ({ "Attributes", "Stats" }),
                 "items": ({
                     sprintf(fmt, "CLASS:", tc->query_class()),
-                    sprintf(fmt, "PERCEPTION:", ""+tc->query_stat("perception")),
+                    sprintf(
+                        fmt,
+                        "PERCEPTION:",
+                        "" + tc->query_stat("perception")
+                    ),
                     sprintf(fmt, "GENDER:", tc->query_gender()),
-                    sprintf(fmt, "STRENGTH:", ""+tc->query_stat("strength")),
-                    sprintf(fmt, "BUILD:", ""+tc->query_attribute("build")),
-                    sprintf(fmt, "ENDURANCE:", ""+tc->query_stat("endurance")),
-                    sprintf(fmt, "COMPLEXION:", ""+tc->query_attribute("complexion")),
-                    sprintf(fmt, "CHARISMA:", ""+tc->query_stat("charisma")),
-                    sprintf(fmt, "EYE:", ""+tc->query_attribute("eye")),
-                    sprintf(fmt, "INTELLIGENCE:", ""+tc->query_stat("intelligence")),
-                    sprintf(fmt, "HAIR:", ""+tc->query_attribute("hair")),
-                    sprintf(fmt, "AGILITY:", ""+tc->query_stat("agility")),
-                    sprintf(fmt, "HEIGHT:", ""+tc->query_attribute("height")),
-                    sprintf(fmt, "LUCK:", ""+tc->query_stat("luck")),
+                    sprintf(fmt, "STRENGTH:", "" + tc->query_stat("strength")),
+                    sprintf(fmt, "BUILD:", "" + tc->query_attribute("build")),
+                    sprintf(
+                        fmt,
+                        "ENDURANCE:",
+                        "" + tc->query_stat("endurance")
+                    ),
+                    sprintf(
+                        fmt,
+                        "COMPLEXION:",
+                        "" + tc->query_attribute("complexion")
+                    ),
+                    sprintf(fmt, "CHARISMA:", "" + tc->query_stat("charisma")),
+                    sprintf(fmt, "EYE:", "" + tc->query_attribute("eye")),
+                    sprintf(
+                        fmt,
+                        "INTELLIGENCE:",
+                        "" + tc->query_stat("intelligence")
+                    ),
+                    sprintf(fmt, "HAIR:", "" + tc->query_attribute("hair")),
+                    sprintf(fmt, "AGILITY:", "" + tc->query_stat("agility")),
+                    sprintf(fmt, "HEIGHT:", "" + tc->query_attribute("height")),
+                    sprintf(fmt, "LUCK:", "" + tc->query_stat("luck")),
                 }),
                 "columns": 2,
                 "align": "left",
@@ -73,11 +92,11 @@ void prepare_long_footer () {
             }),
             "columns": 1,
         ]),
-        "borderColors": ({ ({ 65, 105, 225 }), ({ 65, 105, 225 }) }), // Royal Blue
+        "borderColors": ({ ({ 65, 105, 225 }), ({ 65, 105, 225 }) }),  // Royal Blue
     ]));
 }
 
-void create () {
+void create() {
     ::create();
     set_properties(([ "indoors": 1, ]));
     set_short("inside a tank");
@@ -97,7 +116,7 @@ void create () {
  *
  * @param {STD_CHARACTER} ob
  */
-int handle_receive (object ob) {
+int handle_receive(object ob) {
     if (ob && ob->is_character()) {
         if (ob->query_species() == "human" && !sizeof(ob->query_attributes())) {
             randomize_attributes(ob);
@@ -108,16 +127,16 @@ int handle_receive (object ob) {
 
 /* ----- parser rule: encode ----- */
 
-mixed can_encode () {
+mixed can_encode() {
     return environment(this_character()) == this_object();
 }
-void do_encode () {
+void do_encode() {
     write("Syntax: " + syntax["encode"] + "\n");
 }
-mixed can_encode_str (mixed args...) {
+mixed can_encode_str(mixed args...) {
     return environment(this_character()) == this_object();
 }
-void do_encode_str (mixed args...) {
+void do_encode_str(mixed args...) {
     object tc = this_character();
     string str, *words, word;
 
@@ -134,19 +153,25 @@ void do_encode_str (mixed args...) {
     str = implode(words[1..], " ");
 
 
-    if (member_array(word, ({ "build", "complexion", "eye", "gender", "hair", "height"})) == -1) {
-        write("Syntax: "+syntax["encode"]+"\n");
+    if (member_array(
+        word,
+        ({ "build", "complexion", "eye", "gender", "hair", "height" })
+    ) == -1) {
+        write("Syntax: " + syntax["encode"] + "\n");
         return;
     }
 
-    if (!sizeof(str) && member_array(word, ({ "build", "complexion", "eye", "gender", "hair", "height"})) > -1) {
-        write("Syntax: "+syntax["encode_"+word]+"\n");
+    if (!sizeof(str) && member_array(
+        word,
+        ({ "build", "complexion", "eye", "gender", "hair", "height" })
+    ) > -1) {
+        write("Syntax: " + syntax["encode_" + word] + "\n");
         return;
     }
 
     if (word == "gender") {
         if (member_array(str, ({ "female", "male", "neither" })) == -1) {
-            write("Syntax: "+syntax["encode_gender"]+"\n");
+            write("Syntax: " + syntax["encode_gender"] + "\n");
             return;
         }
 
@@ -160,8 +185,11 @@ void do_encode_str (mixed args...) {
         write("A shock arcs through your body!\n");
         write("You encode yourself " + str + ".\n");
     } else if (word == "build") {
-        if (member_array(str, ({ "athletic", "lean", "muscular", "slender", "stout", })) == -1) {
-            write("Syntax: "+syntax["encode_build"]+"\n");
+        if (member_array(
+            str,
+            ({ "athletic", "lean", "muscular", "slender", "stout", })
+        ) == -1) {
+            write("Syntax: " + syntax["encode_build"] + "\n");
             return;
         }
 
@@ -176,7 +204,7 @@ void do_encode_str (mixed args...) {
         write("You encode yourself with a " + str + " build.\n");
     } else if (word == "complexion") {
         if (member_array(str, ({ "fair", "medium", "dark", })) == -1) {
-            write("Syntax: "+syntax["encode_complexion"]+"\n");
+            write("Syntax: " + syntax["encode_complexion"] + "\n");
             return;
         }
 
@@ -190,8 +218,11 @@ void do_encode_str (mixed args...) {
         write("A shock arcs through your body!\n");
         write("You encode yourself with a " + str + " complexion.\n");
     } else if (word == "eye") {
-        if (member_array(str, ({ "amber", "black", "blue", "brown", "green", "hazel", })) == -1) {
-            write("Syntax: "+syntax["encode_eye"]+"\n");
+        if (member_array(
+            str,
+            ({ "amber", "black", "blue", "brown", "green", "hazel", })
+        ) == -1) {
+            write("Syntax: " + syntax["encode_eye"] + "\n");
             return;
         }
 
@@ -205,8 +236,11 @@ void do_encode_str (mixed args...) {
         write("A shock arcs through your body!\n");
         write("You encode yourself with " + str + " eyes.\n");
     } else if (word == "hair") {
-        if (member_array(str, ({ "auburn", "bald", "black", "blonde", "brown", "gray", })) == -1) {
-            write("Syntax: "+syntax["encode_hair"]+"\n");
+        if (member_array(
+            str,
+            ({ "auburn", "bald", "black", "blonde", "brown", "gray", })
+        ) == -1) {
+            write("Syntax: " + syntax["encode_hair"] + "\n");
             return;
         }
 
@@ -222,7 +256,7 @@ void do_encode_str (mixed args...) {
     } else if (word == "height") {
         int height = to_int(str);
         if (height < 160 || height > 180) {
-            write("Syntax: "+syntax["encode_height"]+"\n");
+            write("Syntax: " + syntax["encode_height"] + "\n");
             return;
         }
 
@@ -240,16 +274,16 @@ void do_encode_str (mixed args...) {
 }
 
 /* ----- parser rule: download ----- */
-mixed can_download () {
+mixed can_download() {
     return environment(this_character()) == this_object();
 }
-void do_download () {
+void do_download() {
     message("action", "Syntax: " + syntax["download full"], this_character());
 }
-mixed can_download_str (mixed args...) {
+mixed can_download_str(mixed args...) {
     return environment(this_character()) == this_object();
 }
-void do_download_str (mixed args...) {
+void do_download_str(mixed args...) {
     object tc = this_character();
     string str;
 
@@ -257,7 +291,10 @@ void do_download_str (mixed args...) {
         str = args[0];
     }
 
-    if (member_array(str, ({ "warrior", "mystic", "scoundrel", "ranger", "psionist", "paladin", })) == -1) {
+    if (member_array(
+        str,
+        ({ "warrior", "mystic", "scoundrel", "ranger", "psionist", "paladin", })
+    ) == -1) {
         return do_download();
     }
 
@@ -269,14 +306,21 @@ void do_download_str (mixed args...) {
 
 /* ----- parser rule: randomize ----- */
 
-mixed can_randomize () {
+mixed can_randomize() {
     return environment(this_character()) == this_object();
 }
-void do_randomize () {
+void do_randomize() {
     object tc = this_character();
 
     tc->set_gender(element_of(({ "female", "male", "neither" })));
-    tc->set_class(element_of(({ "warrior", "mystic", "scoundrel", "ranger", "psionist", "paladin", })));
+    tc->set_class(element_of(({
+        "warrior",
+        "mystic",
+        "scoundrel",
+        "ranger",
+        "psionist",
+        "paladin",
+    })));
 
     randomize_attributes(tc);
 
@@ -287,19 +331,27 @@ void do_randomize () {
 
 /* ----- parser rule: done ----- */
 
-mixed can_done () {
+mixed can_done() {
     return environment(this_character()) == this_object();
 }
-void do_done () {
+void do_done() {
     object tc = this_character();
 
     if (tc->query_class() == "adventurer") {
         message("action", "You press the done button and nothing happens.", tc);
-        message("say", "A robotic voice chimes: Specimen must have a class before process is complete.", environment(tc));
+        message(
+            "say",
+            "A robotic voice chimes: Specimen must have a class before process is complete.",
+            environment(tc)
+        );
         return;
     }
 
-    message("action", "You press the done button and the tank glass pops open.", tc);
+    message(
+        "action",
+        "You press the done button and the tank glass pops open.",
+        tc
+    );
     tc->handle_go(ORIGIN_ROOM + "center.c", "eject", "from the tank");
     tc->describe_environment();
 }

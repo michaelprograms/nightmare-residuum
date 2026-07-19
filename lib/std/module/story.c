@@ -1,29 +1,29 @@
 nosave private int __Delay = 3;
-nosave private mixed *__Lines = ({ });
+nosave private mixed *__Lines = ({});
 
-void story_action_final (object target);
+void story_action_final(object target);
 
 /* ----- ----- */
 
-mixed *query_story_lines () {
+mixed *query_story_lines() {
     return __Lines;
 }
-void set_story_lines (mixed *lines) {
+void set_story_lines(mixed *lines) {
     __Lines = lines;
 }
 
 /* ----- ----- */
 
-void set_story_delay (int d) {
+void set_story_delay(int d) {
     __Delay = d;
 }
-int query_story_delay () {
+int query_story_delay() {
     return __Delay;
 }
 
 /* ----- ----- */
 
-void story_action (object target, mixed line, mixed *lines) {
+void story_action(object target, mixed line, mixed *lines) {
     if (!target || (environment(target) != this_object() && environment(target) != environment())) {
         return;
     }
@@ -41,11 +41,11 @@ void story_action (object target, mixed line, mixed *lines) {
     }
 }
 
-void story_action_final (object target) {
+void story_action_final(object target) {
     /* Override */
 }
 
-void story_start (object target) {
+void story_start(object target) {
     if (!target || (environment(target) != this_object() && environment(target) != environment()) || !sizeof(__Lines)) {
         return;
     }

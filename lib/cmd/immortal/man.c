@@ -1,12 +1,12 @@
 inherit STD_COMMAND;
 
-void create () {
+void create() {
     ::create();
     set_syntax("man [apply|efun|lpc]");
     set_help_text("The man command is used to view driver documentation for the provided apply, efun, or LPC topic.");
 }
 
-void command (string input, mapping flags) {
+void command(string input, mapping flags) {
     string path;
 
     if (!input) {
@@ -14,7 +14,14 @@ void command (string input, mapping flags) {
         return;
     }
 
-    foreach (string type in ({ "apply", "efun", "lpc", "lpc/constructs", "lpc/preprocessor", "lpc/types" })) {
+    foreach (string type in ({
+        "apply",
+        "efun",
+        "lpc",
+        "lpc/constructs",
+        "lpc/preprocessor",
+        "lpc/types"
+    })) {
         if (file_size(path = "/doc/" + type + "/" + input) > 0) {
             this_user()->handle_pager("### " + path + "\n" + read_file(path));
             return;

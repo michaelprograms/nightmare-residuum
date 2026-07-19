@@ -5,7 +5,7 @@ inherit STD_OBJECT;
  * @var {"/std/command"} testOb
  */
 
-string *test_order () {
+string *test_order() {
     return ({
         "test_name",
         "test_syntax",
@@ -16,13 +16,13 @@ string *test_order () {
     });
 }
 
-void test_name () {
+void test_name() {
     expect("handles command name", (: ({
         assert_equal(testOb->query_name(), "command.coverage"),
     }) :));
 }
 
-void test_syntax () {
+void test_syntax() {
     expect("syntax is settable and queryable", (: ({
         assert_equal(testOb->query_syntax(), UNDEFINED),
 
@@ -30,14 +30,20 @@ void test_syntax () {
         assert_equal(testOb->query_syntax(), "<" + testOb->query_name() + ">"),
 
         testOb->set_syntax(testOb->query_name() + " [target]"),
-        assert_equal(testOb->query_syntax(), "<" + testOb->query_name() + " [target]>"),
+        assert_equal(
+            testOb->query_syntax(),
+            "<" + testOb->query_name() + " [target]>"
+        ),
     }) :));
     expect("syntax handles bad inputs", (: ({
-        assert_catch((: testOb->set_syntax("") :), "*Bad argument 1 to command->set_syntax\n"),
+        assert_catch(
+            (: testOb->set_syntax("") :),
+            "*Bad argument 1 to command->set_syntax\n"
+        ),
     }) :));
 }
 
-void test_target () {
+void test_target() {
     object r = new(STD_ROOM);
     object char = new(STD_CHARACTER);
     object npc = new(STD_NPC);
@@ -55,15 +61,24 @@ void test_target () {
         // check mismatch environments but character
         assert_equal(handle_move("/domain/Nowhere/room/void.c"), 1),
         assert_equal($(char)->handle_move($(r)), 1),
-        assert_equal(testOb->determine_immortal_target(this_object(), "testcharacter"), this_object()),  // failure
+        assert_equal(
+            testOb->determine_immortal_target(this_object(), "testcharacter"),
+            this_object()
+        ),  // failure
 
         // check matching environments but NPC
         assert_equal(handle_move($(r)), 1),
         assert_equal($(npc)->handle_move($(r)), 1),
-        assert_equal(testOb->determine_immortal_target(this_object(), "testnpc"), $(npc)),  // success
+        assert_equal(
+            testOb->determine_immortal_target(this_object(), "testnpc"),
+            $(npc)
+        ),  // success
 
         // cleanup
-        assert_equal(this_object()->handle_move("/domain/Nowhere/room/void.c"), 1),
+        assert_equal(
+            this_object()->handle_move("/domain/Nowhere/room/void.c"),
+            1
+        ),
     }) :));
 
     if (npc) destruct(npc);
@@ -71,7 +86,7 @@ void test_target () {
     if (r) destruct(r);
 }
 
-void test_help_text () {
+void test_help_text() {
     expect("handles help text", (: ({
         assert_equal(testOb->query_help_text(), UNDEFINED),
 
@@ -82,11 +97,14 @@ void test_help_text () {
         assert_equal(testOb->query_help_text(), "Different help text."),
     }) :));
     expect("help text handles bad inputs", (: ({
-        assert_catch((: testOb->set_help_text("") :), "*Bad argument 1 to command->set_help_text\n"),
+        assert_catch(
+            (: testOb->set_help_text("") :),
+            "*Bad argument 1 to command->set_help_text\n"
+        ),
     }) :));
 }
 
-void test_help_similar () {
+void test_help_similar() {
     expect("handles help similar", (: ({
         assert_equal(testOb->query_help_similar(), UNDEFINED),
 
@@ -97,27 +115,48 @@ void test_help_similar () {
         assert_equal(testOb->query_help_similar(), ({ "1", "2", "3", })),
     }) :));
     expect("help similar handles bad inputs", (: ({
-        assert_catch((: testOb->set_help_similar(UNDEFINED) :), "*Bad argument 1 to command->set_help_similar\n"),
+        assert_catch(
+            (: testOb->set_help_similar(UNDEFINED) :),
+            "*Bad argument 1 to command->set_help_similar\n"
+        ),
     }) :));
 }
 
-void test_handle_help () {
+void test_handle_help() {
     expect("handles formatting help file", (: ({
         // should contain Syntax section always
         assert_equal(regexp(testOb->handle_help(this_object()), "Syntax"), 1),
 
         // only contain Description section if set
-        assert_equal(regexp(testOb->handle_help(this_object()), "Description"), 0),
-        assert_equal(regexp(testOb->handle_help(this_object()), "Help text"), 0),
+        assert_equal(
+            regexp(testOb->handle_help(this_object()), "Description"),
+            0
+        ),
+        assert_equal(
+            regexp(testOb->handle_help(this_object()), "Help text"),
+            0
+        ),
         testOb->set_help_text("Help text"),
-        assert_equal(regexp(testOb->handle_help(this_object()), "Description"), 1),
-        assert_equal(regexp(testOb->handle_help(this_object()), "Help text"), 1),
+        assert_equal(
+            regexp(testOb->handle_help(this_object()), "Description"),
+            1
+        ),
+        assert_equal(
+            regexp(testOb->handle_help(this_object()), "Help text"),
+            1
+        ),
 
         // only contain Similar Actions section if set
-        assert_equal(regexp(testOb->handle_help(this_object()), "Similar Actions"), 0),
+        assert_equal(
+            regexp(testOb->handle_help(this_object()), "Similar Actions"),
+            0
+        ),
         assert_equal(regexp(testOb->handle_help(this_object()), "A, B, C"), 0),
         testOb->set_help_similar(({ "A", "B", "C", })),
-        assert_equal(regexp(testOb->handle_help(this_object()), "Similar Actions"), 1),
+        assert_equal(
+            regexp(testOb->handle_help(this_object()), "Similar Actions"),
+            1
+        ),
         assert_equal(regexp(testOb->handle_help(this_object()), "A, B, C"), 1),
     }) :));
 }

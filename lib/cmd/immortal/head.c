@@ -1,12 +1,12 @@
 inherit STD_COMMAND;
 
-void create () {
+void create() {
     ::create();
     set_syntax("head (-n=15) [file]");
     set_help_text("The head command can be used to view the first n (default 15) lines of the specified file.");
 }
 
-void command (string input, mapping flags) {
+void command(string input, mapping flags) {
     string cwd, file, *lines;
     int n = 15;
 
@@ -20,16 +20,24 @@ void command (string input, mapping flags) {
     file = absolute_path(input, cwd);
     switch (file_size(file)) {
         case -2:
-            message("action", "head: " + file + ": not a file.", this_character());
+            message(
+                "action",
+                "head: " + file + ": not a file.",
+                this_character()
+            );
             return;
         case -1:
-            message("action", "head: " + file + ": no such file.", this_character());
+            message(
+                "action",
+                "head: " + file + ": no such file.",
+                this_character()
+            );
             return;
     }
 
     if (flags["n"]) n = to_int(flags["n"]);
 
     lines = explode(read_file(file), "\n");
-    lines = lines[0..<(sizeof(lines)-n+1)];
+    lines = lines[0..<(sizeof(lines) - n + 1)];
     this_user()->handle_pager(lines);
 }

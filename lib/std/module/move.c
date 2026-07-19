@@ -10,7 +10,7 @@ nosave private object __CurrentEnv;
  * @param dest the destination to check
  * @returns {STD_STORAGE}
  */
-object query_dest_ob (mixed dest) {
+object query_dest_ob(mixed dest) {
     object destOb;
     if (objectp(dest)) {
         destOb = dest;
@@ -27,7 +27,7 @@ object query_dest_ob (mixed dest) {
  *
  * @param {STD_STORAGE} env
  */
-void handle_received (object env) {
+void handle_received(object env) {
     if (env) {
         env->handle_receive(this_object());
     }
@@ -37,7 +37,7 @@ void handle_received (object env) {
  *
  * @param {STD_STORAGE} env
  */
-void handle_released (object env) {
+void handle_released(object env) {
     if (env) {
         env->handle_release(this_object());
     }
@@ -49,7 +49,7 @@ void handle_released (object env) {
  * @param dest
  * @returns 0 or 1 for success
  */
-int handle_move (mixed dest) {
+int handle_move(mixed dest) {
     /** @type {STD_STORAGE} env */
     object env = environment();
     /** @type {STD_STORAGE} destOb */
@@ -75,14 +75,14 @@ int handle_move (mixed dest) {
     return __LastEnv != environment();
 }
 
-string query_environment_path () {
+string query_environment_path() {
     if (!__EnvPath) {
         return "/domain/Nowhere/room/void.c";
     } else {
         return __EnvPath;
     }
 }
-string query_environment_short () {
+string query_environment_short() {
     if (__CurrentEnv) {
         return __CurrentEnv->query_short();
     } else if (__EnvPath) {
@@ -91,7 +91,7 @@ string query_environment_short () {
         return "no where";
     }
 }
-void set_environment_path (mixed dest) {
+void set_environment_path(mixed dest) {
     object destOb;
     if (!(destOb = query_dest_ob(dest))) {
         error("Bad argument 1 to move->set_environment_path");

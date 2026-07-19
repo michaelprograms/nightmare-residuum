@@ -2,7 +2,7 @@
 
 inherit STD_ROOM;
 
-void create () {
+void create() {
     ::create();
     set_short("a village street");
     set_long("A small street traveling north to south through brick dwellings covered in dark ivy. Several birch trees branch over the street and dwellings. An open grassy area is to the north. A cafe can be seen on the east side of the street. A framework of hexagons glimmer overhead.");
@@ -13,7 +13,10 @@ void create () {
     ]));
     set_looks(([
         "street": "A street sign is labeled N. Second St.",
-        ({ "framework", "hexagons"}): "Far above, the hexagons form a geodesic dome.",
+        ({
+            "framework",
+            "hexagons"
+        }): "Far above, the hexagons form a geodesic dome.",
         "cafe": "A brick dwelling serving as a cafe, as seen through the windows.",
     ]));
 }

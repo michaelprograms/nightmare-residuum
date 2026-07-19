@@ -2,7 +2,7 @@
 
 inherit STD_VERB;
 
-void create () {
+void create() {
     verb::create();
     add_rules(({ "", "OBJ", "OBS", }));
     set_requirements(REQUIREMENT_BUSY | REQUIREMENT_DISABLE);
@@ -11,7 +11,7 @@ void create () {
     set_help_similar(({ "unwield", "wear", "wield", }));
 }
 
-mixed can_unwear () {
+mixed can_unwear() {
     return "Unwear what?";
 }
 
@@ -21,7 +21,7 @@ mixed can_unwear () {
  * @param {STD_ARMOR} ob the armor item to be removed
  * @param str the input text from the player (ex, 'all' or 'helmet')
  */
-void do_unwear_obj (object ob, string str) {
+void do_unwear_obj(object ob, string str) {
     mixed result;
     object po = previous_object();
 
@@ -30,10 +30,14 @@ void do_unwear_obj (object ob, string str) {
     } else if (stringp(result)) {
         message("action", result, po);
     } else {
-        message("action", "You try to remove " + ob->query_name() + " but fail for some reason.", po);
+        message(
+            "action",
+            "You try to remove " + ob->query_name() + " but fail for some reason.",
+            po
+        );
     }
 }
-void do_unwear_obs (mixed *info, string str) {
+void do_unwear_obs(mixed *info, string str) {
     foreach (object ob in info) {
         do_unwear_obj(ob, str);
     }

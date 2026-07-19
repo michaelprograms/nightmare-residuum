@@ -4,7 +4,7 @@ inherit M_TEST;
  * @var {"/std/object/description"} testOb
  */
 
-void test_long_and_long_footer () {
+void test_long_and_long_footer() {
     expect("long is settable and queryable", (: ({
         assert_equal(testOb->query_long(), ""),
 
@@ -32,7 +32,7 @@ void test_long_and_long_footer () {
     }) :));
 }
 
-void test_short () {
+void test_short() {
     expect("short is settable and queryable", (: ({
         assert_equal(testOb->query_short(), ""),
 
@@ -49,6 +49,9 @@ void test_short () {
     expect("short handles DEFAULT ANSI replacement", (: ({
         testOb->set_short("%^BLUE%^Blue text%^DEFAULT%^"),
         assert_equal(testOb->query_short(), "%^BLUE%^Blue text%^RESET%^"),
-        assert_equal(testOb->query_short("%^RED%^"), "%^BLUE%^Blue text%^RED%^"),
+        assert_equal(
+            testOb->query_short("%^RED%^"),
+            "%^BLUE%^Blue text%^RED%^"
+        ),
     }) :));
 }

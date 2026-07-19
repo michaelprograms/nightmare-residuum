@@ -1,25 +1,25 @@
 #define HISTORY_MAX 25
 
-nosave string *__Tells = ({ });
+nosave string *__Tells = ({});
 nosave string __TellReply;
-nosave string *__Says = ({ });
+nosave string *__Says = ({});
 
 /* ----- tells  ----- */
 
-private void initialize_history () {
+private void initialize_history() {
     if (!arrayp(__Tells)) {
-        __Tells = ({ });
+        __Tells = ({});
     }
     if (!arrayp(__Says)) {
-        __Says = ({ });
+        __Says = ({});
     }
 }
 
-string *query_tell_history () {
+string *query_tell_history() {
     initialize_history();
     return __Tells;
 }
-void add_tell_history (string msg) {
+void add_tell_history(string msg) {
     initialize_history();
 
     if (!sizeof(msg)) {
@@ -33,19 +33,19 @@ void add_tell_history (string msg) {
     }
 }
 
-string query_tell_reply () {
+string query_tell_reply() {
     return __TellReply;
 }
-void set_tell_reply (string name) {
+void set_tell_reply(string name) {
     __TellReply = name;
 }
 
 /* ----- says  ----- */
 
-string *query_say_history () {
+string *query_say_history() {
     return __Says;
 }
-void add_say_history (string msg) {
+void add_say_history(string msg) {
     initialize_history();
 
     if (!sizeof(msg)) {

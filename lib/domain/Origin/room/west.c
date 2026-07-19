@@ -3,7 +3,7 @@
 
 inherit STD_ROOM;
 
-void create () {
+void create() {
     ::create();
     set_properties(([
         "no attack": 1,
@@ -14,7 +14,13 @@ void create () {
         "north": ORIGIN_ROOM + "northwest.c",
         "south": ORIGIN_ROOM + "southwest.c",
     ]));
-    set_exit("pad", PLANET_V_ROOM + "surface/Terra/250.250.c", 0, 0, "thin air");
+    set_exit(
+        "pad",
+        PLANET_V_ROOM + "surface/Terra/250.250.c",
+        0,
+        0,
+        "thin air"
+    );
     set_looks(([
         "hallway": "This hallway is of very utilitarian hallway design, simple but built to last. It connects two rooms together.",
         "walls": "Plain white walls, free of blemishes or signage.",

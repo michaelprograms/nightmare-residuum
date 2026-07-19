@@ -1,6 +1,6 @@
-nosave mapping __Weapons = ([ ]);
+nosave mapping __Weapons = ([]);
 
-void set_weapons (mapping weapons) {
+void set_weapons(mapping weapons) {
     /* Data format:
     ([
         "blade|blunt": ({ 1, 2 }),
@@ -11,7 +11,7 @@ void set_weapons (mapping weapons) {
     if (undefinedp(weapons) || !mapp(weapons)) {
         error("Bad argument 1 to weapon->set_weapons");
     }
-    foreach (string key,int *hands in weapons) {
+    foreach (string key, int *hands in weapons) {
         if (member_array(key, ({ "blade", "blunt", "brawl" })) == -1) {
             error("Bad argument (keys) to weapon->set_weapons");
         }
@@ -23,7 +23,7 @@ void set_weapons (mapping weapons) {
     }
     __Weapons = weapons;
 }
-mapping query_weapons () {
+mapping query_weapons() {
     return __Weapons;
 }
 /**
@@ -32,7 +32,7 @@ mapping query_weapons () {
  * @param {STD_LIVING} source who is using this ability
  * @returns {STD_WEAPON} the best weapon
  */
-object query_best_weapon (object source) {
+object query_best_weapon(object source) {
     string *types, t;
     object weapon;
     /** @type {STD_WEAPON*} weapons */

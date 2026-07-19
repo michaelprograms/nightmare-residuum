@@ -1,6 +1,6 @@
 // @this_object /std/user.c
 
-void handle_pager (mixed arg) {
+void handle_pager(mixed arg) {
     string *lines;
 
     if (stringp(arg)) {

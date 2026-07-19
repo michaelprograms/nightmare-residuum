@@ -1,6 +1,6 @@
 inherit STD_INJECTABLE;
 
-void create () {
+void create() {
     ::create();
     set_name("syringe");
     set_id(({ "syringe", "nanites" }));

@@ -13,11 +13,11 @@
 
 #define TEST_IGNORE_DEFAULTS ({ "before_all_tests", "before_each_test", "after_each_test", "after_all_tests", "test_order", "execute_test", "create", "init", "reset", "heart_beat", })
 
-nosave protected mixed UNDEFINED = (([ ])[0]); // equivalent of UNDEFINED
+nosave protected mixed UNDEFINED = (([])[0]);  // equivalent of UNDEFINED
 
 /* ----- function prototypes ----- */
 
-private void process_test ();
+private void process_test();
 
 /* ----- variable definitions ----- */
 
@@ -36,38 +36,34 @@ private function doneTestFn;
 
 /* ----- override functions ----- */
 
-void before_all_tests () {
-
-}
-void before_each_test () {
-
-}
-void after_each_test () {
-
-}
-void after_all_tests () {
-
-}
-string *test_order () {
+void before_all_tests() {}
+void before_each_test() {}
+void after_each_test() {}
+void after_all_tests() {}
+string *test_order() {
     return 0;
 }
 
 /* ----- test functions ----- */
 
 // Used by test.test.c to verify failing expects
-protected void expect_next_failure () {
-    if (base_name() == replace_string(M_TEST, ".c", ".test") && failingExpects == 0) {
-        failingExpects --;
+protected void expect_next_failure() {
+    if (base_name() == replace_string(
+        M_TEST,
+        ".c",
+        ".test"
+    ) && failingExpects == 0) {
+        failingExpects--;
     }
 }
 // Used by test.test.c to verify catches
-int query_expect_catch () {
+int query_expect_catch() {
     return expectCatch;
 }
 
 /* ----- helper functions ----- */
 
-private int query_async_test_function (string fn) {
+private int query_async_test_function(string fn) {
     mixed *fns;
 
     fns = filter(functions(this_object(), 3), (: $1[0] == $(fn) :));
@@ -76,12 +72,15 @@ private int query_async_test_function (string fn) {
 
 /* -----  ----- */
 
-private void finish_test () {
+private void finish_test() {
     after_all_tests();
     timeTotalAfter = time_ns();
 
     // @lpc-ignore
-    if (!this_object()->query_skip_coverage() && regexp(testFile, "\\.coverage\\.")) {
+    if (!this_object()->query_skip_coverage() && regexp(
+        testFile,
+        "\\.coverage\\."
+    )) {
         rm(testFile);
     }
 
@@ -94,7 +93,10 @@ private void finish_test () {
         } else {
             status += "\e[31m\u2715 \e[0m";
         }
-        write(status + " Evaluated " + CYAN + UNDERLINE + base_name() + RESET + " (" + ORANGE + sprintf("%.2f", (timeTotalAfter-timeTotalBefore)/1000000.0) + " ms" + RESET ")\n");
+        write(status + " Evaluated " + CYAN + UNDERLINE + base_name() + RESET + " (" + ORANGE + sprintf(
+            "%.2f",
+            (timeTotalAfter - timeTotalBefore) / 1000000.0
+        ) + " ms" + RESET ")\n");
     }
 
     evaluate(doneTestFn, ([
@@ -113,7 +115,7 @@ private void finish_test () {
     destruct();
 }
 
-void execute_test (function done) {
+void execute_test(function done) {
     timeTotalBefore = time_ns();
     doneTestFn = done;
 
@@ -127,7 +129,10 @@ void execute_test (function done) {
         testFunctions = functions(this_object(), 2) - TEST_IGNORE_DEFAULTS;
     } else if (sizeof(testFunctions) != sizeof(functions(this_object(), 2))) {
         // grab any tests that were not included in test_order and test_ignore
-        testFunctions += (functions(this_object(), 2) - TEST_IGNORE_DEFAULTS - testFunctions);
+        testFunctions += (functions(
+            this_object(),
+            2
+        ) - TEST_IGNORE_DEFAULTS - testFunctions);
     }
     // @TODO
     // testFunctions = (sizeof(test_order()) ? test_order() : ({ })) + (functions(this_object(), 2) - TEST_IGNORE_DEFAULTS);
@@ -142,7 +147,11 @@ void execute_test (function done) {
     if (this_object()->query_skip_coverage()) {
         testFile = replace_string(base_name(), ".test", ".c");
     } else {
-        testFile = D_TEST->create_coverage(replace_string(base_name(), ".test", ".c"));
+        testFile = D_TEST->create_coverage(replace_string(
+            base_name(),
+            ".test",
+            ".c"
+        ));
     }
     before_all_tests();
 
@@ -153,7 +162,7 @@ void execute_test (function done) {
     }
 }
 
-private void done_current_test () {
+private void done_current_test() {
     string status = "";
 
     timeAfter = time_ns();
@@ -172,17 +181,23 @@ private void done_current_test () {
         status += "\e[31m\u2715 \e[0m";
     }
     if (!D_TEST->query_option("brief")) {
-        currentTestLog = "  " + status + "Testing " + BOLD + UNDERLINE + currentTestFn + RESET + " (" + ORANGE + sprintf("%.2f", (timeAfter-timeBefore)/1000000.0) + " ms" + RESET + ")" + currentTestLog;
+        currentTestLog = "  " + status + "Testing " + BOLD + UNDERLINE + currentTestFn + RESET + " (" + ORANGE + sprintf(
+            "%.2f",
+            (timeAfter - timeBefore) / 1000000.0
+        ) + " ms" + RESET + ")" + currentTestLog;
         write(currentTestLog + "\n");
     }
 
     if (passingExpects + failingExpects == 0) {
-        write("  No Tests "+identify(this_object())+"\n");
+        write("  No Tests " + identify(this_object()) + "\n");
     } else if (strlen(currentFailLog) > 0) {
-        totalFailLog += (sizeof(totalFailLog) > 0 ? "\n" : "") + CYAN + UNDERLINE + base_name() + RESET + ": " + UNDERLINE + BOLD + currentTestFn + RESET + " (" + ORANGE + sprintf("%.2f", (timeAfter-timeBefore)/1000000.0) + " ms" + RESET + "):" + currentFailLog;
+        totalFailLog += (sizeof(totalFailLog) > 0 ? "\n" : "") + CYAN + UNDERLINE + base_name() + RESET + ": " + UNDERLINE + BOLD + currentTestFn + RESET + " (" + ORANGE + sprintf(
+            "%.2f",
+            (timeAfter - timeBefore) / 1000000.0
+        ) + " ms" + RESET + "):" + currentFailLog;
     }
 
-    currentTestNum ++;
+    currentTestNum++;
     if (currentTestNum < sizeof(testFunctions)) {
         process_test();
     } else {
@@ -190,7 +205,7 @@ private void done_current_test () {
     }
 }
 
-private void process_test () {
+private void process_test() {
     // no tests remaining
     if (currentTestNum >= sizeof(testFunctions)) {
         done_current_test();
@@ -229,11 +244,11 @@ private void process_test () {
 
 /* ----- expect and assert ----- */
 
-private void validate_expect (mixed value1, mixed value2, string message) {
+private void validate_expect(mixed value1, mixed value2, string message) {
     if (!currentTestPassed) {
         message = stringp(message) ? message : "An expect has failed.";
-        if (failingExpects == -1) { // expected this error
-            passingExpects ++;
+        if (failingExpects == -1) {  // expected this error
+            passingExpects++;
             if (!D_TEST->query_option("brief")) {
                 currentTestLog += "\n    " + GREEN + "+" + RESET + RED + " x" + RESET + " " + message;
             }
@@ -241,9 +256,9 @@ private void validate_expect (mixed value1, mixed value2, string message) {
             currentTestLog += "\n    " + RED + "x" + RESET + " " + message;
             currentFailLog += "\n    " + RED + "x" + RESET + " " + message;
         }
-        failingExpects ++;
+        failingExpects++;
     } else {
-        passingExpects ++;
+        passingExpects++;
         if (!D_TEST->query_option("brief")) {
             message = stringp(message) ? message : "An expect passed.";
             currentTestLog += "\n    " + GREEN + "+" + RESET + " " + message;
@@ -262,7 +277,7 @@ private void validate_expect (mixed value1, mixed value2, string message) {
     }
 }
 
-void expect (string message, function fn) {
+void expect(string message, function fn) {
     if (!stringp(message)) {
         error("Bad argument 1 to test->expect");
     }
@@ -272,11 +287,11 @@ void expect (string message, function fn) {
 
     currentTestMsg = message;
     currentTestPassed = 1;
-    leftResults = ({ });
-    rightResults = ({ });
+    leftResults = ({});
+    rightResults = ({});
 
     passingAsserts = 0;
-    catch (evaluate(fn));
+    catch(evaluate(fn));
     if (!passingAsserts) {
         currentTestPassed = 0;
     }
@@ -287,7 +302,7 @@ void expect (string message, function fn) {
     leftResults = 0;
     rightResults = 0;
 }
-void assert_equal (mixed left, mixed right) {
+void assert_equal(mixed left, mixed right) {
     if (!stringp(currentTestMsg)) {
         error("test->assert_equal outside of test->expect");
     }
@@ -311,13 +326,13 @@ void assert_equal (mixed left, mixed right) {
     rightResults += ({ right });
 
     if (currentTestPassed || failingExpects == -1) {
-        passingAsserts ++;
-        totalPassingAsserts ++;
+        passingAsserts++;
+        totalPassingAsserts++;
     } else {
-        failingAsserts ++;
+        failingAsserts++;
     }
 }
-void assert_regex (mixed left, string right) {
+void assert_regex(mixed left, string right) {
     if (!stringp(currentTestMsg)) {
         error("test->assert_regex outside of test->expect");
     }
@@ -334,13 +349,13 @@ void assert_regex (mixed left, string right) {
     rightResults += ({ right });
 
     if (currentTestPassed || failingExpects == -1) {
-        passingAsserts ++;
-        totalPassingAsserts ++;
+        passingAsserts++;
+        totalPassingAsserts++;
     } else {
-        failingAsserts ++;
+        failingAsserts++;
     }
 }
-void assert_catch (function left, string right) {
+void assert_catch(function left, string right) {
     mixed leftResult, leftError;
 
     if (!stringp(currentTestMsg)) {
@@ -364,9 +379,9 @@ void assert_catch (function left, string right) {
     }
 
     if (currentTestPassed || failingExpects == -1) {
-        passingAsserts ++;
-        totalPassingAsserts ++;
+        passingAsserts++;
+        totalPassingAsserts++;
     } else {
-        failingAsserts ++;
+        failingAsserts++;
     }
 }

@@ -1,16 +1,16 @@
-string strip_colour (string str) {
+string strip_colour(string str) {
     if (!str) {
         return str;
     }
     // parse blank ANSI color tags
-    str = terminal_colour(""+str, D_ANSI->query_unknown_term());
+    str = terminal_colour("" + str, D_ANSI->query_unknown_term());
     // strip default ANSI reset color tag added by fluffos
     str = replace_string(str, "\e[49;49m\e[0;10m", "");
     return str;
 }
 
 // wrap text, preserving ANSI colors
-string wrap_ansi (string str, int width) {
+string wrap_ansi(string str, int width) {
     string *linesANSI, *linesUnknown;
     string strANSI, strUnknown, lastWord;
     int posANSI, posUnknown, i, n, diff;
@@ -23,7 +23,7 @@ string wrap_ansi (string str, int width) {
     linesUnknown = explode(strUnknown, "\n");
     linesANSI = explode(strANSI, "\n");
     n = sizeof(linesANSI);
-    for (i = 0; i < n; i ++) {
+    for (i = 0; i < n; i++) {
         if (i >= sizeof(linesUnknown) || !sizeof(linesUnknown[i])) {
             linesANSI[i] = sprintf("%' '*s", width, "");
             continue;
@@ -42,7 +42,11 @@ string wrap_ansi (string str, int width) {
                 if (posANSI == -1) {
                     linesANSI[i] += sprintf("%' '*s", diff, "");
                 } else {
-                    linesANSI[i] = linesANSI[i][0..posANSI + sizeof(lastWord)-1] + sprintf("%' '*s", diff, "") + linesANSI[i][posANSI + sizeof(lastWord)..];
+                    linesANSI[i] = linesANSI[i][0..posANSI + sizeof(lastWord) - 1] + sprintf(
+                        "%' '*s",
+                        diff,
+                        ""
+                    ) + linesANSI[i][posANSI + sizeof(lastWord)..];
                 }
             }
             diff = 0;
@@ -52,7 +56,7 @@ string wrap_ansi (string str, int width) {
 }
 
 // Returns a random color triplet
-int *query_random_color () {
+int *query_random_color() {
     int *c = ({ 0, 0, 0, });
     int r = 255;
 
@@ -68,7 +72,7 @@ int *query_random_color () {
 }
 
 // Returns a sRGB value in the range of [0..255] for linear input [0..1]
-int color_to_sRGB (float n) {
+int color_to_sRGB(float n) {
     float f;
 
     if (undefinedp(n) || !floatp(n)) {
@@ -85,7 +89,7 @@ int color_to_sRGB (float n) {
 }
 
 // Returns a linear value [0..1] for sRGB input [0..255]
-float color_from_sRGB (int n) {
+float color_from_sRGB(int n) {
     float x, y;
 
     if (undefinedp(n) || !intp(n)) {
@@ -103,7 +107,7 @@ float color_from_sRGB (int n) {
 }
 
 // Linear Interpolation a color between two colors at a ratio
-float color_lerp (float color1, float color2, float ratio) {
+float color_lerp(float color1, float color2, float ratio) {
     if (!floatp(color1)) {
         error("Bad argument 1 to color->color_lerp");
     }
@@ -119,7 +123,7 @@ float color_lerp (float color1, float color2, float ratio) {
 
 // Generate a color gradient between 'color1' and 'color2' of length 'steps'.
 // Originally based upon https://stackoverflow.com/questions/22607043/color-gradient-algorithm
-string *color_gradient (mixed *color1, mixed *color2, int steps) {
+string *color_gradient(mixed *color1, mixed *color2, int steps) {
     string *gradient = allocate(steps);
 
     if (!arrayp(color1) || sizeof(color1) != 3) {
@@ -144,25 +148,25 @@ string *color_gradient (mixed *color1, mixed *color2, int steps) {
 
 // Applies the array gradient to the string text.
 // sizeof(gradient) must be at least sizeof(text)
-string apply_gradient (string text, string *gradient) {
+string apply_gradient(string text, string *gradient) {
     string *line, result = "";
     int i, l;
 
     line = explode(text, "");
 
     if (sizeof(text) > sizeof(gradient)) {
-        error("Bad arguments to color->apply_gradient: invalid sizes "+sizeof(text)+" vs "+sizeof(gradient || ({ })));
+        error("Bad arguments to color->apply_gradient: invalid sizes " + sizeof(text) + " vs " + sizeof(gradient || ({})));
     }
 
-    for (i = 0, l = sizeof(line); i < l; i ++) {
-        result += "\e[38;2;"+gradient[i]+"m" + line[i];
+    for (i = 0, l = sizeof(line); i < l; i++) {
+        result += "\e[38;2;" + gradient[i] + "m" + line[i];
     }
     result += "\e[0;37;40m";
 
     return result;
 }
 
-string format_message_color (string type, string message) {
+string format_message_color(string type, string message) {
     if (undefinedp(type) || !sizeof(type)) {
         error("Bad argument 1 to color->format_message_color");
     }
@@ -173,7 +177,11 @@ string format_message_color (string type, string message) {
     if (type == "say") {
         message = "%^CYAN%^" + replace_string(message, ":", ":%^RESET%^");
     } else if (type == "tell") {
-        message = "%^I_RED%^BOLD%^" + replace_string(message, ":", ":%^RESET%^");
+        message = "%^I_RED%^BOLD%^" + replace_string(
+            message,
+            ":",
+            ":%^RESET%^"
+        );
     } else if (type == "go") {
         message = replace_string(message, "%^DIR%^", "%^CYAN%^");
         message = replace_string(message, "%^DEFAULT%^", "%^GREEN%^");
@@ -183,10 +191,18 @@ string format_message_color (string type, string message) {
     } else if (type == "room smell") {
         message = "%^ORANGE%^" + message + "%^RESET%^";
     } else if (type == "room living contents") {
-        message = replace_string(message, "%^DEFAULT%^", "%^RED%^BOLD_OFF%^") + "%^RESET%^";
+        message = replace_string(
+            message,
+            "%^DEFAULT%^",
+            "%^RED%^BOLD_OFF%^"
+        ) + "%^RESET%^";
         message = replace_string(message, "%^%^", "%^");
     } else if (type == "room item contents") {
-        message = replace_string(message, "%^DEFAULT%^", "%^MAGENTA%^BOLD_OFF%^") + "%^RESET%^";
+        message = replace_string(
+            message,
+            "%^DEFAULT%^",
+            "%^MAGENTA%^BOLD_OFF%^"
+        ) + "%^RESET%^";
         message = replace_string(message, "%^%^", "%^");
     } else if (type == "room exits") {
         message = replace_string(message, "%^DEFAULT%^", "%^GREEN%^");

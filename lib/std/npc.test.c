@@ -3,7 +3,7 @@ inherit M_TEST;
  * @var {"/std/npc"} testOb
  */
 
-void test_npc () {
+void test_npc() {
     expect("is_npc behaves", (: ({
         assert_equal(livingp(testOb), 1),
         assert_equal(npcp(testOb), 1),
@@ -11,7 +11,7 @@ void test_npc () {
     }) :));
 }
 
-void test_set_level () {
+void test_set_level() {
     expect("set_level adjusts stats", (: ({
         assert_equal(testOb->query_level(), 1),
         assert_equal(testOb->query_stat("strength"), 0),
@@ -25,7 +25,7 @@ void test_set_level () {
 }
 
 nosave object __Room, __Character;
-void test_aggressive (function done) {
+void test_aggressive(function done) {
     expect("aggressive is settable and queryable", (: ({
         assert_equal(testOb->query_aggressive(), 0),
 
@@ -58,7 +58,7 @@ void test_aggressive (function done) {
         assert_equal(testOb->query_wanders(), 1),
     }) :));
 
-    call_out_walltime(function (function done) {
+    call_out_walltime(function(function done) {
         expect("aggressive initiates combat", (: ({
             assert_equal(testOb->query_hostile(__Character), 1),
             assert_equal(__Character->query_hostile(testOb), 1),
@@ -74,7 +74,7 @@ void test_aggressive (function done) {
 
 nosave private object r1, r2;
 
-void test_wander (function done) {
+void test_wander(function done) {
     object living = new(STD_LIVING);
 
     expect("wander is queryable and settable", (: ({
@@ -186,7 +186,7 @@ void test_wander (function done) {
         assert_equal(testOb->query_wandering(), 1),
     }) :));
 
-    call_out_walltime(function (function done) {
+    call_out_walltime(function(function done) {
         expect("wandering mode turns off after movement", (: ({
             assert_equal(testOb->query_wandering(), 0),
         }) :));
@@ -196,11 +196,11 @@ void test_wander (function done) {
     }, 0.01, done);
 }
 
-void test_abilities () {
+void test_abilities() {
     object mockNPC = new("/std/npc.mock.c");
 
     expect("ability list is queryable and settable", (: ({
-        assert_equal(testOb->query_ability_list(), ({ })),
+        assert_equal(testOb->query_ability_list(), ({})),
 
         testOb->set_ability_list(({ "test1", "test2", })),
         assert_equal(testOb->query_ability_list(), ({ "test1", "test2", })),
@@ -226,14 +226,14 @@ void test_abilities () {
         assert_equal($(mockNPC)->start_shadow(testOb), 1),
 
         // no ability list
-        testOb->set_ability_list(({ })),
-        assert_equal(testOb->query_ability_list(), ({ })),
+        testOb->set_ability_list(({})),
+        assert_equal(testOb->query_ability_list(), ({})),
         testOb->set_ability_chance(100),
         assert_equal(testOb->query_ability_chance(), 100),
         testOb->handle_ability_attack(),
         // nothing commanded
         // @lpc-ignore
-        assert_equal(testOb->query_received_commands(), ({ })),
+        assert_equal(testOb->query_received_commands(), ({})),
 
         // ability list
         testOb->set_ability_list(({ "test ability" })),
@@ -248,38 +248,56 @@ void test_abilities () {
     if (mockNPC) destruct(mockNPC);
 }
 
-void test_say_response () {
+void test_say_response() {
     object mockNPC = new("/std/npc.mock.c");
 
     expect("say responses should be handled", (: ({
         assert_equal($(mockNPC)->start_shadow(testOb), 1),
 
-        assert_equal(testOb->query_say_response(), ([ ])),
+        assert_equal(testOb->query_say_response(), ([])),
 
         testOb->set_say_response("match", "response"),
         assert_equal(testOb->query_say_response(), ([ "match": "response" ])),
         assert_equal(testOb->query_say_response_matches(), ({ "match" })),
         // nothing commanded
-        assert_equal(/** @type {/std/npc.test} */ (testOb)->query_received_commands(), ({ })),
+        assert_equal(
+            /** @type {/std/npc.test} */ (testOb)->query_received_commands(),
+            ({})
+        ),
 
         testOb->handle_say_response("something unrelated"),
         // nothing commanded still
-        assert_equal(/** @type {/std/npc.test} */ (testOb)->query_received_commands(), ({ })),
+        assert_equal(
+            /** @type {/std/npc.test} */ (testOb)->query_received_commands(),
+            ({})
+        ),
 
         testOb->handle_say_response("match"),
         // say response was commanded
-        assert_equal(/** @type {/std/npc.test} */ (testOb)->query_received_commands(), ({ "say response" })),
+        assert_equal(
+            /** @type {/std/npc.test} */ (testOb)->query_received_commands(),
+            ({ "say response" })
+        ),
 
         testOb->receive_message("say", "You ask: match?"),
         testOb->receive_message("say", "You exclaim: match!"),
         testOb->receive_message("say", "You say: match"),
         testOb->receive_message("say", "You synthesize: match"),
-        assert_equal(/** @type {/std/npc.test} */ (testOb)->query_received_commands(), ({ "say response" })),
+        assert_equal(
+            /** @type {/std/npc.test} */ (testOb)->query_received_commands(),
+            ({ "say response" })
+        ),
         // matches off another living
         testOb->receive_message("say", "Someone says: match"),
-        assert_equal(/** @type {/std/npc.test} */ (testOb)->query_received_commands(), ({ "say response", "say response" })),
+        assert_equal(
+            /** @type {/std/npc.test} */ (testOb)->query_received_commands(),
+            ({ "say response", "say response" })
+        ),
         testOb->receive_message("say", "Someone says: match"),
-        assert_equal(/** @type {/std/npc.test} */ (testOb)->query_received_commands(), ({ "say response", "say response", "say response" })),
+        assert_equal(
+            /** @type {/std/npc.test} */ (testOb)->query_received_commands(),
+            ({ "say response", "say response", "say response" })
+        ),
 
         assert_equal($(mockNPC)->stop_shadow(), 1),
     }) :));
@@ -287,19 +305,28 @@ void test_say_response () {
     if (mockNPC) destruct(mockNPC);
 }
 
-void test_inventory () {
+void test_inventory() {
     object r = new(STD_ROOM);
 
     expect("inventory is handled", (: ({
-        assert_equal(testOb->query_inventory(), ([ ])),
+        assert_equal(testOb->query_inventory(), ([])),
 
         testOb->set_inventory(([ STD_FOOD: "testcommand", ])),
         assert_equal(testOb->query_inventory(), ([ STD_FOOD: "testcommand", ])),
 
         testOb->handle_move($(r)),
-        assert_equal(regexp(file_name(testOb->query_item_contents()[0]), STD_FOOD[0..<3] + "#"), 1),
+        assert_equal(
+            regexp(
+                file_name(testOb->query_item_contents()[0]),
+                STD_FOOD[0..<3] + "#"
+            ),
+            1
+        ),
 
-        assert_catch((: testOb->set_inventory(UNDEFINED) :), "*Bad argument 1 to npc->set_inventory\n"),
+        assert_catch(
+            (: testOb->set_inventory(UNDEFINED) :),
+            "*Bad argument 1 to npc->set_inventory\n"
+        ),
     }) :));
 
     if (r) destruct(r);

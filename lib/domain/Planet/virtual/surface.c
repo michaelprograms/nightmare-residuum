@@ -5,11 +5,11 @@
 
 inherit M_CLEAN;
 
-int is_virtual_room () { return 1; }
+int is_virtual_room() { return 1; }
 
 /* ----- setup virtual room ----- */
 
-mapping __PCache = ([ ]);   // Permutation Cache
+mapping __PCache = ([]);   // Permutation Cache
 
 // per-type player-facing wording for enterable structures
 nosave private mapping __StructureMeta = ([
@@ -28,7 +28,7 @@ nosave private mapping __StructureMeta = ([
  *
  * @param {"/domain/Planet/virtual/room/base/terrain.c"} room
  */
-void setup_room (object room) {
+void setup_room(object room) {
     string name;
     int x, y;
     mapping planet, noise;
@@ -44,7 +44,15 @@ void setup_room (object room) {
         __PCache[planet["name"]] = noise_generate_permutation_simplex(planet["name"]);
     }
 
-    noise = D_PLANET->query_noise(__PCache[planet["name"]], planet["size"], x, y, planet["heightFactor"], planet["humidityFactor"], planet["heatFactor"]);
+    noise = D_PLANET->query_noise(
+        __PCache[planet["name"]],
+        planet["size"],
+        x,
+        y,
+        planet["heightFactor"],
+        planet["humidityFactor"],
+        planet["heatFactor"]
+    );
     room->set_property("level", noise["level"]);
     room->set_property("height", to_int(noise["height"] * 100));
     room->set_property("heat", to_int(noise["heat"] * 100));
@@ -53,7 +61,11 @@ void setup_room (object room) {
         room->set_property("resource", noise["resource"]);
     }
 
-    biome = D_PLANET->query_biome(noise["height"], noise["heat"], noise["humidity"]);
+    biome = D_PLANET->query_biome(
+        noise["height"],
+        noise["heat"],
+        noise["humidity"]
+    );
     room->set_property("biome", biome);
 }
 
@@ -65,7 +77,7 @@ void setup_room (object room) {
  * @param x integer longitude coordinate
  * @param y integer latitude coordinate
  */
-void setup_exits (object room, mapping planet, int x, int y) {
+void setup_exits(object room, mapping planet, int x, int y) {
     string path;
     string name;
     int size, xw, xe, yn, ys;
@@ -75,29 +87,40 @@ void setup_exits (object room, mapping planet, int x, int y) {
     size = planet["size"];
 
     path = PLANET_V_ROOM + "surface/" + name;
-    xw = x     > 0    ? x - 1 : size - 1;
+    xw = x > 0 ? x - 1 : size - 1;
     xe = x + 1 < size ? x + 1 : 0;
-    yn = y     > 0    ? y - 1 : size - 1;
+    yn = y > 0 ? y - 1 : size - 1;
     ys = y + 1 < size ? y + 1 : 0;
 
     room->set_exit("northwest", path + "/" + xw + "." + yn + ".c");
-    room->set_exit("north",     path + "/" + x  + "." + yn + ".c");
+    room->set_exit("north", path + "/" + x + "." + yn + ".c");
     room->set_exit("northeast", path + "/" + xe + "." + yn + ".c");
-    room->set_exit("west",      path + "/" + xw + "." + y  + ".c");
-    room->set_exit("east",      path + "/" + xe + "." + y  + ".c");
+    room->set_exit("west", path + "/" + xw + "." + y + ".c");
+    room->set_exit("east", path + "/" + xe + "." + y + ".c");
     room->set_exit("southwest", path + "/" + xw + "." + ys + ".c");
-    room->set_exit("south",     path + "/" + x  + "." + ys + ".c");
+    room->set_exit("south", path + "/" + x + "." + ys + ".c");
     room->set_exit("southeast", path + "/" + xe + "." + ys + ".c");
 
     if (arrayp(planet["overrides"])) {
-        foreach (mapping override in filter(planet["overrides"], (: $1["x"] == $(x) && $1["y"] == $(y) :))) {
+        foreach (mapping override in filter(
+            planet["overrides"],
+            (: $1["x"] == $(x) && $1["y"] == $(y) :)
+        )) {
             if (override["type"] == "enter") {
                 room->remove_exit(override["dir"]);
                 room->set_exit("enter " + override["dir"], override["room"]);
-                room->add_terrain_override(replace_string(override["desc"], "$DIR", override["dir"]));
+                room->add_terrain_override(replace_string(
+                    override["desc"],
+                    "$DIR",
+                    override["dir"]
+                ));
             } else if (override["type"] == "blocked") {
                 room->remove_exit(override["dir"]);
-                room->add_terrain_override(replace_string(override["desc"], "$DIR", override["dir"]));
+                room->add_terrain_override(replace_string(
+                    override["desc"],
+                    "$DIR",
+                    override["dir"]
+                ));
             } else if (override["type"] == "dome") {
                 room->set_room_brackets(({ "(", ")" }));
                 room->set_room_bracket_color("%^I_CYAN%^BOLD%^");
@@ -109,14 +132,17 @@ void setup_exits (object room, mapping planet, int x, int y) {
     structure = D_PLANET->query_structure(name, x, y);
     if (structure) {
         meta = __StructureMeta[structure["type"]];
-        room->set_exit("enter " + meta["enter"], PLANET_V_ROOM + "interior/" + structure["type"] + "/" + name + "." + x + "." + y + "/entrance.c");
+        room->set_exit(
+            "enter " + meta["enter"],
+            PLANET_V_ROOM + "interior/" + structure["type"] + "/" + name + "." + x + "." + y + "/entrance.c"
+        );
         room->add_terrain_override(meta["desc"]);
     }
 }
 
 /* ----- called by master::compile_object ----- */
 
-object virtual_create (string path) {
+object virtual_create(string path) {
     string name;
     int x, y;
     mapping planet;
@@ -134,7 +160,10 @@ object virtual_create (string path) {
 
     setup_room(room);
     if (arrayp(planet["overrides"])) {
-        foreach (mapping override in filter(planet["overrides"], (: $1["x"] == $(x) && $1["y"] == $(y) :))) {
+        foreach (mapping override in filter(
+            planet["overrides"],
+            (: $1["x"] == $(x) && $1["y"] == $(y) :)
+        )) {
             if (override["type"] == "dome") {
                 room->set_property("no resource", 1);
                 room->set_property("no receive", 1);

@@ -1,6 +1,6 @@
 inherit STD_NPC;
 
-void create () {
+void create() {
     ::create();
     set_gender("female");
     set_id(({ "bee" }));

@@ -5,7 +5,7 @@ inherit STD_OBJECT;
  * @var {"/std/item/bodypart"} testOb
  */
 
-string *test_order () {
+string *test_order() {
     return ({
         "test_received",
         "test_bodypart_no_environment",
@@ -14,7 +14,7 @@ string *test_order () {
 }
 
 private mixed *calloutInfo;
-void test_received () {
+void test_received() {
     expect("handle_received sets expire timer", (: ({
         assert_regex(file_name(testOb), "/std/item/bodypart.coverage#[0-9]+"),
 
@@ -29,9 +29,9 @@ void test_received () {
     }) :));
 }
 
-void test_bodypart_no_environment (function done) {
+void test_bodypart_no_environment(function done) {
     testOb->setup_bodypart(this_object(), "some limb");
-    call_out_walltime(function (function done) {
+    call_out_walltime(function(function done) {
         expect("bodypart not setup when owner has no environment", (: ({
             assert_equal(objectp(testOb), 0),
         }) :));
@@ -40,7 +40,7 @@ void test_bodypart_no_environment (function done) {
     }, 0.1, done);
 }
 
-void test_bodypart_environment () {
+void test_bodypart_environment() {
     object room = new(STD_ROOM);
 
     handle_move(room);
@@ -52,7 +52,17 @@ void test_bodypart_environment () {
         // verify we set bodypart information
         assert_equal(testOb->query_name(), "piece of some limb"),
         assert_equal(testOb->query_short(), "piece of Someone's some limb"),
-        assert_equal(testOb->query_id(), ({ "bodypart", "body part", "limb", "pieceofsomelimb", "piece of some limb", "some limb", })),
+        assert_equal(
+            testOb->query_id(),
+            ({
+                "bodypart",
+                "body part",
+                "limb",
+                "pieceofsomelimb",
+                "piece of some limb",
+                "some limb",
+            })
+        ),
     }) :));
     handle_move("/domain/Nowhere/room/void.c");
     if (room) destruct(room);

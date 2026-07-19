@@ -1,5 +1,5 @@
 // This command currently doesn't work due to a bug in fluffos efun::terminal_color
-void command (string input, mapping flags) {
+void command(string input, mapping flags) {
     mapping b = query_border_charset();
     string left = implode(format_border(([
         "title": "LEFT",
@@ -22,7 +22,7 @@ void command (string input, mapping flags) {
     rightLines = explode(wrap_ansi(right, 40), "\n");
 
     l = max(({ sizeof(leftLines), sizeof(rightLines) }));
-    for (int i = 0; i < l; i ++) {
+    for (int i = 0; i < l; i++) {
         line = "";
         if (i < sizeof(leftLines)) {
             line += leftLines[i];

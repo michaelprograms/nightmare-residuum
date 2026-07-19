@@ -1,15 +1,15 @@
 inherit STD_COMMAND;
 
-void create () {
+void create() {
     ::create();
     set_syntax("defeats");
     set_help_text("The defeats command is used to view the list of defeats your character has recorded.");
 }
 
-void command (string input, mapping flags) {
+void command(string input, mapping flags) {
     object tc = this_character();
     object target = tc;
-    string *items = ({ });
+    string *items = ({});
 
     if (input && tc->query_immortal()) {
         target = determine_immortal_target(tc, input);

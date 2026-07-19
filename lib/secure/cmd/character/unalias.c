@@ -1,13 +1,13 @@
 inherit STD_COMMAND;
 
-void create () {
+void create() {
     ::create();
     set_syntax("unalias [name]");
     set_help_text("Remove an alias by name. Use " + format_syntax("alias") + " to view your current aliases.");
     set_help_similar(({ "alias" }));
 }
 
-void command (string input, mapping flags) {
+void command(string input, mapping flags) {
     object tu = this_user();
     mapping alias;
 

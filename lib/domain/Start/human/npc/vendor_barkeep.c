@@ -2,7 +2,7 @@
 
 inherit STD_VENDOR;
 
-void create () {
+void create() {
     ::create();
     set_id(({ "barkeep", }));
     set_name("barkeep");

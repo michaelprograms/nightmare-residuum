@@ -1,6 +1,6 @@
 inherit STD_VERB;
 
-void create () {
+void create() {
     verb::create();
     add_rules(({ "", "OBS", "WRD WRD", }));
     set_syntax("drop [item]");
@@ -8,11 +8,11 @@ void create () {
     set_help_similar(({ "get", "give", "put", }));
 }
 
-mixed can_drop () {
+mixed can_drop() {
     return "Drop what?";
 }
 
-mixed can_drop_obj (object ob, string str) {
+mixed can_drop_obj(object ob, string str) {
     return 1;
 }
 /**
@@ -21,14 +21,19 @@ mixed can_drop_obj (object ob, string str) {
  * @param {STD_ITEM} ob the item being dropped
  * @param str the input text
  */
-void do_drop_obj (object ob, string str) {
+void do_drop_obj(object ob, string str) {
     object po = previous_object(), env = environment(po);
 
     message("action", "You drop " + ob->query_name() + ".", po);
-    message("action", po->query_cap_name() + " drops some " + ob->query_name() + ".", env, po);
+    message(
+        "action",
+        po->query_cap_name() + " drops some " + ob->query_name() + ".",
+        env,
+        po
+    );
     ob->handle_move(environment(this_character()));
 }
-void do_drop_obs (mixed *info, string str) {
+void do_drop_obs(mixed *info, string str) {
     foreach (mixed item in info) {
         if (stringp(item)) {
             write(item + "\n");
@@ -38,7 +43,7 @@ void do_drop_obs (mixed *info, string str) {
     }
 }
 
-mixed can_drop_wrd_wrd (mixed args...) {
+mixed can_drop_wrd_wrd(mixed args...) {
     object po = previous_object();
     int amount = to_int(args[0]), n;
     string currency = args[1];
@@ -52,7 +57,7 @@ mixed can_drop_wrd_wrd (mixed args...) {
     }
     return 1;
 }
-mixed do_drop_wrd_wrd (mixed args...) {
+mixed do_drop_wrd_wrd(mixed args...) {
     object po = previous_object(), env = environment(po);
     int amount = to_int(args[0]);
     string currency = args[1];
@@ -66,6 +71,11 @@ mixed do_drop_wrd_wrd (mixed args...) {
     }
     coins->add_currency(currency, amount);
     message("action", "You drop " + amount + " " + currency + ".", po);
-    message("action", po->query_cap_name() + " drops some " + currency + ".", env, po);
+    message(
+        "action",
+        po->query_cap_name() + " drops some " + currency + ".",
+        env,
+        po
+    );
     return 1;
 }

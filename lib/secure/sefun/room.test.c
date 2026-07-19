@@ -5,47 +5,83 @@ inherit STD_LIVING;
  * @var {"/secure/sefun/room"} testOb
  */
 
-void test_describe_living_item () {
+void test_describe_living_item() {
     expect("living items are described", (: ({
         assert_equal(testOb->describe_living_item(this_object()), ""),
 
         set_short("Test%^DEFAULT%^Short"),
-        assert_equal(testOb->describe_living_item(this_object()), "Test%^I_RED%^BOLD%^Short"),
+        assert_equal(
+            testOb->describe_living_item(this_object()),
+            "Test%^I_RED%^BOLD%^Short"
+        ),
 
         set_short("Test Short"),
         assert_equal(testOb->describe_living_item(this_object()), "Test Short"),
 
         set_defeated(1),
-        assert_equal(testOb->describe_living_item(this_object()), "Test Short (defeated)"),
+        assert_equal(
+            testOb->describe_living_item(this_object()),
+            "Test Short (defeated)"
+        ),
         set_defeated(0),
 
         __Vitals["hpMax"] = 100,
         __Vitals["hp"] = 100,
         assert_equal(testOb->describe_living_item(this_object()), "Test Short"),
         __Vitals["hp"] = 75,
-        assert_equal(testOb->describe_living_item(this_object()), "Test Short (bruised)"),
+        assert_equal(
+            testOb->describe_living_item(this_object()),
+            "Test Short (bruised)"
+        ),
         __Vitals["hp"] = 50,
-        assert_equal(testOb->describe_living_item(this_object()), "Test Short (injured)"),
+        assert_equal(
+            testOb->describe_living_item(this_object()),
+            "Test Short (injured)"
+        ),
         __Vitals["hp"] = 25,
-        assert_equal(testOb->describe_living_item(this_object()), "Test Short (bleeding)"),
+        assert_equal(
+            testOb->describe_living_item(this_object()),
+            "Test Short (bleeding)"
+        ),
         __Vitals["hp"] = 0,
-        assert_equal(testOb->describe_living_item(this_object()), "Test Short (dying)"),
+        assert_equal(
+            testOb->describe_living_item(this_object()),
+            "Test Short (dying)"
+        ),
         __Vitals["hp"] = -25,
-        assert_equal(testOb->describe_living_item(this_object()), "Test Short (dying)"),
+        assert_equal(
+            testOb->describe_living_item(this_object()),
+            "Test Short (dying)"
+        ),
 
         __Vitals["hp"] = 100,
         set_posture("sitting"),
-        assert_equal(testOb->describe_living_item(this_object()), "Test Short (sitting)"),
+        assert_equal(
+            testOb->describe_living_item(this_object()),
+            "Test Short (sitting)"
+        ),
 
         __Vitals["hp"] = 75,
-        assert_equal(testOb->describe_living_item(this_object()), "Test Short (bruised) (sitting)"),
+        assert_equal(
+            testOb->describe_living_item(this_object()),
+            "Test Short (bruised) (sitting)"
+        ),
 
         set_posture("flying"),
-        assert_equal(testOb->describe_living_item(this_object()), "Test Short (bruised) (flying)"),
+        assert_equal(
+            testOb->describe_living_item(this_object()),
+            "Test Short (bruised) (flying)"
+        ),
         set_posture("laying"),
-        assert_equal(testOb->describe_living_item(this_object()), "Test Short (bruised) (laying)"),
+        assert_equal(
+            testOb->describe_living_item(this_object()),
+            "Test Short (bruised) (laying)"
+        ),
         set_posture("meditating"),
-        assert_equal(testOb->describe_living_item(this_object()), "Test Short (bruised) (meditating)"),
+        assert_equal(
+            testOb->describe_living_item(this_object()),
+            "Test Short (bruised) (meditating)"
+        ),
 
         __Vitals["hp"] = 100,
         set_posture("standing"),
@@ -59,18 +95,39 @@ void test_describe_living_item () {
         __Vitals["hp"] = 96,
         assert_equal(testOb->describe_living_item(this_object()), "Test Short"),
         __Vitals["hp"] = 95,
-        assert_equal(testOb->describe_living_item(this_object()), "Test Short (bruised)"),
+        assert_equal(
+            testOb->describe_living_item(this_object()),
+            "Test Short (bruised)"
+        ),
         __Vitals["hp"] = 72,
-        assert_equal(testOb->describe_living_item(this_object()), "Test Short (bruised)"),
+        assert_equal(
+            testOb->describe_living_item(this_object()),
+            "Test Short (bruised)"
+        ),
         __Vitals["hp"] = 71,
-        assert_equal(testOb->describe_living_item(this_object()), "Test Short (injured)"),
+        assert_equal(
+            testOb->describe_living_item(this_object()),
+            "Test Short (injured)"
+        ),
         __Vitals["hp"] = 48,
-        assert_equal(testOb->describe_living_item(this_object()), "Test Short (injured)"),
+        assert_equal(
+            testOb->describe_living_item(this_object()),
+            "Test Short (injured)"
+        ),
         __Vitals["hp"] = 47,
-        assert_equal(testOb->describe_living_item(this_object()), "Test Short (bleeding)"),
+        assert_equal(
+            testOb->describe_living_item(this_object()),
+            "Test Short (bleeding)"
+        ),
         __Vitals["hp"] = 24,
-        assert_equal(testOb->describe_living_item(this_object()), "Test Short (bleeding)"),
+        assert_equal(
+            testOb->describe_living_item(this_object()),
+            "Test Short (bleeding)"
+        ),
         __Vitals["hp"] = 23,
-        assert_equal(testOb->describe_living_item(this_object()), "Test Short (dying)"),
+        assert_equal(
+            testOb->describe_living_item(this_object()),
+            "Test Short (dying)"
+        ),
     }) :));
 }

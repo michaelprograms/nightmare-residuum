@@ -4,7 +4,7 @@ inherit M_TEST;
  * @var {"/secure/sefun/convert"} testOb
  */
 
-void test_hex_to_int () {
+void test_hex_to_int() {
     expect("hex_to_int handled base 16 to base 10", (: ({
         assert_equal(testOb->hex_to_int("00"), 0),
         assert_equal(testOb->hex_to_int("0A"), 10),
@@ -35,23 +35,41 @@ void test_hex_to_int () {
     }) :));
 
     expect("hex_to_int catches bad input", (: ({
-        assert_catch((: testOb->hex_to_int(UNDEFINED) :), "*Bad argument 1 to convert->hex_to_int\n"),
-        assert_catch((: testOb->hex_to_int("") :), "*Bad argument 1 to convert->hex_to_int\n"),
+        assert_catch(
+            (: testOb->hex_to_int(UNDEFINED) :),
+            "*Bad argument 1 to convert->hex_to_int\n"
+        ),
+        assert_catch(
+            (: testOb->hex_to_int("") :),
+            "*Bad argument 1 to convert->hex_to_int\n"
+        ),
     }) :));
 }
 
-void test_int_to_binary () {
+void test_int_to_binary() {
     expect("int_to_binary handled base 10 to base 2", (: ({
         assert_equal(testOb->int_to_binary(0), "0"),
         assert_equal(testOb->int_to_binary(1), "1"),
         assert_equal(testOb->int_to_binary(2), "10"),
         assert_equal(testOb->int_to_binary(10), "1010"),
-        assert_equal(testOb->int_to_binary(-1), "1111111111111111111111111111111111111111111111111111111111111111"),
-        assert_equal(testOb->int_to_binary(-2), "1111111111111111111111111111111111111111111111111111111111111110"),
-        assert_equal(testOb->int_to_binary(2147483648), "10000000000000000000000000000000"),
+        assert_equal(
+            testOb->int_to_binary(-1),
+            "1111111111111111111111111111111111111111111111111111111111111111"
+        ),
+        assert_equal(
+            testOb->int_to_binary(-2),
+            "1111111111111111111111111111111111111111111111111111111111111110"
+        ),
+        assert_equal(
+            testOb->int_to_binary(2147483648),
+            "10000000000000000000000000000000"
+        ),
     }) :));
 
     expect("int_to_binary catches bad input", (: ({
-        assert_catch((: testOb->int_to_binary(UNDEFINED) :), "*Bad argument 1 to convert->int_to_binary\n"),
+        assert_catch(
+            (: testOb->int_to_binary(UNDEFINED) :),
+            "*Bad argument 1 to convert->int_to_binary\n"
+        ),
     }) :));
 }

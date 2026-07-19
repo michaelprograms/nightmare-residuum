@@ -5,20 +5,26 @@ inherit STD_STORAGE;
  * @var {"/std/item/weapon"} testOb
  */
 
-string *test_order () {
-    return ({ "test_is_weapon", "test_type", "test_wielded", "test_item_verb_wield_applies", "test_item_verb_drop_applies", });
+string *test_order() {
+    return ({
+        "test_is_weapon",
+        "test_type",
+        "test_wielded",
+        "test_item_verb_wield_applies",
+        "test_item_verb_drop_applies",
+    });
 }
 
 nosave private string *__WieldableLimbs;
-string *query_wieldable_limbs () {
+string *query_wieldable_limbs() {
     return __WieldableLimbs;
 }
 nosave private object *__WieldedWeapons;
-object *query_wielded_weapons () {
+object *query_wielded_weapons() {
     return __WieldedWeapons;
 }
 
-void test_is_weapon () {
+void test_is_weapon() {
     expect("is_weapon returns true", (: ({
         assert_equal(weaponp(testOb), 1),
         assert_equal(itemp(testOb), 1),
@@ -27,7 +33,7 @@ void test_is_weapon () {
     }) :));
 }
 
-void test_type () {
+void test_type() {
     expect("weapon handles type", (: ({
         assert_equal(testOb->query_type(), ""),
 
@@ -48,7 +54,7 @@ void test_type () {
     }) :));
 }
 
-void test_hands () {
+void test_hands() {
     expect("weapon handles hands", (: ({
         assert_equal(testOb->query_hands(), 1),
 
@@ -70,7 +76,7 @@ void test_hands () {
     }) :));
 }
 
-void test_wc () {
+void test_wc() {
     expect("weapon handles wc", (: ({
         assert_equal(testOb->query_wc(), 0),
 
@@ -85,7 +91,7 @@ void test_wc () {
     }) :));
 }
 
-void test_wielded () {
+void test_wielded() {
     testOb->set_short("weapon");
     expect("weapon handles wielded", (: ({
         assert_equal(testOb->query_wielded(), 0),
@@ -97,9 +103,9 @@ void test_wielded () {
     }) :));
 }
 
-void test_item_verb_wield_applies () {
+void test_item_verb_wield_applies() {
     __WieldableLimbs = ({ "left hand", "right hand" });
-    __WieldedWeapons = ({ });
+    __WieldedWeapons = ({});
 
     expect("weapon handles verb applies direct_wield_obj and direct_unwield_obj", (: ({
         assert_equal(environment(testOb), 0),
@@ -122,9 +128,9 @@ void test_item_verb_wield_applies () {
     __WieldedWeapons = 0;
 }
 
-void test_item_verb_drop_applies () {
+void test_item_verb_drop_applies() {
     __WieldableLimbs = ({ "left hand", "right hand" });
-    __WieldedWeapons = ({ });
+    __WieldedWeapons = ({});
 
     expect("weapon handles verb apply direct_drop_obj", (: ({
         assert_equal(environment(testOb), 0),

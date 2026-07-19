@@ -2,17 +2,17 @@
 
 nosave private int __NumTargets = 1;
 
-void set_targets (int n) {
+void set_targets(int n) {
     if (undefinedp(n) || !intp(n) || n < 1) {
         error("Bad argument 1 to ability->set_targets");
     }
     __NumTargets = n;
 }
-int query_targets () {
+int query_targets() {
     return __NumTargets;
 }
 
-object *verify_targets (object source, object *targets) {
+object *verify_targets(object source, object *targets) {
     if (this_object()->query_type() == "attack") {
         if (!sizeof(targets) || !targets[0]) {
             targets = ({ present_hostile(source) });

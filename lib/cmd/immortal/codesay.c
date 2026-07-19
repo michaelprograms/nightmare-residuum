@@ -1,4 +1,4 @@
-void command (string input, mapping flags) {
+void command(string input, mapping flags) {
     if (!input || input == "") {
         write("Codesay what?\n");
         return;
@@ -19,5 +19,10 @@ void command (string input, mapping flags) {
     input = "\n// " + replace_string(input, "\n", "\n// ") + "\n";
 
     message("no_ansi", "You codesay:" + input, this_character());
-    message("no_ansi", this_character()->query_cap_name() + " codesays:" + input, environment(this_character()), this_character());
+    message(
+        "no_ansi",
+        this_character()->query_cap_name() + " codesays:" + input,
+        environment(this_character()),
+        this_character()
+    );
 }

@@ -1,6 +1,6 @@
 inherit STD_COMMAND;
 
-void create () {
+void create() {
     ::create();
     set_syntax("alias ([name] [value])");
     set_help_text("The alias command is used to view your current alias list, or if a name and value are provided, create a new alias.\n\nAliases can be used as shortcuts for longer commands. For example, " + format_syntax("alias bag put $* in bag") + " will allow you to type " + format_syntax("bag [item]") + " instead of " + format_syntax("put [item] in bag") + ". Use " + format_syntax("unalias [name]") + " to remove an alias.");
@@ -12,10 +12,10 @@ void create () {
  *
  * @param {STD_USER} user the owner of the aliases
  */
-private void print_all_aliases (object user) {
+private void print_all_aliases(object user) {
     mapping alias;
     string *aliasKeys;
-    string *list = ({ });
+    string *list = ({});
 
     aliasKeys = user->query_alias_names();
     foreach (string name in sort_array(aliasKeys, 1)) {
@@ -25,7 +25,7 @@ private void print_all_aliases (object user) {
             list += ({ "$*: " + alias["d"][0], });
         } else if (sizeof(alias["d"]) > 1) {
             list += ({ "$0: " + alias["d"][0], });
-            for (int i = 1; i < sizeof(alias["d"]); i ++) {
+            for (int i = 1; i < sizeof(alias["d"]); i++) {
                 // insert blank 1st & 2nd columns
                 list += ({ "", "", "$" + i + ": " + alias["d"][i], });
             }
@@ -53,7 +53,7 @@ private void print_all_aliases (object user) {
     ]));
 }
 
-void command (string input, mapping flags) {
+void command(string input, mapping flags) {
     object tu = this_user();
     if (!input) {
         print_all_aliases(tu);
@@ -71,7 +71,11 @@ void command (string input, mapping flags) {
             }
         } else {
             name = implode(argv[1..], " ");
-            message("action", "Adding alias: '" + argv[0] + "' as '" + name + "'", tu);
+            message(
+                "action",
+                "Adding alias: '" + argv[0] + "' as '" + name + "'",
+                tu
+            );
             tu->set_alias(argv[0], name);
         }
     }

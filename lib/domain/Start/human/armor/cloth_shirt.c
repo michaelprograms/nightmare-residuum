@@ -1,6 +1,6 @@
 inherit STD_ARMOR;
 
-void create () {
+void create() {
     ::create();
     set_name("cloth shirt");
     set_id(({ "cloth shirt", "shirt" }));

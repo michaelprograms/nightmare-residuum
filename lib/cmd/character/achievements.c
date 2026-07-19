@@ -1,13 +1,13 @@
 inherit STD_COMMAND;
 
-void create () {
+void create() {
     ::create();
     set_syntax("achievements (here)");
     set_help_text("The achievements command is used to view your achievements, or the achievements in your current environment.");
 }
 
-void command (string input, mapping flags) {
-    mapping *body = ({ });
+void command(string input, mapping flags) {
+    mapping *body = ({});
 
     if (input == "here") {
         mapping a = D_ACHIEVEMENTS->query_achievements_from_room(environment(this_character()));
@@ -42,7 +42,7 @@ void command (string input, mapping flags) {
     } else {
         mapping data = ([
             "title": "ACHIEVEMENTS",
-            "body": ({ }),
+            "body": ({}),
         ]);
         string *done, *incomplete;
         done = this_character()->query_achievements_done();

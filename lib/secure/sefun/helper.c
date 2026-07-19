@@ -4,7 +4,7 @@
  * @param {STD_LIVING} ob the object to check
  * @returns 0 or 1
  */
-int livingp (mixed ob) {
+int livingp(mixed ob) {
     if (!objectp(ob)) {
         return 0;
     }
@@ -17,7 +17,7 @@ int livingp (mixed ob) {
  * @param {STD_NPC} ob the object to check
  * @returns 0 or 1
  */
-int npcp (mixed ob) {
+int npcp(mixed ob) {
     if (!objectp(ob)) {
         return 0;
     }
@@ -30,7 +30,7 @@ int npcp (mixed ob) {
  * @param {STD_VENDOR} ob the object to check
  * @returns 0 or 1
  */
-int vendorp (mixed ob) {
+int vendorp(mixed ob) {
     if (!objectp(ob)) {
         return 0;
     }
@@ -43,7 +43,7 @@ int vendorp (mixed ob) {
  * @param {STD_CHARACTER} ob the object to check
  * @returns 0 or 1
  */
-int characterp (mixed ob) {
+int characterp(mixed ob) {
     if (!objectp(ob)) {
         return 0;
     }
@@ -56,7 +56,7 @@ int characterp (mixed ob) {
  * @param {STD_CHARACTER} ob the object to check
  * @returns 0 or 1
  */
-int immortalp (mixed ob) {
+int immortalp(mixed ob) {
     if (!objectp(ob)) {
         return 0;
     }
@@ -69,7 +69,7 @@ int immortalp (mixed ob) {
  * @param {STD_ITEM} ob the object to check
  * @returns 0 or 1
  */
-int itemp (mixed ob) {
+int itemp(mixed ob) {
     if (!objectp(ob)) {
         return 0;
     }
@@ -82,7 +82,7 @@ int itemp (mixed ob) {
  * @param {STD_ARMOR} ob the object to check
  * @returns 0 or 1
  */
-int armorp (mixed ob) {
+int armorp(mixed ob) {
     if (!objectp(ob)) {
         return 0;
     }
@@ -95,7 +95,7 @@ int armorp (mixed ob) {
  * @param {STD_WEAPON} ob the object to check
  * @returns 0 or 1
  */
-int weaponp (mixed ob) {
+int weaponp(mixed ob) {
     if (!objectp(ob)) {
         return 0;
     }
@@ -108,7 +108,7 @@ int weaponp (mixed ob) {
  * @param {STD_FOOD} ob the object to check
  * @returns 0 or 1
  */
-int foodp (mixed ob) {
+int foodp(mixed ob) {
     if (!objectp(ob)) {
         return 0;
     }
@@ -121,7 +121,7 @@ int foodp (mixed ob) {
  * @param {STD_DRINK} ob the object to check
  * @returns 0 or 1
  */
-int drinkp (mixed ob) {
+int drinkp(mixed ob) {
     if (!objectp(ob)) {
         return 0;
     }
@@ -134,7 +134,7 @@ int drinkp (mixed ob) {
  * @param {STD_ROOM} ob the object to check
  * @returns 0 or 1
  */
-int roomp (mixed ob) {
+int roomp(mixed ob) {
     if (!objectp(ob)) {
         return 0;
     }

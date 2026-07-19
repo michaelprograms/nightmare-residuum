@@ -1,27 +1,27 @@
 nosave private mapping __Reset, __Objects;
 nosave private int __Resets;
 
-private void initialize_reset () {
+private void initialize_reset() {
     if (!mapp(__Reset)) {
-        __Reset   = ([ ]);
+        __Reset = ([]);
     }
     if (!mapp(__Objects)) {
-        __Objects = ([ ]);
+        __Objects = ([]);
     }
 }
 
-mapping query_reset () {
+mapping query_reset() {
     return __Reset;
 }
-mapping query_objects () {
+mapping query_objects() {
     return __Objects;
 }
-int query_resets () {
+int query_resets() {
     return __Resets;
 }
 
-void handle_reset () {
-    mapping counts = ([ ]);
+void handle_reset() {
+    mapping counts = ([]);
     int count, num;
     string name, key;
     object ob, *tracked;
@@ -29,7 +29,7 @@ void handle_reset () {
 
     initialize_reset();
 
-    __Resets ++;
+    __Resets++;
     if (!sizeof(__Reset)) {
         return;
     }
@@ -52,7 +52,7 @@ void handle_reset () {
             if (arrayp(__Objects[name]) && sizeof(__Objects[name])) {
                 continue;
             }
-            counts[name] ++;
+            counts[name]++;
         }
     }
     foreach (key, val in __Reset) {
@@ -68,13 +68,13 @@ void handle_reset () {
             num = val;
         }
 
-        tracked = __Objects[key] || ({ });
+        tracked = __Objects[key] || ({});
         count = sizeof(tracked);
         if (!count && counts[key]) {
             count = counts[key];
         }
 
-        for (; count < num; count ++) {
+        for (; count < num; count++) {
             if (!(ob = new(key))) {
                 continue;
             }
@@ -98,17 +98,17 @@ void handle_reset () {
     }
 }
 
-void create () {
+void create() {
     initialize_reset();
     __Resets = 0;
 }
 
-void reset () {
+void reset() {
     handle_reset();
 }
 
-void set_reset_data (mapping data) {
-    __Reset = ([ ]);
+void set_reset_data(mapping data) {
+    __Reset = ([]);
     foreach (string key, mixed val in data) {
         if (!sizeof(key) || (!mapp(val) && !intp(val))) {
             error("Bad reset data to reset->set_reset_data");
@@ -120,7 +120,7 @@ void set_reset_data (mapping data) {
     }
 }
 
-void set_reset (mapping data) {
+void set_reset(mapping data) {
     set_reset_data(data);
     handle_reset();
 }

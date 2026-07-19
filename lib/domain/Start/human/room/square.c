@@ -2,22 +2,38 @@
 
 inherit STD_ROOM;
 
-void create () {
+void create() {
     ::create();
     set_properties(([
         "no attack": 1,
     ]));
     set_short("a village plaza");
     set_long("Amongst a village center where two bisecting streets blend into a plaza of stone pavers with a third street leads northwest. Brick dwellings covered in dark ivy form a cozy enclosure around the outer circumference of the plaza. Birch trees branch over the perimeter between the dwellings and the open area. A framework of hexagons glimmer overhead.");
-    set_listen("default", "Humans going about their day as birds chirp from the trees.");
+    set_listen(
+        "default",
+        "Humans going about their day as birds chirp from the trees."
+    );
     set_smell("default", "The sweet smell of fresh baked goods fill the air.");
     set_looks(([
-        ({ "center", "plaza", "square" }): "The central meeting point of the village, where most of the locals pass by during their day.",
+        ({
+            "center",
+            "plaza",
+            "square"
+        }): "The central meeting point of the village, where most of the locals pass by during their day.",
         "dwellings": "Squat brick buildings of two floors in height. Modest windows with wooden shutters adorn their front.",
-        ({ "birch", "trees" }): "Birch trees of various ages branch over the plaza's perimeter.",
-        ({ "framework", "hexagons"}): "Far above, the hexagons form a geodesic dome.",
+        ({
+            "birch",
+            "trees"
+        }): "Birch trees of various ages branch over the plaza's perimeter.",
+        ({
+            "framework",
+            "hexagons"
+        }): "Far above, the hexagons form a geodesic dome.",
         "streets": "The streets Broad and Market meet and cross here.",
-        ({ "street", "streets" }): "Street signs are labeled Broad St, Market St, and Parkway.",
+        ({
+            "street",
+            "streets"
+        }): "Street signs are labeled Broad St, Market St, and Parkway.",
     ]));
     set_exits(([
         "northwest": HUMAN_ROOM + "parkway_1.c",

@@ -1,24 +1,31 @@
 inherit STD_COMMAND;
 
-void create () {
+void create() {
     ::create();
     set_syntax("planets");
     set_help_text("The planets command is used to view the entire list of planets available.");
 }
 
-string format_factor (float f) {
+string format_factor(float f) {
     return undefinedp(f) ? "1.00" : sprintf("%.2f", f);
 }
 
-void command (string input, mapping flags) {
+void command(string input, mapping flags) {
     mapping planet;
-    mixed *body = ({ });
-    mapping item = ([ ]);
+    mixed *body = ({});
+    mapping item = ([]);
     int n;
 
     item = ([
-        "header": ({ "Name", "Size", "Overrides", "Height", "Humidity", "Heat", }),
-        "items": ({ }),
+        "header": ({
+            "Name",
+            "Size",
+            "Overrides",
+            "Height",
+            "Humidity",
+            "Heat",
+        }),
+        "items": ({}),
         "columns": 6,
     ]);
 

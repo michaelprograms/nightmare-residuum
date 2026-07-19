@@ -2,7 +2,7 @@
 
 inherit STD_ROOM;
 
-void create () {
+void create() {
     ::create();
     set_properties(([ "indoors": 1, ]));
     set_short("a historical building");
@@ -12,10 +12,14 @@ void create () {
         "up": HUMAN_ROOM + "museum_2_n2.c",
     ]));
     set_looks(([
-        ({ "building", "ceiling", "walls" }): "A building of large proportions. This hallway is a large room with high ceilings and distant walls.",
+        ({
+            "building",
+            "ceiling",
+            "walls"
+        }): "A building of large proportions. This hallway is a large room with high ceilings and distant walls.",
         "floor": "The floor is a polished white stone in large blocks.",
         "hallway": "It leads away and also towards the lobby of the building.",
-        "wall" : "A large painting covers nearly all of the western wall.",
+        "wall": "A large painting covers nearly all of the western wall.",
     ]));
     set_reset(([
         HUMAN_ITEM + "painting_1.c": 1,

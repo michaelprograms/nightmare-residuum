@@ -4,7 +4,7 @@
 
 inherit STD_COMMAND;
 
-void create () {
+void create() {
     ::create();
     set_syntax("eval ([LPC commands])");
     set_help_text(
@@ -16,7 +16,7 @@ void create () {
         "Result = ({ \"b\", \"n\", \"n\" })\n\n"
         "> eval\n"
         "Entering eval ed mode, standard ed commands apply:\n"
-        ED_BASIC_COMMANDS+"\n"
+        ED_BASIC_COMMANDS + "\n"
         "________________________________________________________________________________\n"
         ":i\n"
         "float f = 1 + sin(0.0);\n"
@@ -29,11 +29,11 @@ void create () {
     );
 }
 
-void clear_file (string file);
-void execute_file (string file, string input, mapping flags);
-void create_tmp_file (string file, string input, mapping flags);
+void clear_file(string file);
+void execute_file(string file, string input, mapping flags);
+void create_tmp_file(string file, string input, mapping flags);
 
-void end_edit (string evalfile, string tmpfile, mapping flags) {
+void end_edit(string evalfile, string tmpfile, mapping flags) {
     string input;
     /** @type {M_CLEAN} ob */
     object ob;
@@ -45,7 +45,7 @@ void end_edit (string evalfile, string tmpfile, mapping flags) {
     execute_file(evalfile, input, flags);
 }
 
-void command (string input, mapping flags) {
+void command(string input, mapping flags) {
     object user = this_user();
     string userpath = user_path(this_character()->query_key_name());
     string evalfile, tmpfile, tmp;
@@ -72,17 +72,28 @@ void command (string input, mapping flags) {
         execute_file(evalfile, input, flags);
     } else {
         tmpfile = userpath + "/.eval.tmp";
-        message("system", "Entering eval ed mode, standard ed commands apply:\n", user);
-        message("system", ED_BASIC_COMMANDS + "\n" + sprintf("%*'_'s\n", width, ""), user);
+        message(
+            "system",
+            "Entering eval ed mode, standard ed commands apply:\n",
+            user
+        );
+        message(
+            "system",
+            ED_BASIC_COMMANDS + "\n" + sprintf("%*'_'s\n", width, ""),
+            user
+        );
         if (tmp = read_file(tmpfile)) {
             message("system", tmp + "\n", user);
         }
-        new("/secure/std/editor.c")->editor_start(tmpfile, (: end_edit($(evalfile), $(tmpfile), $(flags)) :));
+        new("/secure/std/editor.c")->editor_start(
+            tmpfile,
+            (: end_edit($(evalfile), $(tmpfile), $(flags)) :)
+        );
     }
     return;
 }
 
-void execute_file (string file, string input, mapping flags) {
+void execute_file(string file, string input, mapping flags) {
     mixed ret;
     int t;
 
@@ -94,26 +105,32 @@ void execute_file (string file, string input, mapping flags) {
     t = time_ns() - t;
 
     if (regexp(input, "return")) {
-        write("Result (%^ORANGE%^" + sprintf("%.2f", t/1000000.0) + " ms%^RESET%^) = " + identify(ret)+"\n");
+        write("Result (%^ORANGE%^" + sprintf(
+            "%.2f",
+            t / 1000000.0
+        ) + " ms%^RESET%^) = " + identify(ret) + "\n");
     } else {
-        write("Complete (%^ORANGE%^" + sprintf("%.2f", t/1000000.0) + " ms%^RESET%^)\n");
+        write("Complete (%^ORANGE%^" + sprintf(
+            "%.2f",
+            t / 1000000.0
+        ) + " ms%^RESET%^)\n");
     }
     if (ret = find_object(file)) destruct(ret);
 }
 
-void clear_file (string file) {
+void clear_file(string file) {
     mixed ret;
     rm(file);
     if (ret = find_object(file)) destruct(ret);
 }
 
-void create_tmp_file (string file, string input, mapping flags) {
+void create_tmp_file(string file, string input, mapping flags) {
     string lines = "";
 
     if (flags["include"]) {
         lines += implode(map(
             explode(flags["include"], ","),
-            (: "#include \""+$1+"\";" :)
+            (: "#include \"" + $1 + "\";" :)
         ), "\n") + "\n";
     }
 

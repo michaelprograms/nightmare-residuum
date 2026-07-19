@@ -4,25 +4,25 @@ inherit M_TEST;
  * @var {"/std/module/reset"} testOb
  */
 
-string *test_order () {
+string *test_order() {
     return ({ "test_resets", "test_objects", });
 }
 
 private int resetFnCalled = 0;
 private int setupFnCalled = 0;
-void test_resets () {
-    function setupFn = function () {
-        setupFnCalled ++;
+void test_resets() {
+    function setupFn = function() {
+        setupFnCalled++;
     };
-    function resetFn = function () {
-        resetFnCalled ++;
+    function resetFn = function() {
+        resetFnCalled++;
         return 2;
     };
 
     expect("resets handle setting, querying, and resetting", (: ({
         // have not set_reset yet
         assert_equal(testOb->query_resets(), 0),
-        assert_equal(testOb->query_reset(), ([ ])),
+        assert_equal(testOb->query_reset(), ([])),
 
         // set_reset will call reset for integer argument
         testOb->set_reset(([ "/std/item.c": 1 ])),
@@ -32,9 +32,15 @@ void test_resets () {
         assert_equal(testOb->query_resets(), 2),
 
         // set_reset will call reset for map argument
-        testOb->set_reset(([ "/std/item.c": ([ "number": 1, "setup": $(setupFn) ]) ])),
+        testOb->set_reset(([ "/std/item.c": ([
+            "number": 1,
+            "setup": $(setupFn)
+        ]) ])),
         assert_equal(testOb->query_resets(), 3),
-        assert_equal(testOb->query_reset(), ([ "/std/item": ([ "number": 1, "setup": $(setupFn) ]) ])),
+        assert_equal(
+            testOb->query_reset(),
+            ([ "/std/item": ([ "number": 1, "setup": $(setupFn) ]) ])
+        ),
         assert_equal(setupFnCalled, 1),
         testOb->handle_reset(),
         assert_equal(testOb->query_resets(), 4),
@@ -45,37 +51,55 @@ void test_resets () {
         assert_equal(testOb->query_resets(), 4),
         assert_equal(testOb->query_reset(), ([ "/std/item": 1 ])),
         // set_reset_data will not call reset for map argument
-        testOb->set_reset_data(([ "/std/item.c": ([ "number": 1, "setup": $(setupFn) ]) ])),
+        testOb->set_reset_data(([ "/std/item.c": ([
+            "number": 1,
+            "setup": $(setupFn)
+        ]) ])),
         assert_equal(testOb->query_resets(), 4),
-        assert_equal(testOb->query_reset(), ([ "/std/item": ([ "number": 1, "setup": $(setupFn) ]) ])),
+        assert_equal(
+            testOb->query_reset(),
+            ([ "/std/item": ([ "number": 1, "setup": $(setupFn) ]) ])
+        ),
 
-        testOb->set_reset(([ "/std/item.c": ([ "number": $(resetFn), "setup": $(setupFn) ]), ])),
+        testOb->set_reset(([ "/std/item.c": ([
+            "number": $(resetFn),
+            "setup": $(setupFn)
+        ]), ])),
         assert_equal(testOb->query_resets(), 5),
-        assert_equal(testOb->query_reset(), ([ "/std/item": ([ "number": $(resetFn), "setup": $(setupFn) ]) ])),
+        assert_equal(
+            testOb->query_reset(),
+            ([ "/std/item": ([ "number": $(resetFn), "setup": $(setupFn) ]) ])
+        ),
         assert_equal(resetFnCalled, 1),
 
         testOb->set_reset(([ "/std/item.c": ([ "number": "bad number" ]) ])),
         assert_equal(testOb->query_resets(), 6),
-        assert_equal(testOb->query_reset(), ([ "/std/item": ([ "number": "bad number" ]) ])),
+        assert_equal(
+            testOb->query_reset(),
+            ([ "/std/item": ([ "number": "bad number" ]) ])
+        ),
 
         testOb->set_reset(([ "/bad/item.c": 1 ])),
         assert_equal(testOb->query_resets(), 7),
         assert_equal(testOb->query_reset(), ([ "/bad/item": 1 ])),
 
-        assert_catch((: testOb->set_reset_data(([ "": 0 ])) :), "*Bad reset data to reset->set_reset_data\n"),
+        assert_catch(
+            (: testOb->set_reset_data(([ "": 0 ])) :),
+            "*Bad reset data to reset->set_reset_data\n"
+        ),
     }) :));
 }
 
 /** @type {STD_NPC} npc */
 nosave private object npc;
 nosave private object item;
-void test_objects () {
+void test_objects() {
     object mockReset;
     /**
      * Called upon room's reset setup.
      * @param {STD_NPC} ob new npc
      */
-    function setupFn = function (object ob) {
+    function setupFn = function(object ob) {
         npc = ob;
         npc->set_wander(1);
     };
@@ -88,7 +112,7 @@ void test_objects () {
         // testOb will have initial reset from create
         testOb->reset(),
         assert_equal(testOb->query_resets(), 1),
-        assert_equal(testOb->query_reset(), ([ ])),
+        assert_equal(testOb->query_reset(), ([])),
 
         // set wanderer
         testOb->set_reset(([

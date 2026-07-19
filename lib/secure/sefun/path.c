@@ -1,4 +1,4 @@
-string user_path (mixed args...) {
+string user_path(mixed args...) {
     string name;
     if (sizeof(args)) {
         name = args[0];
@@ -6,7 +6,7 @@ string user_path (mixed args...) {
     return "/realm" + (name && name != "" ? "/" + name : "");
 }
 
-string *split_path (string path) {
+string *split_path(string path) {
     int pos;
     while (path[<1] == '/' && sizeof(path) > 1) {
         path = path[0..<2];
@@ -15,11 +15,11 @@ string *split_path (string path) {
     if (pos == -1) {
         return ({ "", path });
     }
-    return ({ path[0..pos], path[pos+1..] });
+    return ({ path[0..pos], path[pos + 1..] });
 }
 
 // Evaluate . and .. and enforce leading /
-string sanitize_path (string path) {
+string sanitize_path(string path) {
     string *parts;
     int i = 0;
     int trailingSlash;
@@ -47,14 +47,14 @@ string sanitize_path (string path) {
         string tmp = parts[i];
         if (tmp == "..") {
             if (i) {
-                parts[i-1..i] = ({ });
-                i --;
+                parts[i - 1..i] = ({});
+                i--;
             } else {
-                parts[i..i] = ({ });
+                parts[i..i] = ({});
             }
             continue;
         }
-        i ++;
+        i++;
     }
 
     if (!sizeof(parts) && trailingSlash) {
@@ -64,7 +64,7 @@ string sanitize_path (string path) {
     return "/" + implode(parts, "/") + (trailingSlash ? "/" : "");
 }
 
-varargs string absolute_path (string relative_path, mixed relative_to) {
+varargs string absolute_path(string relative_path, mixed relative_to) {
     if (!stringp(relative_path)) {
         return 0;
     }
@@ -85,7 +85,7 @@ varargs string absolute_path (string relative_path, mixed relative_to) {
 // Check path recursively and create dirs
 // Path can be a directory or filename (which will be truncated)
 // Returns 1 for directory exists or 0 for failure
-int mkdirs (string path) {
+int mkdirs(string path) {
     string *dirs, dir = "";
     int i, l, check = 1;
 
@@ -95,34 +95,34 @@ int mkdirs (string path) {
 
     dirs = explode(path, "/") - ({ "" });
     // dirs[<1] potentially contains a filename with extension
-    dirs = dirs[0..<2] + (!regexp(dirs[<1], "\\.") ? ({ dirs[<1] }) : ({ }));
+    dirs = dirs[0..<2] + (!regexp(dirs[<1], "\\.") ? ({ dirs[<1] }) : ({}));
     path = "/" + implode(dirs, "/");
     if (file_size(path) == -2) {
         return 1;
     }
 
     l = sizeof(dirs);
-    for (i = 0; check && i < l; i ++) {
+    for (i = 0; check && i < l; i++) {
         dir += "/" + dirs[i];
         switch (file_size(dir)) {
-        case -2:
-            continue;
-        case -1:
-            check = mkdir(dir);
-            break;
-        default:
-            check = 0; // a file already exists with this path
-            break;
+            case -2:
+                continue;
+            case -1:
+                check = mkdir(dir);
+                break;
+            default:
+                check = 0;  // a file already exists with this path
+                break;
         }
     }
     return check;
 }
 
-string *wild_card (string path) {
-    string *match = ({ });
+string *wild_card(string path) {
+    string *match = ({});
     if (path && path != "") {
         path = absolute_path(path, "/");
-        match = filter(get_dir(path) || ({ }), (: $1 != "." && $1 != ".." :));
+        match = filter(get_dir(path) || ({}), (: $1 != "." && $1 != ".." :));
         if (path[<1] != '/') {
             path = split_path(path)[0];
         }
@@ -131,12 +131,12 @@ string *wild_card (string path) {
     return match;
 }
 
-string query_file_recursive (string path, string type) {
+string query_file_recursive(string path, string type) {
     string *dirs, typePath;
     int l;
     dirs = explode(path, "/")[0..<2];
     l = sizeof(dirs);
-    while (l --) {
+    while (l--) {
         typePath = "/" + implode(dirs[0..l], "/") + "/" + type + ".c";
         if (file_size(typePath) > 0) {
             return typePath;

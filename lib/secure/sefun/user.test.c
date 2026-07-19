@@ -4,24 +4,24 @@ inherit M_TEST;
  * @var {"/secure/sefun/user"} testOb
  */
 
-int is_user () {
+int is_user() {
     return 1;
 }
-string query_setting (string name) {
+string query_setting(string name) {
     if (name == "test") {
         return "123";
     } else {
         return 0;
     }
 }
-object query_character () {
+object query_character() {
     return this_object();
 }
 int is_character() {
     return 321;
 }
 
-void test_user () {
+void test_user() {
     object user = new(STD_USER);
     user->set_name("test");
 
@@ -29,7 +29,10 @@ void test_user () {
         assert_equal(testOb->find_user("unknown user"), 0),
         assert_equal(testOb->find_user("test"), $(user)),
 
-        assert_catch((: testOb->find_user(UNDEFINED) :), "*Bad argument 1 to user->find_user\n"),
+        assert_catch(
+            (: testOb->find_user(UNDEFINED) :),
+            "*Bad argument 1 to user->find_user\n"
+        ),
     }) :));
     expect("this_user behaves", (: ({
         assert_equal(objectp(testOb->this_user()), 1),
@@ -43,7 +46,7 @@ void test_user () {
     destruct(user);
 }
 
-void test_character () {
+void test_character() {
     object char = new(STD_CHARACTER);
     char->set_name("test");
     char->set_user(this_object());
@@ -52,7 +55,10 @@ void test_character () {
         assert_equal(testOb->find_character("unknown character"), 0),
         assert_equal(testOb->find_character("test"), $(char)),
 
-        assert_catch((: testOb->find_character(UNDEFINED) :), "*Bad argument 1 to user->find_character\n"),
+        assert_catch(
+            (: testOb->find_character(UNDEFINED) :),
+            "*Bad argument 1 to user->find_character\n"
+        ),
     }) :));
     expect("this_character behaves", (: ({
         assert_equal(objectp(testOb->this_character()), 1),
@@ -62,7 +68,7 @@ void test_character () {
     destruct(char);
 }
 
-void test_characters () {
+void test_characters() {
     expect("characters returns an array", (: ({
         assert_equal(arrayp(testOb->characters()), 1),
     }) :));

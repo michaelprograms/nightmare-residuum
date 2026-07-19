@@ -11,15 +11,15 @@ nosave private int __Debug = 0;
  * @param {string} path - absolute path to the config file
  * @returns {mapping} parsed config — keys are paths, values are string arrays of privileges
  */
-private mapping load_config (string path) {
-    mapping result = ([ ]);
+private mapping load_config(string path) {
+    mapping result = ([]);
     string file, *lines, key, value;
     int num;
 
     if (file = read_file(path)) {
         lines = explode(file, "\n");
         num = sizeof(lines);
-        for (int i = 0; i < num; i ++) {
+        for (int i = 0; i < num; i++) {
             if (!lines[i] || lines[i] == "" || lines[i][0] == '#') {
                 continue;
             }
@@ -34,7 +34,7 @@ private mapping load_config (string path) {
 /**
  * Loads the access config files on daemon startup.
  */
-void create () {
+void create() {
     __Read = load_config("/secure/etc/read.cfg");
     __Write = load_config("/secure/etc/write.cfg");
 }
@@ -45,7 +45,7 @@ void create () {
  *
  * @param {int} val - 1 to enable debug output, 0 to disable
  */
-void set_debug (int val) {
+void set_debug(int val) {
     if (!intp(val)) {
         error("Bad argument 1 to access->set_debug");
     }
@@ -64,7 +64,7 @@ void set_debug (int val) {
  * @param {string} filename - absolute path to the file (leading slash optional)
  * @returns {string} the privilege class string, or 0 if path is unrecognized
  */
-string query_file_privs (string filename) {
+string query_file_privs(string filename) {
     string *path, result = 0;
     if (sizeof(path = explode(filename, "/")) > 0) {
         switch (path[0]) {
@@ -109,7 +109,7 @@ string query_file_privs (string filename) {
  *
  * @param {string} msg - the message to emit (will be prefixed with "ACCESS_D: ")
  */
-void print_debug_message (string msg) {
+void print_debug_message(string msg) {
     if (__Debug) {
         debug_message("ACCESS_D: " + msg);
     }
@@ -131,7 +131,12 @@ void print_debug_message (string msg) {
  * @param {string} file            - the target file path
  * @returns {int} 1 if entry clears, 0 if access denied
  */
-private int check_stack_entry (object ob, string *requiredPrivs, string mode, string file) {
+private int check_stack_entry(
+    object ob,
+    string *requiredPrivs,
+    string mode,
+    string file
+) {
     string entryPriv, entryFile, filePriv;
     string *entryPrivs;
 
@@ -177,11 +182,17 @@ private int check_stack_entry (object ob, string *requiredPrivs, string mode, st
 
     // Object holds at least one privilege listed in the path's required set
     if (sizeof(entryPrivs & requiredPrivs)) {
-        print_debug_message(entryFile + " (privilege match: " + implode(entryPrivs & requiredPrivs, ":") + ")");
+        print_debug_message(entryFile + " (privilege match: " + implode(
+            entryPrivs & requiredPrivs,
+            ":"
+        ) + ")");
         return 1;
     }
 
-    print_debug_message(entryFile + " (needs: " + implode(requiredPrivs, ":") + ", has: " + entryPriv + ")");
+    print_debug_message(entryFile + " (needs: " + implode(
+        requiredPrivs,
+        ":"
+    ) + ", has: " + entryPriv + ")");
     return 0;
 }
 
@@ -203,7 +214,7 @@ private int check_stack_entry (object ob, string *requiredPrivs, string mode, st
  * @param {string} mode      - "read", "write", or "socket"
  * @returns {int} 1 if access is allowed, 0 if denied
  */
-int query_allowed (object caller, string fn, string file, string mode) {
+int query_allowed(object caller, string fn, string file, string mode) {
     string *requiredPrivs;
     object *callStack;
 
@@ -222,14 +233,17 @@ int query_allowed (object caller, string fn, string file, string mode) {
 
     // Socket access is handled separately
     if (mode == "socket") {
-        return file_name(caller) == "/secure/daemon/ipc" ||
-            inherits("/secure/module/http.c", caller);
+        return file_name(caller) == "/secure/daemon/ipc" || inherits(
+            "/secure/module/http.c",
+            caller
+        );
     }
 
     // Select required privileges for this path based on the operation mode
-    requiredPrivs = mode == "write"
-        ? match_path(__Write, file)
-        : match_path(__Read, file);
+    requiredPrivs = mode == "write" ? match_path(
+        __Write,
+        file
+    ) : match_path(__Read, file);
 
     // Publicly accessible paths are immediately allowed without stack inspection
     if (sizeof(requiredPrivs) && requiredPrivs[0] == ACCESS_ALL) {

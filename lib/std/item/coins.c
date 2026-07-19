@@ -1,12 +1,12 @@
 inherit STD_ITEM;
 inherit M_CURRENCY;
 
-int is_currency () {
+int is_currency() {
     return 1;
 }
 
-string query_long_coin () {
-    string *coins = ({ });
+string query_long_coin() {
+    string *coins = ({});
     int n;
 
     foreach (string currency in query_currencies()) {
@@ -22,7 +22,7 @@ string query_long_coin () {
     return "A pile of coins consisting of " + conjunction(coins) + ".";
 }
 
-void create () {
+void create() {
     ::create();
     set_id(({ "pile", "pile of coins", "coins", "money" }));
     set_name("pile of coins");
@@ -30,7 +30,7 @@ void create () {
     set_long((: query_long_coin :));
 }
 
-void check_empty () {
+void check_empty() {
     foreach (string currency in query_currencies()) {
         if (query_currency(currency)) {
             return;
@@ -39,8 +39,8 @@ void check_empty () {
     handle_remove();
 }
 
-void handle_received (object env) {
-    string *list = ({ });
+void handle_received(object env) {
+    string *list = ({});
 
     ::handle_received(env);
 

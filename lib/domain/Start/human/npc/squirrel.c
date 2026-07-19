@@ -1,6 +1,6 @@
 inherit STD_NPC;
 
-void create () {
+void create() {
     ::create();
     set_gender(element_of(({ "male", "female" })));
     set_id(({ "squirrel" }));

@@ -5,7 +5,7 @@ inherit M_CONTAINER;
  * @var {"/std/living"} testOb
  */
 
-void test_living () {
+void test_living() {
     expect("is_living returns true", (: ({
         assert_equal(testOb->is_living(), 1),
         assert_equal(npcp(testOb), 0),
@@ -13,7 +13,7 @@ void test_living () {
     }) :));
 }
 
-void test_name () {
+void test_name() {
     expect("name updates long", (: ({
         assert_equal(testOb->query_long(), ""),
 
@@ -28,11 +28,14 @@ void test_name () {
         testOb->set_attribute("eye", "c"),
         testOb->set_attribute("hair", "d"),
         testOb->set_attribute("height", "e"),
-        assert_equal(testOb->query_long(), "Test is a male unknown with c eyes, e units tall, a b complexion, an a build, and d hair."),
+        assert_equal(
+            testOb->query_long(),
+            "Test is a male unknown with c eyes, e units tall, a b complexion, an a build, and d hair."
+        ),
     }) :));
 }
 
-void test_level () {
+void test_level() {
     expect("level updates vitals", (: ({
         testOb->set_species("human"),
         assert_equal(testOb->query_species(), "human"),
@@ -43,7 +46,16 @@ void test_level () {
         assert_equal(testOb->query_max_hp(), 22),
         assert_equal(testOb->query_max_sp(), 12),
         assert_equal(testOb->query_max_mp(), 12),
-        assert_equal(testOb->query_limb("torso"), ([ "damage": 0, "maxdamage": 23, "pct": 100, "status": 0, "type": "FATAL" ])),
+        assert_equal(
+            testOb->query_limb("torso"),
+            ([
+                "damage": 0,
+                "maxdamage": 23,
+                "pct": 100,
+                "status": 0,
+                "type": "FATAL"
+            ])
+        ),
 
         // adjust HP
         testOb->set_hp(1),
@@ -53,7 +65,16 @@ void test_level () {
         assert_equal(testOb->query_sp(), 1),
         assert_equal(testOb->query_mp(), 1),
         testOb->handle_limb_heal("torso", -10),
-        assert_equal(testOb->query_limb("torso"), ([ "damage": 10, "maxdamage": 23, "pct": 100, "status": 0, "type": "FATAL" ])),
+        assert_equal(
+            testOb->query_limb("torso"),
+            ([
+                "damage": 10,
+                "maxdamage": 23,
+                "pct": 100,
+                "status": 0,
+                "type": "FATAL"
+            ])
+        ),
 
         // advance level
         testOb->set_level(2),
@@ -65,11 +86,20 @@ void test_level () {
         assert_equal(testOb->query_max_sp(), 18),
         assert_equal(testOb->query_max_mp(), 18),
         // damage to limb remains, but maxdamage updated
-        assert_equal(testOb->query_limb("torso"), ([ "damage": 10, "maxdamage": 34, "pct": 100, "status": 0, "type": "FATAL" ])),
+        assert_equal(
+            testOb->query_limb("torso"),
+            ([
+                "damage": 10,
+                "maxdamage": 34,
+                "pct": 100,
+                "status": 0,
+                "type": "FATAL"
+            ])
+        ),
     }) :));
 }
 
-void test_parser_applies () {
+void test_parser_applies() {
     object r = new(STD_ROOM);
     object ob = new(STD_OBJECT);
 
@@ -89,21 +119,30 @@ void test_parser_applies () {
     }) :));
 
     expect("give obj to living behaves", (: ({
-        assert_equal(testOb->indirect_give_obj_to_liv($(ob), this_object(), 0, 0), 1),
+        assert_equal(
+            testOb->indirect_give_obj_to_liv($(ob), this_object(), 0, 0),
+            1
+        ),
 
         assert_equal($(ob)->handle_move(this_object()), 1),
-        assert_equal(testOb->indirect_give_obj_to_liv($(ob), this_object(), 0, 0), "You already have that."),
+        assert_equal(
+            testOb->indirect_give_obj_to_liv($(ob), this_object(), 0, 0),
+            "You already have that."
+        ),
     }) :));
 
     expect("give word word to living behaves", (: ({
-        assert_equal(testOb->direct_give_wrd_wrd_to_liv(0, 0, this_object()), "You already have that."),
+        assert_equal(
+            testOb->direct_give_wrd_wrd_to_liv(0, 0, this_object()),
+            "You already have that."
+        ),
         assert_equal(testOb->direct_give_wrd_wrd_to_liv(0, 0, 0), 1),
     }) :));
 
     if (r) destruct(r);
 }
 
-void test_heart_beat () {
+void test_heart_beat() {
     object r = new(STD_ROOM);
 
     testOb->set_species("human");
@@ -122,7 +161,7 @@ void test_heart_beat () {
     if (r) destruct(r);
 }
 
-void test_go () {
+void test_go() {
     object r1 = new(STD_ROOM);
     object r2 = new(STD_ROOM);
 
@@ -140,7 +179,10 @@ void test_go () {
 
         // catch bad move
         assert_equal(testOb->handle_move($(r1)), 1),
-        assert_catch((: testOb->handle_go(0, "go", "east") :), "*Bad argument 1 to living->handle_go\n"),
+        assert_catch(
+            (: testOb->handle_go(0, "go", "east") :),
+            "*Bad argument 1 to living->handle_go\n"
+        ),
     }) :));
 
     if (r1) destruct(r1);

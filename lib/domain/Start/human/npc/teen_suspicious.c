@@ -2,7 +2,7 @@
 
 inherit STD_NPC;
 
-void create () {
+void create() {
     ::create();
     set_id(({ "teen", "suspicious teen", "human" }));
     set_name("suspicious teen");
@@ -21,9 +21,14 @@ void create () {
     add_currency("copper", 1 + random(10));
 }
 
-void handle_receive_living_in_env (object living) {
+void handle_receive_living_in_env(object living) {
     ::handle_receive_living_in_env(living);
     if (!characterp(living)) return;
     if (random(3)) return;
-    message("action", "You get the feeling that you are being watched.", environment(), this_object());
+    message(
+        "action",
+        "You get the feeling that you are being watched.",
+        environment(),
+        this_object()
+    );
 }

@@ -2,7 +2,7 @@
 
 inherit STD_ROOM;
 
-void create () {
+void create() {
     ::create();
     set_short("an apartment building");
     set_long("A lobby floor of an apartment building. It is spacious enough to allow for foot traffic of numerous people. The floor is made of wooden planks that have been smoothed by traffic. Brick walls frame the hallway and entryways. The lobby continues north.");

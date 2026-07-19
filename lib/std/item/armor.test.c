@@ -5,15 +5,15 @@ inherit STD_STORAGE;
  * @var {"/std/item/armor"} testOb
  */
 
-int query_can_wear_armor (object ob) {
+int query_can_wear_armor(object ob) {
     return 1;
 }
 nosave private object *__AllArmor;
-object *query_all_armor () {
+object *query_all_armor() {
     return __AllArmor;
 }
 
-void test_is_armor () {
+void test_is_armor() {
     expect("is_armor returns true", (: ({
         assert_equal(armorp(testOb), 1),
         assert_equal(itemp(testOb), 1),
@@ -22,7 +22,7 @@ void test_is_armor () {
     }) :));
 }
 
-void test_type () {
+void test_type() {
     expect("armor handles type", (: ({
         assert_equal(testOb->query_type(), ""),
 
@@ -43,7 +43,7 @@ void test_type () {
     }) :));
 }
 
-void test_limbs () {
+void test_limbs() {
     expect("armor handles limbs", (: ({
         assert_equal(testOb->query_limbs(), 0),
 
@@ -54,7 +54,10 @@ void test_limbs () {
         assert_equal(testOb->query_limbs(), ({ "left foot", "right foot" })),
 
         testOb->set_limbs(({ "torso", "left arm", "right arm" })),
-        assert_equal(testOb->query_limbs(), ({ "torso", "left arm", "right arm" })),
+        assert_equal(
+            testOb->query_limbs(),
+            ({ "torso", "left arm", "right arm" })
+        ),
 
         testOb->set_limbs(({ "left hand", "right hand" })),
         assert_equal(testOb->query_limbs(), ({ "left hand", "right hand" })),
@@ -64,7 +67,7 @@ void test_limbs () {
     }) :));
 }
 
-void test_worn () {
+void test_worn() {
     testOb->set_short("armor");
     expect("armor handles worn", (: ({
         assert_equal(testOb->query_worn(), 0),
@@ -76,7 +79,7 @@ void test_worn () {
     }) :));
 }
 
-void test_ac () {
+void test_ac() {
     expect("armor handles ac", (: ({
         assert_equal(testOb->query_ac(), 0),
 
@@ -91,8 +94,8 @@ void test_ac () {
     }) :));
 }
 
-void test_item_verb_wear_applies () {
-    __AllArmor = ({ });
+void test_item_verb_wear_applies() {
+    __AllArmor = ({});
 
     expect("armor handles verb applies direct_wear_obj and direct_unwear_obj", (: ({
         assert_equal(environment(testOb), 0),
@@ -118,8 +121,8 @@ void test_item_verb_wear_applies () {
     __AllArmor = 0;
 }
 
-void test_item_verb_drop_applies () {
-    __AllArmor = ({ });
+void test_item_verb_drop_applies() {
+    __AllArmor = ({});
 
     expect("armor handles verb apply direct_drop_obj", (: ({
         assert_equal(environment(testOb), 0),

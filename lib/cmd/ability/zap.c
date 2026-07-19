@@ -2,7 +2,7 @@
 
 inherit STD_ABILITY;
 
-void create () {
+void create() {
     ::create();
     set_type("attack");
     set_powers(([

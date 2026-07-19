@@ -5,11 +5,11 @@ inherit STD_LIVING;
  * @var {"/std/module/bonus"} testOb
  */
 
-void test_singular_bonus () {
+void test_singular_bonus() {
     expect("null bonuses are initialized", (: ({
-        assert_equal(testOb->query_bonuses(), ([ ])),
+        assert_equal(testOb->query_bonuses(), ([])),
         store_variable("__Bonuses", UNDEFINED, testOb),
-        assert_equal(testOb->query_bonuses(), ([ ])),
+        assert_equal(testOb->query_bonuses(), ([])),
     }) :));
 
     expect("handles setting and querying bonus", (: ({
@@ -27,33 +27,48 @@ void test_singular_bonus () {
     }) :));
 }
 
-void test_multiple_bonuses () {
+void test_multiple_bonuses() {
     expect("handles setting and querying bonuses", (: ({
-        assert_equal(testOb->query_bonuses(), ([ ])),
+        assert_equal(testOb->query_bonuses(), ([])),
 
-        assert_equal(testOb->set_bonuses(([ "strength": 1 ])), ([ "strength": 1, ])),
+        assert_equal(
+            testOb->set_bonuses(([ "strength": 1 ])),
+            ([ "strength": 1, ])
+        ),
         assert_equal(testOb->query_bonuses(), ([ "strength": 1, ])),
 
-        assert_equal(testOb->set_bonuses(([ "strength": 2 ])), ([ "strength": 2, ])),
+        assert_equal(
+            testOb->set_bonuses(([ "strength": 2 ])),
+            ([ "strength": 2, ])
+        ),
         assert_equal(testOb->query_bonuses(), ([ "strength": 2, ])),
 
-        assert_equal(testOb->set_bonuses(([ "luck": 3 ])), ([ "strength": 2, "luck": 3, ])),
+        assert_equal(
+            testOb->set_bonuses(([ "luck": 3 ])),
+            ([ "strength": 2, "luck": 3, ])
+        ),
         assert_equal(testOb->query_bonuses(), ([ "strength": 2, "luck": 3, ])),
     }) :));
 }
 
-nosave private mapping __BonusesApplied = ([ ]);
+nosave private mapping __BonusesApplied = ([]);
 
 // Listen for receive/release events from the room
-void add_stat_bonus (string stat, int n) {
+void add_stat_bonus(string stat, int n) {
     __BonusesApplied[stat] = n;
 }
 
-void test_apply_and_remove_bonuses () {
+void test_apply_and_remove_bonuses() {
     expect("bonuses are applied and removed ", (: ({
         // set bonuses
-        assert_equal(testOb->set_bonuses(([ "strength": 123, "charisma": 123, ])), ([ "strength": 123, "charisma": 123, ])),
-        assert_equal(testOb->query_bonuses(), ([ "strength": 123, "charisma": 123, ])),
+        assert_equal(
+            testOb->set_bonuses(([ "strength": 123, "charisma": 123, ])),
+            ([ "strength": 123, "charisma": 123, ])
+        ),
+        assert_equal(
+            testOb->query_bonuses(),
+            ([ "strength": 123, "charisma": 123, ])
+        ),
 
         // apply bonuses
         testOb->apply_bonus(this_object()),
@@ -63,6 +78,9 @@ void test_apply_and_remove_bonuses () {
         // apply bonuses
         testOb->remove_bonus(this_object()),
         // verify bonuses were reversed
-        assert_equal(__BonusesApplied, ([ "strength": -123, "charisma": -123, ])),
+        assert_equal(
+            __BonusesApplied,
+            ([ "strength": -123, "charisma": -123, ])
+        ),
     }) :));
 }

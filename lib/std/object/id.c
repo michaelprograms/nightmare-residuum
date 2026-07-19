@@ -3,42 +3,42 @@ nosave private string __CapName;
 nosave private string __KeyName;
 nosave private string __KeyID;
 nosave private string __KeyAdj;
-nosave private string *__ID = ({ });
-nosave private string *__Adj = ({ });
-nosave private string *__Plural = ({ });
+nosave private string *__ID = ({});
+nosave private string *__Adj = ({});
+nosave private string *__Plural = ({});
 
 // -----------------------------------------------------------------------------
 
-string query_name ();
-string query_cap_name ();
-string query_key_name ();
-void set_name (string name);
-void set_key_name (string name);
-string *query_id ();
-string query_key_id ();
-void set_id (string *id);
-void remove_id (string *id);
-string *query_adjective ();
-void set_adjective (string *adjs);
-void add_adjective (string adj);
-void remove_adjective (string adj);
-void refresh_id ();
-string *parse_command_id_list ();
-string *parse_command_adjectiv_id_list ();
-string *parse_command_plural_id_list ();
+string query_name();
+string query_cap_name();
+string query_key_name();
+void set_name(string name);
+void set_key_name(string name);
+string *query_id();
+string query_key_id();
+void set_id(string *id);
+void remove_id(string *id);
+string *query_adjective();
+void set_adjective(string *adjs);
+void add_adjective(string adj);
+void remove_adjective(string adj);
+void refresh_id();
+string *parse_command_id_list();
+string *parse_command_adjectiv_id_list();
+string *parse_command_plural_id_list();
 
 // -----------------------------------------------------------------------------
 
-string query_name () {
+string query_name() {
     return __Name;
 }
-string query_cap_name () {
+string query_cap_name() {
     return __CapName;
 }
-string query_key_name () {
+string query_key_name() {
     return __KeyName;
 }
-void set_name (string name) {
+void set_name(string name) {
     if (!stringp(name) || name == "") {
         error("Bad argument 1 to id->set_name");
     }
@@ -47,7 +47,7 @@ void set_name (string name) {
     __KeyName = sanitize_name(name);
     refresh_id();
 }
-void set_key_name (string name) {
+void set_key_name(string name) {
     if (!stringp(name) || name == "") {
         error("Bad argument 1 to id->set_key_name");
     }
@@ -55,13 +55,13 @@ void set_key_name (string name) {
     refresh_id();
 }
 
-string *query_id () {
+string *query_id() {
     return __ID;
 }
-string query_key_id () {
+string query_key_id() {
     return __KeyID;
 }
-void set_id (string *id) {
+void set_id(string *id) {
     if (undefinedp(id) || !arrayp(id) || !sizeof(id)) {
         error("Bad argument 1 to id->set_id");
     }
@@ -73,7 +73,7 @@ void set_id (string *id) {
     }
     refresh_id();
 }
-void remove_id (string *id) {
+void remove_id(string *id) {
     if (undefinedp(id) || !arrayp(id) || !sizeof(id)) {
         error("Bad argument 1 to id->remove_id");
     }
@@ -83,27 +83,27 @@ void remove_id (string *id) {
     refresh_id();
 }
 
-string *query_adjective () {
+string *query_adjective() {
     return __Adj;
 }
-string query_key_adjective () {
+string query_key_adjective() {
     return __KeyAdj;
 }
-void set_adjective (string *adj) {
+void set_adjective(string *adj) {
     if (undefinedp(adj) || !arrayp(adj) || !sizeof(adj)) {
         error("Bad argument 1 to id->set_adjective");
     }
     __Adj = filter(__Adj + adj, (: $1 && $1 != "" :));
     refresh_id();
 }
-void add_adjective (string adj) {
+void add_adjective(string adj) {
     if (!stringp(adj) || adj == "") {
         error("Bad argument 1 to id->add_adjective");
     }
     __Adj += ({ adj });
     refresh_id();
 }
-void remove_adjective (string adj) {
+void remove_adjective(string adj) {
     if (!stringp(adj) || adj == "") {
         error("Bad argument 1 to id->remove_adjective");
     }
@@ -114,17 +114,17 @@ void remove_adjective (string adj) {
     refresh_id();
 }
 
-string *query_plural () {
+string *query_plural() {
     return __Plural;
 }
-void add_plural (string plural) {
+void add_plural(string plural) {
     if (!stringp(plural) || plural == "") {
         error("Bad argument 1 to id->add_plural");
     }
     __Plural += ({ plural });
     refresh_id();
 }
-void remove_plural (string plural) {
+void remove_plural(string plural) {
     if (!stringp(plural) || plural == "") {
         error("Bad argument 1 to id->remove_plural");
     }
@@ -134,7 +134,7 @@ void remove_plural (string plural) {
 
 // -----------------------------------------------------------------------------
 
-private void refresh_id () {
+private void refresh_id() {
     if (!__KeyID && sizeof(__ID)) {
         __KeyID = __ID[0];
     }
@@ -148,25 +148,25 @@ private void refresh_id () {
     parse_refresh();
 }
 
-void create () {
+void create() {
     parse_init();
-    __ID = ({ });
-    __Adj = ({ });
-    __Plural = ({ });
+    __ID = ({});
+    __Adj = ({});
+    __Plural = ({});
     refresh_id();
 }
 
 // --- parser applies ----------------------------------------------------------
 
 // List of nouns that apply to this object
-string *parse_command_id_list () {
+string *parse_command_id_list() {
     return __ID;
 }
 // List of adjectives that apply to this object
-string *parse_command_adjectiv_id_list () {
+string *parse_command_adjectiv_id_list() {
     return __Adj;
 }
 // List of plurals that apply to this object
-string *parse_command_plural_id_list () {
+string *parse_command_plural_id_list() {
     return __Plural;
 }

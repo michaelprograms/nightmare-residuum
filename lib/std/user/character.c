@@ -8,13 +8,13 @@ nosave private string __Species;
 /** @type {STD_CHARACTER} */
 nosave private object __Character;
 
-int valid_character () {
+int valid_character() {
     return __Character && __Character->query_key_name() != 0 && __Character->query_species() != "unknown";
 }
 
 // -----------------------------------------------------------------------------
 
-void set_character_name (string name) {
+void set_character_name(string name) {
     if (!__Character) {
         __Character = new(STD_CHARACTER);
         __Character->set_user(this_object());
@@ -27,24 +27,24 @@ void set_character_name (string name) {
         __Character = new(STD_CHARACTER);
     }
 }
-void set_character_species (string species) {
+void set_character_species(string species) {
     __Species = species;
     __Character->set_species(species);
 }
-string query_character_species () {
+string query_character_species() {
     return __Species;
 }
 /** @returns {STD_CHARACTER} */
-object query_character () {
+object query_character() {
     return __Character;
 }
 
 // -----------------------------------------------------------------------------
 
-nomask void character_enter (int newbie) {
+nomask void character_enter(int newbie) {
     remove_call_out();
 
-    __Character->setup_character(); // this calls restore_data/save_data
+    __Character->setup_character();  // this calls restore_data/save_data
     if (newbie) {
         if (__Character->query_species() == "human") {
             __Character->set_environment_path("/domain/Origin/room/enter.c");
@@ -69,7 +69,7 @@ nomask void character_enter (int newbie) {
     this_object()->update_character_data(__Character);
 }
 
-nomask void character_reconnect (object char) {
+nomask void character_reconnect(object char) {
     remove_call_out();
 
     if (!char) {
@@ -91,7 +91,7 @@ nomask void character_reconnect (object char) {
  *
  * @param {STD_CHARACTER} character The character being overridden
  */
-nomask void handle_character_override_new_connection (object character) {
+nomask void handle_character_override_new_connection(object character) {
     remove_call_out();
 
     if (!character) {
@@ -114,7 +114,7 @@ nomask void handle_character_override_new_connection (object character) {
  *
  * @param {STD_CHARACTER} character The character being overridden
  */
-nomask void handle_character_override_old_connection (object character) {
+nomask void handle_character_override_old_connection(object character) {
     if (!character) {
         error("Bad argument 1 to user/character->handle_character_override_old_connection");
     }
@@ -125,14 +125,14 @@ nomask void handle_character_override_old_connection (object character) {
     }
 }
 
-nomask void character_exit () {
+nomask void character_exit() {
     if (valid_character()) {
         __Character->exit_world();
         __Species = 0;
     }
 }
 
-nomask void character_linkdead () {
+nomask void character_linkdead() {
     if (valid_character()) {
         this_object()->update_character_data(__Character);
         __Character->enter_freezer();

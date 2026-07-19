@@ -5,13 +5,13 @@ inherit STD_LIVING;
  * @var {"/std/npc/pet"} testOb
  */
 
-void create () {
+void create() {
     ::create();
     set_id(({ "pet.test", }));
     set_name("pet.test");
 }
 
-void test_owner () {
+void test_owner() {
     expect("owner is settable and queryable", (: ({
         // no owner set
         assert_equal(testOb->query_owner(), UNDEFINED),
@@ -24,7 +24,7 @@ void test_owner () {
     }) :));
 }
 
-void test_following () {
+void test_following() {
     expect("following is settable and queryable", (: ({
         // not following yet
         assert_equal(testOb->query_following(), UNDEFINED),
@@ -38,7 +38,7 @@ void test_following () {
     }) :));
 }
 
-void test_heart_beat () {
+void test_heart_beat() {
     object r1 = new(STD_ROOM);
     object r2 = new(STD_ROOM);
     object npc = new(STD_NPC);
@@ -67,7 +67,7 @@ void test_heart_beat () {
     if (r2) destruct(r2);
 }
 
-void test_parser_applies () {
+void test_parser_applies() {
     object r1 = new(STD_ROOM);
     object r2 = new(STD_ROOM);
 

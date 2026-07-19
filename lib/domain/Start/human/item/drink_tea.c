@@ -1,6 +1,6 @@
 inherit STD_DRINK;
 
-void create () {
+void create() {
     ::create();
     set_name("tea");
     set_id(({ "tea" }));

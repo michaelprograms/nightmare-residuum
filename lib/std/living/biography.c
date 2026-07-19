@@ -3,9 +3,9 @@
 int __Experience = 0, __TotalExperience = 0;
 int __Victory = 0, __VictoryLevel = 0;
 int __Defeated = 0;
-mixed *__Defeat = ({ });
+mixed *__Defeat = ({});
 
-private void initialize_experience () {
+private void initialize_experience() {
     if (undefinedp(__Experience)) {
         __Experience = 0;
     }
@@ -13,7 +13,7 @@ private void initialize_experience () {
         __TotalExperience = 0;
     }
 }
-private void initialize_victory () {
+private void initialize_victory() {
     if (undefinedp(__Victory)) {
         __Victory = 0;
     }
@@ -21,31 +21,31 @@ private void initialize_victory () {
         __VictoryLevel = 0;
     }
 }
-private void initialize_defeat () {
+private void initialize_defeat() {
     if (undefinedp(__Defeated)) {
         __Defeated = 0;
     }
     if (!arrayp(__Defeat)) {
-        __Defeat = ({ });
+        __Defeat = ({});
     }
 }
 
-int query_experience () {
+int query_experience() {
     initialize_experience();
     return __Experience;
 }
-int query_total_experience () {
+int query_total_experience() {
     initialize_experience();
     return __TotalExperience;
 }
-void add_experience (int exp) {
+void add_experience(int exp) {
     if (undefinedp(exp) || !intp(exp)) {
         error("Bad argument 1 to biography->add_experience");
     }
     __Experience = __Experience + exp;
     // @TODO if (__Experience > ExpMax) __Experience = ExpMax
 }
-void spend_experience (int exp) {
+void spend_experience(int exp) {
     if (!intp(exp) || __Experience < exp || exp < 1) {
         error("Bad argument 1 to biography->spend_experience");
     }
@@ -53,24 +53,24 @@ void spend_experience (int exp) {
     __TotalExperience = __TotalExperience + exp;
 }
 
-int query_victory () {
+int query_victory() {
     initialize_victory();
     return __Victory;
 }
-int query_victory_average () {
+int query_victory_average() {
     if (!__Victory) {
         return 0;
     }
     return __VictoryLevel / __Victory;
 }
-mixed *query_defeat () {
+mixed *query_defeat() {
     initialize_defeat();
     return __Defeat;
 }
-int query_defeated () {
+int query_defeated() {
     return __Defeated;
 }
-void set_defeated (int d) {
+void set_defeated(int d) {
     __Defeated = d;
 }
 
@@ -80,9 +80,9 @@ void set_defeated (int d) {
  *
  * @param {STD_LIVING} source the object that was defeated by this object
  */
-void handle_victory (object source) {
+void handle_victory(object source) {
     int exp = D_EXPERIENCE->query_value(source);
-    __Victory ++;
+    __Victory++;
     __VictoryLevel += source->query_level();
     message("action", "You gain " + exp + " experience.", this_object());
     add_experience(exp);
@@ -93,7 +93,7 @@ void handle_victory (object source) {
  *
  * @param {STD_LIVING} source the object that defeated this object
  */
-void handle_defeat (object source) {
+void handle_defeat(object source) {
     object env = environment(), corpse;
 
     initialize_defeat();
@@ -114,7 +114,12 @@ void handle_defeat (object source) {
         corpse->setup_body(this_object());
         corpse->handle_move(env);
         if (this_object()->query_cap_name()) {
-            message("action", this_object()->query_cap_name() + " drops %^RED%^dead%^RESET%^.", env, this_object());
+            message(
+                "action",
+                this_object()->query_cap_name() + " drops %^RED%^dead%^RESET%^.",
+                env,
+                this_object()
+            );
         }
     }
 

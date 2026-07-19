@@ -2,7 +2,7 @@
 
 inherit STD_ITEM;
 
-string painting_long () {
+string painting_long() {
     string desc = "";
     object tc = this_character();
 
@@ -49,7 +49,7 @@ string painting_long () {
     return desc;
 }
 
-void create () {
+void create() {
     ::create();
     set_id(({ "painting", "the starry night", }));
     set_name("painting");

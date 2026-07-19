@@ -13,7 +13,7 @@
  * @param b the second string
  * @returns the count of matching leading characters (0 when strings share no prefix)
  */
-int string_compare_same_until (string a, string b) {
+int string_compare_same_until(string a, string b) {
     int n = 0, l;
 
     if ((l = strlen(a)) == strlen(b) && a == b) {
@@ -23,11 +23,11 @@ int string_compare_same_until (string a, string b) {
         l = strlen(b);
     }
 
-    for (int i = 0; i < l; i ++) {
+    for (int i = 0; i < l; i++) {
         if (a[i] != b[i]) {
             break;
         }
-        n ++;
+        n++;
     }
     return n;
 }
@@ -43,7 +43,7 @@ int string_compare_same_until (string a, string b) {
  * @param expect the expected value
  * @returns two-line string: "    - '<expected>'\n    + '<actual>'"
  */
-string format_string_difference (mixed actual, mixed expect) {
+string format_string_difference(mixed actual, mixed expect) {
     int n;
     string shared;
 
@@ -54,10 +54,18 @@ string format_string_difference (mixed actual, mixed expect) {
         expect = SEFUN->identify(expect);
     }
 
-    actual = replace_string(replace_string(replace_string(actual, "\n", "\\n"), "\e", "\\e"), "%^", "%%^%^^");
-    expect = replace_string(replace_string(replace_string(expect, "\n", "\\n"), "\e", "\\e"), "%^", "%%^%^^");
+    actual = replace_string(
+        replace_string(replace_string(actual, "\n", "\\n"), "\e", "\\e"),
+        "%^",
+        "%%^%^^"
+    );
+    expect = replace_string(
+        replace_string(replace_string(expect, "\n", "\\n"), "\e", "\\e"),
+        "%^",
+        "%%^%^^"
+    );
     n = string_compare_same_until(actual, expect);
-    shared = n ? B_GREEN + actual[0..n-1] + RESET : "";
+    shared = n ? B_GREEN + actual[0..n - 1] + RESET : "";
     return "    - '" + shared + B_ORANGE + expect[n..] + RESET + "'\n" +
         "    + '" + shared + B_RED + actual[n..] + RESET + "'";
 }
@@ -70,13 +78,13 @@ string format_string_difference (mixed actual, mixed expect) {
  * @param expect the expected array
  * @returns multi-line string, one pair of lines per index
  */
-varargs string format_array_differences (mixed *actual, mixed *expect) {
+varargs string format_array_differences(mixed *actual, mixed *expect) {
     string result = "", a, e, shared;
     int i, l, n;
 
     l = max(({ sizeof(actual), sizeof(expect) }));
 
-    for (i = 0; i < l; i ++) {
+    for (i = 0; i < l; i++) {
         if (i < sizeof(actual)) {
             if (arrayp(actual[i])) {
                 a = implode(map(actual[i], (: SEFUN->identify($1) :)), ",");
@@ -102,11 +110,22 @@ varargs string format_array_differences (mixed *actual, mixed *expect) {
         if (!stringp(e)) {
             e = SEFUN->identify(e);
         }
-        a = replace_string(replace_string(replace_string(a, "\n", "\\n"), "\e", "\\e"), "%^", "%%^%^^");
-        e = replace_string(replace_string(replace_string(e, "\n", "\\n"), "\e", "\\e"), "%^", "%%^%^^");
+        a = replace_string(
+            replace_string(replace_string(a, "\n", "\\n"), "\e", "\\e"),
+            "%^",
+            "%%^%^^"
+        );
+        e = replace_string(
+            replace_string(replace_string(e, "\n", "\\n"), "\e", "\\e"),
+            "%^",
+            "%%^%^^"
+        );
         n = string_compare_same_until(a, e);
-        shared = n ? B_GREEN + a[0..n-1] + RESET : "";
-        result += "\n      " + sprintf("%2d", i) + ". - '" + shared + B_ORANGE + e[n..] + RESET + "'" +
+        shared = n ? B_GREEN + a[0..n - 1] + RESET : "";
+        result += "\n      " + sprintf(
+            "%2d",
+            i
+        ) + ". - '" + shared + B_ORANGE + e[n..] + RESET + "'" +
             "\n          + '" + shared + B_RED + a[n..] + RESET + "'";
     }
     return result;

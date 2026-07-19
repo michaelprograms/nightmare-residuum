@@ -1,14 +1,14 @@
 inherit STD_VERB;
 
-void create () {
+void create() {
     verb::create();
     add_rules(({ "", "STR" }));
     set_syntax("say [message]");
     set_help_text("Your character will attempt to speak the provided message.");
 }
 
-int can_say () { return 1; }
-void do_say () {
+int can_say() { return 1; }
+void do_say() {
     write("Say what?\n");
 }
 
@@ -24,16 +24,16 @@ string format_npc_message(object npc, string msg) {
         pos = strsrch(msg, say);
         if (pos > 0) {
             l = sizeof(say);
-            msg = msg[0..pos-1] + "%^UNDERLINE%^" + msg[pos..pos+l-1] + "%^RESET%^" + msg[pos+l..];
+            msg = msg[0..pos - 1] + "%^UNDERLINE%^" + msg[pos..pos + l - 1] + "%^RESET%^" + msg[pos + l..];
         }
     }
     return msg;
 }
 
-int can_say_str (mixed args...) {
+int can_say_str(mixed args...) {
     return 1;
 }
-void do_say_str (mixed args...) {
+void do_say_str(mixed args...) {
     object po = previous_object();
     object *who;
     /** @type {STD_CHARACTER*} chars */

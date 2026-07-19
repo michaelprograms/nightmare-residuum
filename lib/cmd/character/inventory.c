@@ -1,21 +1,24 @@
 inherit STD_COMMAND;
 
-void create () {
+void create() {
     ::create();
     set_syntax("inventory");
     set_help_text("The inventory command is used to view the list of items being carried by your character.");
 }
 
-mapping process_section (object *items, string label, object target) {
+mapping process_section(object *items, string label, object target) {
     mapping section;
 
     if (sizeof(items)) {
         section = ([
             "header": ({ label, "Autoload", }),
-            "items": ({ }),
+            "items": ({}),
             "columns": 2,
         ]);
-        foreach (/** @type {STD_ITEM*} obs */ object *obs in unique_array(items, (: $1->query_short() :))) {
+        foreach (/** @type {STD_ITEM*} obs */ object *obs in unique_array(
+            items,
+            (: $1->query_short() :)
+        )) {
             string autoload;
             int a = sizeof(filter(obs->query_autoload(target), (: $1 :)));
 
@@ -40,9 +43,9 @@ mapping process_section (object *items, string label, object target) {
  *
  * @param {STD_LIVING} target the living item to process
  */
-mapping *process_inventory (object target) {
-    object *weapon = ({ }), *armor = ({ }), *items = ({ });
-    mapping *inventory = ({ });
+mapping *process_inventory(object target) {
+    object *weapon = ({}), *armor = ({}), *items = ({});
+    mapping *inventory = ({});
 
     foreach (object item in target->query_item_contents()) {
         if (weaponp(item)) {
@@ -77,11 +80,11 @@ mapping *process_inventory (object target) {
     return inventory;
 }
 
-void command (string input, mapping flags) {
+void command(string input, mapping flags) {
     object tc = this_character(), target = tc;
-    mapping *items = ({ });
+    mapping *items = ({});
     mapping footer;
-    string *coins = ({ });
+    string *coins = ({});
 
     if (input && tc->query_immortal()) {
         target = determine_immortal_target(tc, input);

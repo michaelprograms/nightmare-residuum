@@ -1,4 +1,4 @@
-mapping __Achievements = ([ ]);
+mapping __Achievements = ([]);
 /*
     Achievement Data format:
     "name": ([
@@ -7,34 +7,34 @@ mapping __Achievements = ([ ]);
     ])
 */
 
-private void initialize_achievements () {
+private void initialize_achievements() {
     if (!mapp(__Achievements)) {
-        __Achievements = ([ ]);
+        __Achievements = ([]);
     }
 }
 
-int query_achievement_done (string str) {
+int query_achievement_done(string str) {
     initialize_achievements();
     return __Achievements[str] && __Achievements[str]["done"] == 1;
 }
-string query_achievement (string str) {
+string query_achievement(string str) {
     initialize_achievements();
     return __Achievements[str];
 }
-string *query_achievements_done () {
+string *query_achievements_done() {
     initialize_achievements();
     return keys(filter(__Achievements, (: $2["done"] :)));
 }
-string *query_achievements_incomplete () {
+string *query_achievements_incomplete() {
     initialize_achievements();
     return keys(filter(__Achievements, (: !$2["done"] :)));
 }
-void remove_achievement (string str) {
+void remove_achievement(string str) {
     initialize_achievements();
     map_delete(__Achievements, str);
 }
 
-mapping set_achievement_flag (string str, string flag, string allflags) {
+mapping set_achievement_flag(string str, string flag, string allflags) {
     string *flags;
     if (!__Achievements[str]) {
         __Achievements[str] = ([
@@ -51,7 +51,11 @@ mapping set_achievement_flag (string str, string flag, string allflags) {
             if (__Achievements[str]["flags"] == allflags) {
                 map_delete(__Achievements[str], "flags");
                 __Achievements[str]["done"] = 1;
-                message("action", "\n%^BOLD%^You have completed "+str+"!%^RESET%^\n", this_object());
+                message(
+                    "action",
+                    "\n%^BOLD%^You have completed " + str + "!%^RESET%^\n",
+                    this_object()
+                );
             }
         }
     }

@@ -4,7 +4,7 @@ inherit M_TEST;
  * @var {"/std/living/stats"} testOb
  */
 
-void test_query_and_set_stat () {
+void test_query_and_set_stat() {
     expect("handles setting and querying stats", (: ({
         testOb->set_stat("strength", 12345),
         testOb->set_stat("perception", 12345),
@@ -52,7 +52,7 @@ void test_query_and_set_stat () {
     }) :));
 }
 
-void test_stat_bonus () {
+void test_stat_bonus() {
     expect("null stats bonus are initialized", (: ({
         assert_equal(testOb->query_stat_bonus("luck"), 0),
         store_variable("__Stat", UNDEFINED, testOb),

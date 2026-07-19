@@ -6,7 +6,7 @@ inherit M_TEST;
 
 private int action = 0;
 
-void test_variables () {
+void test_variables() {
     expect("variables are queryable and settable", (: ({
         assert_equal(testOb->query_variable("testkey1"), UNDEFINED),
 
@@ -26,18 +26,18 @@ void test_variables () {
         assert_equal(testOb->set_variable("testkey2", 123, 1), 123),
         assert_equal(testOb->query_variable("testkey2"), 123),
 
-        assert_equal(testOb->set_variable("testkey2", 987, 1), 123), // didn't set
+        assert_equal(testOb->set_variable("testkey2", 987, 1), 123),  // didn't set
 
         assert_equal(testOb->unset_variable("testkey2"), 1),
         assert_equal(testOb->query_variable("testkey2"), UNDEFINED),
 
-        assert_equal(testOb->set_variable("testkey2", 987, 1), 987), // did set
+        assert_equal(testOb->set_variable("testkey2", 987, 1), 987),  // did set
     }) :));
 }
 
-void test_variable_hooks () {
-    testOb->set_variable_hook("testkey", function (mixed value) {
-        action ++;
+void test_variable_hooks() {
+    testOb->set_variable_hook("testkey", function(mixed value) {
+        action++;
         return value;
     });
 
@@ -52,18 +52,46 @@ void test_variable_hooks () {
     }) :));
 }
 
-void test_aliases () {
+void test_aliases() {
     expect("aliases are queryable, settable, and removable", (: ({
-        assert_equal(testOb->query_alias_names(), ({ "'", "cl", "d", "e", "ent", "l", "n", "ne", "nw", "s", "se", "sw", "u", "w" })),
+        assert_equal(
+            testOb->query_alias_names(),
+            ({
+                "'",
+                "cl",
+                "d",
+                "e",
+                "ent",
+                "l",
+                "n",
+                "ne",
+                "nw",
+                "s",
+                "se",
+                "sw",
+                "u",
+                "w"
+            })
+        ),
         assert_equal(testOb->query_alias("testalias1"), UNDEFINED),
 
         testOb->set_alias("testalias1", "test alias 1 expansion"),
-        assert_equal(testOb->query_alias("testalias1"), ([ "d": ({ "" }), "n": UNDEFINED, "t": "test alias 1 expansion $*" ])),
+        assert_equal(
+            testOb->query_alias("testalias1"),
+            ([
+                "d": ({ "" }),
+                "n": UNDEFINED,
+                "t": "test alias 1 expansion $*"
+            ])
+        ),
 
         testOb->unset_alias("testalias1"),
         assert_equal(testOb->query_alias("testalias1"), UNDEFINED),
 
         testOb->set_alias("testalias1", "xyz"),
-        assert_equal(testOb->query_alias("testalias1"), ([ "d": ({ "" }), "n": UNDEFINED, "t": "xyz $*" ])),
+        assert_equal(
+            testOb->query_alias("testalias1"),
+            ([ "d": ({ "" }), "n": UNDEFINED, "t": "xyz $*" ])
+        ),
     }) :));
 }

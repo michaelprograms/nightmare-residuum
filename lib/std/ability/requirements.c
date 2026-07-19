@@ -1,9 +1,9 @@
 nosave mapping __Reqs;
 
-mapping query_ability_requirements () {
+mapping query_ability_requirements() {
     return __Reqs;
 }
-void set_ability_requirements (mapping reqs) {
+void set_ability_requirements(mapping reqs) {
     /* Data format:
     "anyone|class|species|NPC": ([
         "level" : 1,
@@ -18,7 +18,7 @@ void set_ability_requirements (mapping reqs) {
  * @param {STD_LIVING} source the living object to check requirements of
  * @returns 0 or 1
  */
-int verify_ability_requirements (object source) {
+int verify_ability_requirements(object source) {
     if (!source || !source->is_living()) {
         return 0;
     } else if (immortalp(source)) {
@@ -30,7 +30,7 @@ int verify_ability_requirements (object source) {
         return 1;
     }
 
-    foreach (string key,mapping value in __Reqs) {
+    foreach (string key, mapping value in __Reqs) {
         if (key == "NPC") {
             if (!npcp(source)) {
                 continue;
@@ -44,7 +44,7 @@ int verify_ability_requirements (object source) {
             }
         }
         if (mapp(value["stats"])) {
-            foreach (string stat,int num in value["stats"]) {
+            foreach (string stat, int num in value["stats"]) {
                 if (source->query_stat(stat) < num) {
                     return 0;
                 }

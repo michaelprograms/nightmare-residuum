@@ -2,7 +2,7 @@
 
 inherit STD_ROOM;
 
-void create () {
+void create() {
     ::create();
     set_properties(([
         "indoors": 1,
@@ -17,8 +17,14 @@ void create () {
         "down": HUMAN_ROOM + "building_catacombs.c",
     ]));
     set_looks(([
-        ({ "pews", "altar" }): "Wooden pews used by the faithful in their prayers before an altar of which a senior figure leads a group session of prayer.",
-        ({ "ceiling", "beams" }): "The high ceilings vault overhead with thick exposed wooden beams.",
+        ({
+            "pews",
+            "altar"
+        }): "Wooden pews used by the faithful in their prayers before an altar of which a senior figure leads a group session of prayer.",
+        ({
+            "ceiling",
+            "beams"
+        }): "The high ceilings vault overhead with thick exposed wooden beams.",
         "windows": "The windows are spaced along the side walls and reach towards the base of the vaulted ceiling and consist of faithful in several positions of prayer.",
         "doors": "The front of the building consists of a set of doors facing the street without any windows.",
         "stairs": "The wooden staircase leads down to the basement catacombs of the building.",

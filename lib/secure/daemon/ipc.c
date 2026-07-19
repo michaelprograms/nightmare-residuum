@@ -6,12 +6,12 @@
 
 inherit M_CLEAN;
 
-nosave private int *__Sockets = ({ });
+nosave private int *__Sockets = ({});
 nosave private int __Socket;
 
 /* ----- helpers ----- */
 
-private void setup_ipc () {
+private void setup_ipc() {
     int socket;
 
     __Socket = socket_create(SOCKET_STREAM, "read_socket", "close_socket");
@@ -26,14 +26,14 @@ private void setup_ipc () {
     }
 }
 
-private void monitor_ipc () {
+private void monitor_ipc() {
     if (!socket_status(__Socket)) {
         setup_ipc();
     }
     call_out((: monitor_ipc :), IPC_INTERVAL);
 }
 
-private void authenticate_ipc (int socket) {
+private void authenticate_ipc(int socket) {
     string addr = socket_address(socket);
     // 0.0.0.0 and 127.0.0.1 are the only allowed connections
     if (!regexp(addr, "0\\.0\\.0\\.0|127\\.0\\.0\\.1 [0-9]+")) {
@@ -42,7 +42,7 @@ private void authenticate_ipc (int socket) {
     }
 }
 
-void send (string message) {
+void send(string message) {
     foreach (int socket in __Sockets) {
         int s = socket_write(socket, message);
         if (s < 0) {
@@ -53,7 +53,7 @@ void send (string message) {
 
 /* ----- callbacks ----- */
 
-private void read_socket (int fd, mixed message) {
+private void read_socket(int fd, mixed message) {
     if (!stringp(message)) {
         socket_close(fd);
         error("Bad message from read_socket");
@@ -75,11 +75,9 @@ private void read_socket (int fd, mixed message) {
     // }
 
 }
-void write_socket (int fd) {
+void write_socket(int fd) {}
 
-}
-
-private void listen_socket (int fd) {
+private void listen_socket(int fd) {
     int socket = socket_accept(fd, "read_socket", "write_socket");
 
     authenticate_ipc(fd);
@@ -90,19 +88,19 @@ private void listen_socket (int fd) {
     __Sockets += ({ socket });
 }
 
-private void close_socket (int socket) {
+private void close_socket(int socket) {
     __Sockets -= ({ socket });
 }
 
 /* ----- lifecycle ----- */
 
-void create () {
+void create() {
     set_no_clean(1);
     setup_ipc();
     call_out((: monitor_ipc :), IPC_INTERVAL);
 }
 
-void handle_remove () {
+void handle_remove() {
     foreach (int client in __Sockets) {
         socket_close(client);
     }

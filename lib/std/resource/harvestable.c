@@ -3,7 +3,7 @@ inherit M_LEVELABLE;
 
 nosave private string *__NodeTypes = ({ "ore", "wood", "salvage" });
 
-void create () {
+void create() {
     ::create();
     set_name("resource node");
     set_id(({ "resource_node", }));
@@ -12,14 +12,14 @@ void create () {
     set_no_get(1);
 }
 
-void set_type (string type) {
+void set_type(string type) {
     if (member_array(type, __NodeTypes) == -1) {
         return;
     }
     item::set_type(type);
 }
 
-void set_level (int l) {
+void set_level(int l) {
     string material, type;
 
     levelable::set_level(l);
@@ -49,7 +49,7 @@ void set_level (int l) {
     }
 }
 
-int direct_harvest_obj (mixed args...) {
+int direct_harvest_obj(mixed args...) {
     return environment() && environment() == environment(previous_object());
 }
 
@@ -58,7 +58,7 @@ int direct_harvest_obj (mixed args...) {
  *
  * @param {STD_CHARACTER} character the source of the harvest action
  */
-void handle_harvest (object character) {
+void handle_harvest(object character) {
     object ob, tool;
     string toolType, type = query_type();
 
@@ -78,12 +78,21 @@ void handle_harvest (object character) {
 
     tool = present(toolType, character);
     if (!tool) {
-        message("action", "You need a " + toolType + " to harvest " + query_name() + ".", character);
+        message(
+            "action",
+            "You need a " + toolType + " to harvest " + query_name() + ".",
+            character
+        );
         return;
     }
 
     message("action", "You harvest " + query_name() + ".", character);
-    message("action", character->query_cap_name() + " harvests " + query_name() + ".", environment(character), character);
+    message(
+        "action",
+        character->query_cap_name() + " harvests " + query_name() + ".",
+        environment(character),
+        character
+    );
 
     ob = new(STD_RESOURCE);
     ob->set_type(type);

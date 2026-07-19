@@ -2,7 +2,7 @@
 
 inherit STD_VERB;
 
-void create () {
+void create() {
     verb::create();
     add_rules(({ "", "STR from OBJ", "from OBJ", "STR", }));
     set_requirements(REQUIREMENT_BUSY | REQUIREMENT_DISABLE);
@@ -13,10 +13,10 @@ void create () {
 
 /* ----- STR from OBJ ----- */
 
-mixed can_list_str_from_obj (mixed args...) {
+mixed can_list_str_from_obj(mixed args...) {
     return 1;
 }
-void do_list_str_from_obj (mixed args...) {
+void do_list_str_from_obj(mixed args...) {
     object po = previous_object();
     string str;
     object vendor;
@@ -33,10 +33,10 @@ void do_list_str_from_obj (mixed args...) {
 
 /* ----- from OBJ ----- */
 
-mixed can_list_from_obj (mixed args...) {
+mixed can_list_from_obj(mixed args...) {
     return 1;
 }
-void do_list_from_obj (mixed args...) {
+void do_list_from_obj(mixed args...) {
     object po = previous_object();
     object vendor;
 
@@ -51,10 +51,10 @@ void do_list_from_obj (mixed args...) {
 
 /* ----- STR ----- */
 
-mixed can_list_str (mixed args...) {
+mixed can_list_str(mixed args...) {
     return 1;
 }
-void do_list_str (mixed args...) {
+void do_list_str(mixed args...) {
     object po = previous_object();
     /** @type {STD_ROOM} env */
     object env = environment(po);
@@ -74,9 +74,9 @@ void do_list_str (mixed args...) {
 
 /* ----- no input ----- */
 
-mixed can_list (mixed args...) {
+mixed can_list(mixed args...) {
     return 1;
 }
-void do_list (mixed args...) {
+void do_list(mixed args...) {
     do_list_str(0);
 }

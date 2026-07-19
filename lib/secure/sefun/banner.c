@@ -15,37 +15,37 @@ private string *__Banner = ({
  *
  * @returns login banner
  */
-string query_banner () {
-    string text = "\e[0;37;40m"; // start with ANSI reset
-    string *colors = allocate(6); // left padding
+string query_banner() {
+    string text = "\e[0;37;40m";  // start with ANSI reset
+    string *colors = allocate(6);  // left padding
     string *lines = copy(__Banner);
     object tu = SEFUN->this_user();
     string userColor = tu && tu->query_terminal("color");
 
     string tmp, dot = " ";
     int pad;
-    int r = 25 + 1+random(100);
+    int r = 25 + 1 + random(100);
 
     tmp = "  " + SEFUN->mud_name() + "  ";
     pad = 40 - sizeof(tmp) / 2;
-    lines[<2] = lines[<2][0..pad-1] + tmp + lines[<2][80-pad..79];
+    lines[<2] = lines[<2][0..pad - 1] + tmp + lines[<2][80 - pad..79];
 
     tmp = "  " + SEFUN->version() + "   " + SEFUN->mudlib_version() + "  ";
     pad = 40 - sizeof(tmp) / 2;
-    lines[<1] = lines[<1][0..pad-1] + tmp + lines[<1][80-pad+sizeof(tmp)%2..79];
+    lines[<1] = lines[<1][0..pad - 1] + tmp + lines[<1][80 - pad + sizeof(tmp) % 2..79];
 
     if (userColor == "256") {
         int *c1 = SEFUN->query_random_color();
-        int *c2 = allocate(3, 159+random(32));
+        int *c2 = allocate(3, 159 + random(32));
         string *reversed;
         int n;
         colors += SEFUN->color_gradient(c1, c2, 34);
         n = sizeof(colors);
-        for (int i = 0; i < n; i ++) {
+        for (int i = 0; i < n; i++) {
             colors[i] = "\e[38;2;" + colors[i] + "m";
         }
         reversed = allocate(n);
-        for (int i = 0; i < n; i ++) {
+        for (int i = 0; i < n; i++) {
             reversed[i] = colors[n - 1 - i];
         }
         colors += reversed;
@@ -53,18 +53,18 @@ string query_banner () {
         colors += allocate(74, "\e[33m");
     }
 
-    for (int i = 0; i < sizeof(lines); i ++) {
-        for (int j = 0; j < sizeof(lines[i]); j ++) {
-            if (i == sizeof(lines) - 1 && j >= pad && j <= sizeof(lines[i])-pad-1) {
-                text += lines[i][j..j]; // preserve dots in driver/mudlib versions
+    for (int i = 0; i < sizeof(lines); i++) {
+        for (int j = 0; j < sizeof(lines[i]); j++) {
+            if (i == sizeof(lines) - 1 && j >= pad && j <= sizeof(lines[i]) - pad - 1) {
+                text += lines[i][j..j];  // preserve dots in driver/mudlib versions
             } else if (lines[i][j..j] == ".") {
                 if (userColor == "256") {
                     dot[0] = 10240 + (
-                        (!random(r) ? 0x1  : 0) |
-                        (!random(r) ? 0x2  : 0) |
-                        (!random(r) ? 0x4  : 0) |
+                        (!random(r) ? 0x1 : 0) |
+                        (!random(r) ? 0x2 : 0) |
+                        (!random(r) ? 0x4 : 0) |
                         (!random(r) ? 0x40 : 0) |
-                        (!random(r) ? 0x8  : 0) |
+                        (!random(r) ? 0x8 : 0) |
                         (!random(r) ? 0x10 : 0) |
                         (!random(r) ? 0x20 : 0) |
                         (!random(r) ? 0x80 : 0)
@@ -73,7 +73,7 @@ string query_banner () {
                         dot = " ";
                     }
                 } else {
-                    dot = random(r/2) ? " " : ".";
+                    dot = random(r / 2) ? " " : ".";
                 }
                 text += "\e[0;37;40m" + dot;
             } else if (lines[i][j..j] != " ") {

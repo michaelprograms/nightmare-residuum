@@ -1,6 +1,6 @@
 inherit STD_VERB;
 
-void create () {
+void create() {
     verb::create();
     add_rules(({ "", "OBJ", }));
     set_syntax("harvest [resource]");
@@ -9,13 +9,13 @@ void create () {
 
 /* ----- rule: "" ----- */
 
-mixed can_harvest () {
+mixed can_harvest() {
     return "Harvest what?";
 }
 
 /* ----- rule: "OBJ" ----- */
 
-mixed can_harvest_obj (object ob, string str) {
+mixed can_harvest_obj(object ob, string str) {
     return 1;
 }
 /**
@@ -24,6 +24,6 @@ mixed can_harvest_obj (object ob, string str) {
  * @param {STD_HARVESTABLE} ob the item to harvest
  * @param str the input text
  */
-void do_harvest_obj (object ob, string str) {
+void do_harvest_obj(object ob, string str) {
     ob->handle_harvest(previous_object());
 }

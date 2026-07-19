@@ -2,7 +2,7 @@
 
 inherit STD_VERB;
 
-void create () {
+void create() {
     verb::create();
     add_rules(({ "", "OBJ", }));
     set_requirements(REQUIREMENT_BUSY | REQUIREMENT_DISABLE);
@@ -11,7 +11,7 @@ void create () {
     set_help_similar(({ "drink", }));
 }
 
-mixed can_drink () {
+mixed can_drink() {
     return "Drink what?";
 }
 
@@ -21,6 +21,6 @@ mixed can_drink () {
  * @param {STD_DRINK} ob the object to drink
  * @param str the input text
  */
-void do_drink_obj (object ob, string str) {
+void do_drink_obj(object ob, string str) {
     ob->handle_consume(this_character());
 }

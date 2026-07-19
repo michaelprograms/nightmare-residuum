@@ -23,7 +23,7 @@ inherit "/secure/sefun/user.c";
  *
  * @returns driver version text, ex: "fluffos v2024.07.14"
  */
-string version () {
+string version() {
     string v;
     v = explode(__VERSION__, "-")[0];
     v = replace_string(v, " ", " v");
@@ -36,7 +36,7 @@ string version () {
  *
  * @returns port as an integer
  */
-int driver_port () {
+int driver_port() {
     return __PORT__;
 }
 
@@ -45,7 +45,7 @@ int driver_port () {
  *
  * @returns mudlib version text
  */
-string mudlib_version () {
+string mudlib_version() {
     return "NR v0.3";
 }
 
@@ -54,7 +54,7 @@ string mudlib_version () {
  *
  * @returns mudlib name text
  */
-string mud_name () {
+string mud_name() {
     string name = "Nightmare Residuum";
 #ifdef MUD_NAME
     name = MUD_NAME;
@@ -67,14 +67,14 @@ string mud_name () {
  *
  * @returns multi-line string of the current call stack with some formatting
  */
-string call_trace () {
+string call_trace() {
     string *programs = map(call_stack(4), (: replace_string($1, ":", "::") :));
     object *objects = call_stack(1);
     string *functions = call_stack(2);
     string *origins = call_stack(3);
-    string *res = ({ });
+    string *res = ({});
     int i = sizeof(programs);
-    while (i --) {
+    while (i--) {
         res += ({
             sprintf(
                 "[%O] %s:%s() (%s)",

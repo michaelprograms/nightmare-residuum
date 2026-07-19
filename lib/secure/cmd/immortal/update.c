@@ -1,16 +1,16 @@
 inherit STD_COMMAND;
 
-void create () {
+void create() {
     ::create();
     set_syntax("update -b(rief) -c(overage) [file]");
     set_help_text("The update command is used to destruct and reload a file to the latest copy, and run tests of the file, if they exist.");
 }
 
-void command (string input, mapping flags) {
+void command(string input, mapping flags) {
     string tmp;
     object ob;
     /** @type {STD_LIVING*} keep */
-    object *keep = ({ });
+    object *keep = ({});
 
     if (!input || input == "") {
         message("action", "Update which file?", this_user());
@@ -23,7 +23,11 @@ void command (string input, mapping flags) {
             input = this_user()->query_variable("cwd") + "/" + input;
         }
         input = sanitize_path(input);
-        message("action", "Updating " + input + (flags["R"] ? " and deep inherits " : (flags["r"] ? " and inherits " : "")) + "...", this_user());
+        message(
+            "action",
+            "Updating " + input + (flags["R"] ? " and deep inherits " : (flags["r"] ? " and inherits " : "")) + "...",
+            this_user()
+        );
     }
 
     switch (file_size(input)) {
@@ -42,9 +46,13 @@ void command (string input, mapping flags) {
         int i;
 
         if (!ob) {
-            tmp = catch (ob = load_object(input));
+            tmp = catch(ob = load_object(input));
             if (tmp) {
-                message("action", "update failed: " + input + ":\n" + tmp, this_user());
+                message(
+                    "action",
+                    "update failed: " + input + ":\n" + tmp,
+                    this_user()
+                );
                 return;
             }
         }
@@ -55,7 +63,7 @@ void command (string input, mapping flags) {
             list = inherit_list(ob);
         }
         i = sizeof(list);
-        while (i --) {
+        while (i--) {
             object o = find_object(list[i]);
             if (o) {
                 /** @type {M_CLEAN} */ (o)->handle_remove();
@@ -63,7 +71,7 @@ void command (string input, mapping flags) {
             if (o) {
                 destruct(o);
             }
-            tmp = catch (load_object(list[i]));
+            tmp = catch(load_object(list[i]));
 
             if (!tmp) {
                 // @TODO cleanup how testing on recursive updates work
@@ -74,7 +82,11 @@ void command (string input, mapping flags) {
                 //     D_TEST->process_file(test, ([ "reset": 1 ]));
                 // }
             } else {
-                message("action", "update failed: " + list[i] + ":\n" + tmp, this_user());
+                message(
+                    "action",
+                    "update failed: " + list[i] + ":\n" + tmp,
+                    this_user()
+                );
                 return;
             }
         }
@@ -97,7 +109,7 @@ void command (string input, mapping flags) {
         destruct(ob);
     }
 
-    tmp = catch (load_object(input));
+    tmp = catch(load_object(input));
     if (!tmp) {
         string test = input[0..<2] + "test.c";
         message("action", "update: " + input + ": Ok", this_user());
@@ -105,7 +117,7 @@ void command (string input, mapping flags) {
             l->handle_move(input);
             /** @type {STD_CHARACTER} */ (l)->describe_environment();
         }
-        keep = ({ });
+        keep = ({});
         if (file_size(test) > 0) {
             D_TEST->process_file(test, ([
                 "brief": flags["brief"] || flags["b"],

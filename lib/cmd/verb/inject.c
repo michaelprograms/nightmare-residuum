@@ -2,7 +2,7 @@
 
 inherit STD_VERB;
 
-void create () {
+void create() {
     verb::create();
     add_rules(({ "", "OBJ", "OBJ into LIV" }));
     set_requirements(REQUIREMENT_BUSY | REQUIREMENT_DISABLE);
@@ -13,7 +13,7 @@ void create () {
 
 /* ----- OBJ ----- */
 
-mixed can_inject () {
+mixed can_inject() {
     return "Inject what?";
 }
 
@@ -23,22 +23,31 @@ mixed can_inject () {
  * @param {STD_INJECTABLE} ob the item being injected
  * @param str the input text
  */
-void do_inject_obj (object ob, string str) {
+void do_inject_obj(object ob, string str) {
     object po = previous_object();
 
-    message("action", "You inject " + ob->query_name() + " of " + ob->query_type() + ".", po);
-    message("action", po->query_cap_name() + " injects " + ob->query_name() + " of " + ob->query_type() + ".", environment(po), po);
+    message(
+        "action",
+        "You inject " + ob->query_name() + " of " + ob->query_type() + ".",
+        po
+    );
+    message(
+        "action",
+        po->query_cap_name() + " injects " + ob->query_name() + " of " + ob->query_type() + ".",
+        environment(po),
+        po
+    );
     ob->handle_inject(po);
     po->set_disable(1);
 }
 
 /* ----- OBJ into LIV ----- */
 
-mixed can_inject_obj_into_liv (mixed args...) {
+mixed can_inject_obj_into_liv(mixed args...) {
     return 1;
 }
 
-void do_inject_obj_into_liv (mixed args...) {
+void do_inject_obj_into_liv(mixed args...) {
     object po = previous_object();
     object ob = args[0];
     object target = args[1];
@@ -52,9 +61,22 @@ void do_inject_obj_into_liv (mixed args...) {
     if (ob->query_type() == "damaging nanites") {
         initiate_combat(po, target);
     }
-    message("action", "You inject " + ob->query_name() + " of " + ob->query_type() + " into " + target->query_cap_name() + ".", po);
-    message("action", po->query_cap_name() + " injects " + ob->query_name() + " of " + ob->query_type() + " into you.", target);
-    message("action", po->query_cap_name() + " injects " + ob->query_name() + " of " + ob->query_type() + " into " + target->query_cap_name() + ".", environment(po), ({ po, target }));
+    message(
+        "action",
+        "You inject " + ob->query_name() + " of " + ob->query_type() + " into " + target->query_cap_name() + ".",
+        po
+    );
+    message(
+        "action",
+        po->query_cap_name() + " injects " + ob->query_name() + " of " + ob->query_type() + " into you.",
+        target
+    );
+    message(
+        "action",
+        po->query_cap_name() + " injects " + ob->query_name() + " of " + ob->query_type() + " into " + target->query_cap_name() + ".",
+        environment(po),
+        ({ po, target })
+    );
     ob->handle_inject(target);
     po->set_disable(1);
 }

@@ -4,7 +4,7 @@
  * @param str the string to strip
  * @returns the string without a leading "a", "an", or "the"
  */
-string remove_article (string str) {
+string remove_article(string str) {
     string *matches;
     if (sizeof(matches = pcre_extract(str, "^(?:an?|the) (.+)$")) > 0) {
         str = matches[0];
@@ -20,7 +20,7 @@ string remove_article (string str) {
  * @param definite when non-zero, prepend "the" instead of "a"/"an"
  * @returns the string with an article prepended, or an empty string if str is empty
  */
-varargs string add_article (string str, int definite) {
+varargs string add_article(string str, int definite) {
     if (!stringp(str) || !sizeof(str)) {
         str = "";
     } else {
@@ -28,7 +28,10 @@ varargs string add_article (string str, int definite) {
             str = "the " + remove_article(str);
         } else {
             str = remove_article(str);
-            if (member_array(str[0], ({ 'a','A','e','E','i','I','o','O','u','U' })) > -1) {
+            if (member_array(
+                str[0],
+                ({ 'a', 'A', 'e', 'E', 'i', 'I', 'o', 'O', 'u', 'U' })
+            ) > -1) {
                 str = "an " + str;
             } else {
                 str = "a " + str;
@@ -45,7 +48,7 @@ varargs string add_article (string str, int definite) {
  * @param n the integer to convert
  * @returns the cardinal word for n
  */
-string cardinal (int n) {
+string cardinal(int n) {
     string sign = "";
     if (undefinedp(n) || !intp(n)) {
         error("Bad argument 1 to grammar->cardinal");
@@ -80,7 +83,7 @@ nosave private mapping __Ordinals = ([
  * @param n the non-negative integer to convert
  * @returns the ordinal string for n
  */
-string ordinal (int n) {
+string ordinal(int n) {
     int x;
     if (undefinedp(n) || !intp(n) || n < 0) {
         error("Bad argument 1 to grammar->ordinal");
@@ -128,13 +131,13 @@ nosave private mapping __AbnormalOverride = ([
  * @param single the string or object to pluralize
  * @returns the plural form of the string
  */
-string pluralize (mixed single) {
+string pluralize(mixed single) {
     string str, last;
     string ansiTail = "";
     int n;
 
     if (objectp(single)) {
-        str = /** @type {STD_OBJECT} single */(single)->query_name();
+        str = /** @type {STD_OBJECT} single */ (single)->query_name();
     } else {
         str = single;
     }
@@ -145,14 +148,14 @@ string pluralize (mixed single) {
     if (str[<2..<1] == "%^") {
         n = strsrch(str[0..<3], "%^", -1);
         ansiTail = str[n..];
-        str = str[0..n-1];
+        str = str[0..n - 1];
     }
     if (__AbnormalOverride[str]) {
         return __AbnormalOverride[str] + ansiTail;
     }
     last = explode(str, " ")[<1];
     if (__AbnormalOverride[last]) {
-        return str[0..<(sizeof(last)+1)] + __AbnormalOverride[last] + ansiTail;
+        return str[0..<(sizeof(last) + 1)] + __AbnormalOverride[last] + ansiTail;
     }
 
     if (str[<3..<1] == "uns") {
@@ -175,7 +178,7 @@ string pluralize (mixed single) {
  * @param str the noun string, optionally prefixed with an article
  * @returns the consolidated string, ex: "three swords" or "a sword" when n == 1
  */
-string consolidate (int n, string str) {
+string consolidate(int n, string str) {
     string *words;
     string tmp, result;
     string *tag;
@@ -192,7 +195,7 @@ string consolidate (int n, string str) {
 
     words = explode(str, " ");
     tmp = lower_case(words[0]);
-    if (member_array(tmp, ({"a","an","the","one"})) > -1) {
+    if (member_array(tmp, ({ "a", "an", "the", "one" })) > -1) {
         words = words[1..];
     }
 
@@ -214,7 +217,7 @@ string consolidate (int n, string str) {
  * @param conjunction the joining word; defaults to "and"
  * @returns the joined string, ex: "a, b, and c"
  */
-varargs string conjunction (string *list, string conjunction) {
+varargs string conjunction(string *list, string conjunction) {
     string result = "";
     int l;
 
@@ -244,12 +247,12 @@ varargs string conjunction (string *list, string conjunction) {
  * @param value a string name or object with query_cap_name()
  * @returns the possessive noun string
  */
-string possessive_noun (mixed value) {
+string possessive_noun(mixed value) {
     if (!value) {
         return "Its";
     }
     if (objectp(value)) {
-        value = /** @type {STD_OBJECT} value */(value)->query_cap_name();
+        value = /** @type {STD_OBJECT} value */ (value)->query_cap_name();
         if (!value) {
             return "Its";
         }
@@ -271,10 +274,10 @@ string possessive_noun (mixed value) {
  * @param value a gender string ("male", "female", "neither") or {STD_LIVING} object
  * @returns the subjective pronoun
  */
-string subjective (mixed value) {
+string subjective(mixed value) {
     string str;
     if (objectp(value)) {
-        str = /** @type {STD_LIVING} value */(value)->query_gender();
+        str = /** @type {STD_LIVING} value */ (value)->query_gender();
     } else {
         str = value;
     }
@@ -297,10 +300,10 @@ string subjective (mixed value) {
  * @param value a gender string ("male", "female", "neither") or {STD_LIVING} object
  * @returns the objective pronoun
  */
-string objective (mixed value) {
+string objective(mixed value) {
     string str;
     if (objectp(value)) {
-        str = /** @type {STD_LIVING} value */(value)->query_gender();
+        str = /** @type {STD_LIVING} value */ (value)->query_gender();
     } else {
         str = value;
     }
@@ -323,10 +326,10 @@ string objective (mixed value) {
  * @param value a gender string ("male", "female", "neither") or {STD_LIVING} object
  * @returns the possessive pronoun
  */
-string possessive (mixed value) {
+string possessive(mixed value) {
     string str;
     if (objectp(value)) {
-        str = /** @type {STD_LIVING} value */(value)->query_gender();
+        str = /** @type {STD_LIVING} value */ (value)->query_gender();
     } else {
         str = value;
     }
@@ -349,6 +352,6 @@ string possessive (mixed value) {
  * @param value a gender string ("male", "female", "neither") or {STD_LIVING} object
  * @returns the reflexive pronoun
  */
-string reflexive (mixed value) {
+string reflexive(mixed value) {
     return objective(value) + "self";
 }

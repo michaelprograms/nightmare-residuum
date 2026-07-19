@@ -4,7 +4,7 @@
  * @param b16 hex base16 number to convert
  * @returns base10 integer number
  */
-int hex_to_int (string b16) {
+int hex_to_int(string b16) {
     int b10;
 
     if (!stringp(b16) || !strlen(b16)) {
@@ -20,13 +20,13 @@ int hex_to_int (string b16) {
  * @param b10 integer base10 number to convert
  * @returns string base2 number
  */
-string int_to_binary (int b10) {
+string int_to_binary(int b10) {
     string b2 = "";
 
     if (undefinedp(b10) || !intp(b10)) {
         error("Bad argument 1 to convert->int_to_binary");
     }
-    for (int i = 63; i >= 0; i --) {
+    for (int i = 63; i >= 0; i--) {
         // Check if the ith bit is set
         b2 += b10 & (1 << i) ? "1" : "0";
     }
