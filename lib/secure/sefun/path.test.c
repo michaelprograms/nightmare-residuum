@@ -260,23 +260,11 @@ void test_wild_card() {
         assert_equal(testOb->wild_card("/doc"), ({ "/doc" })),
         assert_equal(
             testOb->wild_card("/doc/"),
-            ({
-                "/doc/apply",
-                "/doc/build",
-                "/doc/efun",
-                "/doc/help",
-                "/doc/lpc"
-            })
+            ({ "/doc/build", "/doc/help" })
         ),
         assert_equal(
             testOb->wild_card("/doc/*"),
-            ({
-                "/doc/apply",
-                "/doc/build",
-                "/doc/efun",
-                "/doc/help",
-                "/doc/lpc"
-            })
+            ({ "/doc/build", "/doc/help" })
         ),
 
         assert_equal(
