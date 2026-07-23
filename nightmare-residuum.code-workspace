@@ -16,7 +16,27 @@
         },
         "files.exclude": {
             "driver/src/thirdparty/**": true,
-        }
+        },
+        "workbench.colorCustomizations": {
+            "activityBar.activeBackground": "#4e6cf7",
+            "activityBar.background": "#4e6cf7",
+            "activityBar.foreground": "#e7e7e7",
+            "activityBar.inactiveForeground": "#e7e7e799",
+            "activityBarBadge.background": "#980721",
+            "activityBarBadge.foreground": "#e7e7e7",
+            "commandCenter.border": "#e7e7e799",
+            "sash.hoverBorder": "#4e6cf7",
+            "statusBar.background": "#1d44f5",
+            "statusBar.foreground": "#e7e7e7",
+            "statusBarItem.hoverBackground": "#4e6cf7",
+            "statusBarItem.remoteBackground": "#1d44f5",
+            "statusBarItem.remoteForeground": "#e7e7e7",
+            "titleBar.activeBackground": "#1d44f5",
+            "titleBar.activeForeground": "#e7e7e7",
+            "titleBar.inactiveBackground": "#1d44f599",
+            "titleBar.inactiveForeground": "#e7e7e799"
+        },
+        "peacock.color": "#1d44f5"
     },
     "extensions": {
         "recommendations": [
