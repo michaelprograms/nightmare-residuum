@@ -22,4 +22,6 @@
 # Certificate files
 /lib/secure/etc/tls
 
+node_modules/
+
 !/**/.gitignore

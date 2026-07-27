@@ -1,0 +1,10 @@
+{
+  "name": "planet-render",
+  "version": "1.0.0",
+  "type": "module",
+  "private": true,
+  "dependencies": {
+    "pureimage": "^0.4.13",
+    "shade-blend-color": "^1.0.0"
+  }
+}

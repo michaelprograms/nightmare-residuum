@@ -353,6 +353,56 @@ varargs mapping query_structure(string name, int x, int y) {
     ]);
 }
 
+/**
+ * Scan an entire planet surface for structure/interior coordinates.
+ * Returns one mapping per enterable structure - the same cells that back
+ * the interior virtual rooms.
+ *
+ * @param {string} name the planet seed/name
+ * @returns {mapping *} ([ "x", "y", "type", "level" ]) per structure
+ */
+mapping *scan_structures(string name) {
+    mapping planet, sp, noise;
+    mapping *found = ({});
+    int *p;
+    int size, x, y;
+    planet = query_planet(name);
+    if (!mapp(planet) || !planet["size"]) {
+        return found;
+    }
+    size = planet["size"];
+    // hoist permutation: query_structure() rebuilds it every call
+    sp = noise_generate_permutation_simplex(name);
+    p = sp["p"];
+    for (y = 0; y < size; y++) {
+        for (x = 0; x < size; x++) {
+            // cheap seed gate: mirrors query_structure()'s presence check
+            if (p[(p[x & 255] + (y & 255)) & 255] >= STRUCTURE_RARITY) {
+                continue;
+            }
+            noise = query_noise(
+                sp,
+                size,
+                x,
+                y,
+                planet["heightFactor"],
+                planet["humidityFactor"],
+                planet["heatFactor"]
+            );
+            if (noise["height"] <= HEIGHT_SHORE) {
+                continue;  // ocean or shore: no structures
+            }
+            found += ({ ([
+                "x": x,
+                "y": y,
+                "type": __StructureTypes[p[(p[y & 255] + (x & 255)) & 255] % sizeof(__StructureTypes)],
+                "level": noise["level"],
+            ]) });
+        }
+    }
+    return found;
+}
+
 /* ----- biome ----- */
 
 /*
@@ -657,7 +707,17 @@ void generate_json_line(mapping data, int time) {
     if (y + 1 == size) {
         // int size2 = size * size;
         int t;
-        write_file(data["file"], "]}");
+        string structs = "";
+        foreach (mapping s in scan_structures(data["name"])) {
+            structs += (strlen(structs) ? "," : "") + sprintf(
+                "[%d,%d,\"%s\",%d]",
+                s["x"],
+                s["y"],
+                s["type"],
+                s["level"]
+            );
+        }
+        write_file(data["file"], "],\n\"structures\":[" + structs + "]}");
         // write_file(data["file"], "    ],\n    \"min height\":\""+data["min"]["height"]+"\",\n    \"max height\":\""+data["max"]["height"]+"\",\n    \"min humidity\":\""+data["min"]["humidity"]+"\",\n    \"max humidity\":\""+data["max"]["humidity"]+"\",\n    \"min heat\":\""+data["min"]["heat"]+"\",\n    \"max heat\":\""+data["max"]["heat"]+"\"\n}");
 
         t = time_ns() - data["start"];
