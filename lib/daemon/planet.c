@@ -22,18 +22,6 @@ private mapping __Planet = ([
     "heightFactor": 1.0,
     "humidityFactor": 1.0,
     "heatFactor": 1.0,
-
-    "overrides": ([
-        "x": integer,
-        "y": integer,
-        "type": string,
-        "dir": string,
-        "room": string,
-
-        Examples:
-        (["x":x,"y":y,"type":"enter","dir":dir,"room":room,,"desc":"$DIR can be entered.",]),
-        (["x":x,"y":y,"type":"blocked","dir":dir,"desc":"$DIR is blocked.",]),
-    ]),
 */
 ]);
 

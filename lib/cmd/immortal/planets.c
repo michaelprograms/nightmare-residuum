@@ -20,13 +20,12 @@ void command(string input, mapping flags) {
         "header": ({
             "Name",
             "Size",
-            "Overrides",
             "Height",
             "Humidity",
             "Heat",
         }),
         "items": ({}),
-        "columns": 6,
+        "columns": 5,
     ]);
 
     if (input) {
@@ -36,7 +35,6 @@ void command(string input, mapping flags) {
             item["items"] += ({
                 planet["name"],
                 planet["size"],
-                sizeof(planet["overrides"]),
                 format_factor(planet["heightFactor"]),
                 format_factor(planet["humidityFactor"]),
                 format_factor(planet["heatFactor"]),
@@ -48,7 +46,6 @@ void command(string input, mapping flags) {
             item["items"] += ({
                 planet["name"],
                 planet["size"],
-                sizeof(planet["overrides"]),
                 format_factor(planet["heightFactor"]),
                 format_factor(planet["humidityFactor"]),
                 format_factor(planet["heatFactor"]),

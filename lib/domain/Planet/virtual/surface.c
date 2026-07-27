@@ -101,33 +101,6 @@ void setup_exits(object room, mapping planet, int x, int y) {
     room->set_exit("south", path + "/" + x + "." + ys + ".c");
     room->set_exit("southeast", path + "/" + xe + "." + ys + ".c");
 
-    if (arrayp(planet["overrides"])) {
-        foreach (mapping override in filter(
-            planet["overrides"],
-            (: $1["x"] == $(x) && $1["y"] == $(y) :)
-        )) {
-            if (override["type"] == "enter") {
-                room->remove_exit(override["dir"]);
-                room->set_exit("enter " + override["dir"], override["room"]);
-                room->add_terrain_override(replace_string(
-                    override["desc"],
-                    "$DIR",
-                    override["dir"]
-                ));
-            } else if (override["type"] == "blocked") {
-                room->remove_exit(override["dir"]);
-                room->add_terrain_override(replace_string(
-                    override["desc"],
-                    "$DIR",
-                    override["dir"]
-                ));
-            } else if (override["type"] == "dome") {
-                room->set_room_brackets(({ "(", ")" }));
-                room->set_room_bracket_color("%^I_CYAN%^BOLD%^");
-            }
-        }
-    }
-
     // seed-derived structures
     structure = D_PLANET->query_structure(name, x, y);
     if (structure) {
@@ -159,17 +132,6 @@ object virtual_create(string path) {
     room->set_property("y", y);
 
     setup_room(room);
-    if (arrayp(planet["overrides"])) {
-        foreach (mapping override in filter(
-            planet["overrides"],
-            (: $1["x"] == $(x) && $1["y"] == $(y) :)
-        )) {
-            if (override["type"] == "dome") {
-                room->set_property("no resource", 1);
-                room->set_property("no receive", 1);
-            }
-        }
-    }
     room->update_descriptions();
     room->update_resource();
     setup_exits(room, planet, x, y);

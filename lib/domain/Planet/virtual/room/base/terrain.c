@@ -185,37 +185,6 @@ mixed handle_go(object ob, string verb, string dir) {
     }
 }
 
-/* ----- map override ----- */
-
-string query_room_bracket_color() {
-    string name;
-    int x, y;
-    mapping planet;
-
-    if (sscanf(
-        file_name(),
-        PLANET_V_ROOM + "surface/%s/%d.%d",
-        name,
-        x,
-        y
-    ) != 3) {
-        return 0;
-    }
-
-    planet = D_PLANET->query_planet(name);
-    if (arrayp(planet["overrides"])) {
-        foreach (mapping override in filter(
-            planet["overrides"],
-            (: $1["x"] == $(x) && $1["y"] == $(y) :)
-        )) {
-            if (override["type"] == "dome") {
-                return "%^AFF%^";
-            }
-        }
-    }
-
-    return ::query_room_bracket_color();
-}
 string *query_room_map() {
     string *result = ({});
     mapping planet;

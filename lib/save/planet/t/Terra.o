@@ -1,2 +1,2 @@
 #/daemon/planet.c
-__Planet (["size":500,"overrides":({}),"name":"Terra",])
+__Planet (["size":500,"name":"Terra",])
