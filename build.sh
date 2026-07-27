@@ -14,7 +14,7 @@ else
 fi
 
 rm -rf build && mkdir -p build && cd build
-cmake ../driver \
+time cmake ../driver \
   "${ccache_flags[@]}" \
   -DPACKAGE_DB_SQLITE=2 \
   -DPACKAGE_UIDS=OFF \
@@ -22,5 +22,5 @@ cmake ../driver \
   -DPACKAGE_EXTERNAL=ON \
   -DCMAKE_BUILD_TYPE=RelWithDebInfo
 
-make -j `nproc` install
+time make -j $(nproc) install
 cd ..
