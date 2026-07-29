@@ -25,3 +25,5 @@
 node_modules/
 
 !/**/.gitignore
+
+native/noise/libnrnoise.so

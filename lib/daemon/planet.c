@@ -709,7 +709,10 @@ void generate_json_line(mapping data, int time) {
         // write_file(data["file"], "    ],\n    \"min height\":\""+data["min"]["height"]+"\",\n    \"max height\":\""+data["max"]["height"]+"\",\n    \"min humidity\":\""+data["min"]["humidity"]+"\",\n    \"max humidity\":\""+data["max"]["humidity"]+"\",\n    \"min heat\":\""+data["min"]["heat"]+"\",\n    \"max heat\":\""+data["max"]["heat"]+"\"\n}");
 
         t = time_ns() - data["start"];
-        // write("Seed '"+planet["name"]+"' size "+size+" "+data["file"]+" done: %^ORANGE%^"+sprintf("%.2f", t/1000000.0)+" ms%^RESET%^\n");
+        write("Seed '" + planet["name"] + "' size " + size + " " + data["file"] + " done: %^ORANGE%^" + sprintf(
+            "%.2f",
+            t / 1000000.0
+        ) + " ms%^RESET%^\n");
 
         // TODO: clean this up
         // foreach (string b in keys(__BiomeColor)) {
@@ -741,7 +744,7 @@ void generate_json_line(mapping data, int time) {
         if (data["y"] % 5 > 0) {
             generate_json_line(data, time);
         } else {
-            call_out_walltime((: generate_json_line :), 0.001, data, time);
+            call_out_walltime((: generate_json_line :), 0.000, data, time);
         }
     }
 }
@@ -777,5 +780,5 @@ varargs void generate_json(string name, int time) {
         1
     );
 
-    call_out_walltime((: generate_json_line :), 0.001, data, time);
+    call_out_walltime((: generate_json_line :), 0.000, data, time);
 }

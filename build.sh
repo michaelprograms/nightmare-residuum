@@ -24,3 +24,6 @@ time cmake ../driver \
 
 time make -j $(nproc) install
 cd ..
+
+# native noise library for FFI acceleration (package_ffi); optional at runtime
+bash native/noise/build.sh

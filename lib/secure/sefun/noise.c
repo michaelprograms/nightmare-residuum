@@ -81,15 +81,94 @@ nosave private int *GRAD4 = ({
     1, 1, 1, 0, 1, 1, -1, 0, 1, -1, 1, 0, 1, -1, -1, 0,
     -1, 1, 1, 0, -1, 1, -1, 0, -1, -1, 1, 0, -1, -1, -1, 0,
 });
+
+
+/* ----- FFI acceleration (package_ffi); LPC fallback when unavailable ----- */
+
+#ifdef __PACKAGE_FFI__
+
+#define __FFI_PERM_BYTES    5120  // sizeof(ns_perm_t): 5 * 256 * int32
+#define __FFI_VOID          0
+#define __FFI_INT           5
+#define __FFI_DOUBLE        10
+#define __FFI_POINTER       11
+
+nosave private int __FFI_Tried = 0;
+nosave private int __FFI_Lib = 0;
+nosave private int __FFI_Perm = 0;
+nosave private int __FFI_Sample = 0;
+nosave private int __FFI_Off = 0;  // runtime override for A/B perf comparison
+
+private void __ffi_init() {
+    string path;
+
+    __FFI_Tried = 1;
+    if (catch(path = get_os_env("NR_NOISE_SO")) || !stringp(path) || !sizeof(path)) {
+        debug_message("noise: FFI disabled (NR_NOISE_SO unset)\n");
+        return;
+    }
+    if (catch(__FFI_Lib = ffi_load(path)) || __FFI_Lib <= 0) {
+        __FFI_Lib = 0;
+        debug_message("noise: FFI disabled (load failed: " + path + ")\n");
+        return;
+    }
+    if (catch(__FFI_Perm = ffi_prepare(__FFI_Lib, "ns_permutation", __FFI_VOID, ({
+        __FFI_POINTER, __FFI_INT, __FFI_POINTER
+    }))) || catch(__FFI_Sample = ffi_prepare(__FFI_Lib, "ns_simplex_4d", __FFI_DOUBLE, ({
+        __FFI_DOUBLE, __FFI_DOUBLE, __FFI_DOUBLE, __FFI_DOUBLE, __FFI_POINTER, __FFI_INT, __FFI_DOUBLE
+    }))) || __FFI_Perm <= 0 || __FFI_Sample <= 0) {
+        __FFI_Lib = 0;
+        debug_message("noise: FFI disabled (prepare failed)\n");
+        return;
+    }
+    debug_message("noise: FFI acceleration enabled via " + path + "\n");
+}
+
+private int __ffi_on() {
+    if (!__FFI_Tried) {
+        __ffi_init();
+    }
+    return __FFI_Lib > 0 && !__FFI_Off;
+}
+
+int noise_ffi_active() {
+    return __ffi_on();
+}
+
+// Diagnostic: force the LPC path on (0) or restore FFI (1) at runtime, for
+// same-session A/B timing. No correctness effect - the paths are identical.
+void noise_ffi_set_active(int on) {
+    __FFI_Off = !on;
+}
+
+#else
+
+int noise_ffi_active() {
+    return 0;
+}
+
+void noise_ffi_set_active(int on) {}
+
+#endif
 mapping noise_generate_permutation_simplex(string seed) {
     int *pArray = noise_generate_permutation(seed);
-    return ([
+    mapping result = ([
         "x": map(pArray, (: GRAD4[($1 % 32) * 4] :)),
         "y": map(pArray, (: GRAD4[($1 % 32) * 4 + 1] :)),
         "z": map(pArray, (: GRAD4[($1 % 32) * 4 + 2] :)),
         "w": map(pArray, (: GRAD4[($1 % 32) * 4 + 3] :)),
         "p": pArray
     ]);
+#ifdef __PACKAGE_FFI__
+    if (__ffi_on()) {
+        buffer permBuf, seedBuf;
+        permBuf = ffi_alloc(__FFI_PERM_BYTES);
+        seedBuf = to_buffer(stringp(seed) ? seed : "");
+        ffi_call(__FFI_Perm, ({ seedBuf, sizeof(seedBuf), permBuf }));
+        result["ffi"] = permBuf;
+    }
+#endif
+    return result;
 }
 
 /* ----- noise helper functions ----- */
@@ -484,6 +563,15 @@ float noise_simplex_4d(
     if (!scale) {
         scale = 1.0;
     }
+
+#ifdef __PACKAGE_FFI__
+    if (__ffi_on() && bufferp(p["ffi"])) {
+        return ffi_call(
+            __FFI_Sample,
+            ({ x, y, z, w, p["ffi"], octaves, scale })
+        );
+    }
+#endif
 
     for (int i = 0; i < octaves; i++) {
         total += noise_simplex_4d_permutation(

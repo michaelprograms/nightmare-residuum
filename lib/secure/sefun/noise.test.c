@@ -11,7 +11,16 @@ string *test_order() {
         "test_noise_perlin",
         "test_noise_simplex",
         "test_gradient",
+        "test_ffi_equivalence",
     });
+}
+
+// Strips the FFI accelerator handle so exact-mapping assertions compare only
+// the permutation content (p/x/y/z/w), not the opaque native buffer.
+mapping perm_no_ffi(mixed seed) {
+    mapping m = testOb->noise_generate_permutation_simplex(seed);
+    map_delete(m, "ffi");
+    return m;
 }
 
 void test_noise_perlin_helpers() {
@@ -1129,7 +1138,7 @@ void test_generate_permutation() {
     }) :));
     expect("noise_generate_permutation_simplex returns different permutations", (: ({
         // default permutation
-        assert_equal(testOb->noise_generate_permutation_simplex(0), ([
+        assert_equal(perm_no_ffi(0), ([
             "p": ({
                 151,
                 160,
@@ -2423,7 +2432,7 @@ void test_generate_permutation() {
         ])),
 
         // seeded permutations
-        assert_equal(testOb->noise_generate_permutation_simplex("test"), ([
+        assert_equal(perm_no_ffi("test"), ([
             "p": ({
                 31,
                 240,
@@ -3715,7 +3724,7 @@ void test_generate_permutation() {
                 -1
             })
         ])),
-        assert_equal(testOb->noise_generate_permutation_simplex("seed"), ([
+        assert_equal(perm_no_ffi("seed"), ([
             "p": ({
                 40,
                 65,
@@ -5007,7 +5016,7 @@ void test_generate_permutation() {
                 1
             }),
         ])),
-        assert_equal(testOb->noise_generate_permutation_simplex("a really long seed"), ([
+        assert_equal(perm_no_ffi("a really long seed"), ([
             "p": ({
                 160,
                 240,
@@ -6734,5 +6743,58 @@ void test_gradient() {
         assert_equal(testOb->gradient_2d(1, 1, 1, 1, 0.5, 0.5), 0.000000),
         assert_equal(testOb->gradient_2d(0, 0, 0, 0, 0.0, 0.0), 0.000000),
         assert_equal(testOb->gradient_2d(-2, 3, -2, 3, 1.0, 1.0), 0.000000),
+    }) :));
+}
+
+// Returns 1 if a and b are within 1e-9 of each other.
+int close(float a, float b) {
+    float d = a - b;
+    if (d < 0.0) {
+        d = -d;
+    }
+    return d < 0.000000001;
+}
+
+void test_ffi_equivalence() {
+    mapping pFFI = testOb->noise_generate_permutation_simplex("Terra");
+    mapping pLPC = copy(pFFI);
+
+    map_delete(pLPC, "ffi");  // force the LPC path regardless of FFI state
+
+    if (!testOb->noise_ffi_active()) {
+        // FFI unavailable in this environment: assert the fallback is sane.
+        expect("noise FFI unavailable: LPC path is used and returns floats", (: ({
+            assert_equal(bufferp($(pFFI)["ffi"]), 0),
+            assert_equal(
+                floatp(testOb->noise_simplex_4d(
+                    0.1,
+                    0.2,
+                    0.3,
+                    0.4,
+                    $(pLPC),
+                    5,
+                    1.25
+                )),
+                1
+            ),
+        }) :));
+        return;
+    }
+
+    // FFI active: the native dispatch must equal the LPC path within 1e-9.
+    expect("noise_simplex_4d FFI dispatch equals LPC within 1e-9", (: ({
+        assert_equal(bufferp($(pFFI)["ffi"]), 1),
+        assert_equal(close(
+            testOb->noise_simplex_4d(0.1, 0.2, 0.3, 0.4, $(pFFI), 5, 1.25),
+            testOb->noise_simplex_4d(0.1, 0.2, 0.3, 0.4, $(pLPC), 5, 1.25)
+        ), 1),
+        assert_equal(close(
+            testOb->noise_simplex_4d(1.5, 2.5, 3.5, 4.5, $(pFFI), 4, 3.0),
+            testOb->noise_simplex_4d(1.5, 2.5, 3.5, 4.5, $(pLPC), 4, 3.0)
+        ), 1),
+        assert_equal(close(
+            testOb->noise_simplex_4d(12.3, 45.6, 78.9, 0.0, $(pFFI), 5, 1.25),
+            testOb->noise_simplex_4d(12.3, 45.6, 78.9, 0.0, $(pLPC), 5, 1.25)
+        ), 1),
     }) :));
 }

@@ -567,6 +567,34 @@ int valid_socket(object caller, string fn, mixed *info) {
 }
 
 /**
+ * Driver apply gating every FFI operation (ffi_load / ffi_symbol /
+ * ffi_prepare / ffi_peek / ffi_callback). Loading a native shared library is
+ * an arbitrary-native-code primitive, so this is scoped as tightly as
+ * possible.
+ *
+ * @param {string} op     - the FFI operation ("load", "symbol", "prepare", ...)
+ * @param {mixed} arg     - the op's subject (library path, symbol name, ...)
+ * @param {object} caller - the object invoking the FFI efun
+ * @returns {int} 1 if permitted, 0 otherwise
+ */
+int valid_ffi(string op, mixed arg, object caller) {
+    string bn;
+
+    if (!objectp(caller)) {
+        return 0;
+    }
+    bn = base_name(caller);
+    if (
+        bn != "/secure/sefun/sefun" &&
+        bn != "/secure/sefun/noise" &&
+        bn != "/secure/sefun/noise.coverage"
+    ) {
+        return 0;
+    }
+    return op == "load" || op == "symbol" || op == "prepare";
+}
+
+/**
  * This apply is called by the driver for each read efun to determine whether
  * the caller has permission to access the file.
  *
