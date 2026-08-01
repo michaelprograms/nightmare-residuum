@@ -6,7 +6,7 @@ void create() {
     set_help_text("The who command is used to view connected characters.");
 }
 
-void command(string input, mapping flags) {
+void command(string _input, mapping _flags) {
     mapping data = ([
         "title": "WHO",
         "subtitle": mud_name(),
@@ -43,7 +43,7 @@ void command(string input, mapping flags) {
         );
         foreach (object imm in immList) {
             bodyItems += ({
-                imm->query_level(),
+                "" + imm->query_level(),
                 "%^I_WHITE%^BOLD%^" + imm->query_short() + "%^RESET%^",
                 capitalize(imm->query_species()),
                 capitalize(imm->query_class()),
@@ -58,7 +58,7 @@ void command(string input, mapping flags) {
     );
     foreach (object char in charList) {
         bodyItems += ({
-            char->query_level(),
+            "" + char->query_level(),
             char->query_short(),
             capitalize(char->query_species()),
             capitalize(char->query_class()),

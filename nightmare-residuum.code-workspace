@@ -17,6 +17,10 @@
         "files.exclude": {
             "driver/src/thirdparty/**": true,
         },
+        "files.associations": {
+            "**/native/**/*.c": "c",
+            "**/native/**/*.h": "c"
+        },
         "workbench.colorCustomizations": {
             "activityBar.activeBackground": "#4e6cf7",
             "activityBar.background": "#4e6cf7",
