@@ -570,11 +570,8 @@ string create_coverage(string path) {
             "^(?:public |private |protected |nosave |nomask |varargs )*(?:float|int|object|mapping|mixed|string|void) *\\**([a-zA-Z0-9_]{1,}) ?\\(.*\\) {"
         )) > 0) {
             // Start of Function
-            line = logical[i] + " D_TEST->line_hit(" + num + "); {";
+            line = logical[i] + " D_TEST->line_hit(" + num + ");";
             __Lines[num] = ({ 0, reMatches[0] });
-        } else if (pcre_match(logical[i], "^}$")) {
-            // End of Function
-            line = "} " + logical[i];
         } else if (pcre_match(logical[i], "^\\s+\\} else \\{")) {
             int n = strsrch(logical[i], "{");
             // Else Construct
@@ -626,9 +623,16 @@ string create_coverage(string path) {
             }
         } else if (pcre_match(
             logical[i],
-            "^\\s+([^ \\((\\/*|\\/\\/)]+ (=|\\+\\+|--|\\+=|-=|\\*=|\\\\=).*;?)"
+            "^\\s+([^ \\((\\/*|\\/\\/)]+ (=(?!=)|\\+\\+|--|\\+=|-=|\\*=|\\\\=).*;?)"
         )) {
             // Variable Operator
+            line = "D_TEST->line_hit(" + num + "); " + logical[i];
+            __Lines[num] = ({ 0 });
+        } else if (pcre_match(
+            logical[i],
+            "^\\s+(?:float|int|object|mapping|mixed|string|function|buffer)\\s+\\**[a-zA-Z_]\\w*.*="
+        )) {
+            // Variable Declaration with initializer
             line = "D_TEST->line_hit(" + num + "); " + logical[i];
             __Lines[num] = ({ 0 });
         } else if (
