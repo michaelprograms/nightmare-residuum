@@ -32,12 +32,15 @@ void command(string input, mapping flags) {
     // grab start time
     int t = rusage()["utime"] + rusage()["stime"];
 
-    object *livs = filter(objects(), (: $1 && $1->is_living() :));
-    object *rooms = objects((: member_array(
-        "/std/room.c",
-        deep_inherit_list($1)
-    ) > -1 :));
-    object *obs = objects() - livs - rooms;
+    object *all = objects();
+    object *livs = filter(all, (: $1 && $1->is_living() :));
+    // inherits() resolves its string via find_object, so the /std/room
+    // blueprint must be loaded or the filter silently matches nothing
+    object *rooms;
+    object *obs;
+    load_object("/std/room");
+    rooms = filter(all, (: $1 && inherits("/std/room", $1) :));
+    obs = all - livs - rooms;
     int totalObs = sizeof(obs);
     int totalRooms = sizeof(rooms);
     int totalLivs = sizeof(livs);
