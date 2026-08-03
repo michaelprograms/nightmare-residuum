@@ -566,6 +566,40 @@ void test_querying_planets() {
     }) :));
 }
 
+void test_generate_missing_planet() {
+    expect("generate_png bails on a planet with no data", (: ({
+        assert_equal(
+            testOb->generate_png("__NoSuchPlanet__ThatWasNeverCreated"),
+            0
+        ),
+    }) :));
+}
+
+void test_planet_size_guards() {
+    expect("query_noise rejects a non-positive size", (: ({
+        assert_catch(
+            (: testOb->query_noise(0, 0, 0, 0) :),
+            "*Bad argument 2 to planet->query_noise: size must be positive\n"
+        ),
+        assert_catch(
+            (: testOb->query_noise(0, -5, 0, 0) :),
+            "*Bad argument 2 to planet->query_noise: size must be positive\n"
+        ),
+    }) :));
+
+    expect("create_planet refuses a missing or non-positive size", (: ({
+        assert_equal(testOb->create_planet("__BadSizePlanet__", ([])), 0),
+        assert_equal(
+            testOb->create_planet("__BadSizePlanet__", ([ "size": 0 ])),
+            0
+        ),
+        assert_equal(
+            testOb->create_planet("__BadSizePlanet__", ([ "size": -1 ])),
+            0
+        ),
+    }) :));
+}
+
 void test_creating_and_adjusting_planet(function done) {
     string testPlanet = "test_" + time();
     string testPlanetFile = "/save/planet/t/" + testPlanet + ".o";

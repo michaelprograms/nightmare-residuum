@@ -12,6 +12,8 @@ string *test_order() {
         "test_noise_simplex",
         "test_gradient",
         "test_ffi_equivalence",
+        "test_planet_row_equivalence",
+        "test_planet_png_smoke",
     });
 }
 
@@ -6797,4 +6799,108 @@ void test_ffi_equivalence() {
             testOb->noise_simplex_4d(12.3, 45.6, 78.9, 0.0, $(pLPC), 5, 1.25)
         ), 1),
     }) :));
+}
+
+// The batched C ns_planet_row must reproduce D_PLANET->query_noise cell for
+// cell. Same seed permutation and time feed both; the same fixed time keeps
+// the day-varying now/nowAdj terms deterministic. Rows sample north/center/
+// south to exercise the heat-gradient branches; x spans edges and the central
+// landmass.
+void test_planet_row_equivalence() {
+    mapping p = testOb->noise_generate_permutation_simplex("Terra");
+    int size = 128, time = 0;
+    int *ys = ({ 10, 64, 100 });
+    int *xs = ({ 0, 32, 64, 65, 100, 127 });
+
+    if (!testOb->noise_ffi_active()) {
+        expect("planet row FFI unavailable: wrapper returns 0", (: ({
+            assert_equal(
+                testOb->noise_planet_row($(p), 128, 0, 1.0, 1.0, 1.0, 0),
+                0
+            ),
+        }) :));
+        return;
+    }
+
+    foreach (int y in ys) {
+        buffer buf = testOb->noise_planet_row(
+            p,
+            size,
+            y,
+            1.0,
+            1.0,
+            1.0,
+            time
+        );
+        foreach (int x in xs) {
+            mapping n = D_PLANET->query_noise(
+                p,
+                size,
+                x,
+                y,
+                1.0,
+                1.0,
+                1.0,
+                time
+            );
+            expect("noise_planet_row cell y=" + y + " x=" + x +
+                " equals query_noise", (: ({
+                    assert_equal(
+                        to_int(testOb->noise_row_value($(buf), $(x) * 5 + 0)),
+                        $(n)["level"]
+                    ),
+                    assert_equal(
+                        close(
+                            testOb->noise_row_value($(buf), $(x) * 5 + 1),
+                            $(n)["height"]
+                        ),
+                        1
+                    ),
+                    assert_equal(
+                        close(
+                            testOb->noise_row_value($(buf), $(x) * 5 + 2),
+                            $(n)["humidity"]
+                        ),
+                        1
+                    ),
+                    assert_equal(
+                        close(
+                            testOb->noise_row_value($(buf), $(x) * 5 + 3),
+                            $(n)["heat"]
+                        ),
+                        1
+                    ),
+                    assert_equal(
+                        to_int(testOb->noise_row_value($(buf), $(x) * 5 + 4)),
+                        $(n)["resource"]
+                    ),
+                }) :));
+        }
+    }
+}
+
+void test_planet_png_smoke() {
+    mapping p = testOb->noise_generate_permutation_simplex("Terra");
+    string npath = "tmp/__pngsmoke.png";  // native: relative to mudlib root
+    string lpath = "/tmp/__pngsmoke.png";  // mudlib path to the same file
+    int r;
+
+    if (!testOb->noise_ffi_active()) {
+        expect("planet png FFI unavailable: wrapper returns 0", (: ({
+            assert_equal(
+                testOb->noise_planet_png($(p), 16, "tmp/x.png", 1.0, 1.0, 1.0,
+                    0),
+                0
+            ),
+        }) :));
+        return;
+    }
+
+    rm(lpath);
+    r = testOb->noise_planet_png(p, 16, npath, 1.0, 1.0, 1.0, 0);
+    expect("noise_planet_png writes a non-empty PNG", (: ({
+        assert_equal($(r), 1),
+        assert_equal(file_size($(lpath)) > 0, 1),
+    }) :));
+    rm(lpath);
 }

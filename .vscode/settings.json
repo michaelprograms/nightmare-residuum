@@ -1,0 +1,6 @@
+{
+    "files.associations": {
+        "**/native/**/*.c": "c",
+        "**/native/**/*.h": "c"
+    }
+}

@@ -97,6 +97,8 @@ nosave private int __FFI_Tried = 0;
 nosave private int __FFI_Lib = 0;
 nosave private int __FFI_Perm = 0;
 nosave private int __FFI_Sample = 0;
+nosave private int __FFI_Row = 0;
+nosave private int __FFI_Png = 0;
 nosave private int __FFI_Off = 0;  // runtime override for A/B perf comparison
 
 private void __ffi_init() {
@@ -121,6 +123,22 @@ private void __ffi_init() {
         debug_message("noise: FFI disabled (prepare failed)\n");
         return;
     }
+    // batched whole-row planet sampler; optional - leave __FFI_Row 0 on failure
+    if (catch(__FFI_Row = ffi_prepare(__FFI_Lib, "ns_planet_row", __FFI_VOID, ({
+        __FFI_POINTER, __FFI_INT, __FFI_INT, __FFI_DOUBLE, __FFI_DOUBLE,
+        __FFI_DOUBLE, __FFI_DOUBLE, __FFI_POINTER
+    }))) || __FFI_Row <= 0) {
+        __FFI_Row = 0;
+        debug_message("noise: ns_planet_row unavailable (prepare failed)\n");
+    }
+    // whole-planet PNG renderer; optional - leave __FFI_Png 0 on failure
+    if (catch(__FFI_Png = ffi_prepare(__FFI_Lib, "ns_planet_png", __FFI_INT, ({
+        __FFI_POINTER, __FFI_INT, __FFI_DOUBLE, __FFI_DOUBLE, __FFI_DOUBLE,
+        __FFI_DOUBLE, __FFI_POINTER, __FFI_INT
+    }))) || __FFI_Png <= 0) {
+        __FFI_Png = 0;
+        debug_message("noise: ns_planet_png unavailable (prepare failed)\n");
+    }
     debug_message("noise: FFI acceleration enabled via " + path + "\n");
 }
 
@@ -141,6 +159,92 @@ void noise_ffi_set_active(int on) {
     __FFI_Off = !on;
 }
 
+// Batched planet sampler: computes the full query_noise result for an entire
+// row (y) in one FFI call, instead of ~6 FFI calls per cell. Returns a buffer
+// of size * 5 doubles laid out per cell as
+// [x*5 + 0]=level [1]=height [2]=humidity [3]=heat [4]=resource,
+// each read via ffi_read(buf, (x*5 + field) * 8, __FFI_DOUBLE). Returns 0 when
+// the row FFI is unavailable so callers fall back to per-cell query_noise.
+varargs buffer noise_planet_row(
+    mapping p,
+    int size,
+    int y,
+    float heightFactor,
+    float humidityFactor,
+    float heatFactor,
+    int time
+) {
+    buffer out;
+    float now;
+
+    if (!__ffi_on() || __FFI_Row <= 0 || !bufferp(p["ffi"])) {
+        return 0;
+    }
+    if (undefinedp(heightFactor)) {
+        heightFactor = 1.0;
+    }
+    if (undefinedp(humidityFactor)) {
+        humidityFactor = 1.0;
+    }
+    if (undefinedp(heatFactor)) {
+        heatFactor = 1.0;
+    }
+    if (undefinedp(time)) {
+        time = time();
+    }
+    now = to_float(time / 86400 % 100) / 100.0;
+    out = ffi_alloc(size * 5 * 8);
+    ffi_call(__FFI_Row, ({
+        p["ffi"], size, y, heightFactor, humidityFactor, heatFactor, now, out
+    }));
+    return out;
+}
+
+// Reads one packed double from a noise_planet_row buffer by flat index
+// (x * 5 + field). Keeps ffi_read out of callers so they compile without FFI.
+float noise_row_value(buffer buf, int index) {
+    return ffi_read(buf, index * 8, __FFI_DOUBLE);
+}
+
+// Renders a whole planet to an RGB PNG at path in a single FFI call (the C side
+// owns the biome/color mapping and zlib encode). Returns 1 on success, 0 if the
+// PNG FFI is unavailable or args are bad. The caller must pass a trusted path -
+// the native code writes it directly, bypassing LPC file security.
+varargs int noise_planet_png(
+    mapping p,
+    int size,
+    string path,
+    float heightFactor,
+    float humidityFactor,
+    float heatFactor,
+    int time
+) {
+    buffer pathBuf;
+    float now;
+
+    if (!__ffi_on() || __FFI_Png <= 0 || !bufferp(p["ffi"]) || !stringp(path)) {
+        return 0;
+    }
+    if (undefinedp(heightFactor)) {
+        heightFactor = 1.0;
+    }
+    if (undefinedp(humidityFactor)) {
+        humidityFactor = 1.0;
+    }
+    if (undefinedp(heatFactor)) {
+        heatFactor = 1.0;
+    }
+    if (undefinedp(time)) {
+        time = time();
+    }
+    now = to_float(time / 86400 % 100) / 100.0;
+    pathBuf = to_buffer(path);
+    return ffi_call(__FFI_Png, ({
+        p["ffi"], size, heightFactor, humidityFactor, heatFactor, now, pathBuf,
+        sizeof(pathBuf)
+    }));
+}
+
 #else
 
 int noise_ffi_active() {
@@ -149,7 +253,36 @@ int noise_ffi_active() {
 
 void noise_ffi_set_active(int on) {}
 
+varargs buffer noise_planet_row(
+    mapping p,
+    int size,
+    int y,
+    float heightFactor,
+    float humidityFactor,
+    float heatFactor,
+    int time
+) {
+    return 0;
+}
+
+float noise_row_value(buffer buf, int index) {
+    return 0.0;
+}
+
+varargs int noise_planet_png(
+    mapping p,
+    int size,
+    string path,
+    float heightFactor,
+    float humidityFactor,
+    float heatFactor,
+    int time
+) {
+    return 0;
+}
+
 #endif
+
 mapping noise_generate_permutation_simplex(string seed) {
     int *pArray = noise_generate_permutation(seed);
     mapping result = ([

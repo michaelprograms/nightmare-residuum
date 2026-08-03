@@ -59,6 +59,11 @@ int create_planet(string name, mapping config) {
     if (file_size(path) > 0) {
         return 0;
     }
+    // never persist a planet without a positive size: it would divide by zero
+    // and hang/garble every downstream noise consumer
+    if (!mapp(config) || !intp(config["size"]) || config["size"] <= 0) {
+        return 0;
+    }
     config["name"] = name;
     __Planet = config;
     return !!save_object(path);
@@ -103,6 +108,9 @@ varargs mapping query_noise(
     }
     if (undefinedp(time)) {
         time = time();
+    }
+    if (size <= 0) {
+        error("Bad argument 2 to planet->query_noise: size must be positive");
     }
 
     // Calculate our 4D coordinates
@@ -692,7 +700,7 @@ void generate_json_line(mapping data, int time) {
     line += "]" + (y == size - 1 ? "" : ",");
     write_file(data["file"], line + "\n");
 
-    if (y + 1 == size) {
+    if (y + 1 >= size) {
         // int size2 = size * size;
         int t;
         string structs = "";
@@ -773,6 +781,10 @@ varargs void generate_json(string name, int time) {
     if (undefinedp(time)) {
         time = time();
     }
+    if (!mapp(data["planet"]) || !data["planet"]["size"]) {
+        write("Planet '" + name + "' has no data (never created).\n");
+        return;
+    }
 
     write_file(
         data["file"],
@@ -781,4 +793,64 @@ varargs void generate_json(string name, int time) {
     );
 
     call_out_walltime((: generate_json_line :), 0.000, data, time);
+}
+
+/* ----- export lib/tmp/name-size.png (native renderer) ----- */
+
+/**
+ * Render the planet straight to lib/tmp/<name>-<size>.png via the native FFI
+ * PNG path, which owns the biome coloring and zlib encode. This replaces the
+ * generate_json + tools/planet-render pipeline: the whole planet is a single
+ * synchronous FFI call (no call_out chunking). Requires FFI; returns 0 if the
+ * native path is unavailable.
+ *
+ * @param {string} name the planet seed/name
+ * @param {int} time optional timestamp (defaults to now)
+ * @returns {int} 1 on success, 0 on failure
+ */
+varargs int generate_png(string name, int time) {
+    mapping planet, p;
+    int size, start, ok;
+    string path;
+
+    // native code writes path directly, so keep the name free of traversal
+    if (!stringp(name) || strsrch(name, "/") >= 0 || strsrch(name, "..") >= 0) {
+        return 0;
+    }
+    planet = query_planet(name);
+    if (!mapp(planet) || !planet["size"]) {
+        write("Planet '" + name + "' has no data (never created).\n");
+        return 0;
+    }
+    size = planet["size"];
+    p = noise_generate_permutation_simplex(name);
+    if (!bufferp(p["ffi"])) {
+        return 0;
+    }
+    if (undefinedp(time)) {
+        time = time();
+    }
+    // native code writes relative to the driver runtime cwd (the mudlib root),
+    // so this is the same directory the mudlib sees as "/tmp/"
+    path = "tmp/" + name + "-" + size + ".png";
+    start = time_ns();
+    ok = noise_planet_png(
+        p,
+        size,
+        path,
+        planet["heightFactor"],
+        planet["humidityFactor"],
+        planet["heatFactor"],
+        time
+    );
+    if (ok) {
+        write("Seed '" + name + "' size " + size + " -> " + path +
+            ": %^ORANGE%^" + sprintf(
+                "%.2f",
+                (time_ns() - start) / 1000000.0
+            ) + " ms%^RESET%^\n");
+    } else {
+        write("PNG generation failed for '" + name + "'.\n");
+    }
+    return ok;
 }
