@@ -373,13 +373,6 @@ void error_handler(mapping e, int caught) {
     }
 }
 
-// @TODO: deprecate this disable warnings system
-private string *read_file_disabled_warnings(string file) {
-    string *lines = file_size(file) > 0 ? explode(read_file(file), "\n") : ({});
-    lines = filter(lines, (: regexp($1, "// disable warning:") :));
-    return map_array(lines, (: $1[strsrch($1, ": ") + 2..<1] :));
-}
-
 /**
  * This apply is called when an error occurs during compilation of a file.
  *
@@ -387,15 +380,13 @@ private string *read_file_disabled_warnings(string file) {
  * @param msg message to log
  */
 void log_error(string file, string msg) {
-    string dest, lcMsg, nom, tmp;
+    string dest, nom, tmp;
 
     if (file[0] != '/') {
         file = "/" + file;
     }
     if (sscanf(file, "/realm/%s/%s", nom, tmp) == 2) {
         dest = nom;
-    } else if (sscanf(file, "/domain/%s/%s", nom, tmp) == 2) {
-        dest = "syntax";
     } else if (sscanf(file, "/%s/%s", nom, tmp) == 2) {
         dest = "syntax";
     }
@@ -406,12 +397,6 @@ void log_error(string file, string msg) {
     if (regexp(msg, "Warning: ")) {
         if (sizeof(previous_object(-1)) > 1 && base_name(previous_object(-1)[<1]) == D_TEST[0..<3] && previous_object()->query_expect_catch()) {
             return;
-        }
-        lcMsg = lower_case(msg);
-        foreach (string warning in read_file_disabled_warnings(file)) {
-            if (regexp(lcMsg, lower_case(warning))) {
-                return;
-            }
         }
         msg = replace_string(msg, "Warning: ", "\e[33mWarning\e[0m: ", 1);
     } else {
