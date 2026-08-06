@@ -37,7 +37,7 @@
 /****************************************************************************
  *                           MISCELLANEOUS                                  *
  ****************************************************************************/
-#define DEFAULT_PRAGMAS PRAGMA_WARNINGS + PRAGMA_SAVE_TYPES + PRAGMA_ERROR_CONTEXT + PRAGMA_OPTIMIZE
+#define DEFAULT_PRAGMAS PRAGMA_WARNINGS + PRAGMA_SAVE_TYPES + PRAGMA_OPTIMIZE
 #define SAVE_EXTENSION ".o"
 #define PRIVS
 #undef NO_SHADOWS
