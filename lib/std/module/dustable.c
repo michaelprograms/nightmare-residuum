@@ -1,7 +1,7 @@
 void handle_expire() {
-    // @lpc-ignore
     message(
         "action",
+        // @lpc-ignore
         "The " + this_object()->query_short() + " flakes into dust.",
         environment()
     );
@@ -10,6 +10,6 @@ void handle_expire() {
     this_object()->handle_remove();
 }
 
-void handle_received(object env) {
+void handle_received(object _env) {
     call_out((: handle_expire :), 120);
 }
