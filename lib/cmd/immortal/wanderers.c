@@ -9,7 +9,7 @@ void create() {
 void command(string input, mapping flags) {
     /** @type {STD_NPC*} obs */
     object *obs;
-    string *items = ({});
+    mixed *items = ({});
     mapping b = query_border_charset();
 
     if (!input) {
