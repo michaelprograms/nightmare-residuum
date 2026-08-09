@@ -193,6 +193,31 @@ double ns_simplex_4d(double x, double y, double z, double w,
     return total / t;
 }
 
+/* Fractal simplex at two octave counts (oct_a < oct_b) in one shared pass:
+   the octave evaluations are computed once and the running result captured
+   after oct_a octaves, so out_a and out_b are each bit-identical to a standalone
+   ns_simplex_4d call. Used to share height (5 octaves) and river1 (4 octaves),
+   which sample identical coords/scale. */
+static void ns_simplex_4d_dual(double x, double y, double z, double w,
+                               const ns_perm_t *perm, double scale,
+                               int oct_a, int oct_b,
+                               double *out_a, double *out_b) {
+    double total = 0.0, t = 0.0;
+    int f = 1, i;
+    if (scale == 0.0) {
+        scale = 1.0;
+    }
+    for (i = 0; i < oct_b; i++) {
+        total += ns_simplex_4d_permutation(x*scale*f, y*scale*f, z*scale*f, w*scale*f, perm) / f;
+        t += 1.0 / f;
+        f *= 2;
+        if (i + 1 == oct_a) {
+            *out_a = total / t;
+        }
+    }
+    *out_b = total / t;
+}
+
 void ns_simplex_4d_row(double *out, int count,
                        double x0, double dx, double y, double z, double w,
                        const ns_perm_t *perm, int octaves, double scale) {
@@ -234,7 +259,7 @@ void ns_planet_cell(const ns_perm_t *perm, int size, int x, int y,
     int size2 = size / 2, hs2, level;
     double nx, ny, nz, nw, nowAdj = now;
     double nHeight, nHumidity = 0.0, nHeat = 0.0, nTmp, nResource = -1.0;
-    double dl;
+    double dl, hRaw4, hRaw5;
 
     nx = cos(((double)x / size) * NS_PIx2) * 2 / NS_PIx2;
     ny = cos(((double)y / size) * NS_PIx2) * 2 / NS_PIx2;
@@ -264,8 +289,11 @@ void ns_planet_cell(const ns_perm_t *perm, int size, int x, int y,
         nHumidity *= humidityFactor;
     }
 
-    nHeight = (((ns_simplex_4d(nx, ny, nz, nw, perm, 5, 1.25) + 1) / 2) - 0.25)
-              / 0.5;
+    /* height (5 octaves) and river1 (4 octaves) sample identical coords/scale;
+       compute both from one shared octave pass. hRaw4 == the standalone river1
+       simplex, used in the else branch below. */
+    ns_simplex_4d_dual(nx, ny, nz, nw, perm, 1.25, 4, 5, &hRaw4, &hRaw5);
+    nHeight = (((hRaw5 + 1) / 2) - 0.25) / 0.5;
     nHeight *= heightFactor;
     if ((nHeight <= NS_HEIGHT_SHALLOW) &&
         (x <= size2 + 3 && y <= size2 + 3 && x >= size2 - 3 &&
@@ -274,8 +302,7 @@ void ns_planet_cell(const ns_perm_t *perm, int size, int x, int y,
               (double)(size2 - y) * (size2 - y)) + 0.5 < 3)) {
         nHeight += (NS_HEIGHT_SHALLOW - nHeight) + 0.05;
     } else {
-        nTmp = (((ns_simplex_4d(nx, ny, nz, nw, perm, 4, 1.25) + 1) / 2) - 0.25)
-               / 0.5;
+        nTmp = (((hRaw4 + 1) / 2) - 0.25) / 0.5;  /* river1: shared with height */
         if (nTmp >= NS_WATER_LAKES - 0.026 && nTmp <= NS_WATER_LAKES + 0.026) {
             if (nTmp >= NS_WATER_LAKES - 0.025 &&
                 nTmp <= NS_WATER_LAKES + 0.025) {
