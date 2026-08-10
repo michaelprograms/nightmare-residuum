@@ -10,6 +10,7 @@ string *test_order() {
         "test_response",
         "test_parse_request",
         "test_handle_response",
+        "test_binary_response",
         "test_static_and_404"
     });
 }
@@ -119,6 +120,22 @@ void test_handle_response() {
     expect("default case (4+ dot segments) returns 500", (: ({
         assert_equal($(res["code"]), "500 Internal Server Error"),
         assert_equal($(res["connection"]), "close"),
+    }) :));
+}
+
+void test_binary_response() {
+    mixed out;
+
+    out = testOb->format_response(([
+        "code": "200 OK",
+        "connection": "close",
+        "type": "image/png",
+        "content": to_buffer("PNGDATA"),
+    ]));
+    expect("format_response returns a buffer for buffer content", (: ({
+        assert_equal(bufferp($(out)), 1),
+        assert_regex(string_decode($(out), "UTF-8"), "Content-Type: image/png"),
+        assert_regex(string_decode($(out), "UTF-8"), "PNGDATA"),
     }) :));
 }
 

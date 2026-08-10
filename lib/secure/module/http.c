@@ -173,10 +173,13 @@ mapping parse_request(string req) {
  *   "type"       : string - Content-Type value (ex: "text/html")
  *   "content"    : string - Response body
  *
+ * When "content" is a buffer the header is serialized to bytes and the buffer
+ * appended raw, so binary payloads (ex: image/png) survive untouched.
+ *
  * @param {mapping} response - Response mapping to serialize.
- * @return {string} Raw HTTP response string ready to write to a socket.
+ * @return {mixed} Raw HTTP response as a string, or a buffer for binary content.
  */
-string format_response(mapping response) {
+mixed format_response(mapping response) {
     string msg = "HTTP/1.0 ";
     msg += response["code"];
     msg += "\r\n";
@@ -184,6 +187,9 @@ string format_response(mapping response) {
     msg += "Server: lpc-http 0.1\r\n";
     msg += "Content-Type: " + response["type"] + "\r\n";
     msg += "\r\n";
+    if (bufferp(response["content"])) {
+        return to_buffer(msg) + response["content"];
+    }
     msg += response["content"];
     return msg;
 }
@@ -202,51 +208,44 @@ string format_response(mapping response) {
 mapping handle_response(mapping response, string path, string *args) {
     string *tmp = explode(path, ".");
     object ob;
+    string func;
+    mixed result;
 
     switch (sizeof(tmp)) {
         case 1:  // add_url_pattern(path, "func")
-            response["content"] = json_encode(call_other(
-                this_object(),
-                path,
-                response,
-                args
-            ));
-            response["type"] = "text/json";
-            response["code"] = "200 OK";
-            response["connection"] = "close";
+            ob = this_object();
+            func = tmp[0];
             break;
         case 2:  // add_url_pattern(path, "file.func")
             ob = load_object(server_root + tmp[0]);
-            response["content"] = json_encode(call_other(
-                ob,
-                tmp[1],
-                response,
-                args
-            ));
-            response["type"] = "text/json";
-            response["code"] = "200 OK";
-            response["connection"] = "close";
+            func = tmp[1];
             break;
         case 3:  // add_url_pattern(path, "dir.file.func")
             ob = load_object(server_root + tmp[0] + "/" + tmp[1]);
-            response["content"] = json_encode(call_other(
-                ob,
-                tmp[2],
-                response,
-                args
-            ));
-            response["type"] = "text/json";
-            response["code"] = "200 OK";
-            response["connection"] = "close";
+            func = tmp[2];
             break;
         default:
             response["content"] = "Couldn't resolve path.\n";
             response["type"] = "text/json";
             response["code"] = "500 Internal Server Error";
             response["connection"] = "close";
-            break;
+            return response;
     }
 
+    result = call_other(ob, func, response, args);
+    // A buffer return is served as-is (binary); the handler sets response["type"]
+    // itself (ex: image/png). Any other return is JSON-encoded.
+    if (bufferp(result)) {
+        response["content"] = result;
+        if (!stringp(response["type"])) {
+            response["type"] = "application/octet-stream";
+        }
+    } else {
+        response["content"] = json_encode(result);
+        response["type"] = "text/json";
+    }
+    response["code"] = "200 OK";
+    response["connection"] = "close";
     return response;
 }
 
@@ -254,7 +253,7 @@ void read_socket(int fd, string msg) {
     mapping req;
     mapping res = ([]);
     int url_match = 0;
-    string result;
+    mixed result;
     int t = time_ns();
 
     req = parse_request(msg);
@@ -301,12 +300,16 @@ void read_socket(int fd, string msg) {
 
     result = format_response(res);
     t = time_ns() - t;
+    // Log a summary, never identify(res): a binary body (ex: an image buffer)
+    // would be hex-dumped byte by byte, hanging on large responses.
     D_LOG->log(
         "http",
         ctime() + " response (" + sprintf(
             "%.1f",
             (t / 1000000.0)
-        ) + " ms) " + identify(res)
+        ) + " ms) " + res["code"] + " " + res["type"] + " " + sizeof(
+            res["content"]
+        ) + " bytes"
     );
 
     socket_write(fd, result);
@@ -343,21 +346,23 @@ void create() {
  * set_port() must be called before start().
  */
 void start() {
-    int socket;
+    int socket, err;
 
     if (!__Port) {
         error("http: No port configured.");
     }
 
     socket = socket_create(SOCKET_STREAM, "read_socket", "close_socket");
-    if (socket <= 0) {
+    if (socket < 0) {  // fd 0 is a valid descriptor; only negative is an error
         error("Bad response socket_create: " + socket_error(socket));
     }
-    if ((socket = socket_bind(socket, __Port)) < 0) {
-        error("Bad response from socket_bind: " + socket_error(socket));
+    // socket_bind/socket_listen return status codes (EESUCCESS), not the fd, so
+    // keep the descriptor in socket and check the status separately.
+    if ((err = socket_bind(socket, __Port)) < 0) {
+        error("Bad response from socket_bind: " + socket_error(err));
     }
-    if ((socket = socket_listen(socket, "listen_socket")) < 0) {
-        error("Bad response from socket_listen: " + socket_error(socket));
+    if ((err = socket_listen(socket, "listen_socket")) < 0) {
+        error("Bad response from socket_listen: " + socket_error(err));
     }
 }
 
