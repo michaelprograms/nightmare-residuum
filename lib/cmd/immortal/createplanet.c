@@ -7,13 +7,12 @@ void create() {
         "[heatFactor=<f>] [heightFactor=<f>]"
     );
     set_help_text(
-        "Create a new planet and persist it, then render it with 'renderplanet "
-        "<name>'. size is required and must be a positive integer. The factors "
-        "are multipliers on the humidity/heat/height noise (default 1.00; 0.0 "
-        "flattens that channel). Existing planets are not overwritten unless you "
-        "pass -force, which retunes the planet in place with the given values "
-        "(flags must come before the name, ex: 'createplanet -force Luna "
-        "humidityFactor=0.5')."
+        "Create a new planet and persist it. size is required and must be a "
+        "positive integer. The factors are multipliers on the humidity/heat/"
+        "height noise (default 1.00; 0.0 flattens that channel). Existing "
+        "planets are not overwritten unless you pass -force, which retunes "
+        "the planet in place with the given values (flags must come before "
+        "the name, ex: 'createplanet -force Luna humidityFactor=0.5')."
     );
 }
 
@@ -50,18 +49,12 @@ void command(string input, mapping flags) {
         }
     }
     if (D_PLANET->create_planet(name, config)) {
-        write(
-            "Created planet '" + name + "'. Render it with: renderplanet " +
-            name + "\n"
-        );
+        write("Created planet '" + name + "'.\n");
         return;
     }
     // create won't overwrite an existing planet; -force retunes it in place.
     if (flags["force"] && D_PLANET->adjust_planet(name, config)) {
-        write(
-            "Adjusted planet '" + name + "'. Render it with: renderplanet " +
-            name + "\n"
-        );
+        write("Adjusted planet '" + name + "'.\n");
         return;
     }
     write(
