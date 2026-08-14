@@ -17,10 +17,12 @@ varargs void update_autoload(int exit) {
 
     reset_autoload();
     for (i = 0; i < l; i++) {
-        if (data = inv[i]->query_autoload(this_object())) {
+        /** @type {STD_ITEM} item */
+        object item = inv[i];
+        if (data = item->query_autoload(this_object())) {
             __Autoload += ({ data });
             if (exit) {
-                inv[i]->handle_remove();
+                item->handle_remove();
             }
         }
     }
