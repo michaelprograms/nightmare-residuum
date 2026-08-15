@@ -160,18 +160,18 @@ varargs string parse_emote(object target, string msg, object *who, mixed args) {
                             break;
                         }
                         has[who[num]]++;
-                        names = who[num]->query_cap_name();
+                        names = /** @type {STD_OBJECT} */ (who[num])->query_cap_name();
                         break;
                     }
                 }
                 has[who[num]]++;
-                names = who[num]->query_cap_name();
+                names = /** @type {STD_OBJECT} */ (who[num])->query_cap_name();
                 break;
             case 'R': case 'r':  // R/r: Reflexive   your/him/her/them/it + self
                 if (target == who[num]) {
                     tmp = "yourself";
                 } else
-                    tmp = who[num]->query_reflexive();
+                    tmp = reflexive(who[num]);
                 break;
             case 'V': case 'v':  // V/v: pluralize word
                 if (num >= sizeof(who) || who[num] != target) {
