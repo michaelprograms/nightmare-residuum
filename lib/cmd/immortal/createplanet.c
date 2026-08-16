@@ -4,15 +4,19 @@ void create() {
     ::create();
     set_syntax(
         "createplanet -f(orce) <name> size=<n> [humidityFactor=<f>] "
-        "[heatFactor=<f>] [heightFactor=<f>]"
+        "[heatFactor=<f>] [heightFactor=<f>] [biome=<name>]"
     );
     set_help_text(
         "Create a new planet and persist it. size is required and must be a "
         "positive integer. The factors are multipliers on the humidity/heat/"
-        "height noise (default 1.00; 0.0 flattens that channel). Existing "
-        "planets are not overwritten unless you pass -force, which retunes "
-        "the planet in place with the given values (flags must come before "
-        "the name, ex: 'createplanet -force Luna humidityFactor=0.5')."
+        "height noise (default 1.00; 0.0 flattens that channel). biome forces "
+        "the whole surface to a single biome (ex: 'barren'), ignoring the "
+        "climate table; use underscores for multi-word biomes (ex: "
+        "'tropical_rainforest'), and pair a land biome with a high "
+        "heightFactor to remove oceans. "
+        "Existing planets are not overwritten unless you pass -force, which "
+        "retunes the planet in place with the given values (flags must come "
+        "before the name, ex: 'createplanet -force Luna humidityFactor=0.5')."
     );
 }
 
@@ -44,6 +48,9 @@ void command(string input, mapping flags) {
         }
         if (pair[0] == "size") {
             config["size"] = to_int(pair[1]);
+        } else if (pair[0] == "biome") {
+            // input is space-split, so multi-word biomes use underscores
+            config["biome"] = replace_string(pair[1], "_", " ");
         } else {
             config[pair[0]] = to_float(pair[1]);
         }

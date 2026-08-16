@@ -16,10 +16,15 @@ void test_biome_colors() {
             testOb->query_biome_color_ansi("ice"),
             "\e[38;2;255;255;255m"
         ),
+        assert_equal(
+            testOb->query_biome_color_ansi("barren"),
+            "\e[38;2;122;110;95m"
+        ),
     }) :));
     expect("biome hex colors returned", (: ({
         assert_equal(testOb->query_biome_color_hex("invalid"), "#800000"),
         assert_equal(testOb->query_biome_color_hex("ice"), "#FFFFFF"),
+        assert_equal(testOb->query_biome_color_hex("barren"), "#7A6E5F"),
     }) :));
 
     expect("humidity hex colors returned", (: ({

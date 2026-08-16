@@ -61,7 +61,7 @@ void setup_room(object room) {
         room->set_property("resource", noise["resource"]);
     }
 
-    biome = D_PLANET->query_biome(
+    biome = planet["biome"] || D_PLANET->query_biome(
         noise["height"],
         noise["heat"],
         noise["humidity"]

@@ -572,6 +572,10 @@ nosave private mapping __BiomeColor = ([
         "ANSI": "\e[38;2;66;123;25m",
         "RGB": "#427B19",
     ]),
+    "barren": ([
+        "ANSI": "\e[38;2;122;110;95m",
+        "RGB": "#7A6E5F",
+    ]),
     "default": ([
         "ANSI": "\e[38;2;128;0;0m",
         "RGB": "#800000",

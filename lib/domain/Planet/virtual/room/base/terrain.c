@@ -79,6 +79,10 @@ void update_descriptions() {
             set_long("A tropical rainforest surrounds the area, with dense vegetation and a canopy that blocks out much of the sunlight. The air is warm and humid, and the forest teems with exotic wildlife.");
             set_property("go", 4);
             break;
+        case "barren":
+            set_long("The land is barren, a desolate stretch of cracked rock and grey dust. Nothing grows here, and the silence is broken only by the wind scouring the bare ground.");
+            set_property("go", 2);
+            break;
         default:
             set_long("Error: unknown biome.");
             break;

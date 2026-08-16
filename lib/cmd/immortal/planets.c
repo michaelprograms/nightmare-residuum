@@ -23,9 +23,10 @@ void command(string input, mapping flags) {
             "Height",
             "Humidity",
             "Heat",
+            "Biome",
         }),
         "items": ({}),
-        "columns": 5,
+        "columns": 6,
     ]);
 
     if (input) {
@@ -38,6 +39,7 @@ void command(string input, mapping flags) {
                 format_factor(planet["heightFactor"]),
                 format_factor(planet["humidityFactor"]),
                 format_factor(planet["heatFactor"]),
+                planet["biome"] || "-",
             });
         }
     } else {
@@ -49,6 +51,7 @@ void command(string input, mapping flags) {
                 format_factor(planet["heightFactor"]),
                 format_factor(planet["humidityFactor"]),
                 format_factor(planet["heatFactor"]),
+                planet["biome"] || "-",
             });
         }
     }
