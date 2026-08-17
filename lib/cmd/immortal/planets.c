@@ -56,15 +56,14 @@ void command(string input, mapping flags) {
         }
     }
     body += ({ item });
-
-
+    n = sizeof(item["items"]) / item["columns"];
 
     border(([
         "title": "PLANETS",
         "subtitle": mud_name(),
         "body": body,
         "footer": ([
-            "items": ({ n + " planet" + (n > 1 ? "s" : "") }),
+            "items": ({ n + " planet" + (n != 1 ? "s" : "") }),
             "columns": 1,
             "align": "center",
         ]),
