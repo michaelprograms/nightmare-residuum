@@ -35,8 +35,8 @@ private void monitor_ipc() {
 
 private void authenticate_ipc(int socket) {
     string addr = socket_address(socket);
-    // 0.0.0.0 and 127.0.0.1 are the only allowed connections
-    if (!regexp(addr, "0\\.0\\.0\\.0|127\\.0\\.0\\.1 [0-9]+")) {
+    // only "127.0.0.1 <port>" connections are allowed
+    if (!regexp(addr, "^127\\.0\\.0\\.1 [0-9]+$")) {
         socket_close(socket);
         error("Bad socket request from " + addr);
     }
@@ -80,11 +80,10 @@ void write_socket(int fd) {}
 private void listen_socket(int fd) {
     int socket = socket_accept(fd, "read_socket", "write_socket");
 
-    authenticate_ipc(fd);
-
     if (socket < 0) {
         error("Bad response to socket_accept: " + socket_error(socket));
     }
+    authenticate_ipc(socket);
     __Sockets += ({ socket });
 }
 
