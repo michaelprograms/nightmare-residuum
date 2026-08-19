@@ -46,7 +46,7 @@ object *query_contents() {
  * @returns {STD_LIVING*}
  */
 object *query_living_contents() {
-    return filter(all_inventory(), (: livingp($1) :));  // TODO
+    return filter(all_inventory(), (: livingp($1) :));
 }
 /**
  * Returns all non-living item objects in this object's inventory.
