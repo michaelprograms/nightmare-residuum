@@ -28,29 +28,31 @@ varargs string json_encode(mixed value) {
         out = "{" + (sizeof(out) ? out : "") + "}";
     } else if (stringp(value)) {
         out = value;
-        if (strsrch(out, '\\') > -1) {
-            out = replace_string(out, "\\", "\\\\");
-        }
-        if (strsrch(out, '"') > -1) {
-            out = replace_string(out, "\"", "\\\"");
-        }
-        if (strsrch(out, '\b') > -1) {
-            out = replace_string(out, "\b", "\\b");
-        }
-        if (strsrch(out, '\n') > -1) {
-            out = replace_string(out, "\n", "\\n");
-        }
-        if (strsrch(out, '\r') > -1) {
-            out = replace_string(out, "\r", "\\r");
-        }
-        if (strsrch(out, '\t') > -1) {
-            out = replace_string(out, "\t", "\\t");
-        }
-        if (member_array(0x0c, out) > -1) {
-            out = replace_string(out, "\x0c", "\\f");
-        }
-        if (member_array(0x1b, out) > -1) {
-            out = replace_string(out, "\x1b", "\\u001b");
+        if (pcre_match(out, "[\\x08\\x09\\x0a\\x0c\\x0d\\x1b\"\\\\]")) {
+            if (strsrch(out, '\\') > -1) {
+                out = replace_string(out, "\\", "\\\\");
+            }
+            if (strsrch(out, '"') > -1) {
+                out = replace_string(out, "\"", "\\\"");
+            }
+            if (strsrch(out, '\b') > -1) {
+                out = replace_string(out, "\b", "\\b");
+            }
+            if (strsrch(out, '\n') > -1) {
+                out = replace_string(out, "\n", "\\n");
+            }
+            if (strsrch(out, '\r') > -1) {
+                out = replace_string(out, "\r", "\\r");
+            }
+            if (strsrch(out, '\t') > -1) {
+                out = replace_string(out, "\t", "\\t");
+            }
+            if (member_array(0x0c, out) > -1) {
+                out = replace_string(out, "\x0c", "\\f");
+            }
+            if (member_array(0x1b, out) > -1) {
+                out = replace_string(out, "\x1b", "\\u001b");
+            }
         }
         out = "\"" + out + "\"";
     } else {
