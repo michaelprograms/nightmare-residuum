@@ -141,7 +141,9 @@ void test_json_decode() {
 
         assert_equal(testOb->json_decode("\"\\b\""), "\b"),
         assert_equal(testOb->json_decode("\"\\f\""), "\x0c"),
+        assert_equal(testOb->json_decode("\"\\n\""), "\n"),
         assert_equal(testOb->json_decode("\"\\r\""), "\r"),
+        assert_equal(testOb->json_decode("\"\\t\""), "\t"),
         assert_equal(testOb->json_decode("\"\\u0041\""), "A"),
     }) :));
 
