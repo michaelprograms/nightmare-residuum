@@ -612,9 +612,16 @@ string create_coverage(string path) {
             while (prev >= 0 && pcre_match(logical[prev], "^\\s*}\\s*$")) {
                 prev--;
             }
+            if (prev >= 0) {
+                int depth = scan_parens(logical[prev])[0];
+                while (depth < 0 && prev > 0) {
+                    prev--;
+                    depth += scan_parens(logical[prev])[0];
+                }
+            }
             if (prev >= 0 && pcre_match(
                 logical[prev],
-                "(?:break|error.*|return.*|continue|remove.*);$"
+                "(?:break|error.*|return.*|continue|remove.*);$|^\\s*error\\s*\\(|^\\s*return\\b"
             )) {
                 line = logical[i];
             } else {
