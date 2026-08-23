@@ -221,8 +221,6 @@ private mixed json_decode_string(int initiator_checked) {
 
     if (!initiator_checked) {
         switch (parseText[parsePos]) {
-            case 0:
-                error("Unexpected end of data in json_decode_string");
             case '}':
                 return 0;
             case '"':
