@@ -17,6 +17,26 @@ int query_unknown_command(int result) {
     }
 }
 
+// Movement shortcuts: bare "enter ..." / "out ..." become "go ..." verbs.
+string normalize_command(string command) {
+    if (strsrch(command, "enter") == 0 || strsrch(command, "out") == 0) {
+        return "go " + command;
+    }
+    return command;
+}
+
+/*
+** True when a parse result should be shown to the player. Benign
+** go-failures ("You can't go ...", "There is no ...") are suppressed so
+** the command can fall through to other handlers.
+*/
+int is_reportable_result(mixed result) {
+    if (!stringp(result)) {
+        return 0;
+    }
+    return result[0..12] != "You can't go " && result[0..11] != "There is no ";
+}
+
 varargs int handle_command(string command, int debug) {
     string *split, action, input;
     string cmdPath;
@@ -36,11 +56,7 @@ varargs int handle_command(string command, int debug) {
         return 1;
     }
 
-    if (strsrch(command, "enter") == 0) {
-        command = "go " + command;
-    } else if (strsrch(command, "out") == 0) {
-        command = "go " + command;
-    }
+    command = normalize_command(command);
 
     split = explode(command, " ") - ({ "" });
     action = split[0];
@@ -73,7 +89,7 @@ varargs int handle_command(string command, int debug) {
             result = resultGo;
         }
     }
-    if (stringp(result) && (result[0..12] != "You can't go " && result[0..11] != "There is no ")) {
+    if (is_reportable_result(result)) {
         write(result + "\n");
         return 1;
     }
