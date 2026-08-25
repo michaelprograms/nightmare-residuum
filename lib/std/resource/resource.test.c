@@ -52,6 +52,14 @@ void test_set_type() {
     }) :));
 }
 
+void test_level_before_type() {
+    testOb->set_level(5);
+    expect("set_level with no type keeps the default description", (: ({
+        assert_equal(testOb->query_short(), "a resource"),
+        assert_equal(testOb->query_name(), "resource"),
+    }) :));
+}
+
 void test_descriptions() {
     expect("set_type and set_level name the resource", (: ({
         testOb->set_type("ore"),
