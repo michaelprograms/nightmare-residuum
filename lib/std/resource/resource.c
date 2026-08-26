@@ -92,10 +92,6 @@ private void update_resource_description() {
         return;
     }
     material = query_material(type, query_level());
-    if (!material) {
-        return;
-    }
-
     if (type == "ore") {
         set_short("a chunk of " + material + " ore");
         set_long("A chunk containing a strip of " + material + " ore.");
