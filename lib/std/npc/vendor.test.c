@@ -300,6 +300,51 @@ void test_buy() {
     if (r) destruct(r);
 }
 
+void test_buy_cannot_hold() {
+    object r = new(STD_ROOM);
+    object mockC1 = new("/std/npc.mock.c");  // TODO: this is weird, its not an NPC but this is the functionality we need
+    object c1 = new(STD_CHARACTER);
+    object item;
+
+    c1->set_name("testcharacter");
+    mockC1->start_shadow(c1);
+    c1->handle_move(r);
+    testOb->set_name("test vendor");
+    testOb->handle_move(r);
+
+    testOb->set_vendor_max_items(1);
+    testOb->set_vendor_currency("copper");
+    testOb->query_vendor_inventory()->set_reset(([
+        "/std/item/food.c": 1,
+    ]));
+    item = testOb->query_vendor_inventory()->query_item_contents()[0];
+    item->set_id(({ "test food" }));
+    item->set_name("test food");
+    item->set_short("test food");
+    item->set_value(10);
+    c1->add_currency("copper", 10);
+    // force the buyer to be unable to hold the purchased item
+    mockC1->set_refuse_receive(1);
+
+    expect("purchased item falls to the ground when buyer can't hold it", (: ({
+        testOb->handle_buy("test food", $(c1)),
+        // item was moved to the room, not the character
+        assert_equal(environment($(item)), $(r)),
+        assert_equal(
+            $(mockC1)->query_received_messages()[<1],
+            ({
+                "action",
+                "You cannot hold test food and it falls from your grasp."
+            })
+        ),
+    }) :));
+
+    mockC1->stop_shadow();
+    if (mockC1) destruct(mockC1);
+    if (c1) destruct(c1);
+    if (r) destruct(r);
+}
+
 void test_sell() {
     object r = new(STD_ROOM);
     object mockC1 = new("/std/npc.mock.c");  // TODO: this is weird, its not an NPC but this is the functionality we need

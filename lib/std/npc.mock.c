@@ -24,6 +24,25 @@ void clear_received_messages() {
     __ReceivedMessages = ({});
 }
 
+/* ---- receive ---- */
+
+// when set, the shadowed object refuses to receive any object, forcing the
+// handle_move failure branch in code under test
+int __RefuseReceive = 0;
+void set_refuse_receive(int i) {
+    __RefuseReceive = i;
+}
+// override from /std/module/container.c
+int can_receive(object ob) {
+    if (__RefuseReceive) {
+        return 0;
+    }
+    if (query_shadow()) {
+        return query_shadow()->can_receive(ob);
+    }
+    return 1;
+}
+
 /* ---- commands ---- */
 
 mixed *__ReceivedCommands = ({});
