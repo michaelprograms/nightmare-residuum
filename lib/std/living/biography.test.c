@@ -108,6 +108,35 @@ void test_handle_defeat() {
         assert_equal(testOb->query_defeat(), ({})),
         assert_equal(testOb->query_defeated(), 0),
     }) :));
+
+    expect("handle_defeat marks defeat without an environment", (: ({
+        // defeat is recorded, source is credited
+        assert_equal(testOb->query_defeated(), 0),
+        testOb->handle_defeat(this_object()),
+        assert_equal(testOb->query_defeated(), 1),
+        assert_equal(
+            testOb->query_defeat(),
+            ({ ({ "Biography Test", time() }) })
+        ),
+        // a second call returns early because defeat is already recorded
+        testOb->handle_defeat(this_object()),
+        assert_equal(sizeof(testOb->query_defeat()), 1),
+        // reset and defeat again with no source (null-source branch)
+        testOb->set_defeated(0),
+        testOb->handle_defeat(0),
+        assert_equal(testOb->query_defeated(), 1),
+        assert_equal(sizeof(testOb->query_defeat()), 2),
+        assert_equal(testOb->query_defeat()[<1][0], 0),
+        // character branch: a defeated character is moved to the defeat room
+        // (handle_move is a no-op on the bare instance, but line is covered)
+        testOb->set_defeated(0),
+        $(mockCharacter)->start_shadow(testOb),
+        assert_equal(characterp(testOb), 1),
+        testOb->handle_defeat(0),
+        assert_equal(testOb->query_defeated(), 1),
+        assert_equal($(mockCharacter)->stop_shadow(), 1),
+    }) :));
+
     expect("defeat can be set", (: ({
         testOb->set_defeated(1),
         assert_equal(testOb->query_defeated(), 1),
