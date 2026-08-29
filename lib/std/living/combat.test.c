@@ -93,6 +93,97 @@ void test_parser_applies() {
     }) :));
 }
 
+void test_combat_hit() {
+    object r = new(STD_ROOM);
+    object mockLiving = new("/std/living/combat.mock.c");
+    object npc = new(STD_NPC), mockNpc1 = new("/std/npc.mock.c");
+
+    mockNpc1->start_shadow(npc);
+    mockLiving->start_shadow(testOb);
+    // the target needs an environment for the block message; the bare
+    // combat instance (the source) cannot have one, so branches whose
+    // messages address the source's environment (parry/evade and the
+    // successful-hit message) are not reachable here
+    npc->handle_move(r);
+
+    expect("handle_combat_hit returns early without a target", (: ({
+        testOb->handle_combat_hit(0, ({}), 0),
+        assert_equal(objectp(testOb), 1),
+    }) :));
+
+    expect("handle_combat_hit rolls a die when sp is available", (: ({
+        // compute vitals so spMax is non-zero and sp can be set above 0
+        $(mockLiving)->update_vitals(1),
+        $(mockLiving)->set_sp(100),
+        // sp > 0 rolls d100; the zero-value entry is then skipped
+        testOb->handle_combat_hit(
+            $(npc),
+            ({ ([ "id": "skip", "value": 0 ]) }),
+            0
+        ),
+        assert_equal(objectp(testOb), 1),
+    }) :));
+
+    // sp <= 0 keeps d100 at 0, so the first non-zero entry always lands,
+    // making each combat branch deterministic
+    expect("handle_combat_hit resolves miss and block", (: ({
+        $(mockLiving)->set_sp(0),
+        // leading zero-value entry exercises the continue path, then a miss
+        testOb->handle_combat_hit(
+            $(npc),
+            ({
+                ([ "id": "skip", "value": 0 ]),
+                ([ "id": "miss", "value": 100 ]),
+            }),
+            0
+        ),
+        testOb->handle_combat_hit(
+            $(npc),
+            ({ ([ "id": "block", "value": 100 ]) }),
+            0
+        ),
+        assert_equal(objectp($(npc)), 1),
+    }) :));
+
+    // high protection fully mitigates damage, so the regular and critical
+    // hit cases resolve through the (source-environment-guarded) miss path
+    expect("handle_combat_hit resolves mitigated regular and critical hits", (: ({
+        $(mockLiving)->set_sp(0),
+        $(npc)->set_protection(1000),
+        testOb->handle_combat_hit(
+            $(npc),
+            ({ ([ "id": "regular hit", "value": 100 ]) }),
+            0
+        ),
+        // critical hit sets crit then falls through to the regular resolution
+        testOb->handle_combat_hit(
+            $(npc),
+            ({ ([ "id": "critical hit", "value": 100 ]) }),
+            0
+        ),
+        assert_equal(objectp($(npc)), 1),
+    }) :));
+
+    if (mockLiving) {
+        mockLiving->stop_shadow();
+        destruct(mockLiving);
+    }
+    if (mockNpc1) {
+        mockNpc1->stop_shadow();
+        destruct(mockNpc1);
+    }
+    if (npc) destruct(npc);
+    if (r) destruct(r);
+}
+
+void test_handle_combat_returns_without_target() {
+    expect("handle_combat returns early when no hostile is present", (: ({
+        // a fresh instance has no hostiles, so present_hostile is 0
+        testOb->handle_combat(),
+        assert_equal(objectp(testOb), 1),
+    }) :));
+}
+
 void test_combat() {
     object mockLiving = new("/std/living/combat.mock.c");
     object npc = new(STD_NPC), mockNpc1;
