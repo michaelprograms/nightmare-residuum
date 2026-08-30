@@ -38,7 +38,7 @@ int can_receive(object ob) {
         return 0;
     }
     if (query_shadow()) {
-        return query_shadow()->can_receive(ob);
+        return /** @type {STD_NPC} */ (query_shadow())->can_receive(ob);
     }
     return 1;
 }
