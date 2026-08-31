@@ -99,6 +99,112 @@ void test_room_map_symbol() {
     if (item2) destruct(item2);
 }
 
+// this_character() resolves through previous_object()->query_character();
+// defining it here lets query_room_map_symbol see a character during tests
+nosave object __TestChar;
+object query_character() {
+    return __TestChar;
+}
+
+void test_room_map_symbol_living() {
+    object npcAgg = new(STD_NPC), npcPass = new(STD_NPC);
+
+    __TestChar = new(STD_NPC);
+    __TestChar->set_stat("charisma", 0);
+    npcAgg->set_aggressive(100);
+    npcPass->set_aggressive(0);
+    npcAgg->handle_move(testOb);
+    npcPass->handle_move(testOb);
+
+    expect("map symbol is orange with aggressive and passive livings", (: ({
+        // charisma 0 < aggressive 100 -> aggressive; passive npc -> passive
+        assert_regex(testOb->query_room_map_symbol(), "ORANGE"),
+    }) :));
+
+    npcPass->handle_move("/domain/Nowhere/room/void.c");
+    expect("map symbol is red with only aggressive livings", (: ({
+        assert_regex(testOb->query_room_map_symbol(), "I_RED"),
+    }) :));
+
+    npcAgg->handle_move("/domain/Nowhere/room/void.c");
+    npcPass->handle_move(testOb);
+    expect("map symbol is green with only passive livings", (: ({
+        assert_regex(testOb->query_room_map_symbol(), "GREEN"),
+    }) :));
+
+    __TestChar = 0;
+    if (npcAgg) destruct(npcAgg);
+    if (npcPass) destruct(npcPass);
+}
+
+void test_room_exits_picture() {
+    expect("room exits picture reflects exits and source filter", (: ({
+        // no exits: blank
+        assert_equal(testOb->query_room_exits_picture()["u"], " "),
+
+        testOb->set_exits(([
+            "up": "/domain/Nowhere/room/void.c",
+            "down": "/domain/Nowhere/room/void.c",
+        ])),
+        assert_equal(testOb->query_room_exits_picture()["u"], "+"),
+        assert_equal(testOb->query_room_exits_picture()["d"], "-"),
+
+        // source filter that matches keeps the exit
+        assert_equal(
+            testOb->query_room_exits_picture(
+                "/domain/Nowhere/room/void.c"
+            )["u"],
+            "+"
+        ),
+        // source filter that does not match blanks the exit
+        assert_equal(
+            testOb->query_room_exits_picture("/nonexistent.c")["u"],
+            " "
+        ),
+    }) :));
+}
+
+void test_room_map() {
+    expect("room map returns 0 when flagged no map", (: ({
+        testOb->set_property("no map", 1),
+        assert_equal(testOb->query_room_map(), 0),
+        testOb->remove_property("no map"),
+    }) :));
+
+    expect("room map renders with and without a valid exit", (: ({
+        // no exits: 9 rendered rows around the centered X
+        assert_equal(sizeof(testOb->query_room_map()), 9),
+        // a valid exit loads the neighbor room
+        testOb->set_exits(([
+            "north": "/domain/Nowhere/room/void.c",
+        ])),
+        assert_equal(sizeof(testOb->query_room_map()), 9),
+    }) :));
+}
+
+void test_environment_damage() {
+    object living = new(STD_LIVING);
+    int i;
+
+    living->handle_move(testOb);
+
+    // no water property: nothing happens
+    testOb->handle_environment_damage(living);
+
+    // deep water: repeat to exercise the random damage case and the default
+    testOb->set_property("water", 5);
+    for (i = 0; i < 100; i++) {
+        testOb->handle_environment_damage(living);
+    }
+
+    expect("environment damage runs in deep water", (: ({
+        assert_equal(objectp(testOb), 1),
+        assert_equal(objectp($(living)), 1),
+    }) :));
+
+    if (living) destruct(living);
+}
+
 nosave private int __HandleFnsItem = 0, __HandleFnsLiving = 0;
 nosave object __Ob, __Living;
 
