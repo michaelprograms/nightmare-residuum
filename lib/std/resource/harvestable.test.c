@@ -52,6 +52,59 @@ void test_type() {
     }) :));
 }
 
+void test_harvest_no_type() {
+    object npc = new(STD_NPC);
+
+    expect("harvest with no node type does nothing", (: ({
+        // the switch default branch returns early
+        testOb->handle_harvest($(npc)),
+        assert_equal(objectp(testOb), 1),
+    }) :));
+
+    if (npc) destruct(npc);
+}
+
+void test_harvest_without_tool() {
+    object npc = new(STD_NPC);
+
+    expect("harvest without the right tool warns and stops", (: ({
+        // each node type routes to its own tool, all missing here, so the
+        // node is never consumed
+        testOb->set_type("ore"),
+        testOb->handle_harvest($(npc)),
+        testOb->set_type("wood"),
+        testOb->handle_harvest($(npc)),
+        testOb->set_type("salvage"),
+        testOb->handle_harvest($(npc)),
+        assert_equal(objectp(testOb), 1),
+    }) :));
+
+    if (npc) destruct(npc);
+}
+
+void test_harvest_success() {
+    object r = new(STD_ROOM);
+    object npc = new(STD_NPC);
+    object pickaxe = new("/std/resource/pickaxe.c");
+
+    npc->handle_move(r);
+    pickaxe->handle_move(npc);
+    testOb->set_type("ore");
+    testOb->set_level(1);
+
+    expect("harvest with the right tool yields a resource", (: ({
+        assert_equal(present("pickaxe", $(npc)) != 0, 1),
+        testOb->handle_harvest($(npc)),
+        // node consumed and an ore resource created in the character
+        assert_equal(objectp(testOb), 0),
+        assert_equal(present("aluminum", $(npc)) != 0, 1),
+    }) :));
+
+    if (pickaxe) destruct(pickaxe);
+    if (npc) destruct(npc);
+    if (r) destruct(r);
+}
+
 void test_level() {
     expect("set_level adjusts descriptions", (: ({
         // no type set
