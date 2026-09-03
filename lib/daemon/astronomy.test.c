@@ -422,6 +422,75 @@ void test_update_almanac_and_dayphase() {
     }) :));
 }
 
+void test_scan_and_process_scheduling() {
+    // query_astronomy() returns the registry by reference, so injecting a
+    // controlled almanac lets heart_beat()/process() run deterministically
+    mapping registry = testOb->query_astronomy();
+
+    testOb->update_almanac(__Time, __Almanac);
+    registry["/domain/testastro/"] = __Almanac;
+
+    // scan with no characters present is a no-op but exercises the guard
+    testOb->scan();
+
+    expect("process schedules the next phase and computes moon phases", (: ({
+        (__Almanac["DAY_PHASE"] = "night"),
+        (__Almanac["NEXT_PHASE"] = 0),
+        // no moon phase set yet
+        assert_equal(undefinedp(__Almanac["MOONS"]["laros"]["phase"]), 1),
+        testOb->heart_beat(),
+        // moon phase computed and a next phase scheduled
+        assert_equal(intp(__Almanac["MOONS"]["laros"]["phase"]), 1),
+        assert_equal(__Almanac["NEXT_PHASE"] > 0, 1),
+    }) :));
+
+    expect("process handles an unknown day phase as night", (: ({
+        (__Almanac["DAY_PHASE"] = "bogus"),
+        (__Almanac["NEXT_PHASE"] = 0),
+        testOb->heart_beat(),
+        // still scheduled without error
+        assert_equal(__Almanac["NEXT_PHASE"] > 0, 1),
+    }) :));
+}
+
+void test_process_transitions() {
+    mapping registry = testOb->query_astronomy();
+
+    testOb->update_almanac(__Time, __Almanac);
+    registry["/domain/testastro/"] = __Almanac;
+
+    // NEXT_PHASE of 1 is always in the past, so each tick advances the phase
+    expect("process advances through the day phases in order", (: ({
+        (__Almanac["DAY_PHASE"] = "night"),
+        (__Almanac["NEXT_PHASE"] = 1),
+        testOb->heart_beat(),
+        assert_equal(__Almanac["DAY_PHASE"], "dawn"),
+
+        (__Almanac["DAY_PHASE"] = "dawn"),
+        (__Almanac["NEXT_PHASE"] = 1),
+        testOb->heart_beat(),
+        assert_equal(__Almanac["DAY_PHASE"], "day"),
+
+        (__Almanac["DAY_PHASE"] = "day"),
+        (__Almanac["NEXT_PHASE"] = 1),
+        testOb->heart_beat(),
+        assert_equal(__Almanac["DAY_PHASE"], "dusk"),
+
+        (__Almanac["DAY_PHASE"] = "dusk"),
+        (__Almanac["NEXT_PHASE"] = 1),
+        testOb->heart_beat(),
+        assert_equal(__Almanac["DAY_PHASE"], "night"),
+    }) :));
+
+    expect("process returns early before the scheduled phase time", (: ({
+        (__Almanac["DAY_PHASE"] = "day"),
+        (__Almanac["NEXT_PHASE"] = time() + 999999),
+        testOb->heart_beat(),
+        // phase is unchanged because the next phase time has not arrived
+        assert_equal(__Almanac["DAY_PHASE"], "day"),
+    }) :));
+}
+
 object roomOb;
 void test_astronomy_from_room() {
     expect("query_astronomy returns the registry mapping", (: ({
