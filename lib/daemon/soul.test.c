@@ -119,25 +119,26 @@ void test_parse_emote() {
             ),
             1
         ),
-        // $R and $P flags execute their branches
+        // $r and $p flags execute their branches (lowercase avoids the
+        // capitalize path, which the daemon does not populate for these)
         assert_equal(
-            stringp(testOb->parse_emote($(alice), "$R", ({ $(alice) }), 0)),
+            stringp(testOb->parse_emote($(alice), "$r", ({ $(alice) }), 0)),
             1
         ),
         assert_equal(
-            stringp(testOb->parse_emote(0, "$R", ({ $(alice) }), 0)),
+            stringp(testOb->parse_emote(0, "$r", ({ $(alice) }), 0)),
             1
         ),
         assert_equal(
-            stringp(testOb->parse_emote($(alice), "$P", ({ $(alice) }), 0)),
+            stringp(testOb->parse_emote($(alice), "$p", ({ $(alice) }), 0)),
             1
         ),
         assert_equal(
-            stringp(testOb->parse_emote(0, "$N $P", ({ $(alice) }), 0)),
+            stringp(testOb->parse_emote(0, "$N $p", ({ $(alice) }), 0)),
             1
         ),
         assert_equal(
-            stringp(testOb->parse_emote(0, "$P", ({ $(alice) }), 0)),
+            stringp(testOb->parse_emote(0, "$p", ({ $(alice) }), 0)),
             1
         ),
         // $Nd and $Np force the name form
@@ -154,6 +155,74 @@ void test_parse_emote() {
     if (alice) destruct(alice);
     if (bob) destruct(bob);
     if (rock) destruct(rock);
+}
+
+// this_character() resolves through previous_object()->query_character();
+// defining it lets prepare_emote/do_verb_rule run with a character in a room
+nosave object __TestChar;
+object query_character() {
+    return __TestChar;
+}
+
+void test_do_verb_rule() {
+    object r = new(STD_ROOM);
+    object char = new(STD_NPC), t2 = new(STD_NPC), t3 = new(STD_NPC);
+
+    char->set_name("charname");
+    char->set_gender("male");
+    t2->set_name("targettwo");
+    t2->set_gender("female");
+    t3->set_name("targetthree");
+    t3->set_gender("neither");
+    char->handle_move(r);
+    t2->handle_move(r);
+    t3->handle_move(r);
+    __TestChar = char;
+
+    expect("do_verb_rule runs the full emote flow", (: ({
+        // fewer than two args is a no-op
+        testOb->do_verb_rule(),
+        // a simple self emote
+        testOb->do_verb_rule("smile", ""),
+        // a single living target
+        testOb->do_verb_rule("smile", "LIV", $(t2)),
+        // multiple living targets
+        testOb->do_verb_rule("smile", "LVS", ({ $(t2), $(t3) })),
+        // an unknown emote: prepare_emote returns 0
+        testOb->do_verb_rule("nonexistent", ""),
+        assert_equal(objectp(testOb), 1),
+    }) :));
+
+    __TestChar = 0;
+    if (r) destruct(r);
+    if (char) destruct(char);
+    if (t2) destruct(t2);
+    if (t3) destruct(t3);
+}
+
+void test_direct_verb_rule() {
+    object r = new(STD_ROOM);
+    object npc = new(STD_NPC), item = new(STD_ITEM);
+
+    // give the targets an environment so they differ from the caller's (0),
+    // exercising the environment-mismatch rejection branches
+    npc->handle_move(r);
+    item->handle_move(r);
+
+    expect("direct_verb_rule validates emote rules and targets", (: ({
+        // fewer than two args
+        assert_equal(testOb->direct_verb_rule(), 0),
+        // valid emote and rule
+        assert_equal(testOb->direct_verb_rule("smile", "") != 0, 1),
+        // LVS against a living in a different environment is rejected
+        assert_equal(testOb->direct_verb_rule("smile", "LVS", $(npc)), 0),
+        // OBJ against an object in a different environment is rejected
+        assert_equal(testOb->direct_verb_rule("smile", "OBJ", $(item)), 0),
+    }) :));
+
+    if (npc) destruct(npc);
+    if (item) destruct(item);
+    if (r) destruct(r);
 }
 
 void test_apply_can_verb_rule() {
