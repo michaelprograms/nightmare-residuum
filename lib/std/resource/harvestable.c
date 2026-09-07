@@ -28,9 +28,6 @@ void set_level(int l) {
         return;
     }
     material = STD_RESOURCE->query_material(type, query_level());
-    if (!material) {
-        return;
-    }
     if (type == "ore") {
         set_short("a rock containing " + material + " ore");
         set_long("A rock containing a strip of " + material + " ore.");
