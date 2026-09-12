@@ -327,8 +327,11 @@ void test_describe_environment() {
     r->set_long("A long description of the test room for wrapping.");
     r->set_long_footer("A footer line.");
     r->set_exit("north", "/domain/Nowhere/room/void.c");
-    r->set_listen("default", (: "You hear a function." :));
+    r->set_listen("default", (: capitalize("you hear a function.") :));
     r->set_smell("default", "You smell a string.");
+    // r2 uses the opposite sense value types to cover both branches
+    r2->set_listen("default", "You hear a string.");
+    r2->set_smell("default", (: capitalize("you smell a function.") :));
     npc->set_name("goblin");
     npc->handle_move(r);
     item->handle_move(r);
@@ -364,4 +367,61 @@ void test_describe_environment() {
     if (item) destruct(item);
     if (r) destruct(r);
     if (r2) destruct(r2);
+}
+
+void test_enter_world() {
+    testOb->set_name("Enterer");
+    testOb->set_user(this_object());
+    testOb->set_level(1);
+
+    // override: skips the announce/log block, still describes and beats
+    testOb->enter_world(1);
+    // full entry: loads the environment, logs, announces, refreshes the parser
+    testOb->enter_world(0);
+
+    expect("enter_world places the character and starts a heart beat", (: ({
+        assert_equal(objectp(testOb), 1),
+        assert_regex(
+            base_name(environment(testOb)),
+            "/domain/Nowhere/room/void"
+        ),
+    }) :));
+}
+
+void test_exit_world() {
+    testOb->set_name("Exiter");
+    testOb->set_user(this_object());
+    testOb->set_level(1);
+    testOb->handle_move("/domain/Nowhere/room/void.c");
+
+    // exit_world saves with exit==1 then removes the character
+    testOb->exit_world();
+
+    expect("exit_world saves and removes the character", (: ({
+        assert_equal(objectp(testOb), 0),
+        assert_equal(file_size("/save/character/e/exiter/character.o") > 0, 1),
+    }) :));
+
+    rm("/save/character/e/exiter/character.o");
+    rmdir("/save/character/e/exiter");
+    rmdir("/save/character/e");
+}
+
+void test_freezer() {
+    testOb->set_name("Frozen");
+    testOb->set_user(this_object());
+    testOb->set_level(1);
+    testOb->handle_move("/domain/Nowhere/room/void.c");
+
+    // freeze on disconnect, then thaw back to the saved environment
+    testOb->enter_freezer();
+    testOb->exit_freezer();
+
+    expect("freezer round-trip returns the character to its environment", (: ({
+        assert_equal(objectp(testOb), 1),
+        assert_regex(
+            base_name(environment(testOb)),
+            "/domain/Nowhere/room/void"
+        ),
+    }) :));
 }
