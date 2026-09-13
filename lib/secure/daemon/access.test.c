@@ -182,6 +182,76 @@ void test_query_allowed_writes() {
     destruct(basicOb);
 }
 
+void test_set_debug() {
+    object basicOb = new(STD_OBJECT);
+
+    expect("set_debug validates its argument and toggles debug output", (: ({
+        assert_catch(
+            (: testOb->set_debug("bad") :),
+            "*Bad argument 1 to access->set_debug\n"
+        ),
+        // with debug enabled a stack check emits print_debug_message output
+        testOb->set_debug(1),
+        assert_equal(
+            testOb->query_allowed(
+                $(basicOb),
+                "write_file",
+                "/secure/daemon/foo.c",
+                "write"
+            ),
+            0
+        ),
+        testOb->set_debug(0),
+    }) :));
+
+    destruct(basicOb);
+}
+
+void test_query_allowed_open_read_path() {
+    object basicOb = new(STD_OBJECT);
+
+    expect("query_allowed permits privileged reads of unconfigured paths", (: ({
+        // no read.cfg entry matches this path, so match_path returns 0 and any
+        // privileged caller is allowed to read (the "open read path" branch)
+        assert_equal(
+            testOb->query_allowed($(basicOb), "read_file", "/foobar/x", "read"),
+            1
+        ),
+    }) :));
+
+    destruct(basicOb);
+}
+
+void test_query_allowed_write_branches() {
+    object basicOb = new(STD_OBJECT);
+
+    expect("query_allowed handles unconfigured and class-matched writes", (: ({
+        // no write.cfg entry matches: unprotected write paths are denied
+        assert_equal(
+            testOb->query_allowed(
+                $(basicOb),
+                "write_file",
+                "/foobar/x",
+                "write"
+            ),
+            0
+        ),
+        // basicOb is a /std/ object (ASSIST); writing a /std/ file matches its
+        // own privilege class (the "file class match" branch)
+        assert_equal(
+            testOb->query_allowed(
+                $(basicOb),
+                "write_file",
+                "/std/foo.c",
+                "write"
+            ),
+            1
+        ),
+    }) :));
+
+    destruct(basicOb);
+}
+
 void test_query_allowed_socket() {
     expect("query_allowed denies socket access to non-IPC callers", (: ({
         // testOb is D_ACCESS, not D_IPC, and does not inherit HTTP module
