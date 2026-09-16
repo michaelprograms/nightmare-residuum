@@ -261,21 +261,21 @@ void test_say_response() {
         assert_equal(testOb->query_say_response_matches(), ({ "match" })),
         // nothing commanded
         assert_equal(
-            /** @type {/std/npc.test} */ (testOb)->query_received_commands(),
+            /** @type {"/std/npc.test"} */ (testOb)->query_received_commands(),
             ({})
         ),
 
         testOb->handle_say_response("something unrelated"),
         // nothing commanded still
         assert_equal(
-            /** @type {/std/npc.test} */ (testOb)->query_received_commands(),
+            /** @type {"/std/npc.test"} */ (testOb)->query_received_commands(),
             ({})
         ),
 
         testOb->handle_say_response("match"),
         // say response was commanded
         assert_equal(
-            /** @type {/std/npc.test} */ (testOb)->query_received_commands(),
+            /** @type {"/std/npc.test"} */ (testOb)->query_received_commands(),
             ({ "say response" })
         ),
 
@@ -284,18 +284,18 @@ void test_say_response() {
         testOb->receive_message("say", "You say: match"),
         testOb->receive_message("say", "You synthesize: match"),
         assert_equal(
-            /** @type {/std/npc.test} */ (testOb)->query_received_commands(),
+            /** @type {"/std/npc.test"} */ (testOb)->query_received_commands(),
             ({ "say response" })
         ),
         // matches off another living
         testOb->receive_message("say", "Someone says: match"),
         assert_equal(
-            /** @type {/std/npc.test} */ (testOb)->query_received_commands(),
+            /** @type {"/std/npc.test"} */ (testOb)->query_received_commands(),
             ({ "say response", "say response" })
         ),
         testOb->receive_message("say", "Someone says: match"),
         assert_equal(
-            /** @type {/std/npc.test} */ (testOb)->query_received_commands(),
+            /** @type {"/std/npc.test"} */ (testOb)->query_received_commands(),
             ({ "say response", "say response", "say response" })
         ),
 

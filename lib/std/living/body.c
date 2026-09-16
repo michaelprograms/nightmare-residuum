@@ -150,7 +150,7 @@ int handle_limb_restore(string limb) {
         return 0;
     }
     attach = filter(
-        __Limbs,
+        keys(__Limbs),
         (: __Limbs[$1]["attach"] == $(limb) && __Limbs[$1]["status"] == "severed" :)
     );
     if (sizeof(attach) > 0) {
