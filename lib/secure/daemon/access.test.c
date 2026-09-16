@@ -182,13 +182,12 @@ void test_query_allowed_writes() {
     destruct(basicOb);
 }
 
-nosave private mixed __BadArg = "bad";
 void test_set_debug() {
     object basicOb = new(STD_OBJECT);
 
     expect("set_debug validates its argument and toggles debug output", (: ({
         assert_catch(
-            (: testOb->set_debug(__BadArg) :),
+            (: testOb->set_debug(UNDEFINED) :),
             "*Bad argument 1 to access->set_debug\n"
         ),
         // with debug enabled a stack check emits print_debug_message output
