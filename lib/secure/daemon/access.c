@@ -46,7 +46,7 @@ void create() {
  * @param {int} val - 1 to enable debug output, 0 to disable
  */
 void set_debug(int val) {
-    if (!intp(val)) {
+    if (undefinedp(val) || !intp(val)) {
         error("Bad argument 1 to access->set_debug");
     }
     __Debug = val;
