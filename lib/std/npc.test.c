@@ -232,15 +232,16 @@ void test_abilities() {
         assert_equal(testOb->query_ability_chance(), 100),
         testOb->handle_ability_attack(),
         // nothing commanded
-        // @lpc-ignore
-        assert_equal(testOb->query_received_commands(), ({})),
+        assert_equal($(mockNPC)->query_received_commands(), ({})),
 
         // ability list
         testOb->set_ability_list(({ "test ability" })),
         testOb->handle_ability_attack(),
         // ability was commanded
-        // @lpc-ignore
-        assert_equal(testOb->query_received_commands(), ({ "test ability" })),
+        assert_equal(
+            $(mockNPC)->query_received_commands(),
+            ({ "test ability" })
+        ),
 
         assert_equal($(mockNPC)->stop_shadow(), 1),
     }) :));
@@ -261,21 +262,21 @@ void test_say_response() {
         assert_equal(testOb->query_say_response_matches(), ({ "match" })),
         // nothing commanded
         assert_equal(
-            /** @type {"/std/npc.test"} */ (testOb)->query_received_commands(),
+            $(mockNPC)->query_received_commands(),
             ({})
         ),
 
         testOb->handle_say_response("something unrelated"),
         // nothing commanded still
         assert_equal(
-            /** @type {"/std/npc.test"} */ (testOb)->query_received_commands(),
+            $(mockNPC)->query_received_commands(),
             ({})
         ),
 
         testOb->handle_say_response("match"),
         // say response was commanded
         assert_equal(
-            /** @type {"/std/npc.test"} */ (testOb)->query_received_commands(),
+            $(mockNPC)->query_received_commands(),
             ({ "say response" })
         ),
 
@@ -284,18 +285,18 @@ void test_say_response() {
         testOb->receive_message("say", "You say: match"),
         testOb->receive_message("say", "You synthesize: match"),
         assert_equal(
-            /** @type {"/std/npc.test"} */ (testOb)->query_received_commands(),
+            $(mockNPC)->query_received_commands(),
             ({ "say response" })
         ),
         // matches off another living
         testOb->receive_message("say", "Someone says: match"),
         assert_equal(
-            /** @type {"/std/npc.test"} */ (testOb)->query_received_commands(),
+            $(mockNPC)->query_received_commands(),
             ({ "say response", "say response" })
         ),
         testOb->receive_message("say", "Someone says: match"),
         assert_equal(
-            /** @type {"/std/npc.test"} */ (testOb)->query_received_commands(),
+            $(mockNPC)->query_received_commands(),
             ({ "say response", "say response", "say response" })
         ),
 
