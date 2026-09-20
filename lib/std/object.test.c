@@ -3,6 +3,13 @@ inherit M_TEST;
  * @var {"/std/object"} testOb
  */
 
+void test_spawned_by() {
+    expect("spawned_by records the cloning object", (: ({
+        // testOb was cloned by the test runner, so it records a spawner name
+        assert_equal(stringp(testOb->query_spawned_by()), 1),
+    }) :));
+}
+
 void test_parser_applies() {
     expect("object handles parser applies", (: ({
         assert_equal(testOb->is_living(), 0),
