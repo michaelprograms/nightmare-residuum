@@ -5,7 +5,7 @@ inherit M_TEST;
  */
 
 string *test_order() {
-    return ({ "test_resets", "test_objects", });
+    return ({ "test_resets", "test_objects", "test_despawn", "test_adopt", });
 }
 
 private int resetFnCalled = 0;
@@ -158,4 +158,92 @@ void test_objects() {
     if (mockReset) destruct(mockReset);
     if (npc) destruct(npc);
     if (item) destruct(item);
+}
+
+nosave private object stray;
+void test_despawn() {
+    object mockReset;
+    /**
+     * @param {STD_NPC} ob new npc
+     */
+    function wanderFn = function(object ob) {
+        ob->set_wander(1);
+    };
+
+    mockReset = new("/std/module/reset.mock.c");
+    mockReset->start_shadow(testOb);
+
+    expect("num <= 0 despawns only this room's own spawns", (: ({
+        // reset spawns one untracked (non-wandering) npc
+        testOb->set_reset(([ "/std/npc.c": 1 ])),
+        assert_equal(sizeof(all_inventory(testOb)), 1),
+
+        // a npc placed by someone else (spawned_by is this test, not testOb)
+        stray = new("/std/npc.c"),
+        assert_equal(stray->handle_move(testOb), 1),
+        assert_equal(sizeof(all_inventory(testOb)), 2),
+
+        // wanting none removes the room's spawn but leaves the stray npc
+        testOb->set_reset(([ "/std/npc.c": 0 ])),
+        assert_equal(sizeof(all_inventory(testOb)), 1),
+        assert_equal(all_inventory(testOb)[0], stray),
+    }) :));
+
+    // clear the stray so it is not counted against the next reset
+    if (stray) {
+        destruct(stray);
+    }
+
+    expect("num <= 0 despawns tracked wanderers", (: ({
+        testOb->set_reset(([ "/std/npc.c": ([
+            "number": 1,
+            "setup": $(wanderFn),
+        ]) ])),
+        assert_equal(sizeof(testOb->query_objects()["/std/npc"]), 1),
+
+        testOb->set_reset(([ "/std/npc.c": 0 ])),
+        assert_equal(testOb->query_objects()["/std/npc"], UNDEFINED),
+    }) :));
+
+    mockReset->stop_shadow();
+
+    if (mockReset) destruct(mockReset);
+    if (stray) destruct(stray);
+}
+
+nosave private object wanderer;
+void test_adopt() {
+    object mockReset;
+
+    mockReset = new("/std/module/reset.mock.c");
+    mockReset->start_shadow(testOb);
+
+    // testOb spawns a non-wandering npc, so it is left untracked while its
+    // spawned_by names testOb's blueprint
+    testOb->set_reset(([ "/std/npc.c": 1 ]));
+    wanderer = all_inventory(testOb)[0];
+
+    expect("a non-wandering spawn is not adopted", (: ({
+        // reset scans children but only adopts wanderers, so this stays untracked
+        testOb->set_reset(([ "/std/npc.c": 1 ])),
+        assert_equal(testOb->query_objects()["/std/npc"], UNDEFINED),
+        assert_equal(sizeof(all_inventory(testOb)), 1),
+    }) :));
+
+    // it becomes a wanderer, as it would have been before roaming off and
+    // losing its tracking to a clean up (deep reset)
+    wanderer->set_wander(1);
+
+    expect("reset re-adopts an untracked wanderer instead of duplicating", (: ({
+        testOb->set_reset(([ "/std/npc.c": 1 ])),
+        // adoption re-tracks the existing wanderer by its spawned_by name
+        assert_equal(testOb->query_objects()["/std/npc"], ({ wanderer })),
+        // and no duplicate was spawned
+        assert_equal(sizeof(all_inventory(testOb)), 1),
+    }) :));
+
+    mockReset->stop_shadow();
+
+    if (mockReset) destruct(mockReset);
+    if (wanderer) destruct(wanderer);
 }

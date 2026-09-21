@@ -23,9 +23,11 @@ int query_resets() {
 void handle_reset() {
     mapping counts = ([]);
     int count, num;
-    string name, key;
-    object ob, *tracked;
+    string name, key, self;
+    object ob, candidate, *tracked, *orphans;
     mixed val;
+
+    self = base_name(this_object());
 
     initialize_reset();
 
@@ -68,8 +70,48 @@ void handle_reset() {
             num = val;
         }
 
+        // data now wants none: despawn this room's own spawns and stop
+        if (num <= 0) {
+            tracked = __Objects[key] || ({});
+            foreach (ob in tracked) {
+                if (objectp(ob)) {
+                    destruct(ob);
+                }
+            }
+            map_delete(__Objects, key);
+            foreach (ob in all_inventory()) {
+                if (base_name(ob) == key && ob->query_spawned_by() == self) {
+                    destruct(ob);
+                }
+            }
+            continue;
+        }
+
         tracked = __Objects[key] || ({});
         count = sizeof(tracked);
+
+        // no tracking (ex: after a clean up): re-adopt this room's wanderers
+        // that have moved away, so a reset does not spawn duplicates
+        if (!count) {
+            orphans = ({});
+            foreach (candidate in children(key)) {
+                if (candidate->query_spawned_by() != self) {
+                    continue;
+                }
+                if (!candidate->query_wander()) {
+                    continue;
+                }
+                orphans += ({ candidate });
+                if (sizeof(orphans) >= num) {
+                    break;
+                }
+            }
+            if (sizeof(orphans)) {
+                __Objects[key] = orphans;
+                count = sizeof(orphans);
+            }
+        }
+
         if (!count && counts[key]) {
             count = counts[key];
         }
