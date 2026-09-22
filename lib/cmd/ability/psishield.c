@@ -19,9 +19,9 @@ void create() {
 /**
  * @param {STD_LIVING} source
  * @param {STD_LIVING} target
- * @param limb
+ * @param _limb
  */
-void handle_utility(object source, object target, string limb) {
+void handle_utility(object source, object target, string _limb) {
     int n, t;
 
     n = 1 + source->query_stat("intelligence") / 25;

@@ -8,7 +8,7 @@ void create() {
     set_help_text("The improve command is used to spend experience points to permanently increase one of your character's stats.");
 }
 
-void command(string input, mapping flags) {
+void command(string input, mapping _flags) {
     object tc = this_character();
     string stat;
     int cost;

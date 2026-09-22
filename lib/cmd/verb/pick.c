@@ -14,7 +14,7 @@ void do_pick() {
     write("Pick what?\n");
 }
 
-int can_pick_obj(object ob, string verb) {
+int can_pick_obj(object _ob, string _verb) {
     return 1;
 }
 /**
@@ -22,9 +22,9 @@ int can_pick_obj(object ob, string verb) {
  * inventory.
  *
  * @param {STD_ITEM & M_PICKABLE} ob the item being picked
- * @param str the input text
+ * @param _str the input text
  */
-void do_pick_obj(object ob, string str) {
+void do_pick_obj(object ob, string _str) {
     object p;
 
     if (ob->query_picks() < 1 || !ob->query_pick_item()) {

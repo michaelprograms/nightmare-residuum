@@ -6,7 +6,7 @@ void create() {
     set_help_text("The heartbeats command is used to view the list of objects with heartbeats.\n\nUsing a name or file filter will show the list of objects that match either filter.");
 }
 
-void command(string input, mapping flags) {
+void command(string input, mapping _flags) {
     object *obs;
     string *items = ({});
 

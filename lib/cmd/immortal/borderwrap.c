@@ -1,5 +1,5 @@
 // This command currently doesn't work due to a bug in fluffos efun::terminal_color
-void command(string input, mapping flags) {
+void command(string _input, mapping _flags) {
     mapping b = query_border_charset();
     string left = implode(format_border(([
         "title": "LEFT",

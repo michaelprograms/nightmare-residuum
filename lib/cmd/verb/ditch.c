@@ -11,7 +11,7 @@ mixed can_ditch() {
     return "Ditch whom?";
 }
 
-mixed can_ditch_liv(object lv, string str) {
+mixed can_ditch_liv(object _lv, string _str) {
     return 1;
 }
 /**
@@ -19,9 +19,9 @@ mixed can_ditch_liv(object lv, string str) {
  * object.
  *
  * @param {"/std/npc/pet"} ob the following pet object being ditched
- * @param str the input text
+ * @param _str the input text
  */
-void do_ditch_liv(object ob, string str) {
+void do_ditch_liv(object ob, string _str) {
     object po = previous_object();
 
     if (!ob->query_following()) {

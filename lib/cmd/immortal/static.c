@@ -1,4 +1,4 @@
-void command(string input, mapping flags) {
+void command(string _input, mapping flags) {
     string s = " ", msg = "";
     int width = this_user()->query_setting("width");
     int w = width * 2;

@@ -6,7 +6,7 @@ void create() {
     set_help_text("The achievements command is used to view your achievements, or the achievements in your current environment.");
 }
 
-void command(string input, mapping flags) {
+void command(string input, mapping _flags) {
     mapping *body = ({});
 
     if (input == "here") {

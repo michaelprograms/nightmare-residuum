@@ -130,7 +130,7 @@ void measure_simplex() {
     ) + " = %^ORANGE%^" + sprintf("%f", time4d / 1000000.0) + " ms%^RESET%^\n");
 }
 
-void command(string input, mapping flags) {
+void command(string _input, mapping _flags) {
     measure_perlin();
     measure_simplex();
 }

@@ -6,7 +6,7 @@ void create() {
     set_help_text("The shutdown command is used to stop the game server.");
 }
 
-void command(string input, mapping flags) {
+void command(string _input, mapping _flags) {
     message(
         "system",
         "Everything is suddenly nothing as irreality takes control.\n",

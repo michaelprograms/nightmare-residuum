@@ -6,7 +6,7 @@ void create() {
     set_help_text("The transport command can be used by an immortal to bring another character to their current environment.");
 }
 
-void command(string input, mapping flags) {
+void command(string input, mapping _flags) {
     object ob;
     if (!input) {
         message("action", "Transport who?", this_character());

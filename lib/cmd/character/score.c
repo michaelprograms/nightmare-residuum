@@ -6,7 +6,7 @@ void create() {
     set_help_text("The score command is used to view the attributes about your character.");
 }
 
-void command(string input, mapping flags) {
+void command(string input, mapping _flags) {
     object tc = this_character(), target = tc;
 
     if (input && tc->query_immortal()) {

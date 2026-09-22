@@ -6,7 +6,7 @@ void create() {
     set_help_text("The tree command can be used to view a directory structure, or an object's inheritables. Search flags can also be passed.");
 }
 
-mapping tree_file(string file, string fn, int index, int maxIndex) {
+mapping tree_file(string file, string fn, int _index, int _maxIndex) {
     mapping result = ([]), tmp;
     string *inherits, err, key;
     object ob;
@@ -42,7 +42,7 @@ mapping tree_file(string file, string fn, int index, int maxIndex) {
     return result;
 }
 
-mapping tree_directory(string file, string search, int index, int maxIndex) {
+mapping tree_directory(string file, string search, int _index, int _maxIndex) {
     mapping result = ([]), tmp;
     string *files, key;
     int l, searchFlag = 0;

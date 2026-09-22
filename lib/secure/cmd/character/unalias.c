@@ -7,7 +7,7 @@ void create() {
     set_help_similar(({ "alias" }));
 }
 
-void command(string input, mapping flags) {
+void command(string input, mapping _flags) {
     object tu = this_user();
     mapping alias;
 

@@ -28,7 +28,7 @@ void format_line(
     write(result + "\n");
 }
 
-void command(string input, mapping flags) {
+void command(string input, mapping _flags) {
     // grab start time
     int t = rusage()["utime"] + rusage()["stime"];
 

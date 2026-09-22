@@ -6,7 +6,7 @@ void create() {
     set_help_text("The time command is used to view the current, local, server, and up time.");
 }
 
-void command(string input, mapping flags) {
+void command(string _input, mapping _flags) {
     string localtime, localdate;
     mapping a;
 

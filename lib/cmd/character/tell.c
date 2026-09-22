@@ -7,7 +7,7 @@ void create() {
     set_help_similar(({ "channels", "last", "reply", }));
 }
 
-void command(string input, mapping flags) {
+void command(string input, mapping _flags) {
     object tc = this_character(), target;
     string name, msg, myMsg, yourMsg;
 

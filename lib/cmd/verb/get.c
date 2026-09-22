@@ -16,16 +16,16 @@ mixed can_get() {
 
 /* ----- rule: "OBS" ----- */
 
-mixed can_get_obj(object ob, string str) {
+mixed can_get_obj(object _ob, string _str) {
     return 1;
 }
 /**
  * Get an item from the living object's environment.
  *
  * @param {STD_ITEM} ob the item being gotten
- * @param str the input text
+ * @param _str the input text
  */
-void do_get_obj(object ob, string str) {
+void do_get_obj(object ob, string _str) {
     object po = previous_object();
 
     message("action", "You take " + ob->query_name() + ".", po);
@@ -49,7 +49,7 @@ void do_get_obs(mixed *info, string str) {
 
 /* ----- rule: "OBJ from OBJ" ----- */
 
-mixed can_get_obj_from_obj(mixed args...) {
+mixed can_get_obj_from_obj(mixed _args...) {
     return 1;
 }
 

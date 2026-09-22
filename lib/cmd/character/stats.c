@@ -33,7 +33,7 @@ private int query_improve_percent(object source, string stat) {
     return pct;
 }
 
-void command(string input, mapping flags) {
+void command(string input, mapping _flags) {
     object tc = this_character(), target = tc;
     string *items = ({});
 

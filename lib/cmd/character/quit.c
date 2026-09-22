@@ -6,7 +6,7 @@ void create() {
     set_help_text("The quit command is used to log out of your character.");
 }
 
-void command(string input, mapping flags) {
+void command(string _input, mapping _flags) {
     if (!this_character()) {
         message("action", "Quitting out...", this_user());
     } else {

@@ -53,7 +53,7 @@ private void print_all_aliases(object user) {
     ]));
 }
 
-void command(string input, mapping flags) {
+void command(string input, mapping _flags) {
     object tu = this_user();
     if (!input) {
         print_all_aliases(tu);

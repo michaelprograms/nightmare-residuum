@@ -6,7 +6,7 @@ void create() {
     set_help_text("The clone command is used to create a copy of the object in the provided file.");
 }
 
-void command(string input, mapping flags) {
+void command(string input, mapping _flags) {
     string cwd, file;
     object ob;
 

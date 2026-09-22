@@ -11,7 +11,7 @@ mixed can_attack() {
     return "Attack whom?";
 }
 
-mixed can_attack_liv(object lv, string str) {
+mixed can_attack_liv(object _lv, string _str) {
     /** @type {STD_ROOM} env */
     object env = environment(previous_object());
     if (env->query_property("no attack")) return "You cannot attack here.";
@@ -21,9 +21,9 @@ mixed can_attack_liv(object lv, string str) {
  * Attack a living object to engage in combat.
  *
  * @param {STD_LIVING} ob the living object being attacked
- * @param str the input text
+ * @param _str the input text
  */
-void do_attack_liv(object ob, string str) {
+void do_attack_liv(object ob, string _str) {
     object po = previous_object();
     if (po->query_defeated()) {
         message(

@@ -16,7 +16,7 @@ mixed can_open() {
 
 /* ----- rule: "STR" ----- */
 
-mixed can_open_str(mixed args...) {
+mixed can_open_str(mixed _args...) {
     return 1;
 }
 

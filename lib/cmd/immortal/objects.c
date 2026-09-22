@@ -67,7 +67,7 @@ private void format_type(mapping data, object *obs) {
     }
 }
 
-void command(string input, mapping flags) {
+void command(string input, mapping _flags) {
     object *obs, *rooms, *containers;
     mapping data = ([]);
 

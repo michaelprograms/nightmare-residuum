@@ -6,7 +6,7 @@ void create() {
     set_help_text("The calendar command is used to view the date and time for your character's current location.");
 }
 
-void command(string input, mapping flags) {
+void command(string _input, mapping _flags) {
     mapping *body = ({});
     mapping a, footer;
     int t = time(), currentMonth, currentDay;

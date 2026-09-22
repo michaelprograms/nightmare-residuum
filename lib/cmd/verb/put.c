@@ -16,7 +16,7 @@ mixed can_put() {
 
 /* ----- rule: "OBJ in OBJ" ----- */
 
-mixed can_put_obj_in_obj(mixed args...) {
+mixed can_put_obj_in_obj(mixed _args...) {
     return 1;
 }
 

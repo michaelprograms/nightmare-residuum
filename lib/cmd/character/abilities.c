@@ -8,7 +8,7 @@ void create() {
     set_help_text("The abilities command is used to view the list of abilities, with filters for abilities your character can use, the generic NPC ability list, or the list of abilities for a class.");
 }
 
-void command(string input, mapping flags) {
+void command(string input, mapping _flags) {
     object po = previous_object();
     mixed *body = ({});
     string *abilities = ({});

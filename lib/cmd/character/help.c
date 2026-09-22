@@ -6,7 +6,7 @@ void create() {
     set_help_text("The help command is used to view more information about a command.");
 }
 
-void command(string input, mapping flags) {
+void command(string input, mapping _flags) {
     string path;
     object ob;
     string result, *parts, *items;

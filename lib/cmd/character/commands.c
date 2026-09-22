@@ -6,7 +6,7 @@ void create() {
     set_help_text("The commands command is used to view the list of possible actions your character can make.");
 }
 
-void command(string input, mapping flags) {
+void command(string _input, mapping flags) {
     mapping actions = ([]);
     string subtitle;
     mixed *body = ({});

@@ -21,9 +21,9 @@ mixed can_inject() {
  * Handle an injectable item being used.
  *
  * @param {STD_INJECTABLE} ob the item being injected
- * @param str the input text
+ * @param _str the input text
  */
-void do_inject_obj(object ob, string str) {
+void do_inject_obj(object ob, string _str) {
     object po = previous_object();
 
     message(
@@ -43,7 +43,7 @@ void do_inject_obj(object ob, string str) {
 
 /* ----- OBJ into LIV ----- */
 
-mixed can_inject_obj_into_liv(mixed args...) {
+mixed can_inject_obj_into_liv(mixed _args...) {
     return 1;
 }
 

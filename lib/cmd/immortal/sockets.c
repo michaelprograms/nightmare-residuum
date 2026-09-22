@@ -6,7 +6,7 @@ void create() {
     set_help_text("The sockets command is used to view the entire list of sockets.");
 }
 
-void command(string input, mapping flags) {
+void command(string _input, mapping _flags) {
     string *sockets = ({}), *netStats = ({});
 
     foreach (mixed *s in socket_status()) {

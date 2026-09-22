@@ -11,7 +11,7 @@ mixed can_aid() {
     return "Aid whom?";
 }
 
-mixed can_aid_liv(object liv, string str) {
+mixed can_aid_liv(object _liv, string _str) {
     /** @type {STD_ROOM} env */
     object env = environment(previous_object());
     if (env->query_property("no attack")) return "You cannot attack here.";
@@ -21,9 +21,9 @@ mixed can_aid_liv(object liv, string str) {
  * Aid a living object to engage in combat with their hostile opponents.
  *
  * @param {STD_LIVING} ob the living object being aided
- * @param str the input text
+ * @param _str the input text
  */
-void do_aid_liv(object ob, string str) {
+void do_aid_liv(object ob, string _str) {
     object po = previous_object();
     object *targets = present_hostiles(ob);
     if (sizeof(targets)) {

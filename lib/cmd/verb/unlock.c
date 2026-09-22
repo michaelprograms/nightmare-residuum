@@ -16,7 +16,7 @@ mixed can_unlock() {
 
 /* ----- rule: "STR with OBJ" ----- */
 
-mixed can_unlock_str_with_obj(mixed args...) {
+mixed can_unlock_str_with_obj(mixed _args...) {
     return 1;
 }
 

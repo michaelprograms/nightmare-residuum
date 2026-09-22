@@ -11,7 +11,7 @@ mixed can_lead() {
     return "Lead whom?";
 }
 
-mixed can_lead_liv(object lv, string str) {
+mixed can_lead_liv(object _lv, string _str) {
     return 1;
 }
 
@@ -19,9 +19,9 @@ mixed can_lead_liv(object lv, string str) {
  * Parser apply for leading a living object such as a pet.
  *
  * @param {"/std/npc/pet.c"} ob the living object being lead
- * @param str
+ * @param _str
  */
-void do_lead_liv(object ob, string str) {
+void do_lead_liv(object ob, string _str) {
     object po = previous_object();
 
     if (ob->query_following()) {

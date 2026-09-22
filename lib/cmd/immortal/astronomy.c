@@ -6,7 +6,7 @@ void create() {
     set_help_text("The astronomy command is used to view the state of the astronomy daemon.");
 }
 
-void command(string input, mapping flags) {
+void command(string _input, mapping _flags) {
     mapping *items = ({});
 
     foreach (string key, mapping a in D_ASTRONOMY->query_astronomy()) {

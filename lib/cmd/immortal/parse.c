@@ -7,7 +7,7 @@ void create() {
 }
 
 
-void command(string input, mapping flags) {
+void command(string input, mapping _flags) {
     if (!input) {
         write("parse: input required.\n");
         return;

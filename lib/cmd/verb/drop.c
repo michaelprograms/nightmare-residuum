@@ -12,16 +12,16 @@ mixed can_drop() {
     return "Drop what?";
 }
 
-mixed can_drop_obj(object ob, string str) {
+mixed can_drop_obj(object _ob, string _str) {
     return 1;
 }
 /**
  * Drop an item into the living object's environment.
  *
  * @param {STD_ITEM} ob the item being dropped
- * @param str the input text
+ * @param _str the input text
  */
-void do_drop_obj(object ob, string str) {
+void do_drop_obj(object ob, string _str) {
     object po = previous_object(), env = environment(po);
 
     message("action", "You drop " + ob->query_name() + ".", po);

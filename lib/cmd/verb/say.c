@@ -30,7 +30,7 @@ string format_npc_message(object npc, string msg) {
     return msg;
 }
 
-int can_say_str(mixed args...) {
+int can_say_str(mixed _args...) {
     return 1;
 }
 void do_say_str(mixed args...) {

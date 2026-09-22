@@ -6,7 +6,7 @@ void create() {
     set_help_text("The goto command can be used by an immortal to go to another character's environment or a specified room path.");
 }
 
-void command(string input, mapping flags) {
+void command(string input, mapping _flags) {
     object ob;
     string path;
 

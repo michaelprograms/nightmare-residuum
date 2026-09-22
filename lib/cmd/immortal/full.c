@@ -6,7 +6,7 @@ void create() {
     set_help_text("The full command is used to return a character's vitals and body to full health.");
 }
 
-void command(string input, mapping flags) {
+void command(string input, mapping _flags) {
     object tc = this_character(), target = tc;
     string *limbs = ({});
 

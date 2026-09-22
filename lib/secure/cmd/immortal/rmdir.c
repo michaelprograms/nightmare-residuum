@@ -6,7 +6,7 @@ void create() {
     set_help_text("The rmdir command is used to remove a directory permanently.");
 }
 
-void command(string input, mapping flags) {
+void command(string input, mapping _flags) {
     string cwd, dir;
     if (!input) {
         write("Syntax: rmdir [directory]\n");

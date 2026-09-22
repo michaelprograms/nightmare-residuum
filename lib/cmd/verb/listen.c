@@ -29,7 +29,7 @@ mixed do_listen() {
 
 /* ----- rule: "STR" and "at STR" ----- */
 
-mixed can_listen_str(string str, string verb) {
+mixed can_listen_str(string _str, string _verb) {
     return 1;
 }
 void do_listen_str(mixed args...) {

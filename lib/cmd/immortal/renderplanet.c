@@ -10,7 +10,7 @@ void create() {
     );
 }
 
-void command(string input, mapping flags) {
+void command(string input, mapping _flags) {
     if (!stringp(input) || !sizeof(input)) {
         write("Usage: renderplanet <name>\n");
         return;

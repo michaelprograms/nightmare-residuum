@@ -6,7 +6,7 @@ void create() {
     set_help_text("The emote command is used to send a custom emote message to your character's environment.");
 }
 
-void command(string input, mapping flags) {
+void command(string input, mapping _flags) {
     string myMsg, yourMsg;
     object tc = this_character();
     /** @type {STD_CHARACTER*} */

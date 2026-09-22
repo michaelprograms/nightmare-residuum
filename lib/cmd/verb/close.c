@@ -16,7 +16,7 @@ mixed can_close() {
 
 /* ----- rule: "STR" ----- */
 
-mixed can_close_str(mixed args...) {
+mixed can_close_str(mixed _args...) {
     return 1;
 }
 

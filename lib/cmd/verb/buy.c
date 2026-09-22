@@ -13,7 +13,7 @@ void create() {
 
 /* ----- STR from OBJ ----- */
 
-mixed can_buy_str_from_obj(mixed args...) {
+mixed can_buy_str_from_obj(mixed _args...) {
     return 1;
 }
 void do_buy_str_from_obj(mixed args...) {
@@ -33,7 +33,7 @@ void do_buy_str_from_obj(mixed args...) {
 
 /* ----- STR ----- */
 
-mixed can_buy_str(mixed args...) {
+mixed can_buy_str(mixed _args...) {
     return 1;
 }
 void do_buy_str(mixed args...) {
@@ -54,9 +54,9 @@ void do_buy_str(mixed args...) {
 
 /* ----- no input ----- */
 
-mixed can_buy(mixed args...) {
+mixed can_buy(mixed _args...) {
     return 1;
 }
-void do_buy(mixed args...) {
+void do_buy(mixed _args...) {
     message("action", "Buy what from which vendor?", previous_object());
 }

@@ -1,4 +1,4 @@
-void command(string input, mapping flags) {
+void command(string input, mapping _flags) {
     if (!input || input == "") {
         write("Codesay what?\n");
         return;

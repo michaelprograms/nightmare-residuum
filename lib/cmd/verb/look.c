@@ -23,7 +23,7 @@ mixed do_look() {
 
 /* ----- rule: "STR" and "at STR" ----- */
 
-mixed can_look_at_str(string str, string verb) {
+mixed can_look_at_str(string _str, string _verb) {
     return 1;
 }
 mixed can_look_str(string str, string verb) {
@@ -75,7 +75,7 @@ void do_look_str(mixed args...) {
 
 /* ----- rule: "OBJ" and "at OBJ" ----- */
 
-mixed can_look_at_obj(string str, string verb) {
+mixed can_look_at_obj(string _str, string _verb) {
     return 1;
 }
 mixed can_look_obj(string str, string verb) {
@@ -85,9 +85,9 @@ mixed can_look_obj(string str, string verb) {
  * Look at and describe a non-living item.
  *
  * @param {STD_ITEM} ob the non-living item to be described
- * @param arg any extra arguments provided by the driver parser (unused)
+ * @param _arg any extra arguments provided by the driver parser (unused)
  */
-varargs mixed do_look_at_obj(object ob, mixed arg) {
+varargs mixed do_look_at_obj(object ob, mixed _arg) {
     object po = previous_object();
     string long = replace_string(ob->query_long(), "%^DEFAULT%^", "%^RESET%^");
     string type = sizeof(long) > __LARGEST_PRINTABLE_STRING__ / 2 ? "pager" : "action";
@@ -118,7 +118,7 @@ varargs mixed do_look_obj(object ob, mixed args...) {
 
 /* ----- rule: "LIV" and "at LIV" ----- */
 
-mixed can_look_at_liv(string str, string verb) {
+mixed can_look_at_liv(string _str, string _verb) {
     return 1;
 }
 mixed can_look_liv(string str, string verb) {
@@ -130,7 +130,7 @@ mixed can_look_liv(string str, string verb) {
  * @param {STD_LIVING} ob the living item to be described
  * @param arg any extra arguments provided by the driver parser (unused)
  */
-mixed do_look_at_liv(object ob, mixed arg...) {
+mixed do_look_at_liv(object ob, mixed _arg...) {
     object po = previous_object();
     /** @type {STD_WEAPON*} wielded */
     object *wielded;

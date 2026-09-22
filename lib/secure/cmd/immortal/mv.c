@@ -6,7 +6,7 @@ void create() {
     set_help_text("The mv command is used to move a file to a new filename.");
 }
 
-void command(string input, mapping flags) {
+void command(string input, mapping _flags) {
     string file1, file2, cwd;
 
     if (!input || sscanf(input, "%s %s", file1, file2) != 2) {

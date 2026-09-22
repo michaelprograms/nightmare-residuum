@@ -6,7 +6,7 @@ void create() {
     set_help_text("The whois command is used to view the information about a character, even if they are disconnected.");
 }
 
-void command(string input, mapping flags) {
+void command(string input, mapping _flags) {
     object tc = this_character();
     object char, curChar;
     string *headerItems = ({});

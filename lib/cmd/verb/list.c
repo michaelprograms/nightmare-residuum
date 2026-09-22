@@ -13,7 +13,7 @@ void create() {
 
 /* ----- STR from OBJ ----- */
 
-mixed can_list_str_from_obj(mixed args...) {
+mixed can_list_str_from_obj(mixed _args...) {
     return 1;
 }
 void do_list_str_from_obj(mixed args...) {
@@ -33,7 +33,7 @@ void do_list_str_from_obj(mixed args...) {
 
 /* ----- from OBJ ----- */
 
-mixed can_list_from_obj(mixed args...) {
+mixed can_list_from_obj(mixed _args...) {
     return 1;
 }
 void do_list_from_obj(mixed args...) {
@@ -51,7 +51,7 @@ void do_list_from_obj(mixed args...) {
 
 /* ----- STR ----- */
 
-mixed can_list_str(mixed args...) {
+mixed can_list_str(mixed _args...) {
     return 1;
 }
 void do_list_str(mixed args...) {
@@ -74,9 +74,9 @@ void do_list_str(mixed args...) {
 
 /* ----- no input ----- */
 
-mixed can_list(mixed args...) {
+mixed can_list(mixed _args...) {
     return 1;
 }
-void do_list(mixed args...) {
+void do_list(mixed _args...) {
     do_list_str(0);
 }

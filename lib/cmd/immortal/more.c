@@ -6,7 +6,7 @@ void create() {
     set_help_text("The more command can be used to view the contents of the specified file using the pager system.");
 }
 
-void command(string input, mapping flags) {
+void command(string input, mapping _flags) {
     string cwd, file, *lines;
 
     if (!input) {

@@ -80,7 +80,7 @@ mapping *process_inventory(object target) {
     return inventory;
 }
 
-void command(string input, mapping flags) {
+void command(string input, mapping _flags) {
     object tc = this_character(), target = tc;
     mapping *items = ({});
     mapping footer;

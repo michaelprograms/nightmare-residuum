@@ -13,7 +13,7 @@ void create() {
 
 /* ----- OBJ to OBJ ----- */
 
-mixed can_sell_obj_to_obj(mixed args...) {
+mixed can_sell_obj_to_obj(mixed _args...) {
     return 1;
 }
 void do_sell_obj_to_obj(mixed args...) {
@@ -33,7 +33,7 @@ void do_sell_obj_to_obj(mixed args...) {
 
 /* ----- OBJ ----- */
 
-mixed can_sell_obj(mixed args...) {
+mixed can_sell_obj(mixed _args...) {
     return 1;
 }
 void do_sell_obj(mixed args...) {
@@ -54,9 +54,9 @@ void do_sell_obj(mixed args...) {
 
 /* ----- no input ----- */
 
-mixed can_sell(mixed args...) {
+mixed can_sell(mixed _args...) {
     return 1;
 }
-void do_sell(mixed args...) {
+void do_sell(mixed _args...) {
     message("action", "Sell what to which vendor?", previous_object());
 }

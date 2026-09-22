@@ -6,7 +6,7 @@ void create() {
     set_help_text("The home command can be used by an immortal to return to their personal workroom, or the workroom of the named immortal if it exists.");
 }
 
-void command(string input, mapping flags) {
+void command(string input, mapping _flags) {
     if (!input) {
         input = this_character()->query_key_name();
     }

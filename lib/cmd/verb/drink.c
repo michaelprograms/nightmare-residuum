@@ -19,8 +19,8 @@ mixed can_drink() {
  * Handle consuming a drink object.
  *
  * @param {STD_DRINK} ob the object to drink
- * @param str the input text
+ * @param _str the input text
  */
-void do_drink_obj(object ob, string str) {
+void do_drink_obj(object ob, string _str) {
     ob->handle_consume(this_character());
 }

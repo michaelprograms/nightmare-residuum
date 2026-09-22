@@ -6,7 +6,7 @@ void create() {
     set_help_text("The colors command is used to view the list of supported colors.");
 }
 
-void command(string input, mapping flags) {
+void command(string _input, mapping _flags) {
     string *keys = D_ANSI->query_keys();
 
     string *styles = ({

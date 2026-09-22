@@ -29,7 +29,7 @@ mixed do_smell() {
 
 /* ----- rule: "STR" and "at STR" ----- */
 
-mixed can_smell_str(string str, string verb) {
+mixed can_smell_str(string _str, string _verb) {
     return 1;
 }
 void do_smell_str(mixed args...) {

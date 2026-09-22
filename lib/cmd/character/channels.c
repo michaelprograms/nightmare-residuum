@@ -7,7 +7,7 @@ void create() {
     set_help_similar(({ "last", "reply", "tell", }));
 }
 
-void command(string input, mapping flags) {
+void command(string input, mapping _flags) {
     object tc = this_character(), target = tc;
     mapping *body = ({});
     string *list = ({});

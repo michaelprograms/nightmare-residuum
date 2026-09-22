@@ -6,7 +6,7 @@ void create() {
     set_help_text("The callouts command is used to view the entire list of callouts.");
 }
 
-void command(string input, mapping flags) {
+void command(string _input, mapping _flags) {
     mixed *callouts;
     string *items = ({});
     int n;

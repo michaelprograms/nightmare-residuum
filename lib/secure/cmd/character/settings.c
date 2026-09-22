@@ -91,7 +91,7 @@ private void apply_setting(object user, string key, string value) {
     );
 }
 
-void command(string input, mapping flags) {
+void command(string input, mapping _flags) {
     object tc = this_character(), user;
     string *split;
 

@@ -6,7 +6,7 @@ void create() {
     set_help_text("The hp command is used to view your character's health and other vitals.");
 }
 
-void command(string input, mapping flags) {
+void command(string _input, mapping _flags) {
     object tc = this_character();
     string hp = tc->query_hp() + "/" + tc->query_max_hp() + " hp";
     string sp = tc->query_sp() + "/" + tc->query_max_sp() + " sp";

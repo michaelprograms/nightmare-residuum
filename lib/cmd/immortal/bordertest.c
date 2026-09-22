@@ -1,4 +1,4 @@
-void command(string input, mapping flags) {
+void command(string _input, mapping _flags) {
 
     border(([
     ]));

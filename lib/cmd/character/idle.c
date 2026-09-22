@@ -6,7 +6,7 @@ void create() {
     set_help_text("The idle command is used to view how long ago a connected character last sent a command.");
 }
 
-void command(string input, mapping flags) {
+void command(string input, mapping _flags) {
     object tc = this_character(), target;
 
     if (!sizeof(input) || !(target = find_character(input))) {

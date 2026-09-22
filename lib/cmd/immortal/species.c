@@ -6,7 +6,7 @@ void create() {
     set_help_text("The species command can be used to view the supported bodytypes and species. Supplying an optional type will filter.");
 }
 
-void command(string input, mapping flags) {
+void command(string input, mapping _flags) {
     string subtitle;
     mapping *items = ({});
 

@@ -16,7 +16,7 @@ void teleport(object tc) {
     tc->handle_go("/domain/Origin/room/center.c", "teleport", "away");
 }
 
-void command(string input, mapping flags) {
+void command(string _input, mapping _flags) {
     object tc = this_character();
     if (present_hostile(tc)) {
         message(

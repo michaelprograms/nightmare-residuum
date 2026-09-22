@@ -6,7 +6,7 @@ void create() {
     set_help_text("The wanderers command is used to view the list of objects with wanderers.\n\nUsing a name or file filter will show the list of objects that match either filter.");
 }
 
-void command(string input, mapping flags) {
+void command(string input, mapping _flags) {
     /** @type {STD_NPC*} obs */
     object *obs;
     mixed *items = ({});

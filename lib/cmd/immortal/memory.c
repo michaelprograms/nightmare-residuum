@@ -6,7 +6,7 @@ void create() {
     set_help_text("The memory command is used to view the total memory used by the driver.");
 }
 
-void command(string input, mapping flags) {
+void command(string _input, mapping _flags) {
     border(([
         "title": "MEMORY",
         "subtitle": mud_name(),

@@ -8,7 +8,7 @@ void create() {
     set_help_text("The advance command is used to spend experience points to permanently increase your character's level.");
 }
 
-void command(string input, mapping flags) {
+void command(string _input, mapping _flags) {
     object tc = this_character();
     int cost;
 

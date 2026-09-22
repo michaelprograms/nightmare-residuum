@@ -6,7 +6,7 @@ void create() {
     set_help_text("The rm command is used to remove a file permanently.");
 }
 
-void command(string input, mapping flags) {
+void command(string input, mapping _flags) {
     string cwd, file;
     if (!input) {
         write("Syntax: rm [file]\n");

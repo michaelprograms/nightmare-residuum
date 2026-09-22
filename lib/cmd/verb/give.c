@@ -12,7 +12,7 @@ mixed can_give() {
     return "Give what to who?";
 }
 
-mixed can_give_obj_to_liv(mixed args...) {
+mixed can_give_obj_to_liv(mixed _args...) {
     return 1;
 }
 /**
@@ -21,7 +21,7 @@ mixed can_give_obj_to_liv(mixed args...) {
  * @param {STD_ITEM} ob the object being given
  * @param {STD_LIVING} liv the receiver of the object
  */
-void do_give_obj_to_liv(object ob, object liv, mixed args...) {
+void do_give_obj_to_liv(object ob, object liv, mixed _args...) {
     object tc = this_character();
     message("action", "You give " + ob->query_name() + " to " +
         liv->query_cap_name() + ".", tc);

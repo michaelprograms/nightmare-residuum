@@ -6,7 +6,7 @@ void create() {
     set_help_text("The body command is used to view the limbs of your character's body.");
 }
 
-void command(string input, mapping flags) {
+void command(string input, mapping _flags) {
     object tc = this_character(), target = tc;
     string *items = ({}), *limbs, *severedLimbs;
     mapping footer;

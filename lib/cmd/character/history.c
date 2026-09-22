@@ -6,7 +6,7 @@ void create() {
     set_help_text("The history command is used to view the list of the last 40 commands you have entered for your character.");
 }
 
-void command(string input, mapping flags) {
+void command(string input, mapping _flags) {
     object tc = this_character(), target = tc;
     string *items = ({});
     string *history;

@@ -6,7 +6,7 @@ void create() {
     set_help_text("The cd command is used to change an immortal's working directory.");
 }
 
-void command(string input, mapping flags) {
+void command(string input, mapping _flags) {
     if (!input) {
         input = user_path(this_character()->query_key_name());
     }

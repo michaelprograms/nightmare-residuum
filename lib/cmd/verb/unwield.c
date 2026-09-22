@@ -19,9 +19,9 @@ mixed can_unwield() {
  * Unequip a wielded weapon item from a living body.
  *
  * @param {STD_WEAPON} ob the weapon item to be unequipped
- * @param str the input text from the player (ex, 'staff' or 'sword')
+ * @param _str the input text from the player (ex, 'staff' or 'sword')
  */
-void do_unwield_obj(object ob, string str) {
+void do_unwield_obj(object ob, string _str) {
     mixed result;
     object po = previous_object();
 

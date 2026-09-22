@@ -10,7 +10,7 @@ string format_factor(float f) {
     return undefinedp(f) ? "1.00" : sprintf("%.2f", f);
 }
 
-void command(string input, mapping flags) {
+void command(string input, mapping _flags) {
     mapping planet;
     mixed *body = ({});
     mapping item = ([]);

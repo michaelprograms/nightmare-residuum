@@ -15,15 +15,15 @@ mixed can_harvest() {
 
 /* ----- rule: "OBJ" ----- */
 
-mixed can_harvest_obj(object ob, string str) {
+mixed can_harvest_obj(object _ob, string _str) {
     return 1;
 }
 /**
  * Harvest a resource from a harvestable item.
  *
  * @param {STD_HARVESTABLE} ob the item to harvest
- * @param str the input text
+ * @param _str the input text
  */
-void do_harvest_obj(object ob, string str) {
+void do_harvest_obj(object ob, string _str) {
     ob->handle_harvest(previous_object());
 }
