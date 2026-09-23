@@ -115,7 +115,7 @@ string query_localsky(mapping a, string str) {
         } else if (a["DAY_PHASE"] == "night") {
             string moons = "";
             desc = "%^BLUE%^BOLD%^The sky is darkened with night.%^RESET%^";
-            foreach (string key, mapping moon in a["MOONS"]) {
+            foreach (string _key, mapping moon in a["MOONS"]) {
                 if (moon["phase"] > 0) {
                     moons += "\n" + "There is a %^" + upper_case(moon["color"]) + "%^" + PHASES[moon["phase"]] + " " + moon["color"] + " moon%^RESET%^ in the sky.%^RESET%^";
                 }
@@ -232,7 +232,7 @@ private void process(int t, string key, mapping a) {
     nextPhase = a["NEXT_PHASE"];
 
     days = query_day_of_year(t, a);
-    foreach (string k, mapping moon in a["MOONS"]) {
+    foreach (string _k, mapping moon in a["MOONS"]) {
         if (!moon["phase"]) {
             moon["phase"] = to_int(days % moon["orbit"] / (1.0 * moon["orbit"] / sizeof(PHASES)));
         }

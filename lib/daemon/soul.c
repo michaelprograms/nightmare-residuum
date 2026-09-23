@@ -40,7 +40,7 @@ void create() {
     generate_defaults();
 
     foreach (string verb, mapping value in __EmotesDefault + __Emotes) {
-        foreach (string rule, mixed ignore in value) {
+        foreach (string rule, mixed _ignore in value) {
             catch(parse_add_rule(verb, rule));
         }
     }
