@@ -56,7 +56,7 @@ void do_balance() {
     display_balance(tc->query_cap_name(), balance, tc);
 }
 
-mixed can_balance_wrd(mixed args...) {
+mixed can_balance_wrd(mixed _args...) {
     return environment(this_character()) == this_object() && previous_object()->query_immortal();
 }
 void do_balance_wrd(mixed args...) {
@@ -79,7 +79,7 @@ void do_balance_wrd(mixed args...) {
 
 /* ----- ----- */
 
-mixed can_deposit_wrd_wrd(mixed args...) {
+mixed can_deposit_wrd_wrd(mixed _args...) {
     return environment(this_character()) == this_object();
 }
 void do_deposit_wrd_wrd(mixed args...) {
@@ -119,7 +119,7 @@ void do_deposit_wrd_wrd(mixed args...) {
 
 /* ----- ----- */
 
-mixed can_withdraw_wrd_wrd(mixed args...) {
+mixed can_withdraw_wrd_wrd(mixed _args...) {
     return environment(this_character()) == this_object();
 }
 void do_withdraw_wrd_wrd(mixed args...) {

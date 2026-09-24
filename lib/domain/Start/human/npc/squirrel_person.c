@@ -43,7 +43,7 @@ mixed can_adopt() {
 void do_adopt() {
     message("action", "Adopt what?", previous_object());
 }
-mixed can_adopt_str(mixed args...) {
+mixed can_adopt_str(mixed _args...) {
     return previous_object()->is_character() && environment(previous_object()) == environment();
 }
 void do_adopt_str(mixed args...) {
@@ -101,7 +101,7 @@ mixed can_reclaim() {
 void do_reclaim() {
     message("action", "Reclaim what?", previous_object());
 }
-mixed can_reclaim_str(mixed args...) {
+mixed can_reclaim_str(mixed _args...) {
     return previous_object()->is_character() && environment(previous_object()) == environment();
 }
 void do_reclaim_str(mixed args...) {

@@ -2,7 +2,7 @@
 
 inherit STD_ROOM;
 
-int admit_entrance(object ob, string dir) {
+int admit_entrance(object ob, string _dir) {
     /** @type {STD_NPC} npc */
     object npc;
     if (characterp(ob)) {

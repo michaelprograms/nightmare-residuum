@@ -133,7 +133,7 @@ mixed can_encode() {
 void do_encode() {
     write("Syntax: " + syntax["encode"] + "\n");
 }
-mixed can_encode_str(mixed args...) {
+mixed can_encode_str(mixed _args...) {
     return environment(this_character()) == this_object();
 }
 void do_encode_str(mixed args...) {
@@ -280,7 +280,7 @@ mixed can_download() {
 void do_download() {
     message("action", "Syntax: " + syntax["download full"], this_character());
 }
-mixed can_download_str(mixed args...) {
+mixed can_download_str(mixed _args...) {
     return environment(this_character()) == this_object();
 }
 void do_download_str(mixed args...) {
