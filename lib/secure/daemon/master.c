@@ -7,10 +7,10 @@
 /**
  * This apply is called when a new user connects to the driver.
  *
- * @param port The port the user has connected on
+ * @param _port The port the user has connected on
  * @returns {STD_USER} the new user object
  */
-object connect(int port) {
+object connect(int _port) {
     object ob;
     string err;
 
@@ -201,10 +201,14 @@ string *get_include_path(string file) {
  * This apply is called when shutting down the driver.
  *
  * @param crash_message
- * @param command_giver
- * @param current_object
+ * @param _command_giver
+ * @param _current_object
  */
-void crash(string crash_message, object command_giver, object current_object) {
+void crash(
+    string crash_message,
+    object _command_giver,
+    object _current_object
+) {
     debug_message(ctime() + " crashed because " + crash_message + " " + identify(call_stack()) + " " + identify(previous_object(-1)));
     message(
         "system",
@@ -474,12 +478,12 @@ string privs_file(string filename) {
  * All database access is unconditionally permitted. SQLite is only used
  * internally by privileged daemons and there is no player-facing SQL exposure.
  *
- * @param {object} caller - the object requesting database access
- * @param {string} action - the database action being attempted
- * @param {mixed *} info  - extra info passed by the driver
+ * @param {object} _caller - the object requesting database access
+ * @param {string} _action - the database action being attempted
+ * @param {mixed *} _info  - extra info passed by the driver
  * @returns {int} 1 - database access is always permitted
  */
-int valid_database(object caller, string action, mixed *info) {
+int valid_database(object _caller, string _action, mixed *_info) {
     // TODO: wire this up like valid_socket
     // return D_ACCESS->query_allowed(caller, action, 0, "database");
     return 1;
@@ -497,10 +501,10 @@ int valid_database(object caller, string action, mixed *info) {
  *
  * @param {string} file      - path of the file requesting efun:: access
  * @param {string} fn        - the efun being overridden
- * @param {string} main_file - the primary file in the inheritance chain
+ * @param {string} _main_file - the primary file in the inheritance chain
  * @returns {int} 1 if the override is permitted, 0 otherwise
  */
-varargs int valid_override(string file, string fn, string main_file) {
+varargs int valid_override(string file, string fn, string _main_file) {
     if (file[0] != '/') {
         return 0;
     }
@@ -544,10 +548,10 @@ int valid_shadow(object ob) {
  *
  * @param {object} caller - the object requesting socket access
  * @param {string} fn     - the socket efun being called
- * @param {mixed *} info  - extra info passed by the driver
+ * @param {mixed *} _info  - extra info passed by the driver
  * @returns {int} 1 if the caller is D_IPC or inherits the HTTP module, 0 otherwise
  */
-int valid_socket(object caller, string fn, mixed *info) {
+int valid_socket(object caller, string fn, mixed *_info) {
     return D_ACCESS->query_allowed(caller, fn, 0, "socket");
 }
 
@@ -558,11 +562,11 @@ int valid_socket(object caller, string fn, mixed *info) {
  * possible.
  *
  * @param {string} op     - the FFI operation ("load", "symbol", "prepare", ...)
- * @param {mixed} arg     - the op's subject (library path, symbol name, ...)
+ * @param {mixed} _arg     - the op's subject (library path, symbol name, ...)
  * @param {object} caller - the object invoking the FFI efun
  * @returns {int} 1 if permitted, 0 otherwise
  */
-int valid_ffi(string op, mixed arg, object caller) {
+int valid_ffi(string op, mixed _arg, object caller) {
     string bn;
 
     if (!objectp(caller)) {

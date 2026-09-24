@@ -78,7 +78,7 @@ void set_ed_setup(int code) {
  *
  * @returns {int} 0 when destructed, 1 when kept alive
  */
-int clean_up(mixed args...) {
+int clean_up(mixed _args...) {
     if (query_ed_mode() == -1) {
         destruct();
         return !this_object();

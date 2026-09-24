@@ -3,7 +3,7 @@
  *
  * @param args
  */
-nomask varargs int input_to(mixed args...) {
+nomask varargs int input_to(mixed _args...) {
     error("efun::input_to disabled");
 }
 
@@ -11,9 +11,9 @@ nomask varargs int input_to(mixed args...) {
  * Disabled: The current player object.
  * Use this_user() instead.
  *
- * @param flag
+ * @param _flag
  */
-nomask varargs object this_player(int flag) {
+nomask varargs object this_player(int _flag) {
     error("efun::this_player disabled");
 }
 

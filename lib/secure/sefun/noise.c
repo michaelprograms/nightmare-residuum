@@ -265,7 +265,7 @@ varargs buffer noise_planet_row(
     return 0;
 }
 
-float noise_row_value(buffer buf, int index) {
+float noise_row_value(buffer _buf, int _index) {
     return 0.0;
 }
 
