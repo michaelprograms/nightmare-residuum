@@ -47,19 +47,19 @@ void set_no_get(mixed condition) {
 
 /* ----- parser applies ----- */
 
-mixed direct_look_at_obj(mixed args...) {
+mixed direct_look_at_obj(mixed _args...) {
     return environment() && (environment() == environment(previous_object()) || environment() == previous_object());
 }
 mixed direct_look_obj(mixed args...) {
     return direct_look_at_obj(args);
 }
-mixed direct_drop_obj(mixed args...) {
+mixed direct_drop_obj(mixed _args...) {
     return environment() == previous_object();
 }
-mixed direct_give_obj_to_liv(mixed args...) {
+mixed direct_give_obj_to_liv(mixed _args...) {
     return environment() == previous_object();
 }
-mixed direct_get_obj(mixed args...) {
+mixed direct_get_obj(mixed _args...) {
     object env = environment();
     if (env != environment(previous_object())) {
         if (env == previous_object()) {
@@ -79,7 +79,7 @@ mixed direct_get_obj(mixed args...) {
     }
     return 1;
 }
-mixed direct_get_obj_from_obj(mixed args...) {
+mixed direct_get_obj_from_obj(mixed _args...) {
     object env = environment();
     if (env == previous_object()) {
         return 0;

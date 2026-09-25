@@ -72,7 +72,7 @@ void test_looks() {
 nosave private int LookCounter = 0;
 void test_handle_look() {
     expect("handle_look returns description", (: ({
-        testOb->set_look("test", function(object character) {
+        testOb->set_look("test", function(object _character) {
             LookCounter++;
             return "Test description. " + LookCounter;
         }),

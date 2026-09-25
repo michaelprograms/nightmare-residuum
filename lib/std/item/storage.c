@@ -29,7 +29,7 @@ string query_long() {
 
 /* ----- parser applies ----- */
 
-mixed indirect_get_obj_from_obj(mixed args...) {
+mixed indirect_get_obj_from_obj(mixed _args...) {
     object env = environment();
     if (env != environment(previous_object())) {
         if (env == previous_object()) {

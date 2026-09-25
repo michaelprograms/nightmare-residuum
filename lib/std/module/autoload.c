@@ -22,6 +22,6 @@ mixed *query_autoload(object character) {
     }
 }
 
-void restore_autoload(mixed *data) {
+void restore_autoload(mixed *_data) {
     // override
 }

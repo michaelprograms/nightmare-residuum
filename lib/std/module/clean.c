@@ -65,7 +65,7 @@ int handle_remove() {
  *
  * @param args an integer argument of number of inherited blueprints (do not trust this value)
  */
-int clean_up(mixed args...) {
+int clean_up(mixed _args...) {
     // Objects never lose environment, let environment handle clean_up
     if (environment()) {
         return clean_never();

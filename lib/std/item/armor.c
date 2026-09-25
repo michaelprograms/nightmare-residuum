@@ -51,11 +51,11 @@ void set_ac(int ac) {
     __AC = ac;
 }
 
-mixed direct_wear_obj(mixed args...) {
+mixed direct_wear_obj(mixed _args...) {
     object po = previous_object();
     return environment() == po && !__Worn;
 }
-mixed direct_unwear_obj(mixed args...) {
+mixed direct_unwear_obj(mixed _args...) {
     object po = previous_object();
     return environment() == po && __Worn == po && member_array(
         this_object(),
@@ -63,6 +63,6 @@ mixed direct_unwear_obj(mixed args...) {
     ) > -1;
 }
 
-mixed direct_drop_obj(mixed args...) {
+mixed direct_drop_obj(mixed _args...) {
     return (environment() == previous_object()) && !__Worn;
 }

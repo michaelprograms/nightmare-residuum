@@ -149,7 +149,7 @@ void test_no_get() {
         ),
 
         // test fn
-        testOb->set_no_get(function(object character) {
+        testOb->set_no_get(function(object _character) {
             GetCounter++;
             return "Function says no.";
         }),

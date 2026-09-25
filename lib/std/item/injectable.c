@@ -26,9 +26,9 @@ void handle_inject(object target) {
 
 /* ----- parser applies ----- */
 
-mixed direct_inject_obj(mixed args...) {
+mixed direct_inject_obj(mixed _args...) {
     return environment() == previous_object();
 }
-mixed direct_inject_obj_into_liv(mixed args...) {
+mixed direct_inject_obj_into_liv(mixed _args...) {
     return environment() == previous_object();
 }

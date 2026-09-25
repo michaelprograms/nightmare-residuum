@@ -41,7 +41,7 @@ void story_action(object target, mixed line, mixed *lines) {
     }
 }
 
-void story_action_final(object target) {
+void story_action_final(object _target) {
     /* Override */
 }
 

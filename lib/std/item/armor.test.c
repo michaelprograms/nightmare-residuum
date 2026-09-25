@@ -5,7 +5,7 @@ inherit STD_STORAGE;
  * @var {"/std/item/armor"} testOb
  */
 
-int query_can_wear_armor(object ob) {
+int query_can_wear_armor(object _ob) {
     return 1;
 }
 nosave private object *__AllArmor;

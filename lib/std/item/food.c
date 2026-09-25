@@ -8,7 +8,7 @@ string query_use_verb() {
     return "eat";
 }
 
-mixed direct_eat_obj(mixed args...) {
+mixed direct_eat_obj(mixed _args...) {
     return (environment() == previous_object());
 }
 

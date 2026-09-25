@@ -421,7 +421,7 @@ void test_handle_climb() {
 
 // catch reverse override for test_exit_reverse_override
 nosave private string __Reverse;
-varargs int handle_go(mixed dest, string verb, string dir, string reverse) {
+varargs int handle_go(mixed _dest, string _verb, string _dir, string reverse) {
     __Reverse = reverse;
     return 1;
 }
