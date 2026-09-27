@@ -22,7 +22,7 @@ void set_powers(mapping powers) {
 }
 int query_total_skill_power() {
     int total = 0;
-    foreach (string key, int value in __Powers) {
+    foreach (string _key, int value in __Powers) {
         total += value;
     }
     return total;

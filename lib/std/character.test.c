@@ -114,7 +114,7 @@ mixed query_setting(string s) {
     }
     return 0;
 }
-void receive_message(string type, string msg) {
+void receive_message(string _type, string msg) {
     __Received += ({ msg });
 }
 void update_character_data(object ob) {}

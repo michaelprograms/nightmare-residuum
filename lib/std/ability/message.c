@@ -72,9 +72,9 @@ void ability_message_attempt(object source, object *targets) {
  *
  * @param {STD_LIVING} source the source of the fail
  * @param {STD_LIVING} target the target of the fail
- * @param limb the limb targeted, if any
+ * @param _limb the limb targeted, if any
  */
-void ability_message_fail(object source, object target, string limb) {
+void ability_message_fail(object source, object target, string _limb) {
     if (this_object()->query_type() == "attack") {
         message(
             "ability miss",

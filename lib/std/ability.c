@@ -32,10 +32,10 @@ int query_cooldown() {
  *
  * @param {STD_LIVING} source the source of the heal
  * @param {STD_LIVING} target the target of the heal
- * @param limb the targeted limb if any
+ * @param _limb the targeted limb if any
  * @returns integer amount of heal
  */
-int calculate_heal(object source, object target, string limb) {
+int calculate_heal(object source, object target, string _limb) {
     int damage;
     int sourceStat, targetStat;
     int n;
@@ -46,7 +46,7 @@ int calculate_heal(object source, object target, string limb) {
 
     // skill powers
     // @TODO: skills were removed
-    foreach (string key, int value in query_powers()) {
+    foreach (string key, int _value in query_powers()) {
         switch (key) {
             case "theurgy":
                 n = 1;
@@ -141,7 +141,7 @@ int query_difficulty_factor() {
 
 /* ----- utility ----- */
 
-void handle_utility(object source, object target, string limb) {
+void handle_utility(object source, object _target, string _limb) {
     // @TODO: refactor this to be std/ability inheritable and more automatic
     // override this function for utility abilities
     message("ability utility", "Nothing happens.", source);
@@ -417,7 +417,7 @@ void do_verb_liv(mixed args...) {
 }
 
 // Handle no input
-void do_verb_rule(mixed args...) {
+void do_verb_rule(mixed _args...) {
     handle_ability_use(previous_object(), ({ 0 }));
 }
 

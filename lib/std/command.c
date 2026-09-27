@@ -61,7 +61,7 @@ void set_help_similar(string *similar) {
     __HelpSimilar = similar;
 }
 
-string handle_help(object char) {
+string handle_help(object _char) {
     string result;
 
     result = "\n%^I_CYAN%^BOLD%^" + sprintf(
