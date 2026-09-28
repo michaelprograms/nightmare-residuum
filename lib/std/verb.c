@@ -37,7 +37,7 @@ void create() {
     set_no_clean(1);
 }
 
-mixed can_verb_rule(mixed args...) {
+mixed can_verb_rule(mixed _args...) {
     mixed tmp;
     if ((__Requirements & REQUIREMENT_BUSY) && (tmp = check_busy()) != 1) {
         return tmp;

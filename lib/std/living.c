@@ -140,7 +140,7 @@ varargs int handle_go(mixed dest, string verb, string dir, string reverse) {
     return move;
 }
 
-mixed direct_look_at_liv(mixed args...) {
+mixed direct_look_at_liv(mixed _args...) {
     return environment() == environment(previous_object());
 }
 mixed direct_look_liv(mixed args...) {
@@ -164,6 +164,6 @@ mixed direct_give_wrd_wrd_to_liv(mixed args...) {
     }
     return 1;
 }
-mixed indirect_inject_obj_into_liv(mixed args...) {
+mixed indirect_inject_obj_into_liv(mixed _args...) {
     return 1;
 }

@@ -218,7 +218,7 @@ varargs void check_lifesigns(object source) {
 
 /* ----- parser applies ----- */
 
-mixed direct_attack_liv(mixed args...) {
+mixed direct_attack_liv(mixed _args...) {
     object po = previous_object();
     return environment() == environment(po) && po != this_object() && !query_hostile(po);
 }

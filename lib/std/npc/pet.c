@@ -61,11 +61,11 @@ void heart_beat() {
     }
 }
 
-mixed direct_lead_liv(mixed args...) {
+mixed direct_lead_liv(mixed _args...) {
     object po = previous_object();
     return environment() == environment(po) && po != this_object();
 }
-mixed direct_ditch_liv(mixed args...) {
+mixed direct_ditch_liv(mixed _args...) {
     object po = previous_object();
     return environment() == environment(po) && po != this_object();
 }
