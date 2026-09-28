@@ -1,4 +1,4 @@
-mapping data(mapping response, string *args) {
+mapping data(mapping _response, string *_args) {
     mapping data = ([]);
 
     foreach (object character in characters()) {
