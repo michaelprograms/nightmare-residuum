@@ -211,6 +211,7 @@ void test_despawn() {
     if (stray) destruct(stray);
 }
 
+/** @type {STD_NPC} wanderer */
 nosave private object wanderer;
 void test_adopt() {
     object mockReset;

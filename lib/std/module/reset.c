@@ -24,7 +24,11 @@ void handle_reset() {
     mapping counts = ([]);
     int count, num;
     string name, key, self;
-    object ob, candidate, *tracked, *orphans;
+    object ob, *tracked, *orphans;
+    /** @type {STD_OBJECT} inv */
+    object inv;
+    /** @type {STD_NPC} candidate */
+    object candidate;
     mixed val;
 
     self = base_name(this_object());
@@ -79,9 +83,9 @@ void handle_reset() {
                 }
             }
             map_delete(__Objects, key);
-            foreach (ob in all_inventory()) {
-                if (base_name(ob) == key && ob->query_spawned_by() == self) {
-                    destruct(ob);
+            foreach (inv in all_inventory()) {
+                if (base_name(inv) == key && inv->query_spawned_by() == self) {
+                    destruct(inv);
                 }
             }
             continue;
