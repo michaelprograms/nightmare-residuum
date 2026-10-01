@@ -15,10 +15,16 @@
 varargs int query_stat_cost(string stat, int level, string c, string s) {
     int bonus = 0;
 
-    if (!stringp(stat)) error("Bad argument 1 to experience->query_stat_cost");
-    if (!intp(level)) error("Bad argument 2 to experience->query_stat_cost");
+    if (!stringp(stat)) {
+        error("Bad argument 1 to experience->query_stat_cost");
+    }
+    if (!intp(level)) {
+        error("Bad argument 2 to experience->query_stat_cost");
+    }
 
-    if (level < 1) return 1;
+    if (level < 1) {
+        return 1;
+    }
 
     if (stringp(c)) {
         bonus += D_CLASS->query_adjust_stat(c, stat);
@@ -36,9 +42,13 @@ varargs int query_stat_cost(string stat, int level, string c, string s) {
 }
 
 int query_level_cost(int level) {
-    if (!intp(level)) error("Bad argument 1 to experience->query_level_cost");
+    if (!intp(level)) {
+        error("Bad argument 1 to experience->query_level_cost");
+    }
 
-    if (level < 1) return 1;
+    if (level < 1) {
+        return 1;
+    }
 
     // (Level * Base) + X1 * (Level ^ Y1 + X2 * (Level ^ Y2)
     return to_int(
