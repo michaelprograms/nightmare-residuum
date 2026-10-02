@@ -128,16 +128,22 @@ varargs string parse_emote(object target, string msg, object *who, mixed args) {
         switch (c) {
             case 'O': case 'o':  // O/o: Object list
                 obs = args[num];
-                if (objectp(obs)) obs = ({ obs });
+                if (objectp(obs)) {
+                    obs = ({ obs });
+                }
                 names = conjunction(map(
                     obs,
                     (: $1 ? ($1->is_living() ? ($1 == $(target) ? "you" : $1->query_cap_name()) : $1->query_name()) : 0 :)
                 ));
                 break;
             case 'T': case 't':  // T/t: Objective Name?
-                if (tmp == "") tmp = "o";  // default to objective
+                if (tmp == "") {
+                    tmp = "o";  // default to objective
+                }
             case 'N': case 'n':  // N/n: You/Name
-                if (tmp == "") tmp = "s";  // default to subjective
+                if (tmp == "") {
+                    tmp = "s";  // default to subjective
+                }
                 if (tmp != "p") {
                     if (tmp != "d") {
                         // Reflexification
@@ -170,8 +176,9 @@ varargs string parse_emote(object target, string msg, object *who, mixed args) {
             case 'R': case 'r':  // R/r: Reflexive   your/him/her/them/it + self
                 if (target == who[num]) {
                     tmp = "yourself";
-                } else
+                } else {
                     tmp = reflexive(who[num]);
+                }
                 break;
             case 'V': case 'v':  // V/v: pluralize word
                 if (num >= sizeof(who) || who[num] != target) {
@@ -194,7 +201,9 @@ varargs string parse_emote(object target, string msg, object *who, mixed args) {
                 break;
         }
         // when flag is uppercase we want to capitalize ('A'=65 < 'a'=97)
-        if (c < 'a') names = capitalize(names);
+        if (c < 'a') {
+            names = capitalize(names);
+        }
         emote += (names ? names : "") + fmt[i + 1];
     }
     return emote;
@@ -253,7 +262,9 @@ private void display_emote(object *who, string *msgs, mixed others) {
     mapping done = ([]);
 
     for (int i = 0; i < sizeof(who); i++) {
-        if (done[who[i]]) continue;
+        if (done[who[i]]) {
+            continue;
+        }
         done[who[i]]++;
         message("soul", msgs[i], who[i]);
     }
@@ -270,29 +281,39 @@ mixed can_verb_rule(mixed args...) {
     string verb, rule;
     mapping emote;
 
-    if (sizeof(args) < 2) return;
+    if (sizeof(args) < 2) {
+        return;
+    }
     verb = args[0];
     rule = args[1];
 
-    if (!(emote = query_emote(verb))) return 0;
+    if (!(emote = query_emote(verb))) {
+        return 0;
+    }
     return !undefinedp(emote[rule]);
 }
 
 mixed direct_verb_rule(mixed args...) {
     string verb, rule;
 
-    if (sizeof(args) < 2) return 0;
+    if (sizeof(args) < 2) {
+        return 0;
+    }
     verb = args[0];
     rule = args[1];
 
     if (rule == "LVS" && sizeof(args) > 2) {
         object po = previous_object();
         object who = args[2];
-        if (po == who || environment(po) != environment(who) || !who->is_living()) return 0;
+        if (po == who || environment(po) != environment(who) || !who->is_living()) {
+            return 0;
+        }
     } else if (rule == "OBJ" && sizeof(args) > 2) {
         object po = previous_object();
         object who = args[2];
-        if (po == who || environment(po) != environment(who) || who->is_living()) return 0;
+        if (po == who || environment(po) != environment(who) || who->is_living()) {
+            return 0;
+        }
     }
 
     return !undefinedp(query_emote(verb)[rule]);
@@ -302,11 +323,15 @@ void do_verb_rule(mixed args...) {
     string verb, rule;
     mapping emote;
 
-    if (sizeof(args) < 2) return;
+    if (sizeof(args) < 2) {
+        return;
+    }
     verb = args[0];
     rule = args[1];
 
     emote = prepare_emote(verb, rule, args[2..]);
-    if (!emote) return;
+    if (!emote) {
+        return;
+    }
     display_emote(emote["who"], emote["msgs"], emote["env"]);
 }
