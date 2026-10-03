@@ -78,18 +78,26 @@ string query_month_name(int t, mapping a) {
 /* -----  ----- */
 
 varargs string query_localtime(mapping a, int t) {
-    if (!a) return 0;
+    if (!a) {
+        return 0;
+    }
 
-    if (undefinedp(t)) t = time();
+    if (undefinedp(t)) {
+        t = time();
+    }
 
     return query_hour(t, a) + ":" + format_minute(query_minute(t, a));
 }
 varargs string query_localdate(mapping a, int t) {
     string day, month, year;
 
-    if (!a) return 0;
+    if (!a) {
+        return 0;
+    }
 
-    if (undefinedp(t)) t = time();
+    if (undefinedp(t)) {
+        t = time();
+    }
 
     day = "" + (query_week(
         t,
@@ -103,7 +111,9 @@ varargs string query_localdate(mapping a, int t) {
 string query_localsky(mapping a, string str) {
     string desc;
 
-    if (!a) return 0;
+    if (!a) {
+        return 0;
+    }
 
     if (str == "sky") {
         if (a["DAY_PHASE"] == "dawn") {
@@ -156,10 +166,15 @@ mapping query_calculate_almanac(int t, mapping a) {
     mapping almanac = ([]);
     int days = query_day_of_year(t, a);
 
-    if (days == a["SHORTEST_DAY"]) almanac["equinox"] = "fall";
-    else if (days == a["LONGEST_DAY"]) almanac["equinox"] = "spring";
-    else if (days == a["LONGEST_DAY"] / 2) almanac["solstice"] = "summer";
-    else if (days == a["LONGEST_DAY"] / 2 * 3) almanac["solstice"] = "winter";
+    if (days == a["SHORTEST_DAY"]) {
+        almanac["equinox"] = "fall";
+    } else if (days == a["LONGEST_DAY"]) {
+        almanac["equinox"] = "spring";
+    } else if (days == a["LONGEST_DAY"] / 2) {
+        almanac["solstice"] = "summer";
+    } else if (days == a["LONGEST_DAY"] / 2 * 3) {
+        almanac["solstice"] = "winter";
+    }
 
     days = (days >= a["LONGEST_DAY"] ? (-1 * days + a["TOTAL_DAYS"]) : days);
 
