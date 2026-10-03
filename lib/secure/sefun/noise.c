@@ -580,7 +580,7 @@ float noise_simplex_4d_permutation(
     }
 
     // simplex[c] is a 4-vector with the numbers 0, 1, 2 and 3 in some order.
-    // Many values of c will never occur, since e.g. x>y>z>w makes x<z, y<w and x<w
+    // Many values of c will never occur, since ex: x>y>z>w makes x<z, y<w and x<w
     // impossible. Only the 24 indices which have non-zero entries make any sense.
     // We use a thresholding to set the coordinates in turn from the largest magnitude.
     // Rank 3 denotes the largest coordinate.

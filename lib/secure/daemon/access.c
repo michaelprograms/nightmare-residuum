@@ -9,7 +9,7 @@ nosave private int __Debug = 0;
  * Each non-comment line must be in the format: (path) PRIV or (path) PRIV:PRIV2
  *
  * @param {string} path - absolute path to the config file
- * @returns {mapping} parsed config — keys are paths, values are string arrays of privileges
+ * @returns {mapping} parsed config - keys are paths, values are string arrays of privileges
  */
 private mapping load_config(string path) {
     mapping result = ([]);
@@ -56,7 +56,7 @@ void set_debug(int val) {
  * Returns the privilege class that a file path belongs to.
  * Called by master.c's privs_file apply to assign object identity when a
  * file is first compiled. This determines what an object *is*, not what it
- * can *access* — see query_allowed for runtime access control.
+ * can *access* - see query_allowed for runtime access control.
  *
  * Realm files return the lowercased realm name. Domain files return the
  * capitalized domain name. All other paths map to an ACCESS_* constant.
@@ -140,7 +140,7 @@ private int check_stack_entry(
     string entryPriv, entryFile, filePriv;
     string *entryPrivs;
 
-    // Skip internal security objects — they are always trusted
+    // Skip internal security objects - they are always trusted
     entryFile = file_name(ob);
     if (ob == this_object() || entryFile == MASTER || entryFile == SEFUN) {
         print_debug_message(entryFile + " (internal object)");
@@ -153,7 +153,7 @@ private int check_stack_entry(
         return 0;
     }
 
-    // No read.cfg entry matched this path — any privileged object may read
+    // No read.cfg entry matched this path - any privileged object may read
     if (!requiredPrivs && mode == "read") {
         print_debug_message(entryFile + " (open read path)");
         return 1;
@@ -174,7 +174,7 @@ private int check_stack_entry(
         return 1;
     }
 
-    // Unprotected write paths — deny by default
+    // Unprotected write paths - deny by default
     if (!requiredPrivs && mode == "write") {
         print_debug_message(entryFile + " (no write config for path)");
         return 0;
@@ -202,14 +202,14 @@ private int check_stack_entry(
  *
  * Paths marked ALL in the config are immediately allowed without stack
  * inspection. Otherwise, every object in the call stack must pass
- * check_stack_entry — if any single entry lacks sufficient privilege,
+ * check_stack_entry - if any single entry lacks sufficient privilege,
  * access is denied.
  *
  * Socket access bypasses the normal config check and is permitted only
  * for the object at /secure/daemon/ipc or any inheritor of the HTTP module.
  *
  * @param {object} caller    - the object initiating the file operation
- * @param {string} fn        - the efun being called (e.g., "read_file", "write_file")
+ * @param {string} fn        - the efun being called (ex: "read_file", "write_file")
  * @param {string|int} file  - the target file path, or 0 for socket mode
  * @param {string} mode      - "read", "write", or "socket"
  * @returns {int} 1 if access is allowed, 0 if denied
