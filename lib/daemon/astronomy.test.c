@@ -145,6 +145,13 @@ void test_localtime() {
         __Time += (MINUTE * 1),
         assert_equal(testOb->query_localtime(__Almanac, __Time), "0:00"),
     }) :));
+
+    expect("localtime defaults to the current time", (: ({
+        assert_equal(
+            testOb->query_localtime(__Almanac),
+            testOb->query_localtime(__Almanac, time())
+        ),
+    }) :));
 }
 
 void test_localdate() {
@@ -172,6 +179,13 @@ void test_localdate() {
         assert_equal(
             testOb->query_localdate(__Almanac, __Time + (DAY * 12345)),
             "6 of Kantki 62"
+        ),
+    }) :));
+
+    expect("localdate defaults to the current time", (: ({
+        assert_equal(
+            testOb->query_localdate(__Almanac),
+            testOb->query_localdate(__Almanac, time())
         ),
     }) :));
 }
