@@ -186,6 +186,8 @@ void test_do_verb_rule() {
         testOb->do_verb_rule("smile", ""),
         // a single living target
         testOb->do_verb_rule("smile", "LIV", $(t2)),
+        // targeting self puts char in who twice: only messaged once
+        testOb->do_verb_rule("smile", "LIV", $(char)),
         // multiple living targets
         testOb->do_verb_rule("smile", "LVS", ({ $(t2), $(t3) })),
         // an unknown emote: prepare_emote returns 0
