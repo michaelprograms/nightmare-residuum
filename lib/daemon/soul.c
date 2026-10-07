@@ -258,7 +258,7 @@ varargs private mapping prepare_emote(string verb, string rule, mixed args) {
     return result;
 }
 
-private void display_emote(object *who, string *msgs, mixed others) {
+private void display_emote(object *who, string *msgs, object *others) {
     mapping done = ([]);
 
     for (int i = 0; i < sizeof(who); i++) {
@@ -268,11 +268,7 @@ private void display_emote(object *who, string *msgs, mixed others) {
         done[who[i]]++;
         message("soul", msgs[i], who[i]);
     }
-    if (arrayp(others)) {
-        message("soul", msgs[<1], others, who);
-    } else {
-        message("soul", msgs[<1], others);
-    }
+    message("soul", msgs[<1], others, who);
 }
 
 /* ----- parser applies ----- */
