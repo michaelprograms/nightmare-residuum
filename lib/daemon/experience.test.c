@@ -111,6 +111,17 @@ void test_query_stat_cost() {
             1
         ),
     }) :));
+
+    expect("query_stat_cost handles invalid input", (: ({
+        assert_catch(
+            (: testOb->query_stat_cost(0, 1) :),
+            "*Bad argument 1 to experience->query_stat_cost\n"
+        ),
+        assert_catch(
+            (: testOb->query_stat_cost("luck", "bad") :),
+            "*Bad argument 2 to experience->query_stat_cost\n"
+        ),
+    }) :));
 }
 
 void test_query_level_cost() {
@@ -130,6 +141,13 @@ void test_query_level_cost() {
         assert_equal(
             testOb->query_level_cost(1000) > testOb->query_level_cost(100),
             1
+        ),
+    }) :));
+
+    expect("query_level_cost handles invalid input", (: ({
+        assert_catch(
+            (: testOb->query_level_cost("bad") :),
+            "*Bad argument 1 to experience->query_level_cost\n"
         ),
     }) :));
 }
