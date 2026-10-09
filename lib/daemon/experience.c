@@ -18,7 +18,7 @@ varargs int query_stat_cost(string stat, int level, string c, string s) {
     if (!stringp(stat)) {
         error("Bad argument 1 to experience->query_stat_cost");
     }
-    if (!intp(level)) {
+    if (undefinedp(level) || !intp(level)) {
         error("Bad argument 2 to experience->query_stat_cost");
     }
 
@@ -42,7 +42,7 @@ varargs int query_stat_cost(string stat, int level, string c, string s) {
 }
 
 int query_level_cost(int level) {
-    if (!intp(level)) {
+    if (undefinedp(level) || !intp(level)) {
         error("Bad argument 1 to experience->query_level_cost");
     }
 

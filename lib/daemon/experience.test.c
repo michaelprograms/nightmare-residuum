@@ -118,7 +118,7 @@ void test_query_stat_cost() {
             "*Bad argument 1 to experience->query_stat_cost\n"
         ),
         assert_catch(
-            (: testOb->query_stat_cost("luck", "bad") :),
+            (: testOb->query_stat_cost("luck", UNDEFINED) :),
             "*Bad argument 2 to experience->query_stat_cost\n"
         ),
     }) :));
@@ -146,7 +146,7 @@ void test_query_level_cost() {
 
     expect("query_level_cost handles invalid input", (: ({
         assert_catch(
-            (: testOb->query_level_cost("bad") :),
+            (: testOb->query_level_cost(UNDEFINED) :),
             "*Bad argument 1 to experience->query_level_cost\n"
         ),
     }) :));
