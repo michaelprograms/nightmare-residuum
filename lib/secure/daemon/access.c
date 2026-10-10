@@ -20,9 +20,6 @@ private mapping load_config(string path) {
         lines = explode(file, "\n");
         num = sizeof(lines);
         for (int i = 0; i < num; i++) {
-            if (!lines[i] || lines[i] == "" || lines[i][0] == '#') {
-                continue;
-            }
             if (sscanf(lines[i], "(%s) %s", key, value) == 2) {
                 result[key] = explode(value, ":");
             }

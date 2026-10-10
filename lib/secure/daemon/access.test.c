@@ -222,6 +222,31 @@ void test_query_allowed_open_read_path() {
     destruct(basicOb);
 }
 
+void test_query_allowed_no_privileges() {
+    object noPrivOb;
+
+    // /tmp/ is not a known privilege class, so objects compiled there have none
+    write_file("/tmp/access_noprivs.c", "void create() {}\n", 1);
+    noPrivOb = load_object("/tmp/access_noprivs.c");
+
+    expect("query_allowed denies callers without privileges", (: ({
+        assert_equal(query_privs($(noPrivOb)), 0),
+        // /tmp/void/ is NONE in read.cfg, so the privilege check is reached
+        assert_equal(
+            testOb->query_allowed(
+                $(noPrivOb),
+                "read_file",
+                "/tmp/void/x",
+                "read"
+            ),
+            0
+        ),
+    }) :));
+
+    destruct(noPrivOb);
+    rm("/tmp/access_noprivs.c");
+}
+
 void test_query_allowed_write_branches() {
     object basicOb = new(STD_OBJECT);
 
