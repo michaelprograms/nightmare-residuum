@@ -149,7 +149,10 @@ void process_file(string file, mapping options) {
     }
     tmp = catch(t = load_object(file));
     if (tmp) {
-        message("system", "Error in test: " + tmp + "\n", this_user());
+        write("\n    " + file + " failed to load:\n" + tmp + "\n");
+        __Results["failingExpects"]++;
+        __Results["failLog"] += ({ file + " failed to load: " + tmp });
+        evaluate(fnDone);
         return;
     }
     if (!inherits(M_TEST, t)) {
