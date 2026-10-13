@@ -179,6 +179,12 @@ void test_room_map() {
             "north": "/domain/Nowhere/room/void.c",
         ])),
         assert_equal(sizeof(testOb->query_room_map()), 9),
+        // a virtual exit skips the file check; this one fails to load and
+        // renders blank
+        testOb->set_exits(([
+            "north": "/domain/Nowhere/virtual/room/fake/0",
+        ])),
+        assert_equal(sizeof(testOb->query_room_map()), 9),
     }) :));
 }
 
