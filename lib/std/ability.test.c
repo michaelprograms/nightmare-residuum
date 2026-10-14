@@ -436,6 +436,9 @@ void test_can_verb_rule() {
 }
 
 void test_do_verb_applies() {
+    // non-living source so requirements fail without erroring
+    __MockLiving = 0;
+
     expect("do_verb_liv is handled", (: ({
         // this error signifies that handle_ability_use was called
         assert_catch(
@@ -471,6 +474,18 @@ void test_do_verb_applies() {
         assert_catch(
             (: testOb->do_verb_rule() :),
             "*Ability ability.coverage does not have an ability type set\n"
+        ),
+    }) :));
+
+    expect("do_verb_lvs returns when requirements fail", (: ({
+        // with a type set, the non-living source fails requirements
+        testOb->set_type("attack"),
+        assert_equal(
+            testOb->do_verb_lvs(
+                0,
+                ({ this_object(), this_object(), this_object() })
+            ),
+            UNDEFINED
         ),
     }) :));
 }
