@@ -15,6 +15,8 @@ mixed query_handle() {
 /* -----  ----- */
 
 mixed connect(mapping config) {
+    mixed handle;
+
     if (!mapp(config)) {
         error("Bad argument 1 to database->connect");
     }
@@ -36,10 +38,12 @@ mixed connect(mapping config) {
         dbType = config["type"];
     }
 
-    dbHandle = db_connect(dbHost, dbDatabase, dbUser, dbType);
-    if (stringp(dbHandle)) {
-        error(dbHandle);
+    // keep a failed connect's error string out of dbHandle
+    handle = db_connect(dbHost, dbDatabase, dbUser, dbType);
+    if (stringp(handle)) {
+        error(handle);
     }
+    dbHandle = handle;
     return this_object();
 }
 

@@ -75,3 +75,30 @@ void test_connect() {
         rm("/save/test/database.db");
     }
 }
+
+void test_connect_error() {
+    expect("connect errors when sqlite cannot open the file", (: ({
+        // sqlite3_open fails when the directory does not exist
+        assert_catch(
+            (: testOb->connect(([ "db": "/save/test/missing/database.db", ])) :),
+            "*unable to open database file\n"
+        ),
+    }) :));
+}
+
+void test_query_error() {
+    expect("query with no statement errors and closes", (: ({
+        assert_equal(
+            objectp(testOb->connect(([ "db": "/save/test/database.db", ]))),
+            1
+        ),
+        // an empty statement prepares to NULL, so db_exec returns an error
+        // string; its text is stale driver state, so only check it errored
+        assert_equal(stringp(catch(testOb->query(""))), 1),
+        assert_equal(testOb->query_handle(), 0),
+    }) :));
+
+    if (file_size("/save/test/database.db")) {
+        rm("/save/test/database.db");
+    }
+}
