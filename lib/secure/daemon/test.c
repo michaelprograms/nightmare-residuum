@@ -164,7 +164,9 @@ void process_file(string file, mapping options) {
         object testFile = new(test);
         mixed err = catch(testFile->execute_test(done));
         if (err) {
-            write("\n    " + test + " encountered an errored:\n" + err + "\n");
+            write("\n    " + test + " encountered an error:\n" + err + "\n");
+            __Results["failingExpects"]++;
+            __Results["failLog"] += ({ test + " encountered an error: " + err });
             evaluate(done);
         }
         if (objectp(testFile)) {  // async tests require time
@@ -560,7 +562,10 @@ string create_coverage(string path) {
     l = sizeof(logical);
     for (i = 0; i < l; i++) {
         int num = nums[i];
-        if (sizeof(reMatches = pcre_extract(
+        if (pcre_match(logical[i], "//\\s*coverage: ignore$")) {
+            // Opt-out: line can never be hit (ex: runs after destruct)
+            line = logical[i];
+        } else if (sizeof(reMatches = pcre_extract(
             logical[i],
             "^(?:public |private |protected |nosave |nomask |varargs )*(?:float|int|object|mapping|mixed|string|void) *\\**([a-zA-Z0-9_]{1,}) ?\\(.*\\) {}$"
         )) > 0) {
