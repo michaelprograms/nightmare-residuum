@@ -45,7 +45,7 @@ protected int internal_remove() {
         map(all_inventory(), (: $1->handle_move($(env)) :));
     }
     destruct();
-    return !this_object();
+    return !this_object();  // coverage: ignore
 }
 
 /**
