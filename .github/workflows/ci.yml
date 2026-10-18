@@ -30,11 +30,11 @@ jobs:
       id: cache
       with:
         path: build
-        key: ${{ hashFiles('**/driver/src') }}
+        key: ${{ hashFiles('**/driver/src') }}-portable
 
     - name: Build Driver
       if: steps.cache.outputs.cache-hit != 'true'
-      run: ./build.sh
+      run: ./build.sh -DMARCH_NATIVE=OFF
       shell: bash
       timeout-minutes: 10
 

@@ -18,7 +18,8 @@ time cmake ../driver \
   -DPACKAGE_UIDS=OFF \
   -DPACKAGE_MUDLIB_STATS=OFF \
   -DPACKAGE_EXTERNAL=ON \
-  -DCMAKE_BUILD_TYPE=RelWithDebInfo
+  -DCMAKE_BUILD_TYPE=RelWithDebInfo \
+  "$@"
 
 # Only the `driver`: `install` implies `all`, which is 6 more executables that
 # each pay a full whole-program LTO link of libdriver (lpcc/lpcshell/symbol/
