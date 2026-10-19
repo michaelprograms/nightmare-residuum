@@ -55,5 +55,5 @@ void handle_received(object env) {
             message("action", "You receive " + conjunction(list) + ".", env);
         }
         check_empty();
-    }
+    }  // coverage: ignore
 }

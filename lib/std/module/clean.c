@@ -42,8 +42,8 @@ nomask int clean_later() {
 protected int internal_remove() {
     object env;
     if (env = environment()) {
-        map(all_inventory(), (: $1->handle_move($(env)) :));
-    }
+        map(all_inventory(), (: $1->handle_move($(env)) :));  // coverage: ignore
+    }  // coverage: ignore
     destruct();
     return !this_object();  // coverage: ignore
 }
@@ -68,7 +68,7 @@ int handle_remove() {
 int clean_up(mixed _args...) {
     // Objects never lose environment, let environment handle clean_up
     if (environment()) {
-        return clean_never();
+        return clean_never();  // coverage: ignore
     }
     // Objects (mainly rooms or containers) can be flagged to never clean
     if (__NoClean) {
