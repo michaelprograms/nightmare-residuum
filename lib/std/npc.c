@@ -68,7 +68,7 @@ void handle_ability_attack() {
     if (!sizeof(__AbilityList)) {
         return;
     }
-    if (__AbilityChance > 1 + random(100)) {
+    if (random(100) < __AbilityChance) {
         this_object()->handle_command(element_of(__AbilityList));
     }
 }
