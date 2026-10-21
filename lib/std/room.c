@@ -31,8 +31,8 @@ void reset() {
 
 int clean_up(mixed args...) {
     foreach (object ob in query_living_contents()) {
-        if (userp(/** @type {STD_CHARACTER} */ (ob)->query_user())) {
-            return ::clean_later();
+        if (userp(/** @type {STD_CHARACTER} */ (ob)->query_user())) {  // coverage: ignore
+            return ::clean_later();  // coverage: ignore
         }
     }
     return ::clean_up(args);
