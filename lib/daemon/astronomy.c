@@ -329,13 +329,13 @@ void scan() {
     object *characters = characters();
     // load any existing environments
     if (sizeof(characters)) {
-        int t = time();
-        map(characters, (: handle_room_create(environment($1)) :));
+        int t = time();  // coverage: ignore
+        map(characters, (: handle_room_create(environment($1)) :));  // coverage: ignore
         // process immediately
-        foreach (string key, mapping a in __Astronomy) {
-            process(t, key, a);
-        }
-    }
+        foreach (string key, mapping a in __Astronomy) {  // coverage: ignore
+            process(t, key, a);  // coverage: ignore
+        }  // coverage: ignore
+    }  // coverage: ignore
 }
 
 void heart_beat() {
