@@ -4,6 +4,7 @@ inherit M_TEST;
  * @var {"/std/user/gmcp"} testOb
  */
 
+/** @type {"/std/user/gmcp.mock"} */
 nosave private object __Mock;
 nosave private int __VitalsUpdates;
 
