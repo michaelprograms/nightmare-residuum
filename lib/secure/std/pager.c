@@ -41,7 +41,7 @@ nomask private string prompt() {
         percent = 100;
         // last page already output by handle_page; signal end of paging
         done(1);
-        return "";
+        return "";  // coverage: ignore
     } else {
         int width = to_int(query_account_setting("width")) || DEFAULT_WIDTH;
         percent = chunkEnd * 100 / __LinesCount;
@@ -67,7 +67,7 @@ private void handle_page(mixed arg) {
         switch (arg[0]) {
             case 'q':
                 done(0);
-                return;  // to prompt
+                return;  // to prompt  // coverage: ignore
             default:
                 __LineNum += __ChunkSize;
         }
