@@ -65,7 +65,6 @@ mixed query(string sql) {
 
     response = db_exec(dbHandle, sql);
     if (stringp(response)) {
-        close();
         error(response);
     } else if (intp(response) && response > 0) {
         result = allocate(response);

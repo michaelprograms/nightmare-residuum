@@ -31,9 +31,6 @@ void test_connect() {
         ),
     }) :));
     expect("handle is queryable", (: ({
-        // query non-existant
-        assert_equal(testOb->query("SELECT * FROM `Test`"), UNDEFINED),
-
         // create
         testOb->query("CREATE TABLE `Test` ( `id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `thing` TEXT NOT NULL )"),
 
@@ -87,7 +84,7 @@ void test_connect_error() {
 }
 
 void test_query_error() {
-    expect("query with no statement errors and closes", (: ({
+    expect("query errors keep the connection open", (: ({
         assert_equal(
             objectp(testOb->connect(([ "db": "/save/test/database.db", ]))),
             1
@@ -95,7 +92,16 @@ void test_query_error() {
         // an empty statement prepares to NULL, so db_exec returns an error
         // string; its text is stale driver state, so only check it errored
         assert_equal(stringp(catch(testOb->query(""))), 1),
-        assert_equal(testOb->query_handle(), 0),
+        assert_equal(testOb->query_handle() > 0, 1),
+
+        assert_catch(
+            (: testOb->query("SELECT * FROM `Missing`") :),
+            "*no such table: Missing\n"
+        ),
+        assert_equal(testOb->query_handle() > 0, 1),
+
+        // connection still works
+        assert_equal(testOb->query("SELECT 1"), ({ ({ 1 }) })),
     }) :));
 
     if (file_size("/save/test/database.db")) {
