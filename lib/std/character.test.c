@@ -119,6 +119,10 @@ void receive_message(string _type, string msg) {
 }
 void update_character_data(object ob) {}
 void test_gmcp() {
+    // other tests set a user, so clear their leftover gmcp updates
+    gmcpName = UNDEFINED;
+    gmcpData = UNDEFINED;
+
     testOb->set_level(1);
     testOb->set_species("human");
 
