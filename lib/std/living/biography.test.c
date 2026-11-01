@@ -142,7 +142,8 @@ void test_handle_defeat() {
         assert_equal(testOb->query_defeated(), 1),
     }) :));
 
-    // @TODO: re-visit this for test coverage
+    // a full living can move into a room, but it is not the instrumented
+    // testOb, so biography.c tags the env/corpse lines to ignore coverage
     // setup test object
     if (testOb) destruct(testOb);
     testOb = new(STD_LIVING);  // need biography's parent inherit living for handle_move

@@ -110,18 +110,18 @@ void handle_defeat(object source) {
     }
 
     if (env) {
-        corpse = new(STD_CORPSE);
-        corpse->setup_body(this_object());
-        corpse->handle_move(env);
-        if (this_object()->query_cap_name()) {
+        corpse = new(STD_CORPSE);  // coverage: ignore
+        corpse->setup_body(this_object());  // coverage: ignore
+        corpse->handle_move(env);  // coverage: ignore
+        if (this_object()->query_cap_name()) {  // coverage: ignore
             message(
                 "action",
                 this_object()->query_cap_name() + " drops %^RED%^dead%^RESET%^.",
                 env,
                 this_object()
             );
-        }
-    }
+        }  // coverage: ignore
+    }  // coverage: ignore
 
     __Defeated = 1;
     __Defeat += ({
