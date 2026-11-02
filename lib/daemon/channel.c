@@ -48,8 +48,7 @@ private void handle_send(
     string name,
     string channel,
     string msg,
-    int emote,
-    int ipc
+    int emote
 ) {
     string type = "channel", m;
 
@@ -64,19 +63,9 @@ private void handle_send(
 
     message(type, m, this_object()->query_listeners(channel));
     add_history(channel, m);
-    // if (channel != "error" && !ipc) {
-    //     D_IPC->send("CHAT:" + channel + ":" + (name ? name + ":" : "") + msg);
-    // }
 }
 
 /* ----- send to channel ----- */
-
-// void send_ipc (string channel, string name, string msg) {
-//     if (!channel || !name || !msg) {
-//         return;
-//     }
-//     handle_send(name, channel, msg, 0, 1);
-// }
 
 /**
  * Send a message to a channel from a source.
@@ -144,14 +133,14 @@ void send(string channel, object source, string msg) {
             source
         );
     }
-    handle_send(source->query_cap_name(), channel, msg, emote, 0);
+    handle_send(source->query_cap_name(), channel, msg, emote);
 }
 
 void send_system(string channel, string msg) {
     if (member_array(channel, __SystemChannels) == -1) {
         return;
     }
-    handle_send(0, channel, msg, 0, 0);
+    handle_send(0, channel, msg, 0);
 }
 
 /* ----- applies ----- */

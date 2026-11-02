@@ -203,7 +203,7 @@ private int check_stack_entry(
  * access is denied.
  *
  * Socket access bypasses the normal config check and is permitted only
- * for the object at /secure/daemon/ipc or any inheritor of the HTTP module.
+ * for inheritors of the HTTP module.
  *
  * @param {object} caller    - the object initiating the file operation
  * @param {string} fn        - the efun being called (ex: "read_file", "write_file")
@@ -230,10 +230,7 @@ int query_allowed(object caller, string fn, string file, string mode) {
 
     // Socket access is handled separately
     if (mode == "socket") {
-        return file_name(caller) == "/secure/daemon/ipc" || inherits(
-            "/secure/module/http.c",
-            caller
-        );
+        return inherits("/secure/module/http.c", caller);
     }
 
     // Select required privileges for this path based on the operation mode

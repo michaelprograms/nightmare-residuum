@@ -278,8 +278,8 @@ void test_query_allowed_write_branches() {
 }
 
 void test_query_allowed_socket() {
-    expect("query_allowed denies socket access to non-IPC callers", (: ({
-        // testOb is D_ACCESS, not D_IPC, and does not inherit HTTP module
+    expect("query_allowed denies socket access to non-HTTP callers", (: ({
+        // testOb is D_ACCESS and does not inherit HTTP module
         assert_equal(
             testOb->query_allowed(testOb, "socket_create", 0, "socket"),
             0

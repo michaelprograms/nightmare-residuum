@@ -543,13 +543,13 @@ int valid_shadow(object ob) {
 
 /**
  * This apply is called by the driver prior to every socket efun.
- * Socket access is delegated to D_ACCESS, which permits only D_IPC and
- * objects that inherit the HTTP module.
+ * Socket access is delegated to D_ACCESS, which permits only objects that
+ * inherit the HTTP module.
  *
  * @param {object} caller - the object requesting socket access
  * @param {string} fn     - the socket efun being called
  * @param {mixed *} _info  - extra info passed by the driver
- * @returns {int} 1 if the caller is D_IPC or inherits the HTTP module, 0 otherwise
+ * @returns {int} 1 if the caller inherits the HTTP module, 0 otherwise
  */
 int valid_socket(object caller, string fn, mixed *_info) {
     return D_ACCESS->query_allowed(caller, fn, 0, "socket");
