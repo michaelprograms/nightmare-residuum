@@ -43,3 +43,45 @@ void test_handle_command_no_env() {
         assert_equal(testOb->handle_command(0), 0),
     }) :));
 }
+
+void test_handle_command() {
+    /** @type {"/std/living/command.mock"} */
+    object mock = new("/std/living/command.mock.c");
+    /** @type {STD_ROOM} */
+    object room = new(STD_ROOM);
+
+    room->set_exits(([ "north": "/domain/Nowhere/room/void.c" ]));
+    mock->mock_move(room);
+
+    expect("handle_command routes commands, verbs, and exits", (: ({
+        // command
+        assert_equal($(mock)->handle_command("idle"), 1),
+
+        // verb that fails returns its message
+        assert_equal($(mock)->handle_command("go"), 1),
+
+        // verb that succeeds
+        assert_equal($(mock)->handle_command("say hi"), 1),
+
+        // unknown
+        assert_equal($(mock)->handle_command("xyzzy"), 0),
+
+        // exit shortcut
+        assert_equal($(mock)->handle_command("north"), 1),
+
+        // exit shortcut that fails reports the go failure
+        $(mock)->set_posture("laying"),
+        assert_equal($(mock)->handle_command("north"), 1),
+
+        // immobile
+        $(mock)->set_immobile(1),
+        assert_equal($(mock)->handle_command("north"), 1),
+        assert_equal(
+            $(mock)->query_received_messages()[<1],
+            ({ "action", "You are unable to take any actions right now." })
+        ),
+    }) :));
+
+    destruct(mock);
+    destruct(room);
+}
