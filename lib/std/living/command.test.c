@@ -55,27 +55,48 @@ void test_handle_command() {
 
     expect("handle_command routes commands, verbs, and exits", (: ({
         // command
-        assert_equal($(mock)->handle_command("idle"), 1),
+        assert_equal(
+            /** @type {"/std/living/command"} */ ($(mock))->handle_command("idle"),
+            1
+        ),
 
         // verb that fails returns its message
-        assert_equal($(mock)->handle_command("go"), 1),
+        assert_equal(
+            /** @type {"/std/living/command"} */ ($(mock))->handle_command("go"),
+            1
+        ),
 
         // verb that succeeds
-        assert_equal($(mock)->handle_command("say hi"), 1),
+        assert_equal(
+            /** @type {"/std/living/command"} */ ($(mock))->handle_command("say hi"),
+            1
+        ),
 
         // unknown
-        assert_equal($(mock)->handle_command("xyzzy"), 0),
+        assert_equal(
+            /** @type {"/std/living/command"} */ ($(mock))->handle_command("xyzzy"),
+            0
+        ),
 
         // exit shortcut
-        assert_equal($(mock)->handle_command("north"), 1),
+        assert_equal(
+            /** @type {"/std/living/command"} */ ($(mock))->handle_command("north"),
+            1
+        ),
 
         // exit shortcut that fails reports the go failure
         $(mock)->set_posture("laying"),
-        assert_equal($(mock)->handle_command("north"), 1),
+        assert_equal(
+            /** @type {"/std/living/command"} */ ($(mock))->handle_command("north"),
+            1
+        ),
 
         // immobile
         $(mock)->set_immobile(1),
-        assert_equal($(mock)->handle_command("north"), 1),
+        assert_equal(
+            /** @type {"/std/living/command"} */ ($(mock))->handle_command("north"),
+            1
+        ),
         assert_equal(
             $(mock)->query_received_messages()[<1],
             ({ "action", "You are unable to take any actions right now." })
