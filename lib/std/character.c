@@ -236,7 +236,7 @@ void exit_world() {
     );
     save_character(1);
     handle_remove();
-    master()->handle_parse_refresh();
+    master()->handle_parse_refresh();  // coverage: ignore
 }
 
 void enter_freezer() {

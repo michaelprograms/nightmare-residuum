@@ -324,11 +324,18 @@ void test_setup_character() {
 void test_describe_environment() {
     object r = new(STD_ROOM);
     object r2 = new(STD_ROOM);
-    object npc = new(STD_NPC);
+    object npc = new(STD_NPC), npc2 = new(STD_NPC);
+    object char = new(STD_CHARACTER), char2 = new(STD_CHARACTER);
     object item = new(STD_ITEM);
 
     r->set_short("A Test Room");
-    r->set_long("A long description of the test room for wrapping.");
+    // long enough to wrap past the height of the room map
+    r->set_long(implode(
+        map(allocate(40), (: "A long test room description." :)),
+        " "
+    ));
+    r->set_property("indoors", 1);
+    r->set_exit("east", "/domain/Nowhere/room/void.c", 0, 0, 0, "door");
     r->set_long_footer("A footer line.");
     r->set_exit("north", "/domain/Nowhere/room/void.c");
     r->set_listen("default", (: capitalize("you hear a function.") :));
@@ -337,7 +344,15 @@ void test_describe_environment() {
     r2->set_listen("default", "You hear a string.");
     r2->set_smell("default", (: capitalize("you smell a function.") :));
     npc->set_name("goblin");
+    // characters sort before npcs, each alphabetically
+    // interleaved so the sort compares characters and npcs both ways
+    char->set_name("Alpha");
+    char->handle_move(r);
     npc->handle_move(r);
+    char2->set_name("Beta");
+    char2->handle_move(r);
+    npc2->set_name("orc");
+    npc2->handle_move(r);
     item->handle_move(r);
 
     testOb->set_name("Describer");
@@ -368,6 +383,9 @@ void test_describe_environment() {
 
     rmdir("/realm/describer");
     if (npc) destruct(npc);
+    if (npc2) destruct(npc2);
+    if (char) destruct(char);
+    if (char2) destruct(char2);
     if (item) destruct(item);
     if (r) destruct(r);
     if (r2) destruct(r2);
@@ -385,6 +403,29 @@ void test_enter_world() {
 
     expect("enter_world places the character and starts a heart beat", (: ({
         assert_equal(objectp(testOb), 1),
+        assert_regex(
+            base_name(environment(testOb)),
+            "/domain/Nowhere/room/void"
+        ),
+    }) :));
+}
+void test_enter_world_missing_room() {
+    string path = "/tmp/character_enter_world.c";
+
+    testOb->set_name("Enterer");
+    testOb->set_user(this_object());
+    testOb->set_level(1);
+
+    // save a room path, then remove the room so it can no longer load
+    write_file(path, "inherit STD_ROOM;\n", 1);
+    testOb->set_environment_path(path);
+    destruct(find_object(path));
+    rm(path);
+
+    testOb->enter_world(0);
+
+    expect("enter_world falls back to the void when the room is missing", (: ({
+        assert_equal(file_size($(path)), -1),
         assert_regex(
             base_name(environment(testOb)),
             "/domain/Nowhere/room/void"
