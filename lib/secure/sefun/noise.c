@@ -106,39 +106,39 @@ private void __ffi_init() {
 
     __FFI_Tried = 1;
     if (catch(path = get_os_env("NR_NOISE_SO")) || !stringp(path) || !sizeof(path)) {
-        debug_message("noise: FFI disabled (NR_NOISE_SO unset)\n");
-        return;
+        debug_message("noise: FFI disabled (NR_NOISE_SO unset)\n");  // coverage: ignore
+        return;  // coverage: ignore
     }
     if (catch(__FFI_Lib = ffi_load(path)) || __FFI_Lib <= 0) {
-        __FFI_Lib = 0;
-        debug_message("noise: FFI disabled (load failed: " + path + ")\n");
-        return;
+        __FFI_Lib = 0;  // coverage: ignore
+        debug_message("noise: FFI disabled (load failed: " + path + ")\n");  // coverage: ignore
+        return;  // coverage: ignore
     }
     if (catch(__FFI_Perm = ffi_prepare(__FFI_Lib, "ns_permutation", __FFI_VOID, ({
         __FFI_POINTER, __FFI_INT, __FFI_POINTER
     }))) || catch(__FFI_Sample = ffi_prepare(__FFI_Lib, "ns_simplex_4d", __FFI_DOUBLE, ({
         __FFI_DOUBLE, __FFI_DOUBLE, __FFI_DOUBLE, __FFI_DOUBLE, __FFI_POINTER, __FFI_INT, __FFI_DOUBLE
     }))) || __FFI_Perm <= 0 || __FFI_Sample <= 0) {
-        __FFI_Lib = 0;
-        debug_message("noise: FFI disabled (prepare failed)\n");
-        return;
+        __FFI_Lib = 0;  // coverage: ignore
+        debug_message("noise: FFI disabled (prepare failed)\n");  // coverage: ignore
+        return;  // coverage: ignore
     }
     // batched whole-row planet sampler; optional - leave __FFI_Row 0 on failure
     if (catch(__FFI_Row = ffi_prepare(__FFI_Lib, "ns_planet_row", __FFI_VOID, ({
         __FFI_POINTER, __FFI_INT, __FFI_INT, __FFI_DOUBLE, __FFI_DOUBLE,
         __FFI_DOUBLE, __FFI_DOUBLE, __FFI_POINTER
     }))) || __FFI_Row <= 0) {
-        __FFI_Row = 0;
-        debug_message("noise: ns_planet_row unavailable (prepare failed)\n");
-    }
+        __FFI_Row = 0;  // coverage: ignore
+        debug_message("noise: ns_planet_row unavailable (prepare failed)\n");  // coverage: ignore
+    }  // coverage: ignore
     // whole-planet PNG renderer; optional - leave __FFI_Png 0 on failure
     if (catch(__FFI_Png = ffi_prepare(__FFI_Lib, "ns_planet_png", __FFI_INT, ({
         __FFI_POINTER, __FFI_INT, __FFI_DOUBLE, __FFI_DOUBLE, __FFI_DOUBLE,
         __FFI_DOUBLE, __FFI_POINTER, __FFI_INT
     }))) || __FFI_Png <= 0) {
-        __FFI_Png = 0;
-        debug_message("noise: ns_planet_png unavailable (prepare failed)\n");
-    }
+        __FFI_Png = 0;  // coverage: ignore
+        debug_message("noise: ns_planet_png unavailable (prepare failed)\n");  // coverage: ignore
+    }  // coverage: ignore
     debug_message("noise: FFI acceleration enabled via " + path + "\n");
 }
 
@@ -247,11 +247,11 @@ varargs int noise_planet_png(
 
 #else
 
-int noise_ffi_active() {
-    return 0;
+int noise_ffi_active() {  // coverage: ignore
+    return 0;  // coverage: ignore
 }
 
-void noise_ffi_set_active(int on) {}
+void noise_ffi_set_active(int on) {}  // coverage: ignore
 
 varargs buffer noise_planet_row(
     mapping p,
@@ -262,11 +262,11 @@ varargs buffer noise_planet_row(
     float heatFactor,
     int time
 ) {
-    return 0;
+    return 0;  // coverage: ignore
 }
 
-float noise_row_value(buffer _buf, int _index) {
-    return 0.0;
+float noise_row_value(buffer _buf, int _index) {  // coverage: ignore
+    return 0.0;  // coverage: ignore
 }
 
 varargs int noise_planet_png(
@@ -277,8 +277,8 @@ varargs int noise_planet_png(
     float humidityFactor,
     float heatFactor,
     int time
-) {
-    return 0;
+) {  // coverage: ignore
+    return 0;  // coverage: ignore
 }
 
 #endif

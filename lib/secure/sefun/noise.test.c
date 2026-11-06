@@ -6904,3 +6904,40 @@ void test_planet_png_smoke() {
     }) :));
     rm(lpath);
 }
+
+void test_ffi_set_active() {
+    mapping p = testOb->noise_generate_permutation_simplex("Terra");
+    int active = testOb->noise_ffi_active();
+
+    expect("noise_ffi_set_active toggles the FFI path off and back on", (: ({
+        testOb->noise_ffi_set_active(0),
+        assert_equal(testOb->noise_ffi_active(), 0),
+        assert_equal(testOb->noise_planet_row($(p), 16, 0), 0),
+        assert_equal(testOb->noise_planet_png($(p), 16, "tmp/x.png"), 0),
+
+        testOb->noise_ffi_set_active(1),
+        assert_equal(testOb->noise_ffi_active(), $(active)),
+    }) :));
+}
+
+void test_ffi_default_args() {
+    mapping p = testOb->noise_generate_permutation_simplex("Terra");
+    string npath = "tmp/__pngdefaults.png";  // native: relative to mudlib root
+    string lpath = "/tmp/__pngdefaults.png";  // mudlib path to the same file
+
+    if (!testOb->noise_ffi_active()) {
+        expect("default args FFI unavailable: wrappers return 0", (: ({
+            assert_equal(testOb->noise_planet_row($(p), 16, 0), 0),
+            assert_equal(testOb->noise_planet_png($(p), 16, $(npath)), 0),
+        }) :));
+        return;
+    }
+
+    rm(lpath);
+    expect("noise_planet_row and noise_planet_png fill in default args", (: ({
+        assert_equal(sizeof(testOb->noise_planet_row($(p), 16, 0)), 16 * 5 * 8),
+        assert_equal(testOb->noise_planet_png($(p), 16, $(npath)), 1),
+        assert_equal(file_size($(lpath)) > 0, 1),
+    }) :));
+    rm(lpath);
+}
