@@ -331,7 +331,7 @@ void test_describe_environment() {
     r->set_short("A Test Room");
     // long enough to wrap past the height of the room map
     r->set_long(implode(
-        map(allocate(40), (: "A long test room description." :)),
+        allocate(40, "A long test room description."),
         " "
     ));
     r->set_property("indoors", 1);
