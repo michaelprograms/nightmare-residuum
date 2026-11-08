@@ -326,7 +326,7 @@ void listen_socket(int fd) {
     if (socket < 0) {
         error("http: Couldn't perform socket_accept.");
     }
-    __Sockets += ({ socket });
+    __Sockets += ({ socket });  // coverage: ignore
 }
 
 /* ----- applies ----- */
@@ -358,11 +358,11 @@ void start() {
     }
     // socket_bind/socket_listen return status codes (EESUCCESS), not the fd, so
     // keep the descriptor in socket and check the status separately.
-    if ((err = socket_bind(socket, __Port)) < 0) {
-        error("Bad response from socket_bind: " + socket_error(err));
+    if ((err = socket_bind(socket, __Port)) < 0) {  // coverage: ignore
+        error("Bad response from socket_bind: " + socket_error(err));  // coverage: ignore
     }
-    if ((err = socket_listen(socket, "listen_socket")) < 0) {
-        error("Bad response from socket_listen: " + socket_error(err));
+    if ((err = socket_listen(socket, "listen_socket")) < 0) {  // coverage: ignore
+        error("Bad response from socket_listen: " + socket_error(err));  // coverage: ignore
     }
 }
 
@@ -371,6 +371,6 @@ void start() {
  */
 void handle_remove() {
     foreach (int socket in __Sockets) {
-        socket_close(socket);
-    }
+        socket_close(socket);  // coverage: ignore
+    }  // coverage: ignore
 }

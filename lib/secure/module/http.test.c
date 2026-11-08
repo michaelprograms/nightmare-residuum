@@ -11,7 +11,9 @@ string *test_order() {
         "test_parse_request",
         "test_handle_response",
         "test_binary_response",
-        "test_static_and_404"
+        "test_static_and_404",
+        "test_server",
+        "test_sockets",
     });
 }
 
@@ -85,6 +87,16 @@ void test_parse_request() {
         assert_equal($(req["method"]), 5),
     }) :));
 
+    req = testOb->parse_request("TRACE /res HTTP/1.0\r\n\r\n");
+    expect("parses TRACE method", (: ({
+        assert_equal($(req["method"]), 6),
+    }) :));
+
+    req = testOb->parse_request("CONNECT /res HTTP/1.0\r\n\r\n");
+    expect("parses CONNECT method", (: ({
+        assert_equal($(req["method"]), 7),
+    }) :));
+
     req = testOb->parse_request("OPTIONS / HTTP/1.0\r\n\r\n");
     expect("unknown method parses as UNDEF_REQUEST", (: ({
         assert_equal($(req["method"]), -1),
@@ -154,4 +166,161 @@ void test_static_and_404() {
         assert_regex($(out), "Content-Type: text/html"),
         assert_regex($(out), "Not Found"),
     }) :));
+}
+
+
+/* ----- server ----- */
+
+// A server written to /tmp inherits the instrumented copy, so its server_root
+// is /tmp/ and the handler files and static pages below can live there too.
+#define SERVER "/tmp/http_server.c"
+#define HANDLER "/tmp/http_handler.c"
+#define DIR_HANDLER "/tmp/http_dir/handler.c"
+#define PAGE "/tmp/www/http_page.html"
+
+/** @type {"/secure/module/http"} */
+nosave private object __Server;
+/** @type {"/daemon/log.mock"} */
+nosave private object __Log;
+
+string query_last_log() {
+    return __Log->query_logs()[<1][1];
+}
+
+void write_server_files() {
+    write_file(SERVER, "inherit \"/secure/module/http.coverage.c\";\n"
+        "mixed text(mapping res, string *args) { return args; }\n"
+        "buffer binary(mapping res, string *args) { return to_buffer(\"BIN\"); }\n"
+        "buffer typed(mapping res, string *args) {\n"
+        "    res[\"type\"] = \"image/png\";\n"
+        "    return to_buffer(\"PNG\");\n"
+        "}\n", 1);
+    write_file(
+        HANDLER,
+        "int data(mapping res, string *args) { return 2; }\n",
+        1
+    );
+    mkdir("/tmp/http_dir");
+    write_file(
+        DIR_HANDLER,
+        "int data(mapping res, string *args) { return 3; }\n",
+        1
+    );
+    mkdir("/tmp/www");
+    write_file(PAGE, "<p>page</p>", 1);
+}
+void remove_server_files() {
+    foreach (string file in ({ SERVER, HANDLER, DIR_HANDLER, PAGE })) {
+        if (find_object(file)) {
+            destruct(find_object(file));
+        }
+        rm(file);
+    }
+    rmdir("/tmp/http_dir");
+    rmdir("/tmp/www");
+}
+
+void test_server() {
+    write_server_files();
+    __Server = new(SERVER);
+    __Server->add_url_pattern("^/text/(\\w+)", "text");
+    __Server->add_url_pattern("^/binary", "binary");
+    __Server->add_url_pattern("^/typed", "typed");
+
+    expect("handle_response resolves handlers and encodes results", (: ({
+        assert_equal(
+            __Server->handle_response(([]), "text", ({ "a" })),
+            ([
+                "content": "[\"a\"]",
+                "type": "text/json",
+                "code": "200 OK",
+                "connection": "close",
+            ])
+        ),
+        assert_equal(
+            __Server->handle_response(([]), "binary", ({})),
+            ([
+                "content": to_buffer("BIN"),
+                "type": "application/octet-stream",
+                "code": "200 OK",
+                "connection": "close",
+            ])
+        ),
+        assert_equal(
+            __Server->handle_response(([]), "typed", ({}))["type"],
+            "image/png"
+        ),
+        assert_equal(
+            __Server->handle_response(
+                ([]),
+                "http_handler.data",
+                ({})
+            )["content"],
+            "2"
+        ),
+        assert_equal(
+            __Server->handle_response(
+                ([]),
+                "http_dir.handler.data",
+                ({})
+            )["content"],
+            "3"
+        ),
+    }) :));
+
+    // read_socket logs each response, so record D_LOG instead of writing
+    __Log = new("/daemon/log.mock.c");
+    __Log->start_shadow(load_object(D_LOG));
+
+    expect("read_socket handles matched, static, and unmatched requests", (: ({
+        // matched pattern
+        __Server->read_socket(-1, "GET /text/a HTTP/1.0\r\n\r\n"),
+        assert_regex(query_last_log(), "\\) 200 OK text/json 5 bytes$"),
+
+        // static pages: served, missing, and parent paths rejected
+        __Server->allow_static_pages(1),
+        __Server->read_socket(-1, "GET /http_page.html HTTP/1.0\r\n\r\n"),
+        assert_regex(query_last_log(), "\\) 200 OK text/html 11 bytes$"),
+        __Server->read_socket(-1, "GET /missing.html HTTP/1.0\r\n\r\n"),
+        assert_regex(query_last_log(), "\\) 404 Not Found text/html"),
+        __Server->read_socket(-1, "GET /../http_page.html HTTP/1.0\r\n\r\n"),
+        assert_regex(query_last_log(), "\\) 404 Not Found text/html"),
+    }) :));
+
+    __Log->stop_shadow();
+    destruct(__Log);
+
+    if (__Server) {
+        destruct(__Server);
+    }
+    remove_server_files();
+}
+
+void test_sockets() {
+    write_server_files();
+    __Server = new(SERVER);
+
+    expect("socket handlers fail without socket access", (: ({
+        assert_catch((: __Server->start() :), "*http: No port configured.\n"),
+
+        // only real inheritors of the HTTP module are allowed sockets
+        __Server->set_port(16670),
+        assert_regex(
+            catch(__Server->start()),
+            "^\\*Bad response socket_create: "
+        ),
+        assert_catch(
+            (: __Server->listen_socket(-1) :),
+            "*http: Couldn't perform socket_accept.\n"
+        ),
+
+        __Server->write_socket(-1),
+        __Server->close_socket(-1),
+        __Server->handle_remove(),
+    }) :));
+
+    if (__Server) {
+        destruct(__Server);
+    }
+    remove_server_files();
 }
