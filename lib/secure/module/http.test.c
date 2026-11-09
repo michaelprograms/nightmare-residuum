@@ -222,6 +222,7 @@ void remove_server_files() {
 
 void test_server() {
     write_server_files();
+    // @lpc-ignore
     __Server = new(SERVER);
     __Server->add_url_pattern("^/text/(\\w+)", "text");
     __Server->add_url_pattern("^/binary", "binary");
@@ -298,6 +299,7 @@ void test_server() {
 
 void test_sockets() {
     write_server_files();
+    // @lpc-ignore
     __Server = new(SERVER);
 
     expect("socket handlers fail without socket access", (: ({
