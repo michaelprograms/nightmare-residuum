@@ -37,7 +37,7 @@ nomask void write(string msg) {
     if (character && character->query_key_name() != "test") {
         character->receive_message("system", msg);
     } else if (efun::this_user()) {
-        efun::this_user()->receive_message("system", msg);
+        efun::this_user()->receive_message("system", msg);  // coverage: ignore
     } else {
         if (msg[<1] == '\n') {
             msg = msg[0..<2];

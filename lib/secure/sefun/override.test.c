@@ -108,3 +108,43 @@ void test_message() {
     if (npc1) destruct(npc1);
     if (npc2) destruct(npc2);
 }
+
+/** @type {STD_NPC} */
+nosave private object __Character;
+// this_character() checks previous_object(1), which is this test file
+object query_character() {
+    return __Character;
+}
+
+void test_write() {
+    /** @type {STD_NPC} */
+    object npc = new(STD_NPC);
+    /** @type {"/std/npc.mock"} */
+    object mockNpc = new("/std/npc.mock.c");
+
+    npc->set_name("tester");
+    mockNpc->start_shadow(npc);
+    __Character = npc;
+
+    expect("write sends to the character", (: ({
+        testOb->write("Written.\n"),
+        assert_equal(
+            $(mockNpc)->query_received_messages(),
+            ({ ({ "system", "Written.\n" }) })
+        ),
+    }) :));
+
+    mockNpc->clear_received_messages();
+    npc->set_name("test");
+
+    expect("write skips the test character and falls back", (: ({
+        // no interactive user during tests, so this goes to debug_message
+        testOb->write("override write fallback\n"),
+        assert_equal($(mockNpc)->query_received_messages(), ({})),
+    }) :));
+
+    __Character = 0;
+    mockNpc->stop_shadow();
+    destruct(mockNpc);
+    destruct(npc);
+}
