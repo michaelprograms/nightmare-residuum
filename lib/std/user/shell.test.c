@@ -95,3 +95,74 @@ void test_aliases() {
         ),
     }) :));
 }
+
+/* ----- prompt ----- */
+
+// query_prompt is protected, so a copy of the instrumented shell exposes it
+#define PROMPT_SHELL "/tmp/shell_prompt.c"
+
+// stands in for the character, see /std/character.c
+int query_hp() {
+    return 1;
+}
+int query_max_hp() {
+    return 2;
+}
+int query_sp() {
+    return 3;
+}
+int query_max_sp() {
+    return 4;
+}
+int query_mp() {
+    return 5;
+}
+int query_max_mp() {
+    return 6;
+}
+
+void test_query_prompt() {
+    object shell;
+
+    write_file(PROMPT_SHELL, "inherit \"/std/user/shell.coverage.c\";\n"
+        "object __Character;\n"
+        "void set_character(object ob) { __Character = ob; }\n"
+        "object query_character() { return __Character; }\n"
+        "mixed test_query_prompt() { return query_prompt(); }\n", 1);
+    // generated at runtime in /tmp, unknown to the static checker
+    // @lpc-ignore
+    shell = new(PROMPT_SHELL);
+    shell->set_character(this_object());
+
+    expect("query_prompt expands tokens", (: ({
+        $(shell)->set_variable("prompt", "$hp/$HP hp $sp/$SP sp $mp/$MP mp >"),
+        assert_equal($(shell)->test_query_prompt(), "1/2 hp 3/4 sp 5/6 mp > "),
+
+        $(shell)->set_variable("cwd", "/domain"),
+        $(shell)->set_variable("prompt", "$cd >"),
+        assert_equal($(shell)->test_query_prompt(), "/domain > "),
+    }) :));
+
+    expect("query_prompt handles unknown tokens", (: ({
+        // an unknown token only drops its own $
+        $(shell)->set_variable("prompt", "$x $hp >"),
+        assert_equal($(shell)->test_query_prompt(), "x 1 > "),
+        $(shell)->set_variable("prompt", "$hp $x $HP"),
+        assert_equal($(shell)->test_query_prompt(), "1 x 2 "),
+
+        // too short to be a token
+        $(shell)->set_variable("prompt", ">$"),
+        assert_equal($(shell)->test_query_prompt(), ">$ "),
+
+        $(shell)->set_variable("prompt", 0),
+        assert_equal($(shell)->test_query_prompt(), " "),
+    }) :));
+
+    if (shell) {
+        destruct(shell);
+    }
+    if (find_object(PROMPT_SHELL)) {
+        destruct(find_object(PROMPT_SHELL));
+    }
+    rm(PROMPT_SHELL);
+}

@@ -257,7 +257,8 @@ protected mixed query_prompt() {
                 prompt = replace_string(prompt, "$cd", query_variable("cwd"));
                 break;
             default:
-                prompt = replace_string(prompt, "$", "");
+                // only drop this unknown $, later tokens still expand
+                prompt = prompt[0..i - 1] + prompt[i + 1..];
         }
     }
     return prompt + " ";
