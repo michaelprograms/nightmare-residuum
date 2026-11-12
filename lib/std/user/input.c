@@ -1,10 +1,5 @@
 // @this_object /std/user.c
 #include <driver/function.h>
-#include "user.h"
-
-#define STATE_INPUT_NORMAL      0
-#define STATE_INPUT_SINGLE      1
-#define STATE_INPUT_CHARACTER   2
 
 /*
 Data format:
@@ -13,7 +8,6 @@ Data format:
     "secure": int
     "callbackFn": function
     "lock": int
-    "type": int
 */
 nosave private mapping *__InputStack = ({});
 
@@ -34,9 +28,6 @@ private nomask void dispatch_input(mixed str) {
         if (!(input = get_top_handler(1))) {
             return;
         }
-        if (input["type"] == STATE_INPUT_SINGLE) {
-            input_pop();
-        }
         evaluate(input["inputFn"], str);
     }
     if (this_object()) {
@@ -52,13 +43,12 @@ private nomask string process_input(string str) {
     return 0;
 }
 
-private nomask void stack_push(
+varargs nomask void input_push(
     function inputFn,
     mixed prompt,
     int secure,
     function callbackFn,
-    int lock,
-    int type
+    int lock
 ) {
     mapping input = ([]);
 
@@ -69,32 +59,9 @@ private nomask void stack_push(
     input["secure"] = secure || 0;
     input["callbackFn"] = callbackFn || 0;
     input["lock"] = lock || 0;
-    input["type"] = type;
     __InputStack += ({ input });
 
-    if (input["type"] == STATE_INPUT_CHARACTER) {
-        efun::get_char((: dispatch_input :), input["secure"] | 2);
-    } else {
-        efun::input_to((: dispatch_input :), input["secure"] | 2);
-    }
-}
-
-varargs nomask void input_push(
-    function inputFn,
-    mixed prompt,
-    int secure,
-    function callbackFn,
-    int lock
-) {
-    stack_push(inputFn, prompt, secure, callbackFn, lock, STATE_INPUT_NORMAL);
-}
-varargs nomask void input_single(
-    function inputFn,
-    mixed prompt,
-    int secure,
-    int lock
-) {
-    stack_push(inputFn, prompt, secure, 0, lock, STATE_INPUT_SINGLE);
+    efun::input_to((: dispatch_input :), input["secure"] | 2);
 }
 varargs nomask void input_next(
     function inputFn,
@@ -130,7 +97,7 @@ nomask varargs void input_prompt(mapping input) {
         }
         go_ahead = 1;
     }
-    if (input["type"] != STATE_INPUT_CHARACTER && input["prompt"]) {
+    if (input["prompt"]) {
         if (functionp(input["prompt"])) {
             prompt = evaluate(input["prompt"]);
         } else {
@@ -151,11 +118,7 @@ nomask void input_focus() {
         return;
     }
     input_prompt(input);
-    if (input["type"] == STATE_INPUT_CHARACTER) {
-        efun::get_char((: dispatch_input :), input["secure"] | 2);
-    } else {
-        efun::input_to((: dispatch_input :), input["secure"] | 2);
-    }
+    efun::input_to((: dispatch_input :), input["secure"] | 2);
 }
 
 private nomask int create_handler() {
