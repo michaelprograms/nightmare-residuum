@@ -1,6 +1,9 @@
 // @this_object /std/user.c
 #include <driver/function.h>
 
+// input_to flag, see I_NOESC in driver/src/interactive.h
+#define I_NOESC 2
+
 /*
 Data format:
     "inputFn": function
@@ -43,6 +46,10 @@ private nomask string process_input(string str) {
     return 0;
 }
 
+private nomask void input_await(mapping input) {
+    efun::input_to((: dispatch_input :), input["secure"] | I_NOESC);
+}
+
 varargs nomask void input_push(
     function inputFn,
     mixed prompt,
@@ -56,12 +63,12 @@ varargs nomask void input_push(
     if (prompt) {
         input["prompt"] = prompt;
     }
-    input["secure"] = secure || 0;
-    input["callbackFn"] = callbackFn || 0;
-    input["lock"] = lock || 0;
+    input["secure"] = secure;
+    input["callbackFn"] = callbackFn;
+    input["lock"] = lock;
     __InputStack += ({ input });
 
-    efun::input_to((: dispatch_input :), input["secure"] | 2);
+    input_await(input);
 }
 varargs nomask void input_next(
     function inputFn,
@@ -118,7 +125,7 @@ nomask void input_focus() {
         return;
     }
     input_prompt(input);
-    efun::input_to((: dispatch_input :), input["secure"] | 2);
+    input_await(input);
 }
 
 private nomask int create_handler() {
