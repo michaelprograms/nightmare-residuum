@@ -100,7 +100,7 @@ nomask varargs void input_prompt(mapping input) {
 
     if (!input) {
         if (!(input = get_top_handler(1))) {
-            return;
+            return;  // coverage: ignore
         }
         go_ahead = 1;
     }
@@ -122,7 +122,7 @@ nomask void input_focus() {
     mapping input;
 
     if (!(input = get_top_handler(1))) {
-        return;
+        return;  // coverage: ignore
     }
     input_prompt(input);
     input_await(input);
@@ -130,7 +130,7 @@ nomask void input_focus() {
 
 private nomask int create_handler() {
     if (!this_object()) {
-        return 0;
+        return 0;  // coverage: ignore
     }
 
     this_object()->shell_start();
@@ -138,7 +138,7 @@ private nomask int create_handler() {
     if (!sizeof(__InputStack)) {
         message("system", "Unable to process input.", this_object());
         destruct();
-        return 1;
+        return 1;  // coverage: ignore
     }
     return 0;
 }
