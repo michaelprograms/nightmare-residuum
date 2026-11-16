@@ -233,8 +233,9 @@ varargs string conjunction(string *list, string conjunction) {
         result = list[0];
     } else if (l == 2) {
         result = list[0] + " " + conjunction + " " + list[1];
-    } else if (l > 1) {
-        list[<1] = conjunction + " " + list[<1];
+    } else {
+        // build a new array, assigning into list changes the caller's array
+        list = list[0..<2] + ({ conjunction + " " + list[<1] });
         result = implode(list, ", ");
     }
     return result;

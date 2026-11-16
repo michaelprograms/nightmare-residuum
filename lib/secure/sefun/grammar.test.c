@@ -32,6 +32,8 @@ void test_add_article() {
 }
 
 void test_conjunction() {
+    string *limbs;
+
     expect("conjunction handles list with default 'and'", (: ({
         assert_equal(testOb->conjunction(({ "1" })), "1"),
         assert_equal(testOb->conjunction(({ "1", "2" })), "1 and 2"),
@@ -72,6 +74,15 @@ void test_conjunction() {
             (: testOb->conjunction(({})) :),
             "*Bad argument 1 to grammar->conjunction\n"
         ),
+    }) :));
+
+    limbs = ({ "torso", "left arm", "right arm" });
+    expect("conjunction doesn't modify the list", (: ({
+        assert_equal(
+            testOb->conjunction($(limbs)),
+            "torso, left arm, and right arm"
+        ),
+        assert_equal($(limbs), ({ "torso", "left arm", "right arm" })),
     }) :));
 }
 
