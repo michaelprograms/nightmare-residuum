@@ -58,7 +58,7 @@ void combat_hit_message(
     int crit,
     int isAbility
 ) {
-    string sourceMsg, targetMsg, envMsg, name, type;
+    string sourceMsg, targetMsg, envMsg, msgType, name, type;
     string critically, verb, verbs, adverb, sourcePossessive;
     int percent, i = 0;
 
@@ -101,7 +101,7 @@ void combat_hit_message(
     targetMsg = sprintf(
         "%s %s%s you%sin the %s with %s %s.",
         source->query_cap_name(),
-        crit ? "critically " : "",
+        critically,
         verbs,
         adverb,
         limb,
@@ -111,7 +111,7 @@ void combat_hit_message(
     envMsg = sprintf(
         "%s %s%s %s%sin the %s with %s %s.",
         source->query_cap_name(),
-        crit ? "critically " : "",
+        critically,
         verbs,
         target->query_cap_name(),
         adverb,
@@ -120,25 +120,10 @@ void combat_hit_message(
         name
     );
 
-    if (isAbility) {
-        message("ability hit", sourceMsg, source);
-        message("ability hit", targetMsg, target);
-        message(
-            "ability hit",
-            envMsg,
-            environment(source),
-            ({ source, target })
-        );
-    } else {
-        message("combat hit", sourceMsg, source);
-        message("combat hit", targetMsg, target);
-        message(
-            "combat hit",
-            envMsg,
-            environment(source),
-            ({ source, target })
-        );
-    }
+    msgType = isAbility ? "ability hit" : "combat hit";
+    message(msgType, sourceMsg, source);
+    message(msgType, targetMsg, target);
+    message(msgType, envMsg, environment(source), ({ source, target }));
 }
 
 /**
@@ -256,13 +241,11 @@ void combat_block_message(object source, object target) {
  * @param {STD_WEAPON|string} weapon the weapon or limb used
  */
 void combat_parry_message(object source, object target, mixed weapon) {
-    string type, name, possessive = SEFUN->possessive(target);
+    string name, possessive = SEFUN->possessive(target);
 
     if (objectp(weapon)) {
-        type = /** @type {STD_WEAPON} */ (weapon)->query_type();
         name = /** @type {STD_WEAPON} */ (weapon)->query_name();
     } else {
-        type = "brawl";
         name = weapon;
     }
     message(
