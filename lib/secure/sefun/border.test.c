@@ -512,6 +512,11 @@ void test_tree() {
             testOb->tree(([ "00": "abcdefghi", "01": "abcdefghi" ])),
             ({ "0. 00abcdefghi", "1. 01abcdefghi" })
         ),
+        // leading numbers sort numerically, not as strings
+        assert_equal(
+            testOb->tree(([ "10. x": "", "2. y": "" ])),
+            ({ "0. 2. y", "1. 10. x" })
+        ),
         assert_equal(
             testOb->tree(([
                 "A": ([ "1": ([ "a": ([]), "b": ([]) ]), "2": ([]), ]),

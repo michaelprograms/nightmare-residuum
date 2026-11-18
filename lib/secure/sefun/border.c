@@ -223,21 +223,18 @@ string *format_border(mapping rawData, mapping b, int width, string ansi) {
     mixed *borderColors;
     int headerStart = 0, headerEnd = 0, footerLine = 0;
     int i;
-    int fTitle = !!(!undefinedp(data["title"]) && data["title"]);
-    int fHeader = !!(!undefinedp(data["header"]) && data["header"]);
-    int fBody = !!(!undefinedp(data["body"]) && data["body"]);
-    int fFooter = !!(!undefinedp(data["footer"]) && data["footer"]);
+    int fTitle = !!data["title"];
+    int fHeader = !!data["header"];
+    int fBody = !!data["body"];
+    int fFooter = !!data["footer"];
 
     string radius = (data["corners"] == "square") ? "" : "r";
 
-    if (fHeader && mapp(data["header"])) {
-        data["header"] = ({ data["header"] });
-    }
-    if (fBody && mapp(data["body"])) {
-        data["body"] = ({ data["body"] });
-    }
-    if (fFooter && mapp(data["footer"])) {
-        data["footer"] = ({ data["footer"] });
+    // a single section mapping is shorthand for an array of one
+    foreach (string section in ({ "header", "body", "footer" })) {
+        if (mapp(data[section])) {
+            data[section] = ({ data[section] });
+        }
     }
 
     if (ansi && arrayp(data["borderColors"])) {
@@ -258,7 +255,7 @@ string *format_border(mapping rawData, mapping b, int width, string ansi) {
     }
 
     if (fTitle) {
-        int fSubtitle = !!(!undefinedp(data["subtitle"]) && sizeof(data["subtitle"]));
+        int fSubtitle = !!sizeof(data["subtitle"]);
         int lSubtitle = fSubtitle ? sizeof(SEFUN->strip_colour(data["subtitle"])) : 0;
         int nSubtitle = fSubtitle ? sizeof(data["subtitle"]) : 0;
         int nTitle = 0, lTitle;
@@ -504,14 +501,8 @@ private varargs string *format_tree(
     int i, l;
 
     if (indent > 0) {
-        for (i = 0; i < indent; i++) {
-            if (i > 0) {
-                if (prefix[i]) {
-                    tmp += "  ";
-                } else {
-                    tmp += b["v"] + " ";
-                }
-            }
+        for (i = 1; i < indent; i++) {
+            tmp += prefix[i] ? "  " : b["v"] + " ";
         }
         if (index == maxIndex) {
             tmp += b["bl"];
@@ -548,6 +539,16 @@ private varargs string *format_tree(
 
     return result;
 }
+// sort tree keys by their leading number ("10. foo" -> 10), tie-breaking on
+// string order so it stays deterministic
+private int compare_tree_keys(string a, string b) {
+    int na = to_int(explode(a, " ")[0]), nb = to_int(explode(b, " ")[0]);
+
+    if (na != nb) {
+        return na < nb ? -1 : 1;
+    }
+    return strcmp(a, b);
+}
 string *tree(mapping value) {
     string *result = ({}), *ids;
     mapping b;
@@ -556,20 +557,7 @@ string *tree(mapping value) {
         error("Bad argument 1 to border->tree");
     }
     b = query_border_charset();
-    // Sort keys by their leading number ("10. foo" -> 10), tie-breaking on string order so it stays deterministic.
-    ids = sort_array(
-        keys(value),
-        (: to_int(explode(
-            $1,
-            " "
-        )[0]) == to_int(explode(
-            $2,
-            " "
-        )[0]) ? ($1 > $2 ? 1 : ($1 < $2 ? -1 : 0)) : (to_int(explode(
-            $1,
-            " "
-        )[0]) < to_int(explode($2, " ")[0]) ? -1 : 1) :)
-    );
+    ids = sort_array(keys(value), (: compare_tree_keys :));
     l = sizeof(ids);
     for (i = 0; i < l; i++) {
         result += format_tree(
