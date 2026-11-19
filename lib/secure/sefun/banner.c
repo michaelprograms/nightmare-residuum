@@ -28,7 +28,7 @@ string query_banner() {
 
     tmp = "  " + SEFUN->mud_name() + "  ";
     pad = 40 - sizeof(tmp) / 2;
-    lines[<2] = lines[<2][0..pad - 1] + tmp + lines[<2][80 - pad..79];
+    lines[<2] = lines[<2][0..pad - 1] + tmp + lines[<2][80 - pad + sizeof(tmp) % 2..79];
 
     tmp = "  " + SEFUN->version() + "   " + SEFUN->mudlib_version() + "  ";
     pad = 40 - sizeof(tmp) / 2;

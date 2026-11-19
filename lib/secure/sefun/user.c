@@ -18,10 +18,11 @@ object this_user() {
  * @returns {STD_USER} a matching user
  */
 object find_user(string name) {
+    object *results;
     if (!stringp(name)) {
         error("Bad argument 1 to user->find_user");
     }
-    object *results = children(STD_USER);
+    results = children(STD_USER);
     results = filter(results, (: $1 && $1->query_key_name() == $(name) :));
     return sizeof(results) ? results[0] : 0;
 }
@@ -52,10 +53,11 @@ object this_character() {
  * @returns {STD_CHARACTER} a matching character
  */
 object find_character(string name) {
+    object *results;
     if (!stringp(name)) {
         error("Bad argument 1 to user->find_character");
     }
-    object *results = children(STD_CHARACTER);
+    results = children(STD_CHARACTER);
     results = filter(
         results,
         (: $1 && $1->query_key_name() == SEFUN->sanitize_name($(name)) && $1->query_user() :)
