@@ -102,6 +102,12 @@ void test_lerp() {
 }
 
 void test_color_gradient() {
+    expect("color_gradient rejects negative steps with its own error", (: ({
+        assert_catch(
+            (: testOb->color_gradient(({ 0, 0, 0 }), ({ 1, 1, 1 }), -1) :),
+            "*Bad argument 3 to color->color_gradient\n"
+        ),
+    }) :));
     expect("color_gradient behaves", (: ({
         assert_equal(
             testOb->color_gradient(({ 0, 0, 0 }), ({ 255, 255, 255 }), 2),

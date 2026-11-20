@@ -124,7 +124,7 @@ float color_lerp(float color1, float color2, float ratio) {
 // Generate a color gradient between 'color1' and 'color2' of length 'steps'.
 // Originally based upon https://stackoverflow.com/questions/22607043/color-gradient-algorithm
 string *color_gradient(mixed *color1, mixed *color2, int steps) {
-    string *gradient = allocate(steps);
+    string *gradient;
 
     if (!arrayp(color1) || sizeof(color1) != 3) {
         error("Bad argument 1 to color->color_gradient");
@@ -135,6 +135,7 @@ string *color_gradient(mixed *color1, mixed *color2, int steps) {
     if (!intp(steps) || steps < 2) {
         error("Bad argument 3 to color->color_gradient");
     }
+    gradient = allocate(steps);
 
     for (int i = 0; i < steps; i++) {
         float ratio = 1.0 * i / (steps - 1);
