@@ -621,3 +621,78 @@ void test_combat_table() {
     if (weapon) destruct(weapon);
     if (armor) destruct(armor);
 }
+
+void test_combat_message_edge_cases() {
+    object npc1, npc2, lost;
+    object mockNpc1, mockNpc2, mockLost;
+    object weapon;
+
+    npc1 = new(STD_NPC);
+    npc2 = new(STD_NPC);
+    lost = new(STD_NPC);
+    npc1->set_name("npc one");
+    npc2->set_name("npc two");
+    lost->set_name("npc lost");
+    npc1->set_species("human");
+    npc2->set_species("human");
+    npc1->set_stat("endurance", 10);
+    npc2->set_stat("endurance", 10);
+    npc1->handle_move(STD_ROOM);
+    npc2->handle_move(STD_ROOM);
+    mockNpc1 = new("/std/npc.mock.c");
+    mockNpc2 = new("/std/npc.mock.c");
+    mockLost = new("/std/npc.mock.c");
+    mockNpc1->start_shadow(npc1);
+    mockNpc2->start_shadow(npc2);
+    mockLost->start_shadow(lost);
+    weapon = new(STD_WEAPON);
+    weapon->set_name("test weapon");
+    weapon->set_type("unknown");
+
+    expect("combat hit message handles an unrecognized weapon type", (: ({
+        testOb->combat_hit_message(
+            $(npc1),
+            $(npc2),
+            "limb",
+            $(weapon),
+            $(npc2)->query_max_hp(),
+            0,
+            0
+        ),
+        assert_equal(
+            $(mockNpc1)->query_received_messages()[<1],
+            ({
+                "combat hit",
+                "You destroy Npc two utterly in the limb with your test weapon."
+            })
+        ),
+        assert_equal(
+            $(mockNpc2)->query_received_messages()[<1],
+            ({
+                "combat hit",
+                "Npc one destroys you utterly in the limb with their test weapon."
+            })
+        ),
+    }) :));
+
+    expect("combat useless message handles a source with no environment", (: ({
+        assert_equal(environment($(lost)), 0),
+        testOb->combat_useless_message($(lost)),
+        assert_equal(sizeof($(mockLost)->query_received_messages()), 1),
+        assert_equal(
+            $(mockLost)->query_received_messages()[<1][0],
+            "combat miss"
+        ),
+    }) :));
+
+    mockNpc1->stop_shadow();
+    mockNpc2->stop_shadow();
+    mockLost->stop_shadow();
+    if (mockNpc1) destruct(mockNpc1);
+    if (mockNpc2) destruct(mockNpc2);
+    if (mockLost) destruct(mockLost);
+    if (npc1) destruct(npc1);
+    if (npc2) destruct(npc2);
+    if (lost) destruct(lost);
+    if (weapon) destruct(weapon);
+}

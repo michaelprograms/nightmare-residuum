@@ -76,12 +76,13 @@ void combat_hit_message(
         adverb = "ineffectively";
     } else {
         i = query_combat_tier_from_percent(percent);
-        if (member_array(type, ({ "blunt", "brawl", "psionic", })) > -1) {
-            verb = BLUNT_VERBS[i];
-            adverb = BLUNT_ADVERBS[i];
-        } else if (member_array(type, ({ "blade", "ranged", })) > -1) {
+        if (member_array(type, ({ "blade", "ranged", })) > -1) {
             verb = SHARP_VERBS[i];
             adverb = SHARP_ADVERBS[i];
+        } else {
+            // blunt, brawl, psionic, and any unrecognized weapon type
+            verb = BLUNT_VERBS[i];
+            adverb = BLUNT_ADVERBS[i];
         }
     }
 
@@ -203,7 +204,9 @@ void combat_useless_message(object source) {
     mymsg = USELESS_MYMSG[i];
     yourmsg = source->query_cap_name() + USELESS_YOURMSG[i];
     message("combat miss", mymsg, source);
-    message("combat miss", yourmsg, env, source);
+    if (env) {
+        message("combat miss", yourmsg, env, source);
+    }
 }
 
 /**
