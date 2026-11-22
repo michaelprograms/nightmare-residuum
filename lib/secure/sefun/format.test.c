@@ -511,3 +511,26 @@ void test_format_integer() {
         assert_equal(testOb->format_integer(UNDEFINED), "0"),
     }) :));
 }
+
+void test_format_page_short_ratio_row() {
+    __Width = 80;
+    expect("format_page pads short final rows of ratio columns to width", (: ({
+        assert_equal(
+            sizeof(testOb->format_page(({ "1" }), ({ 1, 1, 2 }), 0, 0)),
+            80
+        ),
+        assert_equal(
+            testOb->format_page(({ "1" }), ({ 1, 1, 2 }), 0, 0),
+            sprintf("%-80s", "1")
+        ),
+        assert_equal(
+            testOb->format_page(({ "1", "2", "3", "4" }), ({ 2, 1, 1 }), 0, 0),
+            sprintf(
+                "%-40s%-20s%-20s",
+                "1",
+                "2",
+                "3"
+            ) + "\n" + sprintf("%-80s", "4")
+        ),
+    }) :));
+}

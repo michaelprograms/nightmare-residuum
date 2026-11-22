@@ -66,9 +66,9 @@ varargs string format_page(
             }
 
             if (i + j >= numItems) {
-                // ran out of columns to fill final row
-                row += sprintf("%' '*s", width * (numColumns - j), " ");
-                break;
+                // ran out of items to fill final row, pad this column
+                row += sprintf("%*s", width, "");
+                continue;
             }
 
             // check text length without ANSI color
