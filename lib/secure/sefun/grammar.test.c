@@ -13,6 +13,11 @@ void test_remove_article() {
         assert_equal(testOb->remove_article("the thing"), "thing"),
         assert_equal(testOb->remove_article("a thing"), "thing"),
         assert_equal(testOb->remove_article("an item"), "item"),
+
+        assert_equal(testOb->remove_article("The thing"), "thing"),
+        assert_equal(testOb->remove_article("A thing"), "thing"),
+        assert_equal(testOb->remove_article("An item"), "item"),
+        assert_equal(testOb->remove_article("Another thing"), "Another thing"),
     }) :));
 }
 void test_add_article() {
@@ -28,6 +33,9 @@ void test_add_article() {
         assert_equal(testOb->add_article("the thing"), "a thing"),
         assert_equal(testOb->add_article("an item"), "an item"),
         assert_equal(testOb->add_article("the item"), "an item"),
+
+        assert_equal(testOb->add_article("A thing"), "a thing"),
+        assert_equal(testOb->add_article("The item", 1), "the item"),
     }) :));
 }
 
@@ -401,4 +409,12 @@ void test_reflexive() {
         assert_equal(testOb->reflexive($(ob)), "itself"),
     }) :));
     destruct(ob);
+}
+
+void test_pluralize_empty() {
+    expect("pluralize handles empty strings and bare color tags", (: ({
+        assert_equal(testOb->pluralize(""), ""),
+        assert_equal(testOb->pluralize("%^RED%^"), "%^RED%^"),
+        assert_equal(catch(testOb->pluralize("%^")), 0),
+    }) :));
 }

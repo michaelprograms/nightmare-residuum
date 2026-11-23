@@ -6,7 +6,7 @@
  */
 string remove_article(string str) {
     string *matches;
-    if (sizeof(matches = pcre_extract(str, "^(?:an?|the) (.+)$")) > 0) {
+    if (sizeof(matches = pcre_extract(str, "^(?i:an?|the) (.+)$")) > 0) {
         str = matches[0];
     }
     return str;
@@ -147,8 +147,13 @@ string pluralize(mixed single) {
 
     if (str[<2..<1] == "%^") {
         n = strsrch(str[0..<3], "%^", -1);
-        ansiTail = str[n..];
-        str = str[0..n - 1];
+        if (n > -1) {
+            ansiTail = str[n..];
+            str = str[0..n - 1];
+        }
+    }
+    if (!sizeof(str)) {
+        return ansiTail;
     }
     if (__AbnormalOverride[str]) {
         return __AbnormalOverride[str] + ansiTail;
