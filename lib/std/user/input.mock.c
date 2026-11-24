@@ -18,5 +18,8 @@ int query_prompts() {
 
 // override from /std/user/shell.c
 void shell_start() {
-    query_shadow()->input_push((: handle_input :), (: query_prompt :));
+    /** @type {"/std/user/input"} */ (query_shadow())->input_push(
+        (: handle_input :),
+        (: query_prompt :)
+    );
 }
