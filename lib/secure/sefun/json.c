@@ -28,7 +28,7 @@ varargs string json_encode(mixed value) {
         out = "{" + (sizeof(out) ? out : "") + "}";
     } else if (stringp(value)) {
         out = value;
-        if (pcre_match(out, "[\\x08\\x09\\x0a\\x0c\\x0d\\x1b\"\\\\]")) {
+        if (pcre_match(out, "[\\x01-\\x1f\"\\\\]")) {
             if (strsrch(out, '\\') > -1) {
                 out = replace_string(out, "\\", "\\\\");
             }
@@ -50,8 +50,15 @@ varargs string json_encode(mixed value) {
             if (member_array(0x0c, out) > -1) {
                 out = replace_string(out, "\x0c", "\\f");
             }
-            if (member_array(0x1b, out) > -1) {
-                out = replace_string(out, "\x1b", "\\u001b");
+            // any remaining control characters
+            for (i = 1; i < 0x20; i++) {
+                if (member_array(i, out) > -1) {
+                    out = replace_string(
+                        out,
+                        sprintf("%c", i),
+                        sprintf("\\u%04x", i)
+                    );
+                }
             }
         }
         out = "\"" + out + "\"";
@@ -106,11 +113,17 @@ private mixed json_decode_object() {
         }
         key = json_decode_string(0);
         if (!key) {
+            if (found_comma) {
+                error("Unexpected character in json_decode_object: " + sprintf(
+                    "%c",
+                    parseText[parsePos]
+                ));
+            }
             parsePos++;
             return out;
         }
         found_sep = 0;
-        while (!found_sep && !done) {
+        while (!found_sep) {
             ch = parseText[parsePos];
             switch (ch) {
                 case 0:
@@ -125,8 +138,32 @@ private mixed json_decode_object() {
                 case 0x0c: case '\n':
                     parsePos++;
                     break;
+                default:
+                    error("Unexpected character in json_decode_object: " + sprintf(
+                        "%c",
+                        ch
+                    ));
+            }
+        }
+        value = json_decode_value();
+        found_comma = 0;
+        while (!found_comma && !done) {
+            ch = parseText[parsePos];
+            switch (ch) {
+                case 0:
+                    error("Unexpected end of data in json_decode_object");
+                case ',':
+                    found_comma = 1;
+                    parsePos++;
+                    break;
                 case '}':
                     done = 1;
+                    parsePos++;
+                    break;
+                case ' ': case '\t': case '\r':
+                    parsePos++;
+                    break;
+                case 0x0c: case '\n':
                     parsePos++;
                     break;
                 default:
@@ -136,37 +173,7 @@ private mixed json_decode_object() {
                     ));
             }
         }
-        if (!done) {
-            value = json_decode_value();
-            found_comma = 0;
-            while (!found_comma && !done) {
-                ch = parseText[parsePos];
-                switch (ch) {
-                    case 0:
-                        error("Unexpected end of data in json_decode_object");
-                    case ',':
-                        found_comma = 1;
-                        parsePos++;
-                        break;
-                    case '}':
-                        done = 1;
-                        parsePos++;
-                        break;
-                    case ' ': case '\t': case '\r':
-                        parsePos++;
-                        break;
-                    case 0x0c: case '\n':
-                        parsePos++;
-                        break;
-                    default:
-                        error("Unexpected character in json_decode_object: " + sprintf(
-                            "%c",
-                            ch
-                        ));
-                }
-            }
-            out[key] = value;
-        }
+        out[key] = value;
     }
     return out;
 }
@@ -214,9 +221,22 @@ private mixed json_decode_array() {
     return out;
 }
 
+// decode the 4 hex digits of a \uXXXX escape starting at str[start]
+private int json_decode_hex4(string str, int start) {
+    if (start + 3 >= sizeof(str)) {
+        error("Unexpected end of unicode escape in json_decode_string");
+    }
+    for (int k = start; k < start + 4; k++) {
+        if (strsrch("0123456789abcdefABCDEF", str[k..k]) == -1) {
+            error("Invalid hex digit in json_decode_string: " + str[k..k]);
+        }
+    }
+    return SEFUN->hex_to_int(str[start..start + 3]);
+}
+
 private mixed json_decode_string(int initiator_checked) {
     int from, to, esc_state, esc_active;
-    int *nybbles = allocate(4), character = 0, next_character = 0, codepoint;
+    int character = 0, next_character = 0, codepoint;
     string out;
 
     if (!initiator_checked) {
@@ -300,28 +320,17 @@ private mixed json_decode_string(int initiator_checked) {
                     result += "\t";
                     break;
                 case 'u':
-                    for (int k = 0; k < 4; k++) {
-                        if (undefinedp(nybbles[k] = SEFUN->hex_to_int(out[i + 1 + k..i + 1 + k]))) {
-                            error("Invalid hex digit in json_decode_string: " + out[i + 1 + k]);
-                        }
-                    }
-                    character = (nybbles[0] << 12) | (nybbles[1] << 8) | (nybbles[2] << 4) | nybbles[3];
-                    if (!(((character) & 0xfffff800) == 0xd800)) {
+                    character = json_decode_hex4(out, i + 1);
+                    if ((character & 0xfffff800) != 0xd800) {
                         // BMP character
                         result += sprintf("%c", character);
                         i += 4;
                     } else {
                         // UTF-16 surrogate pair
-                        nybbles = allocate(4);
                         if (out[i + 5..i + 6] != "\\u") {
                             error("Invalid string, missing surrogate pair in json_decode_string");
                         }
-                        for (int k = 0; k < 4; k++) {
-                            if (undefinedp(nybbles[k] = SEFUN->hex_to_int(out[i + 7 + k..i + 7 + k]))) {
-                                error("Invalid hex digit in json_decode_string: " + out[i + 7 + k]);
-                            }
-                        }
-                        next_character = (nybbles[0] << 12) | (nybbles[1] << 8) | (nybbles[2] << 4) | nybbles[3];
+                        next_character = json_decode_hex4(out, i + 7);
                         codepoint = 0x10000 + (character - 0xd800) * 0x400 + (next_character - 0xDC00);
                         result += sprintf("%c", codepoint);
                         i += 10;
@@ -408,7 +417,7 @@ private mixed json_decode_number() {
                 // Fallthrough
             default:
                 to = parsePos - 1;
-                if (dot == to || to < from) {
+                if (to < from || parseText[to] < '0' || parseText[to] > '9') {
                     error("Unexpected character in json_decode_number: " + sprintf(
                         "%c",
                         ch

@@ -22,6 +22,9 @@ void test_json_encode() {
         assert_equal(testOb->json_encode("\t"), "\"\\t\""),
         assert_equal(testOb->json_encode("\x0c"), "\"\\f\""),
         assert_equal(testOb->json_encode("\x1b"), "\"\\u001b\""),
+        assert_equal(testOb->json_encode("\x01"), "\"\\u0001\""),
+        assert_equal(testOb->json_encode("a\x1f" + "b"), "\"a\\u001fb\""),
+        assert_equal(testOb->json_decode(testOb->json_encode("\x01")), "\x01"),
 
         assert_equal(
             testOb->json_encode(({ 1, 2, 3, "a", "b", "c" })),
@@ -128,7 +131,6 @@ void test_json_decode() {
             "\u0079\u0316\u0320\u034D\u0318\u0347\u0357\u030F\u033D\u030E\u035E"
         ),
 
-        assert_equal(testOb->json_decode("{\"key\"}"), ([])),
         assert_equal(
             testOb->json_decode("{ \"key1\": true,\r\t\"key2\": false, \"key3\": null }"),
             ([ "key1": 1, "key2": 0, "key3": 0, ])
@@ -260,7 +262,7 @@ void test_json_decode() {
         ),
         assert_catch(
             (: testOb->json_decode("\"\\uzzzz\"") :),
-            "*Invalid hex digit in json_decode_string: 122\n"
+            "*Invalid hex digit in json_decode_string: z\n"
         ),
         assert_catch(
             (: testOb->json_decode("\"\\ud800\"") :),
@@ -268,10 +270,53 @@ void test_json_decode() {
         ),
         assert_catch(
             (: testOb->json_decode("\"\\ud800\\uzzzz\"") :),
-            "*Invalid hex digit in json_decode_string: 122\n"
+            "*Invalid hex digit in json_decode_string: z\n"
         ),
     }) :));
     expect("json_decode_string handles unknown escapes", (: ({
         assert_equal(testOb->json_decode("\"\\x\""), "\\x"),
+    }) :));
+}
+
+void test_json_decode_strict() {
+    expect("json_decode rejects malformed objects", (: ({
+        assert_catch(
+            (: testOb->json_decode("{\"a\"}") :),
+            "*Unexpected character in json_decode_object: }\n"
+        ),
+        assert_catch(
+            (: testOb->json_decode("{\"a\":1,}") :),
+            "*Unexpected character in json_decode_object: }\n"
+        ),
+        assert_equal(testOb->json_decode("{ }"), ([])),
+        assert_equal(
+            testOb->json_decode("{ \"a\" : 1 , \"b\" : 2 }"),
+            ([ "a": 1, "b": 2 ])
+        ),
+    }) :));
+    expect("json_decode rejects malformed numbers", (: ({
+        assert_catch(
+            (: testOb->json_decode("[1e]") :),
+            "*Unexpected character in json_decode_number: ]\n"
+        ),
+        assert_catch(
+            (: testOb->json_decode("[1e+]") :),
+            "*Unexpected character in json_decode_number: ]\n"
+        ),
+        assert_catch(
+            (: testOb->json_decode("[1.]") :),
+            "*Unexpected character in json_decode_number: ]\n"
+        ),
+        assert_equal(testOb->json_decode("[1e2]"), ({ 100.0 })),
+    }) :));
+    expect("json_decode rejects truncated unicode escapes", (: ({
+        assert_catch(
+            (: testOb->json_decode("\"\\u12\"") :),
+            "*Unexpected end of unicode escape in json_decode_string\n"
+        ),
+        assert_catch(
+            (: testOb->json_decode("\"\\ud83d\\ude\"") :),
+            "*Unexpected end of unicode escape in json_decode_string\n"
+        ),
     }) :));
 }
