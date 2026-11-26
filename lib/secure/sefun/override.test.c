@@ -142,6 +142,10 @@ void test_write() {
         testOb->write("override write fallback\n"),
         assert_equal($(mockNpc)->query_received_messages(), ({})),
     }) :));
+    expect("write handles an empty message in the fallback", (: ({
+        assert_equal(catch(testOb->write("")), 0),
+        assert_equal($(mockNpc)->query_received_messages(), ({})),
+    }) :));
 
     __Character = 0;
     mockNpc->stop_shadow();

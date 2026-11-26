@@ -39,7 +39,7 @@ nomask void write(string msg) {
     } else if (efun::this_user()) {
         efun::this_user()->receive_message("system", msg);  // coverage: ignore
     } else {
-        if (msg[<1] == '\n') {
+        if (sizeof(msg) && msg[<1] == '\n') {
             msg = msg[0..<2];
         }
         debug_message(msg);
