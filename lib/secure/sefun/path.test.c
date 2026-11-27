@@ -29,6 +29,9 @@ void test_user_path() {
 }
 
 void test_split_path() {
+    expect("split_path handles an empty path", (: ({
+        assert_equal(testOb->split_path(""), ({ "", "" })),
+    }) :));
     expect("split_path handles path with no slash", (: ({
         assert_equal(
             testOb->split_path("nodirectory"),
@@ -135,6 +138,12 @@ void test_sanitize_path() {
             testOb->sanitize_path("test"),
             "/realm/test/otherdir/test"
         ),
+
+        // cwd without a trailing slash, as stored by the cd command
+        __MockVariable["cwd"] = "/realm/test/testdir",
+        assert_equal(testOb->sanitize_path("test"), "/realm/test/testdir/test"),
+        __MockVariable["cwd"] = "/",
+        assert_equal(testOb->sanitize_path("test"), "/test"),
     }) :));
 
     destruct(__MockCharacter);
@@ -236,6 +245,22 @@ void test_mkdirs() {
         // verify can't create when file exists in path
         assert_equal(testOb->mkdirs(PATH_TEST_DIR + ".txt/test"), 0),
         assert_equal(rm(PATH_TEST_DIR + ".txt"), 1),
+    }) :));
+    expect("mkdirs handles root and dotted directory names", (: ({
+        assert_equal(testOb->mkdirs("/"), 1),
+
+        // without a trailing slash the dotted part is a filename
+        assert_equal(testOb->mkdirs(PATH_TEST_DIR + "/v1.2"), 1),
+        assert_equal(file_size(PATH_TEST_DIR), -2),
+        assert_equal(file_size(PATH_TEST_DIR + "/v1.2"), -1),
+
+        // with a trailing slash the dotted part is a directory
+        assert_equal(testOb->mkdirs(PATH_TEST_DIR + "/v1.2/"), 1),
+        assert_equal(file_size(PATH_TEST_DIR + "/v1.2"), -2),
+
+        rmdir(PATH_TEST_DIR + "/v1.2"),
+        rmdir(PATH_TEST_DIR),
+        assert_equal(file_size(PATH_TEST_DIR), -1),
     }) :));
 }
 

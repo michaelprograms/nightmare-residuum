@@ -8,7 +8,7 @@ string user_path(mixed args...) {
 
 string *split_path(string path) {
     int pos;
-    while (path[<1] == '/' && sizeof(path) > 1) {
+    while (sizeof(path) > 1 && path[<1] == '/') {
         path = path[0..<2];
     }
     pos = strsrch(path, '/', -1);
@@ -23,16 +23,21 @@ string sanitize_path(string path) {
     string *parts;
     int i = 0;
     int trailingSlash;
+    string cwd;
 
     if (!stringp(path) || !sizeof(path)) {
         error("Bad argument 1 to path->sanitize_path");
     }
 
     if ((path[0] != '/' && path[0] != '~' && path[0] != '^') && previous_object()) {
-        path = (previous_object()->query_variable("cwd") || "") + path;
+        cwd = previous_object()->query_variable("cwd") || "";
+        if (sizeof(cwd) && cwd[<1] != '/') {
+            cwd += "/";
+        }
+        path = cwd + path;
     }
 
-    trailingSlash = (sizeof(path) > 0 && (path[<1] == '/' || path[<2..] == "/." || path[<3..] == "/.."));
+    trailingSlash = (path[<1] == '/' || path[<2..] == "/." || path[<3..] == "/..");
     if (path[0] == '^') {
         path = "domain/" + path[1..];
     } else if (path[0] == '~') {
@@ -84,6 +89,7 @@ varargs string absolute_path(string relative_path, mixed relative_to) {
 
 // Check path recursively and create dirs
 // Path can be a directory or filename (which will be truncated)
+// A trailing / marks the final part as a directory even if it contains a dot
 // Returns 1 for directory exists or 0 for failure
 int mkdirs(string path) {
     string *dirs, dir = "";
@@ -94,8 +100,13 @@ int mkdirs(string path) {
     }
 
     dirs = explode(path, "/") - ({ "" });
-    // dirs[<1] potentially contains a filename with extension
-    dirs = dirs[0..<2] + (!regexp(dirs[<1], "\\.") ? ({ dirs[<1] }) : ({}));
+    if (!sizeof(dirs)) {
+        return 1;  // root directory
+    }
+    if (path[<1] != '/' && regexp(dirs[<1], "\\.")) {
+        // dirs[<1] is a filename with extension
+        dirs = dirs[0..<2];
+    }
     path = "/" + implode(dirs, "/");
     if (file_size(path) == -2) {
         return 1;
