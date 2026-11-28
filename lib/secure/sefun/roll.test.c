@@ -5,6 +5,7 @@ inherit M_TEST;
  */
 
 mixed *rollData;
+mixed badSides = 2.5;
 void test_roll_die() {
     expect("roll_die returns valid values", (: ({
         rollData = testOb->roll_die(1, 2),
@@ -60,6 +61,10 @@ void test_roll_die() {
         ),
         assert_catch(
             (: testOb->roll_die(1, 1) :),
+            "*Bad argument 2 to roll->roll_die\n"
+        ),
+        assert_catch(
+            (: testOb->roll_die(1, badSides) :),
             "*Bad argument 2 to roll->roll_die\n"
         ),
 

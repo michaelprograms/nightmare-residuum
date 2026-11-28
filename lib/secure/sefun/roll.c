@@ -10,7 +10,7 @@ mixed *roll_die(int times, int sides) {
 
     if (undefinedp(times) || !intp(times) || times < 1) {
         error("Bad argument 1 to roll->roll_die");
-    } else if (undefinedp(sides) || sides < 2) {
+    } else if (undefinedp(sides) || !intp(sides) || sides < 2) {
         error("Bad argument 2 to roll->roll_die");
     }
 
